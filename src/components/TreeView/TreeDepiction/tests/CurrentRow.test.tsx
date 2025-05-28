@@ -1,10 +1,20 @@
+import "@testing-library/jest-dom";
 import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import { SemanticDomainTreeNode } from "api/models";
-import CurrentRow from "components/TreeView/TreeDepiction/CurrentRow";
+import CurrentRow, {
+  currentDomainButtonId,
+} from "components/TreeView/TreeDepiction/CurrentRow";
 import testDomainMap, {
   mapIds,
 } from "components/TreeView/tests/SemanticDomainMock";
+
+const mockAnimate = jest.fn();
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 describe("CurrentRow", () => {
   for (const small of [false, true]) {
@@ -29,6 +39,29 @@ describe("CurrentRow", () => {
         expect(screen.getAllByRole("button")).toHaveLength(4);
       });
     });
+
+    describe(small ? "clickability narrow" : "clickability wide", () => {
+      test("root is not clickable", async () => {
+        await createTree(testDomainMap[mapIds.head], small);
+        const currentButton = screen.getByTestId(currentDomainButtonId);
+        expect(currentButton).toBeDisabled();
+      });
+
+      test("everything else is clickable", async () => {
+        await createTree(testDomainMap[mapIds.middleKid], small);
+        const domainButtons = screen.getAllByRole("button");
+        expect(domainButtons).toHaveLength(4);
+
+        for (let i = 0; i < domainButtons.length; i++) {
+          const button = domainButtons[i];
+          expect(button).not.toBeDisabled();
+
+          expect(mockAnimate).toHaveBeenCalledTimes(i);
+          await userEvent.click(button);
+          expect(mockAnimate).toHaveBeenCalledTimes(i + 1);
+        }
+      });
+    });
   }
 });
 
@@ -39,7 +72,7 @@ async function createTree(
   await act(async () => {
     render(
       <CurrentRow
-        animate={jest.fn()}
+        animate={mockAnimate}
         colWidth={100}
         currentDomain={domain}
         small={small}

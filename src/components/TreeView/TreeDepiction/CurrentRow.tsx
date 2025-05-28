@@ -10,6 +10,8 @@ import {
 } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
 import { parent as parentSvg } from "resources/tree";
 
+export const currentDomainButtonId = "current-domain";
+
 export default function CurrentRow(props: TreeRowProps): ReactElement {
   return props.small ? (
     <CurrentRowSm {...props} />
@@ -23,9 +25,10 @@ function CurrentTile(props: TreeRowProps): ReactElement {
 
   return (
     <Button
+      data-testid={currentDomainButtonId}
       disabled={!currentDomain.parent}
       fullWidth
-      id="current-domain"
+      id={currentDomainButtonId}
       onClick={() => animate(currentDomain)}
       sx={{ height: "100%", p: 1 }}
       variant="contained"
