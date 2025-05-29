@@ -128,7 +128,7 @@ namespace BackendFramework.Controllers
             try
             {
                 var user = await _permissionService.Authenticate(cred.EmailOrUsername, cred.Password);
-                return (user is null) ? Unauthorized(cred.EmailOrUsername) : Ok(user);
+                return user is null ? Unauthorized(cred.EmailOrUsername) : Ok(user);
             }
             catch (KeyNotFoundException)
             {
@@ -149,7 +149,7 @@ namespace BackendFramework.Controllers
             }
 
             var user = await _userRepo.GetUser(userId);
-            return (user is null) ? NotFound() : Ok(user);
+            return user is null ? NotFound() : Ok(user);
         }
 
         /// <summary> Returns <see cref="User"/> with the specified email address or username. </summary>
@@ -165,7 +165,7 @@ namespace BackendFramework.Controllers
             }
 
             var user = await _userRepo.GetUserByEmailOrUsername(emailOrUsername);
-            return (user is null) ? NotFound() : Ok(user);
+            return user is null ? NotFound() : Ok(user);
         }
 
         /// <summary> Creates specified <see cref="User"/>. </summary>

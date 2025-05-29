@@ -9,6 +9,7 @@ namespace Backend.Tests.Mocks
     internal sealed class PermissionServiceMock : IPermissionService
     {
         private readonly IUserRepository _userRepo;
+        private const string ExportId = "EXPORT_ID";
         private const string NoHttpContextAvailable = "NO_HTTP_CONTEXT_AVAILABLE";
         private const string UnauthorizedHeader = "UNAUTHORIZED";
 
@@ -46,63 +47,72 @@ namespace Backend.Tests.Mocks
             return request is null || request.Request.Headers["Authorization"] != UnauthorizedHeader;
         }
 
-        /// <summary>
-        /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
-        /// </summary>
         /// <param name="request">
         /// Note this parameter is nullable in the mock implementation even though the real implementation it is not
         /// to support unit testing when `HttpContext`s are not available.
         /// </param>
+        /// <returns>
+        /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
+        /// </returns>
         public Task<bool> IsSiteAdmin(HttpContext? request)
         {
             return Task.FromResult(IsAuthorizedHttpContext(request));
         }
 
-        public bool IsUserIdAuthorized(HttpContext request, string userId)
-        {
-            return IsAuthorizedHttpContext(request);
-        }
-
-        /// <summary>
-        /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
-        /// </summary>
         /// <param name="request">
         /// Note this parameter is nullable in the mock implementation even though the real implementation it is not
         /// to support unit testing when `HttpContext`s are not available.
         /// </param>
+        /// <param name="userId"> Ignored. </param>
+        /// <returns>
+        /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
+        /// </returns>
+        public bool IsUserIdAuthorized(HttpContext? request, string userId)
+        {
+            return IsAuthorizedHttpContext(request);
+        }
+
+        /// <param name="request">
+        /// Note this parameter is nullable in the mock implementation even though the real implementation it is not
+        /// to support unit testing when `HttpContext`s are not available.
+        /// </param>
+        /// <returns>
+        /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
+        /// </returns>
         public bool IsCurrentUserAuthorized(HttpContext? request)
         {
             return IsAuthorizedHttpContext(request);
         }
 
-        /// <summary>
-        /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
-        /// </summary>
         /// <param name="request">
         /// Note this parameter is nullable in the mock implementation even though the real implementation it is not
         /// to support unit testing when `HttpContext`s are not available.
         /// </param>
-        /// <param name="permission"> Same as the real implementation. </param>
-        /// <param name="projectId"> Same as the real implementation. </param>
+        /// <param name="permission"> Ignored. </param>
+        /// <param name="projectId"> Ignored. </param
+        /// <returns>
+        /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
+        /// </returns>
         public Task<bool> HasProjectPermission(HttpContext? request, Permission permission, string projectId)
         {
             return Task.FromResult(IsAuthorizedHttpContext(request));
         }
 
-        /// <summary>
-        /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
-        /// </summary>
         /// <param name="request">
         /// Note this parameter is nullable in the mock implementation even though the real implementation it is not
         /// to support unit testing when `HttpContext`s are not available.
         /// </param>
-        /// <param name="role"> Same as the real implementation. </param>
-        /// <param name="projectId"> Same as the real implementation. </param>
+        /// <param name="role"> Ignored. </param>
+        /// <param name="projectId"> Ignored. </param>
+        /// <returns>
+        /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
+        /// </returns>
         public Task<bool> ContainsProjectRole(HttpContext? request, Role role, string projectId)
         {
             return Task.FromResult(IsAuthorizedHttpContext(request));
         }
 
+        /// <returns> Always returns false. </returns>
         public Task<bool> IsViolationEdit(HttpContext request, string userEditId, string projectId)
         {
             return Task.FromResult(false);
@@ -114,11 +124,7 @@ namespace Backend.Tests.Mocks
         /// </param>
         public string GetExportId(HttpContext? request)
         {
-            if (request is null)
-            {
-                return NoHttpContextAvailable;
-            }
-            return "ExportId";
+            return request is null ? NoHttpContextAvailable : ExportId;
         }
 
         /// <param name="request">
