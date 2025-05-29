@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -260,40 +259,6 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> IsUserSiteAdmin()
         {
             return Ok(await _permissionService.IsSiteAdmin(HttpContext));
-        }
-
-        /// <remarks>
-        /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
-        /// </remarks>
-        public class PasswordResetRequestData
-        {
-            [Required]
-            public string Domain { get; set; }
-            [Required]
-            public string EmailOrUsername { get; set; }
-
-            public PasswordResetRequestData()
-            {
-                Domain = "";
-                EmailOrUsername = "";
-            }
-        }
-
-        /// <remarks>
-        /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
-        /// </remarks>
-        public class PasswordResetData
-        {
-            [Required]
-            public string NewPassword { get; set; }
-            [Required]
-            public string Token { get; set; }
-
-            public PasswordResetData()
-            {
-                NewPassword = "";
-                Token = "";
-            }
         }
     }
 }
