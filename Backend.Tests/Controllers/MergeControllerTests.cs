@@ -49,7 +49,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void BlacklistAddTest()
+        public void TestBlacklistAdd()
         {
             var wordIdsA = new List<string> { "1", "2" };
             var wordIdsB = new List<string> { "3", "1" };
@@ -72,7 +72,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void GraylistAddTest()
+        public void TestGraylistAdd()
         {
             var wordIdsA = new List<string> { "1", "2" };
             var wordIdsB = new List<string> { "3", "1" };
@@ -95,7 +95,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void HasGraylistEntriesNoPermissionTest()
+        public void TestHasGraylistEntriesNoPermission()
         {
             _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = _mergeController.HasGraylistEntries("projId", "userId").Result;
@@ -103,7 +103,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void GetGraylistEntriesNoPermissionTest()
+        public void TestGetGraylistEntriesNoPermission()
         {
             _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = _mergeController.GetGraylistEntries("projId", 3, "userId").Result;

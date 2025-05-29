@@ -171,6 +171,13 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestPutCharsNoProject()
+        {
+            var result = _projController.PutChars("not-a-project", new()).Result;
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
+        }
+
+        [Test]
         public void TestDeleteProjectUnauthorized()
         {
             _projController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();

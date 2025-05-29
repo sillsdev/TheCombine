@@ -291,7 +291,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestIsUserSiteAdminNotAuthorized()
+        public void TestIsUserSiteAdminUnauthorized()
         {
             _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = _userController.IsUserSiteAdmin().Result;

@@ -72,7 +72,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestGetAllUserRolesNotAuthorized()
+        public async Task TestGetAllUserRolesUnauthorized()
         {
             _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = await _userRoleController.GetProjectUserRoles(ProjId);
@@ -80,7 +80,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestHasPermissionNotAuthorized()
+        public async Task TestHasPermissionUnauthorized()
         {
             _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = await _userRoleController.HasPermission(ProjId, Permission.WordEntry);
@@ -152,7 +152,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestGetCurrentPermissionsNotAuthorized()
+        public async Task TestGetCurrentPermissionsUnauthorized()
         {
             var user = await _userRepo.Create(new User());
             _userRoleController.ControllerContext.HttpContext =
