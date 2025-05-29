@@ -120,6 +120,12 @@ namespace BackendFramework.Controllers
                 return BadRequest("Empty File");
             }
 
+            var word = await _wordRepo.GetWord(projectId, wordId);
+            if (word is null)
+            {
+                return NotFound($"wordId: {wordId}");
+            }
+
             // This path should be unique even though it is only based on the Word ID because currently, a new
             // Word is created each time an audio file is uploaded.
             var filePath = FileStorage.GenerateAudioFilePathForWord(projectId, wordId);
@@ -131,11 +137,6 @@ namespace BackendFramework.Controllers
             }
 
             // Add the relative path to the audio field
-            var word = await _wordRepo.GetWord(projectId, wordId);
-            if (word is null)
-            {
-                return NotFound($"wordId: {wordId}");
-            }
             var audio = new Pronunciation(Path.GetFileName(filePath), speakerId);
             word.Audio.Add(audio);
 

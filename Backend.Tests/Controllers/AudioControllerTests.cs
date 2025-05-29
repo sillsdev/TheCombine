@@ -106,6 +106,16 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestUploadAudioFileNoWord()
+        {
+            var result = _audioController.UploadAudioFile(_projId, "not-a-user", _file).Result;
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+
+            result = _audioController.UploadAudioFile(_projId, "not-a-user", "speakerId", _file).Result;
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+        }
+
+        [Test]
         public void TestUploadAudioFile()
         {
             _ = _audioController.UploadAudioFile(_projId, _wordId, "speakerId", _file).Result;
