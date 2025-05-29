@@ -49,6 +49,30 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestMergeWordsNoPermission()
+        {
+            _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _mergeController.MergeWords("projId", []).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestUndoMergeNoPermission()
+        {
+            _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _mergeController.UndoMerge("projId", new()).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestBlacklistAddNoPermission()
+        {
+            _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _mergeController.BlacklistAdd("projId", []).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
         public void TestBlacklistAdd()
         {
             var wordIdsA = new List<string> { "1", "2" };
@@ -72,6 +96,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestGraylistAddNoPermission()
+        {
+            _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _mergeController.GraylistAdd("projId", []).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
         public void TestGraylistAdd()
         {
             var wordIdsA = new List<string> { "1", "2" };
@@ -92,6 +124,21 @@ namespace Backend.Tests.Controllers
             result = _mergeGraylistRepo.GetAllSets(ProjId).Result;
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result.First().WordIds, Is.EqualTo(wordIdsC));
+        }
+
+        [Test]
+        public void TestFindPotentialDuplicatesNoPermission()
+        {
+            _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _mergeController.FindPotentialDuplicates("projId", 2, 1).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestRetrievePotentialDuplicatesNoDuplicates()
+        {
+            var result = _mergeController.RetrievePotentialDuplicates();
+            Assert.That(result, Is.InstanceOf<BadRequestResult>());
         }
 
         [Test]

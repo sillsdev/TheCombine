@@ -121,6 +121,22 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestGetAllUsersNoPermission()
+        {
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _userController.GetAllUsers().Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestAuthenticateBadCredentials()
+        {
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _userController.Authenticate(new() { EmailOrUsername = "no", Password = "no" }).Result;
+            Assert.That(result, Is.InstanceOf<UnauthorizedObjectResult>());
+        }
+
+        [Test]
         public void TestGetUser()
         {
             var user = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
@@ -262,6 +278,21 @@ namespace Backend.Tests.Controllers
 
             _ = _userController.DeleteUser(origUser.Id).Result;
             Assert.That(_userRepo.GetAllUsers().Result, Is.Empty);
+        }
+
+        [Test]
+        public void TestDeleteUserNoUser()
+        {
+            var result = _userController.DeleteUser("not-a-user").Result;
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
+        }
+
+        [Test]
+        public void TestDeleteUserNoPermission()
+        {
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _userController.DeleteUser("anything").Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
         [Test]

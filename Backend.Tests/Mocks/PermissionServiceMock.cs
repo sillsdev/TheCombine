@@ -137,21 +137,12 @@ namespace Backend.Tests.Mocks
 
         public Task<User?> Authenticate(string emailOrUsername, string password)
         {
-            try
+            var user = _userRepo.GetUserByEmailOrUsername(emailOrUsername).Result;
+            if (user is not null)
             {
-                var user = _userRepo.GetUserByEmailOrUsername(emailOrUsername).Result;
-                if (user is null)
-                {
-                    return Task.FromResult<User?>(null);
-                }
-
                 user = MakeJwt(user).Result;
-                return Task.FromResult(user);
             }
-            catch (InvalidOperationException)
-            {
-                return Task.FromResult<User?>(null);
-            }
+            return Task.FromResult(user);
         }
 
         public Task<User?> MakeJwt(User user)

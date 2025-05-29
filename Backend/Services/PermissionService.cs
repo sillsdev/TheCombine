@@ -48,8 +48,7 @@ namespace BackendFramework.Services
         /// <summary> Checks whether the current user is authorized. </summary>
         public bool IsCurrentUserAuthorized(HttpContext request)
         {
-            var userId = GetUserId(request);
-            return IsUserIdAuthorized(request, userId);
+            return !string.IsNullOrEmpty(GetUserId(request));
         }
 
         /// <summary> Checks whether the current user is a site admin. </summary>
@@ -144,12 +143,8 @@ namespace BackendFramework.Services
         public string GetUserId(HttpContext request)
         {
             var jsonToken = GetJwt(request);
-            var userId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
-            if (userId is null)
-            {
-                throw new InvalidJwtTokenException();
-            }
-
+            var userId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString()
+                ?? throw new InvalidJwtTokenException();
             return userId;
         }
 

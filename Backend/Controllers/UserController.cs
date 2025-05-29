@@ -111,7 +111,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAllUsers()
         {
-            if (string.IsNullOrEmpty(_permissionService.GetUserId(HttpContext)))
+            if (!_permissionService.IsCurrentUserAuthorized(HttpContext))
             {
                 return Forbid();
             }
@@ -123,21 +123,16 @@ namespace BackendFramework.Controllers
         [HttpPost("authenticate", Name = "Authenticate")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Authenticate([FromBody, BindRequired] Credentials cred)
         {
             try
             {
                 var user = await _permissionService.Authenticate(cred.EmailOrUsername, cred.Password);
-                if (user is null)
-                {
-                    return Unauthorized(cred.EmailOrUsername);
-                }
-                return Ok(user);
+                return (user is null) ? Unauthorized(cred.EmailOrUsername) : Ok(user);
             }
             catch (KeyNotFoundException)
             {
-                return NotFound();
+                return Unauthorized(cred.EmailOrUsername);
             }
         }
 
