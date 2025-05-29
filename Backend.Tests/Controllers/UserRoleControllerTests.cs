@@ -104,7 +104,7 @@ namespace Backend.Tests.Controllers
             Assert.That(result, Is.InstanceOf<ObjectResult>());
 
             var foundPermissions = ((ObjectResult)result).Value as List<Permission>;
-            var expectedPermissions = ProjectRole.RolePermissions(userRole.Role!);
+            var expectedPermissions = ProjectRole.RolePermissions(userRole.Role);
             Assert.That(foundPermissions, Has.Count.EqualTo(expectedPermissions.Count));
             expectedPermissions.ForEach(p =>
             {
@@ -211,7 +211,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestCreateNewUpdateUserRole()
+        public async Task TestUpdateUserRoleCreateNew()
         {
             var userId = (await _userRepo.Create(new User()))!.Id;
             var projectRole = ProjectRoleInProj(Role.Editor);
@@ -235,10 +235,10 @@ namespace Backend.Tests.Controllers
             var missingUserIdResult = await _userRoleController.UpdateUserRole(MissingId, projectRole);
             Assert.That(missingUserIdResult, Is.InstanceOf<NotFoundObjectResult>());
 
-            var userRoleId = (await _userRoleRepo.Create(UserRoleInProj(Role.Harvester))).Id;
-            projectRole.ProjectId = MissingId;
-            var missingProjIdResult = await _userRoleController.UpdateUserRole(userRoleId, projectRole);
-            Assert.That(missingProjIdResult, Is.InstanceOf<NotFoundObjectResult>());
+            var userId = (await _userRepo.Create(new() { ProjectRoles = { [ProjId] = MissingId } }))!.Id;
+            Assert.That((await _userRepo.GetUser(userId))!.ProjectRoles, Does.ContainKey(ProjId));
+            var missingUserRoleIdResult = await _userRoleController.UpdateUserRole(userId, projectRole);
+            Assert.That(missingUserRoleIdResult, Is.InstanceOf<NotFoundObjectResult>());
         }
 
         [Test]
@@ -317,8 +317,18 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestDeleteUserRoleMissingUser()
         {
-            var wordResult = await _userRoleController.DeleteUserRole(ProjId, MissingId);
-            Assert.That(wordResult, Is.InstanceOf<NotFoundObjectResult>());
+            var result = await _userRoleController.DeleteUserRole(ProjId, MissingId);
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+        }
+
+        [Test]
+        public async Task TestDeleteUserRoleMissingRole()
+        {
+            var userId = (await _userRepo.Create(new() { ProjectRoles = { [ProjId] = MissingId } }))!.Id;
+            Assert.That((await _userRepo.GetUser(userId))!.ProjectRoles, Does.ContainKey(ProjId));
+
+            var result = await _userRoleController.DeleteUserRole(ProjId, userId);
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
 
         [Test]
@@ -391,10 +401,15 @@ namespace Backend.Tests.Controllers
             var oldRole = await _userRoleRepo.Create(UserRoleInProj(Role.Editor));
             var oldEditor = new User { ProjectRoles = { [ProjId] = oldRole.Id } };
             var oldEditorId = (await _userRepo.Create(oldEditor))!.Id;
+            var oldMissing = new User { ProjectRoles = { [ProjId] = MissingId } };
+            var oldMissingId = (await _userRepo.Create(oldMissing))!.Id;
             var oldOtherId = (await _userRepo.Create(new()))!.Id;
             var newId = (await _userRepo.Create(new()))!.Id;
 
             var result = await _userRoleController.ChangeOwner(ProjId, oldEditorId, newId);
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+
+            result = await _userRoleController.ChangeOwner(ProjId, oldMissingId, newId);
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
 
             result = await _userRoleController.ChangeOwner(ProjId, oldOtherId, newId);

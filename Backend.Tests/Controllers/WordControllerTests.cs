@@ -198,6 +198,13 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestGetWordNoWord()
+        {
+            var result = await _wordController.GetWord(ProjId, MissingId);
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
+        }
+
+        [Test]
         public async Task TestGetWordNoPermission()
         {
             _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();

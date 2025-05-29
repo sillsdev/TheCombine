@@ -8,7 +8,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    sealed internal class UserRepositoryMock : IUserRepository
+    internal sealed class UserRepositoryMock : IUserRepository
     {
         private readonly List<User> _users;
 
@@ -99,8 +99,5 @@ namespace Backend.Tests.Mocks
         }
     }
 
-    internal sealed class UserCreationException : Exception
-    {
-        public UserCreationException() { }
-    }
+    internal sealed class UserCreationException : Exception;
 }
