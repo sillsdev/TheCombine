@@ -161,5 +161,23 @@ namespace Backend.Tests.Controllers
             Assert.That(status.IsTokenValid, Is.False);
             Assert.That(status.IsUserValid, Is.True);
         }
+
+        [Test]
+        public void TestValidateTokenValidTokenUserAvailable()
+        {
+            _userRepo.Create(new User { Email = EmailActive });
+
+            // No permissions should be required to validate a token.
+            _inviteController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            var result = _inviteController.ValidateToken(_projId, _tokenActive).Result;
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            var value = ((OkObjectResult)result).Value;
+            Assert.That(value, Is.InstanceOf<EmailInviteStatus>());
+
+            var status = (EmailInviteStatus)value!;
+            Assert.That(status.IsTokenValid, Is.True);
+            Assert.That(status.IsUserValid, Is.True);
+        }
     }
 }

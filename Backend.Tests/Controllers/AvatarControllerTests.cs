@@ -118,6 +118,9 @@ namespace Backend.Tests.Controllers
             var foundUser = _userRepo.GetUser(_jwtAuthenticatedUser.Id).Result;
             Assert.That(foundUser?.Avatar, Is.Not.Null);
 
+            // No permissions should be required to download an avatar.
+            _avatarController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
             var fileResult = _avatarController.DownloadAvatar(_jwtAuthenticatedUser.Id).Result as FileStreamResult;
             Assert.That(fileResult, Is.TypeOf<FileStreamResult>());
 
