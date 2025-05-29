@@ -137,6 +137,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestGetUserNoPermission()
+        {
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _userController.GetUser("any-user").Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
         public void TestGetUser()
         {
             var user = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
@@ -194,7 +202,7 @@ namespace Backend.Tests.Controllers
         {
             _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             const string email = "example@gmail.com";
-            var _ = _userRepo.Create(
+            _ = _userRepo.Create(
                 new User { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }
             ).Result ?? throw new UserCreationException();
 
@@ -216,16 +224,14 @@ namespace Backend.Tests.Controllers
         {
             var user = RandomUser();
             _userRepo.Create(user);
+
             var user2 = RandomUser();
             user2.Username = " ";
-            var result = _userController.CreateUser(user).Result;
-            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            Assert.That(_userController.CreateUser(user2).Result, Is.TypeOf<BadRequestObjectResult>());
             user2.Username = user.Username;
-            result = _userController.CreateUser(user).Result;
-            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            Assert.That(_userController.CreateUser(user2).Result, Is.TypeOf<BadRequestObjectResult>());
             user2.Username = user.Email;
-            result = _userController.CreateUser(user).Result;
-            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            Assert.That(_userController.CreateUser(user2).Result, Is.TypeOf<BadRequestObjectResult>());
         }
 
         [Test]
@@ -233,13 +239,14 @@ namespace Backend.Tests.Controllers
         {
             var user = RandomUser();
             _userRepo.Create(user);
+
             var user2 = RandomUser();
             user2.Email = " ";
-            var result = _userController.CreateUser(user).Result;
-            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            Assert.That(_userController.CreateUser(user2).Result, Is.TypeOf<BadRequestObjectResult>());
             user2.Email = user.Email;
-            result = _userController.CreateUser(user).Result;
-            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            Assert.That(_userController.CreateUser(user2).Result, Is.TypeOf<BadRequestObjectResult>());
+            user2.Email = user.Username;
+            Assert.That(_userController.CreateUser(user2).Result, Is.TypeOf<BadRequestObjectResult>());
         }
 
         [Test]
@@ -268,6 +275,14 @@ namespace Backend.Tests.Controllers
             var users = _userRepo.GetAllUsers().Result;
             Assert.That(users, Has.Count.EqualTo(1));
             Assert.That(users, Does.Contain(modUser).UsingPropertiesComparer());
+        }
+
+        [Test]
+        public void TestUpdateUserNoPermission()
+        {
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _userController.UpdateUser("any-user", new()).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
         [Test]

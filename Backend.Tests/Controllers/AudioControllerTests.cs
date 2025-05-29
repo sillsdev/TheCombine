@@ -142,7 +142,39 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void DeleteAudio()
+        public void TestDeleteAudioFileUnauthorized()
+        {
+            _audioController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _audioController.DeleteAudioFile(_projId, _wordId, _file.FileName).Result;
+            Assert.That(result, Is.TypeOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestDeleteAudioFileInvalidArguments()
+        {
+            var result = _audioController.DeleteAudioFile("in/va/lid", _wordId, _file.FileName).Result;
+            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
+
+            result = _audioController.DeleteAudioFile(_projId, "in/va/lid", _file.FileName).Result;
+            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
+
+            result = _audioController.DeleteAudioFile(_projId, _wordId, "in/va/lid").Result;
+            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
+        }
+
+        [Test]
+        public void TestDeleteAudioFileNoWordWithAudio()
+        {
+            var result = _audioController.DeleteAudioFile(_projId, "not-a-word", _file.FileName).Result;
+            Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
+
+            var wordId = _wordRepo.Create(Util.RandomWord(_projId)).Result.Id;
+            result = _audioController.DeleteAudioFile(_projId, wordId, _file.FileName).Result;
+            Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
+        }
+
+        [Test]
+        public void TestDeleteAudioFile()
         {
             // Refill test database
             _wordRepo.DeleteAllWords(_projId);

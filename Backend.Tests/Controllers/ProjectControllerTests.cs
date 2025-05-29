@@ -178,6 +178,43 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestPutCharsNoChange()
+        {
+            var proj = _projRepo.Create(Util.RandomProject()).Result!;
+            var result = _projController.PutChars(proj.Id, proj).Result;
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+        }
+
+        [Test]
+        public void TestPutCharsOnlyChangesChars()
+        {
+            // Setup
+            var oldProj = _projRepo.Create(Util.RandomProject()).Result!;
+            var newProj = Util.RandomProject();
+            Assert.That(newProj.Id, Is.Not.EqualTo((oldProj.Id)));
+            Assert.That(newProj.Name, Is.Not.EqualTo((oldProj.Name)));
+            newProj.RejectedCharacters = ["!", "?"];
+            newProj.ValidCharacters = ["a", "b", "c"];
+
+            // Verify returned project
+            var result = _projController.PutChars(oldProj.Id, newProj).Result;
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            var resultProj = (Project)((OkObjectResult)result).Value!;
+            Assert.That(resultProj.Id, Is.EqualTo(oldProj.Id));
+            Assert.That(resultProj.Name, Is.EqualTo(oldProj.Name));
+            Assert.That(resultProj.RejectedCharacters, Has.Count.EqualTo((2)));
+            Assert.That(resultProj.ValidCharacters, Has.Count.EqualTo((3)));
+
+            // Verify project in repo
+            Assert.That(_projRepo.GetProject(newProj.Id).Result, Is.Null);
+            var updatedProj = _projRepo.GetProject(oldProj.Id).Result!;
+            Assert.That(updatedProj.Id, Is.EqualTo(oldProj.Id));
+            Assert.That(updatedProj.Name, Is.EqualTo(oldProj.Name));
+            Assert.That(updatedProj.RejectedCharacters, Has.Count.EqualTo((2)));
+            Assert.That(updatedProj.ValidCharacters, Has.Count.EqualTo((3)));
+        }
+
+        [Test]
         public void TestDeleteProjectUnauthorized()
         {
             _projController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();

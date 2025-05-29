@@ -150,7 +150,8 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestValidateTokenExpiredTokenUserAvailable()
         {
-            _userRepo.Create(new User { Email = EmailExpired });
+            _userRepo.Create(new() { Id = "other-user" });
+            _userRepo.Create(new() { Id = "invitee", Email = EmailExpired });
 
             var result = _inviteController.ValidateToken(_projId, _tokenExpired).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
