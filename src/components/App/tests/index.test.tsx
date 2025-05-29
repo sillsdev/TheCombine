@@ -8,7 +8,7 @@ import App from "components/App";
 import { defaultState } from "rootRedux/types";
 import theme from "types/theme";
 
-jest.mock("react-router-dom");
+jest.mock("react-router");
 
 const mockStore = configureMockStore()(defaultState);
 

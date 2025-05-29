@@ -1,5 +1,5 @@
 import { ReactElement, useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 
 import * as backend from "backend";
 import InvalidLink from "components/InvalidLink";
