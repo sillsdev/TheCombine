@@ -1,4 +1,10 @@
-import { Button, ImageList, ImageListItem, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import {
   CSSProperties,
   ReactElement,
@@ -15,7 +21,24 @@ import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { Goal, GoalType } from "types/goals";
 import { requiredPermission, goalTypeToGoal } from "utilities/goalUtilities";
-import { useWindowSize } from "utilities/useWindowSize";
+
+// Collapse history items with same name + same changes
+function collapseHistory(goals: Goal[]): Goal[] {
+  const seen: Record<string, number> = {};
+  const collapsed: Goal[] = [];
+
+  for (const goal of goals) {
+    const key = `${goal.name}-${JSON.stringify(goal.changes)}`;
+    if (!seen[key]) {
+      seen[key] = 1;
+      collapsed.push(goal);
+    } else {
+      seen[key] += 1;
+    }
+  }
+
+  return collapsed;
+}
 
 const timelineStyle: { [key: string]: CSSProperties } = {
   centerButton: {
@@ -37,7 +60,8 @@ const timelineStyle: { [key: string]: CSSProperties } = {
 // Extracted for testing purposes.
 export function createSuggestionData(
   availableGoalTypes: GoalType[],
-  goalTypeSuggestions: GoalType[]
+  goalTypeSuggestions: GoalType[],
+  keepFirst = false
 ): Goal[] {
   const suggestions = goalTypeSuggestions.filter((t) =>
     availableGoalTypes.includes(t)
@@ -45,7 +69,7 @@ export function createSuggestionData(
   if (!suggestions.length) {
     return availableGoalTypes.map(goalTypeToGoal);
   }
-  const secondarySuggestions = suggestions.slice(1);
+  const secondarySuggestions = suggestions.slice(keepFirst ? 0 : 1);
   const nonSuggestions = availableGoalTypes.filter(
     (t) => !suggestions.includes(t)
   );
@@ -69,28 +93,23 @@ export default function GoalTimeline(): ReactElement {
 
   const [availableGoalTypes, setAvailableGoalTypes] = useState<GoalType[]>([]);
   const [suggestedGoalTypes, setSuggestedGoalTypes] = useState<GoalType[]>([]);
-
+  const [toolGoals, setToolGoals] = useState<Goal[]>([]);
   const [hasGraylist, setHasGraylist] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [portrait, setPortrait] = useState(true);
 
   const { t } = useTranslation();
 
-  const { windowHeight, windowWidth } = useWindowSize();
+  const theme = useTheme();
+  const isPortrait = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     if (!loaded) {
       dispatch(asyncGetUserEdits());
       setLoaded(true);
     }
-    const updateHasGraylist = async (): Promise<void> =>
-      setHasGraylist(await hasGraylistEntries());
-    updateHasGraylist();
-  }, [dispatch, loaded]);
 
-  useEffect(() => {
-    setPortrait(windowWidth - 40 < windowHeight);
-  }, [windowHeight, windowWidth]);
+    hasGraylistEntries().then(setHasGraylist);
+  }, [dispatch, loaded]);
 
   const getGoalTypes = useCallback(async (): Promise<void> => {
     const permissions = await getCurrentPermissions();
@@ -99,7 +118,9 @@ export default function GoalTimeline(): ReactElement {
         ? allGoalTypes.concat([GoalType.ReviewDeferredDups])
         : allGoalTypes
     ).filter((t) => permissions.includes(requiredPermission(t)));
+
     setAvailableGoalTypes(goalTypes);
+    setToolGoals(createSuggestionData(goalTypes, goalTypeSuggestions, true));
     setSuggestedGoalTypes(
       goalTypes.filter((t) => goalTypeSuggestions.includes(t))
     );
@@ -169,44 +190,39 @@ export default function GoalTimeline(): ReactElement {
 
   function renderLandscape(): ReactElement {
     return (
-      <ImageList cols={13} rowHeight="auto">
-        {/* Alternatives */}
-        <ImageListItem
-          cols={5}
-          style={{ ...timelineStyle.paneStyling, float: "inline-end" }}
-        >
-          <Typography variant="h6">{t("goal.selector.other")}</Typography>
-          <GoalList
-            orientation="vertical"
-            data={createSuggestionData(availableGoalTypes, goalTypeSuggestions)}
-            handleChange={chooseGoal}
-            size={35}
-            numPanes={3}
-          />
-        </ImageListItem>
+      <Box p={4}>
+        {/* TOOL SELECTION ROW */}
+        <Typography variant="h5" gutterBottom>
+          {t("goal.selector.present")}
+        </Typography>
+        <GoalList
+          data={toolGoals}
+          handleChange={chooseGoal}
+          numPanes={isPortrait ? 1 : 4}
+          orientation="horizontal"
+          recommendFirst={suggestedGoalTypes.length > 0}
+          scrollable={toolGoals.length > 4}
+          size={100}
+        />
 
-        {/* Recommendation */}
-        <ImageListItem cols={3} style={timelineStyle.paneStyling}>
-          <Typography variant="h5">{t("goal.selector.present")}</Typography>
-          {goalButton()}
-        </ImageListItem>
-
-        {/* History */}
-        <ImageListItem cols={5} style={timelineStyle.paneStyling}>
-          <Typography variant="h6">{t("goal.selector.past")}</Typography>
+        {/* HISTORY ROW */}
+        <Box mt={6}>
+          <Typography variant="h6" gutterBottom>
+            {t("goal.selector.past")}
+          </Typography>
           <GoalList
             completed
-            orientation="vertical"
-            data={[...history].reverse()}
+            data={collapseHistory([...history].reverse())}
             handleChange={chooseGoal}
-            size={35}
             numPanes={3}
+            orientation="horizontal"
             scrollable
+            size={100}
           />
-        </ImageListItem>
-      </ImageList>
+        </Box>
+      </Box>
     );
   }
 
-  return portrait ? renderPortrait() : renderLandscape();
+  return isPortrait ? renderPortrait() : renderLandscape();
 }

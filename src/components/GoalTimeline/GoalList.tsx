@@ -48,6 +48,7 @@ interface GoalListProps {
   data: Goal[];
   size: number;
   numPanes: number;
+  recommendFirst?: boolean;
   scrollable?: boolean;
   scrollToEnd?: boolean;
   handleChange: (goal: Goal) => void;
@@ -68,12 +69,13 @@ export default function GoalList(props: GoalListProps): ReactElement {
       onMouseLeave={() => setScrollVisible(false)}
     >
       {props.data.length > 0 ? (
-        props.data.map((g) => (
+        props.data.map((g, i) => (
           <GoalTile
             buttonProps={{ id: id(g), onClick: () => props.handleChange(g) }}
             goal={g}
             key={g.guid || g.name}
             orientation={props.orientation}
+            recommended={props.recommendFirst && i === 0}
             size={tileSize}
           />
         ))
@@ -104,6 +106,7 @@ interface GoalTileProps {
   buttonProps?: ButtonProps & { "data-testid"?: string };
   goal?: Goal;
   orientation: Orientation;
+  recommended?: boolean;
   size: number;
 }
 
@@ -113,19 +116,13 @@ function GoalTile(props: GoalTileProps): ReactElement {
     <ImageListItem cols={1}>
       <Button
         {...props.buttonProps}
-        color="primary"
+        color={props.recommended ? "secondary" : "primary"}
         variant={goal ? "outlined" : "contained"}
-        style={buttonStyle(props.orientation, props.size)}
-        disabled={
-          /* Hide completed, except goalTypes for which the completed view is implemented. */
-          !goal ||
-          (goal.status === GoalStatus.Completed &&
-            goal.goalType !== GoalType.CreateCharInv &&
-            goal.goalType !== GoalType.MergeDups &&
-            goal.goalType !== GoalType.ReviewDeferredDups &&
-            goal.goalType !== GoalType.ReviewEntries)
-        }
-        data-testid="goal-button"
+        style={{
+          ...buttonStyle(props.orientation, props.size),
+          border: props.recommended ? "2px solid #f50057" : undefined,
+          boxShadow: props.recommended ? "0 0 8px #f50057" : undefined,
+        }}
       >
         <GoalInfo goal={goal} />
       </Button>
