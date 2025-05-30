@@ -233,7 +233,7 @@ interface Foo {}
 ## Type files
 
 - Separate type files should contain `type`s, `class`es, `interface`s, `enum`s but not any classes or functions that
-  need unit testings. Such files should have filenames ending in `Types.ts`, e.g., `MergeDupReduxTypes.ts`.
+  need unit testings. Such files should have filenames ending in `Types.ts`, e.g., `MergeDupsReduxTypes.ts`.
 
 > Reason: `*Types.ts` files are ignored by our CodeCov settings.
 

@@ -131,7 +131,7 @@ export function DropWordCardHeader(
 
   // Compute how many audio pronunciations the word will have post-merge.
   const otherIds = moves[props.wordId] ?? [];
-  const otherCount = otherIds.reduce((sum, id) => sum + counts[id], 0);
+  const otherCount = otherIds.reduce((sum, id) => sum + (counts[id] ?? 0), 0);
   const audioCount = (treeWord?.audioCount ?? 0) + otherCount;
 
   // Reset vern if not in vern list.
