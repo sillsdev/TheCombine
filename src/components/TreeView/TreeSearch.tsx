@@ -43,7 +43,6 @@ export default function TreeSearch(props: TreeSearchProps): ReactElement {
   return (
     <NormalizedTextField
       InputLabelProps={{ shrink: true }}
-      fullWidth
       id="domain-tree-search-field"
       label={t("treeView.findDomain")}
       onKeyDown={stopPropagation}
