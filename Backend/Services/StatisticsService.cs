@@ -40,7 +40,7 @@ namespace BackendFramework.Services
 
             if (domainTreeNodeList is null || domainTreeNodeList.Count == 0 || wordList.Count == 0)
             {
-                return new();
+                return [];
             }
 
             foreach (var word in wordList)
@@ -73,7 +73,7 @@ namespace BackendFramework.Services
 
             if (wordList.Count == 0)
             {
-                return new();
+                return [];
             }
 
             var allUsers = await _userRepo.GetAllUsers();
@@ -94,7 +94,7 @@ namespace BackendFramework.Services
                         // The created timestamp may not exist for some model
                         if (!string.IsNullOrEmpty(sd.Created))
                         {
-                            var dateKey = ParseDateTimePermissivelyWithException(sd.Created)
+                            var dateKey = sd.Created.ParseModernPastDateTimePermissivelyWithException()
                                 .ToISO8601TimeFormatDateOnlyString();
                             if (!shortTimeDictionary.TryGetValue(dateKey, out var chartNode))
                             {
@@ -157,7 +157,7 @@ namespace BackendFramework.Services
 
                         if (!string.IsNullOrEmpty(sd.Created))
                         {
-                            string dateString = ParseDateTimePermissivelyWithException(sd.Created)
+                            string dateString = sd.Created.ParseModernPastDateTimePermissivelyWithException()
                                 .ToISO8601TimeFormatDateOnlyString();
                             if (!workshopSchedule.Contains(dateString))
                             {
@@ -182,7 +182,7 @@ namespace BackendFramework.Services
             workshopSchedule.Sort();
             var totalCountList = totalCountDictionary.Values.ToList();
             var pastDays = workshopSchedule.FindAll(day =>
-                ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0).Count;
+                day.ParseModernPastDateTimePermissivelyWithException().CompareTo(DateTime.Now) <= 0).Count;
             // calculate average daily count
             // If pastDays is two or more, and pastDays equals the number of days on which at least one word was added
             var min = totalCountList.Min();
@@ -220,7 +220,7 @@ namespace BackendFramework.Services
                 else
                 {
                     // not generate data after the current date for Daily Total, Average, and Running Total
-                    if (ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0)
+                    if (day.ParseModernPastDateTimePermissivelyWithException().CompareTo(DateTime.Now) <= 0)
                     {
                         runningTotal += today;
                         LineChartData.Datasets.Find(element => element.UserName == StatDailyTotal)?.Data.Add(today);
