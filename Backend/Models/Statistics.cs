@@ -104,6 +104,11 @@ namespace BackendFramework.Models
         [Required]
         public List<int> Data { get; set; }
 
+        public Dataset(string userName)
+        {
+            UserName = userName;
+            Data = [];
+        }
         public Dataset(string userName, int data)
         {
             UserName = userName;

@@ -22,6 +22,12 @@ namespace BackendFramework.Services
             _userRepo = userRepo;
         }
 
+        // Statistic names (TODO: localize)
+        const string StatAverage = "Average";
+        const string StatBurstProjection = "Burst Projection";
+        const string StatDailyTotal = "Daily Total";
+        const string StatProjection = "Projection";
+        const string StatRunningTotal = "Running Total";
 
         /// <summary>
         /// Get a <see cref="SemanticDomainCount"/> to generate a SemanticDomain statistics
@@ -205,24 +211,24 @@ namespace BackendFramework.Services
                 if (LineChartData.Datasets.Count == 0)
                 {
                     runningTotal = yesterday = today;
-                    LineChartData.Datasets.Add(new("Daily Total", today));
-                    LineChartData.Datasets.Add(new("Average", averageValue));
-                    LineChartData.Datasets.Add(new("Running Total", runningTotal));
-                    LineChartData.Datasets.Add(new("Projection", projection));
-                    LineChartData.Datasets.Add(new("Burst Projection", runningTotal));
+                    LineChartData.Datasets.Add(new(StatDailyTotal, today));
+                    LineChartData.Datasets.Add(new(StatAverage, averageValue));
+                    LineChartData.Datasets.Add(new(StatRunningTotal, runningTotal));
+                    LineChartData.Datasets.Add(new(StatProjection, projection));
+                    LineChartData.Datasets.Add(new(StatBurstProjection, runningTotal));
                 }
                 else
                 {
-                    // not generate data after the current date for "Daily Total", "Average" and "Running Total"
+                    // not generate data after the current date for Daily Total, Average, and Running Total
                     if (day.ParseModernPastDateTimePermissivelyWithException().CompareTo(DateTime.Now) <= 0)
                     {
                         runningTotal += today;
-                        LineChartData.Datasets.Find(element => element.UserName == "Daily Total")?.Data.Add(today);
-                        LineChartData.Datasets.Find(element => element.UserName == "Average")?.Data.Add(averageValue);
+                        LineChartData.Datasets.Find(element => element.UserName == StatDailyTotal)?.Data.Add(today);
+                        LineChartData.Datasets.Find(element => element.UserName == StatAverage)?.Data.Add(averageValue);
                         LineChartData.Datasets.Find(
-                            element => element.UserName == "Running Total")?.Data.Add(runningTotal);
+                            element => element.UserName == StatRunningTotal)?.Data.Add(runningTotal);
                         LineChartData.Datasets.Find(
-                            element => element.UserName == "Burst Projection")?.Data.Add(runningTotal);
+                            element => element.UserName == StatBurstProjection)?.Data.Add(runningTotal);
                         burst = (today + yesterday) / 2;
                         burstProjection = runningTotal + burst;
                         yesterday = today;
@@ -230,10 +236,10 @@ namespace BackendFramework.Services
                     else
                     {
                         LineChartData.Datasets.Find(
-                            element => element.UserName == "Burst Projection")?.Data.Add(burstProjection);
+                            element => element.UserName == StatBurstProjection)?.Data.Add(burstProjection);
                         burstProjection += burst;
                     }
-                    LineChartData.Datasets.Find(element => element.UserName == "Projection")?.Data.Add(projection);
+                    LineChartData.Datasets.Find(element => element.UserName == StatProjection)?.Data.Add(projection);
                 }
                 projection += averageValue;
             }
@@ -254,34 +260,29 @@ namespace BackendFramework.Services
                 return LineChartData;
             }
 
+            // add the daily totals dataset first
+            LineChartData.Datasets.Add(new(StatDailyTotal));
+
             // update the ChartRootData based on the order of the WordsPerDayPerUserCount from the list
             foreach (var temp in list)
             {
                 LineChartData.Dates.Add(temp.DateTime.ToISO8601TimeFormatDateOnlyString());
-                // first traversal, generate a new Dataset
-                if (LineChartData.Datasets.Count == 0)
+
+                var totalDay = 0;
+                foreach (var item in temp.UserNameCountDictionary)
                 {
-                    var totalDay = 0;
-                    foreach (var item in temp.UserNameCountDictionary)
+                    totalDay += item.Value;
+                    var dataset = LineChartData.Datasets.Find(element => element.UserName == item.Key);
+                    if (dataset is null)
                     {
-                        totalDay += item.Value;
                         LineChartData.Datasets.Add(new(item.Key, item.Value));
                     }
-                    // update "Total", Line Chart needed
-                    LineChartData.Datasets.Add(new("Daily Total", totalDay));
-                }
-                // remaining traversal, update the object by pushing the value to Data array
-                else
-                {
-                    var totalDay = 0;
-                    foreach (var item in temp.UserNameCountDictionary)
+                    else
                     {
-                        totalDay += item.Value;
-                        LineChartData.Datasets.Find(element => element.UserName == item.Key)?.Data.Add(item.Value);
+                        dataset.Data.Add(item.Value);
                     }
-                    // update "Total"
-                    LineChartData.Datasets.Find(element => element.UserName == "Daily Total")?.Data.Add(totalDay);
                 }
+                LineChartData.Datasets.Find(element => element.UserName == StatDailyTotal)!.Data.Add(totalDay);
             }
 
             return LineChartData;
