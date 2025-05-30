@@ -62,19 +62,15 @@ namespace Backend.Tests.Helper
         [Test]
         public void TestConstructorNegativeInputs()
         {
-            Assert.That(() =>
-            {
-                _ = new LevenshteinDistance(-1);
-            }, Throws.TypeOf<ArgumentException>());
+            Assert.That(() => new LevenshteinDistance(-1), Throws.TypeOf<ArgumentException>());
+            Assert.That(() => new LevenshteinDistance(1, -1), Throws.TypeOf<ArgumentException>());
+            Assert.That(() => new LevenshteinDistance(1, 1, -1), Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
-        public void TestConstructorSmallSubstitute()
+        public void TestConstructorTooBigSubstitute()
         {
-            Assert.That(() =>
-            {
-                _ = new LevenshteinDistance(1, 1, 99);
-            }, Throws.TypeOf<ArgumentException>());
+            Assert.That(() => new LevenshteinDistance(1, 1, 3), Throws.TypeOf<ArgumentException>());
         }
     }
 }
