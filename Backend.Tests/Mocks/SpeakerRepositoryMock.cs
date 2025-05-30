@@ -8,7 +8,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    sealed internal class SpeakerRepositoryMock : ISpeakerRepository
+    internal sealed class SpeakerRepositoryMock : ISpeakerRepository
     {
         private readonly List<Speaker> _speakers;
 

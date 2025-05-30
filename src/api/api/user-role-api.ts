@@ -483,7 +483,7 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
       newUserId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.changeOwner(
         projectId,
@@ -665,7 +665,7 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
       projectRole: ProjectRole,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserRole(
         userId,
@@ -707,7 +707,7 @@ export const UserRoleApiFactory = function (
       oldUserId: string,
       newUserId: string,
       options?: any
-    ): AxiosPromise<string> {
+    ): AxiosPromise<void> {
       return localVarFp
         .changeOwner(projectId, oldUserId, newUserId, options)
         .then((request) => request(axios, basePath));
@@ -815,7 +815,7 @@ export const UserRoleApiFactory = function (
       projectId: string,
       projectRole: ProjectRole,
       options?: any
-    ): AxiosPromise<string> {
+    ): AxiosPromise<void> {
       return localVarFp
         .updateUserRole(userId, projectId, projectRole, options)
         .then((request) => request(axios, basePath));

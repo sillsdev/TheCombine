@@ -3,7 +3,7 @@ using BackendFramework.Interfaces;
 
 namespace Backend.Tests.Mocks
 {
-    sealed internal class CaptchaServiceMock : ICaptchaService
+    internal sealed class CaptchaServiceMock : ICaptchaService
     {
         public Task<bool> VerifyToken(string token)
         {

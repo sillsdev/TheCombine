@@ -8,7 +8,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    sealed internal class UserRepositoryMock : IUserRepository
+    internal sealed class UserRepositoryMock : IUserRepository
     {
         private readonly List<User> _users;
 
@@ -76,19 +76,18 @@ namespace Backend.Tests.Mocks
 
         public Task<ResultOfUpdate> Update(string userId, User user, bool updateIsAdmin = false)
         {
-            var foundUser = _users.Single(u => u.Id == userId);
+            var foundUser = _users.SingleOrDefault(u => u.Id == userId);
+            if (foundUser is null)
+            {
+                return Task.FromResult(ResultOfUpdate.NotFound);
+            }
 
             if (!updateIsAdmin)
             {
                 user.IsAdmin = foundUser.IsAdmin;
             }
 
-            var rmCount = _users.RemoveAll(u => u.Id == userId);
-            if (rmCount == 0)
-            {
-                return Task.FromResult(ResultOfUpdate.NotFound);
-            }
-
+            _users.RemoveAll(u => u.Id == userId);
             _users.Add(user.Clone());
             return Task.FromResult(ResultOfUpdate.Updated);
         }
@@ -100,8 +99,5 @@ namespace Backend.Tests.Mocks
         }
     }
 
-    internal sealed class UserCreationException : Exception
-    {
-        public UserCreationException() { }
-    }
+    internal sealed class UserCreationException : Exception;
 }

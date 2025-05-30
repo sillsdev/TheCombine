@@ -337,7 +337,7 @@ export const SemanticDomainApiFp = function (configuration?: Configuration) {
       (
         axios?: AxiosInstance,
         basePath?: string
-      ) => AxiosPromise<SemanticDomainTreeNode>
+      ) => AxiosPromise<Array<SemanticDomainTreeNode>>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getAllSemanticDomainTreeNodes(
@@ -478,7 +478,7 @@ export const SemanticDomainApiFactory = function (
     getAllSemanticDomainTreeNodes(
       lang?: string,
       options?: any
-    ): AxiosPromise<SemanticDomainTreeNode> {
+    ): AxiosPromise<Array<SemanticDomainTreeNode>> {
       return localVarFp
         .getAllSemanticDomainTreeNodes(lang, options)
         .then((request) => request(axios, basePath));

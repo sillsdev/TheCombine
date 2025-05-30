@@ -12,7 +12,6 @@ namespace Backend.Tests.Services
         private ILiftService _liftService = null!;
 
         private const string FileName = "file.lift-ranges";
-        private const string ProjId = "LiftServiceTestsProjId";
         private const string ExportId = "LiftServiceTestsExportId";
         private const string UserId = "LiftServiceTestsUserId";
 
@@ -25,7 +24,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void ExportInProgressTest()
+        public void TestExportInProgress()
         {
             Assert.That(_liftService.IsExportInProgress(UserId), Is.False);
             _liftService.SetExportInProgress(UserId, ExportId);
@@ -35,7 +34,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void StoreRetrieveDeleteExportTest()
+        public void TestStoreRetrieveDeleteExport()
         {
             Assert.That(_liftService.RetrieveExport(UserId), Is.Null);
             Assert.That(_liftService.DeleteExport(UserId), Is.False);
@@ -53,7 +52,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void StoreOnlyValidExportsTest()
+        public void TestStoreOnlyValidExports()
         {
             _liftService.SetExportInProgress(UserId, ExportId);
             _liftService.StoreExport(UserId, FileName, "expiredExportId");
@@ -63,7 +62,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void StoreRetrieveDeleteImportTest()
+        public void TestStoreRetrieveDeleteImport()
         {
             Assert.That(_liftService.RetrieveImport(UserId), Is.Null);
             Assert.That(_liftService.DeleteImport(UserId), Is.False);

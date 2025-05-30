@@ -1,8 +1,9 @@
 using System;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.WebUtilities;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace BackendFramework.Models
 {
@@ -39,5 +40,29 @@ namespace BackendFramework.Models
         {
             Email = email;
         }
+    }
+
+    /// <remarks>
+    /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
+    /// </remarks>
+    public class PasswordResetRequestData
+    {
+        [Required]
+        public string Domain { get; set; } = "";
+
+        [Required]
+        public string EmailOrUsername { get; set; } = "";
+    }
+
+    /// <remarks>
+    /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
+    /// </remarks>
+    public class PasswordResetData
+    {
+        [Required]
+        public string NewPassword { get; set; } = "";
+
+        [Required]
+        public string Token { get; set; } = "";
     }
 }

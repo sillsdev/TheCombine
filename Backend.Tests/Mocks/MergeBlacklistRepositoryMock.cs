@@ -8,7 +8,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    sealed internal class MergeBlacklistRepositoryMock : IMergeBlacklistRepository
+    internal sealed class MergeBlacklistRepositoryMock : IMergeBlacklistRepository
     {
         private readonly List<MergeWordSet> _mergeBlacklist;
 

@@ -41,7 +41,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void GetAllSemanticDomainNamesFound()
+        public void TestGetAllSemanticDomainNamesFound()
         {
             var treeNodes = new List<SemanticDomainTreeNode> { new(_semDom) };
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(treeNodes);
@@ -51,14 +51,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void GetAllSemanticDomainNamesNotFound()
+        public void TestGetAllSemanticDomainNamesNotFound()
         {
             var names = ((OkObjectResult)_semDomController.GetAllSemanticDomainNames(Lang).Result).Value;
             Assert.That(names, Has.Count.EqualTo(0));
         }
 
         [Test]
-        public void GetSemanticDomainFullDomainFound()
+        public void TestGetSemanticDomainFullDomainFound()
         {
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(new SemanticDomainFull(_semDom));
             var domain = (SemanticDomainFull?)(
@@ -69,16 +69,15 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void GetSemanticDomainFullDomainNotFound()
+        public void TestGetSemanticDomainFullDomainNotFound()
         {
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(null);
-            var domain = (SemanticDomainFull?)(
-                (ObjectResult)_semDomController.GetSemanticDomainFull(Id, Lang).Result).Value;
+            var domain = ((ObjectResult)_semDomController.GetSemanticDomainFull(Id, Lang).Result).Value;
             Assert.That(domain, Is.Null);
         }
 
         [Test]
-        public void GetSemanticDomainTreeNodeDomainFound()
+        public void TestGetSemanticDomainTreeNodeDomainFound()
         {
             var treeNode = new SemanticDomainTreeNode(_semDom);
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(treeNode);
@@ -90,16 +89,15 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void GetSemanticDomainTreeNodeDomainNotFound()
+        public void TestGetSemanticDomainTreeNodeDomainNotFound()
         {
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(null);
-            var domain = (SemanticDomainTreeNode?)(
-                (ObjectResult)_semDomController.GetSemanticDomainTreeNode(Id, Lang).Result).Value;
+            var domain = ((ObjectResult)_semDomController.GetSemanticDomainTreeNode(Id, Lang).Result).Value;
             Assert.That(domain, Is.Null);
         }
 
         [Test]
-        public void GetSemanticDomainTreeNodeByNameDomainFound()
+        public void TestGetSemanticDomainTreeNodeByNameDomainFound()
         {
             var treeNode = new SemanticDomainTreeNode(_semDom);
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(treeNode);
@@ -111,12 +109,27 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void GetSemanticDomainTreeNodeByNameDomainNotFound()
+        public void TestGetSemanticDomainTreeNodeByNameDomainNotFound()
         {
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(null);
-            var domain = (SemanticDomainTreeNode?)(
-                (ObjectResult)_semDomController.GetSemanticDomainTreeNodeByName(Name, Lang).Result).Value;
+            var domain = ((ObjectResult)_semDomController.GetSemanticDomainTreeNodeByName(Name, Lang).Result).Value;
             Assert.That(domain, Is.Null);
+        }
+
+        [Test]
+        public void TestGetAllSemanticDomainTreeNodesFound()
+        {
+            ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(new List<SemanticDomainTreeNode>());
+            var list = ((ObjectResult)_semDomController.GetAllSemanticDomainTreeNodes(Lang).Result).Value;
+            Assert.That(list, Has.Count.EqualTo(0));
+        }
+
+        [Test]
+        public void TestGetAllSemanticDomainTreeNodesNotFound()
+        {
+            ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(null);
+            var list = ((ObjectResult)_semDomController.GetAllSemanticDomainTreeNodes(Lang).Result).Value;
+            Assert.That(list, Is.Null);
         }
     }
 }
