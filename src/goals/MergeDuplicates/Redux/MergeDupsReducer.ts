@@ -51,12 +51,24 @@ const mergeDuplicatesSlice = createSlice({
         const words = state.tree.words;
         const srcWordId = srcRef.wordId;
         const srcGuids = words[srcWordId].sensesGuids[srcRef.mergeSenseId];
+        const destWordId = destRef.wordId;
         const destGuids: string[] = [];
         if (srcRef.order === undefined || srcGuids.length === 1) {
           // A sense from a word dropped into another sense.
           destGuids.push(...srcGuids);
           delete words[srcWordId].sensesGuids[srcRef.mergeSenseId];
           if (!Object.keys(words[srcWordId].sensesGuids).length) {
+            // If this was the word's last sense, move the audio...
+            const moves = state.audio.moves;
+            if (!Object.keys(moves).includes(destWordId)) {
+              moves[destWordId] = [];
+            }
+            moves[destWordId].push(srcWordId);
+            if (Object.keys(moves).includes(srcWordId)) {
+              moves[destWordId].push(...moves[srcWordId]);
+              delete moves[srcWordId];
+            }
+            // ...and delete the word from the tree
             delete words[srcWordId];
           }
         } else {
@@ -68,9 +80,7 @@ const mergeDuplicatesSlice = createSlice({
           }
         }
 
-        words[destRef.wordId].sensesGuids[destRef.mergeSenseId].push(
-          ...destGuids
-        );
+        words[destWordId].sensesGuids[destRef.mergeSenseId].push(...destGuids);
         state.tree.words = words;
       }
     },
