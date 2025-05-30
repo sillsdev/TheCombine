@@ -13,7 +13,7 @@ import { Goal, GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
 
 const CharacterInventory = loadable(() => import("goals/CharacterInventory"));
-const MergeDup = loadable(() => import("goals/MergeDuplicates"));
+const MergeDups = loadable(() => import("goals/MergeDuplicates"));
 const ReviewDeferredDups = loadable(
   () => import("goals/ReviewDeferredDuplicates")
 );
@@ -25,7 +25,7 @@ function displayComponent(goal: Goal): ReactElement {
     case GoalType.CreateCharInv:
       return <CharacterInventory completed={isCompleted} />;
     case GoalType.MergeDups:
-      return <MergeDup completed={isCompleted} />;
+      return <MergeDups completed={isCompleted} />;
     case GoalType.ReviewDeferredDups:
       return <ReviewDeferredDups completed={isCompleted} />;
     case GoalType.ReviewEntries:
