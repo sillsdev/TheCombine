@@ -95,7 +95,7 @@ function CurrentRowSm(props: TreeRowProps): ReactElement {
   const { next, parent, previous } = props.currentDomain;
 
   return (
-    <Grid2 container spacing={2} sx={{ px: 2, width: window.innerWidth }}>
+    <Grid2 container columnSpacing={2} sx={{ px: 2, width: window.innerWidth }}>
       {parent && (
         <>
           <Grid2 key="uncle" size={4} />
@@ -107,6 +107,14 @@ function CurrentRowSm(props: TreeRowProps): ReactElement {
             />
           </Grid2>
           <Grid2 key="aunt" size={4} />
+          <Grid2
+            container
+            justifyContent="center"
+            size={12}
+            sx={{ minHeight: 2 }}
+          >
+            <img src={parentSvg} style={{ transform: "scaleX(1.7)" }} />
+          </Grid2>
         </>
       )}
       <Grid2 key="prev" size={4}>

@@ -120,7 +120,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
     <>
       {/* Domain search */}
       <TreeNavigator currentDomain={currentDomain} animate={animateHandler} />
-      <Grid2 container justifyContent="space-between">
+      <Grid2 container justifyContent="space-between" sx={{ marginBottom: 1 }}>
         <Grid2>
           {/* Empty grid to balance the buttons */}
           <div style={{ width: exit ? 80 : 40 }} />
