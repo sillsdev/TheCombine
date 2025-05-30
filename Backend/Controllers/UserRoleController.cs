@@ -28,7 +28,7 @@ namespace BackendFramework.Controllers
             _permissionService = permissionService;
         }
 
-        /// <summary> Returns all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>
+        /// <summary> Returns all <see cref="UserRole"/>s for specified <see cref="Project"/>. </summary>
         [HttpGet(Name = "GetProjectUserRoles")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserRole>))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -42,8 +42,9 @@ namespace BackendFramework.Controllers
             return Ok(await _userRoleRepo.GetAllUserRoles(projectId));
         }
 
-        /// <summary> Deletes all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>
+        /// <summary> Deletes all <see cref="UserRole"/>s for specified <see cref="Project"/>. </summary>
         /// <returns> true: if success, false: if there were no UserRoles </returns>
+        /// <remarks> Can only be used by a site admin. </remarks>
         [HttpDelete(Name = "DeleteProjectUserRoles")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -65,7 +66,7 @@ namespace BackendFramework.Controllers
             return Ok(await _permissionService.HasProjectPermission(HttpContext, perm, projectId));
         }
 
-        /// <summary> Returns <see cref="UserRole"/> with specified id </summary>
+        /// <summary> Returns <see cref="Permission"/>s of current user in specified <see cref="Project"/>. </summary>
         [HttpGet("current", Name = "GetCurrentPermissions")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Permission>))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -98,7 +99,7 @@ namespace BackendFramework.Controllers
             return Ok(userRole is null ? [] : ProjectRole.RolePermissions(userRole.Role));
         }
 
-        /// <summary> Creates a <see cref="UserRole"/> </summary>
+        /// <summary> Creates a <see cref="UserRole"/> in specified <see cref="Project"/>. </summary>
         /// <returns> Id of updated UserRole </returns>
         [HttpPost(Name = "CreateUserRole")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
@@ -254,8 +255,8 @@ namespace BackendFramework.Controllers
 
         /// <summary>
         /// Change project owner from user with first specified id to user with second specified id.
-        /// Can only be used by the project owner or a site admin.
         /// </summary>
+        /// <remarks> Can only be used by the project owner or a site admin. </remarks>
         [HttpGet("changeowner/{oldUserId}/{newUserId}", Name = "ChangeOwner")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status304NotModified)]

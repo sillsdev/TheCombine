@@ -30,7 +30,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Deletes specified Frontier <see cref="Word"/>. </summary>
         [HttpDelete("frontier/{wordId}", Name = "DeleteFrontierWord")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteFrontierWord(string projectId, string wordId)
@@ -42,11 +42,9 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
             var userId = _permissionService.GetUserId(HttpContext);
-            if (await _wordService.DeleteFrontierWord(projectId, userId, wordId) is null)
-            {
-                return NotFound();
-            }
-            return Ok(wordId);
+
+            var deletedWordId = await _wordService.DeleteFrontierWord(projectId, userId, wordId);
+            return deletedWordId is null ? NotFound() : Ok();
         }
 
         /// <summary> Returns all <see cref="Word"/>s for specified <see cref="Project"/>. </summary>
