@@ -12,7 +12,7 @@ import { Goal, GoalType } from "types/goals";
 
 interface GoalHistoryButtonProps {
   goal?: Goal;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export default function GoalHistoryButton(
@@ -22,7 +22,7 @@ export default function GoalHistoryButton(
   return (
     <Button
       disabled={!goal}
-      onClick={() => onClick()}
+      onClick={onClick}
       sx={{ minWidth: "200px" }}
       variant={goal ? "outlined" : "contained"}
     >
