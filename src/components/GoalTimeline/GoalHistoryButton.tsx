@@ -52,9 +52,7 @@ function GoalInfo(props: GoalInfoProps): ReactElement {
         <div />
       </Grid2>
       <Grid2 container alignContent="center" sx={{ height: "100%" }}>
-        <Typography>
-          {goal.changes ? getCompletedGoalInfo(goal) : null}
-        </Typography>
+        {goal.changes ? getCompletedGoalInfo(goal) : null}
       </Grid2>
     </Stack>
   );

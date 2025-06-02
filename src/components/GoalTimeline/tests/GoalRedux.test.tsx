@@ -3,7 +3,6 @@ import { act, cleanup } from "@testing-library/react";
 
 import { Edit, MergeUndoIds, Permission, User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
-import GoalTimeline from "components/GoalTimeline";
 import {
   CharInvChanges,
   CharInvData,
@@ -32,7 +31,6 @@ import { GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
 import { newUser } from "types/user";
 import * as goalUtilities from "utilities/goalUtilities";
-import { renderWithProviders } from "utilities/testingLibraryUtilities";
 
 jest.mock("backend", () => ({
   addGoalToUserEdit: (...args: any[]) => mockAddGoalToUserEdit(...args),
@@ -124,7 +122,6 @@ describe("setCurrentGoal", () => {
   it("calls setCurrentGoal() with no arguments", async () => {
     const store = setupStore();
     await act(async () => {
-      renderWithProviders(<GoalTimeline />, { store: store });
       store.dispatch(setCurrentGoal());
     });
     expect(store.getState().goalsState.currentGoal.goalType).toEqual(
@@ -136,9 +133,6 @@ describe("setCurrentGoal", () => {
 describe("asyncGetUserEdits", () => {
   it("backend returns user edits", async () => {
     const store = setupStore();
-    await act(async () => {
-      renderWithProviders(<GoalTimeline />, { store: store });
-    });
     const convertEditToGoalSpy = jest.spyOn(goalUtilities, "convertEditToGoal");
     await act(async () => {
       await store.dispatch(asyncGetUserEdits());
@@ -148,11 +142,7 @@ describe("asyncGetUserEdits", () => {
   });
 
   it("backend returns no user edits", async () => {
-    // render the GoalTimeline
     const store = setupStore();
-    await act(async () => {
-      renderWithProviders(<GoalTimeline />, { store: store });
-    });
 
     // setup mocks for testing the action/reducers
     jest.clearAllMocks();
@@ -169,9 +159,6 @@ describe("asyncGetUserEdits", () => {
 
   it("creates new user edits", async () => {
     const store = setupStore();
-    await act(async () => {
-      renderWithProviders(<GoalTimeline />, { store: store });
-    });
     LocalStorage.setCurrentUser(newUser());
     await act(async () => {
       await store.dispatch(asyncGetUserEdits());
@@ -185,10 +172,6 @@ describe("asyncAddGoal", () => {
   it("adds new MergeDups goal", async () => {
     const store = setupStore();
     await act(async () => {
-      renderWithProviders(<GoalTimeline />, { store: store });
-    });
-
-    await act(async () => {
       await store.dispatch(asyncAddGoal(new MergeDups()));
     });
     // verify the new goal was loaded but its data was not loaded
@@ -201,10 +184,6 @@ describe("asyncAddGoal", () => {
 
   it("adds new CreateCharInv goal", async () => {
     const store = setupStore();
-    await act(async () => {
-      renderWithProviders(<GoalTimeline />, { store: store });
-    });
-
     await act(async () => {
       await store.dispatch(asyncAddGoal(new CreateCharInv()));
     });
@@ -226,10 +205,6 @@ describe("asyncLoadNewGoalData", () => {
   it("loads data for MergeDups goal", async () => {
     const store = setupStore();
     await act(async () => {
-      renderWithProviders(<GoalTimeline />, { store: store });
-    });
-
-    await act(async () => {
       await store.dispatch(asyncAddGoal(new MergeDups()));
       await store.dispatch(asyncLoadNewGoalData());
     });
@@ -245,11 +220,8 @@ describe("asyncLoadNewGoalData", () => {
 
 describe("asyncAdvanceStep", () => {
   it("advance MergeDups goal", async () => {
-    // setup the test scenario
     const store = setupStore();
-    await act(async () => {
-      renderWithProviders(<GoalTimeline />, { store: store });
-    });
+
     // create mergeDups goal
     await act(async () => {
       await store.dispatch(asyncAddGoal(new MergeDups()));
@@ -280,11 +252,8 @@ describe("asyncAdvanceStep", () => {
   });
 
   it("advance CreateCharInv goal", async () => {
-    // setup the test scenario
     const store = setupStore();
-    await act(async () => {
-      renderWithProviders(<GoalTimeline />, { store: store });
-    });
+
     // create character inventory goal
     const goal = new CreateCharInv();
     await act(async () => {
@@ -302,11 +271,8 @@ describe("asyncAdvanceStep", () => {
 
 describe("asyncUpdateGoal", () => {
   it("update CreateCharInv goal", async () => {
-    // setup the test scenario
     const store = setupStore();
-    await act(async () => {
-      renderWithProviders(<GoalTimeline />, { store: store });
-    });
+
     // create CreateCharInv goal
     const goal = new CreateCharInv();
     await act(async () => {
@@ -325,11 +291,8 @@ describe("asyncUpdateGoal", () => {
   });
 
   it("update MergeDups goal", async () => {
-    // setup the test scenario
     const store = setupStore();
-    await act(async () => {
-      renderWithProviders(<GoalTimeline />, { store: store });
-    });
+
     // create MergeDups goal
     const goal = new MergeDups();
     await act(async () => {
@@ -350,11 +313,8 @@ describe("asyncUpdateGoal", () => {
   });
 
   it("update ReviewDeferredDups goal", async () => {
-    // setup the test scenario
     const store = setupStore();
-    await act(async () => {
-      renderWithProviders(<GoalTimeline />, { store: store });
-    });
+
     // create ReviewDeferredDups goal
     const goal = new ReviewDeferredDups();
     await act(async () => {

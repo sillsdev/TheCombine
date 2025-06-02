@@ -1,5 +1,5 @@
 import { ArrowRightAlt } from "@mui/icons-material";
-import { Divider, Grid, Typography } from "@mui/material";
+import { Divider, Grid, Stack, Typography } from "@mui/material";
 import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -106,18 +106,15 @@ export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
   if (!changes.charChanges?.length) {
     return (
       wordChangesTypography ?? (
-        <>
-          <Typography id={CharInvCompletedId.TypographyNoCharChanges}>
-            {t("charInventory.changes.noCharChanges")}
-          </Typography>
-        </>
+        <Typography id={CharInvCompletedId.TypographyNoCharChanges}>
+          {t("charInventory.changes.noCharChanges")}
+        </Typography>
       )
     );
   }
   if (changes.charChanges.length > changeLimit) {
     return (
-      <>
-        <Typography />
+      <Stack alignItems="flex-start">
         {changes.charChanges.slice(0, changeLimit - 1).map((c) => (
           <CharChange change={c} key={c[0]} />
         ))}
@@ -126,30 +123,28 @@ export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
           {t("charInventory.changes.more")}
         </Typography>
         {wordChangesTypography}
-      </>
+      </Stack>
     );
   }
   return (
-    <>
-      <Typography />
+    <Stack alignItems="flex-start">
       {changes.charChanges.map((c) => (
         <CharChange change={c} key={c[0]} />
       ))}
       {wordChangesTypography}
-    </>
+    </Stack>
   );
 }
 
 /** Component to display in one line the inventory status change of a character. */
 export function CharChange(props: { change: CharacterChange }): ReactElement {
   return (
-    <>
+    <div>
       <Typography display="inline">{`${props.change[0]}: `}</Typography>
       <CharacterStatusText status={props.change[1]} inline />
       <ArrowRightAlt fontSize="inherit" />
       <CharacterStatusText status={props.change[2]} inline />
-      <Typography />
-    </>
+    </div>
   );
 }
 
