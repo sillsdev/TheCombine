@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Button, Grid2, Stack, Typography } from "@mui/material";
 import { Fragment, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -9,6 +9,7 @@ import { MergesCompleted } from "goals/MergeDuplicates/MergeDupsTypes";
 import { EditsCount } from "goals/ReviewEntries/ReviewEntriesCompleted";
 import { EntriesEdited } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { Goal, GoalType } from "types/goals";
+import { goalNameToIcon } from "utilities/goalUtilities";
 
 interface GoalHistoryButtonProps {
   goal?: Goal;
@@ -23,7 +24,7 @@ export default function GoalHistoryButton(
     <Button
       disabled={!goal}
       onClick={onClick}
-      sx={{ minWidth: "200px" }}
+      sx={{ minWidth: "350px" }}
       variant={goal ? "outlined" : "contained"}
     >
       <GoalInfo goal={goal} />
@@ -44,10 +45,18 @@ function GoalInfo(props: GoalInfoProps): ReactElement {
   }
 
   return (
-    <Typography variant="h6">
-      {t(goal.name + ".title")}
-      {goal.changes ? getCompletedGoalInfo(goal) : null}
-    </Typography>
+    <Stack sx={{ height: "100%", width: "100%" }}>
+      <Grid2 alignItems="center" container justifyContent="space-between">
+        {goalNameToIcon(goal.name)}
+        <Typography variant="h6">{t(goal.name + ".title")}</Typography>
+        <div />
+      </Grid2>
+      <Grid2 container alignContent="center" sx={{ height: "100%" }}>
+        <Typography>
+          {goal.changes ? getCompletedGoalInfo(goal) : null}
+        </Typography>
+      </Grid2>
+    </Stack>
   );
 }
 

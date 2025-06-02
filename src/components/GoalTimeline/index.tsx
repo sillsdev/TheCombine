@@ -87,7 +87,7 @@ export default function GoalTimeline(): ReactElement {
   return (
     <>
       {/* Goals */}
-      <Grid2 container justifyContent="space-evenly">
+      <Grid2 container justifyContent="space-evenly" sx={{ m: 2 }}>
         {goalOptions.map((g, i) => (
           <GoalNameButton
             goalName={g}
@@ -99,7 +99,7 @@ export default function GoalTimeline(): ReactElement {
       </Grid2>
 
       {/* History */}
-      <Box mt={6}>
+      <Box sx={{ p: 2 }}>
         <Typography variant="h6" gutterBottom>
           {t("goal.selector.past")}
         </Typography>

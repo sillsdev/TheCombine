@@ -1,3 +1,7 @@
+import { Abc, Layers, LayersOutlined, ManageSearch } from "@mui/icons-material";
+import { Icon } from "@mui/material";
+import { ReactElement } from "react";
+
 import { Edit, Permission } from "api/models";
 import { CreateCharInv } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { CreateStrWordInv } from "goals/CreateStrWordInv/CreateStrWordInv";
@@ -37,8 +41,8 @@ export function requiredPermission(type: GoalType): Permission {
   }
 }
 
-export function goalNameToGoal(type: GoalName): Goal {
-  switch (type) {
+export function goalNameToGoal(name: GoalName): Goal {
+  switch (name) {
     case GoalName.CreateCharInv:
       return new CreateCharInv();
     case GoalName.CreateStrWordInv:
@@ -109,6 +113,21 @@ export function goalTypeToName(type: GoalType): GoalName {
       return GoalName.ValidateStrWords;
     default:
       return GoalName.Default;
+  }
+}
+
+export function goalNameToIcon(name: GoalName): ReactElement {
+  switch (name) {
+    case GoalName.CreateCharInv:
+      return <Abc />;
+    case GoalName.MergeDups:
+      return <Layers />;
+    case GoalName.ReviewDeferredDups:
+      return <LayersOutlined />;
+    case GoalName.ReviewEntries:
+      return <ManageSearch />;
+    default:
+      return <Icon />;
   }
 }
 
