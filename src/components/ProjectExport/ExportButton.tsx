@@ -20,7 +20,7 @@ interface ExportButtonProps {
   buttonProps?: ButtonProps & { "data-testid"?: string };
 }
 
-/** A button for exporting project to Lift file */
+/** A button for exporting project to LIFT file. */
 export default function ExportButton(props: ExportButtonProps): ReactElement {
   const dispatch = useAppDispatch();
   const [exports, setExports] = useState(false);

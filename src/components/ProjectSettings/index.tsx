@@ -263,7 +263,7 @@ export default function ProjectSettingsComponent(): ReactElement {
 
       <TabPanel value={tab} index={ProjectSettingsTab.ImportExport}>
         <Stack>
-          {/* Import Lift file */}
+          {/* Import LIFT file */}
           {permissions.includes(Permission.Import) && (
             <BaseSettings
               icon={<CloudUpload data-testid={Setting.Import} />}
@@ -280,7 +280,7 @@ export default function ProjectSettingsComponent(): ReactElement {
             />
           )}
 
-          {/* Export Lift file */}
+          {/* Export LIFT file */}
           {permissions.includes(Permission.Export) && (
             <BaseSettings
               icon={<GetApp data-testid={Setting.Export} />}
