@@ -98,15 +98,15 @@ function CurrentRowSm(props: TreeRowProps): ReactElement {
     <Grid2 container columnSpacing={2} sx={{ px: 2, width: window.innerWidth }}>
       {parent && (
         <>
-          <Grid2 key="uncle" size={4} />
-          <Grid2 key="parent" size={4}>
+          <Grid2 size={4} />
+          <Grid2 size={4}>
             <DomainTileButton
               direction={Direction.Up}
               domain={parent}
               onClick={props.animate}
             />
           </Grid2>
-          <Grid2 key="aunt" size={4} />
+          <Grid2 size={4} />
           <Grid2
             container
             justifyContent="center"
@@ -117,7 +117,7 @@ function CurrentRowSm(props: TreeRowProps): ReactElement {
           </Grid2>
         </>
       )}
-      <Grid2 key="prev" size={4}>
+      <Grid2 size={4}>
         {previous && (
           <DomainTileButton
             direction={Direction.Prev}
@@ -126,10 +126,10 @@ function CurrentRowSm(props: TreeRowProps): ReactElement {
           />
         )}
       </Grid2>
-      <Grid2 key="current" size={4}>
+      <Grid2 size={4}>
         <CurrentTile {...props} />
       </Grid2>
-      <Grid2 key="next" size={4}>
+      <Grid2 size={4}>
         {next && (
           <DomainTileButton
             direction={Direction.Next}
