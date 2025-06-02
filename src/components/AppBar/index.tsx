@@ -1,6 +1,6 @@
 import { AppBar, Stack, Toolbar } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 
 import { getProjectId } from "backend/localStorage";
 import { appBarHeight } from "components/AppBar/AppBarTypes";

@@ -9,7 +9,7 @@ import {
 import userEvent from "@testing-library/user-event";
 import { type ReactElement, type ReactNode } from "react";
 import { Provider } from "react-redux";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router";
 import configureMockStore from "redux-mock-store";
 
 import PasswordReset, {

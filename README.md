@@ -477,8 +477,8 @@ To browse the database locally during development, open [MongoDB Compass](https:
 ### Add or Update Dictionary Files
 
 The dictionary files for spell-check functionality in _The Combine_ are split into parts to allow lazy-loading, for the
-sake of devices with limited bandwidth. There are scripts for generating these files in `src/resources/dictionaries/`;
-files in this directory should _not_ be manually edited.
+sake of devices with limited bandwidth. There are scripts for generating these files in `public/dictionaries/` and
+`src/resources/dictionaries/`; files in this directory should _not_ be manually edited.
 
 The bash script `scripts/fetch_wordlists.sh` is used to fetch dictionary files for a given language (e.g., `es`) from
 the [LibreOffice dictionaries](https://github.com/LibreOffice/dictionaries) and convert them to raw wordlists (e.g.,
@@ -490,26 +490,24 @@ currently supported can be manually added as a case in this script.
 ```
 
 The python script `scripts/split_dictionary.py` takes a wordlist textfile (e.g., `src/resources/dictionaries/es.txt`),
-splits it into multiple TypeScript files (e.g., into `src/resources/dictionaries/es/` with index file
-`.../es/index.ts`), and updates `src/resources/dictionaries/index.ts` accordingly. Run the script within a Python
-virtual environment, with `-h`/`--help` to see its usage details.
+splits it into multiple text files (e.g., `public/dictionaries/es/u*.dic`), creates a TypeScript file to load them
+(e.g., `src/resources/dictionaries/es.ts`), and updates `src/resources/dictionaries/index.ts` accordingly. Run the
+script within a Python virtual environment, with `-h`/`--help` to see its usage details.
 
 ```bash
 python scripts/split_dictionary.py --help
 ```
 
 For some languages, the wordlist is too large for practical use. Generally try to keep the folder for each language
-under 2.5 MB, to avoid such errors as
-`FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory` in the Kubernetes build. For smaller
-folder sizes, default maximum word-lengths are automatically imposed for some languages: (`ar`, `es`, `fr`, `hi`, `pt`,
-`ru`). Use `-m`/`--max` to override the defaults, with `-m -1` to force no limit.
+under 2.5 MB. For smaller folder sizes, default maximum word-lengths are automatically imposed for some languages:
+(`ar`, `es`, `fr`, `hi`, `pt`, `ru`). Use `-m`/`--max` to override the defaults, with `-m -1` to force no limit.
 
 Adjust the `-t`/`--threshold` and `-T`/`--Threshold` parameters to split a wordlist into more, smaller files; e.g.:
 
 - `python scripts/split_dictionary.py -l es -T 15000`
 - `python scripts/split_dictionary.py -l sw -t 1500`
 
-The top of each language's `index.ts` file states which values of `-m`, `-t`, and `-T` were used for that language.
+The top of each language's `.ts` file states which values of `-m`, `-t`, and `-T` were used for that language.
 
 ### Cleanup Local Repository
 
