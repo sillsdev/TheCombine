@@ -318,25 +318,32 @@
     "progressMerge": "Merge Set {{ val1 }} of {{ val2 }}"
   },
   "createStrWordInv": {
-    "title": "Create Structural Word Inventory"
+    "title": "Create Structural Word Inventory",
+    "description": "NOT IMPLEMENTED"
   },
   "handleFlags": {
-    "title": "Handle Flags"
+    "title": "Handle Flags",
+    "description": "NOT IMPLEMENTED"
   },
   "reviewDeferredDups": {
-    "title": "Review Deferred Duplicates"
+    "title": "Review Deferred Duplicates",
+    "description": "Reconsider deferred sets of potential duplicates."
   },
   "spellCheckGloss": {
-    "title": "Spell Check Gloss"
+    "title": "Spell Check Gloss",
+    "description": "NOT IMPLEMENTED"
   },
   "validateChars": {
-    "title": "Validate Characters"
+    "title": "Validate Characters",
+    "description": "NOT IMPLEMENTED"
   },
   "validateStrWords": {
-    "title": "Validate Structural Words"
+    "title": "Validate Structural Words",
+    "description": "NOT IMPLEMENTED"
   },
   "reviewEntries": {
     "title": "Review Entries",
+    "description": "Review all entries in the project.",
     "allEntriesPerPageOption": "All",
     "editSense": "Edit sense",
     "discardChanges": "Discard changes?",
@@ -376,6 +383,7 @@
   },
   "charInventory": {
     "title": "Create Character Inventory",
+    "description": "Review all vernacular characters.",
     "characters": "characters",
     "examples": "Examples",
     "occurrences": "occurrences",
@@ -418,6 +426,7 @@
   },
   "mergeDups": {
     "title": "Merge Duplicates",
+    "description": "Consider potential duplicates.",
     "helpText": {
       "dragCard": "Drag a card here to merge",
       "saveAndContinue": "Save changes and load a new set of words",

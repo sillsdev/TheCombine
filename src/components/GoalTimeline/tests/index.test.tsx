@@ -5,8 +5,9 @@ import createMockStore from "redux-mock-store";
 
 import { Permission } from "api/models";
 import GoalTimeline, { createSuggestionData } from "components/GoalTimeline";
-import { type GoalsState, defaultState } from "goals/Redux/GoalReduxTypes";
-import { Goal, GoalType } from "types/goals";
+import { implementedTypes, type GoalsState } from "goals/Redux/GoalReduxTypes";
+import { defaultState } from "rootRedux/types";
+import { Goal } from "types/goals";
 import { goalTypeToGoal } from "utilities/goalUtilities";
 
 jest.mock("backend", () => ({
@@ -30,7 +31,7 @@ const mockChooseGoal = jest.fn();
 const mockGetCurrentPermissions = jest.fn();
 const mockHasGraylistEntries = jest.fn();
 
-const allGoals = defaultState.allGoalTypes.map((t) => goalTypeToGoal(t));
+const allGoals = implementedTypes.map((t) => goalTypeToGoal(t));
 const goalWithAnyGuid = (g: Goal): Goal => ({ ...g, guid: expect.any(String) });
 const allGoalsWithAnyGuids = allGoals.map(goalWithAnyGuid);
 
@@ -45,20 +46,16 @@ beforeEach(() => {
 
 describe("GoalTimeline", () => {
   it("has the expected number of buttons", async () => {
-    await renderTimeline(defaultState.allGoalTypes, allGoals);
+    await renderTimeline(implementedTypes, allGoals);
     const buttons = screen.queryAllByRole("button");
-    expect(buttons).toHaveLength(
-      defaultState.allGoalTypes.length + allGoals.length
-    );
+    expect(buttons).toHaveLength(implementedTypes.length + allGoals.length);
   });
 
   it("has one more button if there's a graylist entry", async () => {
     mockHasGraylistEntries.mockResolvedValue(true);
-    await renderTimeline(defaultState.allGoalTypes, allGoals);
+    await renderTimeline(implementedTypes, allGoals);
     const buttons = screen.queryAllByRole("button");
-    expect(buttons).toHaveLength(
-      defaultState.allGoalTypes.length + allGoals.length + 1
-    );
+    expect(buttons).toHaveLength(implementedTypes.length + allGoals.length + 1);
   });
 
   it("selects a goal from suggestions", async () => {
@@ -67,58 +64,48 @@ describe("GoalTimeline", () => {
     await userEvent.click(screen.getByText(`${allGoals[goalNum].name}.title`));
     expect(mockChooseGoal).toHaveBeenCalledTimes(1);
     expect(mockChooseGoal.mock.calls[0][0].goalType).toEqual(
-      defaultState.allGoalTypes[goalNum]
+      implementedTypes[goalNum]
     );
   });
 
   describe("createSuggestionData", () => {
     it("don't suggests goal types that aren't available", () => {
-      const suggestions = createSuggestionData([], defaultState.allGoalTypes);
+      const suggestions = createSuggestionData([], implementedTypes);
       expect(suggestions).toEqual([]);
-    });
-
-    it("suggests all but the first of the available suggestions", () => {
-      const suggestions = createSuggestionData(
-        defaultState.allGoalTypes,
-        defaultState.allGoalTypes
-      );
-      expect(suggestions).toEqual(allGoalsWithAnyGuids.slice(1));
     });
 
     it("appends non-suggested available goal types to the end", () => {
       const sliceIndex = 2;
       const suggestions = createSuggestionData(
-        defaultState.allGoalTypes,
-        defaultState.allGoalTypes.slice(sliceIndex)
+        implementedTypes,
+        implementedTypes.slice(sliceIndex)
       );
       const expectedGoals = [
-        ...allGoalsWithAnyGuids.slice(sliceIndex + 1),
+        ...allGoalsWithAnyGuids.slice(sliceIndex),
         ...allGoalsWithAnyGuids.slice(0, sliceIndex),
       ];
-      expect(suggestions).toEqual(expectedGoals);
+      expect(suggestions).toEqual(expectedGoals.map((g) => g.name));
     });
 
     it("has a fallback for empty suggestion data", () => {
-      const suggestions = createSuggestionData(defaultState.allGoalTypes, []);
-      expect(suggestions).toEqual(allGoalsWithAnyGuids);
+      const suggestions = createSuggestionData(implementedTypes, []);
+      expect(suggestions).toEqual(allGoalsWithAnyGuids.map((g) => g.name));
     });
   });
 });
 
 async function renderTimeline(
-  goalTypeSuggestions?: GoalType[],
-  history?: Goal[]
+  goalTypeSuggestions = [...implementedTypes],
+  history: Goal[] = []
 ): Promise<void> {
-  const currentProjectState = { project: { id: "mockProjId" } };
   const goalsState: GoalsState = {
-    ...defaultState,
-    goalTypeSuggestions: goalTypeSuggestions ?? defaultState.allGoalTypes,
-    history: history ?? [],
-    previousGoalType: GoalType.Default,
+    ...defaultState.goalsState,
+    goalTypeSuggestions,
+    history,
   };
   await act(async () => {
     render(
-      <Provider store={createMockStore()({ currentProjectState, goalsState })}>
+      <Provider store={createMockStore()({ ...defaultState, goalsState })}>
         <GoalTimeline />
       </Provider>
     );

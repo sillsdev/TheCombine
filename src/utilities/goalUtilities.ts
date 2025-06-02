@@ -10,7 +10,7 @@ import { ReviewEntries } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { SpellCheckGloss } from "goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "goals/ValidateStrWords/ValidateStrWords";
-import { Goal, GoalStatus, GoalType } from "types/goals";
+import { Goal, GoalName, GoalStatus, GoalType } from "types/goals";
 
 export function maxNumSteps(type: GoalType): number {
   switch (type) {
@@ -37,6 +37,31 @@ export function requiredPermission(type: GoalType): Permission {
   }
 }
 
+export function goalNameToGoal(type: GoalName): Goal {
+  switch (type) {
+    case GoalName.CreateCharInv:
+      return new CreateCharInv();
+    case GoalName.CreateStrWordInv:
+      return new CreateStrWordInv();
+    case GoalName.HandleFlags:
+      return new HandleFlags();
+    case GoalName.MergeDups:
+      return new MergeDups();
+    case GoalName.ReviewDeferredDups:
+      return new ReviewDeferredDups();
+    case GoalName.ReviewEntries:
+      return new ReviewEntries();
+    case GoalName.SpellCheckGloss:
+      return new SpellCheckGloss();
+    case GoalName.ValidateChars:
+      return new ValidateChars();
+    case GoalName.ValidateStrWords:
+      return new ValidateStrWords();
+    default:
+      return new Goal();
+  }
+}
+
 export function goalTypeToGoal(type: GoalType): Goal {
   switch (type) {
     case GoalType.CreateCharInv:
@@ -59,6 +84,31 @@ export function goalTypeToGoal(type: GoalType): Goal {
       return new ValidateStrWords();
     default:
       return new Goal();
+  }
+}
+
+export function goalTypeToName(type: GoalType): GoalName {
+  switch (type) {
+    case GoalType.CreateCharInv:
+      return GoalName.CreateCharInv;
+    case GoalType.CreateStrWordInv:
+      return GoalName.CreateStrWordInv;
+    case GoalType.HandleFlags:
+      return GoalName.HandleFlags;
+    case GoalType.MergeDups:
+      return GoalName.MergeDups;
+    case GoalType.ReviewDeferredDups:
+      return GoalName.ReviewDeferredDups;
+    case GoalType.ReviewEntries:
+      return GoalName.ReviewEntries;
+    case GoalType.SpellCheckGloss:
+      return GoalName.SpellCheckGloss;
+    case GoalType.ValidateChars:
+      return GoalName.ValidateChars;
+    case GoalType.ValidateStrWords:
+      return GoalName.ValidateStrWords;
+    default:
+      return GoalName.Default;
   }
 }
 

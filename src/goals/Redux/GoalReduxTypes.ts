@@ -19,7 +19,7 @@ export interface GoalsState {
 
 // GoalType.ReviewDeferredDups is also implemented,
 // but is conditionally available
-const implementedTypes: GoalType[] = [
+export const implementedTypes: GoalType[] = [
   GoalType.CreateCharInv,
   GoalType.MergeDups,
   GoalType.ReviewEntries,
