@@ -25,10 +25,7 @@ namespace BackendFramework.Helper
         }
 
         /// <summary> Indicates that an error occurred locating the current user's home directory. </summary>
-        public sealed class HomeFolderNotFoundException : Exception
-        {
-            public HomeFolderNotFoundException() { }
-        }
+        public sealed class HomeFolderNotFoundException : Exception;
 
         /// <summary>
         /// Generate a path to the file name of an audio file for the Project based on the Word ID.
