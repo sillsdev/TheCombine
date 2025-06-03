@@ -171,8 +171,9 @@ export function getAudioUrl(wordId: string, fileName: string): string {
 
 /** Uploads avatar for current user. */
 export async function uploadAvatar(file: File): Promise<void> {
+  // Backend ignores userId and gets current user from HttpContext,
+  // but userId is still required in the url and helpful for analytics.
   const userId = LocalStorage.getUserId();
-  // Backend ignores userId and gets current user from HttpContext.
   await avatarApi.uploadAvatar({ userId, file }, fileUploadOptions());
   LocalStorage.setAvatar(await avatarSrc(userId));
 }
