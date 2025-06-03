@@ -22,6 +22,7 @@ export default function GoalHistoryButton(
   props: GoalHistoryButtonProps
 ): ReactElement {
   const { goal, onClick, small } = props;
+
   return (
     <Button
       disabled={!goal}
@@ -41,7 +42,6 @@ interface GoalInfoProps {
 
 function GoalInfo(props: GoalInfoProps): ReactElement {
   const { goal, small } = props;
-
   const { t } = useTranslation();
 
   if (!goal) {
@@ -53,6 +53,7 @@ function GoalInfo(props: GoalInfoProps): ReactElement {
       spacing={1}
       sx={{ alignItems: "flex-start", height: "100%", width: "100%" }}
     >
+      {/* Goal name */}
       <IconTypography
         icon={goalNameToIcon(goal.name, small ? "small" : "medium")}
         sx={{ textAlign: "start" }}
@@ -60,6 +61,8 @@ function GoalInfo(props: GoalInfoProps): ReactElement {
       >
         {t(goal.name + ".title")}
       </IconTypography>
+
+      {/* Change summary */}
       <Grid2
         container
         sx={{ height: "100%", py: small ? 0 : 1, textAlign: "start" }}

@@ -145,7 +145,6 @@ describe("asyncGetUserEdits", () => {
     const store = setupStore();
 
     // setup mocks for testing the action/reducers
-    jest.clearAllMocks();
     const convertEditToGoalSpy = jest.spyOn(goalUtilities, "convertEditToGoal");
     mockGetUserEditById.mockResolvedValueOnce(mockUserEdit(false));
 
@@ -220,8 +219,8 @@ describe("asyncLoadNewGoalData", () => {
 
 describe("asyncAdvanceStep", () => {
   it("advance MergeDups goal", async () => {
+    // setup the test scenario
     const store = setupStore();
-
     // create mergeDups goal
     await act(async () => {
       await store.dispatch(asyncAddGoal(new MergeDups()));
@@ -252,8 +251,8 @@ describe("asyncAdvanceStep", () => {
   });
 
   it("advance CreateCharInv goal", async () => {
+    // setup the test scenario
     const store = setupStore();
-
     // create character inventory goal
     const goal = new CreateCharInv();
     await act(async () => {
@@ -271,8 +270,8 @@ describe("asyncAdvanceStep", () => {
 
 describe("asyncUpdateGoal", () => {
   it("update CreateCharInv goal", async () => {
+    // setup the test scenario
     const store = setupStore();
-
     // create CreateCharInv goal
     const goal = new CreateCharInv();
     await act(async () => {
@@ -291,8 +290,8 @@ describe("asyncUpdateGoal", () => {
   });
 
   it("update MergeDups goal", async () => {
+    // setup the test scenario
     const store = setupStore();
-
     // create MergeDups goal
     const goal = new MergeDups();
     await act(async () => {
@@ -313,8 +312,8 @@ describe("asyncUpdateGoal", () => {
   });
 
   it("update ReviewDeferredDups goal", async () => {
+    // setup the test scenario
     const store = setupStore();
-
     // create ReviewDeferredDups goal
     const goal = new ReviewDeferredDups();
     await act(async () => {

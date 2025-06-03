@@ -9,6 +9,7 @@ export default function IconTypography(
   props: IconTypographyProps
 ): ReactElement {
   const { children, icon, ...typographyProps } = props;
+
   return (
     <Typography
       {...typographyProps}
