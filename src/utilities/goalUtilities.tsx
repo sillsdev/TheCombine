@@ -41,93 +41,72 @@ export function requiredPermission(type: GoalType): Permission {
   }
 }
 
+const goalNameToGoalMap: Record<GoalName, () => Goal> = {
+  [GoalName.CreateCharInv]: () => new CreateCharInv(),
+  [GoalName.CreateStrWordInv]: () => new CreateStrWordInv(),
+  [GoalName.HandleFlags]: () => new HandleFlags(),
+  [GoalName.MergeDups]: () => new MergeDups(),
+  [GoalName.ReviewDeferredDups]: () => new ReviewDeferredDups(),
+  [GoalName.ReviewEntries]: () => new ReviewEntries(),
+  [GoalName.SpellCheckGloss]: () => new SpellCheckGloss(),
+  [GoalName.ValidateChars]: () => new ValidateChars(),
+  [GoalName.ValidateStrWords]: () => new ValidateStrWords(),
+  [GoalName.Default]: () => new Goal(),
+};
+
 export function goalNameToGoal(name: GoalName): Goal {
-  switch (name) {
-    case GoalName.CreateCharInv:
-      return new CreateCharInv();
-    case GoalName.CreateStrWordInv:
-      return new CreateStrWordInv();
-    case GoalName.HandleFlags:
-      return new HandleFlags();
-    case GoalName.MergeDups:
-      return new MergeDups();
-    case GoalName.ReviewDeferredDups:
-      return new ReviewDeferredDups();
-    case GoalName.ReviewEntries:
-      return new ReviewEntries();
-    case GoalName.SpellCheckGloss:
-      return new SpellCheckGloss();
-    case GoalName.ValidateChars:
-      return new ValidateChars();
-    case GoalName.ValidateStrWords:
-      return new ValidateStrWords();
-    default:
-      return new Goal();
-  }
+  return goalNameToGoalMap[name]();
 }
+
+const goalTypeToGoalMap: Record<GoalType, () => Goal> = {
+  [GoalType.CreateCharInv]: () => new CreateCharInv(),
+  [GoalType.CreateStrWordInv]: () => new CreateStrWordInv(),
+  [GoalType.HandleFlags]: () => new HandleFlags(),
+  [GoalType.MergeDups]: () => new MergeDups(),
+  [GoalType.ReviewDeferredDups]: () => new ReviewDeferredDups(),
+  [GoalType.ReviewEntries]: () => new ReviewEntries(),
+  [GoalType.SpellCheckGloss]: () => new SpellCheckGloss(),
+  [GoalType.ValidateChars]: () => new ValidateChars(),
+  [GoalType.ValidateStrWords]: () => new ValidateStrWords(),
+  [GoalType.Default]: () => new Goal(),
+};
 
 export function goalTypeToGoal(type: GoalType): Goal {
-  switch (type) {
-    case GoalType.CreateCharInv:
-      return new CreateCharInv();
-    case GoalType.CreateStrWordInv:
-      return new CreateStrWordInv();
-    case GoalType.HandleFlags:
-      return new HandleFlags();
-    case GoalType.MergeDups:
-      return new MergeDups();
-    case GoalType.ReviewDeferredDups:
-      return new ReviewDeferredDups();
-    case GoalType.ReviewEntries:
-      return new ReviewEntries();
-    case GoalType.SpellCheckGloss:
-      return new SpellCheckGloss();
-    case GoalType.ValidateChars:
-      return new ValidateChars();
-    case GoalType.ValidateStrWords:
-      return new ValidateStrWords();
-    default:
-      return new Goal();
-  }
+  return goalTypeToGoalMap[type]();
 }
+
+const goalTypeToNameMap: Record<GoalType, GoalName> = {
+  [GoalType.CreateCharInv]: GoalName.CreateCharInv,
+  [GoalType.CreateStrWordInv]: GoalName.CreateStrWordInv,
+  [GoalType.Default]: GoalName.Default,
+  [GoalType.HandleFlags]: GoalName.HandleFlags,
+  [GoalType.MergeDups]: GoalName.MergeDups,
+  [GoalType.ReviewDeferredDups]: GoalName.ReviewDeferredDups,
+  [GoalType.ReviewEntries]: GoalName.ReviewEntries,
+  [GoalType.SpellCheckGloss]: GoalName.SpellCheckGloss,
+  [GoalType.ValidateChars]: GoalName.ValidateChars,
+  [GoalType.ValidateStrWords]: GoalName.ValidateStrWords,
+};
 
 export function goalTypeToName(type: GoalType): GoalName {
-  switch (type) {
-    case GoalType.CreateCharInv:
-      return GoalName.CreateCharInv;
-    case GoalType.CreateStrWordInv:
-      return GoalName.CreateStrWordInv;
-    case GoalType.HandleFlags:
-      return GoalName.HandleFlags;
-    case GoalType.MergeDups:
-      return GoalName.MergeDups;
-    case GoalType.ReviewDeferredDups:
-      return GoalName.ReviewDeferredDups;
-    case GoalType.ReviewEntries:
-      return GoalName.ReviewEntries;
-    case GoalType.SpellCheckGloss:
-      return GoalName.SpellCheckGloss;
-    case GoalType.ValidateChars:
-      return GoalName.ValidateChars;
-    case GoalType.ValidateStrWords:
-      return GoalName.ValidateStrWords;
-    default:
-      return GoalName.Default;
-  }
+  return goalTypeToNameMap[type];
 }
 
-export function goalNameToIcon(name: GoalName): ReactElement {
+export function goalNameToIcon(
+  name: GoalName,
+  size?: "small" | "medium" | "large"
+): ReactElement {
   switch (name) {
     case GoalName.CreateCharInv:
-      return <Abc />;
+      return <Abc fontSize={size} />;
     case GoalName.MergeDups:
-      return <Layers />;
+      return <Layers fontSize={size} />;
     case GoalName.ReviewDeferredDups:
-      return <LayersOutlined />;
+      return <LayersOutlined fontSize={size} />;
     case GoalName.ReviewEntries:
-      return <ManageSearch />;
+      return <ManageSearch fontSize={size} />;
     default:
-      return <Icon />;
+      return <Icon fontSize={size} />;
   }
 }
 

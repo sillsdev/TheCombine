@@ -1,4 +1,11 @@
-import { Box, Grid2, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Grid2,
+  Stack,
+  Theme,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -57,6 +64,8 @@ export default function GoalTimeline(): ReactElement {
     (state: StoreState) => state.goalsState
   );
 
+  const small = useMediaQuery<Theme>((th) => th.breakpoints.down("md"));
+
   const [goalOptions, setGoalOptions] = useState<GoalName[]>([]);
   const [hasGraylist, setHasGraylist] = useState(false);
 
@@ -87,14 +96,16 @@ export default function GoalTimeline(): ReactElement {
   return (
     <>
       {/* Goals */}
-      <Grid2 container justifyContent="space-evenly" sx={{ m: 2 }}>
+      <Grid2 container justifyContent="space-evenly" spacing={3} sx={{ p: 2 }}>
         {goalOptions.map((g, i) => (
-          <GoalNameButton
-            goalName={g}
-            key={g}
-            onClick={() => dispatch(asyncAddGoal(goalNameToGoal(g)))}
-            recommended={i === 0 && goalTypeSuggestions.length > 0}
-          />
+          <Grid2 key={g} size={{ xs: 6, md: 3 }}>
+            <GoalNameButton
+              goalName={g}
+              onClick={() => dispatch(asyncAddGoal(goalNameToGoal(g)))}
+              recommended={i === 0 && goalTypeSuggestions.length > 0}
+              small={small}
+            />
+          </Grid2>
         ))}
       </Grid2>
 
@@ -110,6 +121,7 @@ export default function GoalTimeline(): ReactElement {
                 goal={g}
                 key={i}
                 onClick={() => dispatch(asyncAddGoal(g))}
+                small={small}
               />
             ))
           ) : (

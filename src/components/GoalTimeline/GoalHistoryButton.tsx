@@ -2,6 +2,7 @@ import { Button, Grid2, Stack, Typography } from "@mui/material";
 import { Fragment, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
+import IconTypography from "components/GoalTimeline/IconTypography";
 import { CharInvChangesGoalList } from "goals/CharacterInventory/CharInvCompleted";
 import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { MergesCount } from "goals/MergeDuplicates/MergeDupsCompleted";
@@ -14,44 +15,55 @@ import { goalNameToIcon } from "utilities/goalUtilities";
 interface GoalHistoryButtonProps {
   goal?: Goal;
   onClick?: () => void;
+  small?: boolean;
 }
 
 export default function GoalHistoryButton(
   props: GoalHistoryButtonProps
 ): ReactElement {
-  const { onClick, goal } = props;
+  const { goal, onClick, small } = props;
   return (
     <Button
       disabled={!goal}
       onClick={onClick}
-      sx={{ minWidth: "350px" }}
+      sx={{ minWidth: small ? "225px" : "250px" }}
       variant={goal ? "outlined" : "contained"}
     >
-      <GoalInfo goal={goal} />
+      <GoalInfo goal={goal} small={small} />
     </Button>
   );
 }
 
 interface GoalInfoProps {
   goal?: Goal;
+  small?: boolean;
 }
 
 function GoalInfo(props: GoalInfoProps): ReactElement {
+  const { goal, small } = props;
+
   const { t } = useTranslation();
 
-  const goal = props.goal;
   if (!goal) {
     return <Typography variant="h6">{t("goal.selector.noHistory")}</Typography>;
   }
 
   return (
-    <Stack sx={{ height: "100%", width: "100%" }}>
-      <Grid2 alignItems="center" container justifyContent="space-between">
-        {goalNameToIcon(goal.name)}
-        <Typography variant="h6">{t(goal.name + ".title")}</Typography>
-        <div />
-      </Grid2>
-      <Grid2 container alignContent="center" sx={{ height: "100%" }}>
+    <Stack
+      spacing={1}
+      sx={{ alignItems: "flex-start", height: "100%", width: "100%" }}
+    >
+      <IconTypography
+        icon={goalNameToIcon(goal.name, small ? "small" : "medium")}
+        sx={{ textAlign: "start" }}
+        variant={small ? "body1" : "h6"}
+      >
+        {t(goal.name + ".title")}
+      </IconTypography>
+      <Grid2
+        container
+        sx={{ height: "100%", py: small ? 0 : 1, textAlign: "start" }}
+      >
         {goal.changes ? getCompletedGoalInfo(goal) : null}
       </Grid2>
     </Stack>
