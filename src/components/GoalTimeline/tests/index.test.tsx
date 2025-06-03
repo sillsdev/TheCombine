@@ -1,3 +1,4 @@
+import { ThemeProvider } from "@mui/material";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
@@ -8,7 +9,9 @@ import GoalTimeline, { createSuggestionData } from "components/GoalTimeline";
 import { implementedTypes, type GoalsState } from "goals/Redux/GoalReduxTypes";
 import { defaultState } from "rootRedux/types";
 import { Goal } from "types/goals";
+import theme from "types/theme";
 import { goalTypeToGoal } from "utilities/goalUtilities";
+import { setMatchMedia } from "utilities/testingLibraryUtilities";
 
 jest.mock("backend", () => ({
   getCurrentPermissions: () => mockGetCurrentPermissions(),
@@ -34,6 +37,11 @@ const mockHasGraylistEntries = jest.fn();
 const allGoals = implementedTypes.map((t) => goalTypeToGoal(t));
 const goalWithAnyGuid = (g: Goal): Goal => ({ ...g, guid: expect.any(String) });
 const allGoalsWithAnyGuids = allGoals.map(goalWithAnyGuid);
+
+beforeAll(async () => {
+  // Required (along with a `ThemeProvider`) for `useMediaQuery` to work
+  setMatchMedia();
+});
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -105,9 +113,11 @@ async function renderTimeline(
   };
   await act(async () => {
     render(
-      <Provider store={createMockStore()({ ...defaultState, goalsState })}>
-        <GoalTimeline />
-      </Provider>
+      <ThemeProvider theme={theme}>
+        <Provider store={createMockStore()({ ...defaultState, goalsState })}>
+          <GoalTimeline />
+        </Provider>
+      </ThemeProvider>
     );
   });
 }
