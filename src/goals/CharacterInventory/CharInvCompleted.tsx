@@ -66,15 +66,18 @@ export default function CharInvCompleted(): ReactElement {
 
 /** Typography summarizing find-and-replace word changes for goal history
  * (or undefined if no words changed). */
-function WordChangesTypography(
-  wordChanges: FindAndReplaceChange[]
-): ReactElement | undefined {
+function WordChangesTypography(props: {
+  wordChanges?: FindAndReplaceChange[];
+}): ReactElement | null {
   const { t } = useTranslation();
 
-  const changes = wordChanges.filter((wc) => Object.keys(wc.words).length);
-  if (!changes.length) {
-    return;
+  const changes = props.wordChanges?.filter(
+    (wc) => Object.keys(wc.words).length
+  );
+  if (!changes?.length) {
+    return null;
   }
+
   const wordCount = changes.flatMap((wc) => Object.keys(wc.words)).length;
   const description =
     changes.length === 1
@@ -99,8 +102,8 @@ export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
   const { t } = useTranslation();
   const changeLimit = 3;
 
-  const wordChangesTypography = WordChangesTypography(
-    changes.wordChanges ?? []
+  const wordChangesTypography = (
+    <WordChangesTypography wordChanges={changes.wordChanges ?? []} />
   );
 
   if (!changes.charChanges?.length) {
