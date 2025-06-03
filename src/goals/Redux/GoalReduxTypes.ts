@@ -17,12 +17,12 @@ export interface GoalsState {
   previousGoal: GoalName;
 }
 
-// GoalName.ReviewDeferredDups is also implemented,
-// but is conditionally available
+/** MergeDups, ReviewEntries, CreateCharInv (in that recommendation order);
+ * no ReviewDeferredDups, which is implemented but conditionally available. */
 export const implementedGoals: GoalName[] = [
-  GoalName.CreateCharInv,
   GoalName.MergeDups,
   GoalName.ReviewEntries,
+  GoalName.CreateCharInv,
 ];
 
 export const defaultState: GoalsState = {
