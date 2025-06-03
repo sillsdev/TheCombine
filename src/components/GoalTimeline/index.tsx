@@ -15,12 +15,8 @@ import GoalNameButton from "components/GoalTimeline/GoalNameButton";
 import { asyncAddGoal, asyncGetUserEdits } from "goals/Redux/GoalActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
-import { Goal, GoalName, GoalType } from "types/goals";
-import {
-  goalNameToGoal,
-  goalTypeToName,
-  requiredPermission,
-} from "utilities/goalUtilities";
+import { Goal, GoalName } from "types/goals";
+import { goalNameToGoal, requiredPermission } from "utilities/goalUtilities";
 
 /** Collapse history items with same name & changes. */
 function collapseHistory(goals: Goal[]): Goal[] {
@@ -43,24 +39,19 @@ function collapseHistory(goals: Goal[]): Goal[] {
 /** Creates a list of suggestions, with non-suggested goals at the end.
  * Extracted for testing purposes. */
 export function createSuggestionData(
-  availableGoalTypes: GoalType[],
-  goalTypeSuggestions: GoalType[]
+  availableGoals: GoalName[],
+  goalSuggestions: GoalName[]
 ): GoalName[] {
-  const suggestions = goalTypeSuggestions.filter((t) =>
-    availableGoalTypes.includes(t)
-  );
-  const nonSuggestions = availableGoalTypes.filter(
-    (t) => !suggestions.includes(t)
-  );
-  suggestions.push(...nonSuggestions);
-  return suggestions.map(goalTypeToName);
+  const suggestions = goalSuggestions.filter((t) => availableGoals.includes(t));
+  const nonSuggestions = availableGoals.filter((t) => !suggestions.includes(t));
+  return [...suggestions, ...nonSuggestions];
 }
 
 /** List of goals, followed by goal history. */
 export default function GoalTimeline(): ReactElement {
   const dispatch = useAppDispatch();
 
-  const { allGoalTypes, goalTypeSuggestions, history } = useAppSelector(
+  const { allGoals, goalSuggestions, history } = useAppSelector(
     (state: StoreState) => state.goalsState
   );
 
@@ -79,13 +70,11 @@ export default function GoalTimeline(): ReactElement {
   const getGoalTypes = useCallback(async (): Promise<void> => {
     const permissions = await getCurrentPermissions();
     const goalTypes = (
-      hasGraylist
-        ? allGoalTypes.concat([GoalType.ReviewDeferredDups])
-        : allGoalTypes
+      hasGraylist ? allGoals.concat([GoalName.ReviewDeferredDups]) : allGoals
     ).filter((t) => permissions.includes(requiredPermission(t)));
 
-    setGoalOptions(createSuggestionData(goalTypes, goalTypeSuggestions));
-  }, [allGoalTypes, goalTypeSuggestions, hasGraylist]);
+    setGoalOptions(createSuggestionData(goalTypes, goalSuggestions));
+  }, [allGoals, goalSuggestions, hasGraylist]);
 
   useEffect(() => {
     getGoalTypes();
@@ -102,7 +91,7 @@ export default function GoalTimeline(): ReactElement {
             <GoalNameButton
               goalName={g}
               onClick={() => dispatch(asyncAddGoal(goalNameToGoal(g)))}
-              recommended={i === 0 && goalTypeSuggestions.length > 0}
+              recommended={i === 0 && goalSuggestions.length > 0}
               small={small}
             />
           </Grid2>

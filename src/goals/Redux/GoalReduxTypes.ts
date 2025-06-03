@@ -1,4 +1,4 @@
-import { Goal, GoalType } from "types/goals";
+import { Goal, GoalName } from "types/goals";
 
 export enum DataLoadStatus {
   Default = "DEFAULT",
@@ -9,27 +9,27 @@ export enum DataLoadStatus {
 
 // The representation of goals in the redux store
 export interface GoalsState {
-  allGoalTypes: GoalType[];
+  allGoals: GoalName[];
   currentGoal: Goal;
   dataLoadStatus: DataLoadStatus;
-  goalTypeSuggestions: GoalType[];
+  goalSuggestions: GoalName[];
   history: Goal[];
-  previousGoalType: GoalType;
+  previousGoal: GoalName;
 }
 
-// GoalType.ReviewDeferredDups is also implemented,
+// GoalName.ReviewDeferredDups is also implemented,
 // but is conditionally available
-export const implementedTypes: GoalType[] = [
-  GoalType.CreateCharInv,
-  GoalType.MergeDups,
-  GoalType.ReviewEntries,
+export const implementedGoals: GoalName[] = [
+  GoalName.CreateCharInv,
+  GoalName.MergeDups,
+  GoalName.ReviewEntries,
 ];
 
 export const defaultState: GoalsState = {
-  allGoalTypes: implementedTypes,
+  allGoals: [...implementedGoals],
   currentGoal: new Goal(),
   dataLoadStatus: DataLoadStatus.Default,
-  goalTypeSuggestions: [...implementedTypes],
+  goalSuggestions: [...implementedGoals],
   history: [],
-  previousGoalType: GoalType.Default,
+  previousGoal: GoalName.Default,
 };

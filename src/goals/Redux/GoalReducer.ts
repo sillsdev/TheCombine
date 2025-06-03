@@ -10,21 +10,21 @@ import {
   EntryEdit,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { StoreActionTypes } from "rootRedux/actions";
-import { GoalType } from "types/goals";
+import { GoalName } from "types/goals";
 
 const goalSlice = createSlice({
   name: "goalsState",
   initialState: defaultState,
   reducers: {
     addCharInvChangesToGoalAction: (state, action) => {
-      if (state.currentGoal.goalType === GoalType.CreateCharInv) {
+      if (state.currentGoal.name === GoalName.CreateCharInv) {
         state.currentGoal.changes = action.payload;
       }
     },
     addCompletedMergeToGoalAction: (state, action) => {
       if (
-        state.currentGoal.goalType === GoalType.MergeDups ||
-        state.currentGoal.goalType === GoalType.ReviewDeferredDups
+        state.currentGoal.name === GoalName.MergeDups ||
+        state.currentGoal.name === GoalName.ReviewDeferredDups
       ) {
         const changes = { ...state.currentGoal.changes } as MergesCompleted;
         if (!changes.merges) {
@@ -35,7 +35,7 @@ const goalSlice = createSlice({
       }
     },
     addEntryEditToGoalAction: (state, action) => {
-      if (state.currentGoal.goalType === GoalType.ReviewEntries) {
+      if (state.currentGoal.name === GoalName.ReviewEntries) {
         const changes = { ...state.currentGoal.changes } as EntriesEdited;
         if (!changes.entryEdits) {
           changes.entryEdits = [];
@@ -59,19 +59,19 @@ const goalSlice = createSlice({
     },
     loadUserEditsAction: (state, action) => {
       const history = [...action.payload];
-      state.previousGoalType =
-        history[history.length - 1]?.goalType ?? GoalType.Default;
+      state.previousGoal =
+        history[history.length - 1]?.name ?? GoalName.Default;
       state.history = history;
     },
     setCurrentGoalAction: (state, action) => {
       state.currentGoal = action.payload;
-      state.goalTypeSuggestions = state.goalTypeSuggestions.filter(
-        (type, index) => index !== 0 || action.payload.goalType !== type
+      state.goalSuggestions = state.goalSuggestions.filter(
+        (g, i) => i || action.payload.name !== g
       ); // Remove top suggestion if same as goal to add.
-      state.previousGoalType =
-        state.currentGoal.goalType !== GoalType.Default
-          ? state.currentGoal.goalType
-          : state.previousGoalType;
+      state.previousGoal =
+        state.currentGoal.name !== GoalName.Default
+          ? state.currentGoal.name
+          : state.previousGoal;
     },
     setDataLoadStatusAction: (state, action) => {
       state.dataLoadStatus = action.payload;
@@ -89,8 +89,8 @@ const goalSlice = createSlice({
     },
     updateStepFromDataAction: (state) => {
       if (
-        state.currentGoal.goalType === GoalType.MergeDups ||
-        state.currentGoal.goalType === GoalType.ReviewDeferredDups
+        state.currentGoal.name === GoalName.MergeDups ||
+        state.currentGoal.name === GoalName.ReviewDeferredDups
       ) {
         const currentGoalData = state.currentGoal.data as MergeDupsData;
         state.currentGoal.steps[state.currentGoal.currentStep] = {

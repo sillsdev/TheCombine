@@ -28,13 +28,13 @@ export function maxNumSteps(type: GoalType): number {
 }
 
 /** Specify which project permission is required for a user to access a goal. */
-export function requiredPermission(type: GoalType): Permission {
+export function requiredPermission(type: GoalName): Permission {
   switch (type) {
-    case GoalType.MergeDups:
-    case GoalType.ReviewDeferredDups:
-    case GoalType.ReviewEntries:
+    case GoalName.MergeDups:
+    case GoalName.ReviewDeferredDups:
+    case GoalName.ReviewEntries:
       return Permission.MergeAndReviewEntries;
-    case GoalType.CreateCharInv:
+    case GoalName.CreateCharInv:
       return Permission.CharacterInventory;
     default:
       return Permission.Archive;
@@ -58,40 +58,6 @@ export function goalNameToGoal(name: GoalName): Goal {
   return goalNameToGoalMap[name]();
 }
 
-const goalTypeToGoalMap: Record<GoalType, () => Goal> = {
-  [GoalType.CreateCharInv]: () => new CreateCharInv(),
-  [GoalType.CreateStrWordInv]: () => new CreateStrWordInv(),
-  [GoalType.HandleFlags]: () => new HandleFlags(),
-  [GoalType.MergeDups]: () => new MergeDups(),
-  [GoalType.ReviewDeferredDups]: () => new ReviewDeferredDups(),
-  [GoalType.ReviewEntries]: () => new ReviewEntries(),
-  [GoalType.SpellCheckGloss]: () => new SpellCheckGloss(),
-  [GoalType.ValidateChars]: () => new ValidateChars(),
-  [GoalType.ValidateStrWords]: () => new ValidateStrWords(),
-  [GoalType.Default]: () => new Goal(),
-};
-
-export function goalTypeToGoal(type: GoalType): Goal {
-  return goalTypeToGoalMap[type]();
-}
-
-const goalTypeToNameMap: Record<GoalType, GoalName> = {
-  [GoalType.CreateCharInv]: GoalName.CreateCharInv,
-  [GoalType.CreateStrWordInv]: GoalName.CreateStrWordInv,
-  [GoalType.Default]: GoalName.Default,
-  [GoalType.HandleFlags]: GoalName.HandleFlags,
-  [GoalType.MergeDups]: GoalName.MergeDups,
-  [GoalType.ReviewDeferredDups]: GoalName.ReviewDeferredDups,
-  [GoalType.ReviewEntries]: GoalName.ReviewEntries,
-  [GoalType.SpellCheckGloss]: GoalName.SpellCheckGloss,
-  [GoalType.ValidateChars]: GoalName.ValidateChars,
-  [GoalType.ValidateStrWords]: GoalName.ValidateStrWords,
-};
-
-export function goalTypeToName(type: GoalType): GoalName {
-  return goalTypeToNameMap[type];
-}
-
 export function goalNameToIcon(
   name: GoalName,
   size?: "small" | "medium" | "large"
@@ -108,6 +74,23 @@ export function goalNameToIcon(
     default:
       return <Icon fontSize={size} />;
   }
+}
+
+const goalTypeToGoalMap: Record<GoalType, () => Goal> = {
+  [GoalType.CreateCharInv]: () => new CreateCharInv(),
+  [GoalType.CreateStrWordInv]: () => new CreateStrWordInv(),
+  [GoalType.HandleFlags]: () => new HandleFlags(),
+  [GoalType.MergeDups]: () => new MergeDups(),
+  [GoalType.ReviewDeferredDups]: () => new ReviewDeferredDups(),
+  [GoalType.ReviewEntries]: () => new ReviewEntries(),
+  [GoalType.SpellCheckGloss]: () => new SpellCheckGloss(),
+  [GoalType.ValidateChars]: () => new ValidateChars(),
+  [GoalType.ValidateStrWords]: () => new ValidateStrWords(),
+  [GoalType.Default]: () => new Goal(),
+};
+
+function goalTypeToGoal(type: GoalType): Goal {
+  return goalTypeToGoalMap[type]();
 }
 
 export function convertGoalToEdit(goal: Goal): Edit {
