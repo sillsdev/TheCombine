@@ -169,11 +169,12 @@ export function getAudioUrl(wordId: string, fileName: string): string {
 
 /* AvatarController.cs */
 
-export async function uploadAvatar(userId: string, file: File): Promise<void> {
+/** Uploads avatar for current user. */
+export async function uploadAvatar(file: File): Promise<void> {
+  const userId = LocalStorage.getUserId();
+  // Backend ignores userId and gets current user from HttpContext.
   await avatarApi.uploadAvatar({ userId, file }, fileUploadOptions());
-  if (userId === LocalStorage.getUserId()) {
-    LocalStorage.setAvatar(await avatarSrc(userId));
-  }
+  LocalStorage.setAvatar(await avatarSrc(userId));
 }
 
 /** Returns the string to display the image inline in Base64 <img src= */
