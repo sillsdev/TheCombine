@@ -433,7 +433,7 @@ namespace Backend.Tests.Controllers
         }
 
         /// <summary>
-        /// Create three words and delete one. Ensure that the deleted word is still exported to Lift format and marked
+        /// Create three words and delete one. Ensure that the deleted word is still exported to LIFT format and marked
         /// as deleted.
         /// </summary>
         [Test]
