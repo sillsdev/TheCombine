@@ -7,7 +7,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    sealed internal class WordRepositoryMock : IWordRepository
+    internal sealed class WordRepositoryMock : IWordRepository
     {
         private readonly List<Word> _words;
         private readonly List<Word> _frontier;
