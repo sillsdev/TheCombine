@@ -7,7 +7,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    sealed internal class UserEditRepositoryMock : IUserEditRepository
+    internal sealed class UserEditRepositoryMock : IUserEditRepository
     {
         private readonly List<UserEdit> _userEdits;
 

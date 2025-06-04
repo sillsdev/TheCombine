@@ -6,7 +6,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    sealed internal class PasswordResetContextMock : IPasswordResetContext
+    internal sealed class PasswordResetContextMock : IPasswordResetContext
     {
         private List<PasswordReset> _resets;
 
