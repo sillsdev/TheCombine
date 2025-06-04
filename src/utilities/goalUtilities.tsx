@@ -3,14 +3,21 @@ import { Icon } from "@mui/material";
 import { ReactElement } from "react";
 
 import { Edit, Permission } from "api/models";
-import { CreateCharInv } from "goals/CharacterInventory/CharacterInventoryTypes";
+import {
+  CharInvChanges,
+  CreateCharInv,
+} from "goals/CharacterInventory/CharacterInventoryTypes";
 import { CreateStrWordInv } from "goals/CreateStrWordInv/CreateStrWordInv";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
 import {
   MergeDups,
+  MergesCompleted,
   ReviewDeferredDups,
 } from "goals/MergeDuplicates/MergeDupsTypes";
-import { ReviewEntries } from "goals/ReviewEntries/ReviewEntriesTypes";
+import {
+  EntriesEdited,
+  ReviewEntries,
+} from "goals/ReviewEntries/ReviewEntriesTypes";
 import { SpellCheckGloss } from "goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "goals/ValidateStrWords/ValidateStrWords";
@@ -38,6 +45,26 @@ export function requiredPermission(type: GoalName): Permission {
       return Permission.CharacterInventory;
     default:
       return Permission.Archive;
+  }
+}
+
+export function hasChanges(g: Goal): boolean {
+  if (!g.changes) {
+    return false;
+  }
+  switch (g.name) {
+    case GoalName.CreateCharInv:
+      const cic = g.changes as CharInvChanges;
+      return cic.charChanges?.length > 0 || cic.wordChanges?.length > 0;
+    case GoalName.MergeDups:
+    case GoalName.ReviewDeferredDups:
+      const mc = g.changes as MergesCompleted;
+      return mc.merges?.length > 0;
+    case GoalName.ReviewEntries:
+      const ee = g.changes as EntriesEdited;
+      return ee.entryEdits?.length > 0;
+    default:
+      return false;
   }
 }
 

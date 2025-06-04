@@ -12,55 +12,39 @@ import { Goal, GoalName } from "types/goals";
 import { goalNameToIcon } from "utilities/goalUtilities";
 
 interface GoalHistoryButtonProps {
-  goal?: Goal;
-  onClick?: () => void;
+  goal: Goal;
+  onClick: () => void;
 }
 
 export default function GoalHistoryButton(
   props: GoalHistoryButtonProps
 ): ReactElement {
   const { goal, onClick } = props;
-
-  return (
-    <Button
-      disabled={!goal}
-      onClick={onClick}
-      sx={{ minWidth: "225px" }}
-      variant={goal ? "outlined" : "contained"}
-    >
-      <GoalInfo goal={goal} />
-    </Button>
-  );
-}
-
-function GoalInfo({ goal }: { goal?: Goal }): ReactElement {
   const { t } = useTranslation();
 
-  if (!goal) {
-    return <Typography variant="h6">{t("goal.selector.noHistory")}</Typography>;
-  }
-
   return (
-    <Stack
-      spacing={1}
-      sx={{ alignItems: "flex-start", height: "100%", width: "100%" }}
-    >
-      {/* Goal name */}
-      <Typography sx={{ textAlign: "start" }} variant="h6">
-        <Box
-          component="span" // to be inline with the title
-          sx={{ marginInlineEnd: 1, verticalAlign: "middle" }}
-        >
-          {goalNameToIcon(goal.name)}
-        </Box>
-        {t(goal.name + ".title")}
-      </Typography>
+    <Button onClick={onClick} sx={{ minWidth: "225px" }} variant="outlined">
+      <Stack
+        spacing={1}
+        sx={{ alignItems: "flex-start", height: "100%", width: "100%" }}
+      >
+        {/* Goal name */}
+        <Typography sx={{ textAlign: "start" }} variant="h6">
+          <Box
+            component="span" // to be inline with the title
+            sx={{ marginInlineEnd: 1, verticalAlign: "middle" }}
+          >
+            {goalNameToIcon(goal.name)}
+          </Box>
+          {t(goal.name + ".title")}
+        </Typography>
 
-      {/* Change summary */}
-      <Grid2 container sx={{ height: "100%", textAlign: "start" }}>
-        {goal.changes ? getCompletedGoalInfo(goal) : null}
-      </Grid2>
-    </Stack>
+        {/* Change summary */}
+        <Grid2 container sx={{ height: "100%", textAlign: "start" }}>
+          {goal.changes ? getCompletedGoalInfo(goal) : null}
+        </Grid2>
+      </Stack>
+    </Button>
   );
 }
 

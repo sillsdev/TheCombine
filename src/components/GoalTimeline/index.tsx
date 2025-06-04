@@ -1,12 +1,13 @@
 import {
   Box,
+  Button,
   Grid2,
   Stack,
   Theme,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { ReactElement, useCallback, useEffect, useState } from "react";
+import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { getCurrentPermissions, hasGraylistEntries } from "backend";
@@ -15,26 +16,12 @@ import GoalNameButton from "components/GoalTimeline/GoalNameButton";
 import { asyncAddGoal, asyncGetUserEdits } from "goals/Redux/GoalActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
-import { Goal, GoalName } from "types/goals";
-import { goalNameToGoal, requiredPermission } from "utilities/goalUtilities";
-
-/** Collapse history items with same name & changes. */
-function collapseHistory(goals: Goal[]): Goal[] {
-  const seen: Record<string, number> = {};
-  const collapsed: Goal[] = [];
-
-  for (const goal of goals) {
-    const key = `${goal.name}-${JSON.stringify(goal.changes)}`;
-    if (!seen[key]) {
-      seen[key] = 1;
-      collapsed.push(goal);
-    } else {
-      seen[key] += 1;
-    }
-  }
-
-  return collapsed;
-}
+import { GoalName } from "types/goals";
+import {
+  goalNameToGoal,
+  hasChanges,
+  requiredPermission,
+} from "utilities/goalUtilities";
 
 /** Creates a list of suggestions, with non-suggested goals at the end.
  * Extracted for testing purposes. */
@@ -80,7 +67,7 @@ export default function GoalTimeline(): ReactElement {
     getGoalTypes();
   }, [getGoalTypes]);
 
-  const goalHistory = collapseHistory([...history].reverse());
+  const goalHistory = history.filter(hasChanges).reverse();
 
   return (
     <>
@@ -126,7 +113,11 @@ export default function GoalTimeline(): ReactElement {
               />
             ))
           ) : (
-            <GoalHistoryButton />
+            <Button disabled variant="contained">
+              <Typography variant="h6">
+                {t("goal.selector.noHistory")}
+              </Typography>
+            </Button>
           )}
         </Stack>
       </Box>
