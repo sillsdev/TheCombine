@@ -74,6 +74,49 @@ export default function CharInvCompleted(): ReactElement {
   );
 }
 
+/** One-line display of the inventory status change of a character. */
+export function CharChange(props: { change: CharacterChange }): ReactElement {
+  return (
+    <div>
+      <Typography display="inline">{`${props.change[0]}: `}</Typography>
+      <CharacterStatusText status={props.change[1]} inline />
+      <ArrowRightAlt fontSize="inherit" />
+      <CharacterStatusText status={props.change[2]} inline />
+    </div>
+  );
+}
+
+/** Components summarizing changes to status of inventory characters. */
+export function CharChangesRows(props: {
+  charChanges?: CharacterChange[];
+}): ReactElement | null {
+  const changeLimit = 3;
+  const { charChanges } = props;
+  const { t } = useTranslation();
+
+  if (!charChanges?.length) {
+    return null;
+  }
+
+  return charChanges.length <= changeLimit ? (
+    <>
+      {charChanges.map((c) => (
+        <CharChange change={c} key={c[0]} />
+      ))}
+    </>
+  ) : (
+    <>
+      {charChanges.slice(0, changeLimit - 1).map((c) => (
+        <CharChange change={c} key={c[0]} />
+      ))}
+      <Typography>
+        {`+${charChanges.length - (changeLimit - 1)} `}
+        {t("charInventory.changes.more")}
+      </Typography>
+    </>
+  );
+}
+
 /** Typography summarizing find-and-replace word changes for goal history
  * (or null if no words changed). */
 function WordChangesTypography(props: {
@@ -109,57 +152,18 @@ function WordChangesTypography(props: {
  * - Changes to inventory status of a character (up to 3);
  * - Number of words changed with the find-and-replace tool (only if more than 0). */
 export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
+  const { charChanges, wordChanges } = changes;
   const { t } = useTranslation();
-  const changeLimit = 3;
 
-  const wordChangesTypography = (
-    <WordChangesTypography wordChanges={changes.wordChanges ?? []} />
-  );
-
-  if (!changes.charChanges?.length) {
-    return (
-      wordChangesTypography ?? (
-        <Typography id={CharInvCompletedId.TypographyNoCharChanges}>
-          {t("charInventory.changes.noCharChanges")}
-        </Typography>
-      )
-    );
-  }
-
-  if (changes.charChanges.length > changeLimit) {
-    return (
-      <Stack alignItems="flex-start">
-        {changes.charChanges.slice(0, changeLimit - 1).map((c) => (
-          <CharChange change={c} key={c[0]} />
-        ))}
-        <Typography>
-          {`+${changes.charChanges.length - (changeLimit - 1)} `}
-          {t("charInventory.changes.more")}
-        </Typography>
-        {wordChangesTypography}
-      </Stack>
-    );
-  }
-
-  return (
+  return !charChanges?.length && !wordChanges?.length ? (
+    <Typography id={CharInvCompletedId.TypographyNoCharChanges}>
+      {t("charInventory.changes.noCharChanges")}
+    </Typography>
+  ) : (
     <Stack alignItems="flex-start">
-      {changes.charChanges.map((c) => (
-        <CharChange change={c} key={c[0]} />
-      ))}
-      {wordChangesTypography}
+      <CharChangesRows charChanges={charChanges} />
+      <WordChangesTypography wordChanges={wordChanges} />
     </Stack>
-  );
-}
-
-/** Component to display in one line the inventory status change of a character. */
-export function CharChange(props: { change: CharacterChange }): ReactElement {
-  return (
-    <div>
-      <Typography display="inline">{`${props.change[0]}: `}</Typography>
-      <CharacterStatusText status={props.change[1]} inline />
-      <ArrowRightAlt fontSize="inherit" />
-      <CharacterStatusText status={props.change[2]} inline />
-    </div>
   );
 }
 
