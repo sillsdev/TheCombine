@@ -6,7 +6,16 @@ import createMockStore from "redux-mock-store";
 
 import { Permission } from "api/models";
 import GoalTimeline, { createSuggestionData } from "components/GoalTimeline";
+import {
+  CharacterStatus,
+  CreateCharInv,
+} from "goals/CharacterInventory/CharacterInventoryTypes";
+import {
+  MergeDups,
+  ReviewDeferredDups,
+} from "goals/MergeDuplicates/MergeDupsTypes";
 import { implementedGoals, type GoalsState } from "goals/Redux/GoalReduxTypes";
+import { ReviewEntries } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { defaultState } from "rootRedux/types";
 import { Goal } from "types/goals";
 import theme from "types/theme";
@@ -34,9 +43,10 @@ const mockChooseGoal = jest.fn();
 const mockGetCurrentPermissions = jest.fn();
 const mockHasGraylistEntries = jest.fn();
 
-const allGoals = implementedGoals.map(goalNameToGoal);
 const goalWithAnyGuid = (g: Goal): Goal => ({ ...g, guid: expect.any(String) });
-const allGoalsWithAnyGuids = allGoals.map(goalWithAnyGuid);
+const allGoalsWithAnyGuids = implementedGoals
+  .map(goalNameToGoal)
+  .map(goalWithAnyGuid);
 
 beforeAll(async () => {
   // Required (along with a `ThemeProvider`) for `useMediaQuery` to work
@@ -53,23 +63,53 @@ beforeEach(() => {
 });
 
 describe("GoalTimeline", () => {
-  it("has the expected number of buttons", async () => {
-    await renderTimeline(implementedGoals, allGoals);
+  it("has the expected number of buttons plus 1 for empty history", async () => {
+    await renderTimeline(implementedGoals);
     const buttons = screen.queryAllByRole("button");
-    expect(buttons).toHaveLength(implementedGoals.length + allGoals.length);
+    expect(buttons).toHaveLength(implementedGoals.length + 1);
   });
 
   it("has one more button if there's a graylist entry", async () => {
     mockHasGraylistEntries.mockResolvedValue(true);
-    await renderTimeline(implementedGoals, allGoals);
+    await renderTimeline(implementedGoals);
     const buttons = screen.queryAllByRole("button");
-    expect(buttons).toHaveLength(implementedGoals.length + allGoals.length + 1);
+    expect(buttons).toHaveLength(implementedGoals.length + 2);
+  });
+
+  it("only shows goal history for goals with changes", async () => {
+    const cci = new CreateCharInv();
+    cci.changes = {
+      charChanges: [["a", CharacterStatus.Undecided, CharacterStatus.Accepted]],
+      wordChanges: [],
+    };
+    const md = new MergeDups();
+    md.changes = { merges: [{ parentIds: ["b"], childIds: ["c"] }] };
+    const rdd = new ReviewDeferredDups();
+    rdd.changes = { merges: [{ parentIds: ["d"], childIds: ["e"] }] };
+    const re = new ReviewEntries();
+    re.changes = { entryEdits: [{ oldId: "f", newId: "g" }] };
+    const history = [
+      new CreateCharInv(),
+      cci,
+      new MergeDups(),
+      md,
+      new ReviewDeferredDups(),
+      rdd,
+      new ReviewEntries(),
+      re,
+    ];
+
+    await renderTimeline(implementedGoals, history);
+    const buttons = screen.queryAllByRole("button");
+    expect(buttons).toHaveLength(implementedGoals.length + 4);
   });
 
   it("selects a goal from suggestions", async () => {
     const goalNum = 2;
     await renderTimeline();
-    await userEvent.click(screen.getByText(`${allGoals[goalNum].name}.title`));
+    await userEvent.click(
+      screen.getByText(`${implementedGoals[goalNum]}.title`)
+    );
     expect(mockChooseGoal).toHaveBeenCalledTimes(1);
     const calledGoalName = mockChooseGoal.mock.calls[0][0].name;
     expect(calledGoalName).toEqual(implementedGoals[goalNum]);
