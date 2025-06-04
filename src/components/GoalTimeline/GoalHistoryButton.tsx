@@ -1,47 +1,39 @@
-import { Button, Grid2, Stack, Typography } from "@mui/material";
+import { Box, Button, Grid2, Stack, Typography } from "@mui/material";
 import { Fragment, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import IconTypography from "components/GoalTimeline/IconTypography";
 import { CharInvChangesGoalList } from "goals/CharacterInventory/CharInvCompleted";
 import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { MergesCount } from "goals/MergeDuplicates/MergeDupsCompleted";
 import { MergesCompleted } from "goals/MergeDuplicates/MergeDupsTypes";
 import { EditsCount } from "goals/ReviewEntries/ReviewEntriesCompleted";
 import { EntriesEdited } from "goals/ReviewEntries/ReviewEntriesTypes";
-import { Goal, GoalType } from "types/goals";
+import { Goal, GoalName } from "types/goals";
 import { goalNameToIcon } from "utilities/goalUtilities";
 
 interface GoalHistoryButtonProps {
   goal?: Goal;
   onClick?: () => void;
-  small?: boolean;
 }
 
 export default function GoalHistoryButton(
   props: GoalHistoryButtonProps
 ): ReactElement {
-  const { goal, onClick, small } = props;
+  const { goal, onClick } = props;
 
   return (
     <Button
       disabled={!goal}
       onClick={onClick}
-      sx={{ minWidth: small ? "225px" : "250px" }}
+      sx={{ minWidth: "225px" }}
       variant={goal ? "outlined" : "contained"}
     >
-      <GoalInfo goal={goal} small={small} />
+      <GoalInfo goal={goal} />
     </Button>
   );
 }
 
-interface GoalInfoProps {
-  goal?: Goal;
-  small?: boolean;
-}
-
-function GoalInfo(props: GoalInfoProps): ReactElement {
-  const { goal, small } = props;
+function GoalInfo({ goal }: { goal?: Goal }): ReactElement {
   const { t } = useTranslation();
 
   if (!goal) {
@@ -54,19 +46,18 @@ function GoalInfo(props: GoalInfoProps): ReactElement {
       sx={{ alignItems: "flex-start", height: "100%", width: "100%" }}
     >
       {/* Goal name */}
-      <IconTypography
-        icon={goalNameToIcon(goal.name, small ? "small" : "medium")}
-        sx={{ textAlign: "start" }}
-        variant={small ? "body1" : "h6"}
-      >
+      <Typography sx={{ textAlign: "start" }} variant="h6">
+        <Box
+          component="span" // to be inline with the title
+          sx={{ marginInlineEnd: 1, verticalAlign: "middle" }}
+        >
+          {goalNameToIcon(goal.name)}
+        </Box>
         {t(goal.name + ".title")}
-      </IconTypography>
+      </Typography>
 
       {/* Change summary */}
-      <Grid2
-        container
-        sx={{ height: "100%", py: small ? 0 : 1, textAlign: "start" }}
-      >
+      <Grid2 container sx={{ height: "100%", textAlign: "start" }}>
         {goal.changes ? getCompletedGoalInfo(goal) : null}
       </Grid2>
     </Stack>
@@ -74,14 +65,15 @@ function GoalInfo(props: GoalInfoProps): ReactElement {
 }
 
 function getCompletedGoalInfo(goal: Goal): ReactElement {
-  switch (goal.goalType) {
-    case GoalType.CreateCharInv:
-      return CharInvChangesGoalList(goal.changes as CharInvChanges);
-    case GoalType.MergeDups:
-    case GoalType.ReviewDeferredDups:
-      return MergesCount(goal.changes as MergesCompleted);
-    case GoalType.ReviewEntries:
-      return EditsCount(goal.changes as EntriesEdited);
+  const { changes, name } = goal;
+  switch (name) {
+    case GoalName.CreateCharInv:
+      return CharInvChangesGoalList(changes as CharInvChanges);
+    case GoalName.MergeDups:
+    case GoalName.ReviewDeferredDups:
+      return MergesCount(changes as MergesCompleted);
+    case GoalName.ReviewEntries:
+      return EditsCount(changes as EntriesEdited);
     default:
       return <Fragment />;
   }

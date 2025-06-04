@@ -58,21 +58,18 @@ export function goalNameToGoal(name: GoalName): Goal {
   return goalNameToGoalMap[name]();
 }
 
-export function goalNameToIcon(
-  name: GoalName,
-  size?: "small" | "medium" | "large"
-): ReactElement {
+export function goalNameToIcon(name: GoalName): ReactElement {
   switch (name) {
     case GoalName.CreateCharInv:
-      return <Abc fontSize={size} />;
+      return <Abc sx={{ fontSize: "inherit" }} />;
     case GoalName.MergeDups:
-      return <Layers fontSize={size} />;
+      return <Layers sx={{ fontSize: "inherit" }} />;
     case GoalName.ReviewDeferredDups:
-      return <LayersOutlined fontSize={size} />;
+      return <LayersOutlined sx={{ fontSize: "inherit" }} />;
     case GoalName.ReviewEntries:
-      return <ManageSearch fontSize={size} />;
+      return <ManageSearch sx={{ fontSize: "inherit" }} />;
     default:
-      return <Icon fontSize={size} />;
+      return <Icon sx={{ fontSize: "inherit" }} />;
   }
 }
 

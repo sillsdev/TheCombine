@@ -1,8 +1,7 @@
-import { Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import IconTypography from "components/GoalTimeline/IconTypography";
 import { GoalName } from "types/goals";
 import { goalNameToIcon } from "utilities/goalUtilities";
 
@@ -34,12 +33,15 @@ export default function GoalNameButton(
     >
       <Stack spacing={small ? 1 : 2}>
         {/* Goal name */}
-        <IconTypography
-          icon={goalNameToIcon(goalName, small ? "medium" : "large")}
-          variant={small ? "h5" : "h4"}
-        >
+        <Typography variant={small ? "h5" : "h4"}>
+          <Box
+            component="span" // to be inline with the title
+            sx={{ marginInlineEnd: 1, verticalAlign: "middle" }}
+          >
+            {goalNameToIcon(goalName)}
+          </Box>
           {t(goalName + ".title")}
-        </IconTypography>
+        </Typography>
 
         {/* Goal description */}
         <Typography>{t(goalName + ".description")}</Typography>

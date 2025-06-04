@@ -123,7 +123,6 @@ export default function GoalTimeline(): ReactElement {
                 goal={g}
                 key={i}
                 onClick={() => dispatch(asyncAddGoal(g))}
-                small={small}
               />
             ))
           ) : (
