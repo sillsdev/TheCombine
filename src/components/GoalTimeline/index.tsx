@@ -23,22 +23,11 @@ import {
   requiredPermission,
 } from "utilities/goalUtilities";
 
-/** Creates a list of suggestions, with non-suggested goals at the end.
- * Extracted for testing purposes. */
-export function createSuggestionData(
-  availableGoals: GoalName[],
-  goalSuggestions: GoalName[]
-): GoalName[] {
-  const suggestions = goalSuggestions.filter((t) => availableGoals.includes(t));
-  const nonSuggestions = availableGoals.filter((t) => !suggestions.includes(t));
-  return [...suggestions, ...nonSuggestions];
-}
-
 /** List of goals, followed by goal history. */
 export default function GoalTimeline(): ReactElement {
   const dispatch = useAppDispatch();
 
-  const { allGoals, goalSuggestions, history } = useAppSelector(
+  const { allGoals, history } = useAppSelector(
     (state: StoreState) => state.goalsState
   );
 
@@ -56,12 +45,16 @@ export default function GoalTimeline(): ReactElement {
 
   const getGoalTypes = useCallback(async (): Promise<void> => {
     const permissions = await getCurrentPermissions();
-    const goalTypes = (
-      hasGraylist ? allGoals.concat([GoalName.ReviewDeferredDups]) : allGoals
-    ).filter((t) => permissions.includes(requiredPermission(t)));
-
-    setGoalOptions(createSuggestionData(goalTypes, goalSuggestions));
-  }, [allGoals, goalSuggestions, hasGraylist]);
+    setGoalOptions(
+      allGoals.filter((g) => {
+        console.info(g);
+        return (
+          (g !== GoalName.ReviewDeferredDups || hasGraylist) &&
+          permissions.includes(requiredPermission(g))
+        );
+      })
+    );
+  }, [allGoals, hasGraylist]);
 
   useEffect(() => {
     getGoalTypes();
@@ -78,12 +71,11 @@ export default function GoalTimeline(): ReactElement {
         spacing={3}
         sx={{ p: 2, py: small ? 2 : 4 }}
       >
-        {goalOptions.map((g, i) => (
+        {goalOptions.map((g) => (
           <Grid2 key={g} size={{ xs: 6, md: 3 }}>
             <GoalNameButton
               goalName={g}
               onClick={() => dispatch(asyncAddGoal(goalNameToGoal(g)))}
-              recommended={i === 0 && goalSuggestions.length > 0}
               small={small}
             />
           </Grid2>

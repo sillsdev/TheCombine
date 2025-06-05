@@ -327,7 +327,7 @@
   },
   "reviewDeferredDups": {
     "title": "Review Deferred Duplicates",
-    "description": "Reconsider deferred sets of potential duplicates."
+    "description": "Revisit potential duplicates that were deferred during Merge Duplicates."
   },
   "spellCheckGloss": {
     "title": "Spell Check Gloss",
@@ -343,7 +343,7 @@
   },
   "reviewEntries": {
     "title": "Review Entries",
-    "description": "Review all entries in the project.",
+    "description": "View, sort, filter, and edit entries in the project.",
     "allEntriesPerPageOption": "All",
     "editSense": "Edit sense",
     "discardChanges": "Discard changes?",
@@ -426,7 +426,7 @@
   },
   "mergeDups": {
     "title": "Merge Duplicates",
-    "description": "Consider potential duplicates.",
+    "description": "Review potential duplicates identified by The Combine and merge or eliminate true duplicates.",
     "helpText": {
       "dragCard": "Drag a card here to merge",
       "saveAndContinue": "Save changes and load a new set of words",

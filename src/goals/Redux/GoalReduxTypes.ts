@@ -12,24 +12,21 @@ export interface GoalsState {
   allGoals: GoalName[];
   currentGoal: Goal;
   dataLoadStatus: DataLoadStatus;
-  goalSuggestions: GoalName[];
   history: Goal[];
   previousGoal: GoalName;
 }
 
-/** MergeDups, ReviewEntries, CreateCharInv (in that recommendation order);
- * no ReviewDeferredDups, which is implemented but conditionally available. */
 export const implementedGoals: GoalName[] = [
-  GoalName.MergeDups,
-  GoalName.ReviewEntries,
   GoalName.CreateCharInv,
+  GoalName.MergeDups,
+  GoalName.ReviewDeferredDups,
+  GoalName.ReviewEntries,
 ];
 
 export const defaultState: GoalsState = {
   allGoals: [...implementedGoals],
   currentGoal: new Goal(),
   dataLoadStatus: DataLoadStatus.Default,
-  goalSuggestions: [...implementedGoals],
   history: [],
   previousGoal: GoalName.Default,
 };

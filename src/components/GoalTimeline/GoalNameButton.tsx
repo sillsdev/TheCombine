@@ -8,14 +8,13 @@ import { goalNameToIcon } from "utilities/goalUtilities";
 interface GoalNameButtonProps {
   goalName: GoalName;
   onClick: () => void;
-  recommended?: boolean;
   small?: boolean;
 }
 
 export default function GoalNameButton(
   props: GoalNameButtonProps
 ): ReactElement {
-  const { goalName, onClick, recommended, small } = props;
+  const { goalName, onClick, small } = props;
   const { t } = useTranslation();
 
   return (
@@ -24,7 +23,6 @@ export default function GoalNameButton(
       fullWidth
       sx={{
         alignItems: "flex-start",
-        boxShadow: recommended ? "0 0 16px #090" : undefined,
         height: "100%",
         minHeight: small ? "150px" : "200px",
         p: 2,

@@ -65,9 +65,6 @@ const goalSlice = createSlice({
     },
     setCurrentGoalAction: (state, action) => {
       state.currentGoal = action.payload;
-      state.goalSuggestions = state.goalSuggestions.filter(
-        (g, i) => i || action.payload.name !== g
-      ); // Remove top suggestion if same as goal to add.
       state.previousGoal =
         state.currentGoal.name !== GoalName.Default
           ? state.currentGoal.name

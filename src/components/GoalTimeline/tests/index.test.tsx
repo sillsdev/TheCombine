@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import createMockStore from "redux-mock-store";
 
 import { Permission } from "api/models";
-import GoalTimeline, { createSuggestionData } from "components/GoalTimeline";
+import GoalTimeline from "components/GoalTimeline";
 import {
   CharacterStatus,
   CreateCharInv,
@@ -19,7 +19,6 @@ import { ReviewEntries } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { defaultState } from "rootRedux/types";
 import { Goal } from "types/goals";
 import theme from "types/theme";
-import { goalNameToGoal } from "utilities/goalUtilities";
 import { setMatchMedia } from "utilities/testingLibraryUtilities";
 
 jest.mock("backend", () => ({
@@ -43,11 +42,6 @@ const mockChooseGoal = jest.fn();
 const mockGetCurrentPermissions = jest.fn();
 const mockHasGraylistEntries = jest.fn();
 
-const goalWithAnyGuid = (g: Goal): Goal => ({ ...g, guid: expect.any(String) });
-const allGoalsWithAnyGuids = implementedGoals
-  .map(goalNameToGoal)
-  .map(goalWithAnyGuid);
-
 beforeAll(async () => {
   // Required (along with a `ThemeProvider`) for `useMediaQuery` to work
   setMatchMedia();
@@ -59,7 +53,7 @@ beforeEach(() => {
     Permission.CharacterInventory,
     Permission.MergeAndReviewEntries,
   ]);
-  mockHasGraylistEntries.mockResolvedValue(false);
+  mockHasGraylistEntries.mockResolvedValue(true);
 });
 
 describe("GoalTimeline", () => {
@@ -69,11 +63,11 @@ describe("GoalTimeline", () => {
     expect(buttons).toHaveLength(implementedGoals.length + 1);
   });
 
-  it("has one more button if there's a graylist entry", async () => {
-    mockHasGraylistEntries.mockResolvedValue(true);
+  it("has one fewer button if no graylist entry", async () => {
+    mockHasGraylistEntries.mockResolvedValue(false);
     await renderTimeline(implementedGoals);
     const buttons = screen.queryAllByRole("button");
-    expect(buttons).toHaveLength(implementedGoals.length + 2);
+    expect(buttons).toHaveLength(implementedGoals.length);
   });
 
   it("only shows goal history for goals with changes", async () => {
@@ -114,40 +108,15 @@ describe("GoalTimeline", () => {
     const calledGoalName = mockChooseGoal.mock.calls[0][0].name;
     expect(calledGoalName).toEqual(implementedGoals[goalNum]);
   });
-
-  describe("createSuggestionData", () => {
-    it("don't suggests goal types that aren't available", () => {
-      const suggestions = createSuggestionData([], implementedGoals);
-      expect(suggestions).toEqual([]);
-    });
-
-    it("appends non-suggested available goal types to the end", () => {
-      const sliceIndex = 2;
-      const suggestions = createSuggestionData(
-        implementedGoals,
-        implementedGoals.slice(sliceIndex)
-      );
-      const expectedGoals = [
-        ...allGoalsWithAnyGuids.slice(sliceIndex),
-        ...allGoalsWithAnyGuids.slice(0, sliceIndex),
-      ];
-      expect(suggestions).toEqual(expectedGoals.map((g) => g.name));
-    });
-
-    it("has a fallback for empty suggestion data", () => {
-      const suggestions = createSuggestionData(implementedGoals, []);
-      expect(suggestions).toEqual(allGoalsWithAnyGuids.map((g) => g.name));
-    });
-  });
 });
 
 async function renderTimeline(
-  goalSuggestions = [...implementedGoals],
+  allGoals = [...implementedGoals],
   history: Goal[] = []
 ): Promise<void> {
   const goalsState: GoalsState = {
     ...defaultState.goalsState,
-    goalSuggestions,
+    allGoals,
     history,
   };
   await act(async () => {
