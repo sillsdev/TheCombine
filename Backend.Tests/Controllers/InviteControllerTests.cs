@@ -36,7 +36,9 @@ namespace Backend.Tests.Controllers
         private string _projId = null!;
         private string _tokenActive = null!;
         private string _tokenExpired = null!;
+        // Test email for an invite that has an active token.
         private const string EmailActive = "active@token.email";
+        // Test email for an invite that has an expired token.
         private const string EmailExpired = "expired@token.email";
         private const string MissingId = "MISSING_ID";
 
@@ -57,7 +59,7 @@ namespace Backend.Tests.Controllers
             _projId = (await _projRepo.Create(new Project
             {
                 Name = "InviteControllerTests",
-                InviteTokens = new List<EmailInvite> { tokenPast, tokenFuture }
+                InviteTokens = [ tokenPast, tokenFuture ]
             }))!.Id;
         }
 
@@ -135,7 +137,7 @@ namespace Backend.Tests.Controllers
         public void TestValidateTokenValidTokenUserAlreadyInProject()
         {
             var roles = new Dictionary<string, string> { [_projId] = "role-id" };
-            _userRepo.Create(new User { Email = EmailActive, ProjectRoles = roles });
+            _userRepo.Create(new() { Email = EmailActive, ProjectRoles = roles });
 
             var result = _inviteController.ValidateToken(_projId, _tokenActive).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
@@ -151,6 +153,7 @@ namespace Backend.Tests.Controllers
         public void TestValidateTokenExpiredTokenUserAvailable()
         {
             _userRepo.Create(new() { Id = "other-user" });
+            // User with an email address matching an invite with an expired token.
             _userRepo.Create(new() { Id = "invitee", Email = EmailExpired });
 
             var result = _inviteController.ValidateToken(_projId, _tokenExpired).Result;
@@ -166,7 +169,8 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestValidateTokenValidTokenUserAvailable()
         {
-            _userRepo.Create(new User { Email = EmailActive });
+            // User with an email address matching an invite with an active token.
+            _userRepo.Create(new() { Email = EmailActive });
 
             // No permissions should be required to validate a token.
             _inviteController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
