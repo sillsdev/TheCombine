@@ -95,7 +95,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUploadAudioFileEmptyFile()
         {
-            // Use 0 for the third argument
+            // Use 0 for the third argument to simulate an empty file.
             _file = new FormFile(_stream, 0, 0, "Name", FileName);
 
             var result = _audioController.UploadAudioFile(_projId, _wordId, _file).Result;
@@ -108,10 +108,10 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUploadAudioFileNoWord()
         {
-            var result = _audioController.UploadAudioFile(_projId, "not-a-user", _file).Result;
+            var result = _audioController.UploadAudioFile(_projId, "not-a-word", _file).Result;
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
 
-            result = _audioController.UploadAudioFile(_projId, "not-a-user", "speakerId", _file).Result;
+            result = _audioController.UploadAudioFile(_projId, "not-a-word", "speakerId", _file).Result;
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
 
