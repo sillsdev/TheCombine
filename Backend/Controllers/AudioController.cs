@@ -34,12 +34,6 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public IActionResult DownloadAudioFile(string projectId, string fileName)
         {
-            // SECURITY: Omitting authentication so the frontend can use the API endpoint directly as a URL.
-            // if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
-            // {
-            //     return Forbid();
-            // }
-
             // Sanitize user input
             try
             {

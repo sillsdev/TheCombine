@@ -108,10 +108,10 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUploadAudioFileNoWord()
         {
-            var result = _audioController.UploadAudioFile(_projId, "not-a-user", _file).Result;
+            var result = _audioController.UploadAudioFile(_projId, "not-a-word", _file).Result;
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
 
-            result = _audioController.UploadAudioFile(_projId, "not-a-user", "speakerId", _file).Result;
+            result = _audioController.UploadAudioFile(_projId, "not-a-word", "speakerId", _file).Result;
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
 
