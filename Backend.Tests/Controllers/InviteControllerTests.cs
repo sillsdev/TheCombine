@@ -59,7 +59,7 @@ namespace Backend.Tests.Controllers
             _projId = (await _projRepo.Create(new Project
             {
                 Name = "InviteControllerTests",
-                InviteTokens = [ tokenPast, tokenFuture ]
+                InviteTokens = [tokenPast, tokenFuture]
             }))!.Id;
         }
 
