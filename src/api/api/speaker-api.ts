@@ -678,7 +678,7 @@ export const SpeakerApiFp = function (configuration?: Configuration) {
       speakerId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.removeConsent(
         projectId,
@@ -706,7 +706,7 @@ export const SpeakerApiFp = function (configuration?: Configuration) {
       body: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.updateSpeakerName(
@@ -868,7 +868,7 @@ export const SpeakerApiFactory = function (
       projectId: string,
       speakerId: string,
       options?: any
-    ): AxiosPromise<string> {
+    ): AxiosPromise<void> {
       return localVarFp
         .removeConsent(projectId, speakerId, options)
         .then((request) => request(axios, basePath));
@@ -886,7 +886,7 @@ export const SpeakerApiFactory = function (
       speakerId: string,
       body: string,
       options?: any
-    ): AxiosPromise<string> {
+    ): AxiosPromise<void> {
       return localVarFp
         .updateSpeakerName(projectId, speakerId, body, options)
         .then((request) => request(axios, basePath));

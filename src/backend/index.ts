@@ -250,6 +250,8 @@ export async function uploadLiftAndGetWritingSystems(
   file: File
 ): Promise<Api.WritingSystem[]> {
   const resp = await liftApi.uploadLiftFileAndGetWritingSystems(
+    /* The backend deletes by user, not by project,
+     * but a nonempty projectId in the url is still required. */
     { projectId: "nonempty", file },
     fileUploadOptions()
   );
@@ -281,9 +283,10 @@ export async function exportLift(projectId: string): Promise<string> {
 
 /** Tell the backend to cancel the LIFT file export. */
 export async function cancelExport(): Promise<boolean> {
-  return (
-    await liftApi.cancelLiftExport({ projectId: "nonempty" }, defaultOptions())
-  ).data;
+  /* The backend deletes by user, not by project,
+   * but a nonempty projectId in the url is still required. */
+  const params = { projectId: "nonempty" };
+  return (await liftApi.cancelLiftExport(params, defaultOptions())).data;
 }
 
 /** After the backend confirms that a LIFT file is ready, download it. */
@@ -300,11 +303,10 @@ export async function downloadLift(projectId: string): Promise<string> {
   );
 }
 
-/** After downloading a LIFT file, clear it from the backend.
- * The backend deletes by user, not by project,
- * but a nonempty projectId in the url is still required.
- */
+/** After downloading a LIFT file, clear it from the backend. */
 export async function deleteLift(): Promise<void> {
+  /* The backend deletes by user, not by project,
+   * but a nonempty projectId in the url is still required. */
   await liftApi.deleteLiftFile({ projectId: "nonempty" }, defaultOptions());
 }
 
@@ -438,24 +440,21 @@ export async function getProjectName(projectId?: string): Promise<string> {
   return (await getProject(projectId)).name;
 }
 
-/** Updates project and returns id of updated project. */
-export async function updateProject(project: Project): Promise<string> {
+export async function updateProject(project: Project): Promise<void> {
   const params = { projectId: project.id, project };
-  return (await projectApi.updateProject(params, defaultOptions())).data;
+  await projectApi.updateProject(params, defaultOptions());
 }
 
-/** Archives specified project and returns id. */
-export async function archiveProject(projectId: string): Promise<string> {
+export async function archiveProject(projectId: string): Promise<void> {
   const project = await getProject(projectId);
   project.isActive = false;
-  return await updateProject(project);
+  await updateProject(project);
 }
 
-/** Restores specified archived project and returns id. */
-export async function restoreProject(projectId: string): Promise<string> {
+export async function restoreProject(projectId: string): Promise<void> {
   const project = await getProject(projectId);
   project.isActive = true;
-  return await updateProject(project);
+  await updateProject(project);
 }
 
 /** Returns a boolean indicating whether the specified project name is already taken. */
@@ -557,24 +556,22 @@ export async function deleteSpeaker(
   return (await speakerApi.deleteSpeaker(params, defaultOptions())).data;
 }
 
-/** Remove consent of specified speaker (in current project if no projectId given).
- * Returns id of updated speaker. */
-export async function removeConsent(speaker: Speaker): Promise<string> {
+/** Remove consent of specified speaker (in current project if no projectId given). */
+export async function removeConsent(speaker: Speaker): Promise<void> {
   const projectId = speaker.projectId || LocalStorage.getProjectId();
   const params = { projectId, speakerId: speaker.id };
-  return (await speakerApi.removeConsent(params, defaultOptions())).data;
+  await speakerApi.removeConsent(params, defaultOptions());
 }
 
-/** Updates name of specified speaker (in current project if no projectId given).
- * Returns id of updated speaker. */
+/** Updates name of specified speaker (in current project if no projectId given). */
 export async function updateSpeakerName(
   speakerId: string,
   name: string,
   projectId?: string
-): Promise<string> {
+): Promise<void> {
   projectId = projectId || LocalStorage.getProjectId();
   const params = { body: name, projectId, speakerId };
-  return (await speakerApi.updateSpeakerName(params, defaultOptions())).data;
+  await speakerApi.updateSpeakerName(params, defaultOptions());
 }
 
 /** Uploads consent for specified speaker; overwrites previous consent.
@@ -736,20 +733,15 @@ export async function getUserByEmailOrUsername(
     .data;
 }
 
-export async function updateUser(user: User): Promise<User> {
-  const resp = await userApi.updateUser(
-    { userId: user.id, user },
-    defaultOptions()
-  );
-  const updatedUser = { ...user, id: resp.data };
-  if (updatedUser.id === LocalStorage.getUserId()) {
-    LocalStorage.setCurrentUser(updatedUser);
+export async function updateUser(user: User): Promise<void> {
+  await userApi.updateUser({ userId: user.id, user }, defaultOptions());
+  if (user.id === LocalStorage.getUserId()) {
+    LocalStorage.setCurrentUser(user);
   }
-  return updatedUser;
 }
 
-export async function deleteUser(userId: string): Promise<string> {
-  return (await userApi.deleteUser({ userId }, defaultOptions())).data;
+export async function deleteUser(userId: string): Promise<void> {
+  await userApi.deleteUser({ userId }, defaultOptions());
 }
 
 export async function isSiteAdmin(): Promise<boolean> {
@@ -758,18 +750,16 @@ export async function isSiteAdmin(): Promise<boolean> {
 
 /* UserEditController.cs */
 
-/** Returns guid of added goal, or of updated goal
- * if goal with same guid already exists in the UserEdit */
+/** Adds goal, or updates if goal with same guid already exists. */
 export async function addGoalToUserEdit(
   userEditId: string,
   goal: Goal
-): Promise<string> {
+): Promise<void> {
   const edit = convertGoalToEdit(goal);
-  const resp = await userEditApi.updateUserEditGoal(
+  await userEditApi.updateUserEditGoal(
     { projectId: LocalStorage.getProjectId(), userEditId, edit },
     defaultOptions()
   );
-  return resp.data;
 }
 
 /** Returns index of step within specified goal */
@@ -831,10 +821,10 @@ export async function addOrUpdateUserRole(
   projectId: string,
   role: Role,
   userId: string
-): Promise<string> {
+): Promise<void> {
   const projectRole = { projectId, role };
   const params = { projectId, projectRole, userId };
-  return (await userRoleApi.updateUserRole(params, defaultOptions())).data;
+  await userRoleApi.updateUserRole(params, defaultOptions());
 }
 
 export async function removeUserRole(
@@ -871,9 +861,9 @@ export async function createWord(word: Word): Promise<Word> {
   return word;
 }
 
-export async function deleteFrontierWord(wordId: string): Promise<string> {
+export async function deleteFrontierWord(wordId: string): Promise<void> {
   const params = { projectId: LocalStorage.getProjectId(), wordId };
-  return (await wordApi.deleteFrontierWord(params, defaultOptions())).data;
+  await wordApi.deleteFrontierWord(params, defaultOptions());
 }
 
 export async function getDuplicateId(word: Word): Promise<string> {
