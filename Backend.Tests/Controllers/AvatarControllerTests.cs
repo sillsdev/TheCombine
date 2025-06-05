@@ -100,7 +100,7 @@ namespace Backend.Tests.Controllers
         public void TestUploadAudioFileEmptyFile()
         {
             using var stream = File.OpenRead(_filePath);
-            // Use 0 for the third argument
+            // Use 0 for the third argument to simulate an empty file.
             var file = new FormFile(stream, 0, 0, "formFileName", FileName);
 
             var result = _avatarController.UploadAvatar(file).Result;

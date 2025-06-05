@@ -31,12 +31,6 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DownloadAvatar(string userId)
         {
-            // SECURITY: Omitting authentication so the frontend can use the API endpoint directly as a URL.
-            // if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
-            // {
-            //     return Forbid();
-            // }
-
             var avatar = (await _userRepo.GetUser(userId, false))?.Avatar;
             if (string.IsNullOrEmpty(avatar))
             {
