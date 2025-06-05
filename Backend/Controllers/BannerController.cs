@@ -39,6 +39,7 @@ namespace BackendFramework.Controllers
         /// </summary>
         [HttpPut("", Name = "UpdateBanner")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> UpdateBanner([FromBody, BindRequired] SiteBanner banner)
         {
             if (!await _permissionService.IsSiteAdmin(HttpContext))
