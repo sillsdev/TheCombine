@@ -288,7 +288,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUploadConsentEmptyFile()
         {
-            // Use 0 for the third argument
+            // Use 0 for the third argument to simulate an empty file.
             _file = new FormFile(_stream, 0, 0, "name", FileName)
             {
                 Headers = new HeaderDictionary(),
