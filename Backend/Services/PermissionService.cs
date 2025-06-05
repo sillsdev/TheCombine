@@ -41,22 +41,20 @@ namespace BackendFramework.Services
         /// <summary> Checks whether the given user is authorized. </summary>
         public bool IsUserIdAuthorized(HttpContext request, string userId)
         {
-            var currentUserId = GetUserId(request);
-            return userId == currentUserId;
+            return !string.IsNullOrEmpty(userId) && userId == GetUserId(request);
         }
 
         /// <summary> Checks whether the current user is authorized. </summary>
         public bool IsCurrentUserAuthorized(HttpContext request)
         {
-            var userId = GetUserId(request);
-            return IsUserIdAuthorized(request, userId);
+            return !string.IsNullOrEmpty(GetUserId(request));
         }
 
         /// <summary> Checks whether the current user is a site admin. </summary>
         public async Task<bool> IsSiteAdmin(HttpContext request)
         {
             var user = await _userRepo.GetUser(GetUserId(request));
-            return user is not null && user.IsAdmin;
+            return user?.IsAdmin ?? false;
         }
 
         /// <summary> Checks whether the current user has the given project permission. </summary>
@@ -143,13 +141,8 @@ namespace BackendFramework.Services
         /// <exception cref="InvalidJwtTokenException"> Throws when null userId extracted from token. </exception>
         public string GetUserId(HttpContext request)
         {
-            var jsonToken = GetJwt(request);
-            var userId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
-            if (userId is null)
-            {
-                throw new InvalidJwtTokenException();
-            }
-
+            var token = (JwtSecurityToken)GetJwt(request);
+            var userId = token.Payload["UserId"].ToString() ?? throw new InvalidJwtTokenException();
             return userId;
         }
 
@@ -195,12 +188,8 @@ namespace BackendFramework.Services
             user.Sanitize();
             user.Token = tokenHandler.WriteToken(token);
 
-            if (await _userRepo.Update(user.Id, user) != ResultOfUpdate.Updated)
-            {
-                return null;
-            }
-
-            return user;
+            var updateResult = await _userRepo.Update(user.Id, user);
+            return updateResult == ResultOfUpdate.Updated ? user : null;
         }
 
         public sealed class InvalidJwtTokenException : Exception
