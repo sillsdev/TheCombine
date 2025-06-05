@@ -33,6 +33,8 @@ namespace BackendFramework.Controllers
         /// <summary> Generates invite link and sends email containing link </summary>
         [HttpPut(Name = "EmailInviteToProject")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> EmailInviteToProject([FromBody, BindRequired] EmailInviteData data)
         {
             var projectId = data.ProjectId;
@@ -49,7 +51,7 @@ namespace BackendFramework.Controllers
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
-                return NotFound(projectId);
+                return NotFound($"projectId: {projectId}");
             }
 
             var linkWithIdentifier = await _inviteService.CreateLinkWithToken(project, data.Role, data.EmailAddress);
@@ -61,12 +63,13 @@ namespace BackendFramework.Controllers
         [AllowAnonymous]
         [HttpPut("{projectId}/validate/{token}", Name = "ValidateToken")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmailInviteStatus))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> ValidateToken(string projectId, string token)
         {
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
-                return NotFound(projectId);
+                return NotFound($"projectId: {projectId}");
             }
 
             var isTokenValid = false;

@@ -162,18 +162,22 @@ export async function deleteAudio(
   return (await audioApi.deleteAudioFile(params, defaultOptions())).data;
 }
 
-// Use of the returned url acts as an HttpGet.
+/** Returns a url that, when used, acts as an HttpGet.
+ * Note: Backend doesn't need wordId to find the file,
+ * but it's still required in the url and helpful for analytics. */
 export function getAudioUrl(wordId: string, fileName: string): string {
   return `${apiBaseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/download/${fileName}`;
 }
 
 /* AvatarController.cs */
 
-export async function uploadAvatar(userId: string, file: File): Promise<void> {
+/** Uploads avatar for current user. */
+export async function uploadAvatar(file: File): Promise<void> {
+  // Backend ignores userId and gets current user from HttpContext,
+  // but userId is still required in the url and helpful for analytics.
+  const userId = LocalStorage.getUserId();
   await avatarApi.uploadAvatar({ userId, file }, fileUploadOptions());
-  if (userId === LocalStorage.getUserId()) {
-    LocalStorage.setAvatar(await avatarSrc(userId));
-  }
+  LocalStorage.setAvatar(await avatarSrc(userId));
 }
 
 /** Returns the string to display the image inline in Base64 <img src= */
