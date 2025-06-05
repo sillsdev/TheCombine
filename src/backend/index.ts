@@ -557,24 +557,22 @@ export async function deleteSpeaker(
   return (await speakerApi.deleteSpeaker(params, defaultOptions())).data;
 }
 
-/** Remove consent of specified speaker (in current project if no projectId given).
- * Returns id of updated speaker. */
-export async function removeConsent(speaker: Speaker): Promise<string> {
+/** Remove consent of specified speaker (in current project if no projectId given). */
+export async function removeConsent(speaker: Speaker): Promise<void> {
   const projectId = speaker.projectId || LocalStorage.getProjectId();
   const params = { projectId, speakerId: speaker.id };
-  return (await speakerApi.removeConsent(params, defaultOptions())).data;
+  await speakerApi.removeConsent(params, defaultOptions());
 }
 
-/** Updates name of specified speaker (in current project if no projectId given).
- * Returns id of updated speaker. */
+/** Updates name of specified speaker (in current project if no projectId given). */
 export async function updateSpeakerName(
   speakerId: string,
   name: string,
   projectId?: string
-): Promise<string> {
+): Promise<void> {
   projectId = projectId || LocalStorage.getProjectId();
   const params = { body: name, projectId, speakerId };
-  return (await speakerApi.updateSpeakerName(params, defaultOptions())).data;
+  await speakerApi.updateSpeakerName(params, defaultOptions());
 }
 
 /** Uploads consent for specified speaker; overwrites previous consent.
