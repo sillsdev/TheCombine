@@ -41,7 +41,7 @@ namespace BackendFramework.Services
         /// <summary> Checks whether the given user is authorized. </summary>
         public bool IsUserIdAuthorized(HttpContext request, string userId)
         {
-            return userId == GetUserId(request);
+            return !string.IsNullOrEmpty(userId) && userId == GetUserId(request);
         }
 
         /// <summary> Checks whether the current user is authorized. </summary>
