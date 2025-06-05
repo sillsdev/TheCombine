@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using SIL.Extensions;
+using static SIL.Extensions.DateTimeExtensions;
 
 namespace BackendFramework.Models
 {
@@ -74,7 +74,7 @@ namespace BackendFramework.Models
 
         public WordsPerDayPerUserCount(string isoString)
         {
-            DateTime = DateTimeExtensions.ParseDateTimePermissivelyWithException(isoString);
+            DateTime = isoString.ParseModernPastDateTimePermissivelyWithException();
             UserNameCountDictionary = [];
         }
     }
