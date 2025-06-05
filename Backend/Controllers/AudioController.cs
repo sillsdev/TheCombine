@@ -30,20 +30,15 @@ namespace BackendFramework.Controllers
         [AllowAnonymous]
         [HttpGet("download/{fileName}", Name = "DownloadAudioFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
-        public IActionResult DownloadAudioFile(string projectId, string wordId, string fileName)
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
+        public IActionResult DownloadAudioFile(string projectId, string fileName)
         {
-            // SECURITY: Omitting authentication so the frontend can use the API endpoint directly as a URL.
-            // if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
-            // {
-            //     return Forbid();
-            // }
-
             // Sanitize user input
             try
             {
                 fileName = Sanitization.SanitizeFileName(fileName);
                 projectId = Sanitization.SanitizeId(projectId);
-                wordId = Sanitization.SanitizeId(wordId);
             }
             catch
             {
@@ -67,6 +62,10 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated word </returns>
         [HttpPost("upload", Name = "UploadAudioFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> UploadAudioFile(string projectId, string wordId, IFormFile? file)
         {
             return await UploadAudioFile(projectId, wordId, "", file);
@@ -80,6 +79,10 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated word </returns>
         [HttpPost("upload/{speakerId}", Name = "UploadAudioFileWithSpeaker")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> UploadAudioFile(
             string projectId, string wordId, string speakerId, IFormFile? file)
         {
@@ -111,6 +114,12 @@ namespace BackendFramework.Controllers
                 return BadRequest("Empty File");
             }
 
+            var word = await _wordRepo.GetWord(projectId, wordId);
+            if (word is null)
+            {
+                return NotFound($"wordId: {wordId}");
+            }
+
             // This path should be unique even though it is only based on the Word ID because currently, a new
             // Word is created each time an audio file is uploaded.
             var filePath = FileStorage.GenerateAudioFilePathForWord(projectId, wordId);
@@ -122,11 +131,6 @@ namespace BackendFramework.Controllers
             }
 
             // Add the relative path to the audio field
-            var word = await _wordRepo.GetWord(projectId, wordId);
-            if (word is null)
-            {
-                return NotFound(wordId);
-            }
             var audio = new Pronunciation(Path.GetFileName(filePath), speakerId);
             word.Audio.Add(audio);
 
@@ -139,6 +143,9 @@ namespace BackendFramework.Controllers
         /// <summary> Deletes audio in <see cref="Word"/> with specified ID </summary>
         [HttpDelete("delete/{fileName}", Name = "DeleteAudioFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> DeleteAudioFile(string projectId, string wordId, string fileName)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
@@ -164,7 +171,7 @@ namespace BackendFramework.Controllers
             {
                 return Ok(newWord.Id);
             }
-            return NotFound("The project was found, but the word audio was not deleted");
+            return NotFound($"wordId: {wordId}; fileName: {fileName}");
         }
     }
 }

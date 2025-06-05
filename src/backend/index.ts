@@ -162,7 +162,9 @@ export async function deleteAudio(
   return (await audioApi.deleteAudioFile(params, defaultOptions())).data;
 }
 
-// Use of the returned url acts as an HttpGet.
+/** Returns a url that, when used, acts as an HttpGet.
+ * Note: Backend doesn't need wordId to find the file,
+ * but it's still required in the url and helpful for analytics. */
 export function getAudioUrl(wordId: string, fileName: string): string {
   return `${apiBaseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/download/${fileName}`;
 }
