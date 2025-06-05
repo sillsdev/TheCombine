@@ -25,22 +25,16 @@ namespace BackendFramework.Controllers
 
         /// <summary> Get user's avatar on disk </summary>
         /// <returns> Stream of local avatar file </returns>
+        [AllowAnonymous]
         [HttpGet("download", Name = "DownloadAvatar")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DownloadAvatar(string userId)
         {
-            // SECURITY: Omitting authentication so the frontend can use the API endpoint directly as a URL.
-            // if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
-            // {
-            //     return Forbid();
-            // }
-
-            var user = await _userRepo.GetUser(userId, false);
-            var avatar = string.IsNullOrEmpty(user?.Avatar) ? null : user.Avatar;
-
-            if (avatar is null)
+            var avatar = (await _userRepo.GetUser(userId, false))?.Avatar;
+            if (string.IsNullOrEmpty(avatar))
             {
-                return NotFound(userId);
+                return NotFound();
             }
 
             var imageFile = System.IO.File.OpenRead(avatar);
@@ -48,14 +42,17 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary>
-        /// Adds an avatar image to a <see cref="User"/> and saves locally to ~/.CombineFiles/{ProjectId}/Avatars
+        /// Adds an avatar image to current <see cref="User"/> and saves locally to ~/.CombineFiles/{ProjectId}/Avatars
         /// </summary>
         /// <returns> Path to local avatar file </returns>
         [HttpPost("upload", Name = "UploadAvatar")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> UploadAvatar(string userId, IFormFile? file)
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UploadAvatar(IFormFile? file)
         {
-            if (!_permissionService.IsUserIdAuthorized(HttpContext, userId))
+            if (!_permissionService.IsCurrentUserAuthorized(HttpContext))
             {
                 return Forbid();
             }
@@ -72,10 +69,11 @@ namespace BackendFramework.Controllers
             }
 
             // Get user to apply avatar to.
+            var userId = _permissionService.GetUserId(HttpContext);
             var user = await _userRepo.GetUser(userId, false);
             if (user is null)
             {
-                return NotFound(userId);
+                return NotFound();
             }
 
             // Generate path to store avatar file.
