@@ -25,45 +25,59 @@ const mockStore = configureMockStore()({
   },
 });
 
-const muiSM = 600;
+const muiMd = 900;
 
 describe("TreeView", () => {
-  it("renders without top button in xs windows", async () => {
-    await renderTree(undefined, muiSM - 1);
-    expect(screen.queryByTestId(TreeViewIds.ButtonTop)).toBeNull();
-  });
+  for (const width of [muiMd - 1, muiMd + 1]) {
+    describe(width < muiMd ? "renders narrow" : "renders wide", () => {
+      beforeAll(() => {
+        // Required (along with a `ThemeProvider`) for `useMediaQuery` to work
+        setMatchMedia(width);
+      });
 
-  it("renders with top button in sm+ windows", async () => {
-    await renderTree(undefined, muiSM);
-    expect(screen.queryByTestId(TreeViewIds.ButtonTop)).toBeTruthy();
-  });
+      describe("without exit", () => {
+        beforeEach(async () => {
+          await renderTree();
+        });
 
-  it("renders with no exit button by default", async () => {
-    await renderTree();
-    expect(screen.queryByTestId(TreeViewIds.ButtonExit)).toBeNull();
-  });
+        it("has top button", async () => {
+          expect(screen.queryByTestId(TreeViewIds.ButtonTop)).toBeTruthy();
+        });
 
-  it("exits via exit button", async () => {
-    const mockExit = jest.fn();
-    await renderTree(mockExit);
-    expect(mockExit).not.toHaveBeenCalled();
-    await userEvent.click(screen.getByTestId(TreeViewIds.ButtonExit));
-    expect(mockExit).toHaveBeenCalledTimes(1);
-  });
+        it("has no exit button", async () => {
+          expect(screen.queryByTestId(TreeViewIds.ButtonExit)).toBeNull();
+        });
+      });
 
-  it("exits via escape key", async () => {
-    const mockExit = jest.fn();
-    await renderTree(mockExit);
-    expect(mockExit).not.toHaveBeenCalled();
-    await userEvent.keyboard("{Escape}");
-    expect(mockExit).toHaveBeenCalledTimes(1);
-  });
+      describe("with exit", () => {
+        const mockExit = jest.fn();
+
+        beforeEach(async () => {
+          mockExit.mockClear();
+          await renderTree(mockExit);
+        });
+
+        it("has top button", async () => {
+          expect(screen.queryByTestId(TreeViewIds.ButtonTop)).toBeTruthy();
+        });
+
+        it("exits via exit button", async () => {
+          expect(mockExit).not.toHaveBeenCalled();
+          await userEvent.click(screen.getByTestId(TreeViewIds.ButtonExit));
+          expect(mockExit).toHaveBeenCalledTimes(1);
+        });
+
+        it("exits via escape key", async () => {
+          expect(mockExit).not.toHaveBeenCalled();
+          await userEvent.keyboard("{Escape}");
+          expect(mockExit).toHaveBeenCalledTimes(1);
+        });
+      });
+    });
+  }
 });
 
-async function renderTree(exit?: () => void, width?: number): Promise<void> {
-  // Required (along with a `ThemeProvider`) for `useMediaQuery` to work
-  setMatchMedia(width);
-
+async function renderTree(exit?: () => void): Promise<void> {
   await act(async () => {
     render(
       <ThemeProvider theme={theme}>
