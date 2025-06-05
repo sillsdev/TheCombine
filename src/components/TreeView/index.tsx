@@ -53,7 +53,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
   );
   const [visible, setVisible] = useState(true);
   const dispatch = useAppDispatch();
-  const showButtonToTop = useMediaQuery<Theme>((th) => th.breakpoints.up("sm"));
+  const isMdUp = useMediaQuery<Theme>((th) => th.breakpoints.up("md"));
   const { resolvedLanguage } = useTranslation().i18n;
 
   useEffect(() => {
@@ -85,6 +85,9 @@ export default function TreeView(props: TreeViewProps): ReactElement {
 
   useEffect(() => {
     setVisible(true);
+    if (currentDomain.id && currentDomain.id !== rootId) {
+      animate("#current-domain", { scale: [1, 1.05, 1] }, { duration: 1 });
+    }
   }, [currentDomain]);
 
   const goToDomFromId = useCallback(
@@ -117,16 +120,13 @@ export default function TreeView(props: TreeViewProps): ReactElement {
     <>
       {/* Domain search */}
       <TreeNavigator currentDomain={currentDomain} animate={animateHandler} />
-      <Grid2 container justifyContent="space-between">
+      <Grid2 container justifyContent="space-between" sx={{ marginBottom: 1 }}>
         <Grid2>
-          {/* Empty grid item to balance the buttons */}
-          {showButtonToTop && (
-            <div style={{ display: "inline-block", width: 40 }} />
-          )}
-          {exit && <div style={{ display: "inline-block", width: 40 }} />}
+          {/* Empty grid to balance the buttons */}
+          <div style={{ width: exit ? 80 : 40 }} />
         </Grid2>
 
-        <Grid2>
+        <Grid2 container justifyContent="center" size="grow">
           <TreeSearch
             animate={animateHandler}
             currentDomain={currentDomain}
@@ -135,14 +135,12 @@ export default function TreeView(props: TreeViewProps): ReactElement {
         </Grid2>
 
         <Grid2>
-          {showButtonToTop && (
-            <IconButtonWithTooltip
-              icon={<KeyboardDoubleArrowUp />}
-              textId={"treeView.returnToTop"}
-              onClick={onClickTop}
-              buttonId={TreeViewIds.ButtonTop}
-            />
-          )}
+          <IconButtonWithTooltip
+            icon={<KeyboardDoubleArrowUp />}
+            textId={"treeView.returnToTop"}
+            onClick={onClickTop}
+            buttonId={TreeViewIds.ButtonTop}
+          />
           {exit && (
             <IconButtonWithTooltip
               icon={<Close />}
@@ -155,26 +153,22 @@ export default function TreeView(props: TreeViewProps): ReactElement {
       </Grid2>
 
       {/* Domain tree */}
-      <Zoom
-        in={visible}
-        onEntered={() => {
-          if (currentDomain.id && currentDomain.id !== rootId) {
-            animate("#current-domain", { scale: [1, 0.9, 1] }, { duration: 1 });
-          }
-        }}
-      >
-        <Grid2
-          container
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <TreeDepiction
-            currentDomain={currentDomain}
-            animate={animateHandler}
-          />
-        </Grid2>
-      </Zoom>
+      {isMdUp ? (
+        <Zoom in={visible}>
+          <Grid2 container justifyContent="center">
+            <TreeDepiction
+              animate={animateHandler}
+              currentDomain={currentDomain}
+            />
+          </Grid2>
+        </Zoom>
+      ) : (
+        <TreeDepiction
+          animate={animateHandler}
+          currentDomain={currentDomain}
+          small
+        />
+      )}
     </>
   );
 }

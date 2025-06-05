@@ -5,7 +5,7 @@ import {
   KeyboardArrowUp,
 } from "@mui/icons-material";
 import { Button, Stack, Typography } from "@mui/material";
-import { CSSProperties, ReactElement } from "react";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { SemanticDomain } from "api/models";
@@ -14,19 +14,15 @@ import { rootId } from "types/semanticDomain";
 
 interface DomainTextProps {
   domain: SemanticDomain;
-  extraProps?: CSSProperties;
 }
 
 export function DomainText(props: DomainTextProps): ReactElement {
   const { t } = useTranslation();
+  const { id, name } = props.domain;
   return (
-    <div style={{ ...props.extraProps, textTransform: "capitalize" }}>
-      <Typography variant={"overline"}>
-        {props.domain.id !== rootId ? props.domain.id : ""}
-      </Typography>
-      <Typography variant={"body1"}>
-        {props.domain.id !== rootId ? props.domain.name : t("addWords.domain")}
-      </Typography>
+    <div style={{ textTransform: "capitalize" }}>
+      {id !== rootId && <Typography variant="overline">{id}</Typography>}
+      <Typography>{id !== rootId ? name : t("addWords.domain")}</Typography>
     </div>
   );
 }
@@ -86,23 +82,17 @@ interface DomainTileButtonProps extends DomainTileProps {
 export default function DomainTileButton(
   props: DomainTileButtonProps
 ): ReactElement {
+  const { onClick, ...domainTileProps } = props;
   return (
     <Button
-      color="primary"
       id={props.domain.id}
-      onClick={() => props.onClick(props.domain)}
-      style={{
-        insetInlineStart: 0,
-        bottom: 0,
-        width: "95%",
-        height: "95%",
-        margin: "2.5%",
-        padding: "5px",
-      }}
+      fullWidth
+      onClick={() => onClick(props.domain)}
+      sx={{ height: "100%" }}
       tabIndex={-1}
-      variant={"outlined"}
+      variant="outlined"
     >
-      <DomainTile {...props} />
+      <DomainTile {...domainTileProps} />
     </Button>
   );
 }
