@@ -736,20 +736,15 @@ export async function getUserByEmailOrUsername(
     .data;
 }
 
-export async function updateUser(user: User): Promise<User> {
-  const resp = await userApi.updateUser(
-    { userId: user.id, user },
-    defaultOptions()
-  );
-  const updatedUser = { ...user, id: resp.data };
-  if (updatedUser.id === LocalStorage.getUserId()) {
-    LocalStorage.setCurrentUser(updatedUser);
+export async function updateUser(user: User): Promise<void> {
+  await userApi.updateUser({ userId: user.id, user }, defaultOptions());
+  if (user.id === LocalStorage.getUserId()) {
+    LocalStorage.setCurrentUser(user);
   }
-  return updatedUser;
 }
 
-export async function deleteUser(userId: string): Promise<string> {
-  return (await userApi.deleteUser({ userId }, defaultOptions())).data;
+export async function deleteUser(userId: string): Promise<void> {
+  await userApi.deleteUser({ userId }, defaultOptions());
 }
 
 export async function isSiteAdmin(): Promise<boolean> {
