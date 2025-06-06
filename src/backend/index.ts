@@ -438,21 +438,24 @@ export async function getProjectName(projectId?: string): Promise<string> {
   return (await getProject(projectId)).name;
 }
 
-export async function updateProject(project: Project): Promise<void> {
+/** Updates project and returns id of updated project. */
+export async function updateProject(project: Project): Promise<string> {
   const params = { projectId: project.id, project };
-  await projectApi.updateProject(params, defaultOptions());
+  return (await projectApi.updateProject(params, defaultOptions())).data;
 }
 
-export async function archiveProject(projectId: string): Promise<void> {
+/** Archives specified project and returns id. */
+export async function archiveProject(projectId: string): Promise<string> {
   const project = await getProject(projectId);
   project.isActive = false;
-  await updateProject(project);
+  return await updateProject(project);
 }
 
-export async function restoreProject(projectId: string): Promise<void> {
+/** Restores specified archived project and returns id. */
+export async function restoreProject(projectId: string): Promise<string> {
   const project = await getProject(projectId);
   project.isActive = true;
-  await updateProject(project);
+  return await updateProject(project);
 }
 
 /** Returns a boolean indicating whether the specified project name is already taken. */
@@ -866,9 +869,9 @@ export async function createWord(word: Word): Promise<Word> {
   return word;
 }
 
-export async function deleteFrontierWord(wordId: string): Promise<string> {
+export async function deleteFrontierWord(wordId: string): Promise<void> {
   const params = { projectId: LocalStorage.getProjectId(), wordId };
-  return (await wordApi.deleteFrontierWord(params, defaultOptions())).data;
+  await wordApi.deleteFrontierWord(params, defaultOptions());
 }
 
 export async function getDuplicateId(word: Word): Promise<string> {
