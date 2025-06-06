@@ -12,6 +12,7 @@ namespace Backend.Tests.Controllers
     public class UserControllerTests : IDisposable
     {
         private IUserRepository _userRepo = null!;
+        private IPasswordResetService _passwordResetService = null!;
         private IPermissionService _permissionService = null!;
         private UserController _userController = null!;
 
@@ -33,9 +34,10 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _userRepo = new UserRepositoryMock();
+            _passwordResetService = new PasswordResetServiceMock();
             _permissionService = new PermissionServiceMock(_userRepo);
             _userController = new UserController(_userRepo, _permissionService,
-                new CaptchaServiceMock(), new EmailServiceMock(), new PasswordResetServiceMock());
+                new CaptchaServiceMock(), new EmailServiceMock(), _passwordResetService);
         }
 
         private static User RandomUser()
@@ -50,6 +52,62 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestVerifyCaptchaToken()
+        {
+            // No permissions should be required to verify CAPTCHA.
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            var result = _userController.VerifyCaptchaToken("token").Result;
+            Assert.That(result, Is.TypeOf<OkResult>());
+        }
+
+        [Test]
+        public void TestResetPasswordRequest()
+        {
+            // No permissions should be required to request a password reset.
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            // Returns Ok regardless of if user exists.
+            var noUserResult = _userController.ResetPasswordRequest(new()).Result;
+            Assert.That(noUserResult, Is.TypeOf<OkResult>());
+            var username = (_userRepo.Create(new() { Username = "Imarealboy" }).Result)!.Username;
+            var yesUserResult = _userController.ResetPasswordRequest(new() { EmailOrUsername = username }).Result;
+            Assert.That(yesUserResult, Is.TypeOf<OkResult>());
+        }
+
+        [Test]
+        public void TestValidateResetToken()
+        {
+            // No permissions should be required to validate a password reset token.
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(false);
+            var falseResult = _userController.ValidateResetToken("token").Result;
+            Assert.That(falseResult, Is.TypeOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)falseResult).Value, Is.EqualTo(false));
+
+            ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(true);
+            var trueResult = _userController.ValidateResetToken("token").Result;
+            Assert.That(trueResult, Is.TypeOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)trueResult).Value, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void TestResetPassword()
+        {
+            // No permissions should be required to reset password via a token.
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(false);
+            var falseResult = _userController.ResetPassword(new()).Result;
+            Assert.That(falseResult, Is.TypeOf<ForbidResult>());
+
+            ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(true);
+            var trueResult = _userController.ResetPassword(new()).Result;
+            Assert.That(trueResult, Is.TypeOf<OkResult>());
+        }
+
+        [Test]
         public void TestGetAllUsers()
         {
             _userRepo.Create(RandomUser());
@@ -60,6 +118,30 @@ namespace Backend.Tests.Controllers
             Assert.That(users, Has.Count.EqualTo(3));
             _userRepo.GetAllUsers().Result.ForEach(
                 user => Assert.That(users, Does.Contain(user).UsingPropertiesComparer()));
+        }
+
+        [Test]
+        public void TestGetAllUsersNoPermission()
+        {
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _userController.GetAllUsers().Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestAuthenticateBadCredentials()
+        {
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _userController.Authenticate(new() { EmailOrUsername = "no", Password = "no" }).Result;
+            Assert.That(result, Is.InstanceOf<UnauthorizedObjectResult>());
+        }
+
+        [Test]
+        public void TestGetUserNoPermission()
+        {
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _userController.GetUser("any-user").Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
         [Test]
@@ -79,7 +161,7 @@ namespace Backend.Tests.Controllers
         public void TestGetMissingUser()
         {
             var result = _userController.GetUser("INVALID_USER_ID").Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
@@ -112,7 +194,7 @@ namespace Backend.Tests.Controllers
         public void TestGetUserByEmailOrUsernameMissing()
         {
             var result = _userController.GetUserByEmailOrUsername("INVALID_EMAIL@gmail.com").Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
@@ -120,7 +202,7 @@ namespace Backend.Tests.Controllers
         {
             _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             const string email = "example@gmail.com";
-            var _ = _userRepo.Create(
+            _ = _userRepo.Create(
                 new User { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }
             ).Result ?? throw new UserCreationException();
 
@@ -142,16 +224,14 @@ namespace Backend.Tests.Controllers
         {
             var user = RandomUser();
             _userRepo.Create(user);
+
             var user2 = RandomUser();
             user2.Username = " ";
-            var result = _userController.CreateUser(user).Result;
-            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            Assert.That(_userController.CreateUser(user2).Result, Is.TypeOf<BadRequestObjectResult>());
             user2.Username = user.Username;
-            result = _userController.CreateUser(user).Result;
-            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            Assert.That(_userController.CreateUser(user2).Result, Is.TypeOf<BadRequestObjectResult>());
             user2.Username = user.Email;
-            result = _userController.CreateUser(user).Result;
-            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            Assert.That(_userController.CreateUser(user2).Result, Is.TypeOf<BadRequestObjectResult>());
         }
 
         [Test]
@@ -159,13 +239,14 @@ namespace Backend.Tests.Controllers
         {
             var user = RandomUser();
             _userRepo.Create(user);
+
             var user2 = RandomUser();
             user2.Email = " ";
-            var result = _userController.CreateUser(user).Result;
-            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            Assert.That(_userController.CreateUser(user2).Result, Is.TypeOf<BadRequestObjectResult>());
             user2.Email = user.Email;
-            result = _userController.CreateUser(user).Result;
-            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            Assert.That(_userController.CreateUser(user2).Result, Is.TypeOf<BadRequestObjectResult>());
+            user2.Email = user.Username;
+            Assert.That(_userController.CreateUser(user2).Result, Is.TypeOf<BadRequestObjectResult>());
         }
 
         [Test]
@@ -197,6 +278,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestUpdateUserNoPermission()
+        {
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _userController.UpdateUser("any-user", new()).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
         public void TestDeleteUser()
         {
             var origUser = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
@@ -204,6 +293,21 @@ namespace Backend.Tests.Controllers
 
             _ = _userController.DeleteUser(origUser.Id).Result;
             Assert.That(_userRepo.GetAllUsers().Result, Is.Empty);
+        }
+
+        [Test]
+        public void TestDeleteUserNoUser()
+        {
+            var result = _userController.DeleteUser("not-a-user").Result;
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
+        }
+
+        [Test]
+        public void TestDeleteUserNoPermission()
+        {
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _userController.DeleteUser("anything").Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
         [Test]
@@ -233,7 +337,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestIsUserSiteAdminNotAuthorized()
+        public void TestIsUserSiteAdminUnauthorized()
         {
             _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = _userController.IsUserSiteAdmin().Result;
