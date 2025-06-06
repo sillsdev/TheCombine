@@ -8,21 +8,7 @@ import AppBar from "components/AppBar";
 import { defaultState } from "rootRedux/types";
 import theme from "types/theme";
 
-jest.mock("backend", () => ({
-  isSiteAdmin: () => mockIsSiteAdmin(),
-}));
-
-const mockIsSiteAdmin = jest.fn();
 const mockStore = configureMockStore()(defaultState);
-
-function setMockFunctions(): void {
-  mockIsSiteAdmin.mockResolvedValue(false);
-}
-
-beforeEach(() => {
-  jest.clearAllMocks();
-  setMockFunctions();
-});
 
 describe("AppBar", () => {
   it("renders", async () => {
