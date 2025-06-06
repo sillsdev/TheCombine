@@ -42,8 +42,10 @@ describe("UserStatistics", () => {
     expect(mockGetProjectId).toHaveBeenCalled();
   });
 
-  test("all list items are present", async () => {
-    const listItems = screen.queryAllByRole("listitem");
-    expect(listItems.length).toEqual(mockSemanticDomainUserCountArray.length);
+  test("all rows are present", async () => {
+    const listItems = screen.queryAllByRole("row");
+    expect(listItems.length).toEqual(
+      mockSemanticDomainUserCountArray.length + 1
+    );
   });
 });
