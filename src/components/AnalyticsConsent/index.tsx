@@ -1,4 +1,4 @@
-import { Button, Grid, Theme, Typography, useMediaQuery } from "@mui/material";
+import { Button, Grid2, Stack, Typography } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,8 +16,6 @@ export default function AnalyticsConsent(props: ConsentProps): ReactElement {
   const acceptAnalytics = (): void => props.onChangeConsent(true);
   const rejectAnalytics = (): void => props.onChangeConsent(false);
   const clickedAway = (): void => props.onChangeConsent(undefined);
-
-  const isXs = useMediaQuery<Theme>((th) => th.breakpoints.only("xs"));
 
   function ConsentButton(props: {
     onClick: () => void;
@@ -41,13 +39,12 @@ export default function AnalyticsConsent(props: ConsentProps): ReactElement {
       onClose={!props.required ? clickedAway : undefined}
       PaperProps={{ style: { padding: 20 } }}
     >
-      <Grid
-        container
-        direction={isXs ? "column" : "row"}
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
         alignItems="center"
         spacing={3}
       >
-        <Grid item xs>
+        <div>
           <Typography
             variant="h6"
             style={{ color: themeColors.primary, fontWeight: 600 }}
@@ -58,22 +55,19 @@ export default function AnalyticsConsent(props: ConsentProps): ReactElement {
           <Typography variant="body1">
             {t("analyticsConsent.consentModal.description")}
           </Typography>
-        </Grid>
-        <Grid item container xs="auto" spacing={1}>
-          <Grid item>
-            <ConsentButton
-              onClick={acceptAnalytics}
-              text={t("analyticsConsent.consentModal.acceptAllBtn")}
-            />
-          </Grid>
-          <Grid item>
-            <ConsentButton
-              onClick={rejectAnalytics}
-              text={t("analyticsConsent.consentModal.acceptNecessaryBtn")}
-            />
-          </Grid>
-        </Grid>
-      </Grid>
+        </div>
+
+        <Grid2 container size="auto" spacing={1}>
+          <ConsentButton
+            onClick={acceptAnalytics}
+            text={t("analyticsConsent.consentModal.acceptAllBtn")}
+          />
+          <ConsentButton
+            onClick={rejectAnalytics}
+            text={t("analyticsConsent.consentModal.acceptNecessaryBtn")}
+          />
+        </Grid2>
+      </Stack>
     </Drawer>
   );
 }

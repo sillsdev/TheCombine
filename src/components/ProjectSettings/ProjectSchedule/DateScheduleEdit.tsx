@@ -1,4 +1,4 @@
-import { Button, Grid } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { DateCalendar } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { ReactElement, useState } from "react";
@@ -57,7 +57,7 @@ export default function DateScheduleEdit(
   }
 
   return (
-    <>
+    <Stack spacing={2}>
       <DateCalendar
         defaultValue={
           props.projectSchedule.length
@@ -69,27 +69,25 @@ export default function DateScheduleEdit(
         slots={{ day: ProjectPickersDay }}
         slotProps={{ day: { days: projectSchedule } as any }}
       />
-      <Grid container justifyContent="flex-end" spacing={2}>
-        <Grid item marginTop={1}>
-          <Button
-            variant="contained"
-            onClick={() => props.close()}
-            id="DateSelectorCancelButton"
-          >
-            {t("buttons.cancel")}
-          </Button>
-        </Grid>
-        <Grid item marginTop={1}>
-          <LoadingButton
-            buttonProps={{
-              id: "DateSelectorSubmitButton",
-              onClick: handleSubmit,
-            }}
-          >
-            {t("buttons.confirm")}
-          </LoadingButton>
-        </Grid>
-      </Grid>
-    </>
+
+      <Stack direction="row" justifyContent="flex-end" spacing={2}>
+        <Button
+          variant="contained"
+          onClick={() => props.close()}
+          id="DateSelectorCancelButton"
+        >
+          {t("buttons.cancel")}
+        </Button>
+
+        <LoadingButton
+          buttonProps={{
+            id: "DateSelectorSubmitButton",
+            onClick: handleSubmit,
+          }}
+        >
+          {t("buttons.confirm")}
+        </LoadingButton>
+      </Stack>
+    </Stack>
   );
 }

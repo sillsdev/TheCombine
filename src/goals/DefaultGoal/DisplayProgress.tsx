@@ -1,4 +1,4 @@
-import { Grid, LinearProgress, Paper, Typography } from "@mui/material";
+import { LinearProgress, Paper, Stack, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -31,16 +31,12 @@ export default function DisplayProgress(): ReactElement | null {
 
   return numSteps > 1 ? (
     <Paper key={currentStep}>
-      <Grid container direction="column">
-        <Grid item xs>
-          <Typography variant={"h4"}>
-            {t(stepTranslateId, { val1: currentStep + 1, val2: numSteps })}
-          </Typography>
-        </Grid>
-        <Grid item xs>
-          <LinearProgress variant="determinate" value={percentComplete} />
-        </Grid>
-      </Grid>
+      <Stack>
+        <Typography variant={"h4"}>
+          {t(stepTranslateId, { val1: currentStep + 1, val2: numSteps })}
+        </Typography>
+        <LinearProgress variant="determinate" value={percentComplete} />
+      </Stack>
     </Paper>
   ) : null;
 }
