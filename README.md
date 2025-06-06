@@ -624,7 +624,7 @@ Notes for installing _Docker Desktop_ in Linux:
 Once _Docker Desktop_ has been installed, start it, and set it up as follows:
 
 1. Click the gear icon in the upper right to open the settings dialog;
-2. Click on the _Resources_ link on the left-hand side and set the Memory to at least 8 GB (see Note);
+2. Click on the _Resources_ link on the left-hand side and set the Memory to at least 6 GB (see Note);
 3. Click on the _Kubernetes_ link on the left-hand side;
 4. Select _Enable Kubernetes_ and click _Apply & Restart_;
 5. Click _Install_ on the dialog that is displayed.
