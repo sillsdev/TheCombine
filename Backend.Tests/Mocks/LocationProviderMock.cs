@@ -4,7 +4,7 @@ using BackendFramework.Otel;
 
 namespace Backend.Tests.Mocks
 {
-    sealed internal class LocationProviderMock : ILocationProvider
+    internal sealed class LocationProviderMock : ILocationProvider
     {
         public Task<LocationApi?> GetLocation()
         {

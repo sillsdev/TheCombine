@@ -10,29 +10,29 @@
     <NoWarn>$(NoWarn);CA1305;CA1848;CS1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.11.2" />
+    <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.12.0" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.11.2" />
-    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.11.2" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.12.0" />
     <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.11.1" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.11.1" />
     <PackageReference Include="RelaxNG" Version="3.2.3">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.14" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.6.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.6.0" />
-    <PackageReference Include="MailKit" Version="4.9.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.9.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.9.0" />
+    <PackageReference Include="MailKit" Version="4.12.0" />
     <PackageReference Include="MongoDB.Driver" Version="3.3.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
     <PackageReference Include="Xabe.FFmpeg" Version="5.2.6"/>
 
     <!-- SIL Maintained Dependencies. -->
     <PackageReference Include="icu.net" Version="3.0.1" />
     <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.2.3-beta" />
-    <PackageReference Include="SIL.Core" Version="16.0.0-beta0140" />
-    <PackageReference Include="SIL.Core.Desktop" Version="16.0.0-beta0140"/>
-    <PackageReference Include="SIL.DictionaryServices" Version="16.0.0-beta0140"/>
-    <PackageReference Include="SIL.Lift" Version="16.0.0-beta0140"/>
-    <PackageReference Include="SIL.WritingSystems" Version="16.0.0-beta0140" />
+    <PackageReference Include="SIL.Core" Version="16.0.0" />
+    <PackageReference Include="SIL.Core.Desktop" Version="16.0.0"/>
+    <PackageReference Include="SIL.DictionaryServices" Version="16.0.0"/>
+    <PackageReference Include="SIL.Lift" Version="16.0.0"/>
+    <PackageReference Include="SIL.WritingSystems" Version="16.0.0" />
   </ItemGroup>
 </Project>

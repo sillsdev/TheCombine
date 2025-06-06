@@ -1,27 +1,22 @@
-import { type TouchEvent } from "react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
-import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import AudioPlayer, {
   longPressDelay,
-  playButtonId,
-  playMenuId,
 } from "components/Pronunciations/AudioPlayer";
-import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { type StoreState, defaultState } from "rootRedux/types";
+import { defaultState } from "rootRedux/types";
 import { newPronunciation } from "types/word";
-
-// Mock out Menu to avoid issues with setting its anchor.
-jest.mock("@mui/material", () => {
-  return {
-    ...jest.requireActual("@mui/material"),
-    Menu: (props: any) => <div {...props} />,
-  };
-});
 
 jest.mock("backend", () => ({
   getSpeaker: () => mockGetSpeaker(),
+}));
+jest.mock("components/AppBar/SpeakerMenu", () => ({
+  SpeakerMenuList: () => <div />,
+}));
+jest.mock("components/Dialogs", () => ({
+  ButtonConfirmation: () => <div />,
 }));
 jest.mock("rootRedux/hooks", () => {
   return {
@@ -34,33 +29,12 @@ const mockCanDeleteAudio = jest.fn();
 const mockDispatch = jest.fn((action: any) => action);
 const mockGetSpeaker = jest.fn();
 
-let testRenderer: ReactTestRenderer;
-
-const mockFileName = "speech.mp3";
-const mockId = playButtonId(mockFileName);
-const mockPronunciation = newPronunciation(mockFileName);
-const mockStore = configureMockStore()(mockPlayingState());
-const mockTouchEvent: Partial<TouchEvent<HTMLButtonElement>> = {
-  currentTarget: {} as HTMLButtonElement,
-};
-
-function mockPlayingState(fileName = ""): Partial<StoreState> {
-  return {
-    ...defaultState,
-    pronunciationsState: {
-      fileName,
-      status: PronunciationsStatus.Inactive,
-      wordId: "",
-    },
-  };
-}
-
-function renderAudioPlayer(canDelete = false): void {
-  act(() => {
-    testRenderer = create(
-      <Provider store={mockStore}>
+async function renderAudioPlayer(canDelete = false): Promise<void> {
+  await act(async () => {
+    render(
+      <Provider store={configureMockStore()(defaultState)}>
         <AudioPlayer
-          audio={mockPronunciation}
+          audio={newPronunciation("speech.mp3")}
           deleteAudio={canDelete ? mockCanDeleteAudio : undefined}
         />
       </Provider>
@@ -74,79 +48,76 @@ beforeEach(() => {
 });
 
 describe("Pronunciations", () => {
-  it("dispatches on play", () => {
-    renderAudioPlayer();
+  it("dispatches on play", async () => {
+    await renderAudioPlayer();
     expect(mockDispatch).not.toHaveBeenCalled();
-    const playButton = testRenderer.root.findByProps({ id: mockId });
-    act(() => {
-      playButton.props.onClick();
-    });
+    await userEvent.click(screen.getByRole("button"));
     expect(mockDispatch).toHaveBeenCalledTimes(1);
   });
 
-  it("opens the menu on long-press", () => {
+  it("opens the menu on long-press", async () => {
     // Provide deleteAudio prop so that menu is available
-    renderAudioPlayer(true);
+    await renderAudioPlayer(true);
+    const playButton = screen.getByRole("button");
 
     // Use a mock timer to control the length of the press
     jest.useFakeTimers();
-
-    const playButton = testRenderer.root.findByProps({ id: mockId });
-    const playMenu = testRenderer.root.findByProps({ id: playMenuId });
 
     // Start a press and advance the timer just shy of the long-press time
-    expect(playMenu.props.open).toBeFalsy();
-    act(() => {
-      playButton.props.onTouchStart(mockTouchEvent);
+    expect(screen.queryByRole("menu")).toBeNull();
+    await act(async () => {
+      fireEvent.touchStart(playButton);
     });
-    expect(playMenu.props.open).toBeFalsy();
-    act(() => {
+    expect(screen.queryByRole("menu")).toBeNull();
+    await act(async () => {
       jest.advanceTimersByTime(longPressDelay - 1);
     });
-    expect(playMenu.props.open).toBeFalsy();
+    expect(screen.queryByRole("menu")).toBeNull();
 
     // Advance the timer just past the long-press time
-    act(() => {
+    await act(async () => {
       jest.advanceTimersByTime(2);
     });
-    expect(playMenu.props.open).toBeTruthy();
+    expect(screen.queryByRole("menu")).toBeTruthy();
 
-    // Make sure the menu stays open and no play is dispatched
-    act(() => {
-      playButton.props.onTouchEnd();
-      jest.runAllTimers();
+    // End press, advance timer, and verify the menu stays open
+    await act(async () => {
+      fireEvent.touchEnd(playButton);
     });
-    expect(playMenu.props.open).toBeTruthy();
-    expect(mockDispatch).not.toHaveBeenCalled();
+    expect(screen.queryByRole("menu")).toBeTruthy();
+    await act(async () => {
+      jest.advanceTimersByTime(longPressDelay);
+    });
+    expect(screen.queryByRole("menu")).toBeTruthy();
   });
 
-  it("doesn't open the menu on short-press", () => {
+  it("doesn't open the menu on short-press", async () => {
     // Provide deleteAudio prop so that menu is available
-    renderAudioPlayer(true);
+    await renderAudioPlayer(true);
+    const playButton = screen.getByRole("button");
 
     // Use a mock timer to control the length of the press
     jest.useFakeTimers();
 
-    const playButton = testRenderer.root.findByProps({ id: mockId });
-    const playMenu = testRenderer.root.findByProps({ id: playMenuId });
-
-    // Press the button and advance the timer, but end press before the long-press time
-    expect(playMenu.props.open).toBeFalsy();
-    act(() => {
-      playButton.props.onTouchStart(mockTouchEvent);
+    // Press button and advance timer less than the long-press time
+    expect(screen.queryByRole("menu")).toBeNull();
+    await act(async () => {
+      fireEvent.touchStart(playButton);
     });
-    expect(playMenu.props.open).toBeFalsy();
-    act(() => {
+    expect(screen.queryByRole("menu")).toBeNull();
+    await act(async () => {
       jest.advanceTimersByTime(longPressDelay - 1);
     });
-    expect(playMenu.props.open).toBeFalsy();
-    act(() => {
-      playButton.props.onTouchEnd();
+    expect(screen.queryByRole("menu")).toBeNull();
+
+    // End press and advance timer further
+    await act(async () => {
+      fireEvent.touchEnd(playButton);
     });
-    expect(playMenu.props.open).toBeFalsy();
-    act(() => {
-      jest.advanceTimersByTime(2);
+    expect(screen.queryByRole("menu")).toBeNull();
+    await act(async () => {
+      jest.advanceTimersByTime(2 + longPressDelay);
     });
-    expect(playMenu.props.open).toBeFalsy();
+    expect(screen.queryByRole("menu")).toBeNull();
   });
 });

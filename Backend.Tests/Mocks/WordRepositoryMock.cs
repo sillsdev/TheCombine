@@ -7,7 +7,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    sealed internal class WordRepositoryMock : IWordRepository
+    internal sealed class WordRepositoryMock : IWordRepository
     {
         private readonly List<Word> _words;
         private readonly List<Word> _frontier;
@@ -62,17 +62,23 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> HasWords(string projectId)
         {
-            return Task.FromResult(_words.Find(w => w.ProjectId == projectId) is not null);
+            return Task.FromResult(_words.Any(w => w.ProjectId == projectId));
         }
 
         public Task<bool> HasFrontierWords(string projectId)
         {
-            return Task.FromResult(_frontier.Find(w => w.ProjectId == projectId) is not null);
+            return Task.FromResult(_frontier.Any(w => w.ProjectId == projectId));
         }
 
         public Task<bool> IsInFrontier(string projectId, string wordId)
         {
-            return Task.FromResult(_frontier.Find(w => w.ProjectId == projectId && w.Id == wordId) is not null);
+            return Task.FromResult(_frontier.Any(w => w.ProjectId == projectId && w.Id == wordId));
+        }
+
+        public Task<bool> AreInFrontier(string projectId, List<string> wordIds, int count)
+        {
+            return Task.FromResult(
+                _frontier.Where(w => w.ProjectId == projectId && wordIds.Contains(w.Id)).Count() >= count);
         }
 
         public Task<List<Word>> GetFrontier(string projectId)

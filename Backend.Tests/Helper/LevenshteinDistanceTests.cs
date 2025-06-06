@@ -22,7 +22,7 @@ namespace Backend.Tests.Helper
         }
 
         [Test]
-        public void GetDistanceEmptyWordTest()
+        public void TestGetDistanceEmptyWord()
         {
             Assert.That(_levDist.GetDistance("", ""), Is.EqualTo(0));
             Assert.That(_levDist.GetDistance(BaseWord, ""), Is.EqualTo(DelCost * BaseWord.Length));
@@ -43,14 +43,14 @@ namespace Backend.Tests.Helper
             Tuple.Create("7ditDistanceTes", SubCost + DelCost)
         };
         [TestCaseSource(nameof(WordScorePairs))]
-        public void GetDistanceSimilarWordTest(Tuple<string, int> pair)
+        public void TestGetDistanceSimilarWord(Tuple<string, int> pair)
         {
             var (simWord, score) = pair;
             Assert.That(_levDist.GetDistance(BaseWord, simWord), Is.EqualTo(score));
         }
 
         [Test]
-        public void GetDistanceDifferentWordTest()
+        public void TestGetDistanceDifferentWord()
         {
             const string diffWord = "ZZZZ";
             Assert.That(_levDist.GetDistance(BaseWord, diffWord),
@@ -62,19 +62,15 @@ namespace Backend.Tests.Helper
         [Test]
         public void TestConstructorNegativeInputs()
         {
-            Assert.That(() =>
-            {
-                var _ = new LevenshteinDistance(-1);
-            }, Throws.TypeOf<ArgumentException>());
+            Assert.That(() => new LevenshteinDistance(-1), Throws.TypeOf<ArgumentException>());
+            Assert.That(() => new LevenshteinDistance(1, -1), Throws.TypeOf<ArgumentException>());
+            Assert.That(() => new LevenshteinDistance(1, 1, -1), Throws.TypeOf<ArgumentException>());
         }
 
         [Test]
-        public void TestConstructorSmallSubstitute()
+        public void TestConstructorTooBigSubstitute()
         {
-            Assert.That(() =>
-            {
-                var _ = new LevenshteinDistance(1, 1, 99);
-            }, Throws.TypeOf<ArgumentException>());
+            Assert.That(() => new LevenshteinDistance(1, 1, 3), Throws.TypeOf<ArgumentException>());
         }
     }
 }

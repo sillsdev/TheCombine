@@ -34,7 +34,7 @@ import {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
 import { Permission, type Project } from "api/models";
@@ -263,7 +263,7 @@ export default function ProjectSettingsComponent(): ReactElement {
 
       <TabPanel value={tab} index={ProjectSettingsTab.ImportExport}>
         <Stack>
-          {/* Import Lift file */}
+          {/* Import LIFT file */}
           {permissions.includes(Permission.Import) && (
             <BaseSettings
               icon={<CloudUpload data-testid={Setting.Import} />}
@@ -280,7 +280,7 @@ export default function ProjectSettingsComponent(): ReactElement {
             />
           )}
 
-          {/* Export Lift file */}
+          {/* Export LIFT file */}
           {permissions.includes(Permission.Export) && (
             <BaseSettings
               icon={<GetApp data-testid={Setting.Export} />}
