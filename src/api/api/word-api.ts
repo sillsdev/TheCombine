@@ -745,7 +745,7 @@ export const WordApiFp = function (configuration?: Configuration) {
       wordId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.deleteFrontierWord(
@@ -1050,7 +1050,7 @@ export const WordApiFactory = function (
       projectId: string,
       wordId: string,
       options?: any
-    ): AxiosPromise<string> {
+    ): AxiosPromise<void> {
       return localVarFp
         .deleteFrontierWord(projectId, wordId, options)
         .then((request) => request(axios, basePath));
