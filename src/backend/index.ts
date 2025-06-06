@@ -438,24 +438,21 @@ export async function getProjectName(projectId?: string): Promise<string> {
   return (await getProject(projectId)).name;
 }
 
-/** Updates project and returns id of updated project. */
-export async function updateProject(project: Project): Promise<string> {
+export async function updateProject(project: Project): Promise<void> {
   const params = { projectId: project.id, project };
-  return (await projectApi.updateProject(params, defaultOptions())).data;
+  await projectApi.updateProject(params, defaultOptions());
 }
 
-/** Archives specified project and returns id. */
-export async function archiveProject(projectId: string): Promise<string> {
+export async function archiveProject(projectId: string): Promise<void> {
   const project = await getProject(projectId);
   project.isActive = false;
-  return await updateProject(project);
+  await updateProject(project);
 }
 
-/** Restores specified archived project and returns id. */
-export async function restoreProject(projectId: string): Promise<string> {
+export async function restoreProject(projectId: string): Promise<void> {
   const project = await getProject(projectId);
   project.isActive = true;
-  return await updateProject(project);
+  await updateProject(project);
 }
 
 /** Returns a boolean indicating whether the specified project name is already taken. */
@@ -758,18 +755,16 @@ export async function isSiteAdmin(): Promise<boolean> {
 
 /* UserEditController.cs */
 
-/** Returns guid of added goal, or of updated goal
- * if goal with same guid already exists in the UserEdit */
+/** Adds goal, or updates if goal with same guid already exists. */
 export async function addGoalToUserEdit(
   userEditId: string,
   goal: Goal
-): Promise<string> {
+): Promise<void> {
   const edit = convertGoalToEdit(goal);
-  const resp = await userEditApi.updateUserEditGoal(
+  await userEditApi.updateUserEditGoal(
     { projectId: LocalStorage.getProjectId(), userEditId, edit },
     defaultOptions()
   );
-  return resp.data;
 }
 
 /** Returns index of step within specified goal */
@@ -831,10 +826,10 @@ export async function addOrUpdateUserRole(
   projectId: string,
   role: Role,
   userId: string
-): Promise<string> {
+): Promise<void> {
   const projectRole = { projectId, role };
   const params = { projectId, projectRole, userId };
-  return (await userRoleApi.updateUserRole(params, defaultOptions())).data;
+  await userRoleApi.updateUserRole(params, defaultOptions());
 }
 
 export async function removeUserRole(
