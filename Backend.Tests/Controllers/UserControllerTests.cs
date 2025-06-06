@@ -231,14 +231,5 @@ namespace Backend.Tests.Controllers
             var result5 = (ObjectResult)_userController.IsEmailOrUsernameAvailable("").Result;
             Assert.That(result5.Value, Is.False);
         }
-
-        [Test]
-        public void TestIsUserSiteAdminNotAuthorized()
-        {
-            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var result = _userController.IsUserSiteAdmin().Result;
-            Assert.That(result, Is.InstanceOf<ObjectResult>());
-            Assert.That(((ObjectResult)result).Value, Is.False);
-        }
     }
 }

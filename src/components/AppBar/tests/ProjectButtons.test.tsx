@@ -22,12 +22,10 @@ jest.mock("react-router", () => ({
 
 jest.mock("backend", () => ({
   hasPermission: (perm: Permission) => mockHasPermission(perm),
-  isSiteAdmin: () => mockIsSiteAdmin(),
 }));
 jest.mock("components/Project/ProjectActions", () => ({}));
 
 const mockHasPermission = jest.fn();
-const mockIsSiteAdmin = jest.fn();
 const mockProjectId = "proj-id";
 const mockProjectRoles: { [key: string]: string } = {};
 mockProjectRoles[mockProjectId] = "non-empty-string";
@@ -64,7 +62,7 @@ describe("ProjectButtons", () => {
     expect(screen.queryAllByRole("button")).toHaveLength(1);
   });
 
-  it("has another button for admin or project owner", async () => {
+  it("has another button for project owner", async () => {
     mockHasPermission.mockResolvedValueOnce(true);
     await renderProjectButtons();
     expect(screen.queryAllByRole("button")).toHaveLength(2);
