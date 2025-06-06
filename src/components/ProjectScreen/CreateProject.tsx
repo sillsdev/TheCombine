@@ -2,7 +2,7 @@ import { Cancel } from "@mui/icons-material";
 import {
   Card,
   CardContent,
-  Grid,
+  Grid2,
   IconButton,
   MenuItem,
   Select,
@@ -299,7 +299,7 @@ export default function CreateProject(): ReactElement {
             />
           )}
           {/* Form submission button */}
-          <Grid
+          <Grid2
             container
             justifyContent="flex-end"
             style={{ marginTop: theme.spacing(1) }}
@@ -315,7 +315,7 @@ export default function CreateProject(): ReactElement {
             >
               {t("createProject.create")}
             </LoadingDoneButton>
-          </Grid>
+          </Grid2>
         </CardContent>
       </form>
     </Card>
