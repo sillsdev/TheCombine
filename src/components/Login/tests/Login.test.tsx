@@ -1,6 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { act } from "react";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
@@ -47,7 +46,7 @@ const typeInField = async (id: LoginId, value: string): Promise<void> => {
 /** Click the Login button and confirm whether the field with the given ID has an error. */
 const loginAndCheckError = async (errorId?: LoginId): Promise<void> => {
   // Login button click
-  await act(async () => screen.getByTestId(LoginId.ButtonLogIn).click());
+  await userEvent.click(screen.getByTestId(LoginId.ButtonLogIn));
 
   // Username field check
   const userLabel = screen.getByText(LoginTextId.LabelUsername);

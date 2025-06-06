@@ -1,6 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { act } from "react";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
@@ -75,7 +74,7 @@ const typeInFields = async (textRecord: Partial<SignupText>): Promise<void> => {
 /** Clicks the submit button and checks that only the specified field errors. */
 const submitAndCheckError = async (id?: SignupField): Promise<void> => {
   // Submit the form.
-  await act(async () => screen.getByTestId(SignupId.ButtonSignUp).click());
+  await userEvent.click(screen.getByTestId(SignupId.ButtonSignUp));
 
   // Only the specified field should error.
   Object.values(SignupField).forEach((val) => {
