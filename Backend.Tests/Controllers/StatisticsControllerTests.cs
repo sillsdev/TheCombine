@@ -158,7 +158,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestGetSemanticDomainUserCountsMissingProject()
         {
-            var result = await _statsController.GetSemanticDomainUserCounts(MissingId, "en");
+            var result = await _statsController.GetSemanticDomainUserCounts(MissingId);
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
 
