@@ -1,6 +1,6 @@
 import {
   Box,
-  Grid,
+  Grid2,
   Stack,
   Theme,
   Typography,
@@ -44,16 +44,16 @@ export default function LandingPage(): ReactElement {
   return (
     <>
       <TopBar />
-      <Grid container direction={isXs ? "column" : "row-reverse"}>
-        <Grid item xs="auto">
+      <Grid2 container direction={isXs ? "column" : "row-reverse"}>
+        <Grid2 size="auto">
           <LandingButtons top={isXs} />
-        </Grid>
-        <Grid item xs>
+        </Grid2>
+        <Grid2 size="grow">
           <Box style={{ maxHeight: maxBodyHeight, overflow: "auto" }}>
             <Body />
           </Box>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
       <BottomBar />
     </>
   );
