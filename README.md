@@ -246,10 +246,17 @@ To run all Python linting steps:
 tox
 ```
 
-To upgrade all pinned dependencies:
+To upgrade all pinned development dependencies:
 
 ```bash
 python -m piptools compile --upgrade dev-requirements.in
+```
+
+To upgrade the pinned dependencies for deployment:
+
+```bash
+cd deploy
+python -m piptools compile --upgrade requirements.in
 ```
 
 To upgrade the pinned dependencies for the Maintenance container:
