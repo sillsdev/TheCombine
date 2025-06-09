@@ -2,7 +2,9 @@ import {
   Button,
   Card,
   CardContent,
-  Grid,
+  CardHeader,
+  Grid2,
+  Stack,
   TextField,
   TextFieldProps,
   Typography,
@@ -187,90 +189,89 @@ export default function Signup(props: SignupProps): ReactElement {
   });
 
   return (
-    <Grid container justifyContent="center">
+    <Grid2 container justifyContent="center">
       <Card style={{ width: 450 }}>
-        <form id={SignupId.Form} onSubmit={signUp}>
-          <CardContent>
-            {/* Title */}
-            <Typography align="center" gutterBottom variant="h5">
+        {/* Title */}
+        <CardHeader
+          title={
+            <Typography align="center" variant="h5">
               {t("login.signUpNew")}
             </Typography>
+          }
+        />
 
-            {/* Name field */}
-            <NormalizedTextField
-              {...defaultTextFieldProps(SignupField.Name)}
-              autoComplete="name"
-              autoFocus
-              helperText={
-                fieldError[SignupField.Name] ? t("login.required") : undefined
-              }
-            />
+        <CardContent>
+          <form id={SignupId.Form} onSubmit={signUp}>
+            <Stack spacing={2}>
+              {/* Name field */}
+              <NormalizedTextField
+                {...defaultTextFieldProps(SignupField.Name)}
+                autoComplete="name"
+                autoFocus
+                helperText={
+                  fieldError[SignupField.Name] ? t("login.required") : undefined
+                }
+              />
 
-            {/* Username field */}
-            <NormalizedTextField
-              {...defaultTextFieldProps(SignupField.Username)}
-              autoComplete="username"
-              helperText={t("login.usernameRequirements")}
-              onBlur={() => checkUsername()}
-            />
+              {/* Username field */}
+              <NormalizedTextField
+                {...defaultTextFieldProps(SignupField.Username)}
+                autoComplete="username"
+                helperText={t("login.usernameRequirements")}
+                onBlur={() => checkUsername()}
+              />
 
-            {/* Email field */}
-            {/* Don't use NormalizedTextField for type="email".
-            At best, it doesn't normalize, because of the punycode. */}
-            <TextField
-              {...defaultTextFieldProps(SignupField.Email)}
-              autoComplete="email"
-              type="email"
-            />
+              {/* Email field */}
+              {/* Don't use NormalizedTextField for type="email".
+              At best, it doesn't normalize, because of the punycode. */}
+              <TextField
+                {...defaultTextFieldProps(SignupField.Email)}
+                autoComplete="email"
+                type="email"
+              />
 
-            {/* Password field */}
-            <NormalizedTextField
-              {...defaultTextFieldProps(SignupField.Password1)}
-              autoComplete="new-password"
-              helperText={t("login.passwordRequirements")}
-              onBlur={() => checkPassword1()}
-              type="password"
-            />
+              {/* Password field */}
+              <NormalizedTextField
+                {...defaultTextFieldProps(SignupField.Password1)}
+                autoComplete="new-password"
+                helperText={t("login.passwordRequirements")}
+                onBlur={() => checkPassword1()}
+                type="password"
+              />
 
-            {/* Confirm Password field */}
-            <NormalizedTextField
-              {...defaultTextFieldProps(SignupField.Password2)}
-              autoComplete="new-password"
-              helperText={
-                fieldError[SignupField.Password2]
-                  ? t("login.confirmPasswordError")
-                  : undefined
-              }
-              onBlur={() => checkPassword2()}
-              type="password"
-            />
+              {/* Confirm Password field */}
+              <NormalizedTextField
+                {...defaultTextFieldProps(SignupField.Password2)}
+                autoComplete="new-password"
+                helperText={
+                  fieldError[SignupField.Password2]
+                    ? t("login.confirmPasswordError")
+                    : undefined
+                }
+                onBlur={() => checkPassword2()}
+                type="password"
+              />
 
-            {/* "Failed to sign up" */}
-            {!!error && (
-              <Typography
-                style={{ color: "red", marginBottom: 24, marginTop: 24 }}
-                variant="body2"
-              >
-                {t(error)}
-              </Typography>
-            )}
+              {/* "Failed to sign up" */}
+              {!!error && (
+                <Typography sx={{ color: "red" }} variant="body2">
+                  {t(error)}
+                </Typography>
+              )}
 
-            <Captcha setSuccess={setIsVerified} />
+              <Captcha setSuccess={setIsVerified} />
 
-            {/* Sign Up and Log In buttons */}
-            <Grid container justifyContent="flex-end" spacing={2}>
-              <Grid item>
+              {/* Sign Up and Log In buttons */}
+              <Stack direction="row" justifyContent="flex-end" spacing={2}>
                 <Button
                   data-testid={SignupId.ButtonLogIn}
                   id={SignupId.ButtonLogIn}
                   onClick={() => router.navigate(Path.Login)}
-                  type="button"
                   variant="outlined"
                 >
                   {t("login.backToLogin")}
                 </Button>
-              </Grid>
-              <Grid item>
+
                 <LoadingDoneButton
                   buttonProps={{
                     color: "primary",
@@ -284,11 +285,11 @@ export default function Signup(props: SignupProps): ReactElement {
                 >
                   {t("login.signUp")}
                 </LoadingDoneButton>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </form>
+              </Stack>
+            </Stack>
+          </form>
+        </CardContent>
       </Card>
-    </Grid>
+    </Grid2>
   );
 }
