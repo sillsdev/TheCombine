@@ -1,6 +1,6 @@
 ###############################################################
 PackageId: BouncyCastle.Cryptography
-PackageVersion: 2.5.0
+PackageVersion: 2.5.1
 PackageProjectUrl: https://www.bouncycastle.org/stable/nuget/csharp/website
 Authors: Legion of the Bouncy Castle Inc.
 License: MIT
@@ -34,7 +34,7 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: MailKit
-PackageVersion: 4.9.0
+PackageVersion: 4.12.0
 PackageProjectUrl: http://www.mimekit.net/
 Authors: Jeffrey Stedfast
 License: MIT
@@ -48,7 +48,7 @@ License: BSD-2-Clause
 LicenseUrl: https://licenses.nuget.org/BSD-2-Clause
 ###############################################################
 PackageId: Microsoft.AspNetCore.Authentication.JwtBearer
-PackageVersion: 8.0.14
+PackageVersion: 8.0.15
 PackageProjectUrl: https://asp.net/
 Authors: Microsoft
 License: MIT
@@ -188,21 +188,21 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.IdentityModel.Abstractions
-PackageVersion: 8.6.0
+PackageVersion: 8.9.0
 PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.IdentityModel.JsonWebTokens
-PackageVersion: 8.6.0
+PackageVersion: 8.9.0
 PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.IdentityModel.Logging
-PackageVersion: 8.6.0
+PackageVersion: 8.9.0
 PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Authors: Microsoft
 License: MIT
@@ -223,7 +223,7 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.IdentityModel.Tokens
-PackageVersion: 8.6.0
+PackageVersion: 8.9.0
 PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Authors: Microsoft
 License: MIT
@@ -244,7 +244,7 @@ License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: Microsoft.OpenApi
-PackageVersion: 1.6.22
+PackageVersion: 1.6.23
 PackageProjectUrl: https://github.com/Microsoft/OpenAPI.NET
 Authors: Microsoft
 License: MIT
@@ -265,7 +265,7 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: MimeKit
-PackageVersion: 4.9.0
+PackageVersion: 4.12.0
 PackageProjectUrl: https://www.mimekit.net/
 Authors: Jeffrey Stedfast
 License: MIT
@@ -300,28 +300,28 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: OpenTelemetry
-PackageVersion: 1.11.2
+PackageVersion: 1.12.0
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Api
-PackageVersion: 1.11.2
+PackageVersion: 1.12.0
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Api.ProviderBuilderExtensions
-PackageVersion: 1.11.2
+PackageVersion: 1.12.0
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Exporter.Console
-PackageVersion: 1.11.2
+PackageVersion: 1.12.0
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
@@ -335,7 +335,7 @@ License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Extensions.Hosting
-PackageVersion: 1.11.2
+PackageVersion: 1.12.0
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
@@ -478,35 +478,35 @@ PackageProjectUrl: https://github.com/adamhathcock/sharpcompress
 Authors: Adam Hathcock
 ###############################################################
 PackageId: SIL.Core
-PackageVersion: 16.0.0-beta0140
+PackageVersion: 16.0.0
 PackageProjectUrl: https://github.com/sillsdev/libpalaso
 Authors: SIL Global
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: SIL.Core.Desktop
-PackageVersion: 16.0.0-beta0140
+PackageVersion: 16.0.0
 PackageProjectUrl: https://github.com/sillsdev/libpalaso
 Authors: SIL Global
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: SIL.DictionaryServices
-PackageVersion: 16.0.0-beta0140
+PackageVersion: 16.0.0
 PackageProjectUrl: https://github.com/sillsdev/libpalaso
 Authors: SIL Global
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: SIL.Lift
-PackageVersion: 16.0.0-beta0140
+PackageVersion: 16.0.0
 PackageProjectUrl: https://github.com/sillsdev/libpalaso
 Authors: SIL Global
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: SIL.WritingSystems
-PackageVersion: 16.0.0-beta0140
+PackageVersion: 16.0.0
 PackageProjectUrl: https://github.com/sillsdev/libpalaso
 Authors: SIL Global
 License: MIT
@@ -525,28 +525,28 @@ License: https://opensource.org/licenses/Zlib
 LicenseUrl: https://opensource.org/licenses/Zlib
 ###############################################################
 PackageId: Swashbuckle.AspNetCore
-PackageVersion: 7.2.0
+PackageVersion: 8.1.1
 PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Authors: domaindrivendev
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Swashbuckle.AspNetCore.Swagger
-PackageVersion: 7.2.0
+PackageVersion: 8.1.1
 PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Authors: domaindrivendev
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Swashbuckle.AspNetCore.SwaggerGen
-PackageVersion: 7.2.0
+PackageVersion: 8.1.1
 PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Authors: domaindrivendev
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Swashbuckle.AspNetCore.SwaggerUI
-PackageVersion: 7.2.0
+PackageVersion: 8.1.1
 PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Authors: domaindrivendev
 License: MIT
@@ -623,7 +623,7 @@ License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.Formats.Asn1
-PackageVersion: 8.0.1
+PackageVersion: 8.0.2
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
@@ -651,7 +651,7 @@ License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.IdentityModel.Tokens.Jwt
-PackageVersion: 8.6.0
+PackageVersion: 8.9.0
 PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Authors: Microsoft
 License: MIT
