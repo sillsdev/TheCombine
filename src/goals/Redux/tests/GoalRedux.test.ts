@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { act, cleanup } from "@testing-library/react";
 
-import { Edit, MergeUndoIds, Permission, User, UserEdit } from "api/models";
+import { Edit, MergeUndoIds, User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import {
   CharInvChanges,
@@ -34,44 +34,28 @@ import * as goalUtilities from "utilities/goalUtilities";
 
 jest.mock("backend", () => ({
   addGoalToUserEdit: (...args: any[]) => mockAddGoalToUserEdit(...args),
-  addStepToGoal: (...args: any[]) => mockAddStepToGoal(...args),
+  addStepToGoal: () => jest.fn(),
   createUserEdit: () => mockCreateUserEdit(),
-  findDuplicates: () => Promise.resolve(),
-  getCurrentPermissions: () => mockGetCurrentPermissions(),
+  findDuplicates: () => jest.fn(),
   getGraylistEntries: () => Promise.resolve([]),
-  getUser: (id: string) => mockGetUser(id),
   getUserEditById: (...args: any[]) => mockGetUserEditById(...args),
-  hasGraylistEntries: () => Promise.resolve(false),
+  hasGraylistEntries: () => jest.fn(),
   retrieveDuplicates: () => mockRetrieveDuplicates(),
-  updateUser: (user: User) => mockUpdateUser(user),
 }));
-jest.mock("components/Project/ProjectActions", () => ({}));
-jest.mock("components/Pronunciations/Recorder");
 jest.mock("router/browserRouter", () => ({
   navigate: (path: Path) => mockNavigate(path),
 }));
 
 const mockAddGoalToUserEdit = jest.fn();
-const mockAddStepToGoal = jest.fn();
 const mockCreateUserEdit = jest.fn();
-const mockGetCurrentPermissions = jest.fn();
-const mockGetUser = jest.fn();
 const mockGetUserEditById = jest.fn();
 const mockNavigate = jest.fn();
 const mockRetrieveDuplicates = jest.fn();
-const mockUpdateUser = jest.fn();
 function setMockFunctions(): void {
   mockAddGoalToUserEdit.mockResolvedValue(0);
-  mockAddStepToGoal.mockResolvedValue(0);
   mockCreateUserEdit.mockResolvedValue(mockUser());
-  mockGetCurrentPermissions.mockResolvedValue([
-    Permission.CharacterInventory,
-    Permission.MergeAndReviewEntries,
-  ]);
-  mockGetUser.mockResolvedValue(mockUser());
   mockGetUserEditById.mockResolvedValue(mockUserEdit(true));
   mockRetrieveDuplicates.mockResolvedValue(goalDataMock.plannedWords);
-  mockUpdateUser.mockResolvedValue(mockUser());
 }
 
 const mockProjectId = "123";
