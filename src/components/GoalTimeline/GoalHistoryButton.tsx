@@ -8,7 +8,6 @@ import { MergesCount } from "goals/MergeDuplicates/MergeDupsCompleted";
 import { MergesCompleted } from "goals/MergeDuplicates/MergeDupsTypes";
 import { EditsCount } from "goals/ReviewEntries/ReviewEntriesCompleted";
 import { EntriesEdited } from "goals/ReviewEntries/ReviewEntriesTypes";
-import i18n from "i18n";
 import { Goal, GoalName } from "types/goals";
 import { goalNameToIcon } from "utilities/goalUtilities";
 
@@ -21,7 +20,7 @@ export default function GoalHistoryButton(
   props: GoalHistoryButtonProps
 ): ReactElement {
   const { goal, onClick } = props;
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   const modifiedFormatted = goal.modified
     ? new Date(goal.modified).toLocaleString(i18n.resolvedLanguage, {
