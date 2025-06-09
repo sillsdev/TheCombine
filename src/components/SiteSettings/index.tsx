@@ -1,5 +1,5 @@
 import { Announcement, List, People } from "@mui/icons-material";
-import { Box, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Tab, Tabs, Typography } from "@mui/material";
 import {
   type ReactElement,
   type ReactNode,
@@ -19,8 +19,6 @@ export const enum SiteSettingsTab {
 }
 
 export default function SiteSettings(): ReactElement {
-  const { t } = useTranslation();
-
   const [tab, setTab] = useState(SiteSettingsTab.Projects);
 
   const handleChange = (_e: SyntheticEvent, val: SiteSettingsTab): void =>
@@ -34,10 +32,7 @@ export default function SiteSettings(): ReactElement {
             data-testid={SiteSettingsTab.Projects}
             id={SiteSettingsTab.Projects.toString()}
             label={
-              <Stack direction="row">
-                <List />
-                <Typography>{t("siteSettings.projectList")}</Typography>
-              </Stack>
+              <TabLabel icon={<List />} textId="siteSettings.projectList" />
             }
             value={SiteSettingsTab.Projects}
           />
@@ -45,10 +40,7 @@ export default function SiteSettings(): ReactElement {
             data-testid={SiteSettingsTab.Users}
             id={SiteSettingsTab.Users.toString()}
             label={
-              <Stack direction="row">
-                <People />
-                <Typography>{t("siteSettings.userList")}</Typography>
-              </Stack>
+              <TabLabel icon={<People />} textId="siteSettings.userList" />
             }
             value={SiteSettingsTab.Users}
           />
@@ -56,10 +48,10 @@ export default function SiteSettings(): ReactElement {
             data-testid={SiteSettingsTab.Banners}
             id={SiteSettingsTab.Banners.toString()}
             label={
-              <Stack direction="row">
-                <Announcement />
-                <Typography>{t("siteSettings.banners.title")}</Typography>
-              </Stack>
+              <TabLabel
+                icon={<Announcement />}
+                textId="siteSettings.banners.title"
+              />
             }
             value={SiteSettingsTab.Banners}
           />
@@ -75,6 +67,26 @@ export default function SiteSettings(): ReactElement {
         <Banners />
       </TabPanel>
     </>
+  );
+}
+
+interface TabLabelProps {
+  icon: ReactElement;
+  textId: string;
+}
+
+function TabLabel(props: TabLabelProps): ReactElement {
+  const { t } = useTranslation();
+  return (
+    <Typography>
+      <Box
+        component="span" // to be inline with the title
+        sx={{ marginInlineEnd: 0.25, verticalAlign: "text-top" }}
+      >
+        {props.icon}
+      </Box>
+      {t(props.textId)}
+    </Typography>
   );
 }
 

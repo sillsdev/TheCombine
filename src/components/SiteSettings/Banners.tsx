@@ -4,12 +4,11 @@ import { useTranslation } from "react-i18next";
 
 import { BannerType } from "api/models";
 import { getBannerText, updateBanner } from "backend";
-import theme from "types/theme";
 import { NormalizedTextField } from "utilities/fontComponents";
 
 export default function Banners(): ReactElement {
   return (
-    <Stack spacing={theme.spacing(6)}>
+    <Stack spacing={6}>
       {[BannerType.Announcement, BannerType.Login].map((type) => (
         <Banner key={type} type={type} />
       ))}
@@ -57,7 +56,7 @@ function Banner(props: BannerProps): ReactElement {
   };
 
   return (
-    <Stack spacing={theme.spacing(2)}>
+    <Stack spacing={2}>
       <NormalizedTextField
         id={`${idAffix}-text`}
         variant="outlined"
@@ -69,7 +68,7 @@ function Banner(props: BannerProps): ReactElement {
         style={{ maxWidth: 500 }}
       />
 
-      <Stack direction="row" spacing={theme.spacing(2)}>
+      <Stack direction="row" spacing={2}>
         <Button
           id={`${idAffix}-save`}
           type="submit"

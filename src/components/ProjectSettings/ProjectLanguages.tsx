@@ -255,7 +255,7 @@ export default function ProjectLanguages(
   );
 
   const vernacularLanguageEditor = (): ReactElement => (
-    <Stack alignItems="flex-start" spacing={1}>
+    <Stack spacing={1}>
       <NormalizedTextField
         variant="standard"
         id={ProjectLanguagesId.FieldEditVernacularName}

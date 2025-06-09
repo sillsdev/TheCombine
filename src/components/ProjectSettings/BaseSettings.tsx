@@ -4,7 +4,6 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  Stack,
   Typography,
 } from "@mui/material";
 import { type ReactElement, type ReactNode } from "react";
@@ -36,10 +35,19 @@ export default function BaseSettings(props: BaseSettingsProps): ReactElement {
       }}
     >
       <AccordionSummary expandIcon={<ExpandMore />}>
-        <Stack direction="row" alignItems="center" spacing={2}>
-          <Box sx={{ color: "grey" }}>{props.icon}</Box>
-          <Typography variant="h5">{props.title}</Typography>
-        </Stack>
+        <Typography variant="h5">
+          <Box
+            component="span" // to be inline with the title
+            sx={{
+              color: "grey",
+              marginInlineEnd: 1,
+              verticalAlign: "middle",
+            }}
+          >
+            {props.icon}
+          </Box>
+          {props.title}
+        </Typography>
       </AccordionSummary>
       <AccordionDetails>{props.body}</AccordionDetails>
     </Accordion>

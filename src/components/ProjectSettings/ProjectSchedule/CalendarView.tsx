@@ -41,13 +41,7 @@ export default function CalendarView(props: CalendarViewProps): ReactElement {
   }
 
   return (
-    <Grid2
-      alignItems="center"
-      container
-      direction="row"
-      justifyContent="space-between"
-      size={12}
-    >
+    <Grid2 container justifyContent="space-between" size={12}>
       {handleCalendarView(getScheduledMonths(props.projectSchedule))}
     </Grid2>
   );
