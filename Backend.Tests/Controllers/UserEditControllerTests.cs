@@ -179,8 +179,9 @@ namespace Backend.Tests.Controllers
 
             await _userEditController.UpdateUserEditGoal(_projId, userEdit.Id, newEdit);
 
-            var allUserEdits = await _userEditRepo.GetAllUserEdits(_projId);
-            Assert.That(allUserEdits, Does.Contain(updatedUserEdit).UsingPropertiesComparer());
+            var repoUserEdit = await _userEditRepo.GetUserEdit(_projId, userEdit.Id);
+            newEdit.Modified = repoUserEdit!.Edits.FirstOrDefault(e => e.Guid == newEdit.Guid)!.Modified;
+            Assert.That(repoUserEdit, Is.EqualTo(updatedUserEdit).UsingPropertiesComparer());
         }
 
         [Test]

@@ -8,6 +8,7 @@ import { MergesCount } from "goals/MergeDuplicates/MergeDupsCompleted";
 import { MergesCompleted } from "goals/MergeDuplicates/MergeDupsTypes";
 import { EditsCount } from "goals/ReviewEntries/ReviewEntriesCompleted";
 import { EntriesEdited } from "goals/ReviewEntries/ReviewEntriesTypes";
+import i18n from "i18n";
 import { Goal, GoalName } from "types/goals";
 import { goalNameToIcon } from "utilities/goalUtilities";
 
@@ -21,6 +22,18 @@ export default function GoalHistoryButton(
 ): ReactElement {
   const { goal, onClick } = props;
   const { t } = useTranslation();
+
+  const modifiedFormatted = goal.modified
+    ? new Date(goal.modified).toLocaleString(i18n.resolvedLanguage, {
+        day: "numeric",
+        hour: "numeric",
+        hour12: true,
+        minute: "2-digit",
+        month: "short",
+        weekday: "short",
+        year: "numeric",
+      })
+    : null;
 
   return (
     <Button onClick={onClick} sx={{ minWidth: "225px" }} variant="outlined">
@@ -38,6 +51,13 @@ export default function GoalHistoryButton(
           </Box>
           {t(goal.name + ".title")}
         </Typography>
+
+        {/* Change datetime */}
+        {!!goal.modified && (
+          <Typography sx={{ textAlign: "start" }} variant="caption">
+            {modifiedFormatted}
+          </Typography>
+        )}
 
         {/* Change summary */}
         <Grid2 container sx={{ height: "100%", textAlign: "start" }}>

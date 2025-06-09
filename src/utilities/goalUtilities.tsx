@@ -118,11 +118,11 @@ function goalTypeToGoal(type: GoalType): Goal {
 }
 
 export function convertGoalToEdit(goal: Goal): Edit {
-  const guid = goal.guid;
+  const { guid, modified } = goal;
   const goalType = goal.goalType as number;
   const stepData = goal.steps.map((s) => JSON.stringify(s));
   const changes = JSON.stringify(goal.changes);
-  return { guid, goalType, stepData, changes };
+  return { guid, goalType, stepData, changes, modified };
 }
 
 export function convertEditToGoal(edit: Edit): Goal {
@@ -131,6 +131,7 @@ export function convertEditToGoal(edit: Edit): Goal {
   goal.steps = edit.stepData.map((stepString) => JSON.parse(stepString));
   goal.numSteps = goal.steps.length;
   goal.changes = JSON.parse(edit.changes);
+  goal.modified = edit.modified ?? undefined;
   goal.status = GoalStatus.Completed;
   return goal;
 }
