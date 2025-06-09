@@ -47,7 +47,6 @@ export default function GoalTimeline(): ReactElement {
     const permissions = await getCurrentPermissions();
     setGoalOptions(
       allGoals.filter((g) => {
-        console.info(g);
         return (
           (g !== GoalName.ReviewDeferredDups || hasGraylist) &&
           permissions.includes(requiredPermission(g))
