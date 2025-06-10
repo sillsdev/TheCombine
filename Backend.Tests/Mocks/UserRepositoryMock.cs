@@ -22,6 +22,15 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_users.Select(user => user.Clone()).ToList());
         }
 
+        public Task<List<User>> GetAllUsersByFilter(string filter)
+        {
+            var filteredUsers = _users.Where(user =>
+                user.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                user.Email.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                user.Username.Contains(filter, StringComparison.OrdinalIgnoreCase));
+            return Task.FromResult(filteredUsers.Select(user => user.Clone()).ToList());
+        }
+
         public Task<User?> GetUser(string userId, bool sanitize = true)
         {
             try
