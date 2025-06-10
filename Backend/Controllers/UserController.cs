@@ -108,7 +108,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<User>))]
         public async Task<IActionResult> GetAllUsers()
         {
-            if (string.IsNullOrEmpty(_permissionService.GetUserId(HttpContext)))
+            if (!await _permissionService.IsSiteAdmin(HttpContext))
             {
                 return Forbid();
             }
