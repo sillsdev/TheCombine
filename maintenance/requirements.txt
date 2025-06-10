@@ -23,11 +23,11 @@ durationpy==0.9
 google-auth==2.36.0
     # via kubernetes
 humanfriendly==10.0
-    # via -r requirements.in
+    # via -r maintenance/requirements.in
 idna==3.10
     # via requests
 kubernetes==31.0.0
-    # via -r requirements.in
+    # via -r maintenance/requirements.in
 oauthlib==3.2.2
     # via
     #   kubernetes
@@ -41,16 +41,14 @@ pyasn1-modules==0.4.1
 pycparser==2.22
     # via cffi
 pymongo==4.10.1
-    # via -r requirements.in
+    # via -r maintenance/requirements.in
 pyopenssl==24.3.0
-    # via -r requirements.in
-pyreadline3==3.5.4
-    # via humanfriendly
+    # via -r maintenance/requirements.in
 python-dateutil==2.9.0.post0
     # via kubernetes
 pyyaml==6.0.2
     # via kubernetes
-requests==2.32.3
+requests==2.32.4
     # via
     #   kubernetes
     #   requests-oauthlib
