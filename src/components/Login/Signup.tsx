@@ -261,7 +261,7 @@ export default function Signup(props: SignupProps): ReactElement {
 
               <Captcha setSuccess={setIsVerified} />
 
-              {/* Sign Up and Log In buttons */}
+              {/* Back-to-login and Sign-up buttons */}
               <Stack direction="row" justifyContent="flex-end" spacing={2}>
                 <Button
                   data-testid={SignupId.ButtonLogIn}

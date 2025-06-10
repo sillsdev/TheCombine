@@ -60,7 +60,7 @@ export default function ResetRequest(): ReactElement {
 
         <CardContent>
           {isDone ? (
-            <Stack alignItems="flex-start" spacing={2}>
+            <Stack alignItems="flex-end" spacing={2}>
               <Typography>{t("passwordReset.resetDone")}</Typography>
 
               <Button
@@ -74,7 +74,7 @@ export default function ResetRequest(): ReactElement {
             </Stack>
           ) : (
             <form onSubmit={onSubmit}>
-              <Stack alignItems="flex-start" spacing={1}>
+              <Stack spacing={1}>
                 <Typography>
                   {t("passwordReset.resetRequestInstructions")}
                 </Typography>
@@ -94,18 +94,30 @@ export default function ResetRequest(): ReactElement {
 
                 <Captcha setSuccess={setIsVerified} />
 
-                <LoadingDoneButton
-                  buttonProps={{
-                    "data-testid": PasswordRequestIds.ButtonSubmit,
-                    id: PasswordRequestIds.ButtonSubmit,
-                    type: "submit",
-                    variant: "contained",
-                  }}
-                  disabled={!emailOrUsername || !isVerified}
-                  loading={isLoading}
-                >
-                  {t("passwordReset.submit")}
-                </LoadingDoneButton>
+                {/* Back-to-login and Submit buttons */}
+                <Stack direction="row" justifyContent="flex-end" spacing={2}>
+                  <Button
+                    data-testid={PasswordRequestIds.ButtonLogin}
+                    id={PasswordRequestIds.ButtonLogin}
+                    onClick={() => navigate(Path.Login)}
+                    variant="outlined"
+                  >
+                    {t("login.backToLogin")}
+                  </Button>
+
+                  <LoadingDoneButton
+                    buttonProps={{
+                      "data-testid": PasswordRequestIds.ButtonSubmit,
+                      id: PasswordRequestIds.ButtonSubmit,
+                      type: "submit",
+                      variant: "contained",
+                    }}
+                    disabled={!emailOrUsername || !isVerified}
+                    loading={isLoading}
+                  >
+                    {t("passwordReset.submit")}
+                  </LoadingDoneButton>
+                </Stack>
               </Stack>
             </form>
           )}
