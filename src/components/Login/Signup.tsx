@@ -190,7 +190,7 @@ export default function Signup(props: SignupProps): ReactElement {
 
   return (
     <Grid2 container justifyContent="center">
-      <Card style={{ width: 450 }}>
+      <Card sx={{ width: 450 }}>
         {/* Title */}
         <CardHeader
           title={
