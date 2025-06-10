@@ -274,9 +274,9 @@ export default function Signup(props: SignupProps): ReactElement {
 
                 <LoadingDoneButton
                   buttonProps={{
-                    color: "primary",
                     "data-testid": SignupId.ButtonSignUp,
                     id: SignupId.ButtonSignUp,
+                    type: "submit",
                   }}
                   disabled={!isVerified}
                   done={signupStatus === LoginStatus.Success}

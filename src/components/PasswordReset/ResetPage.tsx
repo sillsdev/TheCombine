@@ -7,13 +7,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import {
-  type FormEvent,
-  type ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { type FormEvent, type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "react-toastify";
@@ -42,15 +36,11 @@ export default function PasswordReset(): ReactElement {
   const [passwordFitsRequirements, setPasswordFitsRequirements] =
     useState(false);
 
-  const validateLink = useCallback(async (): Promise<void> => {
+  useEffect(() => {
     if (token) {
-      setIsValidLink(await validateResetToken(token));
+      validateResetToken(token).then(setIsValidLink);
     }
   }, [token]);
-
-  useEffect(() => {
-    validateLink();
-  });
 
   const onSubmit = async (e: FormEvent<HTMLElement>): Promise<void> => {
     if (token) {
@@ -90,53 +80,51 @@ export default function PasswordReset(): ReactElement {
         />
 
         <CardContent>
-          <form onSubmit={onSubmit}>
-            <Stack alignItems="flex-end" spacing={2}>
-              <NormalizedTextField
-                error={!passwordFitsRequirements}
-                fullWidth
-                helperText={
-                  !passwordFitsRequirements && t("login.passwordRequirements")
-                }
-                id="password-reset-password1"
-                inputProps={{ "data-testid": PasswordResetIds.Password }}
-                label={t("login.password")}
-                onChange={(e) =>
-                  onChangePassword(e.target.value, passwordConfirm)
-                }
-                type="password"
-                value={password}
-              />
+          <Stack alignItems="flex-end" spacing={2}>
+            <NormalizedTextField
+              error={!passwordFitsRequirements}
+              fullWidth
+              helperText={
+                !passwordFitsRequirements && t("login.passwordRequirements")
+              }
+              id="password-reset-password1"
+              inputProps={{ "data-testid": PasswordResetIds.Password }}
+              label={t("login.password")}
+              onChange={(e) =>
+                onChangePassword(e.target.value, passwordConfirm)
+              }
+              type="password"
+              value={password}
+            />
 
-              <NormalizedTextField
-                error={!isPasswordConfirmed && passwordConfirm.length > 0}
-                fullWidth
-                helperText={
-                  !isPasswordConfirmed &&
-                  passwordConfirm.length > 0 &&
-                  t("login.confirmPasswordError")
-                }
-                id={PasswordResetIds.ConfirmPassword}
-                inputProps={{
-                  "data-testid": PasswordResetIds.ConfirmPassword,
-                }}
-                label={t("login.confirmPassword")}
-                onChange={(e) => onChangePassword(password, e.target.value)}
-                type="password"
-                value={passwordConfirm}
-              />
+            <NormalizedTextField
+              error={!isPasswordConfirmed && passwordConfirm.length > 0}
+              fullWidth
+              helperText={
+                !isPasswordConfirmed &&
+                passwordConfirm.length > 0 &&
+                t("login.confirmPasswordError")
+              }
+              id={PasswordResetIds.ConfirmPassword}
+              inputProps={{
+                "data-testid": PasswordResetIds.ConfirmPassword,
+              }}
+              label={t("login.confirmPassword")}
+              onChange={(e) => onChangePassword(password, e.target.value)}
+              type="password"
+              value={passwordConfirm}
+            />
 
-              <Button
-                data-testid={PasswordResetIds.SubmitButton}
-                disabled={!(passwordFitsRequirements && isPasswordConfirmed)}
-                id={PasswordResetIds.SubmitButton}
-                onClick={onSubmit}
-                variant="contained"
-              >
-                {t("passwordReset.submit")}
-              </Button>
-            </Stack>
-          </form>
+            <Button
+              data-testid={PasswordResetIds.SubmitButton}
+              disabled={!(passwordFitsRequirements && isPasswordConfirmed)}
+              id={PasswordResetIds.SubmitButton}
+              onClick={onSubmit}
+              variant="contained"
+            >
+              {t("passwordReset.submit")}
+            </Button>
+          </Stack>
         </CardContent>
       </Card>
     </Grid2>
