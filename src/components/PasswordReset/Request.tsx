@@ -73,41 +73,39 @@ export default function ResetRequest(): ReactElement {
               </Button>
             </Stack>
           ) : (
-            <form onSubmit={onSubmit}>
-              <Stack alignItems="flex-start" spacing={1}>
-                <Typography>
-                  {t("passwordReset.resetRequestInstructions")}
-                </Typography>
+            <Stack alignItems="flex-start" spacing={1}>
+              <Typography>
+                {t("passwordReset.resetRequestInstructions")}
+              </Typography>
 
-                <NormalizedTextField
-                  fullWidth
-                  helperText={isError && t("passwordReset.resetFail")}
-                  id={PasswordRequestIds.FieldEmailOrUsername}
-                  inputProps={{
-                    "data-testid": PasswordRequestIds.FieldEmailOrUsername,
-                  }}
-                  label={t("passwordReset.emailOrUsername")}
-                  onChange={(e) => setEmailOrUsername(e.target.value)}
-                  required
-                  value={emailOrUsername}
-                />
+              <NormalizedTextField
+                fullWidth
+                helperText={isError && t("passwordReset.resetFail")}
+                id={PasswordRequestIds.FieldEmailOrUsername}
+                inputProps={{
+                  "data-testid": PasswordRequestIds.FieldEmailOrUsername,
+                }}
+                label={t("passwordReset.emailOrUsername")}
+                onChange={(e) => setEmailOrUsername(e.target.value)}
+                required
+                value={emailOrUsername}
+              />
 
-                <Captcha setSuccess={setIsVerified} />
+              <Captcha setSuccess={setIsVerified} />
 
-                <LoadingDoneButton
-                  buttonProps={{
-                    "data-testid": PasswordRequestIds.ButtonSubmit,
-                    id: PasswordRequestIds.ButtonSubmit,
-                    onClick: onSubmit,
-                    variant: "contained",
-                  }}
-                  disabled={!emailOrUsername || !isVerified}
-                  loading={isLoading}
-                >
-                  {t("passwordReset.submit")}
-                </LoadingDoneButton>
-              </Stack>
-            </form>
+              <LoadingDoneButton
+                buttonProps={{
+                  "data-testid": PasswordRequestIds.ButtonSubmit,
+                  id: PasswordRequestIds.ButtonSubmit,
+                  onClick: onSubmit,
+                  variant: "contained",
+                }}
+                disabled={!emailOrUsername || !isVerified}
+                loading={isLoading}
+              >
+                {t("passwordReset.submit")}
+              </LoadingDoneButton>
+            </Stack>
           )}
         </CardContent>
       </Card>

@@ -106,9 +106,7 @@ export default function PasswordReset(): ReactElement {
                 t("login.confirmPasswordError")
               }
               id={PasswordResetIds.ConfirmPassword}
-              inputProps={{
-                "data-testid": PasswordResetIds.ConfirmPassword,
-              }}
+              inputProps={{ "data-testid": PasswordResetIds.ConfirmPassword }}
               label={t("login.confirmPassword")}
               onChange={(e) => onChangePassword(password, e.target.value)}
               type="password"
