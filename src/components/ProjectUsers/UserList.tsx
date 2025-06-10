@@ -34,15 +34,14 @@ export default function UserList(props: UserListProps): ReactElement {
 
   const { t } = useTranslation();
 
-  const clearFilter = (): void => {
-    setFilterInput("");
-    setFilteredNotInProj([]);
+  const clearFilteredUsers = (): void => {
     setFilteredInProj([]);
+    setFilteredNotInProj([]);
   };
 
   useEffect(() => {
-    clearFilter();
-
+    setFilterInput("");
+    clearFilteredUsers();
     setProjUserIds(props.projectUsers.map((u) => u.id));
 
     const newUserAvatar: Hash<string> = {};
@@ -69,6 +68,8 @@ export default function UserList(props: UserListProps): ReactElement {
     text = text.trim();
     if (text.length >= props.minSearchLength) {
       await setFilteredUsers(text);
+    } else {
+      clearFilteredUsers();
     }
   };
 
