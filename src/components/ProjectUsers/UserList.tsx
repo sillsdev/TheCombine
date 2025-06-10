@@ -26,9 +26,9 @@ interface UserListProps {
 
 export default function UserList(props: UserListProps): ReactElement {
   const [filterInput, setFilterInput] = useState<string>("");
+  const [filteredInProj, setFilteredInProj] = useState<UserStub[]>([]);
+  const [filteredNotInProj, setFilteredNotInProj] = useState<UserStub[]>([]);
   const [hoverUserId, setHoverUserId] = useState<string>("");
-  const [nonProjUsers, setNonProjUsers] = useState<UserStub[]>([]);
-  const [projUsers, setProjUsers] = useState<UserStub[]>([]);
   const [projUserIds, setProjUserIds] = useState<string[]>([]);
   const [userAvatar, setUserAvatar] = useState<Hash<string>>({});
 
@@ -36,8 +36,8 @@ export default function UserList(props: UserListProps): ReactElement {
 
   const clearFilter = (): void => {
     setFilterInput("");
-    setNonProjUsers([]);
-    setProjUsers([]);
+    setFilteredNotInProj([]);
+    setFilteredInProj([]);
   };
 
   useEffect(() => {
@@ -56,11 +56,10 @@ export default function UserList(props: UserListProps): ReactElement {
 
   const setFilteredUsers = useCallback(
     async (text: string): Promise<void> => {
-      const usersByFilter = (await getUsersByFilter(text)).sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
-      setNonProjUsers(usersByFilter.filter((u) => !projUserIds.includes(u.id)));
-      setProjUsers(usersByFilter.filter((u) => projUserIds.includes(u.id)));
+      const filtered = await getUsersByFilter(text);
+      const sorted = filtered.sort((a, b) => a.name.localeCompare(b.name));
+      setFilteredNotInProj(sorted.filter((u) => !projUserIds.includes(u.id)));
+      setFilteredInProj(sorted.filter((u) => projUserIds.includes(u.id)));
     },
     [projUserIds]
   );
@@ -73,7 +72,7 @@ export default function UserList(props: UserListProps): ReactElement {
     }
   };
 
-  const projUserListItem = (user: UserStub): ReactElement => {
+  const inProjListItem = (user: UserStub): ReactElement => {
     return (
       <ListItem
         key={user.id}
@@ -93,7 +92,7 @@ export default function UserList(props: UserListProps): ReactElement {
     );
   };
 
-  const nonProjUserListItem = (user: UserStub): ReactElement => {
+  const notInProjListItem = (user: UserStub): ReactElement => {
     return (
       <ListItem
         key={user.id}
@@ -122,8 +121,8 @@ export default function UserList(props: UserListProps): ReactElement {
         value={filterInput}
       />
       <List>
-        {projUsers.map(projUserListItem)}
-        {nonProjUsers.map(nonProjUserListItem)}
+        {filteredInProj.map(inProjListItem)}
+        {filteredNotInProj.map(notInProjListItem)}
       </List>
     </Grid>
   );
