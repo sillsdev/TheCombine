@@ -3,8 +3,6 @@ import Drawer from "@mui/material/Drawer";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import { themeColors } from "types/theme";
-
 interface ConsentProps {
   onChangeConsent: (consentVal?: boolean) => void;
   required: boolean;
@@ -24,7 +22,7 @@ export default function AnalyticsConsent(props: ConsentProps): ReactElement {
     return (
       <Button
         onClick={props.onClick}
-        style={{ height: 60, width: 155 }}
+        sx={{ height: 60, width: 155 }}
         variant="contained"
       >
         <Typography variant="body2">{props.text}</Typography>
@@ -37,17 +35,17 @@ export default function AnalyticsConsent(props: ConsentProps): ReactElement {
       anchor={"bottom"}
       open
       onClose={!props.required ? clickedAway : undefined}
-      PaperProps={{ style: { padding: 20 } }}
+      PaperProps={{ sx: { p: 2 } }}
     >
       <Stack
-        direction={{ xs: "column", sm: "row" }}
         alignItems="center"
-        spacing={3}
+        direction={{ sm: "row", xs: "column" }}
+        spacing={2}
       >
         <div>
           <Typography
             variant="h6"
-            style={{ color: themeColors.primary, fontWeight: 600 }}
+            sx={{ color: "primary.main", fontWeight: "bolder" }}
             gutterBottom
           >
             {t("analyticsConsent.consentModal.title")}

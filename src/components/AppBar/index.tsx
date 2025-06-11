@@ -26,14 +26,14 @@ export default function AppBarComponent(): ReactElement {
     <div className="NavigationBar" style={{ marginBottom: topBarHeight }}>
       <AppBar
         position="fixed"
-        style={{ maxHeight: appBarHeight, zIndex: theme.zIndex.drawer + 1 }}
+        sx={{ maxHeight: appBarHeight, zIndex: theme.zIndex.drawer + 1 }}
       >
         <Toolbar>
           <Stack
             alignItems="center"
             direction="row"
             justifyContent="space-between"
-            width="100%"
+            sx={{ width: "100%" }}
           >
             <div>
               <Logo />

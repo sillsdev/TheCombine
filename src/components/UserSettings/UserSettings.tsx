@@ -135,11 +135,11 @@ export function UserSettings(props: {
 
   return (
     <Grid2 container justifyContent="center">
-      <Card style={{ width: 450 }}>
+      <Card sx={{ width: 450 }}>
         <CardContent>
           <form onSubmit={(e) => onSubmit(e)}>
             <Stack spacing={6}>
-              {/* id: avatar, name, username */}
+              {/* ID: avatar, name, username */}
               <Stack alignItems="center" direction="row" spacing={2}>
                 <ClickableAvatar avatar={avatar} setAvatar={setAvatar} />
 
@@ -171,7 +171,7 @@ export function UserSettings(props: {
                 </Grid2>
               </Stack>
 
-              {/* contact: phone, email */}
+              {/* Contact: phone, email */}
               <Stack spacing={2}>
                 <Typography variant="h6">
                   {t("userSettings.contact")}
@@ -220,7 +220,7 @@ export function UserSettings(props: {
                 </Stack>
               </Stack>
 
-              {/* ui language */}
+              {/* UI language */}
               <Stack alignItems="flex-start" spacing={2}>
                 <Typography variant="h6">
                   {t("userSettings.uiLanguage")}
@@ -252,7 +252,7 @@ export function UserSettings(props: {
                 </Select>
               </Stack>
 
-              {/* gloss spelling suggestions */}
+              {/* Gloss spelling suggestions */}
               <Stack alignItems="flex-start" spacing={2}>
                 <Typography variant="h6">
                   {t("userSettings.glossSuggestion")}
@@ -285,7 +285,7 @@ export function UserSettings(props: {
                 </Stack>
               </Stack>
 
-              {/* analytics consent */}
+              {/* Analytics consent */}
               {!RuntimeConfig.getInstance().isOffline() && (
                 <Stack alignItems="flex-start" spacing={2}>
                   <Typography variant="h6">
@@ -318,7 +318,7 @@ export function UserSettings(props: {
                 </Stack>
               )}
 
-              {/* save button */}
+              {/* Save button */}
               <Grid2 container justifyContent="flex-end">
                 <Button
                   data-testid={UserSettingsIds.ButtonSubmit}
