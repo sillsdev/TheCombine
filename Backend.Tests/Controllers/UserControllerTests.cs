@@ -137,6 +137,13 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestGetCurrentUserNonAuthenticated()
+        {
+            var result = _userController.GetCurrentUser().Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
         public void TestGetUserNoPermission()
         {
             _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
@@ -154,7 +161,7 @@ namespace Backend.Tests.Controllers
 
             var result = _userController.GetUser(user.Id).Result;
             Assert.That(result, Is.InstanceOf<ObjectResult>());
-            Assert.That(((ObjectResult)result).Value, Is.EqualTo(user).UsingPropertiesComparer());
+            Assert.That(((ObjectResult)result).Value, Is.EqualTo(new UserStub(user)).UsingPropertiesComparer());
         }
 
         [Test]

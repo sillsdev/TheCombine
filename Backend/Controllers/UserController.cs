@@ -154,9 +154,19 @@ namespace BackendFramework.Controllers
             }
         }
 
-        /// <summary> Returns <see cref="User"/> with specified id </summary>
-        [HttpGet("{userId}", Name = "GetUser")]
+        /// <summary> Gets the current user. </summary>
+        [HttpGet("currentuser", Name = "GetCurrentUser")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var user = await _userRepo.GetUser(_permissionService.GetUserId(HttpContext));
+            return user is null ? Forbid() : Ok(user);
+        }
+
+        /// <summary> Gets user with specified id. </summary>
+        [HttpGet("{userId}", Name = "GetUser")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserStub))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUser(string userId)
@@ -167,7 +177,7 @@ namespace BackendFramework.Controllers
             }
 
             var user = await _userRepo.GetUser(userId);
-            return user is null ? NotFound() : Ok(user);
+            return user is null ? NotFound() : Ok(new UserStub(user));
         }
 
         /// <summary> Gets id of user with the specified email address or username. </summary>
