@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
 
-import { Role, User } from "api/models";
+import { Role } from "api/models";
 import * as backend from "backend";
 import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
 import EmailInvite from "components/ProjectUsers/EmailInvite";
@@ -43,10 +43,10 @@ export default function AddProjectUsers(
     Modal.setAppElement("body");
   }, [projectUsers]);
 
-  function addToProject(user: User): void {
-    if (!projectUsers.map((u) => u.id).includes(user.id)) {
+  function addToProject(userId: string): void {
+    if (!projectUsers.some((u) => u.id === userId)) {
       backend
-        .addOrUpdateUserRole(props.projectId, Role.Harvester, user.id)
+        .addOrUpdateUserRole(props.projectId, Role.Harvester, userId)
         .then(() => {
           toast.success(t("projectSettings.invite.toastSuccess"));
           dispatch(asyncRefreshProjectUsers(props.projectId));

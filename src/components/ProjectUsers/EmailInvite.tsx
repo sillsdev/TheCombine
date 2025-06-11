@@ -4,14 +4,14 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import validator from "validator";
 
-import { Role, User } from "api/models";
+import { Role } from "api/models";
 import * as backend from "backend";
 import { getProjectId } from "backend/localStorage";
 import { LoadingDoneButton } from "components/Buttons";
 import { NormalizedTextField } from "utilities/fontComponents";
 
 interface InviteProps {
-  addToProject: (user: User) => void;
+  addToProject: (userId: string) => void;
   close: () => void;
 }
 
@@ -34,7 +34,7 @@ export default function EmailInvite(props: InviteProps): ReactElement {
         message
       );
     } else {
-      props.addToProject(await backend.getUserByEmailOrUsername(email));
+      props.addToProject(await backend.getUserIdByEmailOrUsername(email));
       toast.info(t("projectSettings.invite.userExists"));
     }
     setIsDone(true);

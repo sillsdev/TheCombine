@@ -18,7 +18,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Role, User } from "api/models";
+import { Role, UserStub } from "api/models";
 import { avatarSrc, getUserRoles } from "backend";
 import { getCurrentUser } from "backend/localStorage";
 import CancelConfirmDialogCollection from "components/ProjectUsers/CancelConfirmDialogCollection";
@@ -42,12 +42,12 @@ export default function ActiveProjectUsers(props: {
   const [userRoles, setUserRoles] = useState<Hash<Role>>({});
   const [userOrder, setUserOrder] = useState<UserOrder>(UserOrder.Username);
   const [reverseSorting, setReverseSorting] = useState<boolean>(false);
-  const [sortedUsers, setSortedUsers] = useState<User[]>([]);
+  const [sortedUsers, setSortedUsers] = useState<UserStub[]>([]);
 
   const { t } = useTranslation();
 
   const compareUsers = useCallback(
-    (a: User, b: User): number =>
+    (a: UserStub, b: UserStub): number =>
       getUserCompare(userOrder, reverseSorting)(a, b),
     [reverseSorting, userOrder]
   );
@@ -56,9 +56,7 @@ export default function ActiveProjectUsers(props: {
     getUserRoles(props.projectId).then((userRoles) => {
       const roles: Hash<Role> = {};
       projectUsers.forEach((u) => {
-        const ur = userRoles.find(
-          (r) => r.id === u.projectRoles[props.projectId]
-        );
+        const ur = userRoles.find((r) => r.id === u.roleId);
         roles[u.id] = ur?.role ?? Role.None;
       });
       setUserRoles(roles);
@@ -86,7 +84,7 @@ export default function ActiveProjectUsers(props: {
 
   const currentIsProjOwner = userRoles[currentUser.id] === Role.Owner;
 
-  const userListItem = (user: User): ReactElement => {
+  const userListItem = (user: UserStub): ReactElement => {
     const userRole = userRoles[user.id];
     const canManageUser =
       userRole !== Role.Owner &&
