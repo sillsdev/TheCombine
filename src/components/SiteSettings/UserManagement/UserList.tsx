@@ -103,7 +103,7 @@ export default function UserList(props: UserListProps): ReactElement {
   return (
     <>
       <Typography>{t("projectSettings.invite.searchTitle")}</Typography>
-      <Stack direction="row" alignItems="flex-end">
+      <Stack alignItems="flex-end" direction="row">
         <NormalizedTextField
           onChange={(e) => setFilterInput(e.target.value)}
           placeholder={t("projectSettings.invite.searchPlaceholder")}

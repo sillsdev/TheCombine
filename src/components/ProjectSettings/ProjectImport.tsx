@@ -76,8 +76,8 @@ export default function ProjectImport(
 
   return (
     <Grid2 container alignItems="center" spacing={1}>
+      {/* Upload/LIFT instructions */}
       <Grid2 size={12}>
-        {/* Upload/LIFT instructions */}
         <Typography variant="body2">
           {t("projectSettings.import.body")}{" "}
           <Trans i18nKey="createProject.uploadFormat">
@@ -117,13 +117,14 @@ export default function ProjectImport(
         {t("buttons.upload")}
       </LoadingDoneButton>
 
-      {/* Displays the name of the selected file */}
+      {/* Name of the selected file */}
       {liftFile && (
         <Typography variant="body1" noWrap>
           {t("createProject.fileSelected", { val: liftFile.name })}
         </Typography>
       )}
 
+      {/* Dialog if LIFT contents don't match vernacular language */}
       {liftLangs && (
         <CancelConfirmDialog
           buttonIdCancel={ProjectImportIds.ButtonDialogCancel}

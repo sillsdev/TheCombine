@@ -49,10 +49,12 @@ export default function EmailInvite(props: InviteProps): ReactElement {
   return (
     <Box sx={{ width: 450 }}>
       <Stack alignContent="center" spacing={2}>
+        {/* Title */}
         <Typography variant="h5" align="center">
           {t("projectSettings.invite.inviteByEmailLabel")}
         </Typography>
 
+        {/* Email address input */}
         <NormalizedTextField
           autoFocus
           fullWidth
@@ -63,6 +65,7 @@ export default function EmailInvite(props: InviteProps): ReactElement {
           slotProps={{ htmlInput: { maxLength: 320 } }}
         />
 
+        {/* Email message input */}
         <NormalizedTextField
           fullWidth
           id="project-user-invite-message"
@@ -71,6 +74,7 @@ export default function EmailInvite(props: InviteProps): ReactElement {
           slotProps={{ htmlInput: { maxLength: 10000 } }}
         />
 
+        {/* Submit button */}
         <Grid2 container justifyContent="flex-end">
           <LoadingDoneButton
             disabled={!isValid}
