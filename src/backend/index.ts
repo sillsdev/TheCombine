@@ -719,7 +719,7 @@ export async function authenticateUser(
   return user;
 }
 
-/** Note: Only useable by site admins. */
+/** Note: Only usable by site admins. */
 export async function getAllUsers(): Promise<User[]> {
   return (await userApi.getAllUsers(defaultOptions())).data;
 }
@@ -752,7 +752,7 @@ export async function updateUser(user: User): Promise<void> {
   }
 }
 
-/** Note: Only useable by site admins. */
+/** Note: Only usable by site admins. */
 export async function deleteUser(userId: string): Promise<void> {
   await userApi.deleteUser({ userId }, defaultOptions());
 }

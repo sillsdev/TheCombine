@@ -137,7 +137,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestGetCurrentUserNonAuthenticated()
+        public void TestGetCurrentUserNoneAuthenticated()
         {
             var result = _userController.GetCurrentUser().Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());

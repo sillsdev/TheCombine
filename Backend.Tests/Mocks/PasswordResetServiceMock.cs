@@ -6,7 +6,7 @@ namespace Backend.Tests.Mocks
 {
     internal sealed class PasswordResetServiceMock : IPasswordResetService
     {
-        private bool? _boolResponse;
+        private bool _boolResponse;
         internal void SetNextBoolResponse(bool response)
         {
             _boolResponse = response;
@@ -24,12 +24,12 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> ValidateToken(string token)
         {
-            return Task.FromResult(_boolResponse ?? false);
+            return Task.FromResult(_boolResponse);
         }
 
         public Task<bool> ResetPassword(string token, string password)
         {
-            return Task.FromResult(_boolResponse ?? false);
+            return Task.FromResult(_boolResponse);
         }
     }
 }

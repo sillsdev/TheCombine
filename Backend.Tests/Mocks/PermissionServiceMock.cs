@@ -144,10 +144,7 @@ namespace Backend.Tests.Mocks
         public Task<User?> Authenticate(string emailOrUsername, string password)
         {
             var user = _userRepo.GetUserByEmailOrUsername(emailOrUsername).Result;
-            if (user is not null)
-            {
-                user = MakeJwt(user).Result;
-            }
+            user = user is null ? null : MakeJwt(user).Result;
             return Task.FromResult(user);
         }
 
