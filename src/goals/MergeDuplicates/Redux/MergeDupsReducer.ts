@@ -63,7 +63,9 @@ const mergeDuplicatesSlice = createSlice({
             if (!Object.keys(moves).includes(destWordId)) {
               moves[destWordId] = [];
             }
-            moves[destWordId].push(srcWordId);
+            if (state.data.words[srcWordId]) {
+              moves[destWordId].push(srcWordId);
+            }
             if (Object.keys(moves).includes(srcWordId)) {
               moves[destWordId].push(...moves[srcWordId]);
               delete moves[srcWordId];
@@ -201,7 +203,9 @@ const mergeDuplicatesSlice = createSlice({
           if (!Object.keys(moves).includes(destWordId)) {
             moves[destWordId] = [];
           }
-          moves[destWordId].push(srcWordId);
+          if (state.data.words[srcWordId]) {
+            moves[destWordId].push(srcWordId);
+          }
           if (Object.keys(moves).includes(srcWordId)) {
             moves[destWordId].push(...moves[srcWordId]);
             delete moves[srcWordId];

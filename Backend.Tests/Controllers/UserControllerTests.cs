@@ -83,40 +83,40 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestGetUserByEmailOrUsernameWithEmail()
+        public void TestGetUserIdByEmailOrUsernameWithEmail()
         {
             const string email = "example@gmail.com";
             var user = _userRepo.Create(
                 new User { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }
             ).Result ?? throw new UserCreationException();
 
-            var result = _userController.GetUserByEmailOrUsername(email).Result;
+            var result = _userController.GetUserIdByEmailOrUsername(email).Result;
             Assert.That(result, Is.InstanceOf<ObjectResult>());
-            Assert.That(((ObjectResult)result).Value, Is.EqualTo(user).UsingPropertiesComparer());
+            Assert.That(((ObjectResult)result).Value, Is.EqualTo(user.Id));
         }
 
         [Test]
-        public void TestGetUserByEmailOrUsernameWithUsername()
+        public void TestGetUserIdByEmailOrUsernameWithUsername()
         {
             const string username = "example-name";
             var user = _userRepo.Create(
                 new User { Username = username, Password = Util.RandString(10) }
             ).Result ?? throw new UserCreationException();
 
-            var result = _userController.GetUserByEmailOrUsername(username).Result;
+            var result = _userController.GetUserIdByEmailOrUsername(username).Result;
             Assert.That(result, Is.InstanceOf<ObjectResult>());
-            Assert.That(((ObjectResult)result).Value, Is.EqualTo(user).UsingPropertiesComparer());
+            Assert.That(((ObjectResult)result).Value, Is.EqualTo(user.Id));
         }
 
         [Test]
-        public void TestGetUserByEmailOrUsernameMissing()
+        public void TestGetUserIdByEmailOrUsernameMissing()
         {
-            var result = _userController.GetUserByEmailOrUsername("INVALID_EMAIL@gmail.com").Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            var result = _userController.GetUserIdByEmailOrUsername("INVALID_EMAIL@gmail.com").Result;
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
-        public void TestGetUserByEmailOrUsernameNoPermission()
+        public void TestGetUserIdByEmailOrUsernameNoPermission()
         {
             _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             const string email = "example@gmail.com";
@@ -124,7 +124,7 @@ namespace Backend.Tests.Controllers
                 new User { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }
             ).Result ?? throw new UserCreationException();
 
-            var result = _userController.GetUserByEmailOrUsername(email).Result;
+            var result = _userController.GetUserIdByEmailOrUsername(email).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
