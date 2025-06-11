@@ -1,7 +1,7 @@
+import { Droppable } from "@hello-pangea/dnd";
 import { ArrowForwardIos, HelpOutline } from "@mui/icons-material";
 import { Grid, IconButton, Typography } from "@mui/material";
 import { type ReactElement } from "react";
-import { Droppable } from "react-beautiful-dnd";
 
 import SidebarDragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/SidebarDragSense";
 import { setSidebar } from "goals/MergeDuplicates/Redux/MergeDupsActions";
