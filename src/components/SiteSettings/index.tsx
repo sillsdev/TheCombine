@@ -1,5 +1,5 @@
 import { Announcement, List, People } from "@mui/icons-material";
-import { Box, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Stack, Tab, Tabs, Typography } from "@mui/material";
 import {
   type ReactElement,
   type ReactNode,
@@ -78,15 +78,10 @@ interface TabLabelProps {
 function TabLabel(props: TabLabelProps): ReactElement {
   const { t } = useTranslation();
   return (
-    <Typography>
-      <Box
-        component="span" // to be inline with the title
-        sx={{ marginInlineEnd: 0.25, verticalAlign: "text-top" }}
-      >
-        {props.icon}
-      </Box>
-      {t(props.textId)}
-    </Typography>
+    <Stack direction="row">
+      {props.icon}
+      <Typography>{t(props.textId)}</Typography>
+    </Stack>
   );
 }
 

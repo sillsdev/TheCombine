@@ -77,6 +77,7 @@ export default function ProjectImport(
   return (
     <Grid2 container alignItems="center" spacing={1}>
       <Grid2 size={12}>
+        {/* Upload/LIFT instructions */}
         <Typography variant="body2">
           {t("projectSettings.import.body")}{" "}
           <Trans i18nKey="createProject.uploadFormat">

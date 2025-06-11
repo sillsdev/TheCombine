@@ -474,15 +474,10 @@ function TabLabel(props: TabLabelProps): ReactElement {
   return props.hideLabel ? (
     <Tooltip title={t(props.textId)}>{props.icon}</Tooltip>
   ) : (
-    <Typography>
-      <Box
-        component="span" // to be inline with the title
-        sx={{ marginInlineEnd: 0.25, verticalAlign: "text-top" }}
-      >
-        {props.icon}
-      </Box>
-      {t(props.textId)}
-    </Typography>
+    <Stack direction="row">
+      {props.icon}
+      <Typography>{t(props.textId)}</Typography>
+    </Stack>
   );
 }
 
