@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -111,11 +112,28 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAllUsers()
         {
-            if (!_permissionService.IsCurrentUserAuthorized(HttpContext))
+            if (!await _permissionService.IsSiteAdmin(HttpContext))
             {
                 return Forbid();
             }
             return Ok(await _userRepo.GetAllUsers());
+        }
+
+        /// <summary> Gets all users with email, name, or username matching the given filter. </summary>
+        /// <remarks> Only site admins can use filters shorter than 3 characters long. </remarks>
+        /// <returns> A list of <see cref="UserStub"/>s. </returns>
+        [HttpGet("filter/{filter}", Name = "GetUsersByFilter")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserStub>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetUsersByFilter(string filter)
+        {
+            filter = filter.Trim();
+            if (!await _permissionService.IsSiteAdmin(HttpContext) && filter.Length < 3)
+            {
+                return Forbid();
+            }
+
+            return Ok((await _userRepo.GetAllUsersByFilter(filter)).Select(u => new UserStub(u)).ToList());
         }
 
         /// <summary> Logs in a <see cref="User"/> and gives a token </summary>
@@ -152,12 +170,12 @@ namespace BackendFramework.Controllers
             return user is null ? NotFound() : Ok(user);
         }
 
-        /// <summary> Returns <see cref="User"/> with the specified email address or username. </summary>
-        [HttpPut("getbyemailorusername", Name = "GetUserByEmailOrUsername")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
+        /// <summary> Gets id of user with the specified email address or username. </summary>
+        [HttpPut("getbyemailorusername", Name = "GetUserIdByEmailOrUsername")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetUserByEmailOrUsername([FromBody, BindRequired] string emailOrUsername)
+        public async Task<IActionResult> GetUserIdByEmailOrUsername([FromBody, BindRequired] string emailOrUsername)
         {
             if (!_permissionService.IsCurrentUserAuthorized(HttpContext))
             {
@@ -165,7 +183,7 @@ namespace BackendFramework.Controllers
             }
 
             var user = await _userRepo.GetUserByEmailOrUsername(emailOrUsername);
-            return user is null ? NotFound() : Ok(user);
+            return user is null ? NotFound() : Ok(user.Id);
         }
 
         /// <summary> Creates specified <see cref="User"/>. </summary>

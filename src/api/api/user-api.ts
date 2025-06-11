@@ -44,6 +44,8 @@ import { PasswordResetData } from "../models";
 import { PasswordResetRequestData } from "../models";
 // @ts-ignore
 import { User } from "../models";
+// @ts-ignore
+import { UserStub } from "../models";
 /**
  * UserApi - axios parameter creator
  * @export
@@ -279,12 +281,12 @@ export const UserApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getUserByEmailOrUsername: async (
+    getUserIdByEmailOrUsername: async (
       body: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'body' is not null or undefined
-      assertParamExists("getUserByEmailOrUsername", "body", body);
+      assertParamExists("getUserIdByEmailOrUsername", "body", body);
       const localVarPath = `/v1/users/getbyemailorusername`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -316,6 +318,51 @@ export const UserApiAxiosParamCreator = function (
         localVarRequestOptions,
         configuration
       );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} filter
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUsersByFilter: async (
+      filter: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'filter' is not null or undefined
+      assertParamExists("getUsersByFilter", "filter", filter);
+      const localVarPath = `/v1/users/filter/{filter}`.replace(
+        `{${"filter"}}`,
+        encodeURIComponent(String(filter))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
 
       return {
         url: toPathString(localVarUrlObj),
@@ -786,14 +833,41 @@ export const UserApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async getUserByEmailOrUsername(
+    async getUserIdByEmailOrUsername(
       body: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.getUserByEmailOrUsername(body, options);
+        await localVarAxiosParamCreator.getUserIdByEmailOrUsername(
+          body,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} filter
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getUsersByFilter(
+      filter: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<UserStub>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getUsersByFilter(filter, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -1033,9 +1107,26 @@ export const UserApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getUserByEmailOrUsername(body: string, options?: any): AxiosPromise<User> {
+    getUserIdByEmailOrUsername(
+      body: string,
+      options?: any
+    ): AxiosPromise<string> {
       return localVarFp
-        .getUserByEmailOrUsername(body, options)
+        .getUserIdByEmailOrUsername(body, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} filter
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUsersByFilter(
+      filter: string,
+      options?: any
+    ): AxiosPromise<Array<UserStub>> {
+      return localVarFp
+        .getUsersByFilter(filter, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1184,17 +1275,31 @@ export interface UserApiGetUserRequest {
 }
 
 /**
- * Request parameters for getUserByEmailOrUsername operation in UserApi.
+ * Request parameters for getUserIdByEmailOrUsername operation in UserApi.
  * @export
- * @interface UserApiGetUserByEmailOrUsernameRequest
+ * @interface UserApiGetUserIdByEmailOrUsernameRequest
  */
-export interface UserApiGetUserByEmailOrUsernameRequest {
+export interface UserApiGetUserIdByEmailOrUsernameRequest {
   /**
    *
    * @type {string}
-   * @memberof UserApiGetUserByEmailOrUsername
+   * @memberof UserApiGetUserIdByEmailOrUsername
    */
   readonly body: string;
+}
+
+/**
+ * Request parameters for getUsersByFilter operation in UserApi.
+ * @export
+ * @interface UserApiGetUsersByFilterRequest
+ */
+export interface UserApiGetUsersByFilterRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof UserApiGetUsersByFilter
+   */
+  readonly filter: string;
 }
 
 /**
@@ -1370,17 +1475,33 @@ export class UserApi extends BaseAPI {
 
   /**
    *
-   * @param {UserApiGetUserByEmailOrUsernameRequest} requestParameters Request parameters.
+   * @param {UserApiGetUserIdByEmailOrUsernameRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UserApi
    */
-  public getUserByEmailOrUsername(
-    requestParameters: UserApiGetUserByEmailOrUsernameRequest,
+  public getUserIdByEmailOrUsername(
+    requestParameters: UserApiGetUserIdByEmailOrUsernameRequest,
     options?: any
   ) {
     return UserApiFp(this.configuration)
-      .getUserByEmailOrUsername(requestParameters.body, options)
+      .getUserIdByEmailOrUsername(requestParameters.body, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {UserApiGetUsersByFilterRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public getUsersByFilter(
+    requestParameters: UserApiGetUsersByFilterRequest,
+    options?: any
+  ) {
+    return UserApiFp(this.configuration)
+      .getUsersByFilter(requestParameters.filter, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
