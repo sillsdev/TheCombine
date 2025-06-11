@@ -30,8 +30,7 @@ import {
   shortenName,
   tabColor,
 } from "components/AppBar/AppBarTypes";
-import { clearCurrentProject } from "components/Project/ProjectActions";
-import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { useAppSelector } from "rootRedux/hooks";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
 import { openUserGuide } from "utilities/pathUtilities";
@@ -117,7 +116,6 @@ interface UserMenuListProps {
  */
 export function UserMenuList(props: UserMenuListProps): ReactElement {
   const combineAppRelease = RuntimeConfig.getInstance().appRelease();
-  const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -130,7 +128,6 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
         <MenuItem
           id={`${idAffix}-admin`}
           onClick={() => {
-            dispatch(clearCurrentProject());
             navigate(Path.SiteSettings);
             props.onSelect();
           }}

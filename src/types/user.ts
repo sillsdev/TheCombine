@@ -1,4 +1,4 @@
-import { OffOnSetting, User } from "api/models";
+import { OffOnSetting, User, UserStub } from "api/models";
 
 export function newUser(name = "", username = "", password = ""): User {
   return {
@@ -16,6 +16,10 @@ export function newUser(name = "", username = "", password = ""): User {
     token: "",
     isAdmin: false,
   };
+}
+
+export function newUserStub(name = "", username = ""): UserStub {
+  return { name, username, id: "", hasAvatar: false };
 }
 
 /** Returns whether the given `text` is a (case-insensitive) substring of the

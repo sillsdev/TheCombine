@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -26,6 +27,15 @@ namespace BackendFramework.Repositories
             var users = await _userDatabase.Users.Find(_ => true).ToListAsync();
             users.ForEach(u => u.Sanitize());
             return users;
+        }
+
+        /// <summary> Finds all <see cref="User"/>s matching a given filter </summary>
+        public async Task<List<User>> GetAllUsersByFilter(string filter)
+        {
+            return (await GetAllUsers()).Where(u =>
+                u.Email.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                u.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                u.Username.Contains(filter, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         /// <summary> Removes all <see cref="User"/>s </summary>
