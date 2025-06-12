@@ -251,6 +251,8 @@ export async function uploadLiftAndGetWritingSystems(
   file: File
 ): Promise<Api.WritingSystem[]> {
   const resp = await liftApi.uploadLiftFileAndGetWritingSystems(
+    /* The backend deletes by user, not by project,
+     * but a nonempty projectId in the url is still required. */
     { projectId: "nonempty", file },
     fileUploadOptions()
   );
@@ -282,9 +284,10 @@ export async function exportLift(projectId: string): Promise<string> {
 
 /** Tell the backend to cancel the LIFT file export. */
 export async function cancelExport(): Promise<boolean> {
-  return (
-    await liftApi.cancelLiftExport({ projectId: "nonempty" }, defaultOptions())
-  ).data;
+  /* The backend deletes by user, not by project,
+   * but a nonempty projectId in the url is still required. */
+  const params = { projectId: "nonempty" };
+  return (await liftApi.cancelLiftExport(params, defaultOptions())).data;
 }
 
 /** After the backend confirms that a LIFT file is ready, download it. */
@@ -301,11 +304,11 @@ export async function downloadLift(projectId: string): Promise<string> {
   );
 }
 
-/** After downloading a LIFT file, clear it from the backend.
- * The backend deletes by user, not by project,
- * but a nonempty projectId in the url is still required.
- */
+/** Clear current user's exported LIFT file from the backend.
+ * To be used after download is complete. */
 export async function deleteLift(): Promise<void> {
+  /* The backend deletes by user, not by project,
+   * but a nonempty projectId in the url is still required. */
   await liftApi.deleteLiftFile({ projectId: "nonempty" }, defaultOptions());
 }
 
@@ -437,24 +440,21 @@ export async function getProjectName(projectId?: string): Promise<string> {
   return (await getProject(projectId)).name;
 }
 
-/** Updates project and returns id of updated project. */
-export async function updateProject(project: Project): Promise<string> {
+export async function updateProject(project: Project): Promise<void> {
   const params = { projectId: project.id, project };
-  return (await projectApi.updateProject(params, defaultOptions())).data;
+  await projectApi.updateProject(params, defaultOptions());
 }
 
-/** Archives specified project and returns id. */
-export async function archiveProject(projectId: string): Promise<string> {
+export async function archiveProject(projectId: string): Promise<void> {
   const project = await getProject(projectId);
   project.isActive = false;
-  return await updateProject(project);
+  await updateProject(project);
 }
 
-/** Restores specified archived project and returns id. */
-export async function restoreProject(projectId: string): Promise<string> {
+export async function restoreProject(projectId: string): Promise<void> {
   const project = await getProject(projectId);
   project.isActive = true;
-  return await updateProject(project);
+  await updateProject(project);
 }
 
 /** Returns a boolean indicating whether the specified project name is already taken. */
