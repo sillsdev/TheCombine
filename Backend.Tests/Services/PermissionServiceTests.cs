@@ -19,7 +19,7 @@ namespace Backend.Tests.Services
         private HttpContext CreateHttpContextWithUser(User user)
         {
             var userId = _userRepo.Create(user).Result!.Id;
-            var identity = new ClaimsIdentity([new("UserId", userId)], "TestAuthType");
+            var identity = new ClaimsIdentity([new(PermissionService.UserIdClaimType, userId)], "TestAuthType");
             return new DefaultHttpContext { User = new ClaimsPrincipal(identity) };
         }
 

@@ -11,7 +11,8 @@ namespace Backend.Tests.Mocks
     {
         private readonly IUserRepository _userRepo;
         private const string ExportId = "EXPORT_ID";
-        private const string UnauthorizedHeader = "UNAUTHORIZED";
+        private const string UnauthorizedId = "UNAUTHORIZED";
+        private const string UserIdClaimType = "USER_ID";
 
         public PermissionServiceMock(IUserRepository? userRepo = null)
         {
@@ -21,15 +22,9 @@ namespace Backend.Tests.Mocks
         /// <summary>
         /// Generates an HttpContext that will fail permissions checks in the mock.
         /// </summary>
-        public static HttpContext UnauthorizedHttpContext(string? userId = null)
+        public static HttpContext UnauthorizedHttpContext()
         {
-            var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers["Authorization"] = UnauthorizedHeader;
-            if (userId is not null)
-            {
-                httpContext.Request.Headers["UserId"] = userId;
-            }
-            return httpContext;
+            return HttpContextWithUserId(UnauthorizedId);
         }
 
         /// <summary>
@@ -37,13 +32,13 @@ namespace Backend.Tests.Mocks
         /// </summary>
         public static HttpContext HttpContextWithUserId(string userId)
         {
-            var identity = new ClaimsIdentity([new("UserId", userId)], "TestAuthType");
+            var identity = new ClaimsIdentity([new(UserIdClaimType, userId)], "TestAuthType");
             return new DefaultHttpContext { User = new ClaimsPrincipal(identity) };
         }
 
-        private static bool IsAuthorizedHttpContext(HttpContext? request)
+        private bool IsAuthorizedHttpContext(HttpContext? request)
         {
-            return request is null || request.Request.Headers["Authorization"] != UnauthorizedHeader;
+            return GetUserId(request) != UnauthorizedId;
         }
 
         /// <param name="request">
@@ -132,7 +127,7 @@ namespace Backend.Tests.Mocks
         /// </param>
         public string GetUserId(HttpContext? request)
         {
-            return request?.User?.FindFirstValue("UserId") ?? "";
+            return request?.User?.FindFirstValue(UserIdClaimType) ?? "";
         }
 
         public Task<User?> Authenticate(string emailOrUsername, string password)

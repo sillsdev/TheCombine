@@ -175,9 +175,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestGetCurrentPermissionsNotAuthorized()
         {
-            var user = await _userRepo.Create(new User());
-            _userRoleController.ControllerContext.HttpContext =
-                PermissionServiceMock.UnauthorizedHttpContext(user!.Id);
+            _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = await _userRoleController.GetCurrentPermissions(_projId);
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }

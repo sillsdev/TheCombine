@@ -16,6 +16,8 @@ namespace BackendFramework.Services
         private readonly IUserRepository _userRepo;
         private readonly IUserRoleRepository _userRoleRepo;
 
+        public const string UserIdClaimType = "USER_ID";
+
         public PermissionService(IUserRepository userRepo, IUserRoleRepository userRoleRepo)
         {
             _userRepo = userRepo;
@@ -129,7 +131,7 @@ namespace BackendFramework.Services
             {
                 throw new InvalidJwtTokenException();
             }
-            return request.User.FindFirstValue("UserId") ?? throw new InvalidJwtTokenException();
+            return request.User.FindFirstValue(UserIdClaimType) ?? throw new InvalidJwtTokenException();
         }
 
         /// <summary> Confirms login credentials are valid. </summary>
@@ -162,7 +164,7 @@ namespace BackendFramework.Services
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity([new("UserId", user.Id)]),
+                Subject = new ClaimsIdentity([new(UserIdClaimType, user.Id)]),
                 Expires = DateTime.UtcNow.AddHours(hoursUntilExpires),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
