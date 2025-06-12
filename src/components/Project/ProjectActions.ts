@@ -5,7 +5,7 @@ import {
   type MRT_VisibilityState,
 } from "material-react-table";
 
-import { type Project, type Speaker, type User } from "api/models";
+import { type Project, type Speaker, type UserStub } from "api/models";
 import {
   getAllProjectUsers,
   getAllSemanticDomainNames,
@@ -56,7 +56,7 @@ export function setCurrentSpeaker(speaker?: Speaker): PayloadAction {
   return setSpeakerAction(speaker);
 }
 
-export function setCurrentUsers(users?: User[]): PayloadAction {
+export function setCurrentUsers(users?: UserStub[]): PayloadAction {
   return setUsersAction(users ?? []);
 }
 
