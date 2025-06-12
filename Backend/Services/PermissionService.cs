@@ -121,11 +121,15 @@ namespace BackendFramework.Services
             return request.TraceIdentifier ?? "";
         }
 
-        /// <summary>Retrieve the User ID from the JWT in a request. </summary>
-        /// <exception cref="InvalidJwtTokenException"> Throws when null userId extracted from token. </exception>
+        /// <summary> Gets the id of the current authenticated user. </summary>
+        /// <exception cref="InvalidJwtTokenException"> Throws when no user is authenticated. </exception>
         public string GetUserId(HttpContext request)
         {
-            return request.User?.FindFirstValue("UserId") ?? throw new InvalidJwtTokenException();
+            if (!IsCurrentUserAuthenticated(request))
+            {
+                throw new InvalidJwtTokenException();
+            }
+            return request.User.FindFirstValue("UserId") ?? throw new InvalidJwtTokenException();
         }
 
         /// <summary> Confirms login credentials are valid. </summary>
@@ -158,7 +162,7 @@ namespace BackendFramework.Services
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("UserId", user.Id) }),
+                Subject = new ClaimsIdentity([new("UserId", user.Id)]),
                 Expires = DateTime.UtcNow.AddHours(hoursUntilExpires),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
