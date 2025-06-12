@@ -45,10 +45,11 @@ cert-manager:
     name: cert-manager
     reference: jetstack/cert-manager
     namespace: cert-manager
-    version: v1.12.3
+    version: v1.17.1
     wait: true
     override:
-      installCRDs: true
+      crds:
+        enabled: true
 
 nginx-ingress-controller:
   repo:
@@ -68,7 +69,7 @@ rancher-ui:
     name: rancher
     reference: rancher-stable/rancher
     namespace: cattle-system
-    version: 2.7.6
+    version: 2.10.4
     wait: true
     override:
       hostname: rancher.thecombine.app
