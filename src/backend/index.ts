@@ -621,11 +621,10 @@ export async function getSemanticDomainCounts(
 }
 
 export async function getSemanticDomainUserCount(
-  projectId: string,
-  lang?: string
+  projectId: string
 ): Promise<Array<SemanticDomainUserCount> | undefined> {
   const response = await statisticsApi.getSemanticDomainUserCounts(
-    { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
+    { projectId: projectId },
     defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.

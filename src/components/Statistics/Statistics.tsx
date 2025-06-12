@@ -42,7 +42,7 @@ export default function Statistics(): ReactElement {
   function componentToDisplay(view: viewEnum): ReactElement {
     switch (view) {
       case viewEnum.User:
-        return <DomainUserStatistics lang={lang} />;
+        return <DomainUserStatistics />;
       case viewEnum.Domain:
         return <SemanticDomainStatistics lang={lang} />;
       case viewEnum.Day:

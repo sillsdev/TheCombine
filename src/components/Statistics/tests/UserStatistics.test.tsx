@@ -14,8 +14,8 @@ const mockGetDomainSenseUserStatistics = jest.fn();
 const mockGetProjectId = jest.fn();
 
 jest.mock("backend", () => ({
-  getSemanticDomainUserCount: (projectId: string, lang?: string) =>
-    mockGetDomainSenseUserStatistics(projectId, lang),
+  getSemanticDomainUserCount: (projectId: string) =>
+    mockGetDomainSenseUserStatistics(projectId),
 }));
 
 jest.mock("backend/localStorage", () => ({
@@ -33,7 +33,7 @@ beforeEach(async () => {
   jest.clearAllMocks();
   setMockFunctions();
   await act(async () => {
-    render(<UserStatistics lang={""} />);
+    render(<UserStatistics />);
   });
 });
 
