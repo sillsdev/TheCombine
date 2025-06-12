@@ -1,10 +1,17 @@
-import { Card, Grid, ListItem, List } from "@mui/material";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import { ReactElement, useState, useEffect } from "react";
 
-import { SemanticDomainCount, SemanticDomainTreeNode } from "api/models";
+import { SemanticDomainCount } from "api/models";
 import { getSemanticDomainCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
-import { ColumnHead, TableCell } from "components/Statistics/TableCells";
+import { Cell, HeadCell } from "components/Statistics/TableCells";
 
 interface DomainStatisticsProps {
   lang: string;
@@ -38,40 +45,25 @@ export default function DomainStatistics(
   }
 
   return (
-    <Grid container justifyContent="center">
-      <Card style={{ width: 600 }}>
-        <List>
-          <Grid container wrap="nowrap" justifyContent="space-around">
-            <ColumnHead titleId={"statistics.column.domainNumber"} />
-            <ColumnHead titleId={"statistics.column.domainName"} />
-            <ColumnHead titleId={"statistics.column.senseCount"} />
-          </Grid>
-        </List>
-        <List>
+    <TableContainer component={Paper} sx={{ maxWidth: 700 }}>
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <HeadCell titleId={"statistics.column.domainNumber"} />
+            <HeadCell titleId={"statistics.column.domainName"} />
+            <HeadCell titleId={"statistics.column.senseCount"} />
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {statisticsList.map((t) => (
-            <TableRow
-              key={t.semanticDomainTreeNode.id}
-              dom={t.semanticDomainTreeNode}
-              count={t.count}
-            />
+            <TableRow key={t.semanticDomainTreeNode.id}>
+              <Cell text={t.semanticDomainTreeNode.id} />
+              <Cell text={t.semanticDomainTreeNode.name} />
+              <Cell text={t.count} />
+            </TableRow>
           ))}
-        </List>
-      </Card>
-    </Grid>
-  );
-}
-
-function TableRow(props: {
-  dom: SemanticDomainTreeNode;
-  count: number;
-}): ReactElement {
-  return (
-    <ListItem style={{ minWidth: "600px" }}>
-      <Grid container wrap="nowrap" justifyContent="space-around">
-        <TableCell text={props.dom.id} />
-        <TableCell text={props.dom.name} />
-        <TableCell text={props.count} />
-      </Grid>
-    </ListItem>
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
