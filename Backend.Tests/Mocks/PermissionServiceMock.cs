@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -37,9 +38,8 @@ namespace Backend.Tests.Mocks
         /// </summary>
         public static HttpContext HttpContextWithUserId(string userId)
         {
-            var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers["UserId"] = userId;
-            return httpContext;
+            var identity = new ClaimsIdentity([new("UserId", userId)], "TestAuthType");
+            return new DefaultHttpContext { User = new ClaimsPrincipal(identity) };
         }
 
         private static bool IsAuthorizedHttpContext(HttpContext? request)
@@ -67,7 +67,7 @@ namespace Backend.Tests.Mocks
         /// <returns>
         /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
         /// </returns>
-        public bool IsUserIdAuthorized(HttpContext? request, string userId)
+        public bool IsUserAuthenticated(HttpContext? request, string userId)
         {
             return IsAuthorizedHttpContext(request);
         }
@@ -79,7 +79,7 @@ namespace Backend.Tests.Mocks
         /// <returns>
         /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
         /// </returns>
-        public bool IsCurrentUserAuthorized(HttpContext? request)
+        public bool IsCurrentUserAuthenticated(HttpContext? request)
         {
             return IsAuthorizedHttpContext(request);
         }
@@ -137,8 +137,7 @@ namespace Backend.Tests.Mocks
             {
                 return NoHttpContextAvailable;
             }
-            var userId = request.Request.Headers["UserId"].ToString();
-            return userId;
+            return request?.User?.FindFirstValue("UserId") ?? "";
         }
 
         public Task<User?> Authenticate(string emailOrUsername, string password)

@@ -1,5 +1,5 @@
-using System;
 using System.Linq;
+using System.Security.Claims;
 using Backend.Tests.Mocks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -18,13 +18,9 @@ namespace Backend.Tests.Services
 
         private HttpContext CreateHttpContextWithUser(User user)
         {
-            var longEnoughString = "12345678901234567890123456789012";
-            Environment.SetEnvironmentVariable("COMBINE_JWT_SECRET_KEY", longEnoughString);
-            user = _userRepo.Create(user).Result!;
-            user = _permService.MakeJwt(user).Result!;
-            var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers["Authorization"] = $"Bearer: {user.Token}";
-            return httpContext;
+            var userId = _userRepo.Create(user).Result!.Id;
+            var identity = new ClaimsIdentity([new("UserId", userId)], "TestAuthType");
+            return new DefaultHttpContext { User = new ClaimsPrincipal(identity) };
         }
 
         [SetUp]
@@ -46,27 +42,27 @@ namespace Backend.Tests.Services
         [Test]
         public void GetUserIdTestReturnsNonemptyId()
         {
-            Assert.That(String.IsNullOrEmpty(_permService.GetUserId(CreateHttpContextWithUser(new User()))), Is.False);
+            Assert.That(string.IsNullOrEmpty(_permService.GetUserId(CreateHttpContextWithUser(new User()))), Is.False);
         }
 
         [Test]
-        public void IsUserIdAuthorizedTestFalse()
+        public void IsUserAuthenticatedTestFalse()
         {
-            Assert.That(_permService.IsUserIdAuthorized(CreateHttpContextWithUser(new User()), "other-id"), Is.False);
+            Assert.That(_permService.IsUserAuthenticated(CreateHttpContextWithUser(new User()), "other-id"), Is.False);
         }
 
         [Test]
-        public void IsUserIdAuthorizedTestTrue()
+        public void IsUserAuthenticatedTestTrue()
         {
             var httpContext = CreateHttpContextWithUser(new User());
             var userId = _userRepo.GetAllUsers().Result.First().Id;
-            Assert.That(_permService.IsUserIdAuthorized(httpContext, userId), Is.True);
+            Assert.That(_permService.IsUserAuthenticated(httpContext, userId), Is.True);
         }
 
         [Test]
-        public void IsCurrentUserAuthorizedTestTrue()
+        public void IsCurrentUserAuthenticatedTestTrue()
         {
-            Assert.That(_permService.IsCurrentUserAuthorized(CreateHttpContextWithUser(new User())), Is.True);
+            Assert.That(_permService.IsCurrentUserAuthenticated(CreateHttpContextWithUser(new User())), Is.True);
         }
 
         [Test]

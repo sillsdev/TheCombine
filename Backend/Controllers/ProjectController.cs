@@ -212,7 +212,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> ProjectDuplicateCheck(string projectName)
         {
-            if (!_permissionService.IsCurrentUserAuthorized(HttpContext))
+            if (!_permissionService.IsCurrentUserAuthenticated(HttpContext))
             {
                 return Forbid();
             }

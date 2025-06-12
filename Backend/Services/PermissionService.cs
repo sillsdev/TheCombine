@@ -22,32 +22,16 @@ namespace BackendFramework.Services
             _userRoleRepo = userRoleRepo;
         }
 
-        /// <summary> Extracts the JWT token from the given HTTP context. </summary>
-        private static SecurityToken GetJwt(HttpContext request)
-        {
-            // Get authorization header (i.e. JWT token)
-            var jwtToken = request.Request.Headers["Authorization"].ToString();
-
-            // Remove "Bearer " from beginning of token
-            var token = jwtToken.Split(" ")[1];
-
-            // Parse JWT for project permissions
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(token);
-
-            return jsonToken;
-        }
-
-        /// <summary> Checks whether the given user is authorized. </summary>
-        public bool IsUserIdAuthorized(HttpContext request, string userId)
+        /// <summary> Checks whether the user with the given id is authenticated. </summary>
+        public bool IsUserAuthenticated(HttpContext request, string userId)
         {
             return !string.IsNullOrEmpty(userId) && userId == GetUserId(request);
         }
 
-        /// <summary> Checks whether the current user is authorized. </summary>
-        public bool IsCurrentUserAuthorized(HttpContext request)
+        /// <summary> Checks whether the current user is authenticated. </summary>
+        public bool IsCurrentUserAuthenticated(HttpContext request)
         {
-            return !string.IsNullOrEmpty(GetUserId(request));
+            return request.User.Identity?.IsAuthenticated ?? false;
         }
 
         /// <summary> Checks whether the current user is a site admin. </summary>
@@ -141,9 +125,7 @@ namespace BackendFramework.Services
         /// <exception cref="InvalidJwtTokenException"> Throws when null userId extracted from token. </exception>
         public string GetUserId(HttpContext request)
         {
-            var token = (JwtSecurityToken)GetJwt(request);
-            var userId = token.Payload["UserId"].ToString() ?? throw new InvalidJwtTokenException();
-            return userId;
+            return request.User?.FindFirstValue("UserId") ?? throw new InvalidJwtTokenException();
         }
 
         /// <summary> Confirms login credentials are valid. </summary>
