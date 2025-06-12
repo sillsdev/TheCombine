@@ -16,7 +16,8 @@ namespace BackendFramework.Services
         private readonly IUserRepository _userRepo;
         private readonly IUserRoleRepository _userRoleRepo;
 
-        public const string UserIdClaimType = "USER_ID";
+        internal const string JwtSecretKeyEnv = "COMBINE_JWT_SECRET_KEY";
+        internal const string UserIdClaimType = "USER_ID";
 
         public PermissionService(IUserRepository userRepo, IUserRoleRepository userRoleRepo)
         {
@@ -159,8 +160,7 @@ namespace BackendFramework.Services
         {
             const int hoursUntilExpires = 12;
             var tokenHandler = new JwtSecurityTokenHandler();
-            var secretKey = Environment.GetEnvironmentVariable("COMBINE_JWT_SECRET_KEY")!;
-            var key = Encoding.ASCII.GetBytes(secretKey);
+            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable(JwtSecretKeyEnv)!);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

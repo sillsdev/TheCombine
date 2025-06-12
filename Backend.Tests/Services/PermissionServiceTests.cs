@@ -35,7 +35,8 @@ namespace Backend.Tests.Services
         [Test]
         public void MakeJwtTestReturnsUser()
         {
-            Environment.SetEnvironmentVariable("COMBINE_JWT_SECRET_KEY", "0123456789abcdefghijklmnopqrstuvwxyz");
+            const string longEnough = "0123456789abcdefghijklmnopqrstuvwxyz";
+            Environment.SetEnvironmentVariable(PermissionService.JwtSecretKeyEnv, longEnough);
             var result = _permService.MakeJwt(_userRepo.Create(new()).Result!).Result;
             Assert.That(result, Is.InstanceOf<User>());
         }
