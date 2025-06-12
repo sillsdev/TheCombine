@@ -2,13 +2,13 @@ import { DeleteForever, VpnKey } from "@mui/icons-material";
 import {
   Avatar,
   Button,
-  Grid,
   List,
   ListItem,
   ListItemAvatar,
   ListItemIcon,
   ListItemText,
   SelectChangeEvent,
+  Stack,
   Typography,
 } from "@mui/material";
 import { ReactElement, useCallback, useEffect, useState } from "react";
@@ -101,9 +101,9 @@ export default function UserList(props: UserListProps): ReactElement {
   };
 
   return (
-    <Grid item xs={12}>
+    <>
       <Typography>{t("projectSettings.invite.searchTitle")}</Typography>
-      <Grid container alignItems="flex-end">
+      <Stack alignItems="flex-end" direction="row">
         <NormalizedTextField
           onChange={(e) => setFilterInput(e.target.value)}
           placeholder={t("projectSettings.invite.searchPlaceholder")}
@@ -116,8 +116,8 @@ export default function UserList(props: UserListProps): ReactElement {
           }
           onReverseClick={() => setReverseSorting(!reverseSorting)}
         />
-      </Grid>
+      </Stack>
       <List>{sortedUsers.map(userListItem)}</List>
-    </Grid>
+    </>
   );
 }
