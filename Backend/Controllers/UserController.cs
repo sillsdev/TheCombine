@@ -37,6 +37,7 @@ namespace BackendFramework.Controllers
         [AllowAnonymous]
         [HttpGet("captcha/{token}", Name = "VerifyCaptchaToken")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> VerifyCaptchaToken(string token)
         {
             return await _captchaService.VerifyToken(token) ? Ok() : BadRequest();
@@ -46,6 +47,7 @@ namespace BackendFramework.Controllers
         [AllowAnonymous]
         [HttpPost("forgot", Name = "ResetPasswordRequest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] PasswordResetRequestData data)
         {
 
@@ -93,6 +95,7 @@ namespace BackendFramework.Controllers
         [AllowAnonymous]
         [HttpPost("forgot/reset", Name = "ResetPassword")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> ResetPassword([FromBody, BindRequired] PasswordResetData data)
         {
             var result = await _passwordResetService.ResetPassword(data.Token, data.NewPassword);
@@ -137,45 +140,51 @@ namespace BackendFramework.Controllers
         [AllowAnonymous]
         [HttpPost("authenticate", Name = "Authenticate")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))]
         public async Task<IActionResult> Authenticate([FromBody, BindRequired] Credentials cred)
         {
             try
             {
                 var user = await _permissionService.Authenticate(cred.EmailOrUsername, cred.Password);
-                if (user is null)
-                {
-                    return Unauthorized(cred.EmailOrUsername);
-                }
-                return Ok(user);
+                return user is null ? Unauthorized(cred.EmailOrUsername) : Ok(user);
             }
             catch (KeyNotFoundException)
             {
-                return NotFound(cred.EmailOrUsername);
+                return Unauthorized(cred.EmailOrUsername);
             }
         }
 
-        /// <summary> Returns <see cref="User"/> with specified id </summary>
-        [HttpGet("{userId}", Name = "GetUser")]
+        /// <summary> Gets the current user. </summary>
+        [HttpGet("currentuser", Name = "GetCurrentUser")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var user = await _userRepo.GetUser(_permissionService.GetUserId(HttpContext));
+            return user is null ? Forbid() : Ok(user);
+        }
+
+        /// <summary> Gets user with specified id. </summary>
+        [HttpGet("{userId}", Name = "GetUser")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserStub))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUser(string userId)
         {
             if (!_permissionService.IsUserIdAuthorized(HttpContext, userId))
             {
                 return Forbid();
             }
+
             var user = await _userRepo.GetUser(userId);
-            if (user is null)
-            {
-                return NotFound(userId);
-            }
-            return Ok(user);
+            return user is null ? NotFound() : Ok(new UserStub(user));
         }
 
         /// <summary> Gets id of user with the specified email address or username. </summary>
         [HttpPut("getbyemailorusername", Name = "GetUserIdByEmailOrUsername")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserIdByEmailOrUsername([FromBody, BindRequired] string emailOrUsername)
         {
             if (!_permissionService.IsCurrentUserAuthorized(HttpContext))
@@ -192,6 +201,7 @@ namespace BackendFramework.Controllers
         [AllowAnonymous]
         [HttpPost("create", Name = "CreateUser")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public async Task<IActionResult> CreateUser([FromBody, BindRequired] User user)
         {
             if (string.IsNullOrWhiteSpace(user.Username)
@@ -229,9 +239,11 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Updates <see cref="User"/> with specified id. </summary>
-        /// <returns> Id of updated user. </returns>
         [HttpPut("updateuser/{userId}", Name = "UpdateUser")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status304NotModified)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateUser(string userId, [FromBody, BindRequired] User user)
         {
             if (!_permissionService.IsUserIdAuthorized(HttpContext, userId)
@@ -243,26 +255,25 @@ namespace BackendFramework.Controllers
             var result = await _userRepo.Update(userId, user);
             return result switch
             {
-                ResultOfUpdate.NotFound => NotFound(userId),
-                ResultOfUpdate.Updated => Ok(userId),
-                _ => StatusCode(StatusCodes.Status304NotModified, userId)
+                ResultOfUpdate.NotFound => NotFound(),
+                ResultOfUpdate.Updated => Ok(),
+                _ => StatusCode(StatusCodes.Status304NotModified)
             };
         }
 
         /// <summary> Deletes <see cref="User"/> with specified id. </summary>
         [HttpDelete("{userId}", Name = "DeleteUser")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser(string userId)
         {
             if (!await _permissionService.IsSiteAdmin(HttpContext))
             {
                 return Forbid();
             }
-            if (await _userRepo.Delete(userId))
-            {
-                return Ok(userId);
-            }
-            return NotFound(userId);
+
+            return await _userRepo.Delete(userId) ? Ok() : NotFound();
         }
     }
 }
