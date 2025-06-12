@@ -101,42 +101,6 @@ export const ProjectApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    deleteAllProjects: async (options: any = {}): Promise<RequestArgs> => {
-      const localVarPath = `/v1/projects`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "DELETE",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
      * @param {string} projectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -501,25 +465,6 @@ export const ProjectApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async deleteAllProjects(
-      options?: any
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.deleteAllProjects(options);
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
      * @param {string} projectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -669,7 +614,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
       project: Project,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.updateProject(
         projectId,
@@ -709,16 +654,6 @@ export const ProjectApiFactory = function (
     ): AxiosPromise<UserCreatedProject> {
       return localVarFp
         .createProject(project, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    deleteAllProjects(options?: any): AxiosPromise<boolean> {
-      return localVarFp
-        .deleteAllProjects(options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -808,7 +743,7 @@ export const ProjectApiFactory = function (
       projectId: string,
       project: Project,
       options?: any
-    ): AxiosPromise<string> {
+    ): AxiosPromise<void> {
       return localVarFp
         .updateProject(projectId, project, options)
         .then((request) => request(axios, basePath));
@@ -948,18 +883,6 @@ export class ProjectApi extends BaseAPI {
   ) {
     return ProjectApiFp(this.configuration)
       .createProject(requestParameters.project, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof ProjectApi
-   */
-  public deleteAllProjects(options?: any) {
-    return ProjectApiFp(this.configuration)
-      .deleteAllProjects(options)
       .then((request) => request(this.axios, this.basePath));
   }
 
