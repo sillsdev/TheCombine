@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Security.Claims;
 using Backend.Tests.Mocks;
@@ -34,8 +35,8 @@ namespace Backend.Tests.Services
         [Test]
         public void MakeJwtTestReturnsUser()
         {
-            var user = _userRepo.Create(new User()).Result!;
-            var result = _permService.MakeJwt(user).Result;
+            Environment.SetEnvironmentVariable("COMBINE_JWT_SECRET_KEY", "0123456789abcdefghijklmnopqrstuvwxyz");
+            var result = _permService.MakeJwt(_userRepo.Create(new()).Result!).Result;
             Assert.That(result, Is.InstanceOf<User>());
         }
 
