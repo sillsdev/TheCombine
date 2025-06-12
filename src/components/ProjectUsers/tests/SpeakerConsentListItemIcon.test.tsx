@@ -79,9 +79,7 @@ describe("SpeakerConsentListItemIcon", () => {
       expect(screen.queryByTestId(ListItemIconId.RecordAudio)).toBeNull();
       expect(screen.queryByTestId(ListItemIconId.UploadAudio)).toBeNull();
 
-      await act(async () => {
-        await agent.click(screen.getByRole("button"));
-      });
+      await agent.click(screen.getByRole("button"));
       expect(screen.queryByRole("menu")).not.toBeNull();
       expect(screen.queryByTestId(ListItemIconId.RecordAudio)).not.toBeNull();
       expect(screen.queryByTestId(ListItemIconId.UploadAudio)).not.toBeNull();
@@ -119,9 +117,7 @@ describe("SpeakerConsentListItemIcon", () => {
       });
       expect(screen.queryByRole("dialog")).toBeNull();
 
-      await act(async () => {
-        await agent.click(screen.getByRole("button"));
-      });
+      await agent.click(screen.getByRole("button"));
       expect(screen.queryByRole("dialog")).not.toBeNull();
     });
   });
