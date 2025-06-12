@@ -150,6 +150,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestGetCurrentPermissionsMissingUser()
         {
+            _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId("user-id");
             var result = await _userRoleController.GetCurrentPermissions(MissingId);
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }

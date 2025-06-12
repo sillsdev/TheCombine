@@ -11,7 +11,6 @@ namespace Backend.Tests.Mocks
     {
         private readonly IUserRepository _userRepo;
         private const string ExportId = "EXPORT_ID";
-        private const string NoHttpContextAvailable = "NO_HTTP_CONTEXT_AVAILABLE";
         private const string UnauthorizedHeader = "UNAUTHORIZED";
 
         public PermissionServiceMock(IUserRepository? userRepo = null)
@@ -124,7 +123,7 @@ namespace Backend.Tests.Mocks
         /// </param>
         public string GetExportId(HttpContext? request)
         {
-            return request is null ? NoHttpContextAvailable : ExportId;
+            return ExportId;
         }
 
         /// <param name="request">
@@ -133,10 +132,6 @@ namespace Backend.Tests.Mocks
         /// </param>
         public string GetUserId(HttpContext? request)
         {
-            if (request is null)
-            {
-                return NoHttpContextAvailable;
-            }
             return request?.User?.FindFirstValue("UserId") ?? "";
         }
 
