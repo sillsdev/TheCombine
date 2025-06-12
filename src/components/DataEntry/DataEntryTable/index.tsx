@@ -1,9 +1,8 @@
 import { ExitToApp, List as ListIcon } from "@mui/icons-material";
-import { Button, Grid, Typography } from "@mui/material";
+import { Button, Grid2, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import {
   FormEvent,
-  Fragment,
   ReactElement,
   useCallback,
   useContext,
@@ -27,7 +26,8 @@ import {
 import * as backend from "backend";
 import { getCurrentUser, getUserId } from "backend/localStorage";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
-import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
+import RecentEntryCold from "components/DataEntry/DataEntryTable/RecentEntryCold";
+import RecentEntryHot from "components/DataEntry/DataEntryTable/RecentEntryHot";
 import {
   filterWordsWithSenses,
   focusInput,
@@ -36,7 +36,6 @@ import { uploadFileFromPronunciation } from "components/Pronunciations/utilities
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { type Hash } from "types/hash";
-import theme from "types/theme";
 import {
   FileWithSpeakerId,
   newGloss,
@@ -215,6 +214,7 @@ const defaultNewEntryState = (): NewEntryState => ({
 interface EntryTableState extends NewEntryState {
   defunctUpdates: Hash<string>;
   defunctWordIds: Hash<DefunctStatus>;
+  recentWordEditingIndex: number | undefined;
   recentWords: WordAccess[];
   senseSwitches: SenseSwitch[];
 }
@@ -223,6 +223,7 @@ const defaultEntryTableState = (): EntryTableState => ({
   ...defaultNewEntryState(),
   defunctUpdates: {},
   defunctWordIds: {},
+  recentWordEditingIndex: undefined,
   recentWords: [],
   senseSwitches: [],
 });
@@ -1017,61 +1018,71 @@ export default function DataEntryTable(
 
   return (
     <form onSubmit={(e?: FormEvent<HTMLFormElement>) => e?.preventDefault()}>
-      <input type="submit" style={{ display: "none" }} />
-      <Grid container>
-        <Grid item xs={4}>
-          <Typography
-            variant="h5"
-            align="center"
-            style={{
-              marginTop: theme.spacing(2),
-              marginBottom: theme.spacing(2),
-            }}
-          >
+      <Grid2 container rowSpacing={1}>
+        <Grid2 size={4}>
+          <Typography align="center" variant="h5">
             {t("addWords.vernacular")}
           </Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <Typography
-            variant="h5"
-            align="center"
-            style={{
-              marginTop: theme.spacing(2),
-              marginBottom: theme.spacing(2),
-            }}
-          >
+        </Grid2>
+
+        <Grid2 size={4}>
+          <Typography align="center" variant="h5">
             {t("addWords.glosses")}
           </Typography>
-        </Grid>
+        </Grid2>
 
         {state.recentWords.map((wordAccess, index) => (
-          <Grid
-            item
+          <Grid2
             key={`${wordAccess.word.id}_${wordAccess.senseGuid}`}
-            xs={12}
+            size={12}
+            sx={{ borderBottom: "1px solid #eee" }}
           >
-            <RecentEntry
-              rowIndex={index}
-              entry={wordAccess.word}
-              senseGuid={wordAccess.senseGuid}
-              updateGloss={updateRecentGloss}
-              updateNote={updateRecentNote}
-              updateVern={updateRecentVern}
-              removeEntry={undoRecentEntry}
-              addAudioToWord={addAudioFileToWord}
-              delAudioFromWord={deleteAudioFromWord}
-              repAudioInWord={replaceAudioInWord}
-              focusNewEntry={handleFocusNewEntry}
-              analysisLang={analysisLang}
-              vernacularLang={vernacularLang}
-              disabled={Object.keys(state.defunctWordIds).includes(
-                wordAccess.word.id
-              )}
-            />
-          </Grid>
+            {index === state.recentWordEditingIndex ? (
+              <RecentEntryHot
+                rowIndex={index}
+                entry={wordAccess.word}
+                senseGuid={wordAccess.senseGuid}
+                updateGloss={updateRecentGloss}
+                updateNote={updateRecentNote}
+                updateVern={updateRecentVern}
+                removeEntry={undoRecentEntry}
+                addAudioToWord={addAudioFileToWord}
+                delAudioFromWord={deleteAudioFromWord}
+                repAudioInWord={replaceAudioInWord}
+                focusNewEntry={handleFocusNewEntry}
+                analysisLang={analysisLang}
+                vernacularLang={vernacularLang}
+                disabled={Object.keys(state.defunctWordIds).includes(
+                  wordAccess.word.id
+                )}
+                close={() =>
+                  setState((prev) => ({
+                    ...prev,
+                    recentWordEditingIndex: undefined,
+                  }))
+                }
+              />
+            ) : (
+              <div
+                onClick={() =>
+                  setState((prev) => ({
+                    ...prev,
+                    recentWordEditingIndex: index,
+                  }))
+                }
+              >
+                <RecentEntryCold
+                  analysisLang={analysisLang}
+                  entry={wordAccess.word}
+                  rowIndex={index}
+                  senseGuid={wordAccess.senseGuid}
+                />
+              </div>
+            )}
+          </Grid2>
         ))}
 
-        <Grid item xs={12}>
+        <Grid2 size={12}>
           <NewEntry
             analysisLang={analysisLang}
             vernacularLang={vernacularLang}
@@ -1097,38 +1108,29 @@ export default function DataEntryTable(
             suggestedDups={state.suggestedDups}
             suggestedVerns={state.suggestedVerns}
           />
-        </Grid>
-      </Grid>
+        </Grid2>
 
-      <Grid container justifyContent="space-between" spacing={3}>
-        <Grid item>
+        <Grid2 container justifyContent="space-between" size={12}>
           {props.hasDrawerButton ? (
-            <Button
-              id="toggle-existing-data"
-              style={{ marginTop: theme.spacing(2) }}
-              onClick={props.showExistingData}
-            >
-              <ListIcon fontSize={"medium"} color={"inherit"} />
+            <Button id="toggle-existing-data" onClick={props.showExistingData}>
+              <ListIcon />
             </Button>
           ) : (
-            <Fragment />
+            <div />
           )}
-        </Grid>
-        <Grid item>
+
           <Button
             id={exitButtonId}
-            type="submit"
             variant="contained"
             color={highlightExitButton ? "primary" : "secondary"}
-            style={{ marginTop: theme.spacing(2) }}
             endIcon={<ExitToApp />}
             tabIndex={-1}
             onClick={handleExit}
           >
             {t("buttons.exit")}
           </Button>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </form>
   );
 }
