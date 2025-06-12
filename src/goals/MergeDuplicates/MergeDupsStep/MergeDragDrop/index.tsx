@@ -1,7 +1,7 @@
+import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
 import { Delete } from "@mui/icons-material";
 import { Drawer, Grid, ImageList, ImageListItem, Tooltip } from "@mui/material";
 import { CSSProperties, ReactElement, useState } from "react";
-import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { v4 } from "uuid";

@@ -1,3 +1,4 @@
+import { Droppable } from "@hello-pangea/dnd";
 import { WarningOutlined } from "@mui/icons-material";
 import {
   Card,
@@ -8,7 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import { type ReactElement } from "react";
-import { Droppable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 
 import { type Flag } from "api/models";

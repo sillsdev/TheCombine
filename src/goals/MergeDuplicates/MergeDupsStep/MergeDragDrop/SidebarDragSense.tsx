@@ -1,6 +1,6 @@
+import { Draggable } from "@hello-pangea/dnd";
 import { Card } from "@mui/material";
 import { type ReactElement } from "react";
-import { Draggable } from "react-beautiful-dnd";
 
 import { trashId } from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/MergeDragDropTypes";
 import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
