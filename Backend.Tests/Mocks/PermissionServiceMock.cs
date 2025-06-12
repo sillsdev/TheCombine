@@ -32,7 +32,7 @@ namespace Backend.Tests.Mocks
         /// </summary>
         public static HttpContext HttpContextWithUserId(string userId)
         {
-            var identity = new ClaimsIdentity([new(UserIdClaimType, userId)], "TestAuthType");
+            var identity = new ClaimsIdentity([new Claim(UserIdClaimType, userId)], "TestAuthType");
             return new DefaultHttpContext { User = new ClaimsPrincipal(identity) };
         }
 

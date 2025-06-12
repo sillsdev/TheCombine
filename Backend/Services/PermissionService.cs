@@ -164,7 +164,7 @@ namespace BackendFramework.Services
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity([new(UserIdClaimType, user.Id)]),
+                Subject = new ClaimsIdentity([new Claim(UserIdClaimType, user.Id)]),
                 Expires = DateTime.UtcNow.AddHours(hoursUntilExpires),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
