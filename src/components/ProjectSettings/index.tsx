@@ -305,6 +305,7 @@ export default function ProjectSettingsComponent(): ReactElement {
               />
             }
             maxWidth="1050px" // Comfortably fits three months
+            minWidth="300px" // Ensures space for one month
           />
         </Stack>
       </TabPanel>
