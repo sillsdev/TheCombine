@@ -22,7 +22,7 @@ namespace BackendFramework.Services
             await _emailVerifyContext.ClearAll(email);
         }
 
-        /// <summary> Validate a user's email address using an email token. </summary>
+        /// <summary> Verify a user's email address using an email token. </summary>
         /// <returns> Returns false if the email token is invalid or expired. </returns>
         public async Task<bool> VerifyEmail(string token)
         {

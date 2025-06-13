@@ -64,17 +64,41 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestVerifyEmailRequestNoUser()
+        {
+            var result = _userController.VerifyEmailRequest(new() { EmailOrUsername = "email" }).Result;
+            Assert.That(result, Is.TypeOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestVerifyEmailRequestNoPermission()
+        {
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var user = _userRepo.Create(new() { Email = "e@mail" }).Result;
+            var result = _userController.VerifyEmailRequest(new() { EmailOrUsername = user!.Email }).Result;
+            Assert.That(result, Is.TypeOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestVerifyEmailRequest()
+        {
+            var user = _userRepo.Create(new() { Email = "e@mail" }).Result;
+            var result = _userController.VerifyEmailRequest(new() { EmailOrUsername = user!.Email }).Result;
+            Assert.That(result, Is.TypeOf<OkResult>());
+        }
+
+        [Test]
         public void TestVerifyEmail()
         {
             // No permissions should be required to verify email via a token.
             _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
-            ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(false);
+            ((EmailVerifyServiceMock)_emailVerifyService).SetNextBoolResponse(false);
             var falseResult = _userController.VerifyEmail("token").Result;
             Assert.That(falseResult, Is.TypeOf<OkObjectResult>());
             Assert.That(((OkObjectResult)falseResult).Value, Is.EqualTo(false));
 
-            ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(true);
+            ((EmailVerifyServiceMock)_emailVerifyService).SetNextBoolResponse(true);
             var trueResult = _userController.VerifyEmail("token").Result;
             Assert.That(trueResult, Is.TypeOf<OkObjectResult>());
             Assert.That(((OkObjectResult)trueResult).Value, Is.EqualTo(true));
@@ -89,7 +113,7 @@ namespace Backend.Tests.Controllers
             // Returns Ok regardless of if user exists.
             var noUserResult = _userController.ResetPasswordRequest(new()).Result;
             Assert.That(noUserResult, Is.TypeOf<OkResult>());
-            var username = (_userRepo.Create(new() { Username = "Imarealboy" }).Result)!.Username;
+            var username = _userRepo.Create(new() { Username = "Imarealboy" }).Result!.Username;
             var yesUserResult = _userController.ResetPasswordRequest(new() { EmailOrUsername = username }).Result;
             Assert.That(yesUserResult, Is.TypeOf<OkResult>());
         }
@@ -97,7 +121,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestValidateResetToken()
         {
-            // No permissions should be required to validate a token.
+            // No permissions should be required to validate a password reset token.
             _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
             ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(false);
@@ -184,7 +208,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestGetMissingUser()
+        public void TestGetUserMissingUser()
         {
             var result = _userController.GetUser("INVALID_USER_ID").Result;
             Assert.That(result, Is.InstanceOf<NotFoundResult>());

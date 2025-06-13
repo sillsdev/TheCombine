@@ -6,8 +6,8 @@ namespace BackendFramework.Interfaces
     public interface IEmailVerifyContext
     {
         int ExpireTime { get; }
-        public Task Insert(EmailToken reset);
-        public Task ClearAll(string email);
-        public Task<EmailToken?> FindByToken(string token);
+        Task Insert(EmailToken reset);
+        Task ClearAll(string email);
+        Task<EmailToken?> FindByToken(string token);
     }
 }

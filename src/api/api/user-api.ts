@@ -658,13 +658,13 @@ export const UserApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    validateEmailToken: async (
+    validateResetToken: async (
       token: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'token' is not null or undefined
-      assertParamExists("validateEmailToken", "token", token);
-      const localVarPath = `/v1/users/validate/{token}`.replace(
+      assertParamExists("validateResetToken", "token", token);
+      const localVarPath = `/v1/users/forgot/reset/validate/{token}`.replace(
         `{${"token"}}`,
         encodeURIComponent(String(token))
       );
@@ -1150,14 +1150,14 @@ export const UserApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async validateEmailToken(
+    async validateResetToken(
       token: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.validateEmailToken(token, options);
+        await localVarAxiosParamCreator.validateResetToken(token, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -1409,9 +1409,9 @@ export const UserApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    validateEmailToken(token: string, options?: any): AxiosPromise<boolean> {
+    validateResetToken(token: string, options?: any): AxiosPromise<boolean> {
       return localVarFp
-        .validateEmailToken(token, options)
+        .validateResetToken(token, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1601,15 +1601,15 @@ export interface UserApiUpdateUserRequest {
 }
 
 /**
- * Request parameters for validateEmailToken operation in UserApi.
+ * Request parameters for validateResetToken operation in UserApi.
  * @export
- * @interface UserApiValidateEmailTokenRequest
+ * @interface UserApiValidateResetTokenRequest
  */
-export interface UserApiValidateEmailTokenRequest {
+export interface UserApiValidateResetTokenRequest {
   /**
    *
    * @type {string}
-   * @memberof UserApiValidateEmailToken
+   * @memberof UserApiValidateResetToken
    */
   readonly token: string;
 }
@@ -1858,17 +1858,17 @@ export class UserApi extends BaseAPI {
 
   /**
    *
-   * @param {UserApiValidateEmailTokenRequest} requestParameters Request parameters.
+   * @param {UserApiValidateResetTokenRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UserApi
    */
-  public validateEmailToken(
-    requestParameters: UserApiValidateEmailTokenRequest,
+  public validateResetToken(
+    requestParameters: UserApiValidateResetTokenRequest,
     options?: any
   ) {
     return UserApiFp(this.configuration)
-      .validateEmailToken(requestParameters.token, options)
+      .validateResetToken(requestParameters.token, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

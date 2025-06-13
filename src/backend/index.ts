@@ -689,7 +689,7 @@ export async function verifyEmailRequest(
 }
 
 export async function validateResetToken(token: string): Promise<boolean> {
-  return (await userApi.validateEmailToken({ token })).data;
+  return (await userApi.validateResetToken({ token })).data;
 }
 
 export async function resetPassword(

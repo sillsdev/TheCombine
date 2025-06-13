@@ -37,7 +37,7 @@ namespace BackendFramework.Services
             {
                 return false;
             }
-            var user = await _userRepo.GetUserByEmail(request.Email);
+            var user = await _userRepo.GetUserByEmailOrUsername(request.Email);
             if (user is null)
             {
                 return false;

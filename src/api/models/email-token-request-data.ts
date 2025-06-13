@@ -23,11 +23,11 @@ export interface EmailTokenRequestData {
    * @type {string}
    * @memberof EmailTokenRequestData
    */
-  url: string;
+  emailOrUsername: string;
   /**
    *
    * @type {string}
    * @memberof EmailTokenRequestData
    */
-  emailOrUsername: string;
+  url: string;
 }
