@@ -304,12 +304,8 @@ export async function downloadLift(projectId: string): Promise<string> {
   );
 }
 
-<<<<<<< HEAD
-/** After downloading a LIFT file, clear it from the backend. */
-=======
 /** Clear current user's exported LIFT file from the backend.
  * To be used after download is complete. */
->>>>>>> master
 export async function deleteLift(): Promise<void> {
   /* The backend deletes by user, not by project,
    * but a nonempty projectId in the url is still required. */
@@ -754,10 +750,7 @@ export async function updateUser(user: User): Promise<void> {
   }
 }
 
-<<<<<<< HEAD
-=======
 /** Note: Only usable by site admins. */
->>>>>>> master
 export async function deleteUser(userId: string): Promise<void> {
   await userApi.deleteUser({ userId }, defaultOptions());
 }
