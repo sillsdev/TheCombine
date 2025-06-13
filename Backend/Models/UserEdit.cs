@@ -13,22 +13,15 @@ namespace BackendFramework.Models
         [Required]
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string Id { get; set; } = "";
 
         [Required]
         [BsonElement("edits")]
-        public List<Edit> Edits { get; set; }
+        public List<Edit> Edits { get; set; } = [];
 
         [Required]
         [BsonElement("projectId")]
-        public string ProjectId { get; set; }
-
-        public UserEdit()
-        {
-            Id = "";
-            ProjectId = "";
-            Edits = new();
-        }
+        public string ProjectId { get; set; } = "";
 
         /// <summary> Create a deep copy. </summary>
         public UserEdit Clone()
@@ -66,7 +59,7 @@ namespace BackendFramework.Models
         [BsonElement("guid")]
         [BsonGuidRepresentation(GuidRepresentation.CSharpLegacy)]
 #pragma warning disable CA1720
-        public Guid Guid { get; set; }
+        public Guid Guid { get; set; } = Guid.NewGuid();
 #pragma warning restore CA1720
 
         /// <summary> Integer representation of enum GoalType in src/types/goals.ts </summary>
@@ -76,24 +69,20 @@ namespace BackendFramework.Models
 
         [Required]
         [BsonElement("stepData")]
-        public List<string> StepData { get; set; }
+        public List<string> StepData { get; set; } = [];
 
         [Required]
         [BsonElement("changes")]
-        public string Changes { get; set; }
+        public string Changes { get; set; } = "{}";
 
-        public Edit()
-        {
-            Guid = Guid.NewGuid();
-            GoalType = 0;
-            StepData = new();
-            Changes = "{}";
-        }
+        [BsonElement("modified")]
+        public DateTime? Modified { get; set; }
 
         /// <summary> Create a deep copy. </summary>
         public Edit Clone()
         {
             var clone = (Edit)MemberwiseClone();
+            clone.Modified = Modified is null ? null : new DateTime(Modified.Value.Ticks);
             clone.StepData = StepData.Select(sd => sd).ToList();
             return clone;
         }

@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import { verifyCaptchaToken } from "backend";
-import i18n from "i18n";
 import { RuntimeConfig } from "types/runtimeConfig";
 import theme from "types/theme";
 
@@ -17,7 +16,7 @@ export interface CaptchaProps {
 export default function Captcha(props: CaptchaProps): ReactElement {
   const setSuccess = props.setSuccess;
   const isRequired = useRef(RuntimeConfig.getInstance().captchaRequired());
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   useEffect(() => {
     setSuccess(!isRequired.current);
