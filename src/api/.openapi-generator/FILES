@@ -64,6 +64,7 @@ models/user-created-project.ts
 models/user-edit-step-wrapper.ts
 models/user-edit.ts
 models/user-role.ts
+models/user-stub.ts
 models/user.ts
 models/word.ts
 models/words-per-day-per-user-count.ts
