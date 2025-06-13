@@ -23,7 +23,6 @@ import {
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
-import { isSiteAdmin } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import {
   type TabProps,
@@ -31,6 +30,7 @@ import {
   shortenName,
   tabColor,
 } from "components/AppBar/AppBarTypes";
+import { useAppSelector } from "rootRedux/hooks";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
 import { openUserGuide } from "utilities/pathUtilities";
@@ -46,9 +46,10 @@ const enum usernameLength {
  * Avatar in AppBar with dropdown UserMenu
  */
 export default function UserMenu(props: TabProps): ReactElement {
+  const isAdmin = useAppSelector((state) => state.loginState.isAdmin);
+
   const [anchorElement, setAnchorElement] = useState<HTMLElement | undefined>();
   const avatar = LocalStorage.getAvatar();
-  const [isAdmin, setIsAdmin] = useState(false);
   const username = LocalStorage.getCurrentUser()?.username;
 
   const horizontal = document.body.dir === "rtl" ? "left" : "right";
@@ -63,8 +64,6 @@ export default function UserMenu(props: TabProps): ReactElement {
   function handleClose(): void {
     setAnchorElement(undefined);
   }
-
-  isSiteAdmin().then(setIsAdmin);
 
   return (
     <>
