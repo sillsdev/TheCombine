@@ -101,6 +101,12 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(ResultOfUpdate.Updated);
         }
 
+        public Task<ResultOfUpdate> VerifyEmail(string userId)
+        {
+            // TODO: more sophisticated mock
+            return Task.FromResult(ResultOfUpdate.Updated);
+        }
+
         public Task<ResultOfUpdate> ChangePassword(string userId, string password)
         {
             // TODO: more sophisticated mock

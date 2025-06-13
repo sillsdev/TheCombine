@@ -39,9 +39,9 @@ import {
 // @ts-ignore
 import { Credentials } from "../models";
 // @ts-ignore
-import { PasswordResetData } from "../models";
+import { EmailTokenRequestData } from "../models";
 // @ts-ignore
-import { PasswordResetRequestData } from "../models";
+import { PasswordResetData } from "../models";
 // @ts-ignore
 import { User } from "../models";
 // @ts-ignore
@@ -545,21 +545,21 @@ export const UserApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {PasswordResetRequestData} passwordResetRequestData
+     * @param {EmailTokenRequestData} emailTokenRequestData
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     resetPasswordRequest: async (
-      passwordResetRequestData: PasswordResetRequestData,
+      emailTokenRequestData: EmailTokenRequestData,
       options: any = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'passwordResetRequestData' is not null or undefined
+      // verify required parameter 'emailTokenRequestData' is not null or undefined
       assertParamExists(
         "resetPasswordRequest",
-        "passwordResetRequestData",
-        passwordResetRequestData
+        "emailTokenRequestData",
+        emailTokenRequestData
       );
-      const localVarPath = `/v1/users/forgot`;
+      const localVarPath = `/v1/users/forgot/request`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -586,7 +586,7 @@ export const UserApiAxiosParamCreator = function (
         ...options.headers,
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
-        passwordResetRequestData,
+        emailTokenRequestData,
         localVarRequestOptions,
         configuration
       );
@@ -658,13 +658,13 @@ export const UserApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    validateResetToken: async (
+    validateEmailToken: async (
       token: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'token' is not null or undefined
-      assertParamExists("validateResetToken", "token", token);
-      const localVarPath = `/v1/users/forgot/reset/validate/{token}`.replace(
+      assertParamExists("validateEmailToken", "token", token);
+      const localVarPath = `/v1/users/validate/{token}`.replace(
         `{${"token"}}`,
         encodeURIComponent(String(token))
       );
@@ -736,6 +736,104 @@ export const UserApiAxiosParamCreator = function (
         ...headersFromBaseOptions,
         ...options.headers,
       };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    verifyEmail: async (
+      token: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'token' is not null or undefined
+      assertParamExists("verifyEmail", "token", token);
+      const localVarPath = `/v1/users/verifyemail/{token}`.replace(
+        `{${"token"}}`,
+        encodeURIComponent(String(token))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {EmailTokenRequestData} emailTokenRequestData
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    verifyEmailRequest: async (
+      emailTokenRequestData: EmailTokenRequestData,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'emailTokenRequestData' is not null or undefined
+      assertParamExists(
+        "verifyEmailRequest",
+        "emailTokenRequestData",
+        emailTokenRequestData
+      );
+      const localVarPath = `/v1/users/verifyemail/request`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        emailTokenRequestData,
+        localVarRequestOptions,
+        configuration
+      );
 
       return {
         url: toPathString(localVarUrlObj),
@@ -998,19 +1096,19 @@ export const UserApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {PasswordResetRequestData} passwordResetRequestData
+     * @param {EmailTokenRequestData} emailTokenRequestData
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async resetPasswordRequest(
-      passwordResetRequestData: PasswordResetRequestData,
+      emailTokenRequestData: EmailTokenRequestData,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.resetPasswordRequest(
-          passwordResetRequestData,
+          emailTokenRequestData,
           options
         );
       return createRequestFunction(
@@ -1052,14 +1150,14 @@ export const UserApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async validateResetToken(
+    async validateEmailToken(
       token: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.validateResetToken(token, options);
+        await localVarAxiosParamCreator.validateEmailToken(token, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -1081,6 +1179,53 @@ export const UserApiFp = function (configuration?: Configuration) {
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.verifyCaptchaToken(token, options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async verifyEmail(
+      token: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.verifyEmail(
+        token,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {EmailTokenRequestData} emailTokenRequestData
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async verifyEmailRequest(
+      emailTokenRequestData: EmailTokenRequestData,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.verifyEmailRequest(
+          emailTokenRequestData,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -1234,16 +1379,16 @@ export const UserApiFactory = function (
     },
     /**
      *
-     * @param {PasswordResetRequestData} passwordResetRequestData
+     * @param {EmailTokenRequestData} emailTokenRequestData
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     resetPasswordRequest(
-      passwordResetRequestData: PasswordResetRequestData,
+      emailTokenRequestData: EmailTokenRequestData,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
-        .resetPasswordRequest(passwordResetRequestData, options)
+        .resetPasswordRequest(emailTokenRequestData, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1264,9 +1409,9 @@ export const UserApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    validateResetToken(token: string, options?: any): AxiosPromise<boolean> {
+    validateEmailToken(token: string, options?: any): AxiosPromise<boolean> {
       return localVarFp
-        .validateResetToken(token, options)
+        .validateEmailToken(token, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1278,6 +1423,31 @@ export const UserApiFactory = function (
     verifyCaptchaToken(token: string, options?: any): AxiosPromise<void> {
       return localVarFp
         .verifyCaptchaToken(token, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    verifyEmail(token: string, options?: any): AxiosPromise<void> {
+      return localVarFp
+        .verifyEmail(token, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {EmailTokenRequestData} emailTokenRequestData
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    verifyEmailRequest(
+      emailTokenRequestData: EmailTokenRequestData,
+      options?: any
+    ): AxiosPromise<void> {
+      return localVarFp
+        .verifyEmailRequest(emailTokenRequestData, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -1403,10 +1573,10 @@ export interface UserApiResetPasswordRequest {
 export interface UserApiResetPasswordRequestRequest {
   /**
    *
-   * @type {PasswordResetRequestData}
+   * @type {EmailTokenRequestData}
    * @memberof UserApiResetPasswordRequest
    */
-  readonly passwordResetRequestData: PasswordResetRequestData;
+  readonly emailTokenRequestData: EmailTokenRequestData;
 }
 
 /**
@@ -1431,15 +1601,15 @@ export interface UserApiUpdateUserRequest {
 }
 
 /**
- * Request parameters for validateResetToken operation in UserApi.
+ * Request parameters for validateEmailToken operation in UserApi.
  * @export
- * @interface UserApiValidateResetTokenRequest
+ * @interface UserApiValidateEmailTokenRequest
  */
-export interface UserApiValidateResetTokenRequest {
+export interface UserApiValidateEmailTokenRequest {
   /**
    *
    * @type {string}
-   * @memberof UserApiValidateResetToken
+   * @memberof UserApiValidateEmailToken
    */
   readonly token: string;
 }
@@ -1456,6 +1626,34 @@ export interface UserApiVerifyCaptchaTokenRequest {
    * @memberof UserApiVerifyCaptchaToken
    */
   readonly token: string;
+}
+
+/**
+ * Request parameters for verifyEmail operation in UserApi.
+ * @export
+ * @interface UserApiVerifyEmailRequest
+ */
+export interface UserApiVerifyEmailRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof UserApiVerifyEmail
+   */
+  readonly token: string;
+}
+
+/**
+ * Request parameters for verifyEmailRequest operation in UserApi.
+ * @export
+ * @interface UserApiVerifyEmailRequestRequest
+ */
+export interface UserApiVerifyEmailRequestRequest {
+  /**
+   *
+   * @type {EmailTokenRequestData}
+   * @memberof UserApiVerifyEmailRequest
+   */
+  readonly emailTokenRequestData: EmailTokenRequestData;
 }
 
 /**
@@ -1638,7 +1836,7 @@ export class UserApi extends BaseAPI {
     options?: any
   ) {
     return UserApiFp(this.configuration)
-      .resetPasswordRequest(requestParameters.passwordResetRequestData, options)
+      .resetPasswordRequest(requestParameters.emailTokenRequestData, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -1660,17 +1858,17 @@ export class UserApi extends BaseAPI {
 
   /**
    *
-   * @param {UserApiValidateResetTokenRequest} requestParameters Request parameters.
+   * @param {UserApiValidateEmailTokenRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UserApi
    */
-  public validateResetToken(
-    requestParameters: UserApiValidateResetTokenRequest,
+  public validateEmailToken(
+    requestParameters: UserApiValidateEmailTokenRequest,
     options?: any
   ) {
     return UserApiFp(this.configuration)
-      .validateResetToken(requestParameters.token, options)
+      .validateEmailToken(requestParameters.token, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -1687,6 +1885,38 @@ export class UserApi extends BaseAPI {
   ) {
     return UserApiFp(this.configuration)
       .verifyCaptchaToken(requestParameters.token, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {UserApiVerifyEmailRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public verifyEmail(
+    requestParameters: UserApiVerifyEmailRequest,
+    options?: any
+  ) {
+    return UserApiFp(this.configuration)
+      .verifyEmail(requestParameters.token, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {UserApiVerifyEmailRequestRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public verifyEmailRequest(
+    requestParameters: UserApiVerifyEmailRequestRequest,
+    options?: any
+  ) {
+    return UserApiFp(this.configuration)
+      .verifyEmailRequest(requestParameters.emailTokenRequestData, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }

@@ -47,7 +47,9 @@ const config = new Api.Configuration(config_parameters);
 const authenticationUrls = [
   "/users/authenticate",
   "/users/create",
+  "/users/email",
   "/users/forgot",
+  "/users/password",
 ];
 
 /** A list of URL patterns for which the frontend explicitly handles errors
@@ -58,6 +60,7 @@ const whiteListedErrorUrls = [
   "/speakers/update/",
   "/users/authenticate",
   "/users/captcha/",
+  "/verifyemail/",
 ];
 
 // Create an axios instance to allow for attaching interceptors to it.
@@ -666,17 +669,27 @@ export async function verifyCaptchaToken(token: string): Promise<boolean> {
 export async function resetPasswordRequest(
   emailOrUsername: string
 ): Promise<boolean> {
-  const domain = window.location.origin;
+  const url = `${window.location.origin}${Path.PwReset}`;
+  const params = { emailTokenRequestData: { emailOrUsername, url } };
   return await userApi
-    .resetPasswordRequest({
-      passwordResetRequestData: { domain, emailOrUsername },
-    })
+    .resetPasswordRequest(params)
+    .then(() => true)
+    .catch(() => false);
+}
+
+export async function verifyEmailRequest(
+  emailOrUsername: string
+): Promise<boolean> {
+  const url = `${window.location.origin}${Path.EmailVerify}`;
+  const params = { emailTokenRequestData: { emailOrUsername, url } };
+  return await userApi
+    .verifyEmailRequest(params, defaultOptions())
     .then(() => true)
     .catch(() => false);
 }
 
 export async function validateResetToken(token: string): Promise<boolean> {
-  return (await userApi.validateResetToken({ token })).data;
+  return (await userApi.validateEmailToken({ token })).data;
 }
 
 export async function resetPassword(
@@ -687,6 +700,11 @@ export async function resetPassword(
     .resetPassword({ passwordResetData: { token, newPassword } })
     .then(() => true)
     .catch(() => false);
+}
+
+/** If the token is valid, sets the associated email address as verified. */
+export async function verifyEmail(token: string): Promise<void> {
+  await userApi.verifyEmail({ token });
 }
 
 /** Returns the created user with id assigned on creation. */

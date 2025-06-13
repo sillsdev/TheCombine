@@ -20,22 +20,21 @@ namespace BackendFramework.Contexts
             ExpireTime = options.Value.PassResetExpireTime;
         }
 
-        private IMongoCollection<PasswordReset> PasswordResets => _db.GetCollection<PasswordReset>(
-            "PasswordResetCollection");
+        private IMongoCollection<EmailToken> EmailTokens => _db.GetCollection<EmailToken>("PasswordResetCollection");
 
         public Task ClearAll(string email)
         {
-            return PasswordResets.DeleteManyAsync(x => x.Email == email);
+            return EmailTokens.DeleteManyAsync(x => x.Email == email);
         }
 
-        public async Task<PasswordReset?> FindByToken(string token)
+        public async Task<EmailToken?> FindByToken(string token)
         {
-            return (await PasswordResets.FindAsync(r => r.Token == token)).SingleOrDefault();
+            return (await EmailTokens.FindAsync(r => r.Token == token)).SingleOrDefault();
         }
 
-        public Task Insert(PasswordReset reset)
+        public Task Insert(EmailToken reset)
         {
-            return PasswordResets.InsertOneAsync(reset);
+            return EmailTokens.InsertOneAsync(reset);
         }
     }
 }

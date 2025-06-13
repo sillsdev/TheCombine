@@ -12,12 +12,12 @@ namespace Backend.Tests.Mocks
             _boolResponse = response;
         }
 
-        public Task<PasswordReset> CreatePasswordReset(string email)
+        public Task<EmailToken> CreateEmailToken(string email)
         {
-            return Task.FromResult(new PasswordReset(15, email));
+            return Task.FromResult(new EmailToken(15, email));
         }
 
-        public Task ExpirePasswordReset(string email)
+        public Task ExpireTokens(string email)
         {
             return Task.CompletedTask;
         }
@@ -28,6 +28,11 @@ namespace Backend.Tests.Mocks
         }
 
         public Task<bool> ResetPassword(string token, string password)
+        {
+            return Task.FromResult(_boolResponse);
+        }
+
+        public Task<bool> VerifyEmail(string token)
         {
             return Task.FromResult(_boolResponse);
         }

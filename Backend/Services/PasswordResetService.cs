@@ -1,7 +1,6 @@
 using BackendFramework.Models;
 using BackendFramework.Interfaces;
 using System.Threading.Tasks;
-using System.Linq;
 using System;
 
 namespace BackendFramework.Services
@@ -17,14 +16,14 @@ namespace BackendFramework.Services
             _userRepo = userRepo;
         }
 
-        public async Task<PasswordReset> CreatePasswordReset(string email)
+        public async Task<EmailToken> CreateEmailToken(string email)
         {
-            var resetRequest = new PasswordReset(_passwordResets.ExpireTime, email);
-            await _passwordResets.Insert(resetRequest);
-            return resetRequest;
+            var emailToken = new EmailToken(_passwordResets.ExpireTime, email);
+            await _passwordResets.Insert(emailToken);
+            return emailToken;
         }
 
-        public async Task ExpirePasswordReset(string email)
+        public async Task ExpireTokens(string email)
         {
             await _passwordResets.ClearAll(email);
         }
@@ -44,10 +43,32 @@ namespace BackendFramework.Services
             {
                 return false;
             }
-            var user = (await _userRepo.GetAllUsers()).Single(u =>
-                u.Email.Equals(request.Email, StringComparison.OrdinalIgnoreCase));
+            var user = await _userRepo.GetUserByEmail(request.Email);
+            if (user is null)
+            {
+                return false;
+            }
             await _userRepo.ChangePassword(user.Id, password);
-            await ExpirePasswordReset(request.Email);
+            await ExpireTokens(request.Email);
+            return true;
+        }
+
+        /// <summary> Validate a user's email address using a password reset request token. </summary>
+        /// <returns> Returns false if the request is invalid or expired. </returns>
+        public async Task<bool> VerifyEmail(string token)
+        {
+            var request = await _passwordResets.FindByToken(token);
+            if (request is null || DateTime.Now > request.ExpireTime)
+            {
+                return false;
+            }
+            var user = await _userRepo.GetUserByEmail(request.Email);
+            if (user is null)
+            {
+                return false;
+            }
+            await _userRepo.VerifyEmail(user.Id);
+            await ExpireTokens(request.Email);
             return true;
         }
     }
