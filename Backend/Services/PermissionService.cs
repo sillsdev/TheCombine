@@ -16,38 +16,25 @@ namespace BackendFramework.Services
         private readonly IUserRepository _userRepo;
         private readonly IUserRoleRepository _userRoleRepo;
 
+        internal const string JwtSecretKeyEnv = "COMBINE_JWT_SECRET_KEY";
+        internal const string UserIdClaimType = "USER_ID";
+
         public PermissionService(IUserRepository userRepo, IUserRoleRepository userRoleRepo)
         {
             _userRepo = userRepo;
             _userRoleRepo = userRoleRepo;
         }
 
-        /// <summary> Extracts the JWT token from the given HTTP context. </summary>
-        private static SecurityToken GetJwt(HttpContext request)
-        {
-            // Get authorization header (i.e. JWT token)
-            var jwtToken = request.Request.Headers["Authorization"].ToString();
-
-            // Remove "Bearer " from beginning of token
-            var token = jwtToken.Split(" ")[1];
-
-            // Parse JWT for project permissions
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(token);
-
-            return jsonToken;
-        }
-
-        /// <summary> Checks whether the given user is authorized. </summary>
-        public bool IsUserIdAuthorized(HttpContext request, string userId)
+        /// <summary> Checks whether the user with the given id is authenticated. </summary>
+        public bool IsUserAuthenticated(HttpContext request, string userId)
         {
             return !string.IsNullOrEmpty(userId) && userId == GetUserId(request);
         }
 
-        /// <summary> Checks whether the current user is authorized. </summary>
-        public bool IsCurrentUserAuthorized(HttpContext request)
+        /// <summary> Checks whether the current user is authenticated. </summary>
+        public bool IsCurrentUserAuthenticated(HttpContext request)
         {
-            return !string.IsNullOrEmpty(GetUserId(request));
+            return request.User.Identity?.IsAuthenticated ?? false;
         }
 
         /// <summary> Checks whether the current user is a site admin. </summary>
@@ -55,6 +42,12 @@ namespace BackendFramework.Services
         {
             var user = await _userRepo.GetUser(GetUserId(request));
             return user?.IsAdmin ?? false;
+        }
+
+        /// <summary> Checks whether the current user either has given userId or is a site admin. </summary>
+        public async Task<bool> CanModifyUser(HttpContext request, string userId)
+        {
+            return IsUserAuthenticated(request, userId) || await IsSiteAdmin(request);
         }
 
         /// <summary> Checks whether the current user has the given project permission. </summary>
@@ -137,13 +130,15 @@ namespace BackendFramework.Services
             return request.TraceIdentifier ?? "";
         }
 
-        /// <summary>Retrieve the User ID from the JWT in a request. </summary>
-        /// <exception cref="InvalidJwtTokenException"> Throws when null userId extracted from token. </exception>
+        /// <summary> Gets the id of the current authenticated user. </summary>
+        /// <exception cref="InvalidJwtTokenException"> Throws when no user is authenticated. </exception>
         public string GetUserId(HttpContext request)
         {
-            var token = (JwtSecurityToken)GetJwt(request);
-            var userId = token.Payload["UserId"].ToString() ?? throw new InvalidJwtTokenException();
-            return userId;
+            if (!IsCurrentUserAuthenticated(request))
+            {
+                throw new InvalidJwtTokenException();
+            }
+            return request.User.FindFirstValue(UserIdClaimType) ?? throw new InvalidJwtTokenException();
         }
 
         /// <summary> Confirms login credentials are valid. </summary>
@@ -171,12 +166,11 @@ namespace BackendFramework.Services
         {
             const int hoursUntilExpires = 12;
             var tokenHandler = new JwtSecurityTokenHandler();
-            var secretKey = Environment.GetEnvironmentVariable("COMBINE_JWT_SECRET_KEY")!;
-            var key = Encoding.ASCII.GetBytes(secretKey);
+            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable(JwtSecretKeyEnv)!);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("UserId", user.Id) }),
+                Subject = new ClaimsIdentity([new Claim(UserIdClaimType, user.Id)]),
                 Expires = DateTime.UtcNow.AddHours(hoursUntilExpires),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

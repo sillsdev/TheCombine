@@ -52,7 +52,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UploadAvatar(IFormFile? file)
         {
-            if (!_permissionService.IsCurrentUserAuthorized(HttpContext))
+            if (!_permissionService.IsCurrentUserAuthenticated(HttpContext))
             {
                 return Forbid();
             }

@@ -139,6 +139,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestGetCurrentPermissionsMissingUser()
         {
+            _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId("user-id");
             var result = await _userRoleController.GetCurrentPermissions(MissingId);
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
@@ -154,9 +155,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestGetCurrentPermissionsUnauthorized()
         {
-            var user = await _userRepo.Create(new User());
-            _userRoleController.ControllerContext.HttpContext =
-                PermissionServiceMock.UnauthorizedHttpContext(user!.Id);
+            _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = await _userRoleController.GetCurrentPermissions(ProjId);
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }

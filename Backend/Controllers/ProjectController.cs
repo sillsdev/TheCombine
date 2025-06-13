@@ -208,7 +208,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> ProjectDuplicateCheck(string projectName)
         {
-            if (!_permissionService.IsCurrentUserAuthorized(HttpContext))
+            if (!_permissionService.IsCurrentUserAuthenticated(HttpContext))
             {
                 return Forbid();
             }

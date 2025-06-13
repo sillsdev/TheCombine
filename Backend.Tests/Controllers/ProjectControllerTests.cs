@@ -4,7 +4,6 @@ using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
@@ -14,8 +13,6 @@ namespace Backend.Tests.Controllers
     {
         private IProjectRepository _projRepo = null!;
         private IUserRepository _userRepo = null!;
-        private UserRoleRepositoryMock _userRoleRepo = null!;
-        private IPermissionService _permissionService = null!;
         private ProjectController _projController = null!;
 
         public void Dispose()
@@ -32,27 +29,16 @@ namespace Backend.Tests.Controllers
             }
         }
 
-        private User _jwtAuthenticatedUser = null!;
-
         [SetUp]
         public void Setup()
         {
             _projRepo = new ProjectRepositoryMock();
             _userRepo = new UserRepositoryMock();
-            _userRoleRepo = new UserRoleRepositoryMock();
-            _permissionService = new PermissionServiceMock(_userRepo);
-            _projController = new ProjectController(_projRepo, _userRoleRepo, _userRepo, _permissionService)
-            {
-                // Mock the Http Context because this isn't an actual call controller
-                ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
-            };
+            _projController = new ProjectController(
+                _projRepo, new UserRoleRepositoryMock(), _userRepo, new PermissionServiceMock(_userRepo));
 
-            _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
-            _userRepo.Create(_jwtAuthenticatedUser);
-            _jwtAuthenticatedUser = _permissionService.Authenticate(_jwtAuthenticatedUser.Username,
-                _jwtAuthenticatedUser.Password).Result ?? throw new UserAuthenticationException();
-
-            _projController.ControllerContext.HttpContext.Request.Headers["UserId"] = _jwtAuthenticatedUser.Id;
+            var _userId = _userRepo.Create(new() { Username = "user", Password = "pass" }).Result!.Id;
+            _projController.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId(_userId);
         }
 
         [Test]

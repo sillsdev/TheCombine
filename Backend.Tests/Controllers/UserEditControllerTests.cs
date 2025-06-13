@@ -6,7 +6,6 @@ using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using static System.Linq.Enumerable;
@@ -17,8 +16,6 @@ namespace Backend.Tests.Controllers
     {
         private IUserRepository _userRepo = null!;
         private IUserEditRepository _userEditRepo = null!;
-        private IPermissionService _permissionService = null!;
-        private IUserEditService _userEditService = null!;
         private UserEditController _userEditController = null!;
 
         public void Dispose()
@@ -35,28 +32,19 @@ namespace Backend.Tests.Controllers
             }
         }
 
-        private User _jwtAuthenticatedUser = null!;
         private const string ProjId = "PROJECT_ID";
         private const string MissingId = "MISSING_ID";
 
         [SetUp]
-        public async Task Setup()
+        public void Setup()
         {
             _userRepo = new UserRepositoryMock();
             _userEditRepo = new UserEditRepositoryMock();
-            _permissionService = new PermissionServiceMock(_userRepo);
-            _userEditService = new UserEditService(_userEditRepo);
             _userEditController = new UserEditController(
-                _userEditRepo, _userEditService, _permissionService, _userRepo)
-            {
-                ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
-            };
+                _userEditRepo, new UserEditService(_userEditRepo), new PermissionServiceMock(_userRepo), _userRepo);
 
-            _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
-            await _userRepo.Create(_jwtAuthenticatedUser);
-            _jwtAuthenticatedUser = await _permissionService.Authenticate(_jwtAuthenticatedUser.Username,
-                _jwtAuthenticatedUser.Password) ?? throw new UserAuthenticationException();
-            _userEditController.ControllerContext.HttpContext.Request.Headers["UserId"] = _jwtAuthenticatedUser.Id;
+            var _userId = _userRepo.Create(new() { Username = "user", Password = "pass" }).Result!.Id;
+            _userEditController.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId(_userId);
         }
 
         private static UserEdit RandomUserEdit()

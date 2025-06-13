@@ -171,7 +171,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUser(string userId)
         {
-            if (!_permissionService.IsUserIdAuthorized(HttpContext, userId))
+            if (!await _permissionService.CanModifyUser(HttpContext, userId))
             {
                 return Forbid();
             }
@@ -187,7 +187,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserIdByEmailOrUsername([FromBody, BindRequired] string emailOrUsername)
         {
-            if (!_permissionService.IsCurrentUserAuthorized(HttpContext))
+            if (!_permissionService.IsCurrentUserAuthenticated(HttpContext))
             {
                 return Forbid();
             }
@@ -246,8 +246,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateUser(string userId, [FromBody, BindRequired] User user)
         {
-            if (!_permissionService.IsUserIdAuthorized(HttpContext, userId)
-                && !await _permissionService.IsSiteAdmin(HttpContext))
+            if (!await _permissionService.CanModifyUser(HttpContext, userId))
             {
                 return Forbid();
             }

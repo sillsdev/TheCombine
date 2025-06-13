@@ -4,7 +4,6 @@ using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
-using BackendFramework.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
@@ -14,7 +13,6 @@ namespace Backend.Tests.Controllers
     public class AvatarControllerTests : IDisposable
     {
         private IUserRepository _userRepo = null!;
-        private PermissionServiceMock _permissionService = null!;
         private AvatarController _avatarController = null!;
 
         public void Dispose()
@@ -31,26 +29,18 @@ namespace Backend.Tests.Controllers
             }
         }
 
-        private User _jwtAuthenticatedUser = null!;
-        private const string FileName = "combine.png";  // File in Backend.Tests/Assets/
+        private string _userId = string.Empty;
+        private const string FileName = "combine.png"; // File in Backend.Tests/Assets/
         private readonly string _filePath = Path.Combine(Util.AssetsDir, FileName);
 
         [SetUp]
         public void Setup()
         {
             _userRepo = new UserRepositoryMock();
-            _permissionService = new PermissionServiceMock(_userRepo);
-            _avatarController = new AvatarController(_userRepo, _permissionService)
-            {
-                // Mock the Http Context because this isn't an actual call controller
-                ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
-            };
+            _avatarController = new AvatarController(_userRepo, new PermissionServiceMock(_userRepo));
 
-            _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
-            _userRepo.Create(_jwtAuthenticatedUser);
-            _jwtAuthenticatedUser = _permissionService.Authenticate(_jwtAuthenticatedUser.Username,
-                _jwtAuthenticatedUser.Password).Result ?? throw new UserAuthenticationException();
-            _avatarController.ControllerContext.HttpContext.Request.Headers["UserId"] = _jwtAuthenticatedUser.Id;
+            _userId = _userRepo.Create(new() { Username = "user", Password = "pass" }).Result!.Id;
+            _avatarController.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId(_userId);
         }
 
         /// <summary> Delete the image file stored on disk for a particular user. </summary>
@@ -74,7 +64,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDownloadAvatarNoAvatar()
         {
-            var result = _avatarController.DownloadAvatar(_jwtAuthenticatedUser.Id).Result;
+            var result = _avatarController.DownloadAvatar(_userId).Result;
             Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
@@ -115,18 +105,18 @@ namespace Backend.Tests.Controllers
             var uploadResult = _avatarController.UploadAvatar(file).Result;
             Assert.That(uploadResult, Is.TypeOf<OkResult>());
 
-            var foundUser = _userRepo.GetUser(_jwtAuthenticatedUser.Id).Result;
+            var foundUser = _userRepo.GetUser(_userId).Result;
             Assert.That(foundUser?.Avatar, Is.Not.Null);
 
             // No permissions should be required to download an avatar.
             _avatarController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
-            var fileResult = _avatarController.DownloadAvatar(_jwtAuthenticatedUser.Id).Result as FileStreamResult;
+            var fileResult = _avatarController.DownloadAvatar(_userId).Result as FileStreamResult;
             Assert.That(fileResult, Is.TypeOf<FileStreamResult>());
 
             // Clean up.
             fileResult!.FileStream.Dispose();
-            DeleteAvatarFile(_jwtAuthenticatedUser.Id);
+            DeleteAvatarFile(_userId);
         }
     }
 }
