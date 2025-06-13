@@ -382,8 +382,8 @@
     }
   },
   "charInventory": {
-    "title": "Create Character Inventory",
-    "description": "Review all vernacular characters.",
+    "title": "Check Orthography",
+    "description": "Review characters used in the spelling of vernacular words and check for typos.",
     "characters": "characters",
     "examples": "Examples",
     "occurrences": "occurrences",
