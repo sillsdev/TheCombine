@@ -82,6 +82,19 @@ namespace Backend.Tests.Mocks
         /// Note this parameter is nullable in the mock implementation even though the real implementation it is not
         /// to support unit testing when `HttpContext`s are not available.
         /// </param>
+        /// <param name="userId"> Ignored. </param>
+        /// <returns>
+        /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
+        /// </returns>
+        public Task<bool> CanModifyUser(HttpContext request, string userId)
+        {
+            return Task.FromResult(IsAuthorizedHttpContext(request));
+        }
+
+        /// <param name="request">
+        /// Note this parameter is nullable in the mock implementation even though the real implementation it is not
+        /// to support unit testing when `HttpContext`s are not available.
+        /// </param>
         /// <param name="permission"> Ignored. </param>
         /// <param name="projectId"> Ignored. </param>
         /// <returns>
