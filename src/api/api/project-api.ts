@@ -39,9 +39,9 @@ import {
 // @ts-ignore
 import { Project } from "../models";
 // @ts-ignore
-import { User } from "../models";
-// @ts-ignore
 import { UserCreatedProject } from "../models";
+// @ts-ignore
+import { UserStub } from "../models";
 /**
  * ProjectApi - axios parameter creator
  * @export
@@ -496,7 +496,10 @@ export const ProjectApiFp = function (configuration?: Configuration) {
       projectId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<UserStub>>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getAllProjectUsers(projectId, options);
@@ -673,7 +676,7 @@ export const ProjectApiFactory = function (
     getAllProjectUsers(
       projectId: string,
       options?: any
-    ): AxiosPromise<Array<User>> {
+    ): AxiosPromise<Array<UserStub>> {
       return localVarFp
         .getAllProjectUsers(projectId, options)
         .then((request) => request(axios, basePath));

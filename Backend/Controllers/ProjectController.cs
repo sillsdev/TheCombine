@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -42,10 +43,10 @@ namespace BackendFramework.Controllers
             return Ok(await _projRepo.GetAllProjects());
         }
 
-        /// <summary> Get a list of <see cref="User"/>s of a specific project </summary>
-        /// <returns> A list of <see cref="User"/>s </returns>
+        /// <summary> Get all users of a specific project. </summary>
+        /// <returns> A list of <see cref="UserStub"/>s. </returns>
         [HttpGet("{projectId}/users", Name = "GetAllProjectUsers")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<User>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserStub>))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAllProjectUsers(string projectId)
         {
@@ -56,9 +57,10 @@ namespace BackendFramework.Controllers
             }
 
             var allUsers = await _userRepo.GetAllUsers();
-            var projectUsers = allUsers.FindAll(user => user.ProjectRoles.ContainsKey(projectId));
+            var projectUsers = allUsers.FindAll(u => u.ProjectRoles.ContainsKey(projectId))
+                .Select((u) => new UserStub(u) { RoleId = u.ProjectRoles[projectId] });
 
-            return Ok(projectUsers);
+            return Ok(projectUsers.ToList());
         }
 
         /// <summary> Returns <see cref="Project"/> with specified id </summary>

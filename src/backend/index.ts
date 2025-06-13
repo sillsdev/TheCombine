@@ -23,6 +23,7 @@ import {
   User,
   UserEdit,
   UserRole,
+  UserStub,
   Word,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
@@ -303,7 +304,12 @@ export async function downloadLift(projectId: string): Promise<string> {
   );
 }
 
+<<<<<<< HEAD
 /** After downloading a LIFT file, clear it from the backend. */
+=======
+/** Clear current user's exported LIFT file from the backend.
+ * To be used after download is complete. */
+>>>>>>> master
 export async function deleteLift(): Promise<void> {
   /* The backend deletes by user, not by project,
    * but a nonempty projectId in the url is still required. */
@@ -397,8 +403,8 @@ export async function getAllProjects(): Promise<Project[]> {
   return (await projectApi.getAllProjects(defaultOptions())).data;
 }
 
-export async function getAllProjectUsers(projectId?: string): Promise<User[]> {
-  const params = { projectId: projectId ?? LocalStorage.getProjectId() };
+export async function getAllProjectUsers(projId?: string): Promise<UserStub[]> {
+  const params = { projectId: projId ?? LocalStorage.getProjectId() };
   return (await projectApi.getAllProjectUsers(params, defaultOptions())).data;
 }
 
@@ -411,12 +417,10 @@ export async function createProject(project: Project): Promise<Project> {
   return resp.data.project;
 }
 
-export async function getAllActiveProjects(
-  userId?: string
-): Promise<Project[]> {
-  const user = await getUser(userId || LocalStorage.getUserId());
+/** Gets all active projects of the current user. */
+export async function getAllActiveProjects(): Promise<Project[]> {
   const projects: Project[] = [];
-  for (const projectId of Object.keys(user.projectRoles)) {
+  for (const projectId of Object.keys((await getCurrentUser()).projectRoles)) {
     try {
       await getProject(projectId).then(
         (project) => project.isActive && projects.push(project)
@@ -717,19 +721,29 @@ export async function authenticateUser(
   return user;
 }
 
+/** Note: Only usable by site admins. */
 export async function getAllUsers(): Promise<User[]> {
   return (await userApi.getAllUsers(defaultOptions())).data;
 }
 
-export async function getUser(userId: string): Promise<User> {
+/** Note: The filter must be length 3 or more (except for site admins). */
+export async function getUsersByFilter(filter: string): Promise<UserStub[]> {
+  return (await userApi.getUsersByFilter({ filter }, defaultOptions())).data;
+}
+
+export async function getCurrentUser(): Promise<User> {
+  return (await userApi.getCurrentUser(defaultOptions())).data;
+}
+
+export async function getUser(userId: string): Promise<UserStub> {
   return (await userApi.getUser({ userId }, defaultOptions())).data;
 }
 
-export async function getUserByEmailOrUsername(
+export async function getUserIdByEmailOrUsername(
   emailOrUsername: string
-): Promise<User> {
+): Promise<string> {
   const params = { body: emailOrUsername };
-  return (await userApi.getUserByEmailOrUsername(params, defaultOptions()))
+  return (await userApi.getUserIdByEmailOrUsername(params, defaultOptions()))
     .data;
 }
 
@@ -740,6 +754,10 @@ export async function updateUser(user: User): Promise<void> {
   }
 }
 
+<<<<<<< HEAD
+=======
+/** Note: Only usable by site admins. */
+>>>>>>> master
 export async function deleteUser(userId: string): Promise<void> {
   await userApi.deleteUser({ userId }, defaultOptions());
 }

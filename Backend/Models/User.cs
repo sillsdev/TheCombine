@@ -137,6 +137,31 @@ namespace BackendFramework.Models
         }
     }
 
+    public class UserStub
+    {
+        [Required]
+        public string Id { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Username { get; set; }
+
+        [Required]
+        public bool HasAvatar { get; set; }
+
+        public string? RoleId { get; set; }
+
+        public UserStub(User user)
+        {
+            Id = user.Id;
+            Name = user.Name;
+            Username = user.Username;
+            HasAvatar = user.HasAvatar;
+        }
+    }
+
     /// <summary> Contains email/username and password for authentication. </summary>
     /// <remarks>
     /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
