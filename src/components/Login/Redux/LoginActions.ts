@@ -42,7 +42,11 @@ export function signupSuccess(): PayloadAction {
 
 // Dispatch Functions
 
-export function asyncLogIn(emailOrUsername: string, password: string) {
+export function asyncLogIn(
+  emailOrUsername: string,
+  password: string,
+  onSuccess?: () => Promise<void> | void
+) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(loginAttempt(emailOrUsername));
     await backend
@@ -50,6 +54,9 @@ export function asyncLogIn(emailOrUsername: string, password: string) {
       .then(async () => {
         dispatch(loginSuccess());
         router.navigate(Path.ProjScreen);
+        if (onSuccess) {
+          onSuccess();
+        }
       })
       .catch((err) =>
         dispatch(loginFailure(`${err.response?.status ?? err.message}`))
@@ -62,7 +69,8 @@ export function asyncSignUp(
   username: string,
   email: string,
   password: string,
-  onSuccess?: () => void
+  onSignupSuccess?: () => void,
+  onLoginSuccess?: () => void
 ) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(signupAttempt(username));
@@ -73,11 +81,11 @@ export function asyncSignUp(
       .addUser(user)
       .then(() => {
         dispatch(signupSuccess());
-        if (onSuccess) {
-          onSuccess();
+        if (onSignupSuccess) {
+          onSignupSuccess();
         }
-        setTimeout(() => {
-          dispatch(asyncLogIn(username, password));
+        setTimeout(async () => {
+          dispatch(asyncLogIn(username, password, onLoginSuccess));
         }, 1000);
       })
       .catch((err) =>

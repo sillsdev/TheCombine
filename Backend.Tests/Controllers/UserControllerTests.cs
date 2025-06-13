@@ -12,6 +12,7 @@ namespace Backend.Tests.Controllers
     public class UserControllerTests : IDisposable
     {
         private IUserRepository _userRepo = null!;
+        private IEmailVerifyService _emailVerifyService = null!;
         private IPasswordResetService _passwordResetService = null!;
         private IPermissionService _permissionService = null!;
         private UserController _userController = null!;
@@ -34,10 +35,11 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _userRepo = new UserRepositoryMock();
+            _emailVerifyService = new EmailVerifyServiceMock();
             _passwordResetService = new PasswordResetServiceMock();
             _permissionService = new PermissionServiceMock(_userRepo);
             _userController = new UserController(_userRepo, _permissionService,
-                new CaptchaServiceMock(), new EmailServiceMock(), _passwordResetService);
+                new CaptchaServiceMock(), new EmailServiceMock(), _emailVerifyService, _passwordResetService);
         }
 
         private static User RandomUser()
@@ -62,6 +64,47 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestVerifyEmailRequestNoUser()
+        {
+            var result = _userController.VerifyEmailRequest(new() { EmailOrUsername = "email" }).Result;
+            Assert.That(result, Is.TypeOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestVerifyEmailRequestNoPermission()
+        {
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var user = _userRepo.Create(new() { Email = "e@mail" }).Result;
+            var result = _userController.VerifyEmailRequest(new() { EmailOrUsername = user!.Email }).Result;
+            Assert.That(result, Is.TypeOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestVerifyEmailRequest()
+        {
+            var user = _userRepo.Create(new() { Email = "e@mail" }).Result;
+            var result = _userController.VerifyEmailRequest(new() { EmailOrUsername = user!.Email }).Result;
+            Assert.That(result, Is.TypeOf<OkResult>());
+        }
+
+        [Test]
+        public void TestVerifyEmail()
+        {
+            // No permissions should be required to verify email via a token.
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            ((EmailVerifyServiceMock)_emailVerifyService).SetNextBoolResponse(false);
+            var falseResult = _userController.VerifyEmail("token").Result;
+            Assert.That(falseResult, Is.TypeOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)falseResult).Value, Is.EqualTo(false));
+
+            ((EmailVerifyServiceMock)_emailVerifyService).SetNextBoolResponse(true);
+            var trueResult = _userController.VerifyEmail("token").Result;
+            Assert.That(trueResult, Is.TypeOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)trueResult).Value, Is.EqualTo(true));
+        }
+
+        [Test]
         public void TestResetPasswordRequest()
         {
             // No permissions should be required to request a password reset.
@@ -70,7 +113,7 @@ namespace Backend.Tests.Controllers
             // Returns Ok regardless of if user exists.
             var noUserResult = _userController.ResetPasswordRequest(new()).Result;
             Assert.That(noUserResult, Is.TypeOf<OkResult>());
-            var username = (_userRepo.Create(new() { Username = "Imarealboy" }).Result)!.Username;
+            var username = _userRepo.Create(new() { Username = "Imarealboy" }).Result!.Username;
             var yesUserResult = _userController.ResetPasswordRequest(new() { EmailOrUsername = username }).Result;
             Assert.That(yesUserResult, Is.TypeOf<OkResult>());
         }
@@ -165,7 +208,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestGetMissingUser()
+        public void TestGetUserMissingUser()
         {
             var result = _userController.GetUser("INVALID_USER_ID").Result;
             Assert.That(result, Is.InstanceOf<NotFoundResult>());

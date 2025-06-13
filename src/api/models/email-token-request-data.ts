@@ -15,19 +15,19 @@
 /**
  *
  * @export
- * @interface PasswordResetRequestData
+ * @interface EmailTokenRequestData
  */
-export interface PasswordResetRequestData {
+export interface EmailTokenRequestData {
   /**
    *
    * @type {string}
-   * @memberof PasswordResetRequestData
-   */
-  domain: string;
-  /**
-   *
-   * @type {string}
-   * @memberof PasswordResetRequestData
+   * @memberof EmailTokenRequestData
    */
   emailOrUsername: string;
+  /**
+   *
+   * @type {string}
+   * @memberof EmailTokenRequestData
+   */
+  url: string;
 }

@@ -32,6 +32,7 @@ models/edit.ts
 models/email-invite-data.ts
 models/email-invite-status.ts
 models/email-invite.ts
+models/email-token-request-data.ts
 models/flag.ts
 models/gloss.ts
 models/gram-cat-group.ts
@@ -43,7 +44,6 @@ models/merge-words.ts
 models/note.ts
 models/off-on-setting.ts
 models/password-reset-data.ts
-models/password-reset-request-data.ts
 models/permission.ts
 models/project-role.ts
 models/project.ts

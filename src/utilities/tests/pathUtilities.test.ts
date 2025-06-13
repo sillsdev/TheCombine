@@ -5,7 +5,7 @@ describe("utilities/pathUtilities", () => {
   describe("getBasePath", () => {
     it("finds matching paths", () => {
       expect(getBasePath("/app/goals/current")).toBe(Path.GoalCurrent);
-      expect(getBasePath("/forgot/reset/token")).toBe(Path.PwReset);
+      expect(getBasePath("/password/reset/token")).toBe(Path.PwReset);
     });
     it("catches mismatched paths", () => {
       expect(getBasePath("/dev/null")).toBe(Path.Root);
