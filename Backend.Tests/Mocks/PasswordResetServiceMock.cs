@@ -31,10 +31,5 @@ namespace Backend.Tests.Mocks
         {
             return Task.FromResult(_boolResponse);
         }
-
-        public Task<bool> VerifyEmail(string token)
-        {
-            return Task.FromResult(_boolResponse);
-        }
     }
 }

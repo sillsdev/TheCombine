@@ -12,6 +12,7 @@ namespace Backend.Tests.Controllers
     public class UserControllerTests : IDisposable
     {
         private IUserRepository _userRepo = null!;
+        private IEmailVerifyService _emailVerifyService = null!;
         private IPasswordResetService _passwordResetService = null!;
         private IPermissionService _permissionService = null!;
         private UserController _userController = null!;
@@ -34,10 +35,11 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _userRepo = new UserRepositoryMock();
+            _emailVerifyService = new EmailVerifyServiceMock();
             _passwordResetService = new PasswordResetServiceMock();
             _permissionService = new PermissionServiceMock(_userRepo);
             _userController = new UserController(_userRepo, _permissionService,
-                new CaptchaServiceMock(), new EmailServiceMock(), _passwordResetService);
+                new CaptchaServiceMock(), new EmailServiceMock(), _emailVerifyService, _passwordResetService);
         }
 
         private static User RandomUser()
@@ -62,6 +64,23 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestVerifyEmail()
+        {
+            // No permissions should be required to verify email via a token.
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(false);
+            var falseResult = _userController.VerifyEmail("token").Result;
+            Assert.That(falseResult, Is.TypeOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)falseResult).Value, Is.EqualTo(false));
+
+            ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(true);
+            var trueResult = _userController.VerifyEmail("token").Result;
+            Assert.That(trueResult, Is.TypeOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)trueResult).Value, Is.EqualTo(true));
+        }
+
+        [Test]
         public void TestResetPasswordRequest()
         {
             // No permissions should be required to request a password reset.
@@ -76,18 +95,18 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestValidateEmailToken()
+        public void TestValidateResetToken()
         {
             // No permissions should be required to validate a token.
             _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
             ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(false);
-            var falseResult = _userController.ValidateEmailToken("token").Result;
+            var falseResult = _userController.ValidateResetToken("token").Result;
             Assert.That(falseResult, Is.TypeOf<OkObjectResult>());
             Assert.That(((OkObjectResult)falseResult).Value, Is.EqualTo(false));
 
             ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(true);
-            var trueResult = _userController.ValidateEmailToken("token").Result;
+            var trueResult = _userController.ValidateResetToken("token").Result;
             Assert.That(trueResult, Is.TypeOf<OkObjectResult>());
             Assert.That(((OkObjectResult)trueResult).Value, Is.EqualTo(true));
         }
@@ -104,21 +123,6 @@ namespace Backend.Tests.Controllers
 
             ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(true);
             var trueResult = _userController.ResetPassword(new()).Result;
-            Assert.That(trueResult, Is.TypeOf<OkResult>());
-        }
-
-        [Test]
-        public void TestVerifyEmail()
-        {
-            // No permissions should be required to verify email via a token.
-            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-
-            ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(false);
-            var falseResult = _userController.VerifyEmail("token").Result;
-            Assert.That(falseResult, Is.TypeOf<ForbidResult>());
-
-            ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(true);
-            var trueResult = _userController.VerifyEmail("token").Result;
             Assert.That(trueResult, Is.TypeOf<OkResult>());
         }
 

@@ -20,15 +20,18 @@ namespace BackendFramework.Controllers
         private readonly IUserRepository _userRepo;
         private readonly ICaptchaService _captchaService;
         private readonly IEmailService _emailService;
+        private readonly IEmailVerifyService _emailVerifyService;
         private readonly IPasswordResetService _passwordResetService;
         private readonly IPermissionService _permissionService;
 
         public UserController(IUserRepository userRepo, IPermissionService permissionService,
-            ICaptchaService captchaService, IEmailService emailService, IPasswordResetService passwordResetService)
+            ICaptchaService captchaService, IEmailService emailService,
+            IEmailVerifyService emailVerifyService, IPasswordResetService passwordResetService)
         {
             _userRepo = userRepo;
             _captchaService = captchaService;
             _emailService = emailService;
+            _emailVerifyService = emailVerifyService;
             _passwordResetService = passwordResetService;
             _permissionService = permissionService;
         }
@@ -43,6 +46,51 @@ namespace BackendFramework.Controllers
             return await _captchaService.VerifyToken(token) ? Ok() : BadRequest();
         }
 
+        /// <summary> Sends an email verification request. </summary>
+        [HttpPost("verifyemail/request", Name = "VerifyEmailRequest")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> VerifyEmailRequest([FromBody, BindRequired] EmailTokenRequestData data)
+        {
+            // Find user attached to email address.
+            var user = await _userRepo.GetUserByEmail(data.EmailOrUsername, false);
+
+            if (user is null || !(_permissionService.IsUserIdAuthorized(HttpContext, user.Id)
+                || await _permissionService.IsSiteAdmin(HttpContext)))
+            {
+                return Forbid();
+            }
+
+            // Create password reset.
+            var resetRequest = await _emailVerifyService.CreateEmailToken(user.Email);
+
+            // Create email.
+            var message = new MimeMessage() { Subject = "The Combine email verification" };
+            message.To.Add(new MailboxAddress(user.Name, user.Email));
+            message.Body = new TextPart("plain")
+            {
+                Text = $"Email verification has been requested for {user.Username}. " +
+                    $"Follow the link to verify this email address for {user.Username}. " +
+                    $"{data.Url}/{resetRequest.Token} \n\n " +
+                    "Email verification is required to add users to your projects in The Combine." +
+                    "If you do not wish to verify your email address, you may ignore this email."
+            };
+
+            return await _emailService.SendEmail(message)
+                ? Ok()
+                : StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        /// <summary> Verify email address using a token </summary>
+        [AllowAnonymous]
+        [HttpGet("verifyemail/{token}", Name = "VerifyEmail")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> VerifyEmail(string token)
+        {
+            return Ok(await _emailVerifyService.VerifyEmail(token));
+        }
+
         /// <summary> Sends a password reset request. </summary>
         [AllowAnonymous]
         [HttpPost("forgot/request", Name = "ResetPasswordRequest")]
@@ -50,7 +98,6 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] EmailTokenRequestData data)
         {
-
             // Find user attached to email or username.
             var user = await _userRepo.GetUserByEmailOrUsername(data.EmailOrUsername, false);
 
@@ -79,47 +126,11 @@ namespace BackendFramework.Controllers
                 : StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        /// <summary> Sends an email verification request. </summary>
-        [HttpPost("verifyemail/request", Name = "VerifyEmailRequest")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> VerifyEmailRequest([FromBody, BindRequired] EmailTokenRequestData data)
-        {
-            // Find user attached to email address.
-            var user = await _userRepo.GetUserByEmail(data.EmailOrUsername, false);
-
-            if (user is null || !(_permissionService.IsUserIdAuthorized(HttpContext, user.Id)
-                || await _permissionService.IsSiteAdmin(HttpContext)))
-            {
-                return Forbid();
-            }
-
-            // Create password reset.
-            var resetRequest = await _passwordResetService.CreateEmailToken(user.Email);
-
-            // Create email.
-            var message = new MimeMessage() { Subject = "The Combine email verification" };
-            message.To.Add(new MailboxAddress(user.Name, user.Email));
-            message.Body = new TextPart("plain")
-            {
-                Text = $"Email verification has been requested for {user.Username}. " +
-                    $"Follow the link to verify this email address for {user.Username}. " +
-                    $"{data.Url}/{resetRequest.Token} \n\n " +
-                    "Email verification is required to add users to your projects in The Combine." +
-                    "If you do not wish to verify your email address, you may ignore this email."
-            };
-
-            return await _emailService.SendEmail(message)
-                ? Ok()
-                : StatusCode(StatusCodes.Status500InternalServerError);
-        }
-
-        /// <summary> Validates token from url for email verification or password reset. </summary>
+        /// <summary> Validates password reset token in url </summary>
         [AllowAnonymous]
-        [HttpGet("validate/{token}", Name = "ValidateEmailToken")]
+        [HttpGet("forgot/reset/validate/{token}", Name = "ValidateResetToken")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> ValidateEmailToken(string token)
+        public async Task<IActionResult> ValidateResetToken(string token)
         {
             return Ok(await _passwordResetService.ValidateToken(token));
         }
@@ -132,17 +143,6 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> ResetPassword([FromBody, BindRequired] PasswordResetData data)
         {
             var result = await _passwordResetService.ResetPassword(data.Token, data.NewPassword);
-            return result ? Ok() : Forbid();
-        }
-
-        /// <summary> Verify email address using a token </summary>
-        [AllowAnonymous]
-        [HttpGet("verifyemail/{token}", Name = "VerifyEmail")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> VerifyEmail(string token)
-        {
-            var result = await _passwordResetService.VerifyEmail(token);
             return result ? Ok() : Forbid();
         }
 

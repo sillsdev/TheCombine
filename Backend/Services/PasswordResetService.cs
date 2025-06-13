@@ -5,16 +5,10 @@ using System;
 
 namespace BackendFramework.Services
 {
-    public class PasswordResetService : IPasswordResetService
+    public class PasswordResetService(IPasswordResetContext passwordResets, IUserRepository userRepo) : IPasswordResetService
     {
-        private readonly IPasswordResetContext _passwordResets;
-        private readonly IUserRepository _userRepo;
-
-        public PasswordResetService(IPasswordResetContext passwordResets, IUserRepository userRepo)
-        {
-            _passwordResets = passwordResets;
-            _userRepo = userRepo;
-        }
+        private readonly IPasswordResetContext _passwordResets = passwordResets;
+        private readonly IUserRepository _userRepo = userRepo;
 
         public async Task<EmailToken> CreateEmailToken(string email)
         {
@@ -49,25 +43,6 @@ namespace BackendFramework.Services
                 return false;
             }
             await _userRepo.ChangePassword(user.Id, password);
-            await ExpireTokens(request.Email);
-            return true;
-        }
-
-        /// <summary> Validate a user's email address using a password reset request token. </summary>
-        /// <returns> Returns false if the request is invalid or expired. </returns>
-        public async Task<bool> VerifyEmail(string token)
-        {
-            var request = await _passwordResets.FindByToken(token);
-            if (request is null || DateTime.Now > request.ExpireTime)
-            {
-                return false;
-            }
-            var user = await _userRepo.GetUserByEmail(request.Email);
-            if (user is null)
-            {
-                return false;
-            }
-            await _userRepo.VerifyEmail(user.Id);
             await ExpireTokens(request.Email);
             return true;
         }
