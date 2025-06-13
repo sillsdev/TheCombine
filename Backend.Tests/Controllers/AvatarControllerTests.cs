@@ -30,7 +30,7 @@ namespace Backend.Tests.Controllers
         }
 
         private string _userId = string.Empty;
-        private const string FileName = "combine.png";  // File in Backend.Tests/Assets/
+        private const string FileName = "combine.png"; // File in Backend.Tests/Assets/
         private readonly string _filePath = Path.Combine(Util.AssetsDir, FileName);
 
         [SetUp]

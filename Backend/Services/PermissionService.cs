@@ -44,7 +44,7 @@ namespace BackendFramework.Services
             return user?.IsAdmin ?? false;
         }
 
-        /// <summary> Checks whether the current user has that userId or is a site admin. </summary>
+        /// <summary> Checks whether the current user either has given userId or is a site admin. </summary>
         public async Task<bool> CanModifyUser(HttpContext request, string userId)
         {
             return IsUserAuthenticated(request, userId) || await IsSiteAdmin(request);
