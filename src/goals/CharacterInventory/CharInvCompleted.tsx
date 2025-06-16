@@ -1,6 +1,12 @@
 import { ArrowRightAlt } from "@mui/icons-material";
-import { Box, Grid2, Stack, Typography } from "@mui/material";
-import { type ReactElement, useCallback, useEffect, useState } from "react";
+import { Divider, Grid2, Stack, Typography } from "@mui/material";
+import {
+  Fragment,
+  type ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import { type Word } from "api/models";
@@ -56,19 +62,19 @@ export default function CharInvCompleted(): ReactElement {
 
       {/* Find-and-replace changes */}
       {changes.wordChanges.length ? (
-        <div>
-          {changes.wordChanges.map((wc, i) => (
-            <Box key={i} sx={{ borderTop: "1px solid #ccc", py: 1 }}>
-              <WordChanges wordChanges={wc} />
-            </Box>
-          ))}
-        </div>
+        changes.wordChanges.map((wc, i) => (
+          <Fragment key={i}>
+            <Divider />
+            <WordChanges wordChanges={wc} />
+          </Fragment>
+        ))
       ) : (
-        <Box sx={{ borderTop: "1px solid #ccc", py: 1 }}>
+        <>
+          <Divider />
           <Typography id={CharInvCompletedId.TypographyNoWordChanges}>
             {t("charInventory.changes.noWordChangesFindReplace")}
           </Typography>
-        </Box>
+        </>
       )}
     </Stack>
   );
