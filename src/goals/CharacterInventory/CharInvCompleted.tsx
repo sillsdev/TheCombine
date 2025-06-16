@@ -69,11 +69,12 @@ export default function CharInvCompleted(): ReactElement {
           </Fragment>
         ))
       ) : (
-        <Box sx={{ borderTop: "1px solid #ccc", p: 1 }}>
+        <>
+          <Divider />
           <Typography id={CharInvCompletedId.TypographyNoWordChanges}>
             {t("charInventory.changes.noWordChangesFindReplace")}
           </Typography>
-        </Box>
+        </>
       )}
     </Stack>
   );
@@ -116,6 +117,7 @@ function WordChangesTypography(props: {
 export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
   const { charChanges, wordChanges } = changes;
   const { t } = useTranslation();
+  const changeLimit = 3;
 
   const noChanges = !(charChanges?.length || wordChanges?.length);
   return noChanges ? (
