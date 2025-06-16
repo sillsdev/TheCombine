@@ -11,7 +11,7 @@ import {
 import { Fragment, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import { User } from "api/models";
+import { User, UserStub } from "api/models";
 
 export const reverseButtonId = "sort-options-reverse";
 
@@ -24,16 +24,16 @@ export enum UserOrder {
 export function getUserCompare(
   order: UserOrder,
   reverse = false
-): (a: User, b: User) => number {
+): (a: User | UserStub, b: User | UserStub) => number {
   const rev = reverse ? -1 : 1;
-  return (a: User, b: User) => {
+  return (a: User | UserStub, b: User | UserStub) => {
     switch (order) {
       case UserOrder.Name:
         return a.name.localeCompare(b.name) * rev;
       case UserOrder.Username:
         return a.username.localeCompare(b.username) * rev;
       case UserOrder.Email:
-        return a.email.localeCompare(b.email) * rev;
+        return (a as User).email.localeCompare((b as User).email) * rev;
       default:
         throw new Error();
     }

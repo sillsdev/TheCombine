@@ -4,13 +4,16 @@ import {
   type ReactElement,
   type ReactNode,
   type SyntheticEvent,
+  useEffect,
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
 
+import { clearCurrentProject } from "components/Project/ProjectActions";
 import Banners from "components/SiteSettings/Banners";
 import ProjectManagement from "components/SiteSettings/ProjectManagement";
 import UserManagement from "components/SiteSettings/UserManagement";
+import { useAppDispatch } from "rootRedux/hooks";
 
 export const enum SiteSettingsTab {
   Projects,
@@ -19,9 +22,12 @@ export const enum SiteSettingsTab {
 }
 
 export default function SiteSettings(): ReactElement {
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   const [tab, setTab] = useState(SiteSettingsTab.Projects);
+
+  useEffect(() => dispatch(clearCurrentProject()), [dispatch]);
 
   const handleChange = (_e: SyntheticEvent, val: SiteSettingsTab): void =>
     setTab(val);

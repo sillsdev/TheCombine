@@ -130,14 +130,14 @@ namespace Backend.Tests.Controllers
         {
             _statsController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
-            var result = await _statsController.GetSemanticDomainUserCounts(_projId, "en");
+            var result = await _statsController.GetSemanticDomainUserCounts(_projId);
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
         [Test]
         public async Task TestGetSemanticDomainUserCounts()
         {
-            var result = await _statsController.GetSemanticDomainUserCounts(_projId, "en");
+            var result = await _statsController.GetSemanticDomainUserCounts(_projId);
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
         }
     }

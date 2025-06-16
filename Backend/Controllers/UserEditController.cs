@@ -15,16 +15,14 @@ namespace BackendFramework.Controllers
     [Route("v1/projects/{projectId}/useredits")]
     public class UserEditController : Controller
     {
-        private readonly IProjectRepository _projRepo;
         private readonly IUserRepository _userRepo;
         private readonly IUserEditRepository _userEditRepo;
         private readonly IPermissionService _permissionService;
         private readonly IUserEditService _userEditService;
 
         public UserEditController(IUserEditRepository userEditRepo, IUserEditService userEditService,
-            IProjectRepository projRepo, IPermissionService permissionService, IUserRepository userRepo)
+            IPermissionService permissionService, IUserRepository userRepo)
         {
-            _projRepo = projRepo;
             _userRepo = userRepo;
             _userEditRepo = userEditRepo;
             _permissionService = permissionService;
@@ -35,18 +33,12 @@ namespace BackendFramework.Controllers
         /// <returns> UserEdit List </returns>
         [HttpGet(Name = "GetProjectUserEdits")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserEdit>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetProjectUserEdits(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
-            }
-
-            // Ensure project exists
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
             }
 
             return Ok(await _userEditRepo.GetAllUserEdits(projectId));
@@ -56,6 +48,8 @@ namespace BackendFramework.Controllers
         /// <returns> UserEdit </returns>
         [HttpGet("{userEditId}", Name = "GetUserEdit")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserEdit))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserEdit(string projectId, string userEditId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
@@ -63,25 +57,16 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
-            // Ensure project exists
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
-            }
-
             var userEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
-            if (userEdit is null)
-            {
-                return NotFound(userEditId);
-            }
-            return Ok(userEdit);
+            return userEdit is null ? NotFound($"userEditId: {userEditId}") : Ok(userEdit);
         }
 
         /// <summary> Creates a <see cref="UserEdit"/> </summary>
         /// <returns> UpdatedUser </returns>
         [HttpPost(Name = "CreateUserEdit")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateUserEdit(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(
@@ -90,17 +75,16 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
-            // Generate the new userEdit
-            var userEdit = new UserEdit { ProjectId = projectId };
-            await _userEditRepo.Create(userEdit);
-            // Update current user
             var currentUserId = _permissionService.GetUserId(HttpContext);
             var currentUser = await _userRepo.GetUser(currentUserId, false);
             if (currentUser is null)
             {
-                return NotFound(currentUserId);
+                return Forbid();
             }
 
+            // Generate the new userEdit
+            var userEdit = new UserEdit { ProjectId = projectId };
+            await _userEditRepo.Create(userEdit);
             currentUser.WorkedProjects.Add(projectId, userEdit.Id);
             await _userRepo.Update(currentUserId, currentUser);
 
@@ -117,9 +101,12 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Adds/updates a goal to/in a specified <see cref="UserEdit"/> </summary>
-        /// <returns> Guid of added/updated edit </returns>
         [HttpPost("{userEditId}", Name = "UpdateUserEditGoal")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status304NotModified)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> UpdateUserEditGoal(
             string projectId, string userEditId, [FromBody, BindRequired] Edit newEdit)
         {
@@ -135,13 +122,6 @@ namespace BackendFramework.Controllers
                 return BadRequest("You cannot edit another user's UserEdit.");
             }
 
-            // Ensure project exists
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound($"projectId: {projectId}");
-            }
-
             var (isSuccess, editGuid) = await _userEditService.AddGoalToUserEdit(projectId, userEditId, newEdit);
 
             if (editGuid is null)
@@ -149,18 +129,16 @@ namespace BackendFramework.Controllers
                 return NotFound($"userEditId: {userEditId}");
             }
 
-            if (isSuccess)
-            {
-                return Ok(editGuid);
-            }
-
-            return StatusCode(StatusCodes.Status304NotModified, editGuid);
+            return isSuccess ? Ok() : StatusCode(StatusCodes.Status304NotModified);
         }
 
         /// <summary> Adds/updates a step to/in specified goal </summary>
         /// <returns> Index of added/modified step in specified goal </returns>
         [HttpPut("{userEditId}", Name = "UpdateUserEditStep")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> UpdateUserEditStep(string projectId, string userEditId,
             [FromBody, BindRequired] UserEditStepWrapper stepWrapper)
         {
@@ -176,25 +154,18 @@ namespace BackendFramework.Controllers
                 return BadRequest("You cannot edit another user's UserEdit.");
             }
 
-            // Ensure project exists.
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
-            }
-
             // Ensure userEdit exists.
             var document = await _userEditRepo.GetUserEdit(projectId, userEditId);
             if (document is null)
             {
-                return NotFound(projectId);
+                return NotFound($"userEditId: {userEditId}");
             }
 
             // Ensure Edit exist.
             var edit = document.Edits.FindLast(e => e.Guid == stepWrapper.EditGuid);
             if (edit is null)
             {
-                return NotFound(stepWrapper.EditGuid);
+                return NotFound($"editGuid: {stepWrapper.EditGuid}");
             }
             var maxStepIndex = edit.StepData.Count;
             var stepIndex = stepWrapper.StepIndex ?? maxStepIndex;
@@ -221,6 +192,8 @@ namespace BackendFramework.Controllers
         /// <summary> Deletes <see cref="UserEdit"/> with specified id </summary>
         [HttpDelete("{userEditId}", Name = "DeleteUserEdit")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> DeleteUserEdit(string projectId, string userEditId)
         {
             if (!await _permissionService.HasProjectPermission(
@@ -229,18 +202,11 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
-            // Ensure project exists
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
-            }
-
             if (await _userEditRepo.Delete(projectId, userEditId))
             {
                 return Ok();
             }
-            return NotFound(userEditId);
+            return NotFound($"userEditId: {userEditId}");
         }
     }
 }
