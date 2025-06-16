@@ -4,12 +4,10 @@ import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
 import UserMenu, { UserMenuList } from "components/AppBar/UserMenu";
+import { defaultState } from "rootRedux/types";
 import { Path } from "types/path";
 import theme from "types/theme";
 
-jest.mock("backend", () => ({
-  isSiteAdmin: () => mockIsSiteAdmin(),
-}));
 jest.mock("backend/localStorage", () => ({
   getAvatar: jest.fn(),
   getCurrentUser: jest.fn(),
@@ -19,18 +17,7 @@ jest.mock("react-router", () => ({
   useNavigate: jest.fn(),
 }));
 
-const mockStore = configureMockStore()();
-
-const mockIsSiteAdmin = jest.fn();
-
-function setMockFunctions(): void {
-  mockIsSiteAdmin.mockResolvedValue(false);
-}
-
-beforeEach(() => {
-  jest.clearAllMocks();
-  setMockFunctions();
-});
+const mockStore = configureMockStore()(defaultState);
 
 describe("UserMenu", () => {
   it("renders", async () => {

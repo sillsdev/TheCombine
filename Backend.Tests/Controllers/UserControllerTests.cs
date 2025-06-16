@@ -70,7 +70,7 @@ namespace Backend.Tests.Controllers
             // Returns Ok regardless of if user exists.
             var noUserResult = _userController.ResetPasswordRequest(new()).Result;
             Assert.That(noUserResult, Is.TypeOf<OkResult>());
-            var username = (_userRepo.Create(new() { Username = "Imarealboy" }).Result)!.Username;
+            var username = _userRepo.Create(new() { Username = "Imarealboy" }).Result!.Username;
             var yesUserResult = _userController.ResetPasswordRequest(new() { EmailOrUsername = username }).Result;
             Assert.That(yesUserResult, Is.TypeOf<OkResult>());
         }
@@ -341,15 +341,6 @@ namespace Backend.Tests.Controllers
 
             var result5 = (ObjectResult)_userController.IsEmailOrUsernameAvailable("").Result;
             Assert.That(result5.Value, Is.False);
-        }
-
-        [Test]
-        public void TestIsUserSiteAdminNoPermission()
-        {
-            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var result = _userController.IsUserSiteAdmin().Result;
-            Assert.That(result, Is.InstanceOf<ObjectResult>());
-            Assert.That(((ObjectResult)result).Value, Is.False);
         }
     }
 }

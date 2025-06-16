@@ -744,6 +744,7 @@ export async function getUserIdByEmailOrUsername(
     .data;
 }
 
+/** Note: Only a site admins can update a user other than themself. */
 export async function updateUser(user: User): Promise<void> {
   await userApi.updateUser({ userId: user.id, user }, defaultOptions());
   if (user.id === LocalStorage.getUserId()) {
@@ -754,10 +755,6 @@ export async function updateUser(user: User): Promise<void> {
 /** Note: Only usable by site admins. */
 export async function deleteUser(userId: string): Promise<void> {
   await userApi.deleteUser({ userId }, defaultOptions());
-}
-
-export async function isSiteAdmin(): Promise<boolean> {
-  return (await userApi.isUserSiteAdmin(defaultOptions())).data;
 }
 
 /* UserEditController.cs */
