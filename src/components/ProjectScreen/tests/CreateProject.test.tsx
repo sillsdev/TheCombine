@@ -1,139 +1,121 @@
-import { LanguagePicker } from "mui-language-picker";
-import { type FormEvent } from "react";
+import { Button as MockFIP, ButtonProps, Input as MockLP } from "@mui/material";
+import "@testing-library/jest-dom";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
-import {
-  type ReactTestInstance,
-  type ReactTestRenderer,
-  act,
-  create,
-} from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { FileInputButton } from "components/Buttons";
 import CreateProject, {
-  buttonIdSubmit,
-  fieldIdName,
-  formId,
-  selectIdVern,
+  CreateProjectId,
+  CreateProjectTextId,
 } from "components/ProjectScreen/CreateProject";
+import { defaultState } from "rootRedux/types";
 import { newWritingSystem } from "types/writingSystem";
+
+jest.mock("mui-language-picker", () => ({
+  ...jest.requireActual("mui-language-picker"),
+  LanguagePicker: (props: { setCode: (code: string) => void }) => (
+    <MockLP
+      data-testid={mockLangPickerId}
+      onChange={(e) => props.setCode(e.target.value)}
+    />
+  ),
+}));
 
 jest.mock("backend", () => ({
   projectDuplicateCheck: () => mockProjectDuplicateCheck(),
   uploadLiftAndGetWritingSystems: () => mockUploadLiftAndGetWritingSystems(),
 }));
-// Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`
+jest.mock("components/Buttons", () => ({
+  ...jest.requireActual("components/Buttons"),
+  FileInputButton: (props: {
+    buttonProps?: ButtonProps & { "data-testid"?: string };
+    updateFile: (file: File) => void;
+  }) => (
+    <MockFIP
+      {...props.buttonProps}
+      onClick={() => props.updateFile(new File([], "file-name"))}
+    />
+  ),
+}));
+// Mock "i18n", else `thrown: "Error: AggregateError [...]`
 jest.mock("i18n", () => ({ language: "" }));
 
+const mockLangPickerId = "mock-mui-language-picker";
 const mockProjectDuplicateCheck = jest.fn();
 const mockUploadLiftAndGetWritingSystems = jest.fn();
-
-const createMockStore = configureMockStore();
-const mockState = { currentProjectState: { project: {} } };
-const mockStore = createMockStore(mockState);
-
-const mockChangeEvent = (
-  value: string
-): { target: Partial<EventTarget & HTMLSelectElement> } => ({
-  target: { value },
-});
-const mockSubmitEvent = (): Partial<FormEvent<HTMLFormElement>> => ({
-  preventDefault: jest.fn(),
-});
-
-let projectMaster: ReactTestRenderer;
-let projectHandle: ReactTestInstance;
 
 beforeEach(async () => {
   jest.resetAllMocks();
   await act(async () => {
-    projectMaster = create(
-      <Provider store={mockStore}>
+    render(
+      <Provider store={configureMockStore()(defaultState)}>
         <CreateProject />
       </Provider>
     );
   });
-  projectHandle = projectMaster.root;
 });
 
 describe("CreateProject", () => {
   it("errors on taken name", async () => {
-    const nameField = projectHandle.findByProps({ id: fieldIdName });
-    const langPickers = projectHandle.findAllByType(LanguagePicker);
-    await act(async () => {
-      nameField.props.onChange(mockChangeEvent("non-empty-name"));
-      langPickers[0].props.setCode("non-empty-code");
-    });
-    expect(nameField.props.error).toBeFalsy();
+    const inputs = screen.getAllByRole("textbox");
+    await userEvent.type(inputs[0], "non-empty-name");
+    await userEvent.type(inputs[1], "non-empty-code");
+    expect(screen.queryByText(CreateProjectTextId.NameTaken)).toBeNull();
 
     mockProjectDuplicateCheck.mockResolvedValueOnce(true);
-    await act(async () => {
-      projectHandle
-        .findByProps({ id: formId })
-        .props.onSubmit(mockSubmitEvent());
-    });
-    expect(nameField.props.error).toBeTruthy();
+    await userEvent.click(screen.getByTestId(CreateProjectId.ButtonSubmit));
+    expect(screen.queryByText(CreateProjectTextId.NameTaken)).toBeTruthy();
   });
 
   it("disables submit button when empty name or empty vern lang bcp code", async () => {
-    const nameField = projectHandle.findByProps({ id: fieldIdName });
-    const button = projectHandle.findByProps({ id: buttonIdSubmit });
+    const button = screen.getByTestId(CreateProjectId.ButtonSubmit);
+    const inputs = screen.getAllByRole("textbox");
 
     // Start with empty name and vern language: button disabled.
-    expect(button.props.disabled).toBeTruthy();
+    expect(button).toBeDisabled();
 
     // Add name but still no vern language: button still disabled.
-    await act(async () => {
-      nameField.props.onChange(mockChangeEvent("non-empty-value"));
-    });
-    expect(button.props.disabled).toBeTruthy();
+    await userEvent.type(inputs[0], "non-empty-name");
+    expect(button).toBeDisabled();
 
     // Also add a vern language: button enabled.
-    const langPickers = projectHandle.findAllByType(LanguagePicker);
-    expect(langPickers).toHaveLength(2);
-
-    await act(async () => {
-      langPickers[0].props.setCode("non-empty");
-    });
-    expect(button.props.disabled).toBeFalsy();
+    await userEvent.type(inputs[1], "non-empty-code");
+    expect(button).toBeEnabled();
 
     // Change name to whitespace: button disabled again.
-    await act(async () => {
-      nameField.props.onChange(mockChangeEvent("   "));
-    });
-    expect(button.props.disabled).toBeTruthy();
+    await userEvent.clear(inputs[0]);
+    await userEvent.type(inputs[0], "   ");
+    expect(button).toBeDisabled();
   });
 
   it("disables analysis language pickers when file selected", async () => {
-    const button = projectHandle.findByType(FileInputButton);
-    expect(projectHandle.findAllByType(LanguagePicker)).toHaveLength(2);
+    expect(screen.queryAllByTestId(mockLangPickerId)).toHaveLength(2);
 
     // File with no writing systems only disables analysis lang picker.
     mockUploadLiftAndGetWritingSystems.mockResolvedValueOnce([]);
-    await act(async () => {
-      button.props.updateFile(new File([], ""));
-    });
-    expect(projectHandle.findAllByType(LanguagePicker)).toHaveLength(1);
+    await userEvent.click(screen.getByTestId(CreateProjectId.ButtonSelectFile));
+    expect(screen.queryAllByTestId(mockLangPickerId)).toHaveLength(1);
 
     // File with writing systems disables both lang pickers.
-    mockUploadLiftAndGetWritingSystems.mockResolvedValueOnce([
-      newWritingSystem(),
-    ]);
-    await act(async () => {
-      button.props.updateFile(new File([], "oneLang"));
-    });
-    expect(projectHandle.findAllByType(LanguagePicker)).toHaveLength(0);
+    const langs = [newWritingSystem("oneLang"), newWritingSystem("twoLang")];
+    mockUploadLiftAndGetWritingSystems.mockResolvedValueOnce(langs);
+    await userEvent.click(screen.getByTestId(CreateProjectId.ButtonSelectFile));
+    expect(screen.queryAllByTestId(mockLangPickerId)).toHaveLength(0);
   });
 
   it("offers vern langs when file has some", async () => {
-    const button = projectHandle.findByType(FileInputButton);
     const langs = [newWritingSystem("redLang"), newWritingSystem("blueLang")];
     mockUploadLiftAndGetWritingSystems.mockResolvedValueOnce(langs);
-    await act(async () => {
-      button.props.updateFile(new File([], "twoLang"));
-    });
-    const vernSelect = projectHandle.findByProps({ id: selectIdVern });
+    expect(screen.queryByTestId(CreateProjectId.SelectVern)).toBeNull();
+    expect(screen.queryByRole("combobox")).toBeNull();
+    await userEvent.click(screen.getByTestId(CreateProjectId.ButtonSelectFile));
+
+    // Open the select, whose button is a combobox
+    expect(screen.queryByTestId(CreateProjectId.SelectVern)).toBeTruthy();
+    await userEvent.click(screen.getByRole("combobox"));
+
     // Number of options is +2 for the menu title item and an "other" item.
-    expect(vernSelect.props.children).toHaveLength(langs.length + 2);
+    expect(screen.getAllByRole("option")).toHaveLength(langs.length + 2);
   });
 });
