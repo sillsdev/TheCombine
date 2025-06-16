@@ -483,7 +483,7 @@ export const UserEditApiFp = function (configuration?: Configuration) {
       edit: Edit,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.updateUserEditGoal(
@@ -613,7 +613,7 @@ export const UserEditApiFactory = function (
       userEditId: string,
       edit: Edit,
       options?: any
-    ): AxiosPromise<string> {
+    ): AxiosPromise<void> {
       return localVarFp
         .updateUserEditGoal(projectId, userEditId, edit, options)
         .then((request) => request(axios, basePath));

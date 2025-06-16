@@ -11,7 +11,7 @@ import { newUser } from "types/user";
 
 const mockGetAvatar = jest.fn();
 const mockGetCurrentUser = jest.fn();
-const mockGetUserByEmailOrUsername = jest.fn();
+const mockGetUserIdByEmailOrUsername = jest.fn();
 const mockIsEmailOrUsernameAvailable = jest.fn();
 const mockSetUser = jest.fn();
 const mockUpdateUser = jest.fn();
@@ -22,8 +22,8 @@ jest.mock("notistack", () => ({
 }));
 
 jest.mock("backend", () => ({
-  getUserByEmailOrUsername: (emailOrUsername: string) =>
-    mockGetUserByEmailOrUsername(emailOrUsername),
+  getUserIdByEmailOrUsername: (emailOrUsername: string) =>
+    mockGetUserIdByEmailOrUsername(emailOrUsername),
   isEmailOrUsernameAvailable: (emailOrUsername: string) =>
     mockIsEmailOrUsernameAvailable(emailOrUsername),
   updateUser: (user: User) => mockUpdateUser(user),
@@ -45,10 +45,11 @@ jest.mock("i18n", () => ({
   updateLangFromUser: jest.fn(),
 }));
 
+const mockUserId = "mock-user-id";
 const mockUser = (): User => {
   const user = newUser("My Name", "my-username");
   user.email = "e@mail.com";
-  user.id = "mock-user-id";
+  user.id = mockUserId;
   user.phone = "123-456-7890";
   user.uiLang = "fr";
   return user;
@@ -57,7 +58,7 @@ const mockUser = (): User => {
 const setupMocks = (): void => {
   mockGetAvatar.mockReturnValue("");
   mockGetCurrentUser.mockReturnValue(mockUser());
-  mockGetUserByEmailOrUsername.mockResolvedValue(newUser());
+  mockGetUserIdByEmailOrUsername.mockResolvedValue(mockUserId);
   mockIsEmailOrUsernameAvailable.mockResolvedValue(true);
   mockSetUser.mockImplementation(async () => {});
   mockUpdateUser.mockImplementation((user: User) => user);
@@ -161,6 +162,7 @@ describe("UserSettings", () => {
 
     await agent.type(screen.getByTestId(UserSettingsIds.FieldEmail), "a");
     mockIsEmailOrUsernameAvailable.mockResolvedValueOnce(false);
+    mockGetUserIdByEmailOrUsername.mockResolvedValue("other-user-id");
 
     await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
     expect(mockUpdateUser).toHaveBeenCalledTimes(0);

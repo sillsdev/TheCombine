@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 
 import { OffOnSetting, User } from "api/models";
 import {
-  getUserByEmailOrUsername,
+  getUserIdByEmailOrUsername,
   isEmailOrUsernameAvailable,
   updateUser,
 } from "backend";
@@ -89,7 +89,7 @@ export function UserSettings(props: {
     return (
       unicodeEmail === props.user.email ||
       (await isEmailOrUsernameAvailable(unicodeEmail)) ||
-      (await getUserByEmailOrUsername(unicodeEmail)).id === props.user.id
+      (await getUserIdByEmailOrUsername(unicodeEmail)) === props.user.id
     );
   }
 
