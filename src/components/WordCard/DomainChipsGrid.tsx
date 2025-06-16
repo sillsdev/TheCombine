@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Grid2 } from "@mui/material";
 import { type ReactElement } from "react";
 
 import { type SemanticDomain } from "api/models";
@@ -26,12 +26,14 @@ export default function DomainChipsGrid(
   };
 
   return (
-    <Grid container spacing={2}>
+    <Grid2 container spacing={2}>
       {props.semDoms.map((d) => (
-        <Grid item key={`${d.id}${d.name}`}>
-          <DomainChip domain={updateName(d)} provenance={props.provenance} />
-        </Grid>
+        <DomainChip
+          domain={updateName(d)}
+          key={`${d.id}${d.name}`}
+          provenance={props.provenance}
+        />
       ))}
-    </Grid>
+    </Grid2>
   );
 }
