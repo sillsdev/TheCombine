@@ -3,15 +3,9 @@
 Remove a project and its associated data from TheCombine.
 
 To delete a project from the database, we need to delete:
- 1. documents in the
-     - FrontierCollection,
-     - MergeBlacklistCollection,
-     - UserEditsCollection,
-     - UserRolesCollection, and
-     - WordsCollection
-    with a projectId field that matches the project being deleted;
- 2. entries in the workedProject and projectRoles arrays in
-    the UsersCollection that reference the project being deleted.
+ 1. documents in the every collection with entries with a projectId field that matches the project
+    being deleted;
+ 2. entries in object fields in the UsersCollection that are keyed by project being deleted.
  3. the project document from the ProjectsCollection;
 
 To delete a project from the backend, we need to delete:
@@ -24,6 +18,18 @@ import argparse
 import sys
 
 from combine_app import CombineApp
+
+collections_with_project_id = (
+    "FrontierCollection",
+    "MergeBlacklistCollection",
+    "MergeGraylistCollection",
+    "SpeakersCollection",
+    "UserEditsCollection",
+    "UserRolesCollection",
+    "WordsCollection",
+)
+
+user_fields_with_project_id = ("projectRoles", "workedProjects")
 
 
 def parse_args() -> argparse.Namespace:
@@ -67,15 +73,9 @@ def main() -> None:
             if args.verbose:
                 print(f"Remove project {project}")
                 print(f"Project ID: {project_id}")
-            for collection in (
-                "FrontierCollection",
-                "MergeBlacklistCollection",
-                "UserEditsCollection",
-                "UserRolesCollection",
-                "WordsCollection",
-            ):
+            for collection in collections_with_project_id:
                 combine.db_cmd(db_delete_from_collection(project_id, collection))
-            for field in ("workedProjects", "projectRoles"):
+            for field in user_fields_with_project_id:
                 combine.db_cmd(db_delete_from_user_fields(project_id, field))
             combine.db_cmd(db_delete_from_projects(project_id))
             backend_pod = combine.get_pod_id(CombineApp.Component.Backend)

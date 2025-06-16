@@ -13,35 +13,25 @@ import { getSemanticDomainUserCount } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { Cell, HeadCell } from "components/Statistics/TableCells";
 
-interface UserStatisticsProps {
-  lang: string;
-}
-
-export default function UserStatistics(
-  props: UserStatisticsProps
-): ReactElement {
+export default function UserStatistics(): ReactElement {
   const [domainUserCountList, setDomainUserCountList] = useState<
     SemanticDomainUserCount[]
   >([]);
 
   useEffect(() => {
     const updateSemanticDomainUserCounts = async (): Promise<void> => {
-      const counts = await getUserStatistics(
-        LocalStorage.getProjectId(),
-        props.lang
-      );
+      const counts = await getUserStatistics(LocalStorage.getProjectId());
       if (counts !== undefined) {
         return setDomainUserCountList(counts);
       }
     };
     updateSemanticDomainUserCounts();
-  }, [props.lang]);
+  }, []);
 
   async function getUserStatistics(
-    projectId: string,
-    lang?: string
+    projectId: string
   ): Promise<SemanticDomainUserCount[] | undefined> {
-    return await getSemanticDomainUserCount(projectId, lang);
+    return await getSemanticDomainUserCount(projectId);
   }
 
   return (
