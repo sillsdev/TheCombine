@@ -48,7 +48,6 @@ namespace BackendFramework.Controllers
             return Ok(await _statService.GetSemanticDomainCounts(projectId, lang));
         }
 
-
         /// <summary> Get a list of <see cref="WordsPerDayPerUserCount"/>s of a specific project in order </summary>
         /// <returns> A list of <see cref="WordsPerDayPerUserCount"/>s </returns>
         [HttpGet("GetWordsPerDayPerUserCounts", Name = "GetWordsPerDayPerUserCounts")]
@@ -70,7 +69,6 @@ namespace BackendFramework.Controllers
             return Ok(await _statService.GetWordsPerDayPerUserCounts(projectId));
         }
 
-
         /// <summary> Get a <see cref="ChartRootData"/> to generate an estimate Line Chart </summary>
         [HttpGet("GetProgressEstimationLineChartRoot", Name = "GetProgressEstimationLineChartRoot")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChartRootData))]
@@ -90,7 +88,6 @@ namespace BackendFramework.Controllers
 
             return Ok(await _statService.GetProgressEstimationLineChartRoot(projectId, proj.WorkshopSchedule));
         }
-
 
         /// <summary> Get a <see cref="ChartRootData"/> to generate a Line Chart </summary>
         [HttpGet("GetLineChartRootData", Name = "GetLineChartRootData")]
@@ -112,13 +109,11 @@ namespace BackendFramework.Controllers
             return Ok(await _statService.GetLineChartRootData(projectId));
         }
 
-
-
         /// <summary> Get a list of <see cref="SemanticDomainUserCount"/>s of a specific project in order </summary>
         /// <returns> A list of <see cref="SemanticDomainUserCount"/>s </returns>
         [HttpGet("GetSemanticDomainUserCounts", Name = "GetSemanticDomainUserCounts")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SemanticDomainUserCount>))]
-        public async Task<IActionResult> GetSemanticDomainUserCounts(string projectId, string lang)
+        public async Task<IActionResult> GetSemanticDomainUserCounts(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Statistics, projectId))
             {
