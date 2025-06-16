@@ -8,7 +8,7 @@ import {
 } from "@mui/icons-material";
 import { CardContent, Divider, Grid2, Icon, Stack } from "@mui/material";
 import { grey, yellow } from "@mui/material/colors";
-import { type ReactElement, useEffect, useState } from "react";
+import { Fragment, type ReactElement, useEffect, useState } from "react";
 
 import { type Sense, Status } from "api/models";
 import { IconButtonWithTooltip } from "components/Buttons";
@@ -52,31 +52,27 @@ export default function EditSensesCardContent(
     );
   }, [props.newSenses, props.oldSenses]);
 
-  const sensesAndDividers: ReactElement[] = [];
-  props.newSenses.forEach((s, i) => {
-    sensesAndDividers.push(
-      <EditSense
-        bumpSenseDown={
-          i < props.newSenses.length - 1
-            ? () => props.moveSense(i, i + 1)
-            : undefined
-        }
-        bumpSenseUp={i ? () => props.moveSense(i, i - 1) : undefined}
-        edited={changes[i]}
-        key={s.guid}
-        sense={s}
-        toggleSenseDeleted={() => props.toggleSenseDeleted(i)}
-        updateSense={props.updateOrAddSense}
-      />
-    );
-    sensesAndDividers.push(<Divider key={i} />);
-  });
-
   return (
     <CardContent>
       {props.showSenses ? (
         <Stack spacing={1}>
-          {sensesAndDividers}
+          {props.newSenses.map((s, i) => (
+            <Fragment key={s.guid}>
+              <EditSense
+                bumpSenseDown={
+                  i < props.newSenses.length - 1
+                    ? () => props.moveSense(i, i + 1)
+                    : undefined
+                }
+                bumpSenseUp={i ? () => props.moveSense(i, i - 1) : undefined}
+                edited={changes[i]}
+                sense={s}
+                toggleSenseDeleted={() => props.toggleSenseDeleted(i)}
+                updateSense={props.updateOrAddSense}
+              />
+              <Divider />
+            </Fragment>
+          ))}
 
           <IconButtonWithTooltip
             buttonId={EditSensesId.ButtonSenseAdd}
