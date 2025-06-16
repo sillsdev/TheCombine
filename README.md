@@ -228,8 +228,8 @@ environment. This will be denoted with the `(venv)` prefix on the prompt.
 With an active virtual environment, install Python development requirements for this project:
 
 ```bash
-python -m pip install --upgrade pip pip-tools
-python -m piptools sync dev-requirements.txt
+python -m pip -q install --upgrade pip pip-tools
+python -m piptools sync -q dev-requirements.txt
 ```
 
 The following Python scripts can now be run from the virtual environment.
@@ -246,10 +246,17 @@ To run all Python linting steps:
 tox
 ```
 
-To upgrade all pinned dependencies:
+To upgrade all pinned development dependencies:
 
 ```bash
 python -m piptools compile --upgrade dev-requirements.in
+```
+
+To upgrade the pinned dependencies for deployment:
+
+```bash
+cd deploy
+python -m piptools compile --upgrade requirements.in
 ```
 
 To upgrade the pinned dependencies for the Maintenance container:
@@ -976,13 +983,13 @@ Task: add an existing user to a project
 Run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- add_user_to_proj.py --project <PROJECT_NAME> --user <USER>
+kubectl -n thecombine exec -it deployment/maintenance -- add_user_to_proj.py --project <PROJECT_NAME> --user <USER>
 ```
 
 For additional options, run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- add_user_to_proj.py --help`
+kubectl -n thecombine exec -it deployment/maintenance -- add_user_to_proj.py --help
 ```
 
 #### Backup _TheCombine_
@@ -992,7 +999,7 @@ Task: Backup the CombineDatabase and the Backend files to the Amazon Simple Stor
 Run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- combine_backup.py [--verbose]
+kubectl -n thecombine exec -it deployment/maintenance -- combine_backup.py [--verbose]
 ```
 
 Notes:
@@ -1010,7 +1017,7 @@ Task: Delete a project
 Run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- rm_project.py <PROJECT_NAME>
+kubectl -n thecombine exec -it deployment/maintenance -- rm_project.py <PROJECT_NAME>
 ```
 
 You may specify more than one `<PROJECT_NAME>` to delete multiple projects.
@@ -1022,7 +1029,7 @@ Task: Restore the CombineDatabase and the Backend files from a backup stored on 
 Run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- combine_restore.py [--verbose] [BACKUP_NAME]
+kubectl -n thecombine exec -it deployment/maintenance -- combine_restore.py [--verbose] [BACKUP_NAME]
 ```
 
 Note:
