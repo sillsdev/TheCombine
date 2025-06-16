@@ -41,6 +41,7 @@ export * from "./user-created-project";
 export * from "./user-edit";
 export * from "./user-edit-step-wrapper";
 export * from "./user-role";
+export * from "./user-stub";
 export * from "./word";
 export * from "./words-per-day-per-user-count";
 export * from "./writing-system";
