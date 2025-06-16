@@ -1,5 +1,5 @@
 import { ArrowRightAlt } from "@mui/icons-material";
-import { Divider, Grid, Typography } from "@mui/material";
+import { Box, Grid2, Stack, Typography } from "@mui/material";
 import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -37,44 +37,57 @@ export default function CharInvCompleted(): ReactElement {
   const changes: CharInvChanges = { ...defaultCharInvChanges, ...stateChanges };
 
   return (
-    <>
+    <Stack spacing={1} sx={{ p: 2 }}>
+      {/* Title */}
       <Typography component="h1" variant="h4">
         {t("charInventory.title")}
       </Typography>
-      {changes.charChanges.length ? (
-        changes.charChanges.map((c) => <CharChange change={c} key={c[0]} />)
-      ) : (
-        <Typography id={CharInvCompletedId.TypographyNoCharChanges}>
-          {t("charInventory.changes.noCharChanges")}
-        </Typography>
-      )}
+
+      {/* Inventory changes */}
+      <div>
+        {changes.charChanges.length ? (
+          changes.charChanges.map((c) => <CharChange change={c} key={c[0]} />)
+        ) : (
+          <Typography id={CharInvCompletedId.TypographyNoCharChanges}>
+            {t("charInventory.changes.noCharChanges")}
+          </Typography>
+        )}
+      </div>
+
+      {/* Find-and-replace changes */}
       {changes.wordChanges.length ? (
-        changes.wordChanges.map((wc, i) => (
-          <WordChanges key={i} wordChanges={wc} />
-        ))
+        <div>
+          {changes.wordChanges.map((wc, i) => (
+            <Box key={i} sx={{ borderTop: "1px solid #ccc", p: 1 }}>
+              <WordChanges wordChanges={wc} />
+            </Box>
+          ))}
+        </div>
       ) : (
-        <>
-          <Divider />
+        <Box sx={{ borderTop: "1px solid #ccc", p: 1 }}>
           <Typography id={CharInvCompletedId.TypographyNoWordChanges}>
             {t("charInventory.changes.noWordChangesFindReplace")}
           </Typography>
-        </>
+        </Box>
       )}
-    </>
+    </Stack>
   );
 }
 
 /** Typography summarizing find-and-replace word changes for goal history
- * (or undefined if no words changed). */
-function WordChangesTypography(
-  wordChanges: FindAndReplaceChange[]
-): ReactElement | undefined {
+ * (or null if no words changed). */
+function WordChangesTypography(props: {
+  wordChanges?: FindAndReplaceChange[];
+}): ReactElement | null {
   const { t } = useTranslation();
 
-  const changes = wordChanges.filter((wc) => Object.keys(wc.words).length);
-  if (!changes.length) {
-    return;
+  const changes = props.wordChanges?.filter(
+    (wc) => Object.keys(wc.words).length
+  );
+  if (!changes?.length) {
+    return null;
   }
+
   const wordCount = changes.flatMap((wc) => Object.keys(wc.words)).length;
   const description =
     changes.length === 1
@@ -96,60 +109,63 @@ function WordChangesTypography(
  * - Changes to inventory status of a character (up to 3);
  * - Number of words changed with the find-and-replace tool (only if more than 0). */
 export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
+  const { charChanges, wordChanges } = changes;
   const { t } = useTranslation();
-  const changeLimit = 3;
 
-  const wordChangesTypography = WordChangesTypography(
-    changes.wordChanges ?? []
+  const noChanges = !(charChanges?.length || wordChanges?.length);
+  return noChanges ? (
+    <Typography id={CharInvCompletedId.TypographyNoCharChanges}>
+      {t("charInventory.changes.noCharChanges")}
+    </Typography>
+  ) : (
+    <Stack alignItems="flex-start">
+      <CharChangesRows charChanges={charChanges} />
+      <WordChangesTypography wordChanges={wordChanges} />
+    </Stack>
   );
+}
 
-  if (!changes.charChanges?.length) {
-    return (
-      wordChangesTypography ?? (
-        <>
-          <Typography id={CharInvCompletedId.TypographyNoCharChanges}>
-            {t("charInventory.changes.noCharChanges")}
-          </Typography>
-        </>
-      )
-    );
+/** Components summarizing changes to status of inventory characters
+ * (or null if no status changes). */
+export function CharChangesRows(props: {
+  charChanges?: CharacterChange[];
+}): ReactElement | null {
+  const changeLimit = 3;
+  const { charChanges } = props;
+  const { t } = useTranslation();
+
+  if (!charChanges?.length) {
+    return null;
   }
-  if (changes.charChanges.length > changeLimit) {
-    return (
-      <>
-        <Typography />
-        {changes.charChanges.slice(0, changeLimit - 1).map((c) => (
-          <CharChange change={c} key={c[0]} />
-        ))}
-        <Typography>
-          {`+${changes.charChanges.length - (changeLimit - 1)} `}
-          {t("charInventory.changes.more")}
-        </Typography>
-        {wordChangesTypography}
-      </>
-    );
-  }
-  return (
+
+  return charChanges.length > changeLimit ? (
     <>
-      <Typography />
-      {changes.charChanges.map((c) => (
+      {charChanges.slice(0, changeLimit - 1).map((c) => (
         <CharChange change={c} key={c[0]} />
       ))}
-      {wordChangesTypography}
+      <Typography>
+        {`+${charChanges.length - (changeLimit - 1)} `}
+        {t("charInventory.changes.more")}
+      </Typography>
+    </>
+  ) : (
+    <>
+      {charChanges.map((c) => (
+        <CharChange change={c} key={c[0]} />
+      ))}
     </>
   );
 }
 
-/** Component to display in one line the inventory status change of a character. */
+/** One-line display of the inventory status change of a character. */
 export function CharChange(props: { change: CharacterChange }): ReactElement {
   return (
-    <>
+    <div>
       <Typography display="inline">{`${props.change[0]}: `}</Typography>
       <CharacterStatusText status={props.change[1]} inline />
       <ArrowRightAlt fontSize="inherit" />
       <CharacterStatusText status={props.change[2]} inline />
-      <Typography />
-    </>
+    </div>
   );
 }
 
@@ -186,28 +202,25 @@ function WordChanges(props: {
   };
 
   return (
-    <>
-      <Divider />
+    <div>
       <Typography id={CharInvCompletedId.TypographyWordChanges}>
         {t("charInventory.changes.wordChangesWithStrings", {
           val1: props.wordChanges.find,
           val2: props.wordChanges.replace,
         })}
       </Typography>
-      <Grid container rowSpacing={2} spacing={2}>
+      <Grid2 container rowSpacing={2} spacing={2}>
         {entries.slice(0, wordLimit).map(([oldId, newId]) => (
-          <WordChangeGrid key={newId} oldId={oldId} newId={newId} />
+          <WordChange key={newId} oldId={oldId} newId={newId} />
         ))}
         {entries.length > wordLimit ? (
-          <Grid item>
-            <Typography>
-              {`+${entries.length - wordLimit} ${t(
-                "charInventory.changes.more"
-              )}`}
-            </Typography>
-          </Grid>
+          <Typography>
+            {`+${entries.length - wordLimit} ${t(
+              "charInventory.changes.more"
+            )}`}
+          </Typography>
         ) : null}
-      </Grid>
+      </Grid2>
       {undoWordsTypography}
       <UndoButton
         isUndoAllowed={isUndoAllowed}
@@ -216,12 +229,12 @@ function WordChanges(props: {
         textIdEnabled="charInventory.undo.undo"
         undo={undo}
       />
-    </>
+    </div>
   );
 }
 
 /** Component to show a word update that only involved a change in vernacular form. */
-function WordChangeGrid(props: { newId: string; oldId: string }): ReactElement {
+function WordChange(props: { newId: string; oldId: string }): ReactElement {
   const [oldVern, setOldVern] = useState("");
   const [newWord, setNewWord] = useState<Word | undefined>();
 
@@ -233,8 +246,6 @@ function WordChangeGrid(props: { newId: string; oldId: string }): ReactElement {
   const vernacular = `${oldVern}  →  ${newWord?.vernacular}`;
 
   return (
-    <Grid item>
-      {newWord ? <WordCard word={{ ...newWord, vernacular }} /> : null}
-    </Grid>
+    <div>{newWord ? <WordCard word={{ ...newWord, vernacular }} /> : null}</div>
   );
 }
