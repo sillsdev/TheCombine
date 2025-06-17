@@ -7,15 +7,16 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { type ReactElement, useCallback, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { Permission } from "api/models";
 import { getCurrentPermissions, hasGraylistEntries } from "backend";
 import GoalHistoryButton from "components/GoalTimeline/GoalHistoryButton";
 import GoalNameButton from "components/GoalTimeline/GoalNameButton";
 import { asyncAddGoal, asyncGetUserEdits } from "goals/Redux/GoalActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/types";
+import { StoreState } from "rootRedux/types";
 import { GoalName } from "types/goals";
 import {
   goalNameToGoal,
@@ -35,30 +36,31 @@ export default function GoalTimeline(): ReactElement {
 
   const [goalOptions, setGoalOptions] = useState<GoalName[]>([]);
   const [hasGraylist, setHasGraylist] = useState(false);
+  const [permissions, setPermissions] = useState<Permission[]>([]);
 
   const { t } = useTranslation();
 
   useEffect(() => {
-    dispatch(asyncGetUserEdits());
     hasGraylistEntries().then(setHasGraylist);
-  }, [dispatch]);
-
-  const getGoalTypes = useCallback(async (): Promise<void> => {
-    const permissions = await getCurrentPermissions();
-    setGoalOptions(
-      allGoals.filter((g) => {
-        return (
-          (g !== GoalName.ReviewDeferredDups || hasGraylist) &&
-          permissions.includes(requiredPermission(g))
-        );
-      })
-    );
-  }, [allGoals, hasGraylist]);
+    getCurrentPermissions().then(setPermissions);
+  }, []);
 
   useEffect(() => {
-    getGoalTypes();
-  }, [getGoalTypes]);
+    dispatch(asyncGetUserEdits());
+  }, [dispatch]);
 
+  useEffect(() => {
+    setGoalOptions(
+      allGoals.filter(
+        (g) =>
+          (g !== GoalName.ReviewDeferredDups || hasGraylist) &&
+          permissions.includes(requiredPermission(g))
+      )
+    );
+  }, [allGoals, hasGraylist, permissions]);
+
+  /* Note: reverse() also does an in-place reversal,
+   * which is only okay because we are creating a new array with filter(). */
   const goalHistory = history.filter(hasChanges).reverse();
 
   return (
