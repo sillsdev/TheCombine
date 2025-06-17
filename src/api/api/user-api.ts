@@ -41,8 +41,6 @@ import { Credentials } from "../models";
 // @ts-ignore
 import { PasswordResetData } from "../models";
 // @ts-ignore
-import { PasswordResetRequestData } from "../models";
-// @ts-ignore
 import { User } from "../models";
 // @ts-ignore
 import { UserStub } from "../models";
@@ -509,20 +507,16 @@ export const UserApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {PasswordResetRequestData} passwordResetRequestData
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     resetPasswordRequest: async (
-      passwordResetRequestData: PasswordResetRequestData,
+      body: string,
       options: any = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'passwordResetRequestData' is not null or undefined
-      assertParamExists(
-        "resetPasswordRequest",
-        "passwordResetRequestData",
-        passwordResetRequestData
-      );
+      // verify required parameter 'body' is not null or undefined
+      assertParamExists("resetPasswordRequest", "body", body);
       const localVarPath = `/v1/users/forgot`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -550,7 +544,7 @@ export const UserApiAxiosParamCreator = function (
         ...options.headers,
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
-        passwordResetRequestData,
+        body,
         localVarRequestOptions,
         configuration
       );
@@ -943,21 +937,18 @@ export const UserApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {PasswordResetRequestData} passwordResetRequestData
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async resetPasswordRequest(
-      passwordResetRequestData: PasswordResetRequestData,
+      body: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.resetPasswordRequest(
-          passwordResetRequestData,
-          options
-        );
+        await localVarAxiosParamCreator.resetPasswordRequest(body, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -1169,16 +1160,13 @@ export const UserApiFactory = function (
     },
     /**
      *
-     * @param {PasswordResetRequestData} passwordResetRequestData
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    resetPasswordRequest(
-      passwordResetRequestData: PasswordResetRequestData,
-      options?: any
-    ): AxiosPromise<void> {
+    resetPasswordRequest(body: string, options?: any): AxiosPromise<void> {
       return localVarFp
-        .resetPasswordRequest(passwordResetRequestData, options)
+        .resetPasswordRequest(body, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1338,10 +1326,10 @@ export interface UserApiResetPasswordRequest {
 export interface UserApiResetPasswordRequestRequest {
   /**
    *
-   * @type {PasswordResetRequestData}
+   * @type {string}
    * @memberof UserApiResetPasswordRequest
    */
-  readonly passwordResetRequestData: PasswordResetRequestData;
+  readonly body: string;
 }
 
 /**
@@ -1561,7 +1549,7 @@ export class UserApi extends BaseAPI {
     options?: any
   ) {
     return UserApiFp(this.configuration)
-      .resetPasswordRequest(requestParameters.passwordResetRequestData, options)
+      .resetPasswordRequest(requestParameters.body, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
