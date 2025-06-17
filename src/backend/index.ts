@@ -668,21 +668,15 @@ export async function verifyCaptchaToken(token: string): Promise<boolean> {
 export async function resetPasswordRequest(
   emailOrUsername: string
 ): Promise<boolean> {
-  const url = `${window.location.origin}${Path.PwReset}`;
-  const params = { emailTokenRequestData: { emailOrUsername, url } };
   return await userApi
-    .resetPasswordRequest(params)
+    .resetPasswordRequest({ body: emailOrUsername })
     .then(() => true)
     .catch(() => false);
 }
 
-export async function verifyEmailRequest(
-  emailOrUsername: string
-): Promise<boolean> {
-  const url = `${window.location.origin}${Path.EmailVerify}`;
-  const params = { emailTokenRequestData: { emailOrUsername, url } };
+export async function verifyEmailRequest(email: string): Promise<boolean> {
   return await userApi
-    .verifyEmailRequest(params, defaultOptions())
+    .verifyEmailRequest({ body: email })
     .then(() => true)
     .catch(() => false);
 }

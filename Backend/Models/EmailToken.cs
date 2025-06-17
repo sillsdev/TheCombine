@@ -45,18 +45,6 @@ namespace BackendFramework.Models
     /// <remarks>
     /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
     /// </remarks>
-    public class EmailTokenRequestData
-    {
-        [Required]
-        public string EmailOrUsername { get; set; } = "";
-
-        [Required]
-        public string Url { get; set; } = "";
-    }
-
-    /// <remarks>
-    /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
-    /// </remarks>
     public class PasswordResetData
     {
         [Required]

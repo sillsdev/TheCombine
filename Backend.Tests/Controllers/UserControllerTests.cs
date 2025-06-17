@@ -66,7 +66,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestVerifyEmailRequestNoUser()
         {
-            var result = _userController.VerifyEmailRequest(new() { EmailOrUsername = "email" }).Result;
+            var result = _userController.VerifyEmailRequest("e@mail").Result;
             Assert.That(result, Is.TypeOf<ForbidResult>());
         }
 
@@ -75,7 +75,7 @@ namespace Backend.Tests.Controllers
         {
             _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var user = _userRepo.Create(new() { Email = "e@mail" }).Result;
-            var result = _userController.VerifyEmailRequest(new() { EmailOrUsername = user!.Email }).Result;
+            var result = _userController.VerifyEmailRequest(user!.Email).Result;
             Assert.That(result, Is.TypeOf<ForbidResult>());
         }
 
@@ -83,7 +83,7 @@ namespace Backend.Tests.Controllers
         public void TestVerifyEmailRequest()
         {
             var user = _userRepo.Create(new() { Email = "e@mail" }).Result;
-            var result = _userController.VerifyEmailRequest(new() { EmailOrUsername = user!.Email }).Result;
+            var result = _userController.VerifyEmailRequest(user!.Email).Result;
             Assert.That(result, Is.TypeOf<OkResult>());
         }
 
@@ -111,10 +111,11 @@ namespace Backend.Tests.Controllers
             _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
             // Returns Ok regardless of if user exists.
-            var noUserResult = _userController.ResetPasswordRequest(new()).Result;
+            var noUserResult = _userController.ResetPasswordRequest("fake-username").Result;
             Assert.That(noUserResult, Is.TypeOf<OkResult>());
+
             var username = _userRepo.Create(new() { Username = "Imarealboy" }).Result!.Username;
-            var yesUserResult = _userController.ResetPasswordRequest(new() { EmailOrUsername = username }).Result;
+            var yesUserResult = _userController.ResetPasswordRequest(username).Result;
             Assert.That(yesUserResult, Is.TypeOf<OkResult>());
         }
 

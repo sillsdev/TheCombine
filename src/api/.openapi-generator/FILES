@@ -32,7 +32,6 @@ models/edit.ts
 models/email-invite-data.ts
 models/email-invite-status.ts
 models/email-invite.ts
-models/email-token-request-data.ts
 models/flag.ts
 models/gloss.ts
 models/gram-cat-group.ts

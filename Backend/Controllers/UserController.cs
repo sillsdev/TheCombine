@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
@@ -23,6 +24,12 @@ namespace BackendFramework.Controllers
         private readonly IEmailVerifyService _emailVerifyService;
         private readonly IPasswordResetService _passwordResetService;
         private readonly IPermissionService _permissionService;
+
+        private static readonly string? frontendServer =
+            Environment.GetEnvironmentVariable("COMBINE_FRONTEND_SERVER_NAME");
+
+        private static readonly string frontendDomain =
+            frontendServer is null ? "http://localhost:3000" : $"https://{frontendServer}";
 
         public UserController(IUserRepository userRepo, IPermissionService permissionService,
             ICaptchaService captchaService, IEmailService emailService,
@@ -51,18 +58,21 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> VerifyEmailRequest([FromBody, BindRequired] EmailTokenRequestData data)
+        public async Task<IActionResult> VerifyEmailRequest([FromBody, BindRequired] string email)
         {
             // Find user attached to email address.
-            var user = await _userRepo.GetUserByEmail(data.EmailOrUsername, false);
+            var user = await _userRepo.GetUserByEmail(email, false);
 
             if (user is null || !await _permissionService.CanModifyUser(HttpContext, user.Id))
             {
                 return Forbid();
             }
 
-            // Create password reset.
-            var resetRequest = await _emailVerifyService.CreateEmailToken(user.Email);
+            // Create email verify token.
+            var emailToken = await _emailVerifyService.CreateEmailToken(user.Email);
+
+            // The url needs to match Path.EmailVerify in src/types/path.ts.
+            var url = $"{frontendDomain}/email/verify/{emailToken.Token}";
 
             // Create email.
             var message = new MimeMessage() { Subject = "The Combine email verification" };
@@ -70,8 +80,7 @@ namespace BackendFramework.Controllers
             message.Body = new TextPart("plain")
             {
                 Text = $"Email verification has been requested for {user.Username}. " +
-                    $"Follow the link to verify this email address for {user.Username}. " +
-                    $"{data.Url}/{resetRequest.Token} \n\n " +
+                    $"Follow the link to verify {user.Username}'s email address: {url}\n\n" +
                     "Email verification is required to add users to your projects in The Combine." +
                     "If you do not wish to verify your email address, you may ignore this email."
             };
@@ -95,10 +104,10 @@ namespace BackendFramework.Controllers
         [HttpPost("forgot/request", Name = "ResetPasswordRequest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] EmailTokenRequestData data)
+        public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] string EmailOrUsername)
         {
             // Find user attached to email or username.
-            var user = await _userRepo.GetUserByEmailOrUsername(data.EmailOrUsername, false);
+            var user = await _userRepo.GetUserByEmailOrUsername(EmailOrUsername, false);
 
             if (user is null)
             {
@@ -106,8 +115,11 @@ namespace BackendFramework.Controllers
                 return Ok();
             }
 
-            // Create password reset.
-            var resetRequest = await _passwordResetService.CreateEmailToken(user.Email);
+            // Create password reset token.
+            var emailToken = await _emailVerifyService.CreateEmailToken(user.Email);
+
+            // The url needs to match Path.PwReset in src/types/path.ts.
+            var url = $"{frontendDomain}/pw/reset/{emailToken.Token}";
 
             // Create email.
             var message = new MimeMessage() { Subject = "The Combine password reset" };
@@ -115,9 +127,8 @@ namespace BackendFramework.Controllers
             message.Body = new TextPart("plain")
             {
                 Text = $"A password reset has been requested for the user {user.Username}. " +
-                    $"Follow the link to reset {user.Username}'s password. " +
-                    $"{data.Url}/{resetRequest.Token} \n\n " +
-                    "If you did not request a password reset please ignore this email."
+                    $"Follow this link to reset {user.Username}'s password: {url}\n\n" +
+                    "If you did not request a password reset, please ignore this email."
             };
 
             return await _emailService.SendEmail(message)
