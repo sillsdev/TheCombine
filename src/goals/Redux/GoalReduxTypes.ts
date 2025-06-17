@@ -1,4 +1,4 @@
-import { Goal, GoalName } from "types/goals";
+import { Goal, GoalName, GoalType } from "types/goals";
 
 export enum DataLoadStatus {
   Default = "DEFAULT",
@@ -13,7 +13,7 @@ export interface GoalsState {
   currentGoal: Goal;
   dataLoadStatus: DataLoadStatus;
   history: Goal[];
-  previousGoal: GoalName;
+  previousGoalType: GoalType;
 }
 
 export const implementedGoals: GoalName[] = [
@@ -28,5 +28,5 @@ export const defaultState: GoalsState = {
   currentGoal: new Goal(),
   dataLoadStatus: DataLoadStatus.Default,
   history: [],
-  previousGoal: GoalName.Default,
+  previousGoalType: GoalType.Default,
 };

@@ -116,7 +116,7 @@ const goalTypeToGoalMap: Record<GoalType, () => Goal> = {
   [GoalType.Default]: () => new Goal(),
 };
 
-function goalTypeToGoal(type: GoalType): Goal {
+export function goalTypeToGoal(type: GoalType): Goal {
   return goalTypeToGoalMap[type]();
 }
 
