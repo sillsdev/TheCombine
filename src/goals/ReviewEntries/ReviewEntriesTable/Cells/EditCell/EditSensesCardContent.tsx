@@ -18,7 +18,7 @@ import EditSenseDialog from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCe
 import { isSenseChanged } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/utilities";
 import { newSense } from "types/word";
 
-enum EditSensesId {
+export enum EditSensesId {
   ButtonSenseAdd = "add-sense-button",
   ButtonSenseBumpDownPrefix = "bump-up-sense-button-",
   ButtonSenseBumpUpPrefix = "bump-down-sense-button-",
@@ -55,7 +55,7 @@ export default function EditSensesCardContent(
   return (
     <CardContent>
       {props.showSenses ? (
-        <Stack spacing={1}>
+        <Stack role="list" spacing={1}>
           {props.newSenses.map((s, i) => (
             <Fragment key={s.guid}>
               <EditSense
@@ -117,7 +117,7 @@ export function EditSense(props: EditSenseProps): ReactElement {
   const [editing, setEditing] = useState(false);
 
   return (
-    <Grid2 container>
+    <Grid2 container role="listitem">
       {props.bumpSenseDown || props.bumpSenseUp ? (
         <Stack>
           <IconButtonWithTooltip

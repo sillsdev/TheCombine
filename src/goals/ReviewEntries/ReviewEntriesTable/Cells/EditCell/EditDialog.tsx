@@ -356,11 +356,16 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
             {`${t("reviewEntries.columns.edit")} : ${props.word.vernacular}`}
 
             <div>
-              <IconButton id={EditDialogId.ButtonSave} onClick={saveAndClose}>
+              <IconButton
+                data-testid={EditDialogId.ButtonSave}
+                id={EditDialogId.ButtonSave}
+                onClick={saveAndClose}
+              >
                 <Check style={{ color: themeColors.success }} />
               </IconButton>
 
               <IconButton
+                data-testid={EditDialogId.ButtonCancel}
                 id={EditDialogId.ButtonCancel}
                 onClick={conditionalCancel}
               >
@@ -378,6 +383,9 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
               <CardContent>
                 <TextFieldWithFont
                   id={EditDialogId.TextFieldVernacular}
+                  inputProps={{
+                    "data-testid": EditDialogId.TextFieldVernacular,
+                  }}
                   label={vernLang}
                   onChange={(e) =>
                     setNewWord((prev) => ({
@@ -397,6 +405,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
                 action={
                   newWord.senses.length > 1 && (
                     <IconButton
+                      data-testid={EditDialogId.ButtonSensesViewToggle}
                       id={EditDialogId.ButtonSensesViewToggle}
                       onClick={() => setShowSenses((prev) => !prev)}
                     >
@@ -454,6 +463,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
                   analysis
                   fullWidth
                   id={EditDialogId.TextFieldNote}
+                  inputProps={{ "data-testid": EditDialogId.TextFieldNote }}
                   lang={newWord.note.language}
                   multiline
                   onChange={(e) => updateNoteText(e.target.value)}
@@ -475,6 +485,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
                 </IconButton>
                 <NormalizedTextField
                   id={EditDialogId.TextFieldFlag}
+                  inputProps={{ "data-testid": EditDialogId.TextFieldFlag }}
                   onChange={(e) => updateFlag(e.target.value)}
                   value={newWord.flag.active ? newWord.flag.text : ""}
                 />
