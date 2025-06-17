@@ -1,5 +1,5 @@
 import { Abc, Layers, LayersOutlined, ManageSearch } from "@mui/icons-material";
-import { Icon } from "@mui/material";
+import { Icon, SxProps } from "@mui/material";
 import { ReactElement } from "react";
 
 import { Edit, Permission } from "api/models";
@@ -85,18 +85,21 @@ export function goalNameToGoal(name: GoalName): Goal {
   return goalNameToGoalMap[name]();
 }
 
-export function goalNameToIcon(name: GoalName): ReactElement {
+export function goalNameToIcon(
+  name: GoalName,
+  sx: SxProps = { fontSize: "inherit" }
+): ReactElement {
   switch (name) {
     case GoalName.CreateCharInv:
-      return <Abc sx={{ fontSize: "inherit" }} />;
+      return <Abc sx={sx} />;
     case GoalName.MergeDups:
-      return <Layers sx={{ fontSize: "inherit" }} />;
+      return <Layers sx={sx} />;
     case GoalName.ReviewDeferredDups:
-      return <LayersOutlined sx={{ fontSize: "inherit" }} />;
+      return <LayersOutlined sx={sx} />;
     case GoalName.ReviewEntries:
-      return <ManageSearch sx={{ fontSize: "inherit" }} />;
+      return <ManageSearch sx={sx} />;
     default:
-      return <Icon sx={{ fontSize: "inherit" }} />;
+      return <Icon sx={sx} />;
   }
 }
 
@@ -126,12 +129,14 @@ export function convertGoalToEdit(goal: Goal): Edit {
 }
 
 export function convertEditToGoal(edit: Edit): Goal {
-  const goal = goalTypeToGoal(edit.goalType);
-  goal.guid = edit.guid;
-  goal.steps = edit.stepData.map((stepString) => JSON.parse(stepString));
-  goal.numSteps = goal.steps.length;
-  goal.changes = JSON.parse(edit.changes);
-  goal.modified = edit.modified ?? undefined;
-  goal.status = GoalStatus.Completed;
-  return goal;
+  const steps = edit.stepData.map((s) => JSON.parse(s));
+  return {
+    ...goalTypeToGoal(edit.goalType),
+    changes: JSON.parse(edit.changes),
+    guid: edit.guid,
+    modified: edit.modified ?? undefined,
+    numSteps: steps.length,
+    status: GoalStatus.Completed,
+    steps,
+  };
 }
