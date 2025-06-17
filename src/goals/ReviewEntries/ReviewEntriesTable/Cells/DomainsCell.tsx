@@ -1,4 +1,4 @@
-import { Chip, Grid } from "@mui/material";
+import { Chip, Grid2 } from "@mui/material";
 import { type ReactElement } from "react";
 
 import { type SemanticDomain, type Sense } from "api/models";
@@ -19,12 +19,14 @@ export function gatherDomains(senses: Sense[]): SemanticDomain[] {
 
 export default function DomainsCell(props: CellProps): ReactElement {
   return (
-    <Grid container direction="row" spacing={1}>
+    <Grid2 container spacing={1}>
       {gatherDomains(props.word.senses).map((dom) => (
-        <Grid item key={`${dom.id}-${dom.name}`}>
-          <Chip label={`${dom.id}: ${dom.name}`} style={{ color: "inherit" }} />
-        </Grid>
+        <Chip
+          key={`${dom.id}-${dom.name}`}
+          label={`${dom.id}: ${dom.name}`}
+          style={{ color: "inherit" }}
+        />
       ))}
-    </Grid>
+    </Grid2>
   );
 }
