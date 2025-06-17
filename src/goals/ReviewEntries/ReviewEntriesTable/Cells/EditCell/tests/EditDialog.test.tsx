@@ -129,8 +129,8 @@ describe("EditDialog", () => {
 
     test("save button saves changes and closes", async () => {
       // Make a change
-      const newFlagText = "New flag!";
       const flagField = screen.getByTestId(EditDialogId.TextFieldFlag);
+      const newFlagText = "New flag!";
       await userEvent.type(flagField, newFlagText);
 
       // Click the save button
