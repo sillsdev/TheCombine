@@ -19,7 +19,6 @@ export * from "./merge-words";
 export * from "./note";
 export * from "./off-on-setting";
 export * from "./password-reset-data";
-export * from "./password-reset-request-data";
 export * from "./permission";
 export * from "./project";
 export * from "./project-role";

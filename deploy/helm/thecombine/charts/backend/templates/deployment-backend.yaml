@@ -55,6 +55,11 @@ spec:
                 configMapKeyRef:
                   key: COMBINE_EMAIL_ENABLED
                   name: env-backend
+            - name: COMBINE_FRONTEND_SERVER_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: COMBINE_FRONTEND_SERVER_NAME
+                  name: env-backend
             - name: COMBINE_JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:
