@@ -68,10 +68,11 @@ namespace Backend.Tests.Controllers
             _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
             // Returns Ok regardless of if user exists.
-            var noUserResult = _userController.ResetPasswordRequest(new()).Result;
+            var noUserResult = _userController.ResetPasswordRequest("fake-username").Result;
             Assert.That(noUserResult, Is.TypeOf<OkResult>());
+
             var username = _userRepo.Create(new() { Username = "Imarealboy" }).Result!.Username;
-            var yesUserResult = _userController.ResetPasswordRequest(new() { EmailOrUsername = username }).Result;
+            var yesUserResult = _userController.ResetPasswordRequest(username).Result;
             Assert.That(yesUserResult, Is.TypeOf<OkResult>());
         }
 
