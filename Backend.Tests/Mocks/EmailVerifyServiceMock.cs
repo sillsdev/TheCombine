@@ -4,7 +4,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    internal sealed class PasswordResetServiceMock : IPasswordResetService
+    internal sealed class EmailVerifyServiceMock : IEmailVerifyService
     {
         private bool _boolResponse;
         internal void SetNextBoolResponse(bool response)
@@ -22,12 +22,7 @@ namespace Backend.Tests.Mocks
             return Task.CompletedTask;
         }
 
-        public Task<bool> ValidateToken(string token)
-        {
-            return Task.FromResult(_boolResponse);
-        }
-
-        public Task<bool> ResetPassword(string token, string password)
+        public Task<bool> VerifyEmail(string token)
         {
             return Task.FromResult(_boolResponse);
         }

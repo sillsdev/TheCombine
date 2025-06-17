@@ -7,7 +7,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace BackendFramework.Models
 {
-    public class PasswordReset
+    public class EmailToken
     {
         private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
         private const int TokenSize = 8;
@@ -25,7 +25,7 @@ namespace BackendFramework.Models
         [BsonElement("expire_time")]
         public DateTime ExpireTime { get; set; }
 
-        public PasswordReset(int expireTime)
+        public EmailToken(int expireTime)
         {
             Id = "";
             Email = "";
@@ -36,7 +36,7 @@ namespace BackendFramework.Models
             Token = WebEncoders.Base64UrlEncode(byteToken);
         }
 
-        public PasswordReset(int expireTime, string email) : this(expireTime)
+        public EmailToken(int expireTime, string email) : this(expireTime)
         {
             Email = email;
         }

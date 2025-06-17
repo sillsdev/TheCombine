@@ -517,7 +517,7 @@ export const UserApiAxiosParamCreator = function (
     ): Promise<RequestArgs> => {
       // verify required parameter 'body' is not null or undefined
       assertParamExists("resetPasswordRequest", "body", body);
-      const localVarPath = `/v1/users/forgot`;
+      const localVarPath = `/v1/users/forgot/request`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -694,6 +694,100 @@ export const UserApiAxiosParamCreator = function (
         ...headersFromBaseOptions,
         ...options.headers,
       };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    verifyEmail: async (
+      token: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'token' is not null or undefined
+      assertParamExists("verifyEmail", "token", token);
+      const localVarPath = `/v1/users/verifyemail/{token}`.replace(
+        `{${"token"}}`,
+        encodeURIComponent(String(token))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    verifyEmailRequest: async (
+      body: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'body' is not null or undefined
+      assertParamExists("verifyEmailRequest", "body", body);
+      const localVarPath = `/v1/users/verifyemail/request`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        body,
+        localVarRequestOptions,
+        configuration
+      );
 
       return {
         url: toPathString(localVarUrlObj),
@@ -1024,6 +1118,50 @@ export const UserApiFp = function (configuration?: Configuration) {
         configuration
       );
     },
+    /**
+     *
+     * @param {string} token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async verifyEmail(
+      token: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.verifyEmail(
+        token,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async verifyEmailRequest(
+      body: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.verifyEmailRequest(body, options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
   };
 };
 
@@ -1203,6 +1341,28 @@ export const UserApiFactory = function (
         .verifyCaptchaToken(token, options)
         .then((request) => request(axios, basePath));
     },
+    /**
+     *
+     * @param {string} token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    verifyEmail(token: string, options?: any): AxiosPromise<void> {
+      return localVarFp
+        .verifyEmail(token, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    verifyEmailRequest(body: string, options?: any): AxiosPromise<void> {
+      return localVarFp
+        .verifyEmailRequest(body, options)
+        .then((request) => request(axios, basePath));
+    },
   };
 };
 
@@ -1379,6 +1539,34 @@ export interface UserApiVerifyCaptchaTokenRequest {
    * @memberof UserApiVerifyCaptchaToken
    */
   readonly token: string;
+}
+
+/**
+ * Request parameters for verifyEmail operation in UserApi.
+ * @export
+ * @interface UserApiVerifyEmailRequest
+ */
+export interface UserApiVerifyEmailRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof UserApiVerifyEmail
+   */
+  readonly token: string;
+}
+
+/**
+ * Request parameters for verifyEmailRequest operation in UserApi.
+ * @export
+ * @interface UserApiVerifyEmailRequestRequest
+ */
+export interface UserApiVerifyEmailRequestRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof UserApiVerifyEmailRequest
+   */
+  readonly body: string;
 }
 
 /**
@@ -1598,6 +1786,38 @@ export class UserApi extends BaseAPI {
   ) {
     return UserApiFp(this.configuration)
       .verifyCaptchaToken(requestParameters.token, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {UserApiVerifyEmailRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public verifyEmail(
+    requestParameters: UserApiVerifyEmailRequest,
+    options?: any
+  ) {
+    return UserApiFp(this.configuration)
+      .verifyEmail(requestParameters.token, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {UserApiVerifyEmailRequestRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public verifyEmailRequest(
+    requestParameters: UserApiVerifyEmailRequestRequest,
+    options?: any
+  ) {
+    return UserApiFp(this.configuration)
+      .verifyEmailRequest(requestParameters.body, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace BackendFramework.Interfaces
 {
-    public interface IPasswordResetContext
+    public interface IEmailVerifyContext
     {
         int ExpireTime { get; }
         Task Insert(EmailToken reset);

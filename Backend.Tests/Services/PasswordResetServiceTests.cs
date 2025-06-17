@@ -30,8 +30,8 @@ namespace Backend.Tests.Services
             var user = new User { Email = Email };
             _userRepo.Create(user);
 
-            var res = _passwordResetService.CreatePasswordReset(Email).Result;
-            Assert.That(_passwordResets.GetResets(), Does.Contain(res).UsingPropertiesComparer());
+            var emailToken = _passwordResetService.CreateEmailToken(Email).Result;
+            Assert.That(_passwordResets.GetResets(), Does.Contain(emailToken).UsingPropertiesComparer());
         }
 
         [Test]
@@ -40,8 +40,8 @@ namespace Backend.Tests.Services
             var user = new User { Email = Email };
             _userRepo.Create(user);
 
-            var request = _passwordResetService.CreatePasswordReset(Email).Result;
-            Assert.That(_passwordResetService.ResetPassword(request.Token, Password).Result, Is.True);
+            var emailToken = _passwordResetService.CreateEmailToken(Email).Result;
+            Assert.That(_passwordResetService.ResetPassword(emailToken.Token, Password).Result, Is.True);
             Assert.That(_passwordResets.GetResets(), Is.Empty);
         }
 
@@ -51,10 +51,10 @@ namespace Backend.Tests.Services
             var user = new User { Email = Email };
             _userRepo.Create(user);
 
-            var request = _passwordResetService.CreatePasswordReset(Email).Result;
-            request.ExpireTime = DateTime.Now.AddMinutes(-1);
+            var emailToken = _passwordResetService.CreateEmailToken(Email).Result;
+            emailToken.ExpireTime = DateTime.Now.AddMinutes(-1);
 
-            Assert.That(_passwordResetService.ResetPassword(request.Token, Password).Result, Is.False);
+            Assert.That(_passwordResetService.ResetPassword(emailToken.Token, Password).Result, Is.False);
         }
 
         [Test]
@@ -63,8 +63,8 @@ namespace Backend.Tests.Services
             var user = new User { Email = Email };
             _userRepo.Create(user);
 
-            var request = _passwordResetService.CreatePasswordReset(Email).Result;
-            Assert.That(request.Email == Email, Is.True);
+            var emailToken = _passwordResetService.CreateEmailToken(Email).Result;
+            Assert.That(emailToken.Email == Email, Is.True);
             var task = _passwordResetService.ResetPassword("NotARealToken", Password);
             Assert.That(task.Result, Is.False);
         }

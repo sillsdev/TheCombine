@@ -47,7 +47,9 @@ const config = new Api.Configuration(config_parameters);
 const authenticationUrls = [
   "/users/authenticate",
   "/users/create",
+  "/users/email",
   "/users/forgot",
+  "/users/password",
 ];
 
 /** A list of URL patterns for which the frontend explicitly handles errors
@@ -58,6 +60,7 @@ const whiteListedErrorUrls = [
   "/speakers/update/",
   "/users/authenticate",
   "/users/captcha/",
+  "/verifyemail/",
 ];
 
 // Create an axios instance to allow for attaching interceptors to it.
@@ -671,6 +674,13 @@ export async function resetPasswordRequest(
     .catch(() => false);
 }
 
+export async function verifyEmailRequest(email: string): Promise<boolean> {
+  return await userApi
+    .verifyEmailRequest({ body: email })
+    .then(() => true)
+    .catch(() => false);
+}
+
 export async function validateResetToken(token: string): Promise<boolean> {
   return (await userApi.validateResetToken({ token })).data;
 }
@@ -683,6 +693,11 @@ export async function resetPassword(
     .resetPassword({ passwordResetData: { token, newPassword } })
     .then(() => true)
     .catch(() => false);
+}
+
+/** If the token is valid, sets the associated email address as verified. */
+export async function verifyEmail(token: string): Promise<void> {
+  await userApi.verifyEmail({ token });
 }
 
 /** Returns the created user with id assigned on creation. */

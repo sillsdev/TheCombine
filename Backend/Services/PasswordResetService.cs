@@ -1,30 +1,23 @@
 using BackendFramework.Models;
 using BackendFramework.Interfaces;
 using System.Threading.Tasks;
-using System.Linq;
 using System;
 
 namespace BackendFramework.Services
 {
-    public class PasswordResetService : IPasswordResetService
+    public class PasswordResetService(IPasswordResetContext passwordResets, IUserRepository userRepo) : IPasswordResetService
     {
-        private readonly IPasswordResetContext _passwordResets;
-        private readonly IUserRepository _userRepo;
+        private readonly IPasswordResetContext _passwordResets = passwordResets;
+        private readonly IUserRepository _userRepo = userRepo;
 
-        public PasswordResetService(IPasswordResetContext passwordResets, IUserRepository userRepo)
+        public async Task<EmailToken> CreateEmailToken(string email)
         {
-            _passwordResets = passwordResets;
-            _userRepo = userRepo;
+            var emailToken = new EmailToken(_passwordResets.ExpireTime, email);
+            await _passwordResets.Insert(emailToken);
+            return emailToken;
         }
 
-        public async Task<PasswordReset> CreatePasswordReset(string email)
-        {
-            var resetRequest = new PasswordReset(_passwordResets.ExpireTime, email);
-            await _passwordResets.Insert(resetRequest);
-            return resetRequest;
-        }
-
-        public async Task ExpirePasswordReset(string email)
+        public async Task ExpireTokens(string email)
         {
             await _passwordResets.ClearAll(email);
         }
@@ -44,10 +37,13 @@ namespace BackendFramework.Services
             {
                 return false;
             }
-            var user = (await _userRepo.GetAllUsers()).Single(u =>
-                u.Email.Equals(request.Email, StringComparison.OrdinalIgnoreCase));
+            var user = await _userRepo.GetUserByEmailOrUsername(request.Email);
+            if (user is null)
+            {
+                return false;
+            }
             await _userRepo.ChangePassword(user.Id, password);
-            await ExpirePasswordReset(request.Email);
+            await ExpireTokens(request.Email);
             return true;
         }
     }

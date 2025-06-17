@@ -128,4 +128,10 @@ export interface User {
    * @memberof User
    */
   isAdmin: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof User
+   */
+  isEmailVerified?: boolean;
 }
