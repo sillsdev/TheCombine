@@ -56,8 +56,7 @@ namespace BackendFramework.Controllers
             // Find user attached to email address.
             var user = await _userRepo.GetUserByEmail(data.EmailOrUsername, false);
 
-            if (user is null || !(_permissionService.IsUserIdAuthorized(HttpContext, user.Id)
-                || await _permissionService.IsSiteAdmin(HttpContext)))
+            if (user is null || !await _permissionService.CanModifyUser(HttpContext, user.Id))
             {
                 return Forbid();
             }
