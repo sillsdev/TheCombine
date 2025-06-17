@@ -1,6 +1,6 @@
-import { type ChangeEvent } from "react";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
-import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { Project, type Sense } from "api/models";
@@ -10,26 +10,8 @@ import EditSenseDialog, {
 import { type StoreState, defaultState } from "rootRedux/types";
 import { newSense } from "types/word";
 
-// Dialog uses Portal, not supported in react-test-renderer
-jest.mock("@mui/material/Dialog", () =>
-  jest.requireActual("@mui/material/Container")
-);
-// Textfield with multiline not supported in react-test-renderer
-jest.mock("@mui/material/TextField", () => "div");
-
-jest.mock("components/TreeView", () => "div");
-jest.mock("rootRedux/hooks", () => ({
-  ...jest.requireActual("rootRedux/hooks"),
-  useAppDispatch: () => jest.fn(),
-}));
-
 const mockClose = jest.fn();
 const mockSave = jest.fn();
-
-const mockTextFieldEvent = (
-  value: string
-): ChangeEvent<HTMLInputElement | HTMLTextAreaElement> =>
-  ({ target: { value } }) as any;
 
 const mockState = (
   definitionsEnabled = false,
@@ -46,8 +28,6 @@ const mockState = (
   };
 };
 
-let renderer: ReactTestRenderer;
-
 const renderEditSenseDialog = async (
   definitionsEnabled = false,
   grammaticalInfoEnabled = false
@@ -56,7 +36,7 @@ const renderEditSenseDialog = async (
     mockState(definitionsEnabled, grammaticalInfoEnabled)
   );
   await act(async () => {
-    renderer = create(
+    render(
       <Provider store={mockStore}>
         <EditSenseDialog
           close={mockClose}
@@ -81,12 +61,7 @@ describe("EditSenseDialog", () => {
 
     test("cancel button closes if no changes", async () => {
       // Click the cancel button
-      const cancelButton = renderer.root.findByProps({
-        id: EditSenseDialogId.ButtonCancel,
-      });
-      await act(async () => {
-        cancelButton.props.onClick();
-      });
+      await userEvent.click(screen.getByTestId(EditSenseDialogId.ButtonCancel));
 
       // Ensure a close without saving
       expect(mockClose).toHaveBeenCalledTimes(1);
@@ -95,42 +70,24 @@ describe("EditSenseDialog", () => {
 
     test("cancel button opens dialog if changes", async () => {
       // Make a change
-      const glossTextField = renderer.root.findByProps({
-        id: `${EditSenseDialogId.TextFieldGlossPrefix}0`,
-      });
-      const newGlossText = "New gloss!";
-      await act(async () => {
-        glossTextField.props.onChange(mockTextFieldEvent(newGlossText));
-      });
+      const testId = `${EditSenseDialogId.TextFieldGlossPrefix}0`;
+      await userEvent.type(screen.getByTestId(testId), "glossier");
 
       // Click the cancel button and cancel the cancel
-      const cancelButton = renderer.root.findByProps({
-        id: EditSenseDialogId.ButtonCancel,
-      });
-      await act(async () => {
-        cancelButton.props.onClick();
-      });
-      const cancelButNoButton = renderer.root.findByProps({
-        id: EditSenseDialogId.ButtonCancelDialogCancel,
-      });
-      await act(async () => {
-        cancelButNoButton.props.onClick();
-      });
+      await userEvent.click(screen.getByTestId(EditSenseDialogId.ButtonCancel));
+      await userEvent.click(
+        screen.getByTestId(EditSenseDialogId.ButtonCancelDialogCancel)
+      );
 
       // Ensure nothing happened
       expect(mockClose).not.toHaveBeenCalled();
       expect(mockSave).not.toHaveBeenCalled();
 
       // Click the cancel button and confirm the cancel
-      await act(async () => {
-        cancelButton.props.onClick();
-      });
-      const cancelAndYesButton = renderer.root.findByProps({
-        id: EditSenseDialogId.ButtonCancelDialogConfirm,
-      });
-      await act(async () => {
-        cancelAndYesButton.props.onClick();
-      });
+      await userEvent.click(screen.getByTestId(EditSenseDialogId.ButtonCancel));
+      await userEvent.click(
+        screen.getByTestId(EditSenseDialogId.ButtonCancelDialogConfirm)
+      );
 
       // Ensure a close without saving
       expect(mockClose).toHaveBeenCalledTimes(1);
@@ -139,12 +96,7 @@ describe("EditSenseDialog", () => {
 
     test("save button closes if no changes", async () => {
       // Click the save button
-      const saveButton = renderer.root.findByProps({
-        id: EditSenseDialogId.ButtonSave,
-      });
-      await act(async () => {
-        saveButton.props.onClick();
-      });
+      await userEvent.click(screen.getByTestId(EditSenseDialogId.ButtonSave));
 
       // Ensure a close without saving
       expect(mockClose).toHaveBeenCalledTimes(1);
@@ -153,21 +105,14 @@ describe("EditSenseDialog", () => {
 
     test("save button saves changes and closes", async () => {
       // Make a change
-      const glossTextField = renderer.root.findByProps({
-        id: `${EditSenseDialogId.TextFieldGlossPrefix}0`,
-      });
+      const testId = `${EditSenseDialogId.TextFieldGlossPrefix}0`;
+      const glossField = screen.getByTestId(testId);
+      await userEvent.clear(glossField);
       const newGlossText = "New gloss!";
-      await act(async () => {
-        glossTextField.props.onChange(mockTextFieldEvent(newGlossText));
-      });
+      await userEvent.type(glossField, newGlossText);
 
       // Click the save button
-      const saveButton = renderer.root.findByProps({
-        id: EditSenseDialogId.ButtonSave,
-      });
-      await act(async () => {
-        saveButton.props.onClick();
-      });
+      await userEvent.click(screen.getByTestId(EditSenseDialogId.ButtonSave));
 
       // Ensure save and close occurred
       expect(mockClose).toHaveBeenCalledTimes(1);
@@ -183,30 +128,14 @@ describe("EditSenseDialog", () => {
 
     test("show definitions when definitionsEnabled is true", async () => {
       await renderEditSenseDialog(true, false);
-      expect(
-        renderer.root.findAllByProps({
-          title: definitionsTitle,
-        })
-      ).toHaveLength(1);
-      expect(
-        renderer.root.findAllByProps({
-          title: partOfSpeechTitle,
-        })
-      ).toHaveLength(0);
+      expect(screen.queryByText(definitionsTitle)).toBeTruthy();
+      expect(screen.queryByText(partOfSpeechTitle)).toBeNull();
     });
 
     test("show part of speech when grammaticalInfoEnabled is true", async () => {
       await renderEditSenseDialog(false, true);
-      expect(
-        renderer.root.findAllByProps({
-          title: definitionsTitle,
-        })
-      ).toHaveLength(0);
-      expect(
-        renderer.root.findAllByProps({
-          title: partOfSpeechTitle,
-        })
-      ).toHaveLength(1);
+      expect(screen.queryByText(definitionsTitle)).toBeNull();
+      expect(screen.queryByText(partOfSpeechTitle)).toBeTruthy();
     });
   });
 });

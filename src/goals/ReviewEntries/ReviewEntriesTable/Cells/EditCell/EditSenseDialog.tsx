@@ -190,6 +190,7 @@ export default function EditSenseDialog(
 
             <div>
               <IconButton
+                data-testid={EditSenseDialogId.ButtonSave}
                 id={EditSenseDialogId.ButtonSave}
                 onClick={saveAndClose}
               >
@@ -197,6 +198,7 @@ export default function EditSenseDialog(
               </IconButton>
 
               <IconButton
+                data-testid={EditSenseDialogId.ButtonCancel}
                 id={EditSenseDialogId.ButtonCancel}
                 onClick={conditionalCancel}
               >
@@ -328,6 +330,7 @@ function DefinitionTextField(props: DefinitionTextFieldProps): ReactElement {
       error={props.error}
       fullWidth
       id={props.textFieldId}
+      inputProps={{ "data-testid": props.textFieldId }}
       label={props.definition.language}
       lang={props.definition.language}
       margin="dense"
@@ -390,6 +393,7 @@ function GlossTextField(props: GlossTextFieldProps): ReactElement {
       error={props.error}
       fullWidth
       id={props.textFieldId}
+      inputProps={{ "data-testid": props.textFieldId }}
       label={props.gloss.language}
       lang={props.gloss.language}
       margin="dense"
@@ -445,6 +449,7 @@ function DomainList(props: DomainListProps): ReactElement {
         {props.domains.length > 0 ? (
           props.domains.map((domain, index) => (
             <Chip
+              data-testid={`${props.buttonIdPrefixDelete}${index}`}
               id={`${props.buttonIdPrefixDelete}${index}`}
               key={`${domain.id}_${domain.name}`}
               label={`${domain.id}: ${domain.name}`}
@@ -457,6 +462,7 @@ function DomainList(props: DomainListProps): ReactElement {
           </Grid2>
         )}
         <IconButton
+          data-testid={props.buttonIdAdd}
           id={props.buttonIdAdd}
           onClick={(e) => {
             e.currentTarget.blur(); // else dialog reopens when domain selected with Enter
