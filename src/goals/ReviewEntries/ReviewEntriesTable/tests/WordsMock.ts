@@ -51,6 +51,8 @@ senses[3][1].semanticDomains.push(newSemanticDomain("1"));
 senses[0][0].semanticDomains.push(newSemanticDomain("3"));
 // (leave senses[1] without semantic domains)
 
+export const verns = ["Alfa", "Delta", "Bravo", "Charlie"];
+
 // Defined words for vernaculars sorted order [0, 2, 3, 1]
 // and for pronunciations sorted order [3, 2, 1, 0]
 // and for flags sorted order [1, 0, 3, 2]
@@ -59,7 +61,7 @@ senses[0][0].semanticDomains.push(newSemanticDomain("3"));
 export function mockWords(): Word[] {
   return [
     {
-      ...newWord("Alfa"),
+      ...newWord(verns[0]),
       audio: [newPronunciation(), newPronunciation(), newPronunciation()],
       flag: newFlag("India"),
       id: "0",
@@ -67,7 +69,7 @@ export function mockWords(): Word[] {
       senses: senses[0],
     },
     {
-      ...newWord("Delta"),
+      ...newWord(verns[1]),
       audio: [newPronunciation(), newPronunciation()],
       flag: { active: true, text: "" }, // (active flag with empty text is sorted to first)
       id: "1",
@@ -75,7 +77,7 @@ export function mockWords(): Word[] {
       senses: senses[1],
     },
     {
-      ...newWord("Bravo"),
+      ...newWord(verns[2]),
       audio: [newPronunciation()],
       // (flag with `active = false` is sorted to last)
       id: "2",
@@ -83,7 +85,7 @@ export function mockWords(): Word[] {
       senses: senses[2],
     },
     {
-      ...newWord("Charlie"),
+      ...newWord(verns[3]),
       flag: newFlag("Juliett"),
       id: "3",
       note: newNote("Lima"),

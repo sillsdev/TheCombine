@@ -1,24 +1,16 @@
-import { TableSortLabel } from "@mui/material";
-import { MRT_TableBodyRow, MRT_TableHeadCell } from "material-react-table";
+import { act, render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
-import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { defaultState } from "components/Project/ProjectReduxTypes";
-import ReviewEntriesTable, {
-  ColumnId,
-} from "goals/ReviewEntries/ReviewEntriesTable";
-import VernacularCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/VernacularCell";
+import ReviewEntriesTable from "goals/ReviewEntries/ReviewEntriesTable";
 import {
   mockWords,
   sortOrder,
+  verns,
 } from "goals/ReviewEntries/ReviewEntriesTable/tests/WordsMock";
 import { type StoreState } from "rootRedux/types";
-
-// With `columnFilterDisplayMode: "popover",`, it is necessary to mock out `Grow`.
-// To access filter `TextField`s, replace both `Grow`, `Modal` with `div`.
-// However, using a `TextField`'s `.props.onChange()` doesn't activate a filter.
-jest.mock("@mui/material/Grow", () => "div");
 
 // Intercept i18n to set the resolvedLanguage for localization testing.
 jest.mock("react-i18next", () => ({
@@ -34,15 +26,13 @@ const setMockUseTranslation = (resolvedLanguage: string): void => {
 };
 
 jest.mock("backend", () => ({
-  getAllSpeakers: (projectId: string) => mockGetAllSpeakers(projectId),
+  getAllSpeakers: () => Promise.resolve([]),
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
   getWord: (wordId: string) => mockGetWord(wordId),
 }));
 jest.mock("components/Pronunciations/PronunciationsBackend");
 jest.mock("i18n", () => ({}));
 
-const mockClickEvent = { stopPropagation: jest.fn() };
-const mockGetAllSpeakers = jest.fn();
 const mockGetFrontierWords = jest.fn();
 const mockGetWord = jest.fn();
 const mockState = (
@@ -59,8 +49,6 @@ const mockState = (
   },
 });
 
-let renderer: ReactTestRenderer;
-
 const renderReviewEntriesTable = async (
   definitionsEnabled = false,
   grammaticalInfoEnabled = false,
@@ -71,7 +59,7 @@ const renderReviewEntriesTable = async (
     mockState(definitionsEnabled, grammaticalInfoEnabled)
   );
   await act(async () => {
-    renderer = create(
+    render(
       <Provider store={mockStore}>
         <ReviewEntriesTable disableVirtualization />
       </Provider>
@@ -81,7 +69,6 @@ const renderReviewEntriesTable = async (
 
 function setMockFunctions(): void {
   jest.clearAllMocks();
-  mockGetAllSpeakers.mockResolvedValue([]);
   mockGetFrontierWords.mockResolvedValue(mockWords());
 }
 
@@ -93,7 +80,8 @@ describe("ReviewEntriesTable", () => {
   test("initial render fetches frontier and loads data", async () => {
     await renderReviewEntriesTable();
     expect(mockGetFrontierWords).toHaveBeenCalled();
-    expect(renderer.root.findAllByType(MRT_TableBodyRow)).toHaveLength(4);
+    const rowCount = mockWords().length + 1; // +1 for header row
+    expect(screen.getAllByRole("row")).toHaveLength(rowCount);
   });
 
   describe("table sort", () => {
@@ -103,15 +91,22 @@ describe("ReviewEntriesTable", () => {
 
     /** Checks if the WordsMock.tsx words have been sorted by the given column. */
     const checkRowOrder = (col: number, dir: "asc" | "desc"): void => {
-      const rowIds = renderer.root
-        .findAllByType(VernacularCell)
-        .map((cell) => cell.props.word.id);
+      // The mock verns are distinct strings,
+      // so they can be used to determine row permutation.
+      const rows = screen.getAllByRole("row").slice(1);
+      const sorted = verns.map((v) =>
+        rows.findIndex((r) => within(r).queryByText(v))
+      );
+
+      // Get what the row order should be.
       const order = [...sortOrder[col]];
       if (dir === "desc") {
         order.reverse();
       }
-      order.forEach((id, index) => {
-        expect(rowIds[index]).toEqual(`${id}`);
+
+      // Verify the permutation.
+      sorted.forEach((rowIndex, wordIndex) => {
+        expect(order[rowIndex]).toEqual(wordIndex);
       });
     };
 
@@ -130,43 +125,32 @@ describe("ReviewEntriesTable", () => {
 
     cols.forEach((col, i) => {
       test(`sorting by ${col} column`, async () => {
-        const button = renderer.root.findAllByType(TableSortLabel)[i];
-        expect(button.props.direction).toBeUndefined();
-        await act(async () => {
-          button.props.onClick(mockClickEvent);
-        });
-        expect(button.props.direction).toEqual("asc");
+        // The icon changes when clicked, so use the surrounding span.
+        const button = screen.getAllByTestId("SyncAltIcon")[i].closest("span");
+
+        await userEvent.click(button!);
         checkRowOrder(i, "asc");
-        await act(async () => {
-          button.props.onClick(mockClickEvent);
-        });
-        expect(button.props.direction).toEqual("desc");
+
+        await userEvent.click(button!);
         checkRowOrder(i, "desc");
-        await act(async () => {
-          button.props.onClick(mockClickEvent);
-        });
-        expect(button.props.direction).toBeUndefined();
       });
     });
   });
 
   describe("definitionsEnabled & grammaticalInfoEnabled", () => {
+    const defTextId = "reviewEntries.columns.definitions";
+    const posTextId = "reviewEntries.columns.partOfSpeech";
+
     test("show definitions when definitionsEnabled is true", async () => {
       await renderReviewEntriesTable(true, false);
-      const colIds = renderer.root
-        .findAllByType(MRT_TableHeadCell)
-        .map((col) => col.props.header.id);
-      expect(colIds).toContain(ColumnId.Definitions);
-      expect(colIds).not.toContain(ColumnId.PartOfSpeech);
+      expect(screen.queryByText(defTextId)).toBeTruthy();
+      expect(screen.queryByText(posTextId)).toBeNull();
     });
 
     test("show part of speech when grammaticalInfoEnabled is true", async () => {
       await renderReviewEntriesTable(false, true);
-      const colIds = renderer.root
-        .findAllByType(MRT_TableHeadCell)
-        .map((col) => col.props.header.id);
-      expect(colIds).not.toContain(ColumnId.Definitions);
-      expect(colIds).toContain(ColumnId.PartOfSpeech);
+      expect(screen.queryByText(defTextId)).toBeNull();
+      expect(screen.queryByText(posTextId)).toBeTruthy();
     });
   });
 
@@ -183,15 +167,13 @@ describe("ReviewEntriesTable", () => {
 
     test("defaults to en", async () => {
       await renderReviewEntriesTable();
-      // Throws error if no component found with specified `title` prop
-      renderer.root.findByProps({ title: localizedText["en"] });
+      screen.getByLabelText(localizedText["en"]); // throws if none
     });
 
     Object.entries(localizedText).forEach(([lang, text]) => {
       test(lang, async () => {
         await renderReviewEntriesTable(false, false, lang);
-        // Throws error if no component found with specified `title` prop
-        renderer.root.findByProps({ title: text });
+        screen.getByLabelText(text); // throws if none
       });
     });
   });
