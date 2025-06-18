@@ -43,7 +43,6 @@ models/merge-words.ts
 models/note.ts
 models/off-on-setting.ts
 models/password-reset-data.ts
-models/password-reset-request-data.ts
 models/permission.ts
 models/project-role.ts
 models/project.ts
@@ -64,6 +63,7 @@ models/user-created-project.ts
 models/user-edit-step-wrapper.ts
 models/user-edit.ts
 models/user-role.ts
+models/user-stub.ts
 models/user.ts
 models/word.ts
 models/words-per-day-per-user-count.ts

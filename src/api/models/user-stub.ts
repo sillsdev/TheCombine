@@ -15,19 +15,37 @@
 /**
  *
  * @export
- * @interface PasswordResetRequestData
+ * @interface UserStub
  */
-export interface PasswordResetRequestData {
+export interface UserStub {
   /**
    *
    * @type {string}
-   * @memberof PasswordResetRequestData
+   * @memberof UserStub
    */
-  domain: string;
+  id: string;
   /**
    *
    * @type {string}
-   * @memberof PasswordResetRequestData
+   * @memberof UserStub
    */
-  emailOrUsername: string;
+  name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UserStub
+   */
+  username: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof UserStub
+   */
+  hasAvatar: boolean;
+  /**
+   *
+   * @type {string}
+   * @memberof UserStub
+   */
+  roleId?: string | null;
 }
