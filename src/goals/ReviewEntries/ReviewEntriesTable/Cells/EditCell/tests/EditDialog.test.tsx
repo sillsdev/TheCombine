@@ -41,6 +41,8 @@ const mockUpdateWord = jest.fn();
 
 const mockSenseStackId = "stack-o-senses";
 const mockSenseSummaryId = "summary-o-senses";
+
+/** Returns minimalist multi-sense word. */
 const mockWord = (): Word => ({
   ...newWord("vernacular"),
   senses: [newSense("gloss1"), newSense("gloss2")],
@@ -153,16 +155,13 @@ describe("EditDialog", () => {
     expect(screen.queryByTestId(mockSenseSummaryId)).toBeNull();
 
     // Click to turn on summary view
-    await userEvent.click(
-      screen.getByTestId(EditDialogId.ButtonSensesViewToggle)
-    );
+    const button = screen.getByTestId(EditDialogId.ButtonSensesViewToggle);
+    await userEvent.click(button);
     expect(screen.queryByTestId(mockSenseStackId)).toBeNull();
     expect(screen.queryByTestId(mockSenseSummaryId)).toBeTruthy();
 
     // Click again to turn off summary view
-    await userEvent.click(
-      screen.getByTestId(EditDialogId.ButtonSensesViewToggle)
-    );
+    await userEvent.click(button);
     expect(screen.queryByTestId(mockSenseStackId)).toBeTruthy();
     expect(screen.queryByTestId(mockSenseSummaryId)).toBeNull();
   });
