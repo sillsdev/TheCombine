@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@mui/material";
+import "@testing-library/jest-dom";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
@@ -19,18 +20,19 @@ import { ReviewEntries } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { defaultState } from "rootRedux/types";
 import { Goal } from "types/goals";
 import theme from "types/theme";
+import { goalNameToGoal } from "utilities/goalUtilities";
 import { setMatchMedia } from "utilities/testingLibraryUtilities";
 
 jest.mock("backend", () => ({
   getCurrentPermissions: () => mockGetCurrentPermissions(),
   hasGraylistEntries: () => mockHasGraylistEntries(),
 }));
+jest.mock("components/Project/ProjectActions", () => ({}));
 jest.mock("components/Pronunciations/Recorder");
 jest.mock("goals/Redux/GoalActions", () => ({
   asyncAddGoal: (goal: Goal) => mockChooseGoal(goal),
   asyncGetUserEdits: () => jest.fn(),
 }));
-jest.mock("components/Project/ProjectActions", () => ({}));
 jest.mock("rootRedux/hooks", () => {
   return {
     ...jest.requireActual("rootRedux/hooks"),
@@ -41,6 +43,11 @@ jest.mock("rootRedux/hooks", () => {
 const mockChooseGoal = jest.fn();
 const mockGetCurrentPermissions = jest.fn();
 const mockHasGraylistEntries = jest.fn();
+
+/** Total number of goal options, assuming all permissions and a graylist. */
+const optionCount = implementedGoals.length;
+/** `optionCount` +1 for a disabled history button. */
+const noHistoryCount = optionCount + 1;
 
 beforeAll(async () => {
   // Required (along with a `ThemeProvider`) for `useMediaQuery` to work
@@ -57,68 +64,78 @@ beforeEach(() => {
 });
 
 describe("GoalTimeline", () => {
-  it("has the expected number of buttons plus 1 for empty history", async () => {
-    await renderTimeline(implementedGoals);
+  it("has the expected number of buttons", async () => {
+    await renderTimeline();
     const buttons = screen.queryAllByRole("button");
-    expect(buttons).toHaveLength(implementedGoals.length + 1);
+    expect(buttons).toHaveLength(noHistoryCount);
   });
 
   it("has one fewer button if no graylist entry", async () => {
     mockHasGraylistEntries.mockResolvedValue(false);
-    await renderTimeline(implementedGoals);
+    await renderTimeline();
     const buttons = screen.queryAllByRole("button");
-    expect(buttons).toHaveLength(implementedGoals.length);
+    expect(buttons).toHaveLength(noHistoryCount - 1);
   });
 
-  it("only shows goal history for goals with changes", async () => {
-    const cci = new CreateCharInv();
-    cci.changes = {
+  it("has one fewer button if no CharInv permission", async () => {
+    mockGetCurrentPermissions.mockResolvedValue([
+      Permission.MergeAndReviewEntries,
+    ]);
+    await renderTimeline();
+    const buttons = screen.queryAllByRole("button");
+    expect(buttons).toHaveLength(noHistoryCount - 1);
+  });
+
+  it("has the last button disabled for no history", async () => {
+    await renderTimeline();
+    const buttons = screen.queryAllByRole("button");
+    expect(buttons[0]).toBeEnabled();
+    expect(buttons[buttons.length - 1]).toBeDisabled();
+  });
+
+  it("has a button for each history goal with changes", async () => {
+    // Define 5 goals with changes.
+    const [ccic, cciw] = [new CreateCharInv(), new CreateCharInv()];
+    ccic.changes = {
       charChanges: [["a", CharacterStatus.Undecided, CharacterStatus.Accepted]],
       wordChanges: [],
     };
-    const md = new MergeDups();
-    md.changes = { merges: [{ parentIds: ["b"], childIds: ["c"] }] };
-    const rdd = new ReviewDeferredDups();
-    rdd.changes = { merges: [{ parentIds: ["d"], childIds: ["e"] }] };
+    cciw.changes = {
+      charChanges: [],
+      wordChanges: [{ find: "b", replace: "c", words: {} }],
+    };
+    const [md, rdd] = [new MergeDups(), new ReviewDeferredDups()];
+    md.changes = { merges: [{ parentIds: ["d"], childIds: ["e"] }] };
+    rdd.changes = { merges: [{ parentIds: ["f"], childIds: ["g"] }] };
     const re = new ReviewEntries();
-    re.changes = { entryEdits: [{ oldId: "f", newId: "g" }] };
-    const history = [
-      new CreateCharInv(),
-      cci,
-      new MergeDups(),
-      md,
-      new ReviewDeferredDups(),
-      rdd,
-      new ReviewEntries(),
-      re,
-    ];
+    re.changes = { entryEdits: [{ oldId: "h", newId: "i" }] };
 
-    await renderTimeline(implementedGoals, history);
+    // Render with history containing goals both with and without changes.
+    const changeless = implementedGoals.map(goalNameToGoal);
+    await renderTimeline([ccic, cciw, md, ...changeless, rdd, re]);
+
+    // Verify that only 4 history buttons are present and all are enabled.
     const buttons = screen.queryAllByRole("button");
-    expect(buttons).toHaveLength(implementedGoals.length + 4);
+    expect(buttons).toHaveLength(optionCount + 5);
+    for (const b of buttons) {
+      expect(b).toBeEnabled();
+    }
   });
 
   it("selects a goal from suggestions", async () => {
-    const goalNum = 2;
+    const goalName = implementedGoals[2];
     await renderTimeline();
-    await userEvent.click(
-      screen.getByText(`${implementedGoals[goalNum]}.title`)
-    );
+    expect(mockChooseGoal).not.toHaveBeenCalled();
+
+    await userEvent.click(screen.getByText(`${goalName}.title`));
     expect(mockChooseGoal).toHaveBeenCalledTimes(1);
-    const calledGoalName = mockChooseGoal.mock.calls[0][0].name;
-    expect(calledGoalName).toEqual(implementedGoals[goalNum]);
+    const calledGoal = mockChooseGoal.mock.calls[0][0];
+    expect(calledGoal.name).toEqual(goalName);
   });
 });
 
-async function renderTimeline(
-  allGoals = [...implementedGoals],
-  history: Goal[] = []
-): Promise<void> {
-  const goalsState: GoalsState = {
-    ...defaultState.goalsState,
-    allGoals,
-    history,
-  };
+async function renderTimeline(history: Goal[] = []): Promise<void> {
+  const goalsState: GoalsState = { ...defaultState.goalsState, history };
   await act(async () => {
     render(
       <ThemeProvider theme={theme}>
