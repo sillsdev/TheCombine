@@ -1,4 +1,4 @@
-import { Box, Button, Grid2, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { Fragment, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -35,13 +35,14 @@ export default function GoalHistoryButton(
     : null;
 
   return (
-    <Button onClick={onClick} sx={{ minWidth: "225px" }} variant="outlined">
-      <Stack
-        spacing={1}
-        sx={{ alignItems: "flex-start", height: "100%", width: "100%" }}
-      >
+    <Button
+      onClick={onClick}
+      sx={{ alignItems: "flex-start", minWidth: "225px", textAlign: "start" }}
+      variant="outlined"
+    >
+      <Stack spacing={1}>
         {/* Goal name */}
-        <Typography sx={{ textAlign: "start" }} variant="h6">
+        <Typography variant="h6">
           <Box
             component="span" // to be inline with the title
             sx={{ marginInlineEnd: 1, verticalAlign: "middle" }}
@@ -53,15 +54,11 @@ export default function GoalHistoryButton(
 
         {/* Change datetime */}
         {!!goal.modified && (
-          <Typography sx={{ textAlign: "start" }} variant="caption">
-            {modifiedFormatted}
-          </Typography>
+          <Typography variant="caption">{modifiedFormatted}</Typography>
         )}
 
         {/* Change summary */}
-        <Grid2 container sx={{ height: "100%", textAlign: "start" }}>
-          {goal.changes ? getCompletedGoalInfo(goal) : null}
-        </Grid2>
+        {!!goal.changes && <div>{getCompletedGoalInfo(goal)}</div>}
       </Stack>
     </Button>
   );
