@@ -3,7 +3,7 @@ import {
   Button,
   Grid2,
   Stack,
-  Theme,
+  SxProps,
   Typography,
   useMediaQuery,
 } from "@mui/material";
@@ -32,7 +32,7 @@ export default function GoalTimeline(): ReactElement {
     (state: StoreState) => state.goalsState
   );
 
-  const small = useMediaQuery<Theme>((th) => th.breakpoints.down("md"));
+  const small = useMediaQuery((th) => th.breakpoints.down("md"));
 
   const [goalOptions, setGoalOptions] = useState<GoalName[]>([]);
   const [hasGraylist, setHasGraylist] = useState(false);
@@ -59,6 +59,12 @@ export default function GoalTimeline(): ReactElement {
     );
   }, [allGoals, hasGraylist, permissions]);
 
+  const thinScrollX: SxProps = {
+    overflowX: "auto",
+    scrollbarColor: "#ccc transparent",
+    scrollbarWidth: "thin",
+  };
+
   /* Note: reverse() also does an in-place reversal,
    * which is only okay because we are creating a new array with filter(). */
   const goalHistory = history.filter(hasChanges).reverse();
@@ -69,8 +75,8 @@ export default function GoalTimeline(): ReactElement {
       <Grid2
         container
         justifyContent="space-evenly"
-        spacing={3}
-        sx={{ p: 2, py: small ? 2 : 4 }}
+        spacing={small ? 2 : 3}
+        sx={small ? { p: 2 } : { px: 3, py: 4 }}
       >
         {goalOptions.map((g) => (
           <Grid2 key={g} size={{ xs: 6, md: 3 }}>
@@ -88,15 +94,7 @@ export default function GoalTimeline(): ReactElement {
         <Typography variant="h6" gutterBottom>
           {t("goal.selector.past")}
         </Typography>
-        <Stack
-          direction="row"
-          spacing={2}
-          sx={{
-            overflowX: "auto",
-            scrollbarColor: "#ccc transparent",
-            scrollbarWidth: "thin",
-          }}
-        >
+        <Stack direction="row" spacing={2} sx={thinScrollX}>
           {goalHistory.length ? (
             goalHistory.map((g, i) => (
               <GoalHistoryButton

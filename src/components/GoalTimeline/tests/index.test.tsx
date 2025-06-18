@@ -94,7 +94,7 @@ describe("GoalTimeline", () => {
   });
 
   it("has a button for each history goal with changes", async () => {
-    // Define 5 goals with changes.
+    // Define goals with changes.
     const [ccic, cciw] = [new CreateCharInv(), new CreateCharInv()];
     ccic.changes = {
       charChanges: [["a", CharacterStatus.Undecided, CharacterStatus.Accepted]],
@@ -113,13 +113,12 @@ describe("GoalTimeline", () => {
     // Render with history containing goals both with and without changes.
     const changeless = implementedGoals.map(goalNameToGoal);
     await renderTimeline([ccic, cciw, md, ...changeless, rdd, re]);
+    const historyCount = 5;
 
-    // Verify that only 4 history buttons are present and all are enabled.
+    // Verify that only history goals with changes have buttons, all enabled.
     const buttons = screen.queryAllByRole("button");
-    expect(buttons).toHaveLength(optionCount + 5);
-    for (const b of buttons) {
-      expect(b).toBeEnabled();
-    }
+    expect(buttons).toHaveLength(optionCount + historyCount);
+    buttons.forEach((b) => expect(b).toBeEnabled());
   });
 
   it("selects a goal from suggestions", async () => {
