@@ -1,6 +1,6 @@
 import { Droppable } from "@hello-pangea/dnd";
 import { ArrowForwardIos, HelpOutline } from "@mui/icons-material";
-import { Grid, IconButton, Typography } from "@mui/material";
+import { Grid2, IconButton, Typography } from "@mui/material";
 import { type ReactElement } from "react";
 
 import SidebarDragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/SidebarDragSense";
@@ -29,21 +29,24 @@ export default function SidebarDrop(): ReactElement {
           {...providedDroppable.droppableProps}
           style={{ backgroundColor: "lightblue", height: "100%", padding: 20 }}
         >
-          <Grid container justifyContent="space-between">
+          <Grid2 container justifyContent="space-between">
             <IconButton
               id="sidebar-close"
               onClick={() => dispatch(setSidebar())}
             >
               <ArrowForwardIos />
             </IconButton>
+
             <IconButton
               id="sidebar-help"
               onClick={() => openUserGuide("goals.html#merge-a-sense")}
             >
               <HelpOutline />
             </IconButton>
-          </Grid>
+          </Grid2>
+
           <Typography variant="h5">{vernacular}</Typography>
+
           {sidebar.mergeSenses.map((mergeSense, index) => (
             <SidebarDragSense
               index={index}
