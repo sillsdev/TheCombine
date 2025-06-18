@@ -28,6 +28,7 @@ jest.mock(
     ),
   })
 );
+jest.mock("i18n", () => ({})); // else `thrown: "Error: AggregateError`
 jest.mock("rootRedux/hooks", () => ({
   ...jest.requireActual("rootRedux/hooks"),
   useAppDispatch: () => mockDispatch,
