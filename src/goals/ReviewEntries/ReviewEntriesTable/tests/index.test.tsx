@@ -91,23 +91,18 @@ describe("ReviewEntriesTable", () => {
 
     /** Checks if the WordsMock.tsx words have been sorted by the given column. */
     const checkRowOrder = (col: number, dir: "asc" | "desc"): void => {
-      // The mock verns are distinct strings,
-      // so they can be used to determine row permutation.
-      const rows = screen.getAllByRole("row").slice(1);
-      const sorted = verns.map((v) =>
-        rows.findIndex((r) => within(r).queryByText(v))
-      );
+      // Use distinct mock verns to determine sorted order.
+      const sorted = screen
+        .getAllByRole("row")
+        .slice(1)
+        .map((r) => verns.findIndex((v) => within(r).queryByText(v)));
 
-      // Get what the row order should be.
+      // Verify the order is right.
       const order = [...sortOrder[col]];
       if (dir === "desc") {
         order.reverse();
       }
-
-      // Verify the permutation.
-      sorted.forEach((rowIndex, wordIndex) => {
-        expect(order[rowIndex]).toEqual(wordIndex);
-      });
+      expect(sorted).toEqual(order);
     };
 
     /** The accessor columns in default order. */
