@@ -30,8 +30,6 @@ export enum CharInvCancelSaveIds {
   DialogCancel = "char-inv-cancel-dialog",
   DialogCancelButtonNo = "char-inv-cancel-dialog-no-button",
   DialogCancelButtonYes = "char-inv-cancel-dialog-yes-button",
-  DialogCancelText = "char-inv-cancel-dialog-text",
-  DialogCancelTitle = "char-inv-cancel-dialog-title",
 }
 
 /**
@@ -69,6 +67,7 @@ export default function CharacterEntry(): ReactElement {
           {/* Save button */}
           <LoadingButton
             buttonProps={{
+              "data-testid": CharInvCancelSaveIds.ButtonSave,
               id: CharInvCancelSaveIds.ButtonSave,
               onClick: () => save(),
             }}
@@ -80,6 +79,7 @@ export default function CharacterEntry(): ReactElement {
           {/* Cancel button */}
           <Button
             color="secondary"
+            data-testid={CharInvCancelSaveIds.ButtonCancel}
             id={CharInvCancelSaveIds.ButtonCancel}
             onClick={() => setCancelDialogOpen(true)}
             variant="contained"
@@ -144,7 +144,11 @@ function CharactersInput(props: CharactersInputProps): ReactElement {
       autoComplete="off"
       fullWidth
       id={props.id}
-      inputProps={{ spellCheck: false, style: { letterSpacing: 5 } }}
+      inputProps={{
+        "data-testid": props.id,
+        spellCheck: false,
+        style: { letterSpacing: 5 },
+      }}
       label={props.label}
       name="characters"
       onChange={(e) =>
@@ -169,18 +173,15 @@ function CancelDialog(props: CancelDialogProps): ReactElement {
 
   return (
     <Dialog
-      aria-describedby="alert-dialog-description"
-      aria-labelledby="alert-dialog-title"
+      data-testid={CharInvCancelSaveIds.DialogCancel}
       id={CharInvCancelSaveIds.DialogCancel}
       onClose={() => props.onClose()}
       open={props.open}
     >
-      <DialogTitle id={CharInvCancelSaveIds.DialogCancelTitle}>
-        {t("charInventory.dialog.title")}
-      </DialogTitle>
+      <DialogTitle>{t("charInventory.dialog.title")}</DialogTitle>
 
       <DialogContent>
-        <DialogContentText id={CharInvCancelSaveIds.DialogCancelText}>
+        <DialogContentText>
           {t("charInventory.dialog.content")}
         </DialogContentText>
       </DialogContent>
@@ -189,6 +190,7 @@ function CancelDialog(props: CancelDialogProps): ReactElement {
         <Button
           autoFocus
           color="secondary"
+          data-testid={CharInvCancelSaveIds.DialogCancelButtonYes}
           id={CharInvCancelSaveIds.DialogCancelButtonYes}
           onClick={() => exit()}
           variant="contained"
@@ -197,6 +199,7 @@ function CancelDialog(props: CancelDialogProps): ReactElement {
         </Button>
 
         <Button
+          data-testid={CharInvCancelSaveIds.DialogCancelButtonNo}
           id={CharInvCancelSaveIds.DialogCancelButtonNo}
           onClick={() => props.onClose()}
         >
