@@ -66,9 +66,8 @@ const preloadedState = {
   ...persistedDefaultState,
   goalsState: {
     ...defaultGoalsState,
-    allGoalTypes: [],
+    allGoals: [],
     currentGoal: new MergeDups(),
-    goalTypeSuggestions: [],
     history: [mockGoal],
   },
 };
