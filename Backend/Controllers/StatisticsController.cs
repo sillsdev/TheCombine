@@ -12,7 +12,6 @@ namespace BackendFramework.Controllers
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/statistics")]
 
-
     public class StatisticsController : Controller
     {
         private readonly IStatisticsService _statService;
@@ -31,18 +30,12 @@ namespace BackendFramework.Controllers
         /// <returns> A list of <see cref="SemanticDomainCount"/>s </returns>
         [HttpGet("GetSemanticDomainCounts", Name = "GetSemanticDomainCounts")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SemanticDomainCount>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetSemanticDomainCounts(string projectId, string lang)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Statistics, projectId))
             {
                 return Forbid();
-            }
-
-            // Ensure project exists.
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
             }
 
             return Ok(await _statService.GetSemanticDomainCounts(projectId, lang));
@@ -52,18 +45,12 @@ namespace BackendFramework.Controllers
         /// <returns> A list of <see cref="WordsPerDayPerUserCount"/>s </returns>
         [HttpGet("GetWordsPerDayPerUserCounts", Name = "GetWordsPerDayPerUserCounts")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<WordsPerDayPerUserCount>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetWordsPerDayPerUserCounts(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Statistics, projectId))
             {
                 return Forbid();
-            }
-
-            // Ensure project exists.
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
             }
 
             return Ok(await _statService.GetWordsPerDayPerUserCounts(projectId));
@@ -72,6 +59,8 @@ namespace BackendFramework.Controllers
         /// <summary> Get a <see cref="ChartRootData"/> to generate an estimate Line Chart </summary>
         [HttpGet("GetProgressEstimationLineChartRoot", Name = "GetProgressEstimationLineChartRoot")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChartRootData))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetProgressEstimationLineChartRoot(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Statistics, projectId))
@@ -79,11 +68,10 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
-            // Ensure project exists.
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return NotFound(projectId);
+                return NotFound();
             }
 
             return Ok(await _statService.GetProgressEstimationLineChartRoot(projectId, proj.WorkshopSchedule));
@@ -92,18 +80,12 @@ namespace BackendFramework.Controllers
         /// <summary> Get a <see cref="ChartRootData"/> to generate a Line Chart </summary>
         [HttpGet("GetLineChartRootData", Name = "GetLineChartRootData")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChartRootData))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetLineChartRootData(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Statistics, projectId))
             {
                 return Forbid();
-            }
-
-            // Ensure project exists.
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
             }
 
             return Ok(await _statService.GetLineChartRootData(projectId));
@@ -113,18 +95,12 @@ namespace BackendFramework.Controllers
         /// <returns> A list of <see cref="SemanticDomainUserCount"/>s </returns>
         [HttpGet("GetSemanticDomainUserCounts", Name = "GetSemanticDomainUserCounts")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SemanticDomainUserCount>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetSemanticDomainUserCounts(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Statistics, projectId))
             {
                 return Forbid();
-            }
-
-            //Ensure project exists.
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
             }
 
             return Ok(await _statService.GetSemanticDomainUserCounts(projectId));
