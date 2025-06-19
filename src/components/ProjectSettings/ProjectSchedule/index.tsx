@@ -1,5 +1,5 @@
 import { CalendarMonth, DateRange, EventRepeat } from "@mui/icons-material";
-import { Button, Grid, Typography } from "@mui/material";
+import { Button, Grid2, Stack, Typography } from "@mui/material";
 import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
@@ -57,22 +57,9 @@ export default function ProjectSchedule(
 
   return (
     <>
-      <Grid
-        container
-        direction="column"
-        justifyContent="flex-start"
-        alignItems="center"
-        spacing={1}
-      >
+      <Grid2 container spacing={1}>
         {!props.readOnly && (
-          <Grid
-            item
-            container
-            direction="row"
-            justifyContent="space-evenly"
-            alignItems="center"
-            xs={12}
-          >
+          <Grid2 container justifyContent="space-evenly" size={12}>
             <IconButtonWithTooltip
               icon={<CalendarMonth />}
               textId="projectSettings.schedule.setDays"
@@ -91,19 +78,11 @@ export default function ProjectSchedule(
               onClick={() => setShowRemove(true)}
               buttonId={"Project-Schedule-removeDays"}
             />
-          </Grid>
+          </Grid2>
         )}
-        <Grid
-          item
-          container
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          xs={12}
-        >
-          <CalendarView projectSchedule={projectSchedule} />
-        </Grid>
-      </Grid>
+
+        <CalendarView projectSchedule={projectSchedule} />
+      </Grid2>
 
       <Modal
         isOpen={showSelector}
@@ -136,10 +115,10 @@ export default function ProjectSchedule(
         shouldCloseOnOverlayClick={false}
         onRequestClose={() => setShowRemove(false)}
       >
-        <Typography>{t("projectSettings.schedule.removeAll")}</Typography>
+        <Stack spacing={2}>
+          <Typography>{t("projectSettings.schedule.removeAll")}</Typography>
 
-        <Grid container justifyContent="flex-end" spacing={2}>
-          <Grid item marginTop={1}>
+          <Stack direction="row" justifyContent="flex-end" spacing={2}>
             <Button
               variant="contained"
               onClick={() => setShowRemove(false)}
@@ -147,8 +126,7 @@ export default function ProjectSchedule(
             >
               {t("buttons.cancel")}
             </Button>
-          </Grid>
-          <Grid item marginTop={1}>
+
             <Button
               variant="contained"
               onClick={() => handleRemoveAll()}
@@ -156,8 +134,8 @@ export default function ProjectSchedule(
             >
               {t("buttons.confirm")}
             </Button>
-          </Grid>
-        </Grid>
+          </Stack>
+        </Stack>
       </Modal>
     </>
   );
