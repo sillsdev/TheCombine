@@ -37,7 +37,7 @@ export default function BaseSettings(props: BaseSettingsProps): ReactElement {
     >
       <AccordionSummary expandIcon={<ExpandMore />}>
         <Stack direction="row" spacing={1}>
-          <Box sx={{ color: "gray", paddingTop: 0.5 }}>{props.icon}</Box>
+          <Box sx={{ color: "grey", paddingTop: 0.5 }}>{props.icon}</Box>
           <Typography variant="h5">{props.title}</Typography>
         </Stack>
       </AccordionSummary>
