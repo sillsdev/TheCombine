@@ -13,7 +13,12 @@ jest.mock("backend", () => ({
   getAllUsers: (...args: any[]) => mockGetAllUsers(...args),
   getBannerText: (...args: any[]) => mockGetBannerText(...args),
 }));
-jest.mock("components/Project/ProjectActions", () => ({}));
+jest.mock("components/Project/ProjectActions", () => ({
+  clearCurrentProject: () => jest.fn(),
+}));
+jest.mock("rootRedux/hooks", () => ({
+  useAppDispatch: () => jest.fn(),
+}));
 
 const setupMocks = (): void => {
   mockGetAllProjects.mockResolvedValue([]);
