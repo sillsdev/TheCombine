@@ -23,7 +23,7 @@ export const enum SiteSettingsTab {
 
 export default function SiteSettings(): ReactElement {
   const dispatch = useAppDispatch();
-        
+
   const [tab, setTab] = useState(SiteSettingsTab.Projects);
 
   useEffect(() => dispatch(clearCurrentProject()), [dispatch]);
