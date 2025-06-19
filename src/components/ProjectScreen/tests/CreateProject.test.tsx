@@ -61,11 +61,13 @@ beforeEach(async () => {
 
 describe("CreateProject", () => {
   it("errors on taken name", async () => {
+    // Input project name and vernacular language.
     const [nameInput, vernInput] = screen.getAllByRole("textbox");
     await userEvent.type(nameInput, "non-empty-name");
     await userEvent.type(vernInput, "non-empty-code");
-    expect(screen.queryByText(CreateProjectTextId.NameTaken)).toBeNull();
 
+    // Error appears when duplicate name submitted.
+    expect(screen.queryByText(CreateProjectTextId.NameTaken)).toBeNull();
     mockProjectDuplicateCheck.mockResolvedValueOnce(true);
     await userEvent.click(screen.getByTestId(CreateProjectId.ButtonSubmit));
     expect(screen.queryByText(CreateProjectTextId.NameTaken)).toBeTruthy();
