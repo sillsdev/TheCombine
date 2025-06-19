@@ -5,6 +5,7 @@ import {
   CardContent,
   CardHeader,
   IconButton,
+  Stack,
   Typography,
 } from "@mui/material";
 import { Fragment, ReactElement, useEffect, useState } from "react";
@@ -89,13 +90,7 @@ export default function WordCard(props: WordCardProps): ReactElement {
         buttonLabel={
           full ? WordCardLabel.ButtonCondense : WordCardLabel.ButtonExpand
         }
-        icon={
-          full ? (
-            <CloseFullscreen sx={{ color: (t) => t.palette.grey[900] }} />
-          ) : (
-            <OpenInFull sx={{ color: (t) => t.palette.grey[600] }} />
-          )
-        }
+        icon={full ? <CloseFullscreen /> : <OpenInFull />}
         onClick={() => setFull(!full)}
       />
     </>
@@ -130,14 +125,16 @@ export default function WordCard(props: WordCardProps): ReactElement {
 
         {/* Senses */}
         {full ? (
-          senses.map((s) => (
-            <SenseCard
-              key={s.guid}
-              languages={languages}
-              provenance={provenance}
-              sense={s}
-            />
-          ))
+          <Stack spacing={1}>
+            {senses.map((s) => (
+              <SenseCard
+                key={s.guid}
+                languages={languages}
+                provenance={provenance}
+                sense={s}
+              />
+            ))}
+          </Stack>
         ) : (
           <SummarySenseCard senses={senses} />
         )}

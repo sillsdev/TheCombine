@@ -305,14 +305,8 @@ export default function ReviewEntriesTable(props: {
       filterFn: ff.filterFnPronunciations(speakers),
       Header: (
         <>
-          <FiberManualRecord
-            fontSize="small"
-            sx={{ color: (t) => t.palette.error.main }}
-          />
-          <PlayArrow
-            fontSize="small"
-            sx={{ color: (t) => t.palette.success.main }}
-          />
+          <FiberManualRecord fontSize="small" sx={{ color: "error.main" }} />
+          <PlayArrow fontSize="small" sx={{ color: "success.main" }} />
         </>
       ),
       header: t("reviewEntries.columns.pronunciations"),
@@ -344,12 +338,7 @@ export default function ReviewEntriesTable(props: {
     columnHelper.accessor("flag", {
       Cell: ({ row }: CellProps) => <Cell.Flag word={row.original} />,
       filterFn: ff.filterFnFlag,
-      Header: (
-        <FlagIcon
-          fontSize="small"
-          sx={{ color: (t) => t.palette.error.main }}
-        />
-      ),
+      Header: <FlagIcon fontSize="small" sx={{ color: "error.main" }} />,
       header: t("reviewEntries.columns.flag"),
       id: ColumnId.Flag,
       muiTableHeadCellProps: {
