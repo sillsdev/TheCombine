@@ -1,4 +1,4 @@
-import { Button as MockFIP, ButtonProps, Input as MockLP } from "@mui/material";
+import { Button as MockFIB, ButtonProps, Input as MockLP } from "@mui/material";
 import "@testing-library/jest-dom";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -37,7 +37,7 @@ jest.mock("components/Buttons", () => ({
     updateFile: (file: File) => void;
   }) => {
     const { buttonProps, updateFile } = props;
-    return <MockFIP {...buttonProps} onClick={() => updateFile(mockFile)} />;
+    return <MockFIB {...buttonProps} onClick={() => updateFile(mockFile)} />;
   },
 }));
 // Mock "i18n", else `thrown: "Error: AggregateError [...]`
