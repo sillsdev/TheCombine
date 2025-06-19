@@ -1,4 +1,4 @@
-import { Dialog, Divider, Grid2, Paper } from "@mui/material";
+import { Dialog, Divider, Paper, Stack, useMediaQuery } from "@mui/material";
 import {
   ReactElement,
   useCallback,
@@ -19,18 +19,10 @@ import { closeTree, openTree } from "components/TreeView/Redux/TreeViewActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { newSemanticDomain } from "types/semanticDomain";
-import theme from "types/theme";
 import { DomainWord } from "types/word";
 import { useWindowSize } from "utilities/useWindowSize";
 
-export const smallScreenThreshold = 960;
 export const treeViewDialogId = "tree-view-dialog";
-
-const paperStyle = {
-  marginInline: "auto",
-  maxWidth: 900,
-  padding: theme.spacing(2),
-};
 
 /**
  * Allows users to add words to a project, add senses to an existing word,
@@ -62,10 +54,10 @@ export default function DataEntry(): ReactElement {
   const [domainWords, setDomainWords] = useState<DomainWord[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [height, setHeight] = useState<number>();
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [questionsVisible, setQuestionsVisible] = useState(false);
 
-  const { windowWidth } = useWindowSize();
+  const isSmallScreen = useMediaQuery((th) => th.breakpoints.down("md"));
+  const { windowHeight } = useWindowSize();
 
   const updateHeight = useCallback(() => {
     setHeight(dataEntryRef.current?.clientHeight);
@@ -75,11 +67,6 @@ export default function DataEntry(): ReactElement {
   useLayoutEffect(() => {
     dispatch(openTree());
   }, [dispatch]);
-
-  // When window width changes, check if there's space for the sidebar.
-  useLayoutEffect(() => {
-    setIsSmallScreen(windowWidth < smallScreenThreshold);
-  }, [windowWidth]);
 
   // When domain changes, fetch full domain details.
   useEffect(() => {
@@ -100,7 +87,7 @@ export default function DataEntry(): ReactElement {
   // Recalculate height if something changed that might affect it.
   useEffect(() => {
     updateHeight();
-  }, [domain, questionsVisible, updateHeight, windowWidth]);
+  }, [domain, questionsVisible, updateHeight, windowHeight]);
 
   const returnControlToCaller = useCallback(async () => {
     setDomainWords(
@@ -112,20 +99,21 @@ export default function DataEntry(): ReactElement {
   return (
     <>
       {!open && !!domain.guid && (
-        <Grid2
-          container
+        <Stack
+          alignItems="flex-start"
+          direction="row"
           justifyContent="center"
-          spacing={theme.spacing(2)}
-          wrap={"nowrap"}
+          spacing={2}
         >
-          <Grid2>
-            <Paper ref={dataEntryRef} style={paperStyle}>
+          {/* Domain data entry */}
+          <Paper ref={dataEntryRef} sx={{ maxWidth: 900, p: 2 }}>
+            <Stack divider={<Divider />} spacing={2}>
               <DataEntryHeader
                 domain={domain}
                 questionsVisible={questionsVisible}
                 setQuestionVisibility={setQuestionsVisible}
               />
-              <Divider sx={{ my: theme.spacing(2) }} />
+
               <DataEntryTable
                 hasDrawerButton={isSmallScreen && domainWords.length > 0}
                 hideQuestions={() => setQuestionsVisible(false)}
@@ -135,9 +123,10 @@ export default function DataEntry(): ReactElement {
                 showExistingData={() => setDrawerOpen(true)}
                 updateHeight={updateHeight}
               />
-            </Paper>
-          </Grid2>
+            </Stack>
+          </Paper>
 
+          {/* Existing domain entries */}
           <ExistingDataTable
             domain={domain}
             domainWords={domainWords}
@@ -146,8 +135,9 @@ export default function DataEntry(): ReactElement {
             toggleDrawer={setDrawerOpen}
             typeDrawer={isSmallScreen}
           />
-        </Grid2>
+        </Stack>
       )}
+
       <Dialog id={treeViewDialogId} fullScreen open={open}>
         <AppBar />
         <TreeView returnControlToCaller={returnControlToCaller} />
