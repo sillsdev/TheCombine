@@ -23,8 +23,8 @@ import {
   newWord,
 } from "types/word";
 
-jest.mock("react-beautiful-dnd", () => ({
-  ...jest.requireActual("react-beautiful-dnd"),
+jest.mock("@hello-pangea/dnd", () => ({
+  ...jest.requireActual("@hello-pangea/dnd"),
   Draggable: ({ children }: any) =>
     children({ draggableProps: {}, innerRef: jest.fn() }, {}, {}),
   Droppable: ({ children }: any) => children({ innerRef: jest.fn() }, {}),
