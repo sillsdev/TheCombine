@@ -621,11 +621,10 @@ export async function getSemanticDomainCounts(
 }
 
 export async function getSemanticDomainUserCount(
-  projectId: string,
-  lang?: string
+  projectId: string
 ): Promise<Array<SemanticDomainUserCount> | undefined> {
   const response = await statisticsApi.getSemanticDomainUserCounts(
-    { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
+    { projectId: projectId },
     defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.
@@ -666,11 +665,8 @@ export async function verifyCaptchaToken(token: string): Promise<boolean> {
 export async function resetPasswordRequest(
   emailOrUsername: string
 ): Promise<boolean> {
-  const domain = window.location.origin;
   return await userApi
-    .resetPasswordRequest({
-      passwordResetRequestData: { domain, emailOrUsername },
-    })
+    .resetPasswordRequest({ body: emailOrUsername })
     .then(() => true)
     .catch(() => false);
 }
@@ -745,6 +741,7 @@ export async function getUserIdByEmailOrUsername(
     .data;
 }
 
+/** Note: Only a site admins can update a user other than themself. */
 export async function updateUser(user: User): Promise<void> {
   await userApi.updateUser({ userId: user.id, user }, defaultOptions());
   if (user.id === LocalStorage.getUserId()) {
@@ -755,10 +752,6 @@ export async function updateUser(user: User): Promise<void> {
 /** Note: Only usable by site admins. */
 export async function deleteUser(userId: string): Promise<void> {
   await userApi.deleteUser({ userId }, defaultOptions());
-}
-
-export async function isSiteAdmin(): Promise<boolean> {
-  return (await userApi.isUserSiteAdmin(defaultOptions())).data;
 }
 
 /* UserEditController.cs */
