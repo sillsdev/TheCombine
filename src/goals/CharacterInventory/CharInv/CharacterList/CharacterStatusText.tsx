@@ -3,7 +3,6 @@ import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { CharacterStatus } from "goals/CharacterInventory/CharacterInventoryTypes";
-import { themeColors } from "types/theme";
 
 interface CharacterStatusTextProps {
   status: CharacterStatus;
@@ -17,24 +16,22 @@ export default function CharacterStatusText(
 
   return (
     <Typography
-      variant="body2"
-      color="textSecondary"
-      component="p"
-      style={CharacterStatusStyle(props.status)}
       display={props.inline ? "inline" : "initial"}
+      sx={{ color: CharStatusColor(props.status) }}
+      variant="body2"
     >
       {t(`buttons.${props.status}`)}
     </Typography>
   );
 }
 
-function CharacterStatusStyle(status: CharacterStatus): { color: string } {
+function CharStatusColor(status: CharacterStatus): string {
   switch (status) {
     case CharacterStatus.Accepted:
-      return { color: themeColors.success };
+      return "success.main";
     case CharacterStatus.Rejected:
-      return { color: themeColors.error };
+      return "error.main";
     case CharacterStatus.Undecided:
-      return { color: themeColors.primary };
+      return "primary.main";
   }
 }
