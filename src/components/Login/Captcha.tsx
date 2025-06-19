@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 
 import { verifyCaptchaToken } from "backend";
 import { RuntimeConfig } from "types/runtimeConfig";
-import theme from "types/theme";
 
 export interface CaptchaProps {
   /** Parent function to call when CAPTCHA succeeds or fails. */
@@ -42,7 +41,6 @@ export default function Captcha(props: CaptchaProps): ReactElement {
       onSuccess={verify}
       options={{ language: i18n.resolvedLanguage, theme: "light" }}
       siteKey={RuntimeConfig.getInstance().captchaSiteKey()}
-      style={{ marginBottom: theme.spacing(1) }}
     />
   ) : (
     <Fragment />
