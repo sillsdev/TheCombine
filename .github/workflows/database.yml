@@ -1,8 +1,14 @@
 name: database
 
 on:
+  push:
+    branches: [master]
   pull_request:
     branches: [master]
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref_protected && github.run_id || github.event.pull_request.number }}
 
 permissions: # added using https://github.com/step-security/secure-workflows
   contents: read
@@ -10,7 +16,7 @@ permissions: # added using https://github.com/step-security/secure-workflows
 jobs:
   docker_build:
     if: ${{ github.event.type }} == "PullRequest"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         arch: ["amd64", "arm64"]
@@ -30,7 +36,7 @@ jobs:
       # For subfolders, currently a full checkout is required.
       # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
       - name: Checkout repository
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
       - name: Set up QEMU

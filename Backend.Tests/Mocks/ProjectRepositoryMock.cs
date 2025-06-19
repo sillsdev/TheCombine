@@ -9,7 +9,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    sealed internal class ProjectRepositoryMock : IProjectRepository
+    internal sealed class ProjectRepositoryMock : IProjectRepository
     {
         private readonly List<Project> _projects;
 
@@ -61,8 +61,7 @@ namespace Backend.Tests.Mocks
         /// </summary>
         public Task<bool> Delete(string projectId)
         {
-            var foundProject = _projects.Single(project => project.Id == projectId);
-            var success = _projects.Remove(foundProject);
+            var rmCount = _projects.RemoveAll(project => project.Id == projectId);
 
             // Clean up any files stored on disk for this project.
             var projectFilePath = FileStorage.GetProjectDir(projectId);
@@ -70,14 +69,13 @@ namespace Backend.Tests.Mocks
             {
                 Directory.Delete(projectFilePath, true);
             }
-            return Task.FromResult(success);
+            return Task.FromResult(rmCount > 0);
         }
 
         public Task<ResultOfUpdate> Update(string projectId, Project project)
         {
-            var foundProject = _projects.Single(u => u.Id == projectId);
-            var success = _projects.Remove(foundProject);
-            if (!success)
+            var rmCount = _projects.RemoveAll(u => u.Id == projectId);
+            if (rmCount == 0)
             {
                 return Task.FromResult(ResultOfUpdate.NotFound);
             }

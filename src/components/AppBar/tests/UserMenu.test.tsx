@@ -1,44 +1,28 @@
-import { Button, MenuItem } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
-import { act, create, ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import UserMenu, { UserMenuList } from "components/AppBar/UserMenu";
+import { defaultState } from "rootRedux/types";
 import { Path } from "types/path";
 import theme from "types/theme";
 
-jest.mock("backend", () => ({
-  isSiteAdmin: () => mockIsSiteAdmin(),
-}));
 jest.mock("backend/localStorage", () => ({
   getAvatar: jest.fn(),
   getCurrentUser: jest.fn(),
 }));
 jest.mock("components/Project/ProjectActions", () => ({}));
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router", () => ({
   useNavigate: jest.fn(),
 }));
 
-let testRenderer: ReactTestRenderer;
-
-const mockStore = configureMockStore()();
-
-const mockIsSiteAdmin = jest.fn();
-
-function setMockFunctions(): void {
-  mockIsSiteAdmin.mockResolvedValue(false);
-}
-
-beforeEach(() => {
-  jest.clearAllMocks();
-  setMockFunctions();
-});
+const mockStore = configureMockStore()(defaultState);
 
 describe("UserMenu", () => {
   it("renders", async () => {
     await act(async () => {
-      testRenderer = create(
+      render(
         <ThemeProvider theme={theme}>
           <Provider store={mockStore}>
             <UserMenu currentTab={Path.Root} />
@@ -46,23 +30,24 @@ describe("UserMenu", () => {
         </ThemeProvider>
       );
     });
-    expect(testRenderer.root.findAllByType(Button).length).toEqual(1);
+    expect(screen.queryAllByRole("button")).toHaveLength(1);
   });
 });
 
 describe("UserMenuList", () => {
   it("has one more item for admins (Site Settings)", async () => {
     await renderMenuList();
-    const normalMenuItems = testRenderer.root.findAllByType(MenuItem).length;
+    const normalMenuItems = screen.queryAllByRole("menuitem").length;
+    cleanup();
     await renderMenuList(true);
-    const adminMenuItems = testRenderer.root.findAllByType(MenuItem).length;
+    const adminMenuItems = screen.queryAllByRole("menuitem").length;
     expect(adminMenuItems).toBe(normalMenuItems + 1);
   });
 });
 
 async function renderMenuList(isAdmin = false): Promise<void> {
   await act(async () => {
-    testRenderer = create(
+    render(
       <Provider store={mockStore}>
         <UserMenuList isAdmin={isAdmin} onSelect={jest.fn()} />
       </Provider>

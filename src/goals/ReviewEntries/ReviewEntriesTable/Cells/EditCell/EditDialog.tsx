@@ -17,7 +17,6 @@ import {
   IconButton,
   MenuItem,
   Select,
-  TextField,
   type SelectChangeEvent,
 } from "@mui/material";
 import { grey, yellow } from "@mui/material/colors";
@@ -50,7 +49,10 @@ import {
   newPronunciation,
   updateSpeakerInAudio,
 } from "types/word";
-import { TextFieldWithFont } from "utilities/fontComponents";
+import {
+  NormalizedTextField,
+  TextFieldWithFont,
+} from "utilities/fontComponents";
 
 /** Add word update to the current goal. */
 function asyncUpdateWord(oldId: string, newId: string) {
@@ -119,6 +121,9 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
   const analysisWritingSystems = useAppSelector(
     (state: StoreState) =>
       state.currentProjectState.project.analysisWritingSystems
+  );
+  const definitionsEnabled = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
   const vernLang = useAppSelector(
     (state: StoreState) =>
@@ -276,10 +281,13 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
     }
 
     // Remove empty/deleted senses; confirm nonempty vernacular and senses
-    const cleanedWord = cleanWord(newWord, true);
+    const cleanedWord = cleanWord(newWord, {
+      definitionsEnabled,
+      exemptProtected: true,
+    });
     if (typeof cleanedWord === "string") {
       toast.error(t(cleanedWord));
-      return Promise.reject(t(cleanedWord));
+      return;
     }
 
     // Update in backend
@@ -479,11 +487,11 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
                       <FlagOutlined />
                     )}
                   </IconButton>
-                  <TextField
+                  <NormalizedTextField
                     id={EditDialogId.TextFieldFlag}
                     onChange={(e) => updateFlag(e.target.value)}
                     value={newWord.flag.active ? newWord.flag.text : ""}
-                  ></TextField>
+                  />
                 </CardContent>
               </Card>
             </Grid>

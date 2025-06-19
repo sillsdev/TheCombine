@@ -9,7 +9,7 @@ import {
 } from "react";
 
 import { getFrontierWords, getSemanticDomainFull } from "backend";
-import AppBar from "components/AppBar/AppBarComponent";
+import AppBar from "components/AppBar";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader";
 import DataEntryTable from "components/DataEntry/DataEntryTable";
 import ExistingDataTable from "components/DataEntry/ExistingDataTable";
@@ -27,8 +27,7 @@ export const smallScreenThreshold = 960;
 export const treeViewDialogId = "tree-view-dialog";
 
 const paperStyle = {
-  marginLeft: "auto",
-  marginRight: "auto",
+  marginInline: "auto",
   maxWidth: 800,
   padding: theme.spacing(2),
 };

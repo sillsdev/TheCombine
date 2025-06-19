@@ -16,6 +16,7 @@ namespace BackendFramework.Models
         /// </summary>
         [Required]
         [BsonElement("guid")]
+        [BsonGuidRepresentation(GuidRepresentation.CSharpLegacy)]
 #pragma warning disable CA1720
         public Guid Guid { get; set; }
 #pragma warning restore CA1720
@@ -56,6 +57,7 @@ namespace BackendFramework.Models
             SemanticDomains = new();
         }
 
+        /// <summary> Create a deep copy. </summary>
         public Sense Clone()
         {
             return new()
@@ -68,33 +70,6 @@ namespace BackendFramework.Models
                 ProtectReasons = ProtectReasons.Select(pr => pr.Clone()).ToList(),
                 SemanticDomains = SemanticDomains.Select(sd => sd.Clone()).ToList(),
             };
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not Sense other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return
-                other.Guid == Guid &&
-                other.Accessibility == Accessibility &&
-                other.GrammaticalInfo.Equals(GrammaticalInfo) &&
-                other.Definitions.Count == Definitions.Count &&
-                other.Definitions.All(Definitions.Contains) &&
-                other.Glosses.Count == Glosses.Count &&
-                other.Glosses.All(Glosses.Contains) &&
-                other.ProtectReasons.Count == ProtectReasons.Count &&
-                other.ProtectReasons.All(ProtectReasons.Contains) &&
-                other.SemanticDomains.Count == SemanticDomains.Count &&
-                other.SemanticDomains.All(SemanticDomains.Contains);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(
-                Guid, Accessibility, GrammaticalInfo, Definitions, Glosses, ProtectReasons, SemanticDomains);
         }
 
         public bool IsEmpty()
@@ -119,8 +94,8 @@ namespace BackendFramework.Models
             }
 
             return
-                Glosses.All(other.Glosses.Contains) &&
-                Definitions.All(other.Definitions.Contains);
+                Glosses.All(a => other.Glosses.Any(b => b.ContentEquals(a))) &&
+                Definitions.All(a => other.Definitions.Any(b => b.ContentEquals(a)));
         }
 
         /// <summary> Adds all semantic domains from other Sense. </summary>
@@ -154,29 +129,18 @@ namespace BackendFramework.Models
             Text = "";
         }
 
+        /// <summary> Create a deep copy. </summary>
         public Definition Clone()
         {
-            return new Definition
-            {
-                Language = Language,
-                Text = Text
-            };
+            // Shallow copy is sufficient.
+            return (Definition)MemberwiseClone();
         }
 
-        public override bool Equals(object? obj)
+        /// <summary> Check if content is the same as another Definition. </summary>
+        public bool ContentEquals(Definition other)
         {
-            if (obj is not Definition other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
             return Language.Equals(other.Language, StringComparison.Ordinal) &&
                 Text.Equals(other.Text, StringComparison.Ordinal);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Language, Text);
         }
     }
 
@@ -225,29 +189,18 @@ namespace BackendFramework.Models
             GrammaticalCategory = gramCat;
         }
 
+        /// <summary> Create a deep copy. </summary>
         public GrammaticalInfo Clone()
         {
-            return new GrammaticalInfo
-            {
-                CatGroup = CatGroup,
-                GrammaticalCategory = GrammaticalCategory
-            };
+            // Shallow copy is sufficient.
+            return (GrammaticalInfo)MemberwiseClone();
         }
 
-        public override bool Equals(object? obj)
+        /// <summary> Check if content is the same as another GrammaticalInfo. </summary>
+        public bool ContentEquals(GrammaticalInfo other)
         {
-            if (obj is not GrammaticalInfo other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
             return CatGroup == other.CatGroup &&
                 GrammaticalCategory.Equals(other.GrammaticalCategory, StringComparison.Ordinal);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(CatGroup, GrammaticalCategory);
         }
 
     }
@@ -268,29 +221,19 @@ namespace BackendFramework.Models
             Def = "";
         }
 
+
+        /// <summary> Create a deep copy. </summary>
         public Gloss Clone()
         {
-            return new Gloss
-            {
-                Language = Language,
-                Def = Def
-            };
+            // Shallow copy is sufficient.
+            return (Gloss)MemberwiseClone();
         }
 
-        public override bool Equals(object? obj)
+        /// <summary> Check if content is the same as another Gloss. </summary>
+        public bool ContentEquals(Gloss other)
         {
-            if (obj is not Gloss other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return Language.Equals(other.Language, StringComparison.Ordinal) &&
-                Def.Equals(other.Def, StringComparison.Ordinal);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Language, Def);
+            return Def.Equals(other.Def, StringComparison.Ordinal) &&
+                Language.Equals(other.Language, StringComparison.Ordinal);
         }
     }
 

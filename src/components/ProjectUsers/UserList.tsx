@@ -3,53 +3,47 @@ import {
   Avatar,
   Button,
   Grid,
-  Input,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   Typography,
 } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { User } from "api/models";
-import { avatarSrc, getAllUsers } from "backend";
+import { UserStub } from "api/models";
+import { avatarSrc, getUsersByFilter } from "backend";
 import { Hash } from "types/hash";
 import theme from "types/theme";
-import { doesTextMatchUser } from "types/user";
+import { NormalizedTextField } from "utilities/fontComponents";
 
 interface UserListProps {
-  addToProject: (user: User) => void;
+  addToProject: (userId: string) => void;
   minSearchLength: number;
-  projectUsers: User[];
+  projectUsers: UserStub[];
 }
 
 export default function UserList(props: UserListProps): ReactElement {
-  const [nonProjUsers, setNonProjUsers] = useState<User[]>([]);
   const [filterInput, setFilterInput] = useState<string>("");
-  const [filteredNonProjUsers, setFilteredNonProjUsers] = useState<User[]>([]);
-  const [filteredProjUsers, setFilteredProjUsers] = useState<User[]>([]);
+  const [filteredInProj, setFilteredInProj] = useState<UserStub[]>([]);
+  const [filteredNotInProj, setFilteredNotInProj] = useState<UserStub[]>([]);
   const [hoverUserId, setHoverUserId] = useState<string>("");
+  const [projUserIds, setProjUserIds] = useState<string[]>([]);
   const [userAvatar, setUserAvatar] = useState<Hash<string>>({});
 
   const { t } = useTranslation();
 
-  const clearFilter = (): void => {
-    setFilterInput("");
-    setFilteredNonProjUsers([]);
-    setFilteredProjUsers([]);
+  const clearFilteredUsers = (): void => {
+    setFilteredInProj([]);
+    setFilteredNotInProj([]);
   };
 
   useEffect(() => {
-    clearFilter();
-    getAllUsers().then((users) => {
-      const projUserIds = props.projectUsers.map((u) => u.id);
-      setNonProjUsers(users.filter((u) => !projUserIds.includes(u.id)));
-    });
-  }, [props.projectUsers]);
+    setFilterInput("");
+    clearFilteredUsers();
+    setProjUserIds(props.projectUsers.map((u) => u.id));
 
-  useEffect(() => {
     const newUserAvatar: Hash<string> = {};
     const promises = props.projectUsers.map(async (u) => {
       if (u.hasAvatar) {
@@ -59,20 +53,27 @@ export default function UserList(props: UserListProps): ReactElement {
     Promise.all(promises).then(() => setUserAvatar(newUserAvatar));
   }, [props.projectUsers]);
 
-  const updateUsers = (text: string): void => {
+  const setFilteredUsers = useCallback(
+    async (text: string): Promise<void> => {
+      const filtered = await getUsersByFilter(text);
+      const sorted = filtered.sort((a, b) => a.name.localeCompare(b.name));
+      setFilteredNotInProj(sorted.filter((u) => !projUserIds.includes(u.id)));
+      setFilteredInProj(sorted.filter((u) => projUserIds.includes(u.id)));
+    },
+    [projUserIds]
+  );
+
+  const updateUsers = async (text: string): Promise<void> => {
     setFilterInput(text);
+    text = text.trim();
     if (text.length >= props.minSearchLength) {
-      const filterUsers = (users: User[]): User[] =>
-        users.filter((u) => doesTextMatchUser(text, u));
-      setFilteredNonProjUsers(filterUsers(nonProjUsers));
-      setFilteredProjUsers(filterUsers(props.projectUsers));
+      await setFilteredUsers(text);
     } else {
-      setFilteredNonProjUsers([]);
-      setFilteredProjUsers([]);
+      clearFilteredUsers();
     }
   };
 
-  const projUserListItem = (user: User): ReactElement => {
+  const inProjListItem = (user: UserStub): ReactElement => {
     return (
       <ListItem
         key={user.id}
@@ -85,14 +86,14 @@ export default function UserList(props: UserListProps): ReactElement {
         <Avatar
           alt="User Avatar"
           src={userAvatar[user.id]}
-          style={{ marginRight: theme.spacing(1) }}
+          style={{ marginInlineEnd: theme.spacing(1) }}
         />
         <ListItemText primary={`${user.name} (${user.username})`} />
       </ListItem>
     );
   };
 
-  const nonProjUserListItem = (user: User): ReactElement => {
+  const notInProjListItem = (user: UserStub): ReactElement => {
     return (
       <ListItem
         key={user.id}
@@ -102,7 +103,7 @@ export default function UserList(props: UserListProps): ReactElement {
         <ListItemText primary={`${user.name} (${user.username})`} />
         {hoverUserId === user.id && (
           <Button
-            onClick={() => props.addToProject(user)}
+            onClick={() => props.addToProject(user.id)}
             id={`project-user-add-${user.username}`}
           >
             {t("buttons.add")}
@@ -115,15 +116,14 @@ export default function UserList(props: UserListProps): ReactElement {
   return (
     <Grid item xs={12}>
       <Typography>{t("projectSettings.invite.searchTitle")}</Typography>
-      <Input
-        type="text"
+      <NormalizedTextField
         onChange={(e) => updateUsers(e.target.value)}
         placeholder={t("projectSettings.invite.searchPlaceholder")}
         value={filterInput}
       />
       <List>
-        {filteredProjUsers.map(projUserListItem)}
-        {filteredNonProjUsers.map(nonProjUserListItem)}
+        {filteredInProj.map(inProjListItem)}
+        {filteredNotInProj.map(notInProjListItem)}
       </List>
     </Grid>
   );

@@ -15,17 +15,14 @@ namespace BackendFramework.Controllers
     [Route("v1/projects/{projectId}/words")]
     public class WordController : Controller
     {
-        private readonly IProjectRepository _projRepo;
         private readonly IWordRepository _wordRepo;
         private readonly IPermissionService _permissionService;
         private readonly IWordService _wordService;
 
         private const string otelTagName = "otel.WordController";
 
-        public WordController(IWordRepository repo, IWordService wordService, IProjectRepository projRepo,
-            IPermissionService permissionService)
+        public WordController(IWordRepository repo, IWordService wordService, IPermissionService permissionService)
         {
-            _projRepo = projRepo;
             _wordRepo = repo;
             _permissionService = permissionService;
             _wordService = wordService;
@@ -33,7 +30,9 @@ namespace BackendFramework.Controllers
 
         /// <summary> Deletes specified Frontier <see cref="Word"/>. </summary>
         [HttpDelete("frontier/{wordId}", Name = "DeleteFrontierWord")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteFrontierWord(string projectId, string wordId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
@@ -42,23 +41,16 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
-            }
             var userId = _permissionService.GetUserId(HttpContext);
-            var id = await _wordService.DeleteFrontierWord(projectId, userId, wordId);
-            if (id is null)
-            {
-                return NotFound(wordId);
-            }
-            return Ok(wordId);
+
+            var deletedWordId = await _wordService.DeleteFrontierWord(projectId, userId, wordId);
+            return deletedWordId is null ? NotFound() : Ok();
         }
 
         /// <summary> Returns all <see cref="Word"/>s for specified <see cref="Project"/>. </summary>
         [HttpGet(Name = "GetProjectWords")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Word>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetProjectWords(string projectId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all words");
@@ -67,17 +59,14 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
-            }
             return Ok(await _wordRepo.GetAllWords(projectId));
         }
 
         /// <summary> Returns <see cref="Word"/> with specified id. </summary>
         [HttpGet("{wordId}", Name = "GetWord")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Word))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetWord(string projectId, string wordId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting a word");
@@ -86,41 +75,33 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
-            }
             var word = await _wordRepo.GetWord(projectId, wordId);
             if (word is null)
             {
-                return NotFound(wordId);
+                return NotFound();
             }
             return Ok(word);
         }
 
-        /// <summary> Checks if Frontier nonempty for specified <see cref="Project"/>. </summary>
-        [HttpGet("isfrontiernonempty", Name = "IsFrontierNonempty")]
+        /// <summary> Checks if Frontier for specified <see cref="Project"/> has any words. </summary>
+        [HttpGet("hasfrontierwords", Name = "HasFrontierWords")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> IsFrontierNonempty(string projectId)
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> HasFrontierWords(string projectId)
         {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier is nonempty");
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier has any words");
 
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
             }
-            var project = await _projRepo.GetProject(projectId);
-            if (project is null)
-            {
-                return NotFound(projectId);
-            }
-            return Ok(await _wordRepo.IsFrontierNonempty(projectId));
+            return Ok(await _wordRepo.HasFrontierWords(projectId));
         }
 
         /// <summary> Returns all Frontier <see cref="Word"/> in specified <see cref="Project"/>. </summary>
         [HttpGet("frontier", Name = "GetProjectFrontierWords")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Word>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetProjectFrontierWords(string projectId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all Frontier words");
@@ -129,17 +110,13 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
-            var project = await _projRepo.GetProject(projectId);
-            if (project is null)
-            {
-                return NotFound(projectId);
-            }
             return Ok(await _wordRepo.GetFrontier(projectId));
         }
 
         /// <summary> Checks if Frontier has <see cref="Word"/> in specified <see cref="Project"/>. </summary>
         [HttpGet("isinfrontier/{wordId}", Name = "IsInFrontier")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> IsInFrontier(string projectId, string wordId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier contains a word");
@@ -148,17 +125,13 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
-            var project = await _projRepo.GetProject(projectId);
-            if (project is null)
-            {
-                return NotFound(projectId);
-            }
             return Ok(await _wordRepo.IsInFrontier(projectId, wordId));
         }
 
         /// <summary> Checks if Frontier has words in specified <see cref="Project"/>. </summary>
         [HttpPost("areinfrontier", Name = "AreInFrontier")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<string>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> AreInFrontier(string projectId, [FromBody, BindRequired] List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier contains given words");
@@ -166,10 +139,6 @@ namespace BackendFramework.Controllers
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
-            }
-            if ((await _projRepo.GetProject(projectId)) is null)
-            {
-                return NotFound(projectId);
             }
 
             var idsInFrontier = new List<string>();
@@ -190,6 +159,7 @@ namespace BackendFramework.Controllers
         /// <returns> Id of containing word, or empty string if none. </returns>
         [HttpPost("getduplicateid", Name = "GetDuplicateId")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetDuplicateId(string projectId, [FromBody, BindRequired] Word word)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "checking for duplicates of a word");
@@ -197,11 +167,6 @@ namespace BackendFramework.Controllers
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
-            }
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
             }
             word.ProjectId = projectId;
 
@@ -212,6 +177,9 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated word. </returns>
         [HttpPost("{dupId}", Name = "UpdateDuplicate")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> UpdateDuplicate(
             string projectId, string dupId, [FromBody, BindRequired] Word word)
         {
@@ -221,17 +189,12 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
-            }
             word.ProjectId = projectId;
 
             var duplicatedWord = await _wordRepo.GetWord(word.ProjectId, dupId);
             if (duplicatedWord is null)
             {
-                return NotFound(dupId);
+                return NotFound();
             }
 
             var userId = _permissionService.GetUserId(HttpContext);
@@ -249,6 +212,7 @@ namespace BackendFramework.Controllers
         /// <returns> Id of created word. </returns>
         [HttpPost(Name = "CreateWord")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateWord(string projectId, [FromBody, BindRequired] Word word)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "creating a word");
@@ -256,11 +220,6 @@ namespace BackendFramework.Controllers
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
-            }
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
             }
             word.ProjectId = projectId;
             var userId = _permissionService.GetUserId(HttpContext);
@@ -271,6 +230,8 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated word </returns>
         [HttpPut("{wordId}", Name = "UpdateWord")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateWord(
             string projectId, string wordId, [FromBody, BindRequired] Word word)
         {
@@ -280,15 +241,10 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
-            }
             var document = await _wordRepo.GetWord(projectId, wordId);
             if (document is null)
             {
-                return NotFound(wordId);
+                return NotFound();
             }
 
             // Add the found id to the updated word.
@@ -302,6 +258,7 @@ namespace BackendFramework.Controllers
         /// <returns> Id dictionary of all words successfully updated (key: was in frontier; value: new id). </returns>
         [HttpPost("revertwords", Name = "RevertWords")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Dictionary<string, string>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> RevertWords(
             string projectId, [FromBody, BindRequired] Dictionary<string, string> wordIds)
         {
@@ -310,10 +267,6 @@ namespace BackendFramework.Controllers
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
-            }
-            if ((await _projRepo.GetProject(projectId)) is null)
-            {
-                return NotFound(projectId);
             }
 
             var updates = new Dictionary<string, string>();

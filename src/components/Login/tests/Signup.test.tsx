@@ -1,20 +1,30 @@
-import { ChangeEvent, FormEvent } from "react";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
-import {
-  ReactTestInstance,
-  ReactTestRenderer,
-  act,
-  create,
-} from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
+import MockBypassLoadableButton from "components/Buttons/LoadingDoneButton";
 import { defaultState as loginState } from "components/Login/Redux/LoginReduxTypes";
-import Signup, { SignupId } from "components/Login/Signup";
+import Signup, {
+  SignupField,
+  SignupId,
+  SignupText,
+  signupFieldId,
+  signupFieldTextId,
+} from "components/Login/Signup";
+import MockCaptcha from "components/Login/tests/MockCaptcha";
 
 jest.mock("backend", () => ({
   getBannerText: () => Promise.resolve(""),
 }));
-jest.mock("components/Login/Captcha", () => "div");
+jest.mock("components/Buttons", () => ({
+  ...jest.requireActual("components/Buttons"),
+  LoadingDoneButton: MockBypassLoadableButton,
+}));
+jest.mock("components/Login/Captcha", () => ({
+  __esModule: true,
+  default: (props: any) => <MockCaptcha {...props} />,
+}));
 jest.mock("components/Login/Redux/LoginActions", () => ({
   asyncSignUp: (...args: any[]) => mockAsyncSignUp(...args),
 }));
@@ -25,55 +35,55 @@ jest.mock("rootRedux/hooks", () => {
   };
 });
 
+const errorClass = "Mui-error";
 const mockAsyncSignUp = jest.fn();
-const mockChangeEvent = (text: string): Partial<ChangeEvent> => ({
-  target: { value: text } as HTMLTextAreaElement | HTMLInputElement,
-});
-const mockFormEvent: Partial<FormEvent> = { preventDefault: jest.fn() };
 const mockStore = configureMockStore()({ loginState });
 
-const emailValid = "non@empty.com";
-const nameValid = "Mr. Nonempty";
-const passInvalid = "$hort";
 const passValid = "@-least+8_chars";
-const userInvalid = "no";
-const userValid = "3+ letters long";
-
-let signupMaster: ReactTestRenderer;
-let signupHandle: ReactTestInstance;
+const validTexts: SignupText = {
+  [SignupField.Email]: "non@empty.com",
+  [SignupField.Name]: "Mr. Nonempty",
+  [SignupField.Password1]: passValid,
+  [SignupField.Password2]: passValid,
+  [SignupField.Username]: "3+ letters long",
+};
 
 const renderSignup = async (): Promise<void> => {
   await act(async () => {
-    signupMaster = create(
+    render(
       <Provider store={mockStore}>
         <Signup />
       </Provider>
     );
   });
-  signupHandle = signupMaster.root.findByType(Signup);
 };
 
-const typeInField = async (id: SignupId, text: string): Promise<void> => {
-  const field = signupHandle.findByProps({ id });
-  await act(async () => {
-    await field.props.onChange(mockChangeEvent(text));
-  });
+/** Types text into all fields, using text from the given `textRecord` when present,
+ * and falling back to entries in `validTexts` for keys missing from `textRecord`. */
+const typeInFields = async (textRecord: Partial<SignupText>): Promise<void> => {
+  for (const field of Object.values(SignupField)) {
+    const text = textRecord[field] ?? validTexts[field];
+    if (!text) {
+      continue;
+    }
+    const id = signupFieldId[field as SignupField];
+    await userEvent.type(screen.getByTestId(id), text);
+  }
 };
 
-const submitAndCheckError = async (id?: SignupId): Promise<void> => {
+/** Clicks the submit button and checks that only the specified field errors. */
+const submitAndCheckError = async (id?: SignupField): Promise<void> => {
   // Submit the form.
-  const form = signupHandle.findByProps({ id: SignupId.Form });
-  await act(async () => {
-    await form.props.onSubmit(mockFormEvent);
-  });
+  await userEvent.click(screen.getByTestId(SignupId.ButtonSignUp));
 
   // Only the specified field should error.
-  Object.values(SignupId).forEach((val) => {
-    const field = signupHandle.findByProps({ id: val });
+  Object.values(SignupField).forEach((val) => {
+    const text = signupFieldTextId[val as SignupField];
+    const classes = screen.getByText(text).className.split(" ");
     if (val === id) {
-      expect(field.props.error).toBeTruthy();
+      expect(classes).toContain(errorClass);
     } else {
-      expect(field.props.error).toBeFalsy();
+      expect(classes).not.toContain(errorClass);
     }
   });
 
@@ -87,67 +97,39 @@ const submitAndCheckError = async (id?: SignupId): Promise<void> => {
 
 beforeEach(async () => {
   jest.clearAllMocks();
+  await renderSignup();
 });
 
 describe("Signup", () => {
   describe("submit button", () => {
-    it("errors when email blank", async () => {
-      await renderSignup();
-      await typeInField(SignupId.FieldEmail, "");
-      await typeInField(SignupId.FieldName, nameValid);
-      await typeInField(SignupId.FieldPassword1, passValid);
-      await typeInField(SignupId.FieldPassword2, passValid);
-      await typeInField(SignupId.FieldUsername, userValid);
-      await submitAndCheckError(SignupId.FieldEmail);
+    // Don't test with empty fields or invalid email, because those prevent submission.
+
+    it("errors when name is whitespace", async () => {
+      await typeInFields({ [SignupField.Name]: "  " });
+      await submitAndCheckError(SignupField.Name);
     });
 
-    it("errors when name blank", async () => {
-      await renderSignup();
-      await typeInField(SignupId.FieldEmail, emailValid);
-      await typeInField(SignupId.FieldName, "");
-      await typeInField(SignupId.FieldPassword1, passValid);
-      await typeInField(SignupId.FieldPassword2, passValid);
-      await typeInField(SignupId.FieldUsername, userValid);
-      await submitAndCheckError(SignupId.FieldName);
-    });
-
-    it("errors when password too short", async () => {
-      await renderSignup();
-      await typeInField(SignupId.FieldEmail, emailValid);
-      await typeInField(SignupId.FieldName, nameValid);
-      await typeInField(SignupId.FieldPassword1, passInvalid);
-      await typeInField(SignupId.FieldPassword2, passInvalid);
-      await typeInField(SignupId.FieldUsername, userValid);
-      await submitAndCheckError(SignupId.FieldPassword1);
+    it("errors when password is too short", async () => {
+      const passInvalid = "$hort";
+      await typeInFields({
+        [SignupField.Password1]: passInvalid,
+        [SignupField.Password2]: passInvalid,
+      });
+      await submitAndCheckError(SignupField.Password1);
     });
 
     it("errors when passwords don't match", async () => {
-      await renderSignup();
-      await typeInField(SignupId.FieldEmail, emailValid);
-      await typeInField(SignupId.FieldName, nameValid);
-      await typeInField(SignupId.FieldPassword1, passValid);
-      await typeInField(SignupId.FieldPassword2, `${passValid}++`);
-      await typeInField(SignupId.FieldUsername, userValid);
-      await submitAndCheckError(SignupId.FieldPassword2);
+      await typeInFields({ [SignupField.Password2]: `${passValid}++` });
+      await submitAndCheckError(SignupField.Password2);
     });
 
-    it("errors when username too short", async () => {
-      await renderSignup();
-      await typeInField(SignupId.FieldEmail, emailValid);
-      await typeInField(SignupId.FieldName, nameValid);
-      await typeInField(SignupId.FieldPassword1, passValid);
-      await typeInField(SignupId.FieldPassword2, passValid);
-      await typeInField(SignupId.FieldUsername, userInvalid);
-      await submitAndCheckError(SignupId.FieldUsername);
+    it("errors when username is too short", async () => {
+      await typeInFields({ [SignupField.Username]: "     no     " });
+      await submitAndCheckError(SignupField.Username);
     });
 
-    it("submits when all fields valid", async () => {
-      await renderSignup();
-      await typeInField(SignupId.FieldEmail, emailValid);
-      await typeInField(SignupId.FieldName, nameValid);
-      await typeInField(SignupId.FieldPassword1, passValid);
-      await typeInField(SignupId.FieldPassword2, passValid);
-      await typeInField(SignupId.FieldUsername, userValid);
+    it("submits when all fields are valid", async () => {
+      await typeInFields({});
       await submitAndCheckError();
     });
   });

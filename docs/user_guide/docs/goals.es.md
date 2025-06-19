@@ -1,4 +1,4 @@
-# Depuración de datos / Objetivos
+# Limpieza de datos / Objetivos
 
 ## Revisar entradas {#review-entries}
 
@@ -17,8 +17,8 @@ To show/hide columns or rearrange their order, click on the
 ![Review Entries columns edit icon](../images/reviewEntriesColumnsEdit.png){width=25} icon in the top corner.
 
 Debido a la naturaleza de la recopilación rápida de palabras, la [entrada de datos](dataEntry.md) en The Combine no
-permite añadir definiciones o partes de la oración. However, if the project has imported data in which definitions or
-parts of speech were already present, additional columns will be available in the Review Entries table.
+permite añadir definiciones o partes de la oración. Sin embargo, si el proyecto tiene datos importados en los que hay
+definiciones o partes de discurso, habrá columnas adicionales disponibles en la tabla Entradas de revisión.
 
 #### Ordenar y filtrar
 
@@ -26,17 +26,17 @@ There are icons at the top of each column to
 ![Review Entries column filter icon](../images/reviewEntriesColumnFilter.png){width=20} filter and
 ![Review Entries column sort icon](../images/reviewEntriesColumnSort.png){width=20} sort the data.
 
-In a column with predominantly text content (Vernacular, Glosses, Note, or Flag), you can sort alphabetically or filter
-with a text search. By default, the text search is a fuzzy match: it is not case sensitive and it allows for one or two
-typos. If you want exact text matches, use quotes around your filter.
+En una columna con contenido predominantemente textual (Vernáculo, Glosas, Nota o Bandera), puede ordenar
+alfabéticamente o filtrar con una búsqueda de texto. By default, the text search is a fuzzy match: it is not case
+sensitive and it allows for one or two typos. If you want exact text matches, use quotes around your filter.
 
 In the Number of Senses column or Pronunciations column, you can sort or filter by the number of senses or recordings
 that entries have. In the Pronunciations column, you can also filter by speaker name.
 
-In the Domains column, sorting is numerical by each entry's least domain id. To filter by domain, type a domain id with
-or without periods. For example, "8111" and "8.1.1.1" both show all entries with a sense in domain 8.1.1.1. To also
-include subdomains, add a final period to your filter. For example, "8111." includes domains "8.1.1.1", "8.1.1.1.1", and
-"8.1.1.1.2". Filter with just a period (".") to show all entries with any semantic domain.
+En la columna Dominios, la ordenación es numérica por el id de dominio menor de cada entrada. To filter by domain, type
+a domain id with or without periods. For example, "8111" and "8.1.1.1" both show all entries with a sense in domain
+8.1.1.1. To also include subdomains, add a final period to your filter. For example, "8111." includes domains "8.1.1.1",
+"8.1.1.1.1", and "8.1.1.1.2". Filter with just a period (".") to show all entries with any semantic domain.
 
 ### Edición de filas de entrada
 
@@ -57,13 +57,14 @@ continuación, presenta conjuntos con formas vernáculas similares o glosas (o d
 
 ![Fusionar duplicados entradas](../images/mergeTwo.es.png)
 
-Cada entrada se muestra en una columna, y cada acepción de esa entrada se muestra como una tarjeta que puede pulsar y
-arrastrar. Hay tres cosas básicas que puede hacer con una acepción: moverlo, combinarlo con otra acepción o eliminarlo.
+Cada entrada se muestra en una columna, y cada acepción de esa entrada se muestra como una tarjeta que puede hacer clic
+y arrastrar. Hay tres cosas básicas que puede hacer con una acepción: moverlo, combinarlo con otra acepción o
+eliminarlo.
 
 ### Mover una acepción
 
-Cuando pulsa y mantiene pulsada una tarjeta de acepción, ésta se vuelve verde. Puede arrastrar y soltar la tarjeta de
-acepción a un lugar diferente de la misma columna para reordenar las acepciones de esa entrada. O puede arrastrar y
+Cuando hace clic y mantiene pulsada una tarjeta de acepción, ésta se vuelve verde. Puede arrastrar y soltar la tarjeta
+de acepción a un lugar diferente de la misma columna para reordenar las acepciones de esa entrada. O puede arrastrar y
 soltar la tarjeta de acepción a una columna diferente para mover la acepción a esa otra entrada.
 
 ![Fusionar duplicados moviendo una acepción](../images/mergeMove.es.png)
@@ -88,7 +89,7 @@ glosas).
 
 ![Combinar duplicados moviendo una acepción de la barra lateral](../images/mergeSidebarMove.es.png)
 
-Pulse el corchete angular derecho (>) para cerrar o abrir la barra lateral azul.
+Haga clic en el corchete angular derecho (>) para cerrar o abrir la barra lateral azul.
 
 ### Borrar una acepción
 
@@ -119,7 +120,7 @@ sólido. Si ha añadido texto, puede pasar el cursor por encima de la bandera pa
 
 ![Combinar duplicados una entrada marcada](../images/mergeFlagged.es.png){.center}
 
-Pulse sobre el icono de la bandera roja para editar el texto o eliminar la bandera.
+Haga clic en el icono de la bandera roja para editar el texto o eliminar la bandera.
 
 ### Terminar un conjunto
 
@@ -136,7 +137,7 @@ the resulting set of words as non-duplicates.
 
 !!! tip "Consejo"
 
-    ¿Los duplicados potenciales no son duplicados? Sólo tiene que pulsar Guardar y Continuar para decirle a The Combine que no le vuelva a mostrar ese conjunto.
+    ¿Los duplicados potenciales no son duplicados? Sólo tiene que hacer clic en Guardar y Continuar para decirle a The Combine que no le vuelva a mostrar ese conjunto.
 
 !!! note "Nota"
 
@@ -161,7 +162,7 @@ Aunque las definiciones y las partes de la oración no pueden añadirse durante 
 presentes en las entradas importadas. Esta información aparecerá en las tarjetas de acepción de Combinar duplicados de
 la siguiente manera:
 
-- Cualquier definición en una lengua de análisis se muestra debajo de la glosa en esa lengua.
+- Cualquier definición en un idioma de análisis se muestra debajo de la glosa en esa lengua.
 - Cualquier parte de la oración se indica mediante un hexágono de color en la esquina superior izquierda. El color
   corresponde a su categoría (por ejemplo, sustantivo o verbo). Pase el cursor por encima del hexágono para ver la
   categoría gramatical específica (p. ej., nombre propio o verbo transitivo).
@@ -172,7 +173,7 @@ la siguiente manera:
 
     A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different general categories, only the first one is preserved.
 
-#### Entradas y acepciones protegidas
+#### Entradas y acepciones protegidas {#protected-entries-and-senses}
 
 Si una entrada o acepción importada contiene datos no admitidos en The Combine (por ejemplo, etimologías o inversiones
 de sentido), se protege para evitar su eliminación. Si una acepción está protegida, su tarjeta tendrá un fondo
@@ -182,14 +183,14 @@ una entrada protegida sólo tiene una acepción, esa tarjeta de acepción no se 
 
 ## Crear inventario de caracteres
 
-Las herramientas de inventario de personajes sólo están disponibles para los administradores de proyectos.
+Las herramientas de inventario de caracteres sólo están disponibles para los administradores del proyecto.
 
 _Crear un inventario de caracteres_ proporciona una visión general de cada carácter unicode que aparece en las formas
 vernáculas del entradas del proyecto. Esto le permite identificar qué caracteres se utilizan habitualmente en la lengua
 y "aceptarlos" como parte del inventario de caracteres de la lengua. El inventario de caracteres forma parte del archivo
-LDML para la lengua vernácula de un proyecto lengua vernácula que se incluye cuando se [exporta](project.md#export) el
-proyecto. La aceptación de los caracteres conducirá a una representación precisa de la lengua en Unicode, el Ethnologue
-y otros estándares y recursos lingüísticos.
+LDML para el idioma vernáculo de un proyecto que se incluye cuando se [exporta](project.md#export) el proyecto. La
+aceptación de los caracteres conducirá a una representación precisa de la lengua en Unicode, el Ethnologue y otros
+estándares y recursos lingüísticos.
 
 Otro uso de _Crear inventario de caracteres_ es identificar y sustituir caracteres que se han utilizado incorrectamente
 al escribir formas vernáculas de palabras.
@@ -198,32 +199,32 @@ Hay una ficha para cada carácter unicode que aparece en la forma vernácula de 
 carácter, su valor Unicode "U+", el número de veces que aparece en las formas vernáculas de entrada y su designación
 (por defecto: Indeciso).
 
-![Fichas de personaje del inventario](../images/characterInventoryTiles.es.png)
+![Inventario de caracteres fichas de caracteres](../images/characterInventoryTiles.es.png)
 
 ### Gestionar un solo carácter
 
-Haga clic en una ficha de personaje para abrir un panel para ese personaje.
+Haga clic en una ficha de carácter para abrir un panel para ese carácter.
 
 !!! tip "Consejo"
 
     Puede que tenga que desplazarse para ver el panel. Si su ventana es lo suficientemente ancha, habrá un margen en blanco a la
     derecha; el panel estará en la parte superior de éste. Si su ventana es estrecha, los azulejos llenarán todo el lado derecho de la
-    ventana; el panel estará en la parte inferior, debajo de todos los azulejos.
+    ventana; el panel estará en la parte inferior, debajo de todos los fichas.
 
-![Inventario de personajes panel de personajes](../images/characterInventoryPanel.es.png){.center}
+![Inventario de caracteres panel de caracteres](../images/characterInventoryPanel.es.png){.center}
 
 El centro del panel muestra hasta 5 ejemplos de formas vernáculas en las que aparece el carácter, resaltando el carácter
 en cada ocurrencia.
 
 En la parte superior del panel hay tres botones para designar si el carácter debe incluirse en el inventario de
-caracteres de la lengua vernácula: "Aceptar", "No decidido" y "Rechazar". Al pulsar cualquiera de estos botones se
-actualizará la designación en la parte inferior de la ficha de personaje. (Estas actualizaciones del inventario del
-personaje no se guardan en el proyecto hasta que pulse el botón Guardar en la parte inferior de la página)
+caracteres del idioma vernáculo: "Aceptar", "No decidido" y "Rechazar". Al pulsar cualquiera de estos botones se
+actualizará la designación en la parte inferior de la ficha de carácter. (Estas actualizaciones del inventario del
+caracteres no se guardan en el proyecto hasta que haga clic en el botón Guardar en la parte inferior de la página)
 
 En la parte inferior del panel se encuentra la herramienta Buscar y Reemplazar. Si _cada_ aparición del carácter debe
-sustituirse por otra cosa, escriba el carácter o cadena de sustitución en la casilla "Sustituir por" y pulse el botón
-Aplicar.
+sustituirse por otra cosa, escriba el carácter o cadena de sustitución en la casilla "Sustituir por" y haga clic en el
+botón Aplicar.
 
 !!! warning "Importante"
 
-    La operación de buscar y reemplazar realiza cambios en las entradas, no en el inventario de personajes.
+    La operación de buscar y reemplazar realiza cambios en las entradas, no en el inventario de caracteres.

@@ -4,22 +4,22 @@ This README describes how to install _The Combine_ Rapid Word Collection tool on
 
 ## Contents
 
- - [System Requirements](#system-requirements)
- - [Install _The Combine_](#install-the-combine)
- - [Running _The Combine_](#running-the-combine)
- - [Advanced Installation Options](#advanced-installation-options)
+- [System Requirements](#system-requirements)
+- [Install _The Combine_](#install-the-combine)
+- [Running _The Combine_](#running-the-combine)
+- [Advanced Installation Options](#advanced-installation-options)
 
 ## System Requirements
 
 _The Combine_ can be installed on a PC that meets the following requirements:
 
 - Debian-based Linux Operating system
-- 6 GB of memory;
+- 8 GB of memory;
 - WiFi interface that supports creating a WiFi Hotspot;
 - a wired-ethernet connection to the Internet
 - User account that can run as `root` with `sudo`.
 
-The installation script has been tested on _Ubuntu 22.04_ and _Wasta Linux 22.04_.
+The installation script has been tested on _Ubuntu 22.04_, _Ubuntu 24.04_, and _Wasta Linux 22.04_.
 
 ## Install _The Combine_
 
@@ -39,10 +39,10 @@ The installation script has been tested on _Ubuntu 22.04_ and _Wasta Linux 22.04
    via `apt`. (It's available as a Snap package.) As a result, when the installation script, or a user, updates the list of available
    software, the process fails. To address this issue, run:
 
-      ```console
-      sudo rm /etc/apt/sources.list.d/skype-stable.list
-      sudo apt update && sudo apt upgrade -y
-      ```
+   ```console
+   sudo rm /etc/apt/sources.list.d/skype-stable.list
+   sudo apt update && sudo apt upgrade -y
+   ```
 
 4. Download the installation script from
    [https://s3.amazonaws.com/software.thecombine.app/combine-installer.run](https://s3.amazonaws.com/software.thecombine.app/combine-installer.run)
@@ -76,12 +76,21 @@ The installation script has been tested on _Ubuntu 22.04_ and _Wasta Linux 22.04
      [The Combine](https://software.sil.org/thecombine/#contact)
    - When run with no options, ./combine-installer.run will install the current version of _The Combine_.
    - If the previous installation did not run to completion, it will resume where the previous installation left off.
-   - If you get the error `Job for k3s.service failed because the control process exited with error code.`,
-     make sure no other instance of k3s is running. For example, if Docker Desktop is active on the current user, run:
+   - If you get the error `Job for k3s.service failed because the control process exited with error code.`, make sure no
+     other instance of k3s is running. For example, if Docker Desktop is active on the current user, run:
 
-      ```console
+     ```console
      systemctl --user stop docker-desktop
      systemctl --user disable docker-desktop
+     ```
+
+   - If you get an error with
+     `Conflicting values set for option Signed-By regarding source https://download.docker.com/linux/ubuntu/ noble`, you
+     may need to delete the `apt` files associated with Docker:
+
+     ```console
+     sudo rm /etc/apt/keyrings/*docker*
+     sudo rm /etc/apt/sources.list.d/*docker*
      ```
 
 _The Combine_ will not be running when installation is complete.
@@ -158,7 +167,7 @@ Web certificate expires at Jul  8 08:54:11 2024 GMT
 To run `combine-installer.run` with options, the option list must be started with `--` . The following options are supported:
 
 | option          | description |
-| --------------- | ---------------------------------------------------------------------------- |
+| ---------------- | ---------------------------------------------------------------------------- |
 | clean           | Remove the previously saved environment (AWS Access Key, admin user info) before performing the installation. |
 | restart         | Run the installation from the beginning; do not resume a previous installation. |
 | server          | Install _The Combine_ in a server environment so that _The Combine_ is always running by default. |

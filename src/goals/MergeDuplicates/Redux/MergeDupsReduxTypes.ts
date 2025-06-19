@@ -10,15 +10,17 @@ import { type Hash } from "types/hash";
 
 // Redux state
 
-/** `.counts` is a dictionary of all audio counts of the words being merged:
- * - key: id of a word in the set of potential duplicates
- * - value: number of audio pronunciations on the word
- *
- * `.moves` is a dictionary of words receiving the audio of other words:
- * - key: id of a word receiving audio
- * - value: array of ids of words whose audio is being received */
+/** Properties:
+ * - `counts` is a dictionary of audio counts of the words being merged.
+ * - `moves` is a dictionary of words receiving the audio of other words. */
 export interface MergeAudio {
+  /** Dictionary of audio counts of the words being merged:
+   * - key: id of a word in the set of potential duplicates
+   * - value: number of audio pronunciations on the word */
   counts: Hash<number>;
+  /** Dictionary of words receiving the audio of other words:
+   * - key: id of a word receiving audio
+   * - value: array of ids of words whose audio is being received */
   moves: Hash<string[]>;
 }
 
@@ -31,14 +33,18 @@ export interface MergeTreeState {
   data: MergeData;
   tree: MergeTree;
   audio: MergeAudio;
+  hasProtected: boolean;
   mergeWords: MergeWords[];
+  overrideProtection: boolean;
 }
 
 export const defaultState: MergeTreeState = {
   data: defaultData,
   tree: defaultTree,
   audio: defaultAudio,
+  hasProtected: false,
   mergeWords: [],
+  overrideProtection: false,
 };
 
 // Action payloads

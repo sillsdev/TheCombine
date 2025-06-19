@@ -2,7 +2,6 @@ name: "Deploy Update to Live Server"
 
 on:
   release:
-    branches: [master]
     types: [published]
 
 permissions:
@@ -13,7 +12,7 @@ jobs:
     strategy:
       matrix:
         component: [frontend, backend, maintenance, database]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     outputs:
       image_tag: ${{ steps.build_combine.outputs.image_tag }}
     steps:
@@ -27,7 +26,7 @@ jobs:
             *.actions.githubusercontent.com:443
             *.cloudfront.net:443
             *.data.mcr.microsoft.com:443
-            api.ecr-public.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
+            api.ecr-public.us-east-1.amazonaws.com:443
             api.github.com:443
             api.nuget.org:443
             archive.ubuntu.com:80
@@ -47,8 +46,8 @@ jobs:
             security.debian.org:80
             security.ubuntu.com:80
             storage.googleapis.com:443
-            sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+            sts.us-east-1.amazonaws.com:443
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Build The Combine
         id: build_combine
         uses: ./.github/actions/combine-build
@@ -58,9 +57,8 @@ jobs:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           # Note that the region for the public registries is always us-east-1 regardless of
-          # the account's default region. See the section "To authenticate Docker to an Amazon
-          # ECR registry with get-login-password in
-          # https://docs.aws.amazon.com/AmazonECR/latest/public/public-registries.html
+          # the account's default region. See the section "Using an authorization token" in
+          # https://docs.aws.amazon.com/AmazonECR/latest/public/public-registry-auth.html#public-registry-auth-token
           aws_default_region: us-east-1
           build_component: ${{ matrix.component }}
   deploy_update:
@@ -72,7 +70,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
       - name: Deploy The Combine Update to QA

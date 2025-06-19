@@ -23,6 +23,7 @@ import {
   User,
   UserEdit,
   UserRole,
+  UserStub,
   Word,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
@@ -42,9 +43,17 @@ const apiBaseURL = `${baseURL}/v1`;
 const config_parameters: Api.ConfigurationParameters = { basePath: baseURL };
 const config = new Api.Configuration(config_parameters);
 
+/** A list of URL patterns for which user analytics should not be collected. */
+const authenticationUrls = [
+  "/users/authenticate",
+  "/users/create",
+  "/users/forgot",
+];
+
 /** A list of URL patterns for which the frontend explicitly handles errors
  * and the blanket error pop ups should be suppressed.*/
 const whiteListedErrorUrls = [
+  "/merge/retrievedups",
   "/speakers/create/",
   "/speakers/update/",
   "/users/authenticate",
@@ -55,7 +64,8 @@ const whiteListedErrorUrls = [
 const axiosInstance = axios.create({ baseURL: apiBaseURL });
 axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const consent = LocalStorage.getCurrentUser()?.analyticsOn;
-  if (consent === false) {
+  const url = config.url;
+  if (consent === false || authenticationUrls.some((u) => url?.includes(u))) {
     config.headers.analyticsOn = `${false}`;
   } else {
     config.headers.analyticsOn = `${true}`;
@@ -153,18 +163,22 @@ export async function deleteAudio(
   return (await audioApi.deleteAudioFile(params, defaultOptions())).data;
 }
 
-// Use of the returned url acts as an HttpGet.
+/** Returns a url that, when used, acts as an HttpGet.
+ * Note: Backend doesn't need wordId to find the file,
+ * but it's still required in the url and helpful for analytics. */
 export function getAudioUrl(wordId: string, fileName: string): string {
   return `${apiBaseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/download/${fileName}`;
 }
 
 /* AvatarController.cs */
 
-export async function uploadAvatar(userId: string, file: File): Promise<void> {
+/** Uploads avatar for current user. */
+export async function uploadAvatar(file: File): Promise<void> {
+  // Backend ignores userId and gets current user from HttpContext,
+  // but userId is still required in the url and helpful for analytics.
+  const userId = LocalStorage.getUserId();
   await avatarApi.uploadAvatar({ userId, file }, fileUploadOptions());
-  if (userId === LocalStorage.getUserId()) {
-    LocalStorage.setAvatar(await avatarSrc(userId));
-  }
+  LocalStorage.setAvatar(await avatarSrc(userId));
 }
 
 /** Returns the string to display the image inline in Base64 <img src= */
@@ -237,6 +251,8 @@ export async function uploadLiftAndGetWritingSystems(
   file: File
 ): Promise<Api.WritingSystem[]> {
   const resp = await liftApi.uploadLiftFileAndGetWritingSystems(
+    /* The backend deletes by user, not by project,
+     * but a nonempty projectId in the url is still required. */
     { projectId: "nonempty", file },
     fileUploadOptions()
   );
@@ -266,6 +282,14 @@ export async function exportLift(projectId: string): Promise<string> {
   return (await liftApi.exportLiftFile({ projectId }, defaultOptions())).data;
 }
 
+/** Tell the backend to cancel the LIFT file export. */
+export async function cancelExport(): Promise<boolean> {
+  /* The backend deletes by user, not by project,
+   * but a nonempty projectId in the url is still required. */
+  const params = { projectId: "nonempty" };
+  return (await liftApi.cancelLiftExport(params, defaultOptions())).data;
+}
+
 /** After the backend confirms that a LIFT file is ready, download it. */
 export async function downloadLift(projectId: string): Promise<string> {
   /** For details on how to download binary files with axios, see:
@@ -280,11 +304,11 @@ export async function downloadLift(projectId: string): Promise<string> {
   );
 }
 
-/** After downloading a LIFT file, clear it from the backend.
- * The backend deletes by user, not by project,
- * but a nonempty projectId in the url is still required.
- */
+/** Clear current user's exported LIFT file from the backend.
+ * To be used after download is complete. */
 export async function deleteLift(): Promise<void> {
+  /* The backend deletes by user, not by project,
+   * but a nonempty projectId in the url is still required. */
   await liftApi.deleteLiftFile({ projectId: "nonempty" }, defaultOptions());
 }
 
@@ -327,15 +351,32 @@ export async function graylistAdd(wordIds: string[]): Promise<void> {
   );
 }
 
-/** Get list of potential duplicates for merging. */
-export async function getDuplicates(
+/** Start finding list of potential duplicates for merging. */
+export async function findDuplicates(
   maxInList: number,
   maxLists: number
-): Promise<Word[][]> {
+): Promise<void> {
+  await mergeApi.findPotentialDuplicates(
+    { projectId: LocalStorage.getProjectId(), maxInList, maxLists },
+    defaultOptions()
+  );
+}
+
+/** Retrieve list of potential duplicates for merging. */
+export async function retrieveDuplicates(): Promise<Word[][]> {
+  const resp = await mergeApi.retrievePotentialDuplicates(
+    { projectId: LocalStorage.getProjectId() },
+    defaultOptions()
+  );
+  return resp.data;
+}
+
+/** Get whether the current user has any graylist entries in the current project. */
+export async function hasGraylistEntries(): Promise<boolean> {
   const projectId = LocalStorage.getProjectId();
   const userId = LocalStorage.getUserId();
-  const resp = await mergeApi.getPotentialDuplicates(
-    { projectId, maxInList, maxLists, userId },
+  const resp = await mergeApi.hasGraylistEntries(
+    { projectId, userId },
     defaultOptions()
   );
   return resp.data;
@@ -358,8 +399,8 @@ export async function getAllProjects(): Promise<Project[]> {
   return (await projectApi.getAllProjects(defaultOptions())).data;
 }
 
-export async function getAllProjectUsers(projectId?: string): Promise<User[]> {
-  const params = { projectId: projectId ?? LocalStorage.getProjectId() };
+export async function getAllProjectUsers(projId?: string): Promise<UserStub[]> {
+  const params = { projectId: projId ?? LocalStorage.getProjectId() };
   return (await projectApi.getAllProjectUsers(params, defaultOptions())).data;
 }
 
@@ -372,12 +413,10 @@ export async function createProject(project: Project): Promise<Project> {
   return resp.data.project;
 }
 
-export async function getAllActiveProjects(
-  userId?: string
-): Promise<Project[]> {
-  const user = await getUser(userId || LocalStorage.getUserId());
+/** Gets all active projects of the current user. */
+export async function getAllActiveProjects(): Promise<Project[]> {
   const projects: Project[] = [];
-  for (const projectId of Object.keys(user.projectRoles)) {
+  for (const projectId of Object.keys((await getCurrentUser()).projectRoles)) {
     try {
       await getProject(projectId).then(
         (project) => project.isActive && projects.push(project)
@@ -401,24 +440,21 @@ export async function getProjectName(projectId?: string): Promise<string> {
   return (await getProject(projectId)).name;
 }
 
-/** Updates project and returns id of updated project. */
-export async function updateProject(project: Project): Promise<string> {
+export async function updateProject(project: Project): Promise<void> {
   const params = { projectId: project.id, project };
-  return (await projectApi.updateProject(params, defaultOptions())).data;
+  await projectApi.updateProject(params, defaultOptions());
 }
 
-/** Archives specified project and returns id. */
-export async function archiveProject(projectId: string): Promise<string> {
+export async function archiveProject(projectId: string): Promise<void> {
   const project = await getProject(projectId);
   project.isActive = false;
-  return await updateProject(project);
+  await updateProject(project);
 }
 
-/** Restores specified archived project and returns id. */
-export async function restoreProject(projectId: string): Promise<string> {
+export async function restoreProject(projectId: string): Promise<void> {
   const project = await getProject(projectId);
   project.isActive = true;
-  return await updateProject(project);
+  await updateProject(project);
 }
 
 /** Returns a boolean indicating whether the specified project name is already taken. */
@@ -585,11 +621,10 @@ export async function getSemanticDomainCounts(
 }
 
 export async function getSemanticDomainUserCount(
-  projectId: string,
-  lang?: string
+  projectId: string
 ): Promise<Array<SemanticDomainUserCount> | undefined> {
   const response = await statisticsApi.getSemanticDomainUserCounts(
-    { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
+    { projectId: projectId },
     defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.
@@ -630,11 +665,8 @@ export async function verifyCaptchaToken(token: string): Promise<boolean> {
 export async function resetPasswordRequest(
   emailOrUsername: string
 ): Promise<boolean> {
-  const domain = window.location.origin;
   return await userApi
-    .resetPasswordRequest({
-      passwordResetRequestData: { domain, emailOrUsername },
-    })
+    .resetPasswordRequest({ body: emailOrUsername })
     .then(() => true)
     .catch(() => false);
 }
@@ -659,17 +691,20 @@ export async function addUser(user: User): Promise<User> {
   return { ...user, id: resp.data };
 }
 
-/** Returns true if the email address is in use already. */
-export async function isEmailTaken(email: string): Promise<boolean> {
-  return (await userApi.isEmailUnavailable({ body: email })).data;
+/** Returns true if the email address or username is neither empty nor in use. */
+export async function isEmailOrUsernameAvailable(
+  emailOrUsername: string
+): Promise<boolean> {
+  return (await userApi.isEmailOrUsernameAvailable({ body: emailOrUsername }))
+    .data;
 }
 
 export async function authenticateUser(
-  username: string,
+  emailOrUsername: string,
   password: string
 ): Promise<User> {
   const resp = await userApi.authenticate(
-    { credentials: { username, password } },
+    { credentials: { emailOrUsername, password } },
     defaultOptions()
   );
   const user = resp.data;
@@ -680,52 +715,57 @@ export async function authenticateUser(
   return user;
 }
 
+/** Note: Only usable by site admins. */
 export async function getAllUsers(): Promise<User[]> {
   return (await userApi.getAllUsers(defaultOptions())).data;
 }
 
-export async function getUser(userId: string): Promise<User> {
+/** Note: The filter must be length 3 or more (except for site admins). */
+export async function getUsersByFilter(filter: string): Promise<UserStub[]> {
+  return (await userApi.getUsersByFilter({ filter }, defaultOptions())).data;
+}
+
+export async function getCurrentUser(): Promise<User> {
+  return (await userApi.getCurrentUser(defaultOptions())).data;
+}
+
+export async function getUser(userId: string): Promise<UserStub> {
   return (await userApi.getUser({ userId }, defaultOptions())).data;
 }
 
-export async function getUserByEmail(email: string): Promise<User> {
-  return (await userApi.getUserByEmail({ body: email }, defaultOptions())).data;
+export async function getUserIdByEmailOrUsername(
+  emailOrUsername: string
+): Promise<string> {
+  const params = { body: emailOrUsername };
+  return (await userApi.getUserIdByEmailOrUsername(params, defaultOptions()))
+    .data;
 }
 
-export async function updateUser(user: User): Promise<User> {
-  const resp = await userApi.updateUser(
-    { userId: user.id, user },
-    defaultOptions()
-  );
-  const updatedUser = { ...user, id: resp.data };
-  if (updatedUser.id === LocalStorage.getUserId()) {
-    LocalStorage.setCurrentUser(updatedUser);
+/** Note: Only a site admins can update a user other than themself. */
+export async function updateUser(user: User): Promise<void> {
+  await userApi.updateUser({ userId: user.id, user }, defaultOptions());
+  if (user.id === LocalStorage.getUserId()) {
+    LocalStorage.setCurrentUser(user);
   }
-  return updatedUser;
 }
 
-export async function deleteUser(userId: string): Promise<string> {
-  return (await userApi.deleteUser({ userId }, defaultOptions())).data;
-}
-
-export async function isSiteAdmin(): Promise<boolean> {
-  return (await userApi.isUserSiteAdmin(defaultOptions())).data;
+/** Note: Only usable by site admins. */
+export async function deleteUser(userId: string): Promise<void> {
+  await userApi.deleteUser({ userId }, defaultOptions());
 }
 
 /* UserEditController.cs */
 
-/** Returns guid of added goal, or of updated goal
- * if goal with same guid already exists in the UserEdit */
+/** Adds goal, or updates if goal with same guid already exists. */
 export async function addGoalToUserEdit(
   userEditId: string,
   goal: Goal
-): Promise<string> {
+): Promise<void> {
   const edit = convertGoalToEdit(goal);
-  const resp = await userEditApi.updateUserEditGoal(
+  await userEditApi.updateUserEditGoal(
     { projectId: LocalStorage.getProjectId(), userEditId, edit },
     defaultOptions()
   );
-  return resp.data;
 }
 
 /** Returns index of step within specified goal */
@@ -787,10 +827,10 @@ export async function addOrUpdateUserRole(
   projectId: string,
   role: Role,
   userId: string
-): Promise<string> {
+): Promise<void> {
   const projectRole = { projectId, role };
   const params = { projectId, projectRole, userId };
-  return (await userRoleApi.updateUserRole(params, defaultOptions())).data;
+  await userRoleApi.updateUserRole(params, defaultOptions());
 }
 
 export async function removeUserRole(
@@ -827,9 +867,9 @@ export async function createWord(word: Word): Promise<Word> {
   return word;
 }
 
-export async function deleteFrontierWord(wordId: string): Promise<string> {
+export async function deleteFrontierWord(wordId: string): Promise<void> {
   const params = { projectId: LocalStorage.getProjectId(), wordId };
-  return (await wordApi.deleteFrontierWord(params, defaultOptions())).data;
+  await wordApi.deleteFrontierWord(params, defaultOptions());
 }
 
 export async function getDuplicateId(word: Word): Promise<string> {
@@ -847,9 +887,9 @@ export async function getWord(wordId: string): Promise<Word> {
   return (await wordApi.getWord(params, defaultOptions())).data;
 }
 
-export async function isFrontierNonempty(projectId?: string): Promise<boolean> {
+export async function hasFrontierWords(projectId?: string): Promise<boolean> {
   const params = { projectId: projectId ?? LocalStorage.getProjectId() };
-  return (await wordApi.isFrontierNonempty(params, defaultOptions())).data;
+  return (await wordApi.hasFrontierWords(params, defaultOptions())).data;
 }
 
 export async function isInFrontier(

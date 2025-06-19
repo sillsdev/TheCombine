@@ -1,6 +1,6 @@
 # Proyectos
 
-Un proyecto es para una sola lengua vernácula.
+Un proyecto es para un solo idioma vernáculo.
 
 ## Crear un proyecto
 
@@ -12,32 +12,32 @@ Al crear un proyecto, tiene la opción de empezar con un proyecto vacío o de im
 
 Si tiene datos léxicos en un archivo [LIFT](https://software.sil.org/lifttools) (probablemente exportado de The Combine,
 [WeSay](https://software.sil.org/wesay), [FLEx](https://software.sil.org/fieldworks) o
-[Lexique Pro](https://software.sil.org/lexiquepro)), puede hacer clic en el botón Navegar junto a "¿Cargar los datos
+[Lexique Pro](https://software.sil.org/lexiquepro)), puede hacer clic en el botón Navegar junto a "¿Subir los datos
 existentes?" para importar los datos a su proyecto.
 
 Si decide no importar datos durante la creación del proyecto, podrá hacerlo más adelante (véase [más abajo](#import)).
 
 ### Idioma vernáculo
 
-La _lengua vernácula_ es la lengua para la que se recogen palabras. Suele tratarse de una lengua o dialecto local,
-indígena minoritario, autóctono, patrimonio o lengua o dialecto en peligro de extinción. Una vez creado un proyecto, la
-lengua vernácula no puede cambiarse.
+El _idioma vernáculo_ es el idioma para lo que se recogen palabras. Suele tratarse de una lengua o dialecto local,
+indígena minoritario, autóctono, patrimonio o lengua o dialecto en peligro de extinción. Una vez creado un proyecto, el
+idioma vernáculo no puede cambiarse.
 
 Si selecciona un archivo LIFT para importar durante la creación del proyecto, aparecerá un menú desplegable que le
-permitirá elegir la lengua vernácula del proyecto entre todas las lenguas de los archivos LDML de la importación.
+permitirá elegir el idioma vernáculo del proyecto entre todos los idiomas de los archivos LDML de la importación.
 
 ### Idioma de análisis
 
-La _lengua de análisis_ es la lengua primaria a la que se traduce la lengua vernácula. Ésta suele ser una lengua
-regional, nacional, oficial o mayoritaria del lugar donde se habla la lengua vernácula. Análisis adicionales pueden
-añadirse tras la creación del proyecto (véase [más abajo](#project-languages)).
+El _idioma de análisis_ es el idioma primario a lo que se traduce el idioma vernáculo. Ésta suele ser una lengua
+regional, nacional, oficial o mayoritaria del lugar donde se habla la lengua vernácula. Idiomas de análisis adicionales
+pueden añadirse tras la creación del proyecto (véase [más abajo](#project-languages)).
 
 Si selecciona un archivo LIFT para importarlo durante la creación del proyecto, cada idioma utilizado en una definición
-o glosa se añadirá automáticamente al proyecto como lengua de análisis.
+o glosa se añadirá automáticamente al proyecto como idioma de análisis.
 
 ## Administrar un proyecto
 
-Cuando se ha creado o seleccionado un proyecto, éste se convierte en el proyecto activo-deberá ver un icono de engranaje
+Cuando se ha creado o seleccionado un proyecto, éste se convierte en el proyecto activo—deberá ver un icono de engranaje
 y/o el nombre del proyecto en el centro de la barra de aplicaciones, en la parte superior de The Combine. Al hacer clic
 en el icono de engranaje o en el nombre del proyecto, aparece Proyecto Ajustes para gestionar el proyecto. Los
 siguientes ajustes están disponibles para los usuarios del proyecto con permisos suficientes.
@@ -64,6 +64,12 @@ más detalles.
 (Esto no afecta a las sugerencias ortográficas para la glosa, ya que dichas sugerencias se basan en un diccionario
 independiente de los datos existentes del proyecto)
 
+#### Anulación de datos protegidos
+
+El ajuste por defecto es Desactivado. Change this to On to allow project users in Merge Duplicates to override the
+[protection](goals.md#protected-entries-and-senses) of words and senses that were imported with data not handled by The
+Combine.
+
 #### Archivar el proyecto
 
 Sólo está disponible para el Propietario del proyecto. Archivar un proyecto lo hace inaccesible para todos los usuarios.
@@ -76,7 +82,7 @@ que el proyecto se elimine por completo de los servidores.
 
 ![Idiomas del proyecto - Tzotzil](../images/projectLanguagesTzotzil.es.png){.center}
 
-La _lengua vernácula_ especificada en la creación del proyecto es fija.
+El _idioma vernáculo_ especificado en la creación del proyecto es fijo.
 
 Puede haber varios _idiomas de análisis_ asociados al proyecto, pero sólo el primero de la lista se asocia con las
 nuevas entradas de datos.
@@ -84,7 +90,7 @@ nuevas entradas de datos.
 !!! note "Nota"
 
     Si el proyecto tiene glosas en varios idiomas, esos idiomas deben añadirse aquí para que todas las glosas aparezcan
-    en [Limpieza de datos](goals.md). Pulse el icono de la lupa para ver todos los códigos de idioma presentes en el proyecto.
+    en [Limpieza de datos](goals.md). Haga clic en el icono de la lupa para ver todos los códigos de idioma presentes en el proyecto.
 
 El _idioma de los dominios semánticos_ controla el idioma en el que se muestran los títulos y descripciones de los
 dominios semánticos en [Entrada de datos](./dataEntry.md).
@@ -100,11 +106,11 @@ un Administrador, puede hacer clic aquí para abrir un menú de gestión de usua
 
 <pre>
     Eliminar del proyecto
-    Cambiar el papel del proyecto:
-        Cosechadora
+    Cambiar rol del proyecto:
+        Cosechador
         Editor
         Administrador
-    Convertir el proyecto en Propietario
+    Hacer propietario del proyecto
         [sólo disponible para el Propietario que modifica un Administrador]
 </pre>
 
@@ -162,8 +168,8 @@ used for the file names).
 
 #### Exportar {#export}
 
-Tras pulsar el botón Exportar, puede navegar por otras partes del sitio web mientras se preparan los datos para la
-descargar. When the data is gathered, the download will begin automatically. El nombre del archivo es el id del
+Tras hacer clic en el botón Exportar, puede navegar por otras partes del sitio web mientras se preparan los datos para
+la descargar. When the data is gathered, the download will begin automatically. El nombre del archivo es el id del
 proyecto.
 
 !!! warning "Importante"
@@ -186,7 +192,8 @@ not be imported into FieldWorks.
 
 Sólo está disponible para editar para el Propietario del proyecto, lo que permite fijar un calendario para un taller de
 recopilación rápida de palabras. Haga clic en el primer botón para seleccionar un intervalo de fechas para el taller.
-Pulse el botón central para añadir o eliminar fechas concretas. Pulse el último botón para borrar la programación.
+Haga clic en el botón central para añadir o eliminar fechas concretas. Haga clic en el último botón para borrar la
+programación.
 
 ![Calendario de talleres](../images/projectSchedule.es.png){.center}
 

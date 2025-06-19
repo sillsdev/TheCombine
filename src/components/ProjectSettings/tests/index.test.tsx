@@ -2,10 +2,8 @@ import { ThemeProvider } from "@mui/material/styles";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "@testing-library/jest-dom";
-import { cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { match } from "css-mediaquery";
-import { act } from "react";
 import { Provider } from "react-redux";
 import { Store } from "redux";
 import configureMockStore from "redux-mock-store";
@@ -22,10 +20,9 @@ import {
 } from "components/ProjectSettings/tests/SettingsTabTypes";
 import { randomProject } from "types/project";
 import theme from "types/theme";
+import { setMatchMedia } from "utilities/testingLibraryUtilities";
 
-jest.mock("react-router-dom", () => ({
-  useNavigate: jest.fn(),
-}));
+jest.mock("react-router", () => ({ useNavigate: jest.fn() }));
 
 jest.mock("backend", () => ({
   canUploadLift: () => Promise.resolve(false),
@@ -34,7 +31,7 @@ jest.mock("backend", () => ({
   getAllUsers: () => Promise.resolve([]),
   getCurrentPermissions: () => mockGetCurrentPermissions(),
   getUserRoles: () => Promise.resolve([]),
-  isFrontierNonempty: () => Promise.resolve(false),
+  hasFrontierWords: () => Promise.resolve(false),
 }));
 jest.mock("components/Project/ProjectActions");
 // Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`
@@ -80,21 +77,9 @@ const resetMocks = (): void => {
   mockGetCurrentPermissions.mockResolvedValue([]);
 };
 
-// Modified from mui.com/material-ui/react-use-media-query/#testing
-const createMatchMedia = (
-  width: number
-): ((query: string) => MediaQueryList) => {
-  return (query: string) =>
-    ({
-      matches: match(query, { width }),
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-    }) as any;
-};
-
 beforeAll(async () => {
   // Required (along with a `ThemeProvider`) for `useMediaQuery` to work
-  window.matchMedia = createMatchMedia(window.innerWidth);
+  setMatchMedia();
 
   resetMocks();
   await act(async () => {

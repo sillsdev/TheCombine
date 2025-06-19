@@ -4,10 +4,14 @@ on:
   pull_request:
     branches: [master]
 
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+
 permissions: # added using https://github.com/step-security/secure-workflows
   contents: read
   pull-requests: write
 
 jobs:
   commit-message-lint:
-    uses: sillsdev/FieldWorks/.github/workflows/CommitMessage.yml@d6f2ee1ed5aa1257e408a4afab2aab8fd8268764
+    uses: sillsdev/FieldWorks/.github/workflows/CommitMessage.yml@b34051e392d699c2d690b066cd5fd8ed00dc7c42

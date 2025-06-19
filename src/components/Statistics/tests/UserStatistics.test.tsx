@@ -1,11 +1,8 @@
-import { ListItem } from "@mui/material";
-import { type ReactTestRenderer, act, create } from "react-test-renderer";
+import { act, render, screen } from "@testing-library/react";
 
 import { SemanticDomainUserCount } from "api/models";
 import UserStatistics from "components/Statistics/UserStatistics";
 import { newSemanticDomainUserCount } from "types/semanticDomain";
-
-let testRenderer: ReactTestRenderer;
 
 const mockProjectId = "mockProjectId";
 const mockSemanticDomainUserCount = newSemanticDomainUserCount();
@@ -17,8 +14,8 @@ const mockGetDomainSenseUserStatistics = jest.fn();
 const mockGetProjectId = jest.fn();
 
 jest.mock("backend", () => ({
-  getSemanticDomainUserCount: (projectId: string, lang?: string) =>
-    mockGetDomainSenseUserStatistics(projectId, lang),
+  getSemanticDomainUserCount: (projectId: string) =>
+    mockGetDomainSenseUserStatistics(projectId),
 }));
 
 jest.mock("backend/localStorage", () => ({
@@ -36,23 +33,17 @@ beforeEach(async () => {
   jest.clearAllMocks();
   setMockFunctions();
   await act(async () => {
-    testRenderer = create(<UserStatistics lang={""} />);
+    render(<UserStatistics />);
   });
 });
 
 describe("UserStatistics", () => {
-  it("renders without crashing, UI does not change unexpectedly", async () => {
-    expect(testRenderer.toJSON()).toMatchSnapshot();
+  test("useEffect hook was called", async () => {
+    expect(mockGetProjectId).toHaveBeenCalled();
   });
 
-  it("useEffect hook was called", async () => {
-    //Verify the mock function called
-    expect(mockGetProjectId).toHaveBeenCalled();
-
-    //Verify ListItem for the DomainSenseUserCount object is present
-    const newSenDomCountList = testRenderer.root.findAllByType(ListItem);
-    expect(newSenDomCountList.length).toEqual(
-      mockSemanticDomainUserCountArray.length
-    );
+  test("all list items are present", async () => {
+    const listItems = screen.queryAllByRole("listitem");
+    expect(listItems.length).toEqual(mockSemanticDomainUserCountArray.length);
   });
 });

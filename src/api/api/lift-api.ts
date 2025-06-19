@@ -97,6 +97,51 @@ export const LiftApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
+    cancelLiftExport: async (
+      projectId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("cancelLiftExport", "projectId", projectId);
+      const localVarPath = `/v1/projects/{projectId}/lift/cancelexport`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
     deleteLiftFile: async (
       projectId: string,
       options: any = {}
@@ -429,6 +474,27 @@ export const LiftApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
+    async cancelLiftExport(
+      projectId: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.cancelLiftExport(projectId, options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
     async deleteLiftFile(
       projectId: string,
       options?: any
@@ -601,6 +667,17 @@ export const LiftApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
+    cancelLiftExport(projectId: string, options?: any): AxiosPromise<boolean> {
+      return localVarFp
+        .cancelLiftExport(projectId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
     deleteLiftFile(projectId: string, options?: any): AxiosPromise<string> {
       return localVarFp
         .deleteLiftFile(projectId, options)
@@ -687,6 +764,20 @@ export interface LiftApiCanUploadLiftRequest {
    *
    * @type {string}
    * @memberof LiftApiCanUploadLift
+   */
+  readonly projectId: string;
+}
+
+/**
+ * Request parameters for cancelLiftExport operation in LiftApi.
+ * @export
+ * @interface LiftApiCancelLiftExportRequest
+ */
+export interface LiftApiCancelLiftExportRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof LiftApiCancelLiftExport
    */
   readonly projectId: string;
 }
@@ -809,6 +900,22 @@ export class LiftApi extends BaseAPI {
   ) {
     return LiftApiFp(this.configuration)
       .canUploadLift(requestParameters.projectId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {LiftApiCancelLiftExportRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof LiftApi
+   */
+  public cancelLiftExport(
+    requestParameters: LiftApiCancelLiftExportRequest,
+    options?: any
+  ) {
+    return LiftApiFp(this.configuration)
+      .cancelLiftExport(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

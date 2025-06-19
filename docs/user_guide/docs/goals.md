@@ -27,7 +27,8 @@ There are icons at the top of each column to
 
 In a column with predominantly text content (Vernacular, Glosses, Note, or Flag), you can sort alphabetically or filter
 with a text search. By default, the text search is a fuzzy match: it is not case sensitive and it allows for one or two
-typos. If you want exact text matches, use quotes around your filter.
+typos. If you want exact text matches, use quotes around your filter. To show all entries with non-empty text in the
+column, type a space for your filter.
 
 In the Number of Senses column or Pronunciations column, you can sort or filter by the number of senses or recordings
 that entries have. In the Pronunciations column, you can also filter by speaker name.
@@ -167,7 +168,7 @@ information will appear in the Merge Duplicate sense cards as follows:
 
     A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different general categories, only the first one is preserved.
 
-#### Protected Entries and Senses
+#### Protected Entries and Senses {#protected-entries-and-senses}
 
 If an imported entry or sense contains data not supported in The Combine (e.g., etymologies or sense reversals), it is
 protected to prevent its deletion. If a sense is protected, its card will have a yellow background—it cannot be deleted

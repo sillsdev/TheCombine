@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { getCurrentPermissions, getGraylistEntries } from "backend";
+import { getCurrentPermissions, hasGraylistEntries } from "backend";
 import GoalList from "components/GoalTimeline/GoalList";
 import { asyncAddGoal, asyncGetUserEdits } from "goals/Redux/GoalActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
@@ -26,9 +26,8 @@ const timelineStyle: { [key: string]: CSSProperties } = {
   },
   paneStyling: {
     display: "block",
-    marginLeft: "auto",
-    marginRight: "auto",
     justifyContent: "center",
+    marginInline: "auto",
     textAlign: "center",
   },
 };
@@ -85,9 +84,7 @@ export default function GoalTimeline(): ReactElement {
       setLoaded(true);
     }
     const updateHasGraylist = async (): Promise<void> =>
-      setHasGraylist(
-        await getGraylistEntries(1).then((res) => res.length !== 0)
-      );
+      setHasGraylist(await hasGraylistEntries());
     updateHasGraylist();
   }, [dispatch, loaded]);
 
@@ -137,7 +134,7 @@ export default function GoalTimeline(): ReactElement {
     return (
       <>
         {/* Alternatives */}
-        <div style={{ ...timelineStyle.paneStyling, float: "right" }}>
+        <div style={{ ...timelineStyle.paneStyling, float: "inline-end" }}>
           <GoalList
             orientation="horizontal"
             data={createSuggestionData(availableGoalTypes, goalTypeSuggestions)}
@@ -176,7 +173,7 @@ export default function GoalTimeline(): ReactElement {
         {/* Alternatives */}
         <ImageListItem
           cols={5}
-          style={{ ...timelineStyle.paneStyling, float: "right" }}
+          style={{ ...timelineStyle.paneStyling, float: "inline-end" }}
         >
           <Typography variant="h6">{t("goal.selector.other")}</Typography>
           <GoalList

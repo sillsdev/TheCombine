@@ -9,7 +9,7 @@ import {
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import { Permission } from "api/models";
 import { hasPermission } from "backend";
@@ -67,6 +67,7 @@ export default function ProjectButtons(props: TabProps): ReactElement {
         <Tooltip title={t("appBar.statistics")}>
           <Button
             color="inherit"
+            data-testid={statButtonId}
             id={statButtonId}
             onClick={() => navigate(Path.Statistics)}
             style={{
@@ -83,6 +84,7 @@ export default function ProjectButtons(props: TabProps): ReactElement {
       <Tooltip title={t("appBar.projectSettings")}>
         <Button
           color="inherit"
+          data-testid={projButtonId}
           id={projButtonId}
           onClick={() => navigate(Path.ProjSettings)}
           style={{
@@ -93,10 +95,7 @@ export default function ProjectButtons(props: TabProps): ReactElement {
         >
           <Settings />
           {isMdUp && (
-            <Typography
-              display="inline"
-              style={{ marginLeft: 5, marginRight: 5 }}
-            >
+            <Typography display="inline" style={{ marginInline: 5 }}>
               {shortenName(projectName, nameLength)}
             </Typography>
           )}

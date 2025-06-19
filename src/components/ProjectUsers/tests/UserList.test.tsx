@@ -1,24 +1,24 @@
-import { Input, ListItem } from "@mui/material";
-import renderer from "react-test-renderer";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
-import { User } from "api/models";
+import { UserStub } from "api/models";
 import UserList from "components/ProjectUsers/UserList";
-import { newUser } from "types/user";
+import { newUserStub } from "types/user";
 
 jest.mock("backend", () => ({
   avatarSrc: () => jest.fn(),
-  getAllUsers: () => mockGetAllUsers(),
+  getUsersByFilter: () => mockGetUsersByFilter(),
 }));
 
-const mockGetAllUsers = jest.fn();
+const mockGetUsersByFilter = jest.fn();
 
-const mockUsers = [newUser("NameA", "userA"), newUser("NameB", "userB")];
+const userA: UserStub = { ...newUserStub("NameA", "userA"), id: "A" };
+const userB: UserStub = { ...newUserStub("NameB", "userB"), id: "B" };
+const mockUsers = [userA, userB];
 
-let testRenderer: renderer.ReactTestRenderer;
-
-const renderUserList = async (users: User[] = []): Promise<void> => {
-  await renderer.act(async () => {
-    testRenderer = renderer.create(
+const renderUserList = async (users: UserStub[] = []): Promise<void> => {
+  await act(async () => {
+    render(
       <UserList
         addToProject={jest.fn()}
         minSearchLength={3}
@@ -34,19 +34,15 @@ beforeEach(() => {
 
 describe("UserList", () => {
   it("shows no users by default", async () => {
-    mockGetAllUsers.mockResolvedValue(mockUsers);
+    mockGetUsersByFilter.mockResolvedValue([]);
     await renderUserList(mockUsers);
-    expect(testRenderer.root.findAllByType(ListItem)).toHaveLength(0);
+    expect(screen.queryAllByRole("listitem")).toHaveLength(0);
   });
 
   it("shows user when filter has a match", async () => {
-    mockGetAllUsers.mockResolvedValue(mockUsers);
+    mockGetUsersByFilter.mockResolvedValue([userA]);
     await renderUserList();
-    renderer.act(() => {
-      testRenderer.root
-        .findByType(Input)
-        .props.onChange({ target: { value: mockUsers[0].name } });
-    });
-    expect(testRenderer.root.findAllByType(ListItem)).toHaveLength(1);
+    await userEvent.type(screen.getByRole("textbox"), userA.name);
+    expect(screen.queryAllByRole("listitem")).toHaveLength(1);
   });
 });

@@ -13,14 +13,13 @@ import { useSelector } from "react-redux";
 
 import { Pronunciation, Word, WritingSystem } from "api/models";
 import { NoteButton } from "components/Buttons";
-import { focusInput } from "components/DataEntry/DataEntryTable";
 import {
   DeleteEntry,
   GlossWithSuggestions,
   VernWithSuggestions,
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
-import SenseDialog from "components/DataEntry/DataEntryTable/NewEntry/SenseDialog";
 import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
+import { focusInput } from "components/DataEntry/utilities";
 import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import { type StoreState } from "rootRedux/types";
 import theme from "types/theme";
@@ -40,8 +39,7 @@ export enum FocusTarget {
 }
 
 const gridItemStyle = (spacing: number): CSSProperties => ({
-  paddingLeft: theme.spacing(spacing),
-  paddingRight: theme.spacing(spacing),
+  paddingInline: theme.spacing(spacing),
   position: "relative",
 });
 
@@ -65,7 +63,6 @@ interface NewEntryProps {
   vernInput: RefObject<HTMLInputElement>;
   // Parent component handles vern suggestion state:
   selectedDup?: Word;
-  selectedSenseGuid?: string;
   setSelectedDup: (id?: string) => void;
   setSelectedSense: (guid?: string) => void;
   suggestedVerns: string[];
@@ -96,7 +93,6 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     vernInput,
     // Parent component handles vern suggestion state:
     selectedDup,
-    selectedSenseGuid,
     setSelectedDup,
     setSelectedSense,
     suggestedVerns,
@@ -107,7 +103,6 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     (state: StoreState) => state.treeViewState.open
   );
 
-  const [senseOpen, setSenseOpen] = useState(false);
   const [shouldFocus, setShouldFocus] = useState<FocusTarget | undefined>();
   const [submitting, setSubmitting] = useState(false);
   const [vernOpen, setVernOpen] = useState(false);
@@ -148,19 +143,14 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     }
   }, [isTreeOpen, resetState, wasTreeClosed]);
 
-  /** Update whether the Sense dialog should be open. */
-  useEffect(() => {
-    setSenseOpen(!!selectedDup?.id && selectedSenseGuid === undefined);
-  }, [selectedDup, selectedSenseGuid]);
-
-  /** When the vern/sense dialogs are closed, focus needs to return to text fields.
+  /** When the vern dialog is closed, focus needs to return to text fields.
    * The following sets a flag (shouldFocus) to be triggered by conditionalFocus(),
    * which is passed to each input component to call on update. */
   useEffect(() => {
-    if (!(senseOpen || vernOpen)) {
+    if (!vernOpen) {
       setShouldFocus(selectedDup ? FocusTarget.Gloss : FocusTarget.Vernacular);
     }
-  }, [selectedDup, senseOpen, vernOpen]);
+  }, [selectedDup, vernOpen]);
 
   /** This function is for a child input component to call on update
    * to move focus to itself, if shouldFocus says it should. */
@@ -221,27 +211,16 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     }
   };
 
-  const handleCloseVernDialog = (id?: string): void => {
-    if (id !== undefined) {
-      setSelectedDup(id);
+  const handleCloseVernDialog = (wordId?: string, senseId?: string): void => {
+    if (wordId !== undefined) {
+      setSelectedDup(wordId);
+      setSelectedSense(senseId);
     } else {
       // User closed the dialog without choosing a duplicate entry or new entry.
       // Highlight-select the typed vernacular for easy deletion.
       vernInput.current?.setSelectionRange(0, vernInput.current.value.length);
     }
     setVernOpen(false);
-  };
-
-  const handleCloseSenseDialog = (guid?: string): void => {
-    if (guid === undefined) {
-      // If undefined, the user exited the dialog without a selection.
-      setSelectedDup();
-      setVernOpen(true);
-    } else {
-      // Set the selected dup sense to the one with the specified guid;
-      // an empty string indicates new sense for the selectedDup.
-      setSelectedSense(guid);
-    }
   };
 
   return (
@@ -280,14 +259,6 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
             vernacularWords={suggestedDups}
             analysisLang={analysisLang.bcp47}
           />
-          {selectedDup && (
-            <SenseDialog
-              selectedWord={selectedDup}
-              open={senseOpen}
-              handleClose={handleCloseSenseDialog}
-              analysisLang={analysisLang.bcp47}
-            />
-          )}
         </Grid>
       </Grid>
       <Grid item xs={4} style={gridItemStyle(1)}>
@@ -304,7 +275,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
       </Grid>
       <Grid item xs={1} style={gridItemStyle(1)}>
         {!selectedDup?.id && (
-          // note is not available if user selected to modify an exiting entry
+          // note is not available if user selected to modify an existing entry
           <NoteButton
             buttonId={NewEntryId.ButtonNote}
             noteText={newNote}
@@ -335,7 +306,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
 function EnterGrid(): ReactElement {
   const { t } = useTranslation();
   return (
-    <Grid item xs={12} style={{ paddingLeft: theme.spacing(2) }}>
+    <Grid item xs={12} style={{ paddingInlineStart: theme.spacing(2) }}>
       <Typography variant="body2">{t("addWords.pressEnter")}</Typography>
     </Grid>
   );

@@ -24,9 +24,9 @@ import {
   defaultState as defaultMergeState,
 } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
+import { defaultState as defaultGoalsState } from "goals/Redux/GoalReduxTypes";
 import { setupStore } from "rootRedux/store";
 import { persistedDefaultState } from "rootRedux/testTypes";
-import { GoalType } from "types/goals";
 import { multiSenseWord, newFlag, newWord } from "types/word";
 
 // Used when the guids don't matter.
@@ -65,16 +65,11 @@ mockGoal.steps = [{ words: [] }, { words: [] }];
 const preloadedState = {
   ...persistedDefaultState,
   goalsState: {
+    ...defaultGoalsState,
     allGoalTypes: [],
     currentGoal: new MergeDups(),
     goalTypeSuggestions: [],
     history: [mockGoal],
-    previousGoalType: GoalType.Default,
-  },
-  mergeDuplicateGoal: {
-    data: {} as MergeData,
-    tree: {} as MergeTree,
-    mergeWords: [],
   },
 };
 
@@ -120,7 +115,7 @@ beforeEach(() => {
   );
 });
 
-describe("MergeDupActions", () => {
+describe("MergeDupsActions", () => {
   describe("mergeAll", () => {
     // Don't move or merge anything
     it("handles no merge", async () => {

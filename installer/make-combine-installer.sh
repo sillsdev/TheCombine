@@ -1,7 +1,10 @@
 #! /usr/bin/env bash
 set -eo pipefail
 
-# Warning and Error reporting functions
+# Reporting functions
+info () {
+  echo "INFO: $1"
+}
 warning () {
   echo "WARNING: $1" >&2
 }
@@ -43,13 +46,15 @@ while (( "$#" )) ; do
   shift
 done
 
-if [ -z "${COMBINE_VERSION}" ] ; then
-  error "COMBINE_VERSION is not set."
-fi
-# Setup Python virtual environment
 cd ../deploy
 
 if [[ $NET_INSTALL == 0 ]] ; then
+  if [ -z "${COMBINE_VERSION}" ] ; then
+    error "COMBINE_VERSION is not set."
+  fi
+
+  # Setup Python virtual environment
+  info "Setting up the Python virtual environment."
   if [ ! -f venv/bin/activate ] ; then
     # Virtual environment does not exist - create it
     python3 -m venv venv
@@ -57,9 +62,10 @@ if [[ $NET_INSTALL == 0 ]] ; then
   source venv/bin/activate
   # Update the environment if necessary
   python -m pip $((( DEBUG == 0)) && echo "-q") install --upgrade pip pip-tools
-  python -m piptools sync requirements.txt
+  python -m piptools sync $((( DEBUG == 0)) && echo "-q") requirements.txt
 
   # Package The Combine for "offline" installation
+  info "Packaging low-bandwidth installer for $COMBINE_VERSION."
   TEMP_DIR=/tmp/images-$$
   pushd scripts
   ./package_images.py ${COMBINE_VERSION} ${TEMP_DIR} $((( ARM == 1 )) && echo "--arch arm64") $((( DEBUG == 1 )) && echo "--debug")
@@ -67,13 +73,14 @@ if [[ $NET_INSTALL == 0 ]] ; then
   popd
 else
   # Package The Combine for network installation
+  info "Packaging high-bandwidth installer."
   INSTALLER_NAME="combine-net-installer.run"
 fi
 
 # Remove unwanted folders
 for DIR in venv scripts/__pycache__ ; do
   if [ -d $DIR ] ; then
-    (( DEBUG == 1 )) && echo "Removing ../deploy/$DIR/"
+    (( DEBUG == 1 )) && info "Removing ../deploy/$DIR/"
     rm -rf $DIR
   fi
 done
@@ -81,6 +88,6 @@ done
 cd ${SCRIPT_DIR}
 makeself $((( DEBUG == 0)) && echo "--tar-quietly" ) ../deploy ${INSTALLER_NAME} "Combine Installer" scripts/install-combine.sh ${COMBINE_VERSION} $((( ARM == 1 )) && echo "arm")
 if  [[ $NET_INSTALL == 0 ]] ; then
-  makeself --append ${TEMP_DIR} ${INSTALLER_NAME}
+  makeself $((( DEBUG == 0)) && echo "--tar-quietly" ) --append ${TEMP_DIR} ${INSTALLER_NAME}
   rm -rf ${TEMP_DIR}
 fi

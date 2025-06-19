@@ -9,7 +9,7 @@
     "subtitle": "Una aplicación web para recopilar rápidamente muchos conjuntos de palabras",
     "privacyPolicy": "Política de privacidad",
     "descriptionP1": "Las palabras son los bloques de construcción de la lengua, vitales tanto para comunicar información como para compartir la cultura. Un diccionario, lleno de palabras y sus significados, es un recurso lingüístico fundamental, que ayuda a documentar y preservar la lengua para las generaciones futuras dentro de la comunidad y proporciona un puente para la comunicación con otras comunidades. Sin embargo, muchas comunidades lingüísticas minoritarias de todo el mundo carecen de este recurso en su lengua, lo que las coloca en una situación de desventaja.",
-    "descriptionP2": "The Combine es una herramienta fácil de usar en el proceso de Recopilación Rápida de Palabras (RWC), un método para reunir las palabras que servirán de base para un diccionario bilingüe. En el centro del proceso de RWC se encuentran los hablantes nativos de una determinada comunidad lingüística. Un grupo de 4 a 6 hablantes nativos, a los que se les presenta un dominio semántico a la vez, proponen todas las palabras de su lengua que se les ocurran relacionadas con ese dominio. The Combine facilita la introducción de estas palabras en una base de datos, junto con traducciones, grabaciones de audio y notas, para captar mejor su forma y significado.",
+    "descriptionP2": "The Combine es una herramienta fácil de usar en el proceso de Recopilación Rápida de Palabras (RWC), un método para recopilar las palabras que servirán de base para un diccionario bilingüe. En el centro del proceso de RWC se encuentran los hablantes nativos de una determinada comunidad lingüística. Un grupo de 4 a 6 hablantes nativos, a los que se les presenta un dominio semántico a la vez, proponen todas las palabras de su lengua que se les ocurran relacionadas con ese dominio. The Combine facilita la introducción de estas palabras en una base de datos, junto con traducciones, grabaciones de audio y notas, para captar mejor su forma y significado.",
     "descriptionP3": "Las personas con poco conocimiento lingüístico previo y una experiencia informática limitada pueden aprender rápidamente a utilizar las principales funciones de recopilación de palabras de The Combine. A continuación, las palabras resultantes pueden organizarse y editarse dentro de The Combine antes de exportar los datos para utilizarlos en otras herramientas como FLEx.",
     "descriptionP4": "¡Inscríbase para comenzar con su recopilación de palabras!"
   },
@@ -22,7 +22,7 @@
     "selectEntry": "Seleccionar una entrada",
     "selectSense": "Seleccionar una acepción",
     "newEntryFor": "Nueva entrada para: ",
-    "newSenseFor": "Nueva acepción para: ",
+    "newSense": "Nueva acepción",
     "senseInWord": "La palabra ya tiene esta acepción en este dominio semántico: {{ val1 }}, {{ val2 }}",
     "deleteRow": "Borrar esta fila",
     "deleteRowWarning": "¡Esta fila se eliminará permanentemente!",
@@ -30,8 +30,16 @@
     "domain": "Dominio",
     "domainTitle": "Dominio: {{ val1 }} ({{ val2 }})",
     "glosses": "Glosas",
-    "pressEnter": "Presione Enter para guardar la palabra",
+    "pressEnter": "Pulse Enter para guardar la palabra",
     "vernacular": "Vernáculo"
+  },
+  "analyticsConsent": {
+    "consentModal": {
+      "acceptAllBtn": "Sí, permitir todos los análisis",
+      "acceptNecessaryBtn": "No, sólo análisis necesarios",
+      "description": "El Combine almacena información básica sobre su sesión actual y su uso con fines de mantenimiento. Esta información es necesaria y no se comparte con nadie. The Combine también utiliza análisis adicionales para recopilar estadísticas anónimas. ¿Autoriza el uso de análisis adicionales?",
+      "title": "Análisis en The Combine"
+    }
   },
   "appBar": {
     "dataEntry": "Entrada de datos",
@@ -46,11 +54,13 @@
     "title": "Iniciar Sesión",
     "name": "Su nombre",
     "username": "Nombre de usuario",
+    "usernameOrEmail": "Nombre de usuario o correo electrónico",
     "password": "Contraseña",
     "passwordRequirements": "La contraseña debe tener 8 carácteres o más.",
     "forgotPassword": "¿Olvidó su contraseña?",
     "login": "Iniciar sesión",
     "failed": "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña.",
+    "failedUnknownReason": "No se ha podido iniciar sesión. Algo ha ido mal con The Combine.",
     "backToLogin": "Volver al inicio de sesión",
     "signUp": "Registrarse",
     "signUpNew": "Registrar un nuevo usuario",
@@ -75,7 +85,9 @@
     "resetDone": "Si ha introducido correctamente su dirección de correo electrónico o su nombre de usuario, se le habrá enviado un enlace para restablecer la contraseña.",
     "backToLogin": "Volver al inicio de sesión"
   },
-  "captcha": {},
+  "captcha": {
+    "error": "La verificación de la página ha fallado o ha expirado. Por favor, actualice la página."
+  },
   "speakerMenu": {
     "none": "No hay locutores en el proyecto. Para adjuntar un locutor a las grabaciones de audio, habla con un administrador del proyecto.",
     "other": "[Ninguna de los anteriores]"
@@ -89,22 +101,25 @@
   "createProject": {
     "name": "Nombre del Proyecto",
     "nameTaken": "Nombre tomado",
-    "upload?": "¿Cargar los datos existentes?",
+    "upload?": "¿Subir los datos existentes?",
     "uploadFormat": "El archivo debe ser una carpeta comprimida que contenga un proyecto <1>Lexicon Interchange FormaT (LIFT)</1>.",
-    "create": "Crear Proyecto",
+    "create": "Crear proyecto",
     "fileSelected": "Archivo seleccionado: {{ val }}",
-    "language": "La información lingüística del proyecto se extraerá automáticamente de los datos cargados.",
+    "language": "La información lingüística del proyecto se extraerá automáticamente de los datos subidos.",
     "languageOptionOther": "otro",
     "languageSelect": "Seleccionar de idiomas en el archivo:",
     "success": "¡Proyecto creado!"
   },
-  "selectProject": { "title": "Seleccionar Proyecto" },
+  "selectProject": { "title": "Seleccionar proyecto" },
   "siteSettings": {
     "projectList": "Proyectos",
+    "activeProjects": "Proyectos activos: {{ val }}",
+    "archivedProjects": "Proyectos archivados: {{ val }}",
+    "manageProject": "Administrar este proyecto",
     "projectRoles": "Roles del proyecto",
     "addProjectUsers": "Agregar usuarios del proyecto",
     "archiveProjectText": "Este proyecto no será accesible para ningún usuario.",
-    "restoreProjectText": "Alguien probablemente tuvo una buena razón para archivar este proyecto. ¿Seguro que quieres restaurarlo?",
+    "restoreProjectText": "Alguien probablemente tuvo una buena razón para archivar este proyecto. ¿Está seguro que quiere restaurarlo?",
     "userList": "Usuarios",
     "deleteUser": {
       "confirm": "Confirmar la eliminación del usuario de la base de datos de The Combine.",
@@ -117,11 +132,20 @@
     "banners": {
       "title": "Banners",
       "loginBanner": "Banner de inicio de sesión",
-      "announcementBanner": "Banner de anuncios"
+      "announcementBanner": "Banner de anuncios",
+      "bannerCloseButton": "Cerrar el banner"
     }
   },
   "userSettings": {
+    "analyticsConsent": {
+      "button": "Cambiar el consentimiento",
+      "consentNo": "Usted no ha aceptado nuestro uso de cookies de análisis.",
+      "consentYes": "Usted ha consentido nuestro uso de cookies de análisis.",
+      "title": "Cookies de análisis"
+    },
     "contact": "Información de contacto",
+    "glossSuggestion": "Sugerencias de ortografía de las glosas",
+    "glossSuggestionHint": "En Introducción de datos, ofrece sugerencias ortográficas para la glosa que se está escribiendo.",
     "phone": "Número de teléfono",
     "uiLanguage": "Idioma de la interfaz de usuario",
     "uiLanguageDefault": "(Por defecto, el idioma del navegador)",
@@ -162,9 +186,10 @@
       "deleteAnalysisLanguage": "Eliminar este idioma de análisis.",
       "getGlossLanguages": "Encuentre todos los códigos de idioma utilizados en los datos actuales.",
       "updateVernacularLanguageNameFailed": "Error al actualizar el nombre del idioma vernáculo",
-      "addAnalysisLanguageFailed": "No se ha podido añadir el lenguaje de análisis",
-      "makeDefaultAnalysisLanguageFailed": "No se ha podido establecer el lenguaje de análisis por defecto",
-      "deleteAnalysisLanguageFailed": "Fallo en la eliminación del lenguaje de análisis",
+      "updateVernacularLanguageNameSuccess": "¡Idioma vernácular actualizado!",
+      "addAnalysisLanguageFailed": "No se ha podido añadir el idioma de análisis",
+      "makeDefaultAnalysisLanguageFailed": "No se ha podido establecer el idioma de análisis por defecto",
+      "deleteAnalysisLanguageFailed": "Fallo en la eliminación del idioma de análisis",
       "updateSemDomWritingSystemFailed": "Fallo en la actualización del lenguaje de los dominios semánticos"
     },
     "name": "Nombre del Proyecto",
@@ -219,7 +244,10 @@
       "header": "Importar datos",
       "body": "Los datos importados se añadirán a este proyecto. The Combine no hará ningún intento de deduplicar, sobrescribir o sincronizar.",
       "chooseFile": "Elegir archivo",
-      "notAllowed": "Ya ha importado un archivo Lift a este proyecto."
+      "notAllowed": "Ya ha importado un archivo LIFT a este proyecto.",
+      "wordsUploaded": "Palabras subidas: {{ val }}",
+      "noWordsUploaded": "El archivo LIFT no tiene palabras en el idioma vernáculo de este proyecto.",
+      "liftLanguageMismatch": "Los idiomas de este archivo LIFT ({{ val1 }}) no incluyen el idioma vernáculo del proyecto ({{ val2 }}). Probablemente no se importarán ningunas palabras. ¿Está seguro de que desea continuar?"
     },
     "archive": {
       "archive": "Archivar el proyecto",
@@ -242,6 +270,10 @@
       "on": "Encendido",
       "hint": "En la entrada de datos, sugiera las lenguas vernáculas existentes similares a la lengua vernácula que se está escribiendo."
     },
+    "protectedDataOverride": {
+      "hint": "En combinar duplicados, permita anular la protección de palabras y sentidos protegidos.",
+      "label": "Anulación de datos protegidos"
+    },
     "invite": {
       "inviteByEmailLabel": "Invitar por correo electrónico",
       "userExists": "Este usuario ya está registrado.",
@@ -253,11 +285,20 @@
       "toastFail": "Error al agregar usuario al proyecto."
     },
     "domains": {
+      "semDomLanguage": "Idioma de los dominios semánticos",
+      "label": "Dominios semánticos personalizados",
+      "add": "Añadir un subdominio personalizado",
+      "parent": "Dominio padre: ",
       "subdomainName": "Nombre de subdominio: ",
       "name": "Nombre: ",
       "description": "Descripción: ",
       "questions": "Preguntas: ",
-      "addError": {}
+      "deleteConfirm": "¿Está seguro que desea eliminar este dominio personalizado?",
+      "addError": {
+        "name": "Por favor, introduzca un nombre para el dominio personalizado.",
+        "customParent": "El dominio padre no puede ser un subdominio personalizado. Por favor, elija un dominio padre diferente.",
+        "takenParent": "El dominio padre seleccionado ya tiene un subdominio personalizado."
+      }
     }
   },
   "goal": {
@@ -288,6 +329,8 @@
     "deleteDisabled": "Se importó con datos que The Combine no maneja, por lo que no se puede eliminar.",
     "error": {
       "gloss": "Las glosas no pueden dejarse en blanco",
+      "glossAndDefinition": "Las glosas y las definiciones no pueden dejarse en blanco",
+      "sense": "No se puede guardar una acepción vacía",
       "senses": "No se puede guardar una entrada sin acepciones",
       "vernacular": "El vernáculo no puede dejarse en blanco"
     },
@@ -364,10 +407,16 @@
       "delete": "Borrar la acepción",
       "deleteDialog": "¿Borrar esta acepción?",
       "protectedSense": "Esta acepción fue importado con datos que The Combine no maneja.",
-      "protectedSenseInfo": "Esta acepción no puede ser borrado o añadido a otra acepción. Puede moverla a otra palabra o añadir otras acepciones a éste para combinarlos.",
+      "protectedSenseInfo": "Esta acepción no puede ser borrado o añadido a otra acepción de forma segura. Puede moverla a otra palabra o añadir otras acepciones a éste para combinarlos.",
       "protectedWord": "Esta palabra se importó con datos que The Combine no maneja.",
-      "protectedWordInfo": "Para evitar que se borre, no se puede eliminar la acepción final de esa palabra.",
-      "protectedData": "Datos protegidos: {{ val }}"
+      "protectedWordInfo": "Para evitar que se borre, no se puede eliminar de forma segura la acepción final de esa palabra.",
+      "protectedData": "Datos protegidos: {{ val }}",
+      "protectedOverride": "¿Permitir la eliminación de palabras o acepciones protegidos?",
+      "protectedOverrideWarning": "Se perderán los siguientes datos: {{ val }}",
+      "deleteProtectedSenseWarning": "No puede eliminar una acepción protegida.",
+      "dropIntoSidebarWarning": "No se puede colocar acepciones en la barra lateral.",
+      "dropProtectedSenseWarning": "No se puede combinar una acepción protegida en otro sentido.",
+      "orderProtectedSidebarWarning": "Una acepción protegida en la barra lateral no puede moverse de la posición superior."
     },
     "protectReason": {
       "annotations": "anotaciones",
@@ -379,6 +428,7 @@
       "noteWithType": "nota con tipo \"{{ val }}\"",
       "notesSense": "notas",
       "notesWord": "más de 1 nota",
+      "pronunciationWithoutUrl": "pronunciación sin archivo multimedia",
       "relations": "relaciones",
       "reversal": "Reverso de \"{{ val }}\"",
       "subsenses": "subacepciones",
@@ -406,6 +456,9 @@
     "undo": {
       "undo": "Deshacer la combinación",
       "undoDialog": "¿Deshacer esta combinación?",
+      "deleted": "Borrado:",
+      "undoDelete": "Deshacer el borrado",
+      "undoDeleteDialog": "¿Deshacer este borrado?",
       "undoDisabled": "Deshacer no disponible"
     }
   },
@@ -442,16 +495,20 @@
     "upload": "Subir"
   },
   "pronunciations": {
+    "enableMicTooltip": "Habilita el acceso al micrófono para grabar.",
     "recordTooltip": "Mantenga presionado para grabar.",
     "playTooltip": "Haga clic para reproducir.",
-    "deleteTooltip": "Presiona Shift más clic para eliminar.",
+    "deleteTooltip": "Pulse Mayúsculas y haga clic para eliminar.",
     "protectedTooltip": "El audio importado no se puede borrar ni modificar.",
     "speaker": "Locutor: {{ val }}.",
     "speakerAdd": "Clic derecho para añadir un locutor.",
     "speakerChange": "Clic derecho para cambiar de locutor.",
     "speakerSelect": "Seleccionar locutor de esta grabación de audio",
-    "recordingError": "Error de grabación",
-    "deleteRecording": "Eliminar grabación"
+    "recordingError": "Error de grabación.",
+    "recordingPermission": "Por favor, compruebe si el permiso de micrófono está activado en su navegador.",
+    "deleteRecording": "Eliminar grabación",
+    "audioStreamError": "¡Error al recibir el flujo de audio!",
+    "noMicAccess": "Sin acceso al micrófono. Grabación de audio desactivada."
   },
   "statistics": {
     "title": "Estadísticas de datos: {{ val }}",

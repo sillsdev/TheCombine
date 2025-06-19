@@ -60,7 +60,7 @@ create-python-venv () {
   echo "Install pip and pip-tools"
   python -m pip $((( DEBUG == 0)) && echo "-q") install --upgrade pip pip-tools
   echo "Install dependencies"
-  python -m piptools sync requirements.txt
+  python -m piptools sync $((( DEBUG == 0)) && echo "-q") requirements.txt
 }
 
 # Install Kubernetes engine and other supporting software

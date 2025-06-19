@@ -57,7 +57,7 @@ export default class SpellChecker {
       return;
     }
 
-    const part = await this.dictLoader.loadDictPart(word);
+    const part = (await this.dictLoader.loadDictPart(word))?.normalize("NFC");
     if (part) {
       this.addToDictLoaded(part);
       this.spell.personal(part);
@@ -77,17 +77,20 @@ export default class SpellChecker {
     });
   }
 
-  /** Trim whitespace from the start and non-letter/-mark/-number characters from the end,
+  // Use of [^\p{L}\p{M}] for separator characters matches split_dictionary.py.
+  // Cf. https://en.wikipedia.org/wiki/Unicode_character_property
+  static sepFinalString = /[^\p{L}\p{M}]*$/u;
+  static sepChar = /[^\p{L}\p{M}]/gu;
+
+  /** Trim whitespace from the start and separator characters from the end,
    * then split off the final word. */
   static cleanAndSplit(word: string): SplitWord {
-    // Use of \p{L}\p{M}\p{N} here matches that in split_dictionary.py.
-    // Cf. https://en.wikipedia.org/wiki/Unicode_character_property
-    word = word.trimStart().replace(/[^\p{L}\p{M}\p{N}]*$/u, "");
+    word = word.trimStart().replace(this.sepFinalString, "");
     if (!word) {
       return {};
     }
-    // Split by non-letter/-mark/-number characters.
-    const final = word.split(/[^\p{L}\p{M}\p{N}]/u).pop();
+    // Split by separator characters.
+    const final = word.split(this.sepChar).pop();
     if (!final) {
       // The above `.replace(...)` and `!word`-check make this impossible,
       // but it mollifies Typescript and is a good backstop for any future changes.
@@ -97,15 +100,15 @@ export default class SpellChecker {
     return { allButFinal, final };
   }
 
-  /** If the given string, split by separator (non-letter/-mark/-number) characters,
+  /** If the given string, split by separator characters,
    * is multiple words, replace all but the last word with ellipses (...).
    * (Assumes all end-of-string separator characters have been removed,
    * which is the case for suggestions from this SpellChecker.) */
   public static replaceAllButLastWordWithEllipses(word: string): string {
-    // Split by non-letter/-mark/-number characters
-    const words = word.split(/[^\p{L}\p{M}\p{N}]/u).filter((w) => w);
-    // Find the last non-letter/-mark/-number character
-    const finalSep = word.match(/[^\p{L}\p{M}\p{N}]/gu)?.pop();
+    // Split by separator characters.
+    const words = word.split(this.sepChar).filter((w) => w);
+    // Find the last separator character.
+    const finalSep = word.match(this.sepChar)?.pop();
     return words.length > 1 ? `...${finalSep}${words[words.length - 1]}` : word;
   }
 

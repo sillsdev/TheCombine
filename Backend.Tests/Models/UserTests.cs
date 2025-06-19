@@ -5,48 +5,50 @@ namespace Backend.Tests.Models
 {
     public class UserTests
     {
-        private const string Name = "George";
-
         [Test]
-        public void TestEquals()
+        public void TestClone()
         {
-            var user = new User { Name = Name };
-            Assert.That(user.Equals(new User { Name = Name }), Is.True);
-        }
-
-        [Test]
-        public void TestEqualsNull()
-        {
-            var user = new User { Name = Name };
-            Assert.That(user.Equals(null), Is.False);
-        }
-
-        [Test]
-        public void TestHashCode()
-        {
-            Assert.That(
-                new User { Name = Name }.GetHashCode(),
-                Is.Not.EqualTo(new User { Name = "Different Name" }.GetHashCode())
-            );
+            var user = new User
+            {
+                Id = "user-id",
+                Avatar = "avatar-path",
+                HasAvatar = true,
+                Name = "Mr. Surname",
+                Email = "a@b.c",
+                Phone = "123-4556-7890",
+                OtherConnectionField = "huh?",
+                Agreement = true,
+                Password = "encrypted-string",
+                Username = "surname2000",
+                AnalyticsOn = false,
+                AnsweredConsent = true,
+                UILang = "fr",
+                GlossSuggestion = OffOnSetting.Off,
+                Token = "auth-token",
+                IsAdmin = true,
+                WorkedProjects = new() { { "proj-id", "ue-id" } },
+                ProjectRoles = new() { { "proj-id", "ur-id" } },
+            };
+            Assert.That(user.Clone(), Is.EqualTo(user).UsingPropertiesComparer());
         }
 
         [Test]
         public void TestSanitize()
         {
             var user = new User { Avatar = "ava", Password = "pas", Token = "tok" };
-            Assert.That(user.Equals(new User()), Is.False);
+            Assert.That(user, Is.Not.EqualTo(new User()).UsingPropertiesComparer());
             user.Sanitize();
-            Assert.That(user.Equals(new User()), Is.True);
+            Assert.That(user, Is.EqualTo(new User()).UsingPropertiesComparer());
         }
     }
 
-    public class CredentialsTest
+    public class CredentialsTests
     {
         [Test]
         public void TestConstructor()
         {
             var credentials = new Credentials();
-            Assert.That(credentials.Username, Is.EqualTo(""));
+            Assert.That(credentials.EmailOrUsername, Is.EqualTo(""));
             Assert.That(credentials.Password, Is.EqualTo(""));
         }
     }

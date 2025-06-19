@@ -101,28 +101,28 @@ export const AudioApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {string} wordId
      * @param {string} fileName
+     * @param {string} wordId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     downloadAudioFile: async (
       projectId: string,
-      wordId: string,
       fileName: string,
+      wordId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("downloadAudioFile", "projectId", projectId);
-      // verify required parameter 'wordId' is not null or undefined
-      assertParamExists("downloadAudioFile", "wordId", wordId);
       // verify required parameter 'fileName' is not null or undefined
       assertParamExists("downloadAudioFile", "fileName", fileName);
+      // verify required parameter 'wordId' is not null or undefined
+      assertParamExists("downloadAudioFile", "wordId", wordId);
       const localVarPath =
         `/v1/projects/{projectId}/words/{wordId}/audio/download/{fileName}`
           .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
-          .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)))
-          .replace(`{${"fileName"}}`, encodeURIComponent(String(fileName)));
+          .replace(`{${"fileName"}}`, encodeURIComponent(String(fileName)))
+          .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)));
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -321,15 +321,15 @@ export const AudioApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {string} wordId
      * @param {string} fileName
+     * @param {string} wordId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async downloadAudioFile(
       projectId: string,
-      wordId: string,
       fileName: string,
+      wordId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
@@ -337,8 +337,8 @@ export const AudioApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.downloadAudioFile(
           projectId,
-          wordId,
           fileName,
+          wordId,
           options
         );
       return createRequestFunction(
@@ -445,19 +445,19 @@ export const AudioApiFactory = function (
     /**
      *
      * @param {string} projectId
-     * @param {string} wordId
      * @param {string} fileName
+     * @param {string} wordId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     downloadAudioFile(
       projectId: string,
-      wordId: string,
       fileName: string,
+      wordId: string,
       options?: any
     ): AxiosPromise<any> {
       return localVarFp
-        .downloadAudioFile(projectId, wordId, fileName, options)
+        .downloadAudioFile(projectId, fileName, wordId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -547,14 +547,14 @@ export interface AudioApiDownloadAudioFileRequest {
    * @type {string}
    * @memberof AudioApiDownloadAudioFile
    */
-  readonly wordId: string;
+  readonly fileName: string;
 
   /**
    *
    * @type {string}
    * @memberof AudioApiDownloadAudioFile
    */
-  readonly fileName: string;
+  readonly wordId: string;
 }
 
 /**
@@ -662,8 +662,8 @@ export class AudioApi extends BaseAPI {
     return AudioApiFp(this.configuration)
       .downloadAudioFile(
         requestParameters.projectId,
-        requestParameters.wordId,
         requestParameters.fileName,
+        requestParameters.wordId,
         options
       )
       .then((request) => request(this.axios, this.basePath));

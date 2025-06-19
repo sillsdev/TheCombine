@@ -1,8 +1,8 @@
+import { Draggable } from "@hello-pangea/dnd";
 import { Card } from "@mui/material";
 import { type ReactElement } from "react";
-import { Draggable } from "react-beautiful-dnd";
 
-import { trashId } from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop";
+import { trashId } from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/MergeDragDropTypes";
 import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
 import { type MergeTreeSense } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { useAppSelector } from "rootRedux/hooks";
@@ -21,13 +21,16 @@ export default function SidebarDragSense(
     const ref = state.mergeDuplicateGoal.tree.sidebar.senseRef;
     return JSON.stringify({ ...ref, order: props.index });
   });
+  const overrideProtection = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.overrideProtection
+  );
 
   return (
     <Draggable
       key={props.mergeSense.sense.guid}
       draggableId={draggableId}
       index={props.index}
-      isDragDisabled={props.mergeSense.protected}
+      isDragDisabled={props.mergeSense.protected && !overrideProtection}
     >
       {(provided, snapshot): ReactElement => (
         <div

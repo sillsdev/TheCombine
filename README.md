@@ -99,6 +99,9 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      appropriate Node.js version.
 
 4. [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+
+   - On Ubuntu, if using Snap: `sudo snap install dotnet-sdk --classic --channel 8.0/stable`
+
 5. [MongoDB](https://mongodb.com/docs/manual/administration/install-community/) provides instructions on how to install
    the current release of MongoDB.
 
@@ -225,8 +228,8 @@ environment. This will be denoted with the `(venv)` prefix on the prompt.
 With an active virtual environment, install Python development requirements for this project:
 
 ```bash
-python -m pip install --upgrade pip pip-tools
-python -m piptools sync dev-requirements.txt
+python -m pip -q install --upgrade pip pip-tools
+python -m piptools sync -q dev-requirements.txt
 ```
 
 The following Python scripts can now be run from the virtual environment.
@@ -243,10 +246,17 @@ To run all Python linting steps:
 tox
 ```
 
-To upgrade all pinned dependencies:
+To upgrade all pinned development dependencies:
 
 ```bash
 python -m piptools compile --upgrade dev-requirements.in
+```
+
+To upgrade the pinned dependencies for deployment:
+
+```bash
+cd deploy
+python -m piptools compile --upgrade requirements.in
 ```
 
 To upgrade the pinned dependencies for the Maintenance container:
@@ -422,7 +432,11 @@ virtual environment.
    ```
 
    where `<xml_filename>` is the name of the file(s) to import. Currently each file contains English and one other
-   language.
+   language. In bash (not powershell), you can import all the xml files at once with:
+
+   ```bash
+   cd deploy/scripts && python sem_dom_import.py semantic_domains/xml/*
+   ```
 
 2. Start the database:
 
@@ -462,7 +476,7 @@ npm run license-report-frontend
 
 ### Inspect Database
 
-To browse the database locally during development, open MongoDB Compass Community.
+To browse the database locally during development, open [MongoDB Compass](https://www.mongodb.com/try/download/compass).
 
 1. Under New Connection, enter `mongodb://localhost:27017`
 2. Under Databases, select CombineDatabase
@@ -470,39 +484,37 @@ To browse the database locally during development, open MongoDB Compass Communit
 ### Add or Update Dictionary Files
 
 The dictionary files for spell-check functionality in _The Combine_ are split into parts to allow lazy-loading, for the
-sake of devices with limited bandwidth. There are scripts for generating these files in `src/resources/dictionaries/`;
-files in this directory should _not_ be manually edited.
+sake of devices with limited bandwidth. There are scripts for generating these files in `public/dictionaries/` and
+`src/resources/dictionaries/`; files in this directory should _not_ be manually edited.
 
 The bash script `scripts/fetch_wordlists.sh` is used to fetch dictionary files for a given language (e.g., `es`) from
-the [LibreOffice dictionaries](https://cgit.freedesktop.org/libreoffice/dictionaries/) and convert them to raw wordlists
-(e.g., `src/resources/dictionaries/es.txt`). Execute the script with no arguments for its usage details. Any language
-not currently supported can be manually added as a case in this script.
+the [LibreOffice dictionaries](https://github.com/LibreOffice/dictionaries) and convert them to raw wordlists (e.g.,
+`src/resources/dictionaries/es.txt`). Execute the script with no arguments for its usage details. Any language not
+currently supported can be manually added as a case in this script.
 
 ```bash
 ./scripts/fetch_wordlist.sh
 ```
 
 The python script `scripts/split_dictionary.py` takes a wordlist textfile (e.g., `src/resources/dictionaries/es.txt`),
-splits it into multiple TypeScript files (e.g., into `src/resources/dictionaries/es/` with index file
-`.../es/index.ts`), and updates `src/resources/dictionaries/index.ts` accordingly. Run the script within a Python
-virtual environment, with `-h`/`--help` to see its usage details.
+splits it into multiple text files (e.g., `public/dictionaries/es/u*.dic`), creates a TypeScript file to load them
+(e.g., `src/resources/dictionaries/es.ts`), and updates `src/resources/dictionaries/index.ts` accordingly. Run the
+script within a Python virtual environment, with `-h`/`--help` to see its usage details.
 
 ```bash
 python scripts/split_dictionary.py --help
 ```
 
 For some languages, the wordlist is too large for practical use. Generally try to keep the folder for each language
-under 2.5 MB, to avoid such errors as
-`FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory` in the Kubernetes build. For smaller
-folder sizes, default maximum word-lengths are automatically imposed for some languages: (`ar`, `es`, `fr`, `pt`, `ru`).
-Use `-m`/`--max` to override the defaults, with `-m -1` to force no limit.
+under 2.5 MB. For smaller folder sizes, default maximum word-lengths are automatically imposed for some languages:
+(`ar`, `es`, `fr`, `hi`, `pt`, `ru`). Use `-m`/`--max` to override the defaults, with `-m -1` to force no limit.
 
 Adjust the `-t`/`--threshold` and `-T`/`--Threshold` parameters to split a wordlist into more, smaller files; e.g.:
 
-- `python scripts/split_dictionary.py -l hi -t 1000`
+- `python scripts/split_dictionary.py -l es -T 15000`
 - `python scripts/split_dictionary.py -l sw -t 1500`
 
-The top of each language's `index.ts` file states which values of `-m`, `-t`, and `-T` were used for that language.
+The top of each language's `.ts` file states which values of `-m`, `-t`, and `-T` were used for that language.
 
 ### Cleanup Local Repository
 
@@ -533,7 +545,7 @@ Options:
 To update the PDF copy of the installer README.md file, run the following from the `installer` directory:
 
 ```console
-pandoc --pdf-engine=weasyprint README.md -o README.pdf
+pandoc --pdf-engine=weasyprint --metadata title="The Combine Installation Instructions" README.md -o README.pdf
 ```
 
 ## Generate Tutorial Video Subtitles
@@ -599,7 +611,7 @@ Install _Docker Desktop_ from <https://docs.docker.com/get-docker/>.
 
 Notes for installing _Docker Desktop_ in Linux:
 
-1. _Docker Desktop_ requires a distribution running the GNOME or KDE Desktop environment.
+1. On Ubuntu: https://docs.docker.com/desktop/setup/install/linux/ubuntu/#install-docker-desktop
 2. If you installed `docker` or `docker-compose` previously, remove them:
 
    ```bash
@@ -617,10 +629,12 @@ Once _Docker Desktop_ has been installed, start it, and set it up as follows:
 4. Select _Enable Kubernetes_ and click _Apply & Restart_;
 5. Click _Install_ on the dialog that is displayed.
 
-Note:
+Notes:
 
-Normally, there is a slider to adjust the Memory size for the _Docker Desktop_ virtual machine. On Windows systems using
-the WSL 2 backend, there are instructions for setting the resources outside of the _Docker Desktop_ application.
+- Normally, there is a slider to adjust the Memory size for the _Docker Desktop_ virtual machine. On Windows systems
+  using the WSL 2 backend, there are instructions for setting the resources outside of the _Docker Desktop_ application.
+- On Linux, it's possible for `docker-desktop` to be run without the GUI, which can prevent the _Docker Desktop_ GUI
+  from opening. In that situation, execute `systemctl --user stop docker-desktop`.
 
 ### Install Kubernetes Tools
 
@@ -872,7 +886,7 @@ For each of the `kubectl` commands below:
 To stop _The Combine_ without deleting it, you scale it back to 0 replicas running:
 
 ```bash
-kubectl -n thecombine scale --replicas=0 deployments frontend backend maintenance database
+kubectl -n thecombine scale --replicas=0 deployments frontend backend maintenance database otel-opentelemetry-collector
 ```
 
 You can restart the deployments by setting `--replicas=1`.
@@ -905,15 +919,19 @@ helm -n <chart_namespace> delete <chart_name>
 where `<chart_namespace>` and `<chart_name>` are the `NAMESPACE` and `NAME` respectively of the chart you want to
 delete. These are listed in the output of `helm list -A`.
 
+You can delete the entire `thecombine` namespace and its charts with `kubectl delete namespace thecombine`. However,
+then you will have to rerun `setup_cluster.py` (to install `otel-opentelemetry-collector`) before `setup_combine.py`.
+
 #### Checking The System Status
 
 Once _The Combine_ is installed, it is useful to be able to see the state of the system and to look at the logs. _The
-Combine_ is setup as four deployments:
+Combine_ is setup as five deployments:
 
 - frontend
 - backend
 - database
 - maintenance
+- otel/opentelemetry-collector
 
 Each deployment definition is used to create a _pod_ that runs the docker image.
 
@@ -921,23 +939,25 @@ To see the state of the deployments, run:
 
 ```console
 $ kubectl -n thecombine get deployments
-NAME          READY   UP-TO-DATE   AVAILABLE   AGE
-database      1/1     1            1           3h41m
-maintenance   1/1     1            1           3h41m
-backend       1/1     1            1           3h41m
-frontend      1/1     1            1           3h41m
+NAME                              READY   UP-TO-DATE   AVAILABLE   AGE
+database                          1/1     1            1           3h41m
+maintenance                       1/1     1            1           3h41m
+backend                           1/1     1            1           3h41m
+frontend                          1/1     1            1           3h41m
+otel/opentelemetry-collector      1/1     1            1           3h46m
 ```
 
 Similarly, you can view the state of the pods:
 
 ```console
 $ kubectl -n thecombine get pods
-NAME                           READY   STATUS      RESTARTS        AGE
-database-794b4d956f-g2n5k      1/1     Running     1 (3h51m ago)   3h58m
-ecr-cred-helper--1-w9xxp       0/1     Completed   0               164m
-maintenance-85644b9c76-55pz8   1/1     Running     0               130m
-backend-69b77c46c5-8dqlv       1/1     Running     0               130m
-frontend-c94c5747c-pz6cc       1/1     Running     0               60m
+NAME                                                READY   STATUS      RESTARTS        AGE
+database-794b4d956f-g2n5k                           1/1     Running     1 (3h51m ago)   3h58m
+install-fonts-fvrb4                                 0/1     Completed   0               164m
+maintenance-85644b9c76-55pz8                        1/1     Running     0               130m
+backend-69b77c46c5-8dqlv                            1/1     Running     0               130m
+frontend-c94c5747c-pz6cc                            1/1     Running     0               60m
+otel/opentelemetry-collector-5cd6b9c867-6j5zb       1/1     Running     0               4h03m
 ```
 
 Use the `logs` command to view the log file of a pod; you can specify the pod name listed in the output of the
@@ -963,13 +983,13 @@ Task: add an existing user to a project
 Run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- add_user_to_proj.py --project <PROJECT_NAME> --user <USER>
+kubectl -n thecombine exec -it deployment/maintenance -- add_user_to_proj.py --project <PROJECT_NAME> --user <USER>
 ```
 
 For additional options, run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- add_user_to_proj.py --help`
+kubectl -n thecombine exec -it deployment/maintenance -- add_user_to_proj.py --help
 ```
 
 #### Backup _TheCombine_
@@ -979,7 +999,7 @@ Task: Backup the CombineDatabase and the Backend files to the Amazon Simple Stor
 Run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- combine_backup.py [--verbose]
+kubectl -n thecombine exec -it deployment/maintenance -- combine_backup.py [--verbose]
 ```
 
 Notes:
@@ -997,7 +1017,7 @@ Task: Delete a project
 Run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- rm_project.py <PROJECT_NAME>
+kubectl -n thecombine exec -it deployment/maintenance -- rm_project.py <PROJECT_NAME>
 ```
 
 You may specify more than one `<PROJECT_NAME>` to delete multiple projects.
@@ -1009,7 +1029,7 @@ Task: Restore the CombineDatabase and the Backend files from a backup stored on 
 Run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- combine_restore.py [--verbose] [BACKUP_NAME]
+kubectl -n thecombine exec -it deployment/maintenance -- combine_restore.py [--verbose] [BACKUP_NAME]
 ```
 
 Note:

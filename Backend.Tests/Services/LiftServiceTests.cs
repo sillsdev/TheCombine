@@ -12,7 +12,7 @@ namespace Backend.Tests.Services
         private ILiftService _liftService = null!;
 
         private const string FileName = "file.lift-ranges";
-        private const string ProjId = "LiftServiceTestsProjId";
+        private const string ExportId = "LiftServiceTestsExportId";
         private const string UserId = "LiftServiceTestsUserId";
 
         [SetUp]
@@ -24,34 +24,45 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void ExportInProgressTest()
+        public void TestExportInProgress()
         {
             Assert.That(_liftService.IsExportInProgress(UserId), Is.False);
-            _liftService.SetExportInProgress(UserId, true);
+            _liftService.SetExportInProgress(UserId, ExportId);
             Assert.That(_liftService.IsExportInProgress(UserId), Is.True);
-            _liftService.SetExportInProgress(UserId, false);
+            _liftService.CancelRecentExport(UserId);
             Assert.That(_liftService.IsExportInProgress(UserId), Is.False);
         }
 
         [Test]
-        public void StoreRetrieveDeleteExportTest()
+        public void TestStoreRetrieveDeleteExport()
         {
             Assert.That(_liftService.RetrieveExport(UserId), Is.Null);
             Assert.That(_liftService.DeleteExport(UserId), Is.False);
 
-            _liftService.SetExportInProgress(UserId, true);
+            _liftService.SetExportInProgress(UserId, ExportId);
             Assert.That(_liftService.RetrieveExport(UserId), Is.Null);
             Assert.That(_liftService.DeleteExport(UserId), Is.True);
             Assert.That(_liftService.DeleteExport(UserId), Is.False);
 
-            _liftService.StoreExport(UserId, FileName);
+            _liftService.SetExportInProgress(UserId, ExportId);
+            _liftService.StoreExport(UserId, FileName, ExportId);
             Assert.That(_liftService.RetrieveExport(UserId), Is.EqualTo(FileName));
             Assert.That(_liftService.DeleteExport(UserId), Is.True);
             Assert.That(_liftService.RetrieveExport(UserId), Is.Null);
         }
 
         [Test]
-        public void StoreRetrieveDeleteImportTest()
+        public void TestStoreOnlyValidExports()
+        {
+            _liftService.SetExportInProgress(UserId, ExportId);
+            _liftService.StoreExport(UserId, FileName, "expiredExportId");
+            Assert.That(_liftService.RetrieveExport(UserId), Is.Null);
+            _liftService.StoreExport(UserId, FileName, ExportId);
+            Assert.That(_liftService.RetrieveExport(UserId), Is.EqualTo(FileName));
+        }
+
+        [Test]
+        public void TestStoreRetrieveDeleteImport()
         {
             Assert.That(_liftService.RetrieveImport(UserId), Is.Null);
             Assert.That(_liftService.DeleteImport(UserId), Is.False);

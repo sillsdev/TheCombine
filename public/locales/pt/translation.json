@@ -21,7 +21,7 @@
     "selectEntry": "Selecione uma entrada",
     "selectSense": "Selecione um sentido",
     "newEntryFor": "Nova entrada para: ",
-    "newSenseFor": "Novo sentido para: ",
+    "newSense": "Novo sentido",
     "senseInWord": "A palavra já tem este sentido neste domínio semântico: {{ val1 }}, {{ val2 }}",
     "deleteRow": "Excluir esta linha",
     "deleteRowWarning": "Esta linha será permanentemente apagada!",
@@ -32,6 +32,7 @@
     "pressEnter": "Pressione Enter para salvar a palavra",
     "vernacular": "Vernáculo"
   },
+  "analyticsConsent": { "consentModal": {} },
   "appBar": {
     "dataEntry": "Entrada de dados",
     "dataCleanup": "Limpeza de dados",
@@ -43,6 +44,7 @@
     "title": "Entrar",
     "name": "Seu Nome",
     "username": "Nome de usuário",
+    "usernameOrEmail": "Nome de usuário ou endereço de e-mail",
     "password": "Senha",
     "passwordRequirements": "A senha deve conter 8 caracteres ou mais.",
     "forgotPassword": "Esqueceu a senha?",
@@ -108,6 +110,7 @@
     }
   },
   "userSettings": {
+    "analyticsConsent": {},
     "uiLanguage": "Idioma da interface",
     "uiLanguageDefault": "(Definir o idioma do navegador como padrão)",
     "updateSuccess": "Configurações atualizadas com sucesso."
@@ -165,7 +168,7 @@
       "header": "Importar Dados",
       "body": "Os dados importados serão adicionados a este projeto. The Combine não tentará deduplicar, sobrescrever ou sincronizar.",
       "chooseFile": "Escolha Arquivo",
-      "notAllowed": "Você já importou um arquivo Lift para este projeto."
+      "notAllowed": "Você já importou um arquivo LIFT para este projeto."
     },
     "archive": {
       "archive": "Arquivar Projeto",
@@ -179,6 +182,7 @@
       "on": "Ativado",
       "hint": "Na Entrada de Dados, o programa irá sugerir verbetes existentes que são similares ao verbete no vernáculo que está sendo digitado."
     },
+    "protectedDataOverride": {},
     "invite": {
       "inviteByEmailLabel": "Convidar por e-mail",
       "userExists": "Esse usuário já está registrado.",
@@ -208,9 +212,9 @@
     "progress": "Passo {{ val1 }} de {{ val2 }}"
   },
   "createStrWordInv": { "title": "Criar Inventário de Palavra Estrutural" },
-  "handleFlags": { "title": "Bandeiras de identificadores" },
-  "reviewDeferredDups": {},
-  "spellCheckGloss": { "title": "Verificar Ortografia do Glossário" },
+  "handleFlags": { "title": "Manjar Sinalizações" },
+  "reviewDeferredDups": { "title": "Revisar Duplicações Atrasadas" },
+  "spellCheckGloss": { "title": "Verificar Ortografia da Glosa" },
   "validateChars": { "title": "Validar Caracteres" },
   "validateStrWords": { "title": "Validar os Caracteres Estruturais" },
   "reviewEntries": {
@@ -303,6 +307,7 @@
     "cancel": "Cancelar",
     "clearText": "Limpar texto",
     "confirm": "Confirmar",
+    "defer": "Adiar",
     "delete": "Excluir",
     "deletePermanently": "Eliminar permanentemente?",
     "done": "Concluído",
@@ -323,7 +328,7 @@
     "recordTooltip": "Pressione e segure para gravar.",
     "playTooltip": "Pressione para reproduzir.",
     "deleteTooltip": "Clique em shift para excluir.",
-    "recordingError": "Erro de gravação",
+    "recordingError": "Erro de gravação.",
     "deleteRecording": "Eliminar Gravação"
   },
   "statistics": {

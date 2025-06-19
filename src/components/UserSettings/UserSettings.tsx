@@ -15,15 +15,21 @@ import { FormEvent, Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { OffOnSetting, User } from "api/models";
-import { isEmailTaken, updateUser } from "backend";
+import {
+  getUserIdByEmailOrUsername,
+  isEmailOrUsernameAvailable,
+  updateUser,
+} from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
 import AnalyticsConsent from "components/AnalyticsConsent";
 import { asyncLoadSemanticDomains } from "components/Project/ProjectActions";
 import ClickableAvatar from "components/UserSettings/ClickableAvatar";
 import { updateLangFromUser } from "i18n";
 import { useAppDispatch } from "rootRedux/hooks";
+import { RuntimeConfig } from "types/runtimeConfig";
 import theme from "types/theme";
 import { uiWritingSystems } from "types/writingSystem";
+import { NormalizedTextField } from "utilities/fontComponents";
 
 // Chrome silently converts non-ASCII characters in a Textfield of type="email".
 // Use punycode.toUnicode() to convert them from punycode back to Unicode.
@@ -51,6 +57,11 @@ export default function UserSettingsGetUser(): ReactElement {
   );
 }
 
+/** Text field of type="email" silently converted its input from Unicode to punycode.
+This function trims whitespace, and converts to normalized Unicode. */
+const normalizeEmail = (email: string): string =>
+  punycode.toUnicode(email.trim()).normalize("NFC");
+
 export function UserSettings(props: {
   user: User;
   setUser: (user?: User) => void;
@@ -71,10 +82,14 @@ export function UserSettings(props: {
 
   const { t } = useTranslation();
 
+  /** Checks whether email address is okay: unchanged or not taken by a different user. */
   async function isEmailOkay(): Promise<boolean> {
-    const unicodeEmail = punycode.toUnicode(email.toLowerCase());
-    const unchanged = unicodeEmail === props.user.email.toLowerCase();
-    return unchanged || !(await isEmailTaken(unicodeEmail));
+    const unicodeEmail = normalizeEmail(email);
+    return (
+      unicodeEmail === props.user.email ||
+      (await isEmailOrUsernameAvailable(unicodeEmail)) ||
+      (await getUserIdByEmailOrUsername(unicodeEmail)) === props.user.id
+    );
   }
 
   const handleConsentChange = (consentVal?: boolean): void => {
@@ -82,10 +97,11 @@ export function UserSettings(props: {
     setDisplayConsent(false);
   };
 
+  /** For the save button, true if nothing has changed. */
   const disabled =
     name === props.user.name &&
     phone === props.user.phone &&
-    punycode.toUnicode(email) === props.user.email &&
+    normalizeEmail(email) === props.user.email &&
     analyticsOn === props.user.analyticsOn &&
     uiLang === (props.user.uiLang ?? "") &&
     glossSuggestion === props.user.glossSuggestion;
@@ -97,7 +113,7 @@ export function UserSettings(props: {
         ...props.user,
         name,
         phone,
-        email: punycode.toUnicode(email),
+        email: normalizeEmail(email),
         analyticsOn,
         uiLang,
         glossSuggestion,
@@ -127,7 +143,7 @@ export function UserSettings(props: {
                   <ClickableAvatar avatar={avatar} setAvatar={setAvatar} />
                 </Grid>
                 <Grid item xs>
-                  <TextField
+                  <NormalizedTextField
                     id={UserSettingsIds.FieldName}
                     fullWidth
                     variant="outlined"
@@ -138,7 +154,7 @@ export function UserSettings(props: {
                       "data-testid": UserSettingsIds.FieldName,
                       maxLength: 100,
                     }}
-                    style={{ margin: theme.spacing(1), marginLeft: 0 }}
+                    style={{ margin: theme.spacing(1), marginInlineStart: 0 }}
                   />
                   <Typography
                     data-testid={UserSettingsIds.FieldUsername}
@@ -165,11 +181,9 @@ export function UserSettings(props: {
                     <Phone />
                   </Grid>
                   <Grid item xs>
-                    <TextField
+                    <NormalizedTextField
                       id={UserSettingsIds.FieldPhone}
-                      inputProps={{
-                        "data-testid": UserSettingsIds.FieldPhone,
-                      }}
+                      inputProps={{ "data-testid": UserSettingsIds.FieldPhone }}
                       fullWidth
                       variant="outlined"
                       value={phone}
@@ -187,9 +201,7 @@ export function UserSettings(props: {
                   <Grid item xs>
                     <TextField
                       id={UserSettingsIds.FieldEmail}
-                      inputProps={{
-                        "data-testid": UserSettingsIds.FieldEmail,
-                      }}
+                      inputProps={{ "data-testid": UserSettingsIds.FieldEmail }}
                       required
                       fullWidth
                       variant="outlined"
@@ -280,40 +292,42 @@ export function UserSettings(props: {
                 </Grid>
               </Grid>
 
-              <Grid item container spacing={2}>
-                <Grid item xs={12}>
-                  <Typography variant="h6">
-                    {t("userSettings.analyticsConsent.title")}
-                  </Typography>
-                </Grid>
+              {!RuntimeConfig.getInstance().isOffline() && (
+                <Grid item container spacing={2}>
+                  <Grid item xs={12}>
+                    <Typography variant="h6">
+                      {t("userSettings.analyticsConsent.title")}
+                    </Typography>
+                  </Grid>
 
-                <Grid item>
-                  <Typography>
-                    {t(
-                      analyticsOn
-                        ? "userSettings.analyticsConsent.consentYes"
-                        : "userSettings.analyticsConsent.consentNo"
-                    )}
-                  </Typography>
-                </Grid>
+                  <Grid item>
+                    <Typography>
+                      {t(
+                        analyticsOn
+                          ? "userSettings.analyticsConsent.consentYes"
+                          : "userSettings.analyticsConsent.consentNo"
+                      )}
+                    </Typography>
+                  </Grid>
 
-                <Grid item>
-                  <Button
-                    data-testid={UserSettingsIds.ButtonChangeConsent}
-                    id={UserSettingsIds.ButtonChangeConsent}
-                    onClick={() => setDisplayConsent(true)}
-                    variant="outlined"
-                  >
-                    {t("userSettings.analyticsConsent.button")}
-                  </Button>
+                  <Grid item>
+                    <Button
+                      data-testid={UserSettingsIds.ButtonChangeConsent}
+                      id={UserSettingsIds.ButtonChangeConsent}
+                      onClick={() => setDisplayConsent(true)}
+                      variant="outlined"
+                    >
+                      {t("userSettings.analyticsConsent.button")}
+                    </Button>
+                  </Grid>
+                  {displayConsent && (
+                    <AnalyticsConsent
+                      onChangeConsent={handleConsentChange}
+                      required={false}
+                    />
+                  )}
                 </Grid>
-                {displayConsent && (
-                  <AnalyticsConsent
-                    onChangeConsent={handleConsentChange}
-                    required={false}
-                  />
-                )}
-              </Grid>
+              )}
 
               <Grid item container justifyContent="flex-end">
                 <Button

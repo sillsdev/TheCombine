@@ -22,7 +22,7 @@
     "selectEntry": "Select an entry",
     "selectSense": "Select a sense",
     "newEntryFor": "New entry for: ",
-    "newSenseFor": "New sense for: ",
+    "newSense": "New sense",
     "senseInWord": "The word already has this sense in this semantic domain: {{ val1 }}, {{ val2 }}",
     "deleteRow": "Delete this row",
     "deleteRowWarning": "This row will be permanently deleted!",
@@ -54,6 +54,7 @@
     "title": "Log In",
     "name": "Your Name",
     "username": "Username",
+    "usernameOrEmail": "Username or email address",
     "password": "Password",
     "passwordRequirements": "Password must be 8 characters or longer.",
     "forgotPassword": "Forgot password?",
@@ -114,6 +115,9 @@
   },
   "siteSettings": {
     "projectList": "Projects",
+    "activeProjects": "Active Projects: {{ val }}",
+    "archivedProjects": "Archived Projects: {{ val }}",
+    "manageProject": "Manage this project",
     "projectRoles": "Project roles",
     "addProjectUsers": "Add project users",
     "archiveProjectText": "This project will not be accessible to any users.",
@@ -151,6 +155,7 @@
     "uploadAvatarTitle": "Set user avatar"
   },
   "projectExport": {
+    "cancelExport": "Cancel export",
     "cannotExportEmpty": "Project is empty. You cannot export a project with no words.",
     "downloadInProgress": "Downloading project: {{ val }}",
     "exportFailed": "Failed to export project {{ val }}. Click to clear this message.",
@@ -242,7 +247,10 @@
       "header": "Import Data",
       "body": "Imported data will be added to this project. The Combine will make no attempt to deduplicate, overwrite, or sync.",
       "chooseFile": "Choose File",
-      "notAllowed": "You have already imported a Lift file to this project."
+      "notAllowed": "You have already imported a LIFT file to this project.",
+      "wordsUploaded": "Words uploaded: {{ val }}",
+      "noWordsUploaded": "The LIFT file has no words in this project's vernacular language.",
+      "liftLanguageMismatch": "The languages in this LIFT file ({{ val1 }}) do not include the project's vernacular language ({{ val2 }}). Likely no words will be imported. Are you sure you want to proceed?"
     },
     "archive": {
       "archive": "Archive Project",
@@ -266,6 +274,10 @@
       "off": "Off",
       "on": "On",
       "hint": "In Data Entry, suggest existing Vernaculars similar to the Vernacular being typed."
+    },
+    "protectedDataOverride": {
+      "hint": "In Merge Duplicates, allow overriding protection of protected words and senses.",
+      "label": "Protected Data Override"
     },
     "invite": {
       "inviteByEmailLabel": "Invite by Email",
@@ -334,6 +346,8 @@
     "deleteDisabled": "This was imported with data that The Combine doesn't handle, so it may not be deleted.",
     "error": {
       "gloss": "Glosses cannot be left blank",
+      "glossAndDefinition": "Glosses and definitions cannot both be left blank",
+      "sense": "Cannot save an empty sense",
       "senses": "Cannot save an entry with no senses",
       "vernacular": "Vernacular cannot be left blank"
     },
@@ -412,10 +426,16 @@
       "delete": "Delete sense",
       "deleteDialog": "Delete this sense?",
       "protectedSense": "This sense was imported with data that The Combine doesn't handle.",
-      "protectedSenseInfo": "This sense cannot be deleted or dropped into another sense. You may still move it to another word or drop other senses into this one to merge them.",
+      "protectedSenseInfo": "This sense cannot be safely deleted or dropped into another sense. You may still move it to another word or drop other senses into this one to merge them.",
       "protectedWord": "This word was imported with data that The Combine doesn't handle.",
-      "protectedWordInfo": "To prevent deletion, the final sense of this word cannot be removed.",
-      "protectedData": "Protected data: {{ val }}"
+      "protectedWordInfo": "To prevent deletion, the final sense of this word cannot be safely removed.",
+      "protectedData": "Protected data: {{ val }}",
+      "protectedOverride": "Allow deletion of protected words or senses?",
+      "protectedOverrideWarning": "The following data will be lost: {{ val }}",
+      "deleteProtectedSenseWarning": "You cannot delete a protected sense.",
+      "dropIntoSidebarWarning": "You cannot drop senses into the sidebar.",
+      "dropProtectedSenseWarning": "You cannot merge a protected sense into another sense.",
+      "orderProtectedSidebarWarning": "A protected sense in the sidebar cannot be moved out of top position."
     },
     "protectReason": {
       "annotations": "annotations",
@@ -427,6 +447,7 @@
       "noteWithType": "note with type \"{{ val }}\"",
       "notesSense": "notes",
       "notesWord": "more than 1 note",
+      "pronunciationWithoutUrl": "pronunciation without a media file",
       "relations": "relations",
       "reversal": "\"{{ val }}\" reversal",
       "subsenses": "subsenses",

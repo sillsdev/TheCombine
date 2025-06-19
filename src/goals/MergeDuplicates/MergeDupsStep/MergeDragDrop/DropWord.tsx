@@ -1,3 +1,4 @@
+import { Droppable } from "@hello-pangea/dnd";
 import { WarningOutlined } from "@mui/icons-material";
 import {
   Card,
@@ -8,7 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import { type ReactElement } from "react";
-import { Droppable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 
 import { type Flag } from "api/models";
@@ -56,11 +56,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
         paddingBottom: theme.spacing(1),
       }}
     >
-      <DropWordCardHeader
-        protectedWithOneChild={protectedWithOneChild}
-        treeWord={treeWord}
-        wordId={props.wordId}
-      />
+      <DropWordCardHeader treeWord={treeWord} wordId={props.wordId} />
       <CardContent>
         <Droppable
           key={props.wordId}
@@ -80,6 +76,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
                       senseRef={{
                         isSenseProtected: senses[0].protected,
                         mergeSenseId: id,
+                        protectReasons: senses[0].protectReasons,
                         wordId: props.wordId,
                       }}
                       isOnlySenseInProtectedWord={protectedWithOneChild}
@@ -102,7 +99,6 @@ export default function DropWord(props: DropWordProps): ReactElement {
 }
 
 interface DropWordCardHeaderProps {
-  protectedWithOneChild: boolean;
   treeWord?: MergeTreeWord;
   wordId: string;
 }
@@ -135,7 +131,7 @@ export function DropWordCardHeader(
 
   // Compute how many audio pronunciations the word will have post-merge.
   const otherIds = moves[props.wordId] ?? [];
-  const otherCount = otherIds.reduce((sum, id) => sum + counts[id], 0);
+  const otherCount = otherIds.reduce((sum, id) => sum + (counts[id] ?? 0), 0);
   const audioCount = (treeWord?.audioCount ?? 0) + otherCount;
 
   // Reset vern if not in vern list.
@@ -176,7 +172,7 @@ export function DropWordCardHeader(
 
   const headerAction = treeWord ? (
     <>
-      {props.protectedWithOneChild && (
+      {treeWord?.protected && (
         <IconButtonWithTooltip
           buttonId={`word-${props.wordId}-protected`}
           icon={<WarningOutlined />}
@@ -203,7 +199,7 @@ export function DropWordCardHeader(
       action={headerAction}
       style={{
         backgroundColor: treeWord?.protected ? "lightyellow" : "white",
-        height: 44,
+        minHeight: 44,
         minWidth: 150,
         padding: theme.spacing(1),
       }}

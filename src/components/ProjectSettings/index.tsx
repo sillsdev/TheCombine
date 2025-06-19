@@ -10,6 +10,7 @@ import {
   People,
   PersonAdd,
   RecordVoiceOver,
+  RemoveModerator,
   Settings,
   Sms,
 } from "@mui/icons-material";
@@ -33,7 +34,7 @@ import {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
 import { Permission, type Project } from "api/models";
@@ -53,6 +54,7 @@ import ProjectLanguages, {
   SemanticDomainLanguage,
 } from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
+import ProjectProtectedOverride from "components/ProjectSettings/ProjectProtectedOverride";
 import ProjectSchedule from "components/ProjectSettings/ProjectSchedule";
 import ProjectSelect from "components/ProjectSettings/ProjectSelect";
 import ActiveProjectUsers from "components/ProjectUsers/ActiveProjectUsers";
@@ -80,6 +82,7 @@ export enum Setting {
   Import = "SettingImport",
   Languages = "SettingLanguages",
   Name = "SettingName",
+  ProtectOverride = "SettingProtectOverride",
   Schedule = "SettingSchedule",
   Speakers = "SettingSpeakers",
   UserAdd = "SettingUserAdd",
@@ -176,6 +179,20 @@ export default function ProjectSettingsComponent(): ReactElement {
             />
           )}
 
+          {/* Protected data override toggle */}
+          {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+            <BaseSettings
+              icon={<RemoveModerator data-testid={Setting.ProtectOverride} />}
+              title={t("projectSettings.protectedDataOverride.label")}
+              body={
+                <ProjectProtectedOverride
+                  project={project}
+                  setProject={updateProject}
+                />
+              }
+            />
+          )}
+
           {/* Archive project */}
           {permissions.includes(Permission.Archive) && (
             <BaseSettings
@@ -246,7 +263,7 @@ export default function ProjectSettingsComponent(): ReactElement {
 
       <TabPanel value={tab} index={ProjectSettingsTab.ImportExport}>
         <Stack>
-          {/* Import Lift file */}
+          {/* Import LIFT file */}
           {permissions.includes(Permission.Import) && (
             <BaseSettings
               icon={<CloudUpload data-testid={Setting.Import} />}
@@ -263,7 +280,7 @@ export default function ProjectSettingsComponent(): ReactElement {
             />
           )}
 
-          {/* Export Lift file */}
+          {/* Export LIFT file */}
           {permissions.includes(Permission.Export) && (
             <BaseSettings
               icon={<GetApp data-testid={Setting.Export} />}

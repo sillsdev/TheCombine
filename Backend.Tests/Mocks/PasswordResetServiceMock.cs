@@ -4,8 +4,14 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    sealed internal class PasswordResetServiceMock : IPasswordResetService
+    internal sealed class PasswordResetServiceMock : IPasswordResetService
     {
+        private bool _boolResponse;
+        internal void SetNextBoolResponse(bool response)
+        {
+            _boolResponse = response;
+        }
+
         public Task<PasswordReset> CreatePasswordReset(string email)
         {
             return Task.FromResult(new PasswordReset(15, email));
@@ -18,14 +24,12 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> ValidateToken(string token)
         {
-            // TODO: More sophisticated mock
-            return Task.FromResult(true);
+            return Task.FromResult(_boolResponse);
         }
 
         public Task<bool> ResetPassword(string token, string password)
         {
-            // TODO: More sophisticated mock
-            return Task.FromResult(true);
+            return Task.FromResult(_boolResponse);
         }
     }
 }

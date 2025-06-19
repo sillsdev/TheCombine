@@ -1,4 +1,3 @@
-import { TextField } from "@mui/material";
 import {
   type ChangeEvent,
   type KeyboardEvent,
@@ -13,6 +12,7 @@ import {
   type SemanticDomainTreeNode,
 } from "api/models";
 import { getAugmentedTreeNode } from "components/TreeView/utilities";
+import { NormalizedTextField } from "utilities/fontComponents";
 
 export interface TreeSearchProps {
   currentDomain: SemanticDomainTreeNode;
@@ -41,9 +41,8 @@ export default function TreeSearch(props: TreeSearchProps): ReactElement {
   };
 
   return (
-    <TextField
+    <NormalizedTextField
       InputLabelProps={{ shrink: true }}
-      fullWidth
       id="domain-tree-search-field"
       label={t("treeView.findDomain")}
       onKeyDown={stopPropagation}

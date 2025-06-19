@@ -56,7 +56,9 @@ export default function GlossWithSuggestions(
         }
       }}
       onInputChange={(_e, newInputValue) => {
-        props.updateGlossField(newInputValue);
+        // Autocomplete doesn't use its renderInput's onChange,
+        // so we need to normalize manually here.
+        props.updateGlossField(newInputValue.normalize("NFC"));
       }}
       renderInput={(params) => (
         <TextFieldWithFont
@@ -83,7 +85,7 @@ export default function GlossWithSuggestions(
       /* Even though `onKeyPress` is deprecated, we need to keep using it:
        * - `onKeyDown` doesn't work with spelling suggestion selection via Enter,
        * because the submission occurs before the selected suggestion is applied;
-       * - `onKeyUp` doesn't work with SenseDialog selection via Enter,
+       * - `onKeyUp` doesn't work with VernDialog selection via Enter,
        * because the dialog closes before the key is released. */
       onKeyPress={(e: KeyboardEvent) => {
         if (e.key === Key.Enter) {

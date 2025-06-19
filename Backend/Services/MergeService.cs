@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -16,6 +18,11 @@ namespace BackendFramework.Services
         private readonly IWordRepository _wordRepo;
         private readonly IWordService _wordService;
 
+        /// <summary> Counter to uniquely id find-duplicates requests. </summary>
+        private ulong _mergeCounter;
+        /// <summary> A dictionary shared by all Projects for storing and retrieving potential duplicates. </summary>
+        private readonly ConcurrentDictionary<string, (ulong, List<List<Word>>?)> _potentialDups;
+
         public MergeService(IMergeBlacklistRepository mergeBlacklistRepo, IMergeGraylistRepository mergeGraylistRepo,
             IWordRepository wordRepo, IWordService wordService)
         {
@@ -23,6 +30,29 @@ namespace BackendFramework.Services
             _mergeGraylistRepo = mergeGraylistRepo;
             _wordRepo = wordRepo;
             _wordService = wordService;
+
+            _potentialDups = [];
+        }
+
+        /// <summary> Store potential duplicates, but only for the user's most recent duplicates request. </summary>
+        /// <param name="userId"> Id of user requesting duplicates. </param>
+        /// <param name="counter"> Unique and increasing identifier for duplicates request. </param>
+        /// <param name="dups"> List of sets of potential duplicates,
+        /// or null to indicate the duplicates finding has just begun. </param>
+        /// <returns> Counter of the newest request stored. </returns>
+        private ulong StoreDups(string userId, ulong counter, List<List<Word>>? dups)
+        {
+            return _potentialDups
+                .AddOrUpdate(userId, (counter, dups), (_, v) => counter >= v.Item1 ? (counter, dups) : v).Item1;
+        }
+
+        /// <summary> Retrieve potential duplicates for a user. </summary>
+        /// <param name="userId"> Id of user retrieving duplicates. </param>
+        /// <returns> List of Lists of potential duplicate Words. </returns>
+        public List<List<Word>>? RetrieveDups(string userId)
+        {
+            _potentialDups.TryRemove(userId, out var dups);
+            return dups.Item2;
         }
 
         /// <summary> Prepares a merge parent to be added to the database. </summary>
@@ -35,14 +65,21 @@ namespace BackendFramework.Services
 
             foreach (var childSource in mergeWords.Children)
             {
+                var child = await _wordRepo.GetWord(projectId, childSource.SrcWordId)
+                    ?? throw new KeyNotFoundException($"Unable to locate word: ${childSource.SrcWordId}");
+
+                if (child.Guid == parent.Guid)
+                {
+                    // Update parent's UsingCitationForm.
+                    parent.UsingCitationForm = child.UsingCitationForm && parent.Vernacular == child.Vernacular;
+                }
+
                 // Add child to history.
                 parent.History.Add(childSource.SrcWordId);
 
                 if (childSource.GetAudio)
                 {
                     // Add child's audio.
-                    var child = await _wordRepo.GetWord(projectId, childSource.SrcWordId)
-                        ?? throw new KeyNotFoundException($"Unable to locate word: ${childSource.SrcWordId}");
                     child.Audio.ForEach(pro =>
                     {
                         if (parent.Audio.All(p => p.FileName != pro.FileName))
@@ -96,7 +133,7 @@ namespace BackendFramework.Services
             if (!await _wordService.RestoreFrontierWords(projectId, ids.ChildIds))
             {
                 return false;
-            };
+            }
             foreach (var parentId in ids.ParentIds)
             {
                 await _wordService.DeleteFrontierWord(projectId, userId, parentId);
@@ -295,11 +332,34 @@ namespace BackendFramework.Services
             return updateCount;
         }
 
+        /// <summary> Are there graylist entries in the specified <see cref="Project"/>? </summary>
+        /// <remarks> Removes from the graylist any checked entry without at least 2 words in the Frontier. </remarks>
+        public async Task<bool> HasGraylistEntries(string projectId, string? userId = null)
+        {
+            var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
+            foreach (var entry in graylist)
+            {
+                if (await _wordRepo.AreInFrontier(projectId, entry.WordIds, 2))
+                {
+                    return true;
+                }
+                else
+                {
+                    await _mergeGraylistRepo.Delete(projectId, entry.Id);
+                }
+            }
+            return false;
+        }
+
         /// <summary> Get Lists of entries in specified <see cref="Project"/>'s graylist. </summary>
         public async Task<List<List<Word>>> GetGraylistEntries(
             string projectId, int maxLists, string? userId = null)
         {
             var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
+            if (graylist.Count == 0)
+            {
+                return [];
+            }
             var frontier = await _wordRepo.GetFrontier(projectId);
             var wordLists = new List<List<Word>> { Capacity = maxLists };
             foreach (var entry in graylist)
@@ -314,12 +374,30 @@ namespace BackendFramework.Services
         }
 
         /// <summary>
+        /// Get Lists of potential duplicate <see cref="Word"/>s in specified <see cref="Project"/>'s frontier
+        /// and stores the result for the user to retrieve later.
+        /// </summary>
+        /// <returns> bool: true if successful or false if a newer request has begun. </returns>
+        public async Task<bool> GetAndStorePotentialDuplicates(
+            string projectId, int maxInList, int maxLists, string userId)
+        {
+            var counter = Interlocked.Increment(ref _mergeCounter);
+            if (StoreDups(userId, counter, null) != counter)
+            {
+                return false;
+            }
+            var dups = await GetPotentialDuplicates(projectId, maxInList, maxLists, userId);
+            // Store the potential duplicates for user to retrieve later.
+            return StoreDups(userId, counter, dups) == counter;
+        }
+
+        /// <summary>
         /// Get Lists of potential duplicate <see cref="Word"/>s in specified <see cref="Project"/>'s frontier.
         /// </summary>
-        public async Task<List<List<Word>>> GetPotentialDuplicates(
+        private async Task<List<List<Word>>> GetPotentialDuplicates(
             string projectId, int maxInList, int maxLists, string? userId = null)
         {
-            var dupFinder = new DuplicateFinder(maxInList, maxLists, 3);
+            var dupFinder = new DuplicateFinder(maxInList, maxLists, 2);
 
             var collection = await _wordRepo.GetFrontier(projectId);
             async Task<bool> isUnavailableSet(List<string> wordIds) =>

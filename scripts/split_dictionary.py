@@ -13,7 +13,8 @@ from unicodedata import normalize
 from regex import sub
 
 combine_dir = Path(__file__).resolve().parent.parent
-dictionary_dir = combine_dir / "src" / "resources" / "dictionaries"
+public_dir = combine_dir / "public" / "dictionaries"
+resources_dir = combine_dir / "src" / "resources" / "dictionaries"
 
 
 def parse_args() -> argparse.Namespace:
@@ -43,9 +44,7 @@ def parse_args() -> argparse.Namespace:
         help="Override the lang's default max word-length, or -1 to force no limit",
         type=int,
     )
-    parser.add_argument(
-        "--normalize", "-n", choices=["NFC", "NFD", "NFKC", "NFKD"], default="NFKD"
-    )
+    parser.add_argument("--normalize", "-n", choices=["NFC", "NFD", "NFKC", "NFKD"], default="NFD")
     parser.add_argument(
         "--threshold",
         "-t",
@@ -81,6 +80,8 @@ def max_length(lang: str) -> int:
         return 9
     elif lang == "fr":
         return 10
+    elif lang == "hi":
+        return 6
     elif lang == "pt":
         return 7
     elif lang == "ru":
@@ -94,10 +95,7 @@ def write_dict_part(file_path: Path, entries: List[str], include_count: bool = F
 
     with open(file_path, "w", encoding="utf-8") as file:
         if include_count:
-            file.write(f"export default `{len(entries)}\n")
-        else:
-            file.write("export default `")
-        entries[-1] += "`;"
+            file.write(f"{len(entries)}\n")
         for entry in entries:
             file.write(entry + "\n")
 
@@ -110,13 +108,13 @@ def main() -> None:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
 
     if not args.input:
-        args.input = dictionary_dir / f"{args.lang}.txt"
+        args.input = resources_dir / f"{args.lang}.txt"
 
     if not args.input.is_file():
         logging.error("No such word-list file")
         exit(1)
 
-    subdir = dictionary_dir / args.lang
+    subdir = public_dir / args.lang
     if subdir.is_dir():
         for path in subdir.iterdir():
             logging.info(f"Deleting {path}")
@@ -131,7 +129,7 @@ def main() -> None:
         for line in file.readlines():
             # The characters sub()-ed here should match those used in spellChecker.ts
             # Cf. https://en.wikipedia.org/wiki/Unicode_character_property
-            words = sub("[^\\p{L}\\p{M}\\p{N}]+", " ", normalize(args.normalize, line)).split()
+            words = sub("[^\\p{L}\\p{M}]+", " ", normalize(args.normalize, line)).split()
 
             # If user doesn't specify -m, use lang-specific default of max_length().
             if not args.max:
@@ -170,11 +168,11 @@ def main() -> None:
                 continue
 
             all_starts.append(key)
-            file_path = subdir / f"u{'-'.join([str(ord(c)) for c in key])}.dic.js"
+            file_path = subdir / f"u{'-'.join([str(ord(c)) for c in key])}.dic"
             logging.info(f"Saving {len(subentries)} entries to {file_path}")
             write_dict_part(file_path, subentries)
 
-        file_path = subdir / f"u{'-'.join([str(ord(c)) for c in start])}.dic.js"
+        file_path = subdir / f"u{'-'.join([str(ord(c)) for c in start])}.dic"
         other_words = list(others.keys())
         if len(other_words):
             if start:
@@ -191,6 +189,9 @@ def main() -> None:
         header_line += f" -l {args.lang} -m {args.max} -t {args.threshold} -T {args.Threshold}"
         header_line += "`.\n\n"
 
+        # Generate the needed import
+        import_line = 'import { fetchText } from "utilities/fontCssUtilities";\n\n'
+
         # Generate the exported array of keys for this language's dictionary parts...
         key_lines = ["export const keys = [\n"]
         # ... and the switch cases for fetching dictionary parts by key
@@ -199,25 +200,25 @@ def main() -> None:
             key = "-".join([str(ord(c)) for c in start])
             key_lines.append(f'  "{key}",\n')
             switch_lines.append(f'    case "{key}":\n')
-            import_path = f'"resources/dictionaries/{args.lang}/u{key}.dic"'
-            switch_lines.append(f"      return (await import({import_path})).default;\n")
+            import_path = f'"/dictionaries/{args.lang}/u{key}.dic"'
+            switch_lines.append(f"      return await fetchText({import_path});\n")
         key_lines.append("];\n\n")
         switch_lines.append("    default:\n      return;\n  }\n")
 
         # Generate the default exported dictionary-fetch function
-        default_path = f'"resources/dictionaries/{args.lang}/u.dic"'
+        default_path = f'"/dictionaries/{args.lang}/u.dic"'
         default_function_lines = [
             "export default async function (key?: string): Promise<string | undefined> {\n",
             "  if (!key) {\n",
-            f"    return (await import({default_path})).default;\n",
+            f"    return await fetchText({default_path});\n",
             "  }\n\n",
             *switch_lines,
             "}\n",
         ]
 
-        return [header_line, *key_lines, *default_function_lines]
+        return [header_line, import_line, *key_lines, *default_function_lines]
 
-    index_file_path = subdir / "index.ts"
+    index_file_path = resources_dir / f"{args.lang}.ts"
     logging.info(f"Generating {index_file_path}")
     with open(index_file_path, "w") as index_file:
         index_file.writelines(generate_lang_index_file_lines())
@@ -229,7 +230,7 @@ def main() -> None:
             "// Arabic word-list source (GPLv3):\n",
             "// https://sourceforge.net/projects/arabic-wordlist\n"
             "// Other languages source (MPLv2):\n",
-            "// https://cgit.freedesktop.org/libreoffice/dictionaries\n\n",
+            "// https://github.com/LibreOffice/dictionaries\n\n",
         ]
 
         # Generate the imports of the various language dictionaries...
@@ -252,10 +253,10 @@ def main() -> None:
             "): Promise<string | undefined> {\n"
             "  switch (bcp47) {\n"
         ]
-        for file_path in dictionary_dir.iterdir():
+        for file_path in public_dir.iterdir():
             if file_path.is_dir():
                 lang = file_path.stem
-                lang_index_path = file_path / "index.ts"
+                lang_index_path = resources_dir / f"{lang}.ts"
                 if lang_index_path.is_file():
                     import_lines.append(f"import {lang}Dic, {{ keys as {lang}Keys }} ")
                     import_lines.append(f'from "resources/dictionaries/{lang}";\n')
@@ -269,7 +270,7 @@ def main() -> None:
 
         return [*header_lines, *import_lines, *keys_lines, *dict_lines]
 
-    langs_index_file_path = dictionary_dir / "index.ts"
+    langs_index_file_path = resources_dir / "index.ts"
     logging.info(f"Generating {langs_index_file_path}")
     with open(langs_index_file_path, "w") as langs_index_file:
         langs_index_file.writelines(generate_main_index_file_lines())

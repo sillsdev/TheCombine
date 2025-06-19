@@ -1,7 +1,8 @@
-import { ImageList, ImageListItem } from "@mui/material";
+import { Grid2, ImageList, ImageListItem } from "@mui/material";
 import { ReactElement } from "react";
 
 import DomainTileButton from "components/TreeView/TreeDepiction/DomainTileButton";
+import DownBrace from "components/TreeView/TreeDepiction/DownBrace";
 import {
   Direction,
   RATIO_TILE_TO_GAP,
@@ -102,14 +103,37 @@ export default function ChildrenRow(props: TreeRowProps): ReactElement {
     return subdomains;
   };
 
-  const numCols = getNumCols(props.currentDomain.children.length);
+  const numKids = props.currentDomain.children.length;
+  const numCols = getNumCols(numKids);
 
-  return (
+  return props.small ? (
+    <Grid2 container justifyContent="center">
+      <DownBrace
+        height={48}
+        width={(window.innerWidth * Math.min(numKids, 3)) / 3}
+      />
+      <Grid2
+        container
+        justifyContent={numKids < 3 ? "center" : "flex-start"}
+        spacing={2}
+        sx={{ px: 2, width: window.innerWidth }}
+      >
+        {props.currentDomain.children.map((child) => (
+          <Grid2 key={child.id} size={4}>
+            <DomainTileButton
+              direction={Direction.Down}
+              domain={child}
+              onClick={(d) => props.animate(d)}
+            />
+          </Grid2>
+        ))}
+      </Grid2>
+    </Grid2>
+  ) : (
     <ImageList
       cols={numCols}
       gap={0}
-      rowHeight={"auto"}
-      style={{ overflow: "visible", width: numCols * props.colWidth }}
+      sx={{ m: 0, width: numCols * props.colWidth }}
     >
       {joistRow()}
       {domainRow()}

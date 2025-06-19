@@ -1,5 +1,5 @@
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import { Button, Card, Grid, TextField, Typography } from "@mui/material";
+import { Button, Card, Grid, Typography } from "@mui/material";
 import {
   type FormEvent,
   type ReactElement,
@@ -8,11 +8,12 @@ import {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 
 import { resetPassword, validateResetToken } from "backend";
 import InvalidLink from "components/InvalidLink";
 import { Path } from "types/path";
+import { NormalizedTextField } from "utilities/fontComponents";
 import { meetsPasswordRequirements } from "utilities/utilities";
 
 export enum PasswordResetTestIds {
@@ -95,7 +96,7 @@ export default function PasswordReset(): ReactElement {
             {t("passwordReset.resetTitle")}
           </Typography>
           <Grid item>
-            <TextField
+            <NormalizedTextField
               id="password-reset-password1"
               variant="outlined"
               label={t("login.password")}
@@ -121,7 +122,7 @@ export default function PasswordReset(): ReactElement {
             )}
           </Grid>
           <Grid item>
-            <TextField
+            <NormalizedTextField
               id="password-reset-password2"
               inputProps={{
                 "data-testid": PasswordResetTestIds.ConfirmPassword,

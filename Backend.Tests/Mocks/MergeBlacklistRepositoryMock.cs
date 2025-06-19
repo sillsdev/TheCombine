@@ -8,7 +8,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    sealed internal class MergeBlacklistRepositoryMock : IMergeBlacklistRepository
+    internal sealed class MergeBlacklistRepositoryMock : IMergeBlacklistRepository
     {
         private readonly List<MergeWordSet> _mergeBlacklist;
 
@@ -54,16 +54,15 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> Delete(string projectId, string entryId)
         {
-            var foundMergeBlacklist = _mergeBlacklist.Single(entry => entry.Id == entryId);
-            return Task.FromResult(_mergeBlacklist.Remove(foundMergeBlacklist));
+            var rmCount = _mergeBlacklist.RemoveAll(entry => entry.Id == entryId);
+            return Task.FromResult(rmCount > 0);
         }
 
         public Task<ResultOfUpdate> Update(MergeWordSet wordSetEntry)
         {
-            var foundEntry = _mergeBlacklist.Single(
+            var rmCount = _mergeBlacklist.RemoveAll(
                 e => e.ProjectId == wordSetEntry.ProjectId && e.Id == wordSetEntry.Id);
-            var success = _mergeBlacklist.Remove(foundEntry);
-            if (!success)
+            if (rmCount == 0)
             {
                 return Task.FromResult(ResultOfUpdate.NotFound);
             }

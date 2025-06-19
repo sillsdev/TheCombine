@@ -8,16 +8,10 @@ using System.Text;
 namespace BackendFramework.Helper
 {
     /// <summary> Indicates an invalid input file name. </summary>
-    public sealed class InvalidFileNameException : Exception
-    {
-        public InvalidFileNameException() : base() { }
-    }
+    public sealed class InvalidFileNameException : Exception;
 
     /// <summary> Indicates an invalid input id. </summary>
-    public sealed class InvalidIdException : Exception
-    {
-        public InvalidIdException() { }
-    }
+    public sealed class InvalidIdException : Exception;
 
     public static class Sanitization
     {
@@ -54,6 +48,7 @@ namespace BackendFramework.Helper
                 ',',
                 '(',
                 ')',
+                '\'',
                 ' '
             }.ToImmutableList();
             if (fileName.All(c => char.IsLetterOrDigit(c) || validCharacters.Contains(c)))

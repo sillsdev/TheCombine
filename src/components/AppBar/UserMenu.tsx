@@ -21,9 +21,8 @@ import {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
-import { isSiteAdmin } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import {
   type TabProps,
@@ -31,8 +30,7 @@ import {
   shortenName,
   tabColor,
 } from "components/AppBar/AppBarTypes";
-import { clearCurrentProject } from "components/Project/ProjectActions";
-import { useAppDispatch } from "rootRedux/hooks";
+import { useAppSelector } from "rootRedux/hooks";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
 import { openUserGuide } from "utilities/pathUtilities";
@@ -48,11 +46,13 @@ const enum usernameLength {
  * Avatar in AppBar with dropdown UserMenu
  */
 export default function UserMenu(props: TabProps): ReactElement {
+  const isAdmin = useAppSelector((state) => state.loginState.isAdmin);
+
   const [anchorElement, setAnchorElement] = useState<HTMLElement | undefined>();
   const avatar = LocalStorage.getAvatar();
-  const [isAdmin, setIsAdmin] = useState(false);
   const username = LocalStorage.getCurrentUser()?.username;
 
+  const horizontal = document.body.dir === "rtl" ? "left" : "right";
   const isLgUp = useMediaQuery<Theme>((th) => th.breakpoints.up("lg"));
   const isXl = useMediaQuery<Theme>((th) => th.breakpoints.only("xl"));
   const nameLength = isXl ? usernameLength.xl : usernameLength.lg;
@@ -64,8 +64,6 @@ export default function UserMenu(props: TabProps): ReactElement {
   function handleClose(): void {
     setAnchorElement(undefined);
   }
-
-  isSiteAdmin().then(setIsAdmin);
 
   return (
     <>
@@ -83,7 +81,7 @@ export default function UserMenu(props: TabProps): ReactElement {
         }}
       >
         {!!username && isLgUp && (
-          <Typography style={{ marginLeft: 5, marginRight: 5 }}>
+          <Typography style={{ marginInline: 5 }}>
             {shortenName(username, nameLength)}
           </Typography>
         )}
@@ -95,11 +93,11 @@ export default function UserMenu(props: TabProps): ReactElement {
       </Button>
       <Menu
         anchorEl={anchorElement}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        anchorOrigin={{ horizontal, vertical: "bottom" }}
         id={idAffix}
         onClose={handleClose}
         open={Boolean(anchorElement)}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        transformOrigin={{ horizontal, vertical: "top" }}
       >
         <UserMenuList isAdmin={isAdmin} onSelect={handleClose} />
       </Menu>
@@ -118,12 +116,10 @@ interface UserMenuListProps {
  */
 export function UserMenuList(props: UserMenuListProps): ReactElement {
   const combineAppRelease = RuntimeConfig.getInstance().appRelease();
-  const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const iconStyle: CSSProperties =
-    document.body.dir == "rtl" ? { marginLeft: 6 } : { marginRight: 6 };
+  const iconStyle: CSSProperties = { marginInlineEnd: 6 };
 
   return (
     <div ref={props.forwardedRef}>
@@ -132,7 +128,6 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
         <MenuItem
           id={`${idAffix}-admin`}
           onClick={() => {
-            dispatch(clearCurrentProject());
             navigate(Path.SiteSettings);
             props.onSelect();
           }}

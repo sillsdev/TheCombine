@@ -125,6 +125,13 @@ namespace BackendFramework.Otel
                         data.AddTag("regionName", location?.RegionName);
                         data.AddTag("city", location?.City);
                     }
+                    else
+                    {
+                        // When getting location externally, url.full includes site URI and user IP.
+                        // In such cases, only add url without IP information to traces.
+                        data.SetTag("url.full", "");
+                        data.SetTag("url.redacted.ip", LocationProvider.locationGetterUri);
+                    }
                     data.AddTag(SessionIdTag, data.GetBaggageItem(SessionIdBaggage));
                 }
             }

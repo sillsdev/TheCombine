@@ -7,6 +7,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  PopoverOrigin,
   Tooltip,
 } from "@mui/material";
 import {
@@ -37,6 +38,7 @@ import { type StoreState } from "rootRedux/types";
 export const longPressDelay = 700;
 
 export const playButtonId = (fileName: string): string => `audio-${fileName}`;
+export const playButtonLabel = "Play";
 export const playMenuId = "play-menu";
 
 interface PlayerProps {
@@ -218,6 +220,11 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
     />
   );
 
+  const origin: PopoverOrigin = {
+    horizontal: document.body.dir === "rtl" ? "right" : "left",
+    vertical: "top",
+  };
+
   return (
     <>
       <Tooltip
@@ -232,7 +239,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
           onMouseDown={handleOnMouseDown}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          aria-label="play"
+          aria-label={playButtonLabel}
           disabled={props.disabled}
           id={playButtonId(props.audio.fileName)}
           size={props.size || "large"}
@@ -246,8 +253,8 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
         anchorEl={anchor}
         open={Boolean(anchor)}
         onClose={handleMenuOnClose}
-        anchorOrigin={{ vertical: "top", horizontal: "left" }}
-        transformOrigin={{ vertical: "top", horizontal: "left" }}
+        anchorOrigin={origin}
+        transformOrigin={origin}
       >
         <MenuItem
           id={isPlaying ? "audio-stop" : "audio-play"}

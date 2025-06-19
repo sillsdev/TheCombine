@@ -1,26 +1,15 @@
 import { ThemeProvider } from "@mui/material/styles";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
-import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
-import { Key } from "ts-key-enum";
 
-import TreeView, { exitButtonId, topButtonId } from "components/TreeView";
+import TreeView, { TreeViewIds } from "components/TreeView";
 import { defaultState as treeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
 import mockMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 import theme from "types/theme";
 import { newWritingSystem } from "types/writingSystem";
-import { setMatchMedia } from "utilities/testRendererUtilities";
-
-let treeMaster: renderer.ReactTestRenderer;
-
-// Mock out Zoom to avoid issues with portals
-jest.mock("@mui/material", () => {
-  const realMaterialUi = jest.requireActual("@mui/material");
-  return {
-    ...realMaterialUi,
-    Zoom: realMaterialUi.Container,
-  };
-});
+import { setMatchMedia } from "utilities/testingLibraryUtilities";
 
 jest.mock("rootRedux/hooks", () => {
   return {
@@ -36,54 +25,61 @@ const mockStore = configureMockStore()({
   },
 });
 
-const findById = (id: string): renderer.ReactTestInstance =>
-  treeMaster.root.findByProps({ id });
-
-const muiSM = 600;
+const muiMd = 900;
 
 describe("TreeView", () => {
-  it("renders without top button in xs windows", async () => {
-    await renderTree(undefined, muiSM - 1);
-    expect(() => findById(topButtonId)).toThrow();
-  });
+  for (const width of [muiMd - 1, muiMd + 1]) {
+    describe(width < muiMd ? "renders narrow" : "renders wide", () => {
+      beforeAll(() => {
+        // Required (along with a `ThemeProvider`) for `useMediaQuery` to work
+        setMatchMedia(width);
+      });
 
-  it("renders with top button in sm+ windows", async () => {
-    await renderTree(undefined, muiSM);
-    expect(() => findById(topButtonId)).not.toThrow();
-  });
+      describe("without exit", () => {
+        beforeEach(async () => {
+          await renderTree();
+        });
 
-  it("renders with no exit button by default", async () => {
-    await renderTree();
-    expect(() => findById(exitButtonId)).toThrow();
-  });
+        it("has top button", async () => {
+          expect(screen.queryByTestId(TreeViewIds.ButtonTop)).toBeTruthy();
+        });
 
-  it("exits via exit button", async () => {
-    const mockExit = jest.fn();
-    await renderTree(mockExit);
-    expect(mockExit).not.toHaveBeenCalled();
-    renderer.act(() => {
-      findById(exitButtonId).props.onClick();
+        it("has no exit button", async () => {
+          expect(screen.queryByTestId(TreeViewIds.ButtonExit)).toBeNull();
+        });
+      });
+
+      describe("with exit", () => {
+        const mockExit = jest.fn();
+
+        beforeEach(async () => {
+          mockExit.mockClear();
+          await renderTree(mockExit);
+        });
+
+        it("has top button", async () => {
+          expect(screen.queryByTestId(TreeViewIds.ButtonTop)).toBeTruthy();
+        });
+
+        it("exits via exit button", async () => {
+          expect(mockExit).not.toHaveBeenCalled();
+          await userEvent.click(screen.getByTestId(TreeViewIds.ButtonExit));
+          expect(mockExit).toHaveBeenCalledTimes(1);
+        });
+
+        it("exits via escape key", async () => {
+          expect(mockExit).not.toHaveBeenCalled();
+          await userEvent.keyboard("{Escape}");
+          expect(mockExit).toHaveBeenCalledTimes(1);
+        });
+      });
     });
-    expect(mockExit).toHaveBeenCalledTimes(1);
-  });
-
-  it("exits via escape key", async () => {
-    const mockExit = jest.fn();
-    await renderTree(mockExit);
-    expect(mockExit).not.toHaveBeenCalled();
-    renderer.act(() => {
-      window.dispatchEvent(new KeyboardEvent("keydown", { key: Key.Escape }));
-    });
-    expect(mockExit).toHaveBeenCalledTimes(1);
-  });
+  }
 });
 
-async function renderTree(exit?: () => void, width?: number): Promise<void> {
-  // Required (along with a `ThemeProvider`) for `useMediaQuery` to work
-  setMatchMedia(width);
-
-  await renderer.act(async () => {
-    treeMaster = renderer.create(
+async function renderTree(exit?: () => void): Promise<void> {
+  await act(async () => {
+    render(
       <ThemeProvider theme={theme}>
         <Provider store={mockStore}>
           <TreeView returnControlToCaller={jest.fn()} exit={exit} />

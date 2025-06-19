@@ -12,10 +12,12 @@ import {
   incrementGoalStepAction,
   loadUserEditsAction,
   setCurrentGoalAction,
+  setDataLoadStatusAction,
   setGoalDataAction,
   setGoalStatusAction,
   updateStepFromDataAction,
 } from "goals/Redux/GoalReducer";
+import { DataLoadStatus } from "goals/Redux/GoalReduxTypes";
 import { EntryEdit } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { type StoreState, type StoreStateDispatch } from "rootRedux/types";
 import router from "router/browserRouter";
@@ -51,6 +53,10 @@ export function setCurrentGoal(goal?: Goal): PayloadAction {
   return setCurrentGoalAction(goal ? { ...goal } : new Goal());
 }
 
+export function setDataLoadStatus(status: DataLoadStatus): PayloadAction {
+  return setDataLoadStatusAction(status);
+}
+
 export function setGoalData(goalData: Word[][]): PayloadAction {
   return setGoalDataAction(goalData);
 }
@@ -74,8 +80,18 @@ export function asyncAddGoal(goal: Goal) {
       // Check if this is a new goal.
       if (goal.status !== GoalStatus.Completed) {
         await Backend.addGoalToUserEdit(userEditId, goal);
-        // Load the new goal, but don't await, to allow a loading screen.
-        dispatch(asyncLoadNewGoal(goal, userEditId));
+        dispatch(setCurrentGoal(goal));
+
+        // Start loading goal data.
+        if (goal.goalType === GoalType.MergeDups) {
+          // Initialize data loading in the backend.
+          dispatch(setDataLoadStatus(DataLoadStatus.Loading));
+          await Backend.findDuplicates(5, maxNumSteps(goal.goalType));
+          // Don't load goal data, since it'll be triggered by a signal from the backend when data is ready.
+        } else {
+          // Load the goal data, but don't await, to allow a loading screen.
+          dispatch(asyncLoadNewGoalData());
+        }
       }
 
       // Serve goal.
@@ -135,18 +151,23 @@ export function asyncLoadExistingUserEdits(
   };
 }
 
-export function asyncLoadNewGoal(goal: Goal, userEditId: string) {
+export function asyncLoadNewGoalData() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    // Load data.
-    dispatch(setCurrentGoal(goal));
     const currentGoal = getState().goalsState.currentGoal;
-    const goalData = await loadGoalData(currentGoal.goalType);
+    const goalData = await loadGoalData(currentGoal.goalType).catch(() => {
+      dispatch(setDataLoadStatus(DataLoadStatus.Failure));
+      alert("Failed to load data.");
+      router.navigate(Path.Goals);
+    });
+    if (!goalData) {
+      return;
+    }
     if (goalData.length > 0) {
       dispatch(setGoalData(goalData));
       dispatch(updateStepFromData());
       const updatedGoal = getState().goalsState.currentGoal;
       dispatch(dispatchStepData(updatedGoal));
-      await Backend.addGoalToUserEdit(userEditId, updatedGoal);
+      await Backend.addGoalToUserEdit(getUserEditId()!, updatedGoal);
       await saveCurrentStep(updatedGoal);
     }
     dispatch(setGoalStatus(GoalStatus.InProgress));
@@ -207,12 +228,12 @@ function goalCleanup(goal: Goal): void {
 }
 
 /** Returns goal data for some goal types. */
-export async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
+async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
   switch (goalType) {
     case GoalType.MergeDups:
-      return checkMergeData(
-        await Backend.getDuplicates(5, maxNumSteps(goalType))
-      );
+      // Catch failure and pass to caller to allow for error dispatch.
+      const dups = await Backend.retrieveDuplicates().catch(() => {});
+      return dups ? checkMergeData(dups) : Promise.reject();
     case GoalType.ReviewDeferredDups:
       return checkMergeData(
         await Backend.getGraylistEntries(maxNumSteps(goalType))

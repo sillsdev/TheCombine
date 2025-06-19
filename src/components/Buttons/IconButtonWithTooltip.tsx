@@ -1,8 +1,8 @@
-import { Tooltip, IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import { MouseEventHandler, ReactElement, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
-interface IconButtonWithTooltipProps {
+export interface IconButtonWithTooltipProps {
   buttonId?: string;
   buttonLabel?: string;
   disabled?: boolean;
@@ -22,8 +22,8 @@ export default function IconButtonWithTooltip(
 
   return (
     <Tooltip
+      placement={props.side ?? (document.body.dir === "rtl" ? "left" : "right")}
       title={props.text ?? (props.textId ? t(props.textId) : false)}
-      placement={props.side ?? "right"}
     >
       <span>
         <IconButton

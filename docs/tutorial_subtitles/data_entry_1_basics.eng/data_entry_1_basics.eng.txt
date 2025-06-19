@@ -1,0 +1,43 @@
+The Combine is designed for Rapid Word Collection, a method of gathering words by semantic domain.
+In this video, we will see how to do Data Entry in The Combine to collect words.
+Let’s go to thecombine.app and log in.
+When you click on a project, the semantic domain tree appears.
+Selecting your domain is the first step in Data Entry.
+If you are doing a different project task (for example, in data cleanup or project settings), you can get back here by clicking the “Data Entry” button in the top bar.
+There is another tutorial video about navigating the semantic domain tree or changing its language.
+For this video, let’s select domain “2: Person” and start gathering words!
+There are 4 things that can be included in a new word.
+First, the vernacular form of the word in the project’s vernacular language.
+Second, a gloss for the word in the project’s primary analysis language.
+(You can change a project’s analysis language in the project settings.)
+Third, a note about the word.
+Fourth, audio recordings of the word’s pronunciation.
+After adding the content of the new word, press the Enter key.
+See how the word we just entered appears in the table?
+If we hover our cursor over the note icon for that word, the text of the note appears.
+Let’s add another word!
+Now the vernacular form is required for a new entry, but the gloss, note, and audio are optional.
+At any time, you can make changes to the words you have entered.
+Let’s add a gloss and a note to the second entry.
+Let’s change the vernacular form and delete the note on the first entry.
+What can we do with the audio recordings?
+If we hover our cursor over the play button (the green triangle icon), text appears describing what options are available.
+Click on the play button to listen.
+Hold the shift-key and click to delete it.
+A dialog box will appear to confirm whether you want to delete the recording.
+(If you are using a touch-screen, you can tap on the play button to play, or press and hold the button to bring up a menu.)
+When you are done entering words, click the “Exit” button to return to the semantic domain tree.
+(Don’t worry—the words you entered are already saved even if you close the window without clicking the exit button.)
+If we select the same domain to enter more words, see how the words we previously entered in this domain are listed in a panel on the side?
+If you are working in a narrow web browser window, the panel of previously entered words will not automatically appear.
+You can bring it up by clicking the sideways carat icon at the bottom of the data entry box.
+Let’s enter more words!
+If you want to delete one of the words you added, click on the delete icon at the end of its row.
+Warning: this will permanently remove the word and all its content!
+If you want to start over on a word you are adding, click on the delete icon here on the bottom row.
+It will reset the vernacular field, the gloss field, the note, and the audio recordings for the new word.
+That covers how to gather words with Data Entry in The Combine!
+When gathering words by semantic domain, often the same word will be added to multiple domains, resulting in lots of duplicate words.
+The Combine has ways to help avoid or manage that issue.
+In the next Data Entry video, we will look at entering multiple words with the same vernacular form.
+Have a wonderful day!

@@ -1,0 +1,46 @@
+The Combine is designed for Rapid Word Collection, a method of gathering words by semantic domain.
+In this video, we will see how to select a semantic domain in The Combine to begin collecting words in that domain.
+Then at the end, we’ll see how to change the language of the semantic domains.
+Let’s go to thecombine.app and log in.
+When you click on a project, the semantic domain tree appears.
+If you are doing a different project task (for example, in data cleanup or project settings), you can get back to the semantic domain tree by clicking the “Data Entry” button in the top bar.
+Now the easiest way to get to a domain is using the domain’s id number.
+If I want to collect words for domain 6.5.1.1, “House”, I can click in the field that says “Find a domain” and type 6.5.1.1
+In fact, I don’t even need to type the periods.
+If I type 6511, the periods are automatically added.
+Now press Enter, and the domain appears.
+Yes, this is the domain we want!
+Click on the domain tile.
+The semantic domain tree disappears and the interface for data entry appears.
+We’ll discuss this data entry tool in another video.
+When you are done collecting words in this domain, click the “Exit” button to return to the semantic domain tree.
+Instead of typing a domain number, you can also navigate the tree by clicking on tiles.
+For example, I can click on the “6.5.1.2 Types Of Houses” tile that is beside the current domain to move to that sibling domain.
+Or I can click the “6.5.1 Building” tile above to move to the parent domain.
+You can also use the left and right arrow keys to navigate between siblings, the up arrow to go to the parent domain, or the down arrow to go to the first child domain.
+To return to the top of the domain tree, click on the double-caret icon in the top corner.
+So now you know how to select a semantic domain for data collection.
+You can type the domain id number or you can navigate the tree by clicking the domain tiles or using your arrow keys.
+What if you need the semantic domains to be in a different language?
+By default, the semantic domains language will be the same as the user-interface language.
+The user-interface language will automatically match your browser language, if that language is available for The Combine.
+To manually choose your user-interface language, click on your username or the user avatar in the top bar.
+This opens the user menu.
+Click on “User Settings”.
+Under “User-interface language”, there is a dropdown menu for you to select your preferred language.
+After you’ve made your selection, click the “Save” button.
+Now my user interface is in Spanish!
+I can get back to the semantic domain tree by clicking the “Data Entry” button, or rather the “Entrada de datos” button, in the top bar.
+Success!
+The domain names are all in Spanish.
+In fact, there are more languages available for the semantic domains than for the user interface.
+Let me switch back to English to continue this tutorial.
+(Note that if you use the browser language to change the user interface language, you may have to refresh the page for that change to take effect.)
+Now that we’re back to English, let’s click on the gear icon in the top bar to open the project settings.
+Here in the “Languages” tab, there is a drop-down menu under “Semantic Domains”.
+If a project administrator selects one of these languages, such as Hindi, that will override the semantic domains language for all project users.
+Now let’s go back to “Data Entry”.
+See how the semantic domains are now in Hindi, even though the user interface is still in English.
+Success!
+I hope this video helps you get your word collection started.
+Have a wonderful day!

@@ -1,7 +1,9 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
+import { User } from "api/models";
 import * as backend from "backend";
 import {
+  setIsAdminTrueAction,
   setLoginAttemptAction,
   setLoginFailureAction,
   setLoginSuccessAction,
@@ -15,6 +17,11 @@ import { Path } from "types/path";
 import { newUser } from "types/user";
 
 // Action Creation Functions
+
+/** Don't export! Only to be used when an admin logs in. */
+function setIsAdminTrue(): PayloadAction {
+  return setIsAdminTrueAction();
+}
 
 export function loginAttempt(username: string): PayloadAction {
   return setLoginAttemptAction(username);
@@ -42,12 +49,15 @@ export function signupSuccess(): PayloadAction {
 
 // Dispatch Functions
 
-export function asyncLogIn(username: string, password: string) {
+export function asyncLogIn(emailOrUsername: string, password: string) {
   return async (dispatch: StoreStateDispatch) => {
-    dispatch(loginAttempt(username));
+    dispatch(loginAttempt(emailOrUsername));
     await backend
-      .authenticateUser(username, password)
-      .then(async () => {
+      .authenticateUser(emailOrUsername, password)
+      .then(async (user: User) => {
+        if (user.isAdmin) {
+          dispatch(setIsAdminTrue());
+        }
         dispatch(loginSuccess());
         router.navigate(Path.ProjScreen);
       })

@@ -1,5 +1,5 @@
 import { Close, KeyboardDoubleArrowUp } from "@mui/icons-material";
-import { Grid, type Theme, Zoom, useMediaQuery } from "@mui/material";
+import { Grid2, type Theme, Zoom, useMediaQuery } from "@mui/material";
 import { animate } from "motion";
 import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -18,7 +18,7 @@ import TreeNavigator from "components/TreeView/TreeNavigator";
 import TreeSearch from "components/TreeView/TreeSearch";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
-import { newSemanticDomain } from "types/semanticDomain";
+import { newSemanticDomain, rootId } from "types/semanticDomain";
 import { semDomWritingSystems } from "types/writingSystem";
 
 function getSemDomWritingSystem(
@@ -27,8 +27,10 @@ function getSemDomWritingSystem(
   return semDomWritingSystems.find((ws) => lang.bcp47.startsWith(ws.bcp47));
 }
 
-export const exitButtonId = "tree-view-exit";
-export const topButtonId = "tree-view-top";
+export enum TreeViewIds {
+  ButtonExit = "tree-view-exit-button",
+  ButtonTop = "tree-view-top-button",
+}
 
 export interface TreeViewProps {
   exit?: () => void;
@@ -51,7 +53,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
   );
   const [visible, setVisible] = useState(true);
   const dispatch = useAppDispatch();
-  const showButtonToTop = useMediaQuery<Theme>((th) => th.breakpoints.up("sm"));
+  const isMdUp = useMediaQuery<Theme>((th) => th.breakpoints.up("md"));
   const { resolvedLanguage } = useTranslation().i18n;
 
   useEffect(() => {
@@ -83,6 +85,9 @@ export default function TreeView(props: TreeViewProps): ReactElement {
 
   useEffect(() => {
     setVisible(true);
+    if (currentDomain.id && currentDomain.id !== rootId) {
+      animate("#current-domain", { scale: [1, 1.05, 1] }, { duration: 1 });
+    }
   }, [currentDomain]);
 
   const goToDomFromId = useCallback(
@@ -115,65 +120,55 @@ export default function TreeView(props: TreeViewProps): ReactElement {
     <>
       {/* Domain search */}
       <TreeNavigator currentDomain={currentDomain} animate={animateHandler} />
-      <Grid container justifyContent="space-between">
-        <Grid item>
-          {/* Empty grid item to balance the buttons */}
-          {showButtonToTop && (
-            <div style={{ display: "inline-block", width: 40 }} />
-          )}
-          {exit && <div style={{ display: "inline-block", width: 40 }} />}
-        </Grid>
-        <Grid item>
+      <Grid2 container justifyContent="space-between" sx={{ marginBottom: 1 }}>
+        <Grid2>
+          {/* Empty grid to balance the buttons */}
+          <div style={{ width: exit ? 80 : 40 }} />
+        </Grid2>
+
+        <Grid2 container justifyContent="center" size="grow">
           <TreeSearch
             animate={animateHandler}
             currentDomain={currentDomain}
             customDomains={customDomains}
           />
-        </Grid>
-        <Grid item>
-          {showButtonToTop && (
-            <IconButtonWithTooltip
-              icon={<KeyboardDoubleArrowUp />}
-              textId={"treeView.returnToTop"}
-              onClick={onClickTop}
-              buttonId={topButtonId}
-            />
-          )}
+        </Grid2>
+
+        <Grid2>
+          <IconButtonWithTooltip
+            icon={<KeyboardDoubleArrowUp />}
+            textId={"treeView.returnToTop"}
+            onClick={onClickTop}
+            buttonId={TreeViewIds.ButtonTop}
+          />
           {exit && (
             <IconButtonWithTooltip
               icon={<Close />}
               textId={"buttons.exit"}
               onClick={exit}
-              buttonId={exitButtonId}
+              buttonId={TreeViewIds.ButtonExit}
             />
           )}
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
+
       {/* Domain tree */}
-      <Zoom
-        in={visible}
-        onEntered={() => {
-          if (currentDomain.id) {
-            animate(
-              "#current-domain",
-              { transform: ["none", "scale(.9)", "none"] },
-              { duration: 1 }
-            );
-          }
-        }}
-      >
-        <Grid
-          container
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <TreeDepiction
-            currentDomain={currentDomain}
-            animate={animateHandler}
-          />
-        </Grid>
-      </Zoom>
+      {isMdUp ? (
+        <Zoom in={visible}>
+          <Grid2 container justifyContent="center">
+            <TreeDepiction
+              animate={animateHandler}
+              currentDomain={currentDomain}
+            />
+          </Grid2>
+        </Zoom>
+      ) : (
+        <TreeDepiction
+          animate={animateHandler}
+          currentDomain={currentDomain}
+          small
+        />
+      )}
     </>
   );
 }

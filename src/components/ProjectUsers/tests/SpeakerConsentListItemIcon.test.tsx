@@ -1,8 +1,8 @@
 import { PlayArrow } from "@mui/icons-material";
 import "@testing-library/jest-dom";
-import { cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ReactElement, act } from "react";
+import { ReactElement } from "react";
 
 import { ConsentType, Speaker } from "api/models";
 import SpeakerConsentListItemIcon, {
@@ -79,9 +79,7 @@ describe("SpeakerConsentListItemIcon", () => {
       expect(screen.queryByTestId(ListItemIconId.RecordAudio)).toBeNull();
       expect(screen.queryByTestId(ListItemIconId.UploadAudio)).toBeNull();
 
-      await act(async () => {
-        await agent.click(screen.getByRole("button"));
-      });
+      await agent.click(screen.getByRole("button"));
       expect(screen.queryByRole("menu")).not.toBeNull();
       expect(screen.queryByTestId(ListItemIconId.RecordAudio)).not.toBeNull();
       expect(screen.queryByTestId(ListItemIconId.UploadAudio)).not.toBeNull();
@@ -119,9 +117,7 @@ describe("SpeakerConsentListItemIcon", () => {
       });
       expect(screen.queryByRole("dialog")).toBeNull();
 
-      await act(async () => {
-        await agent.click(screen.getByRole("button"));
-      });
+      await agent.click(screen.getByRole("button"));
       expect(screen.queryByRole("dialog")).not.toBeNull();
     });
   });

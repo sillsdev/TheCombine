@@ -1,19 +1,32 @@
-import { Grid } from "@mui/material";
+import { Checkbox, FormControlLabel, Grid } from "@mui/material";
 import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { OffOnSetting } from "api/models";
 import { LoadingButton } from "components/Buttons";
 import {
   deferMerge,
   mergeAll,
   setSidebar,
+  toggleOverrideProtection,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { asyncAdvanceStep } from "goals/Redux/GoalActions";
-import { useAppDispatch } from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { StoreState } from "rootRedux/types";
 import theme from "types/theme";
 
 export default function SaveDeferButtons(): ReactElement {
   const dispatch = useAppDispatch();
+
+  const hasProtected = useAppSelector(
+    (state: StoreState) =>
+      state.mergeDuplicateGoal.hasProtected &&
+      state.currentProjectState.project.protectedDataOverrideEnabled ==
+        OffOnSetting.On
+  );
+  const overrideProtection = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.overrideProtection
+  );
 
   const [isDeferring, setIsDeferring] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -44,7 +57,7 @@ export default function SaveDeferButtons(): ReactElement {
         <LoadingButton
           loading={isSaving}
           buttonProps={{
-            style: { marginRight: theme.spacing(3) },
+            style: { marginInlineEnd: theme.spacing(3) },
             onClick: saveContinue,
             title: t("mergeDups.helpText.saveAndContinue"),
             id: "merge-save",
@@ -56,7 +69,7 @@ export default function SaveDeferButtons(): ReactElement {
           loading={isDeferring}
           buttonProps={{
             color: "secondary",
-            style: { marginRight: theme.spacing(3) },
+            style: { marginInlineEnd: theme.spacing(3) },
             onClick: defer,
             title: t("mergeDups.helpText.defer"),
             id: "merge-defer",
@@ -64,6 +77,17 @@ export default function SaveDeferButtons(): ReactElement {
         >
           {t("buttons.defer")}
         </LoadingButton>
+        {hasProtected && (
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={overrideProtection}
+                onChange={() => dispatch(toggleOverrideProtection())}
+              />
+            }
+            label={t("mergeDups.helpText.protectedOverride")}
+          />
+        )}
       </Grid>
     </Grid>
   );

@@ -408,14 +408,14 @@ export const WordApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    isFrontierNonempty: async (
+    hasFrontierWords: async (
       projectId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("isFrontierNonempty", "projectId", projectId);
+      assertParamExists("hasFrontierWords", "projectId", projectId);
       const localVarPath =
-        `/v1/projects/{projectId}/words/isfrontiernonempty`.replace(
+        `/v1/projects/{projectId}/words/hasfrontierwords`.replace(
           `{${"projectId"}}`,
           encodeURIComponent(String(projectId))
         );
@@ -745,7 +745,7 @@ export const WordApiFp = function (configuration?: Configuration) {
       wordId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.deleteFrontierWord(
@@ -865,14 +865,14 @@ export const WordApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async isFrontierNonempty(
+    async hasFrontierWords(
       projectId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.isFrontierNonempty(projectId, options);
+        await localVarAxiosParamCreator.hasFrontierWords(projectId, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -1050,7 +1050,7 @@ export const WordApiFactory = function (
       projectId: string,
       wordId: string,
       options?: any
-    ): AxiosPromise<string> {
+    ): AxiosPromise<void> {
       return localVarFp
         .deleteFrontierWord(projectId, wordId, options)
         .then((request) => request(axios, basePath));
@@ -1121,12 +1121,9 @@ export const WordApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    isFrontierNonempty(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<boolean> {
+    hasFrontierWords(projectId: string, options?: any): AxiosPromise<boolean> {
       return localVarFp
-        .isFrontierNonempty(projectId, options)
+        .hasFrontierWords(projectId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1334,15 +1331,15 @@ export interface WordApiGetWordRequest {
 }
 
 /**
- * Request parameters for isFrontierNonempty operation in WordApi.
+ * Request parameters for hasFrontierWords operation in WordApi.
  * @export
- * @interface WordApiIsFrontierNonemptyRequest
+ * @interface WordApiHasFrontierWordsRequest
  */
-export interface WordApiIsFrontierNonemptyRequest {
+export interface WordApiHasFrontierWordsRequest {
   /**
    *
    * @type {string}
-   * @memberof WordApiIsFrontierNonempty
+   * @memberof WordApiHasFrontierWords
    */
   readonly projectId: string;
 }
@@ -1575,17 +1572,17 @@ export class WordApi extends BaseAPI {
 
   /**
    *
-   * @param {WordApiIsFrontierNonemptyRequest} requestParameters Request parameters.
+   * @param {WordApiHasFrontierWordsRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof WordApi
    */
-  public isFrontierNonempty(
-    requestParameters: WordApiIsFrontierNonemptyRequest,
+  public hasFrontierWords(
+    requestParameters: WordApiHasFrontierWordsRequest,
     options?: any
   ) {
     return WordApiFp(this.configuration)
-      .isFrontierNonempty(requestParameters.projectId, options)
+      .hasFrontierWords(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

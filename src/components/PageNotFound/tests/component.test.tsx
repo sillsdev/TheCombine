@@ -1,11 +1,11 @@
-import renderer from "react-test-renderer";
+import { act, render } from "@testing-library/react";
 
 import PageNotFound from "components/PageNotFound/component";
 
-jest.mock("react-router-dom");
+jest.mock("react-router");
 
 it("renders without crashing", () => {
-  renderer.act(() => {
-    renderer.create(<PageNotFound />);
+  act(() => {
+    render(<PageNotFound />);
   });
 });

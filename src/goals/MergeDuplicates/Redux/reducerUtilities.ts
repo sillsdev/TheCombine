@@ -81,6 +81,9 @@ export function createMergeChildren(
   const redundantIds = mergeSenses.flatMap((senses) =>
     senses.map((s) => s.srcWordId)
   );
+  // Catch words whose final sense was merged in and subsequently removed.
+  redundantIds.push(...audioMoves);
+
   const childrenIds = [...new Set(redundantIds)];
   return childrenIds.map((srcWordId) => ({
     srcWordId,
@@ -160,13 +163,9 @@ export function combineSenses(senses: Sense[]): Sense {
           // If not, add this one to the array.
           mainSense.definitions.push({ ...def, text: newText });
         } else {
-          // If so, check whether this one's text is already present.
-          const oldText = oldDef.text.trim();
-          if (!oldText) {
-            oldDef.text = newText;
-          } else if (!oldText.includes(newText)) {
-            oldDef.text = `${oldText}${sep}${newText}`;
-          }
+          // If so, merge the text.
+          const texts = [...oldDef.text.split(sep), ...newText.split(sep)];
+          oldDef.text = [...new Set(texts.map((t) => t.trim()))].join(sep);
         }
       }
     });
@@ -183,13 +182,9 @@ export function combineSenses(senses: Sense[]): Sense {
           // If not, add this one to the array.
           mainSense.glosses.push({ ...gloss, def: newDef });
         } else {
-          // If so, check whether this one's text is already present.
-          const oldDef = oldGloss.def.trim();
-          if (!oldDef) {
-            oldGloss.def = newDef;
-          } else if (!oldDef.includes(newDef)) {
-            oldGloss.def = `${oldDef}${sep}${newDef}`;
-          }
+          // If so, merge the defs.
+          const defs = [...oldGloss.def.split(sep), ...newDef.split(sep)];
+          oldGloss.def = [...new Set(defs.map((t) => t.trim()))].join(sep);
         }
       }
     });

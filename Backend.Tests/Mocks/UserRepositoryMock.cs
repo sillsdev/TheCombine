@@ -8,7 +8,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    sealed internal class UserRepositoryMock : IUserRepository
+    internal sealed class UserRepositoryMock : IUserRepository
     {
         private readonly List<User> _users;
 
@@ -20,6 +20,15 @@ namespace Backend.Tests.Mocks
         public Task<List<User>> GetAllUsers()
         {
             return Task.FromResult(_users.Select(user => user.Clone()).ToList());
+        }
+
+        public Task<List<User>> GetAllUsersByFilter(string filter)
+        {
+            var filteredUsers = _users.Where(user =>
+                user.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                user.Email.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                user.Username.Contains(filter, StringComparison.OrdinalIgnoreCase));
+            return Task.FromResult(filteredUsers.Select(user => user.Clone()).ToList());
         }
 
         public Task<User?> GetUser(string userId, bool sanitize = true)
@@ -50,9 +59,8 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> Delete(string userId)
         {
-            var foundUser = _users.Single(user => user.Id == userId);
-            var success = _users.Remove(foundUser);
-            return Task.FromResult(success);
+            var rmCount = _users.RemoveAll(user => user.Id == userId);
+            return Task.FromResult(rmCount > 0);
         }
 
         public Task<User?> GetUserByEmail(string email, bool sanitize = true)
@@ -77,19 +85,18 @@ namespace Backend.Tests.Mocks
 
         public Task<ResultOfUpdate> Update(string userId, User user, bool updateIsAdmin = false)
         {
-            var foundUser = _users.Single(u => u.Id == userId);
+            var foundUser = _users.SingleOrDefault(u => u.Id == userId);
+            if (foundUser is null)
+            {
+                return Task.FromResult(ResultOfUpdate.NotFound);
+            }
 
             if (!updateIsAdmin)
             {
                 user.IsAdmin = foundUser.IsAdmin;
             }
 
-            var success = _users.Remove(foundUser);
-            if (!success)
-            {
-                return Task.FromResult(ResultOfUpdate.NotFound);
-            }
-
+            _users.RemoveAll(u => u.Id == userId);
             _users.Add(user.Clone());
             return Task.FromResult(ResultOfUpdate.Updated);
         }
@@ -101,8 +108,5 @@ namespace Backend.Tests.Mocks
         }
     }
 
-    internal sealed class UserCreationException : Exception
-    {
-        public UserCreationException() { }
-    }
+    internal sealed class UserCreationException : Exception;
 }

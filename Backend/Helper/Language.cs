@@ -29,7 +29,7 @@ namespace BackendFramework.Helper
                 Sldr.Initialize();
             }
             var langLookup = new LanguageLookup();
-            var writingSystems = langTags.Select(tag =>
+            var writingSystems = langTags.Where(tag => !string.IsNullOrEmpty(tag)).Select(tag =>
                 new WritingSystem(tag, langLookup.GetLanguageFromCode(tag)?.DesiredName ?? ""));
             if (!isSldrInitialized)
             {

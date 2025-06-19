@@ -1,12 +1,10 @@
-import { IconButton } from "@mui/material";
+import { act, render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
-import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { GramCatGroup, type Sense } from "api/models";
 import MergeDragDrop from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop";
-import DragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DragSense";
-import DropWord from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DropWord";
 import {
   convertSenseToMergeTreeSense,
   defaultTree,
@@ -25,13 +23,13 @@ import {
   newWord,
 } from "types/word";
 
-jest.mock("react-beautiful-dnd", () => ({
-  ...jest.requireActual("react-beautiful-dnd"),
+jest.mock("@hello-pangea/dnd", () => ({
+  ...jest.requireActual("@hello-pangea/dnd"),
   Draggable: ({ children }: any) =>
     children({ draggableProps: {}, innerRef: jest.fn() }, {}, {}),
   Droppable: ({ children }: any) => children({ innerRef: jest.fn() }, {}),
 }));
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router", () => ({
   useNavigate: jest.fn(),
 }));
 
@@ -48,8 +46,6 @@ jest.mock("rootRedux/hooks", () => {
 });
 
 const mockSetSidebar = jest.fn();
-
-let testRenderer: ReactTestRenderer;
 
 // Words/Senses to be used for a preloaded mergeDuplicateGoal state
 const senseBah: Sense = {
@@ -120,7 +116,7 @@ const renderMergeDragDrop = async (
   mergeDuplicateGoal: MergeTreeState
 ): Promise<void> => {
   await act(async () => {
-    testRenderer = create(
+    render(
       <Provider
         store={configureMockStore()({ ...defaultState, mergeDuplicateGoal })}
       >
@@ -136,24 +132,18 @@ beforeEach(async () => {
 });
 
 describe("MergeDragDrop", () => {
-  it("render all columns with right number of senses", async () => {
-    const wordCols = testRenderer.root.findAllByType(DropWord);
-    expect(wordCols).toHaveLength(3);
-    expect(wordCols[0].findAllByType(DragSense)).toHaveLength(1);
-    expect(wordCols[1].findAllByType(DragSense)).toHaveLength(2);
-    expect(wordCols[2].findAllByType(DragSense)).toHaveLength(0);
+  it("renders one more column than the number of words", async () => {
+    expect(screen.queryAllByRole("listitem")).toHaveLength(3);
   });
 
   it("renders with button for opening the sidebar", async () => {
-    const iconButtons = testRenderer.root.findAllByType(IconButton);
-    const sidebarButtons = iconButtons.filter((b) =>
-      b.props.id.includes("sidebar")
-    );
-    expect(sidebarButtons).toHaveLength(1);
+    const testIdSidebarIcon = "ArrowForwardIosIcon"; // MUI Icon data-testid
+    const sidebarButton = screen
+      .getAllByRole("button")
+      .find((b) => within(b).queryByTestId(testIdSidebarIcon));
+    expect(sidebarButton).toBeTruthy();
     mockSetSidebar.mockReset();
-    await act(async () => {
-      sidebarButtons[0].props.onClick();
-    });
+    await userEvent.click(sidebarButton!);
     expect(mockSetSidebar).toHaveBeenCalledTimes(1);
     const callArg = mockSetSidebar.mock.calls[0][0];
     expect(callArg.senseRef.mergeSenseId).toEqual("word1_senseA");
