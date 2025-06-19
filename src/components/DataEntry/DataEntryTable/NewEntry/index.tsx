@@ -220,8 +220,8 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
   return (
     <Grid2
       alignItems="center"
-      id={NewEntryId.GridNewEntry}
       container
+      id={NewEntryId.GridNewEntry}
       spacing={1}
     >
       <Grid2 size={4}>

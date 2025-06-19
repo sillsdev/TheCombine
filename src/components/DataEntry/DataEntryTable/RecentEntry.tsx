@@ -77,8 +77,8 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
   return (
     <Grid2
       alignItems="center"
-      id={`${idAffix}-${props.rowIndex}`}
       container
+      id={`${idAffix}-${props.rowIndex}`}
       spacing={1}
     >
       <Grid2 size={4} sx={{ px: 1 }}>
