@@ -40,8 +40,7 @@ jest.mock("components/Buttons", () => ({
     return <MockFIB {...buttonProps} onClick={() => updateFile(mockFile)} />;
   },
 }));
-// Mock "i18n", else `thrown: "Error: AggregateError [...]`
-jest.mock("i18n", () => ({ language: "" }));
+jest.mock("i18n", () => ({ language: "" })); // else `thrown: "Error: AggregateError`
 
 const mockFile = new File([], "file-name");
 const mockLangPickerId = "mock-mui-language-picker";
