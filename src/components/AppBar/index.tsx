@@ -33,7 +33,7 @@ export default function AppBarComponent(): ReactElement {
             alignItems="center"
             direction="row"
             justifyContent="space-between"
-            sx={{ width: "100%" }}
+            sx={{ flexGrow: 1 }}
           >
             <div>
               <Logo />

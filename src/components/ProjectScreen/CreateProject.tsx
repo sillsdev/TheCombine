@@ -270,7 +270,7 @@ export default function CreateProject(): ReactElement {
               buttonProps={{
                 "data-testid": CreateProjectId.ButtonSelectFile,
                 id: CreateProjectId.ButtonSelectFile,
-                style: { margin: theme.spacing(1) },
+                sx: { m: 1 },
               }}
             >
               {t(CreateProjectTextId.UploadBrowse)}
@@ -342,7 +342,6 @@ export default function CreateProject(): ReactElement {
           >
             <LoadingDoneButton
               buttonProps={{
-                color: "primary",
                 "data-testid": CreateProjectId.ButtonSubmit,
                 id: CreateProjectId.ButtonSubmit,
                 type: "submit",

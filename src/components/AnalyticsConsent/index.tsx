@@ -32,16 +32,17 @@ export default function AnalyticsConsent(props: ConsentProps): ReactElement {
 
   return (
     <Drawer
-      anchor={"bottom"}
+      anchor="bottom"
       open
-      onClose={!props.required ? clickedAway : undefined}
-      PaperProps={{ sx: { p: 2 } }}
+      onClose={props.required ? undefined : clickedAway}
+      slotProps={{ paper: { sx: { p: 2 } } }}
     >
       <Stack
         alignItems="center"
         direction={{ sm: "row", xs: "column" }}
         spacing={2}
       >
+        {/* Consent texts */}
         <div>
           <Typography
             variant="h6"
@@ -55,6 +56,7 @@ export default function AnalyticsConsent(props: ConsentProps): ReactElement {
           </Typography>
         </div>
 
+        {/* Consent buttons */}
         <Grid2 container size="auto" spacing={1}>
           <ConsentButton
             onClick={acceptAnalytics}
