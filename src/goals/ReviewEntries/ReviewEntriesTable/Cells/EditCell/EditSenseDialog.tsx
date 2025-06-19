@@ -194,7 +194,7 @@ export default function EditSenseDialog(
                 id={EditSenseDialogId.ButtonSave}
                 onClick={saveAndClose}
               >
-                <Check sx={{ color: (t) => t.palette.success.main }} />
+                <Check sx={{ color: "success.main" }} />
               </IconButton>
 
               <IconButton
@@ -202,7 +202,7 @@ export default function EditSenseDialog(
                 id={EditSenseDialogId.ButtonCancel}
                 onClick={conditionalCancel}
               >
-                <Close sx={{ color: (t) => t.palette.error.main }} />
+                <Close sx={{ color: "error.main" }} />
               </IconButton>
             </div>
           </Grid2>
