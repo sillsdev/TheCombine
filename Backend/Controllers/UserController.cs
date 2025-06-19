@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
@@ -22,6 +23,12 @@ namespace BackendFramework.Controllers
         private readonly IEmailService _emailService;
         private readonly IPasswordResetService _passwordResetService;
         private readonly IPermissionService _permissionService;
+
+        private static readonly string? frontendServer =
+            Environment.GetEnvironmentVariable("COMBINE_FRONTEND_SERVER_NAME");
+
+        private static readonly string frontendDomain =
+            frontendServer is null ? "http://localhost:3000" : $"https://{frontendServer}";
 
         public UserController(IUserRepository userRepo, IPermissionService permissionService,
             ICaptchaService captchaService, IEmailService emailService, IPasswordResetService passwordResetService)
@@ -48,11 +55,10 @@ namespace BackendFramework.Controllers
         [HttpPost("forgot", Name = "ResetPasswordRequest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] PasswordResetRequestData data)
+        public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] string EmailOrUsername)
         {
-
             // Find user attached to email or username.
-            var user = await _userRepo.GetUserByEmailOrUsername(data.EmailOrUsername, false);
+            var user = await _userRepo.GetUserByEmailOrUsername(EmailOrUsername, false);
 
             if (user is null)
             {
@@ -63,6 +69,9 @@ namespace BackendFramework.Controllers
             // Create password reset.
             var resetRequest = await _passwordResetService.CreatePasswordReset(user.Email);
 
+            // The url needs to match Path.PwReset in src/types/path.ts.
+            var url = $"{frontendDomain}/pw/reset/{resetRequest.Token}";
+
             // Create email.
             var message = new MimeMessage();
             message.To.Add(new MailboxAddress(user.Name, user.Email));
@@ -70,9 +79,8 @@ namespace BackendFramework.Controllers
             message.Body = new TextPart("plain")
             {
                 Text = $"A password reset has been requested for the user {user.Username}. " +
-                    $"Follow the link to reset {user.Username}'s password. " +
-                    $"{data.Domain}/forgot/reset/{resetRequest.Token} \n\n " +
-                    "If you did not request a password reset please ignore this email."
+                    $"Follow this link to reset {user.Username}'s password: {url}\n\n" +
+                    "If you did not request a password reset, please ignore this email."
             };
             if (await _emailService.SendEmail(message))
             {
@@ -171,7 +179,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUser(string userId)
         {
-            if (!_permissionService.IsUserIdAuthorized(HttpContext, userId))
+            if (!await _permissionService.CanModifyUser(HttpContext, userId))
             {
                 return Forbid();
             }
@@ -187,7 +195,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserIdByEmailOrUsername([FromBody, BindRequired] string emailOrUsername)
         {
-            if (!_permissionService.IsCurrentUserAuthorized(HttpContext))
+            if (!_permissionService.IsCurrentUserAuthenticated(HttpContext))
             {
                 return Forbid();
             }
@@ -246,8 +254,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateUser(string userId, [FromBody, BindRequired] User user)
         {
-            if (!_permissionService.IsUserIdAuthorized(HttpContext, userId)
-                && !await _permissionService.IsSiteAdmin(HttpContext))
+            if (!await _permissionService.CanModifyUser(HttpContext, userId))
             {
                 return Forbid();
             }
@@ -274,14 +281,6 @@ namespace BackendFramework.Controllers
             }
 
             return await _userRepo.Delete(userId) ? Ok() : NotFound();
-        }
-
-        /// <summary> Checks if current user is a site administrator. </summary>
-        [HttpGet("issiteadmin", Name = "IsUserSiteAdmin")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> IsUserSiteAdmin()
-        {
-            return Ok(await _permissionService.IsSiteAdmin(HttpContext));
         }
     }
 }
