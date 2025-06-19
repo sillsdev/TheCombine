@@ -78,7 +78,7 @@ six==1.17.0
     #   python-dateutil
 typing-extensions==4.14.0
     # via pyopenssl
-urllib3==2.4.0
+urllib3==2.5.0
     # via
     #   kubernetes
     #   requests
