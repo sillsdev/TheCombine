@@ -1,6 +1,5 @@
 import { AutocompleteCloseReason, Grid2, Typography } from "@mui/material";
 import {
-  CSSProperties,
   ReactElement,
   RefObject,
   useCallback,
@@ -37,11 +36,6 @@ export enum FocusTarget {
   Gloss,
   Vernacular,
 }
-
-const gridItemStyle: CSSProperties = {
-  paddingInline: theme.spacing(1),
-  position: "relative",
-};
 
 interface NewEntryProps {
   analysisLang: WritingSystem;
@@ -224,8 +218,13 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
   };
 
   return (
-    <Grid2 alignItems="center" container id={NewEntryId.GridNewEntry}>
-      <Grid2 size={4} style={gridItemStyle}>
+    <Grid2
+      alignItems="center"
+      id={NewEntryId.GridNewEntry}
+      container
+      spacing={1}
+    >
+      <Grid2 size={4}>
         <VernWithSuggestions
           isNew
           vernacular={newVern}
@@ -260,7 +259,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
         />
       </Grid2>
 
-      <Grid2 size={4} style={gridItemStyle}>
+      <Grid2 size={4}>
         <GlossWithSuggestions
           isNew
           gloss={newGloss}
@@ -273,7 +272,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
         />
       </Grid2>
 
-      <Grid2 size={1} style={gridItemStyle}>
+      <Grid2 size={1}>
         {!selectedDup?.id && (
           // note is not available if user selected to modify an existing entry
           <NoteButton
@@ -284,7 +283,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
         )}
       </Grid2>
 
-      <Grid2 size={2} style={gridItemStyle}>
+      <Grid2 size={2}>
         <PronunciationsFrontend
           audio={newAudio}
           deleteAudio={delNewAudio}
@@ -294,7 +293,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
         />
       </Grid2>
 
-      <Grid2 size={1} style={gridItemStyle}>
+      <Grid2 size={1}>
         <DeleteEntry
           buttonId={NewEntryId.ButtonDelete}
           removeEntry={() => resetState()}
