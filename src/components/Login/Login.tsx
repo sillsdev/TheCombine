@@ -174,7 +174,7 @@ export default function Login(): ReactElement {
 
               {/* "Failed to log in" */}
               {status === LoginStatus.Failure && (
-                <Typography sx={{ color: "red" }} variant="body2">
+                <Typography sx={{ color: "error.main" }} variant="body2">
                   {t(
                     loginError.includes("401")
                       ? LoginTextId.Error401

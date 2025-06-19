@@ -254,7 +254,7 @@ export default function Signup(props: SignupProps): ReactElement {
 
               {/* "Failed to sign up" */}
               {!!error && (
-                <Typography sx={{ color: "red" }} variant="body2">
+                <Typography sx={{ color: "error.main" }} variant="body2">
                   {t(error)}
                 </Typography>
               )}
