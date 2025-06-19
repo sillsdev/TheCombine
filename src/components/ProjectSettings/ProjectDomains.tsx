@@ -322,7 +322,7 @@ export function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
               onClick={() => submit()}
               size="small"
             >
-              <Check sx={{ color: (t) => t.palette.success.main }} />
+              <Check sx={{ color: "success.main" }} />
             </IconButton>
 
             <IconButton
@@ -330,7 +330,7 @@ export function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
               onClick={() => cancel()}
               size="small"
             >
-              <Close sx={{ color: (t) => t.palette.error.main }} />
+              <Close sx={{ color: "error.main" }} />
             </IconButton>
           </div>
         </Grid2>
