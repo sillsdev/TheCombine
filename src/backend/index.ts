@@ -665,11 +665,8 @@ export async function verifyCaptchaToken(token: string): Promise<boolean> {
 export async function resetPasswordRequest(
   emailOrUsername: string
 ): Promise<boolean> {
-  const domain = window.location.origin;
   return await userApi
-    .resetPasswordRequest({
-      passwordResetRequestData: { domain, emailOrUsername },
-    })
+    .resetPasswordRequest({ body: emailOrUsername })
     .then(() => true)
     .catch(() => false);
 }
