@@ -1,4 +1,12 @@
-import { Button, Card, Grid, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid2,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { FormEvent, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
@@ -40,71 +48,81 @@ export default function ResetRequest(): ReactElement {
   };
 
   return (
-    <Grid container justifyContent="center">
-      <Card style={{ padding: 10, width: 450 }}>
-        <Typography align="center" variant="h5">
-          {t("passwordReset.resetRequestTitle")}
-        </Typography>
-        {isDone ? (
-          <>
-            <Typography>{t("passwordReset.resetDone")}</Typography>
-            <Grid item>
+    <Grid2 container justifyContent="center">
+      <Card sx={{ width: 450 }}>
+        <CardHeader
+          title={
+            <Typography align="center" variant="h5">
+              {t("passwordReset.resetRequestTitle")}
+            </Typography>
+          }
+        />
+
+        <CardContent>
+          {isDone ? (
+            <Stack alignItems="flex-end" spacing={2}>
+              <Typography>{t("passwordReset.resetDone")}</Typography>
+
               <Button
                 data-testid={PasswordRequestIds.ButtonLogin}
                 id={PasswordRequestIds.ButtonLogin}
                 onClick={() => navigate(Path.Login)}
-                type="button"
-                variant="outlined"
+                variant="contained"
               >
                 {t("login.backToLogin")}
               </Button>
-            </Grid>
-          </>
-        ) : (
-          <>
-            <Typography align="center" variant="subtitle1">
-              {t("passwordReset.resetRequestInstructions")}
-            </Typography>
+            </Stack>
+          ) : (
             <form onSubmit={onSubmit}>
-              <Grid item>
+              <Stack spacing={1}>
+                <Typography>
+                  {t("passwordReset.resetRequestInstructions")}
+                </Typography>
+
                 <NormalizedTextField
+                  fullWidth
                   helperText={isError && t("passwordReset.resetFail")}
                   id={PasswordRequestIds.FieldEmailOrUsername}
                   inputProps={{
                     "data-testid": PasswordRequestIds.FieldEmailOrUsername,
                   }}
                   label={t("passwordReset.emailOrUsername")}
-                  margin="normal"
                   onChange={(e) => setEmailOrUsername(e.target.value)}
                   required
-                  type="text"
-                  style={{ width: "100%" }}
                   value={emailOrUsername}
-                  variant="outlined"
                 />
-              </Grid>
-              <Grid item>
+
                 <Captcha setSuccess={setIsVerified} />
-              </Grid>
-              <Grid item>
-                <LoadingDoneButton
-                  buttonProps={{
-                    color: "primary",
-                    "data-testid": PasswordRequestIds.ButtonSubmit,
-                    id: PasswordRequestIds.ButtonSubmit,
-                    onClick: () => onSubmit,
-                    variant: "contained",
-                  }}
-                  disabled={!emailOrUsername || !isVerified}
-                  loading={isLoading}
-                >
-                  {t("passwordReset.submit")}
-                </LoadingDoneButton>
-              </Grid>
+
+                {/* Back-to-login and Submit buttons */}
+                <Stack direction="row" justifyContent="flex-end" spacing={2}>
+                  <Button
+                    data-testid={PasswordRequestIds.ButtonLogin}
+                    id={PasswordRequestIds.ButtonLogin}
+                    onClick={() => navigate(Path.Login)}
+                    variant="outlined"
+                  >
+                    {t("login.backToLogin")}
+                  </Button>
+
+                  <LoadingDoneButton
+                    buttonProps={{
+                      "data-testid": PasswordRequestIds.ButtonSubmit,
+                      id: PasswordRequestIds.ButtonSubmit,
+                      type: "submit",
+                      variant: "contained",
+                    }}
+                    disabled={!emailOrUsername || !isVerified}
+                    loading={isLoading}
+                  >
+                    {t("passwordReset.submit")}
+                  </LoadingDoneButton>
+                </Stack>
+              </Stack>
             </form>
-          </>
-        )}
+          )}
+        </CardContent>
       </Card>
-    </Grid>
+    </Grid2>
   );
 }

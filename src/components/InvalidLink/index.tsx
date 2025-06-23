@@ -1,5 +1,12 @@
 import { Help } from "@mui/icons-material";
-import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid2,
+  Typography,
+} from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
@@ -17,44 +24,47 @@ export default function InvalidLink(props: InvalidLinkProps): ReactElement {
   const idAffix = "invalid-link";
 
   return (
-    <Grid container justifyContent="center">
-      <Card style={{ width: 450 }}>
+    <Grid2 container justifyContent="center">
+      <Card sx={{ width: 450 }}>
+        <CardHeader
+          title={
+            <Typography align="center" variant="h5">
+              {t(props.textId)}
+            </Typography>
+          }
+        />
+
         <CardContent>
-          <Typography variant="h5" align="center" gutterBottom>
-            {t(props.textId)}
-          </Typography>
           {/* User Guide, Sign Up, and Log In buttons */}
-          <Grid container justifyContent="flex-end" spacing={2}>
-            <Grid item xs={4} sm={6}>
+          <Grid2 container spacing={2}>
+            <Grid2 size="grow">
               <Button id={`${idAffix}-guide`} onClick={() => openUserGuide()}>
                 <Help />
               </Button>
-            </Grid>
+            </Grid2>
 
-            <Grid item xs={4} sm={3}>
-              <Button
-                id={`${idAffix}-signUp`}
-                onClick={() => {
-                  navigate(Path.Signup);
-                }}
-              >
-                {t("login.signUp")}
-              </Button>
-            </Grid>
+            <Button
+              id={`${idAffix}-signUp`}
+              onClick={() => {
+                navigate(Path.Signup);
+              }}
+              variant="contained"
+            >
+              {t("login.signUp")}
+            </Button>
 
-            <Grid item xs={4} sm={3}>
-              <Button
-                id={`${idAffix}-login`}
-                onClick={() => {
-                  navigate(Path.Login);
-                }}
-              >
-                {t("login.login")}
-              </Button>
-            </Grid>
-          </Grid>
+            <Button
+              id={`${idAffix}-login`}
+              onClick={() => {
+                navigate(Path.Login);
+              }}
+              variant="contained"
+            >
+              {t("login.login")}
+            </Button>
+          </Grid2>
         </CardContent>
       </Card>
-    </Grid>
+    </Grid2>
   );
 }
