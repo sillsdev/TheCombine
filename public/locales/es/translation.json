@@ -153,6 +153,7 @@
     "uploadAvatarTitle": "Establecer avatar de usuario"
   },
   "projectExport": {
+    "cancelExport": "Cancelar exportación",
     "cannotExportEmpty": "El proyecto está vacío. No se puede exportar un proyecto sin palabras.",
     "downloadInProgress": "Descargando proyecto: {{ val }}",
     "exportFailed": "Error al exportar el proyecto {{ val }}. Haga clic para borrar este mensaje.",
@@ -312,14 +313,33 @@
     "progress": "Paso {{ val1 }} de {{ val2 }}",
     "progressMerge": "Conjunto de combinación {{ val1 }} de {{ val2 }}"
   },
-  "createStrWordInv": { "title": "Crear inventario de palabras estructurales" },
-  "handleFlags": { "title": "Manejar banderas" },
-  "reviewDeferredDups": { "title": "Revisar duplicados aplazados" },
-  "spellCheckGloss": { "title": "Corregir la ortografía del glosario" },
-  "validateChars": { "title": "Validar caracteres" },
-  "validateStrWords": { "title": "Validar los caracteres estructurales" },
+  "createStrWordInv": {
+    "title": "Crear inventario de palabras estructurales",
+    "description": "NO IMPLEMENTADO"
+  },
+  "handleFlags": {
+    "title": "Manejar banderas",
+    "description": "NO IMPLEMENTADO"
+  },
+  "reviewDeferredDups": {
+    "title": "Revisar duplicados aplazados",
+    "description": "Revisar los duplicados potenciales que se aplazaron al usar Combinar duplicados."
+  },
+  "spellCheckGloss": {
+    "title": "Corregir la ortografía del glosario",
+    "description": "NO IMPLEMENTADO"
+  },
+  "validateChars": {
+    "title": "Validar caracteres",
+    "description": "NO IMPLEMENTADO"
+  },
+  "validateStrWords": {
+    "title": "Validar los caracteres estructurales",
+    "description": "NO IMPLEMENTADO"
+  },
   "reviewEntries": {
     "title": "Revisar entradas",
+    "description": "Ver, ordenar, filtrar y editar entradas del proyecto.",
     "allEntriesPerPageOption": "Todos",
     "editSense": "Editar acepción",
     "discardChanges": "Descartar los cambios?",
@@ -356,7 +376,8 @@
     }
   },
   "charInventory": {
-    "title": "Crear inventario de caracteres",
+    "title": "Comprobar ortografía",
+    "description": "Revisar los caracteres utilizados en la ortografía de las palabras vernáculas y comprobar si hay errores tipográficos.",
     "characters": "caracteres",
     "examples": "Ejemplos",
     "occurrences": "ocurrencias",
@@ -399,6 +420,7 @@
   },
   "mergeDups": {
     "title": "Combinar duplicados",
+    "description": "Revisar los duplicados potenciales identificados por The Combine y combinar o eliminar los duplicados verdaderos.",
     "helpText": {
       "dragCard": "Arrastre una tarjeta aquí para combinarla",
       "saveAndContinue": "Guardar los cambios y cargar un nuevo conjunto de palabras",

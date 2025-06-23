@@ -181,19 +181,19 @@ amarillo—no se puede borrar ni colocar en (es decir, se combina en) otra tarje
 está protegida, su columna tendrá una cabecera amarilla (donde se encuentran la lengua vernácula y la bandera). Cuando
 una entrada protegida sólo tiene una acepción, esa tarjeta de acepción no se puede mover.
 
-## Crear inventario de caracteres
+## Comprobar ortografía
 
-Las herramientas de inventario de caracteres sólo están disponibles para los administradores del proyecto.
+Esta herramienta sólo está disponible para los administradores del proyecto.
 
-_Crear un inventario de caracteres_ proporciona una visión general de cada carácter unicode que aparece en las formas
-vernáculas del entradas del proyecto. Esto le permite identificar qué caracteres se utilizan habitualmente en la lengua
-y "aceptarlos" como parte del inventario de caracteres de la lengua. El inventario de caracteres forma parte del archivo
-LDML para el idioma vernáculo de un proyecto que se incluye cuando se [exporta](project.md#export) el proyecto. La
-aceptación de los caracteres conducirá a una representación precisa de la lengua en Unicode, el Ethnologue y otros
-estándares y recursos lingüísticos.
+_Comprobar ortografía_ proporciona una visión general de cada carácter unicode que aparece en las formas vernáculas del
+entradas del proyecto. Esto le permite identificar qué caracteres se utilizan habitualmente en la lengua y "aceptarlos"
+como parte del inventario de caracteres de la lengua. El inventario de caracteres forma parte del archivo LDML para el
+idioma vernáculo de un proyecto que se incluye cuando se [exporta](project.md#export) el proyecto. La aceptación de los
+caracteres conducirá a una representación precisa de la lengua en Unicode, el Ethnologue y otros estándares y recursos
+lingüísticos.
 
-Otro uso de _Crear inventario de caracteres_ es identificar y sustituir caracteres que se han utilizado incorrectamente
-al escribir formas vernáculas de palabras.
+Otro uso de _Comprobar ortografía_ es identificar y sustituir caracteres que se han utilizado incorrectamente al
+escribir formas vernáculas de palabras.
 
 Hay una ficha para cada carácter unicode que aparece en la forma vernácula de cualquier entrada. Cada ficha muestra el
 carácter, su valor Unicode "U+", el número de veces que aparece en las formas vernáculas de entrada y su designación

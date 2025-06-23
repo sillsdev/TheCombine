@@ -176,18 +176,18 @@ or dropped into (i.e., merged into) another sense card. If an entire entry is pr
 header (where the vernacular and flag are located). When a protected entry has only one sense, that sense card cannot be
 moved.
 
-## Create Character Inventory
+## Check Orthography
 
-Character Inventory tools are only available to project admins.
+This tool is only available to project admins.
 
-_Create Character Inventory_ provides an overview of every unicode character that appears in the vernacular forms of the
+_Check Orthography_ provides an overview of every unicode character that appears in the vernacular forms of the
 project's entries. This allows you to identify which characters are commonly used in the language, and to "accept" them
 as part of the language's character inventory. The character inventory is part of the LDML file for a project's
 vernacular language that is included when the project is [exported](project.md#export). Accepting characters will lead
 to accurate representation of the language in Unicode, the Ethnologue, and other language standards and resources.
 
-Another use of _Create Character Inventory_ is to identify and replace characters that have incorrectly been used in
-typing vernacular forms of words.
+Another use of _Check Orthography_ is to identify and replace characters that have incorrectly been used in typing
+vernacular forms of words.
 
 There is a tile for each unicode character that appears in the vernacular form of any entry. Each tile shows the
 character, its Unicode "U+" value, the number of times it occurs in entry vernacular forms, and its designation
