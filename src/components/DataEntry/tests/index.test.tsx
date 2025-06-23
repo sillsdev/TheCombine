@@ -1,13 +1,15 @@
+import { ThemeProvider } from "@mui/material";
 import { act, render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
 import createMockStore from "redux-mock-store";
 
-import DataEntry, { smallScreenThreshold } from "components/DataEntry";
+import DataEntry from "components/DataEntry";
 import { openTree } from "components/TreeView/Redux/TreeViewActions";
 import { TreeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
 import { defaultState } from "rootRedux/types";
 import { newSemanticDomainTreeNode } from "types/semanticDomain";
-import * as useWindowSize from "utilities/useWindowSize";
+import theme from "types/theme";
+import { setMatchMedia } from "utilities/testingLibraryUtilities";
 
 jest.mock("backend", () => ({
   getSemanticDomainFull: (...args: any[]) => mockGetSemanticDomainFull(...args),
@@ -36,11 +38,7 @@ const mockDomain = newSemanticDomainTreeNode("mockId", "mockName", "mockLang");
 const mockGetSemanticDomainFull = jest.fn();
 const mockStore = createMockStore();
 
-function spyOnUseWindowSize(windowWidth: number): jest.SpyInstance {
-  return jest
-    .spyOn(useWindowSize, "useWindowSize")
-    .mockReturnValue({ windowWidth, windowHeight: 1 });
-}
+const mdWidth = 900;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -72,28 +70,26 @@ describe("DataEntry", () => {
   });
 
   it("renders on a small screen", async () => {
-    await renderDataEntry(
-      { currentDomain: mockDomain },
-      smallScreenThreshold - 1
-    );
+    await renderDataEntry({ currentDomain: mockDomain }, mdWidth - 1);
   });
 });
 
 async function renderDataEntry(
   treeViewState: Partial<TreeViewState>,
-  windowWidth = smallScreenThreshold + 1
+  width = mdWidth
 ): Promise<void> {
-  spyOnUseWindowSize(windowWidth);
+  // Required (along with a `ThemeProvider`) for `useMediaQuery` to work
+  setMatchMedia(width);
+
+  treeViewState = { ...defaultState.treeViewState, ...treeViewState };
+
   await act(async () => {
     render(
-      <Provider
-        store={mockStore({
-          ...defaultState,
-          treeViewState: { ...defaultState.treeViewState, ...treeViewState },
-        })}
-      >
-        <DataEntry />
-      </Provider>
+      <ThemeProvider theme={theme}>
+        <Provider store={mockStore({ ...defaultState, treeViewState })}>
+          <DataEntry />
+        </Provider>
+      </ThemeProvider>
     );
   });
 }
