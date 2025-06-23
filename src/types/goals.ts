@@ -65,6 +65,7 @@ export class Goal {
   data?: GoalData;
   status: GoalStatus;
   changes?: GoalChanges;
+  modified?: string;
 
   constructor(
     type = GoalType.Default,
