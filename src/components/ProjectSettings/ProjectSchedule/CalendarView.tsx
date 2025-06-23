@@ -1,4 +1,4 @@
-import { Icon } from "@mui/material";
+import { Grid2, Icon } from "@mui/material";
 import { DateCalendar } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { ReactElement } from "react";
@@ -40,5 +40,9 @@ export default function CalendarView(props: CalendarViewProps): ReactElement {
     return Array.from(new Set(months)).sort().map(dayjs);
   }
 
-  return <>{handleCalendarView(getScheduledMonths(props.projectSchedule))}</>;
+  return (
+    <Grid2 container justifyContent="space-between" size={12}>
+      {handleCalendarView(getScheduledMonths(props.projectSchedule))}
+    </Grid2>
+  );
 }

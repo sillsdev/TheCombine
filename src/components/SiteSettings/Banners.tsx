@@ -1,19 +1,18 @@
-import { Button, Grid } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { ChangeEvent, ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { BannerType } from "api/models";
 import { getBannerText, updateBanner } from "backend";
-import theme from "types/theme";
 import { NormalizedTextField } from "utilities/fontComponents";
 
 export default function Banners(): ReactElement {
   return (
-    <>
+    <Stack spacing={6}>
       {[BannerType.Announcement, BannerType.Login].map((type) => (
         <Banner key={type} type={type} />
       ))}
-    </>
+    </Stack>
   );
 }
 
@@ -57,26 +56,19 @@ function Banner(props: BannerProps): ReactElement {
   };
 
   return (
-    <Grid
-      container
-      spacing={2}
-      alignItems="center"
-      style={{ marginBottom: theme.spacing(1) }}
-    >
-      <Grid item xs={12} sm={8}>
-        <NormalizedTextField
-          id={`${idAffix}-text`}
-          variant="outlined"
-          fullWidth
-          multiline
-          label={t(labelId(props.type))}
-          value={text}
-          onChange={handleOnChange}
-          style={{ minWidth: 300 }}
-        />
-      </Grid>
+    <Stack spacing={2}>
+      <NormalizedTextField
+        id={`${idAffix}-text`}
+        variant="outlined"
+        fullWidth
+        multiline
+        label={t(labelId(props.type))}
+        value={text}
+        onChange={handleOnChange}
+        style={{ maxWidth: 500 }}
+      />
 
-      <Grid item>
+      <Stack direction="row" spacing={2}>
         <Button
           id={`${idAffix}-save`}
           type="submit"
@@ -86,9 +78,7 @@ function Banner(props: BannerProps): ReactElement {
         >
           {t("buttons.save")}
         </Button>
-      </Grid>
 
-      <Grid item>
         <Button
           id={`${idAffix}-reset`}
           type="reset"
@@ -97,7 +87,7 @@ function Banner(props: BannerProps): ReactElement {
         >
           {t("buttons.reset")}
         </Button>
-      </Grid>
-    </Grid>
+      </Stack>
+    </Stack>
   );
 }
