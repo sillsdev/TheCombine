@@ -33,6 +33,8 @@ namespace BackendFramework.Services
                 return new Tuple<bool, Guid?>(false, null);
             }
 
+            edit.Modified = DateTime.UtcNow;
+
             // Update existing Edit if guid exists, otherwise add new one at end of List.
             var editIndex = userEdit.Edits.FindLastIndex(e => e.Guid == edit.Guid);
             if (editIndex > -1)
@@ -64,6 +66,7 @@ namespace BackendFramework.Services
             {
                 return false;
             }
+            edit.Modified = DateTime.UtcNow;
             edit.StepData.Add(stepString);
             return await _userEditRepo.Replace(projectId, userEditId, userEdit);
         }
@@ -87,6 +90,7 @@ namespace BackendFramework.Services
             {
                 return false;
             }
+            edit.Modified = DateTime.UtcNow;
             edit.StepData[stepIndex] = stepString;
             return await _userEditRepo.Replace(projectId, userEditId, userEdit);
         }
