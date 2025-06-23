@@ -95,7 +95,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUploadAudioFileEmptyFile()
         {
-            // Use 0 for the third argument
+            // Use 0 for the third argument to simulate an empty file.
             _file = new FormFile(_stream, 0, 0, "Name", FileName);
 
             var result = _audioController.UploadAudioFile(_projId, _wordId, _file).Result;
