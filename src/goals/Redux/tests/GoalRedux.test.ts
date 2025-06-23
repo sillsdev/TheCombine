@@ -237,7 +237,7 @@ describe("asyncAdvanceStep", () => {
   it("advance CreateCharInv goal", async () => {
     // setup the test scenario
     const store = setupStore();
-    // create character inventory goal
+    // create charInv goal
     const goal = new CreateCharInv();
     await act(async () => {
       await store.dispatch(asyncAddGoal(goal));
