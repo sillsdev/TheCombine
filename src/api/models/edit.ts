@@ -42,4 +42,10 @@ export interface Edit {
    * @memberof Edit
    */
   changes: string;
+  /**
+   *
+   * @type {string}
+   * @memberof Edit
+   */
+  modified?: string | null;
 }
