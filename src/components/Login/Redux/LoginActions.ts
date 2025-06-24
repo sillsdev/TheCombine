@@ -52,7 +52,7 @@ export function signupSuccess(): PayloadAction {
 export function asyncLogIn(
   emailOrUsername: string,
   password: string,
-  onSuccess?: () => Promise<void> | void
+  onSuccess?: () => void
 ) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(loginAttempt(emailOrUsername));
