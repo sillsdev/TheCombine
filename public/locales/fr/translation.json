@@ -247,7 +247,7 @@
     "undo": { "undoDisabled": "Annuler indisponible" }
   },
   "charInventory": {
-    "title": "Créer un inventaire de caractères",
+    "title": "Vérifier l'orthographe",
     "characters": "caractères",
     "examples": "Exemples",
     "occurrences": "occurrences",

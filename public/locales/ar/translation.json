@@ -246,7 +246,7 @@
     "undo": { "undoDisabled": "التراجع غير متوفر" }
   },
   "charInventory": {
-    "title": "إنشاء جرد الشخصية",
+    "title": "التحقق من الإملاء",
     "characters": "أحرف",
     "examples": "أمثلة",
     "occurrences": "مرات الحدوث",
