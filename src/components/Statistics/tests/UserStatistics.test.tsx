@@ -43,9 +43,7 @@ describe("UserStatistics", () => {
   });
 
   test("all rows are present", async () => {
-    const listItems = screen.queryAllByRole("row");
-    expect(listItems.length).toEqual(
-      mockSemanticDomainUserCountArray.length + 1
-    );
+    const expectedRowCount = mockSemanticDomainUserCountArray.length + 1; // +1 for the header row
+    expect(screen.queryAllByRole("row")).toHaveLength(expectedRowCount);
   });
 });
