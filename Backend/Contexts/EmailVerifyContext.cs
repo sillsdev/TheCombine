@@ -8,19 +8,19 @@ using MongoDB.Driver;
 namespace BackendFramework.Contexts
 {
     [ExcludeFromCodeCoverage]
-    public class PasswordResetContext : IPasswordResetContext
+    public class EmailVerifyContext : IEmailVerifyContext
     {
         private readonly IMongoDatabase _db;
         public int ExpireTime { get; }
 
-        public PasswordResetContext(IOptions<Startup.Settings> options)
+        public EmailVerifyContext(IOptions<Startup.Settings> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
             _db = client.GetDatabase(options.Value.CombineDatabase);
             ExpireTime = options.Value.PassResetExpireTime;
         }
 
-        private IMongoCollection<EmailToken> EmailTokens => _db.GetCollection<EmailToken>("PasswordResetCollection");
+        private IMongoCollection<EmailToken> EmailTokens => _db.GetCollection<EmailToken>("EmailVerifyCollection");
 
         public Task ClearAll(string email)
         {

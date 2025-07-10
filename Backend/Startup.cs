@@ -238,6 +238,10 @@ namespace BackendFramework
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IInviteService, InviteService>();
 
+            // Email verify types
+            services.AddTransient<IEmailVerifyContext, EmailVerifyContext>();
+            services.AddTransient<IEmailVerifyService, EmailVerifyService>();
+
             // Lift Service - Singleton to avoid initializing the Sldr multiple times,
             // also to avoid leaking LanguageTag data
             services.AddSingleton<ILiftService, LiftService>();

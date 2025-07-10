@@ -97,6 +97,12 @@ namespace BackendFramework.Models
         [BsonElement("isAdmin")]
         public bool IsAdmin { get; set; }
 
+        /// <summary>
+        /// Is set to true after a user has verified their email address.
+        /// </summary>
+        [BsonElement("IsEmailVerified")]
+        public bool IsEmailVerified { get; set; }
+
         public User()
         {
             Id = "";
@@ -115,6 +121,7 @@ namespace BackendFramework.Models
             GlossSuggestion = OffOnSetting.On;
             Token = "";
             IsAdmin = false;
+            IsEmailVerified = false;
             WorkedProjects = new();
             ProjectRoles = new();
         }
