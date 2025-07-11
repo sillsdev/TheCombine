@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Grid2 } from "@mui/material";
 import { CSSProperties, ReactElement } from "react";
 
 import { Gloss } from "api/models";
@@ -20,20 +20,18 @@ export default function ImmutableExistingData(
   props: ImmutableExistingDataProps
 ): ReactElement {
   return (
-    <Grid container wrap="nowrap" justifyContent="space-around">
-      <Grid
-        item
+    <Grid2 container wrap="nowrap" justifyContent="space-around">
+      <Grid2
+        size={5}
         style={{ ...TopStyle(props.index), position: "relative" }}
-        xs={5}
       >
         <TypographyWithFont variant="body1" vernacular>
           {props.vernacular}
         </TypographyWithFont>
-      </Grid>
-      <Grid
-        item
+      </Grid2>
+      <Grid2
+        size={5}
         style={{ ...TopStyle(props.index), position: "relative" }}
-        xs={5}
       >
         {props.glosses.map((g, i) => (
           <TypographyWithFont
@@ -46,7 +44,7 @@ export default function ImmutableExistingData(
             {g.def}
           </TypographyWithFont>
         ))}
-      </Grid>
-    </Grid>
+      </Grid2>
+    </Grid2>
   );
 }
