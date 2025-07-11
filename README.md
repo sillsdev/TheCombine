@@ -91,7 +91,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    ```
 
 2. [Chocolatey][chocolatey] (Windows only): a Windows package manager.
-3. [Node.js 20 (LTS)](https://nodejs.org/en/download/)
+3. [Node.js 22 (LTS)](https://nodejs.org/en/download/)
 
    - On Windows, if using [Chocolatey][chocolatey]: `choco install nodejs-lts`
    - On Ubuntu, follow
