@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
@@ -59,31 +59,25 @@ export default function AddProjectUsers(
   }
 
   return (
-    <>
-      <Grid container spacing={1}>
-        <UserList
-          addToProject={addToProject}
-          minSearchLength={props.siteAdmin ? 1 : 3}
-          projectUsers={projectUsers}
-        />
-      </Grid>
+    <Stack alignItems="flex-start" spacing={1}>
+      <UserList
+        addToProject={addToProject}
+        minSearchLength={props.siteAdmin ? 1 : 3}
+        projectUsers={projectUsers}
+      />
 
       {RuntimeConfig.getInstance().emailServicesEnabled() && (
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <Typography>{t("projectSettings.invite.or")}</Typography>
-          </Grid>
+        <>
+          <Typography>{t("projectSettings.invite.or")}</Typography>
 
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              onClick={() => setShowModal(true)}
-              id="project-user-invite"
-            >
-              {t("projectSettings.invite.inviteByEmailLabel")}
-            </Button>
-          </Grid>
-        </Grid>
+          <Button
+            variant="contained"
+            onClick={() => setShowModal(true)}
+            id="project-user-invite"
+          >
+            {t("projectSettings.invite.inviteByEmailLabel")}
+          </Button>
+        </>
       )}
 
       {RuntimeConfig.getInstance().emailServicesEnabled() && (
@@ -99,6 +93,6 @@ export default function AddProjectUsers(
           />
         </Modal>
       )}
-    </>
+    </Stack>
   );
 }
