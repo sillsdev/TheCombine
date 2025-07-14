@@ -75,7 +75,7 @@ export default function ProjectImport(
   };
 
   return (
-    <Grid2 container alignItems="center" spacing={1}>
+    <Grid2 alignItems="center" container spacing={1}>
       {/* Upload/LIFT instructions */}
       <Grid2 size={12}>
         <Typography variant="body2">

@@ -59,26 +59,28 @@ export default function AddProjectUsers(
   }
 
   return (
-    <Stack alignItems="flex-start" spacing={1}>
-      <UserList
-        addToProject={addToProject}
-        minSearchLength={props.siteAdmin ? 1 : 3}
-        projectUsers={projectUsers}
-      />
+    <>
+      <Stack alignItems="flex-start" spacing={1}>
+        <UserList
+          addToProject={addToProject}
+          minSearchLength={props.siteAdmin ? 1 : 3}
+          projectUsers={projectUsers}
+        />
 
-      {RuntimeConfig.getInstance().emailServicesEnabled() && (
-        <>
-          <Typography>{t("projectSettings.invite.or")}</Typography>
+        {RuntimeConfig.getInstance().emailServicesEnabled() && (
+          <>
+            <Typography>{t("projectSettings.invite.or")}</Typography>
 
-          <Button
-            variant="contained"
-            onClick={() => setShowModal(true)}
-            id="project-user-invite"
-          >
-            {t("projectSettings.invite.inviteByEmailLabel")}
-          </Button>
-        </>
-      )}
+            <Button
+              variant="contained"
+              onClick={() => setShowModal(true)}
+              id="project-user-invite"
+            >
+              {t("projectSettings.invite.inviteByEmailLabel")}
+            </Button>
+          </>
+        )}
+      </Stack>
 
       {RuntimeConfig.getInstance().emailServicesEnabled() && (
         <Modal
@@ -93,6 +95,6 @@ export default function AddProjectUsers(
           />
         </Modal>
       )}
-    </Stack>
+    </>
   );
 }
