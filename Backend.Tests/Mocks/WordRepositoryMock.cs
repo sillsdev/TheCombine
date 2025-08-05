@@ -60,6 +60,12 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(true);
         }
 
+        public Task<bool> DeleteAllFrontierWords(string projectId)
+        {
+            _frontier.RemoveAll(word => word.ProjectId == projectId);
+            return Task.FromResult(true);
+        }
+
         public Task<bool> HasWords(string projectId)
         {
             return Task.FromResult(_words.Any(w => w.ProjectId == projectId));

@@ -38,10 +38,4 @@ export interface UserEdit {
    * @memberof UserEdit
    */
   projectId: string;
-  /**
-   *
-   * @type {string}
-   * @memberof UserEdit
-   */
-  modified?: string | null;
 }

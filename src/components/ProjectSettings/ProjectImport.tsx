@@ -1,10 +1,11 @@
-import { Grid, Typography } from "@mui/material";
+import { Grid2, Typography } from "@mui/material";
 import { type ReactElement, useEffect, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import { type WritingSystem } from "api";
 import {
+  deleteFrontierAndFinishUploadLift,
   finishUploadLift,
   getProject,
   uploadLiftAndGetWritingSystems,
@@ -29,7 +30,8 @@ export enum ProjectImportIds {
 export default function ProjectImport(
   props: ProjectSettingProps
 ): ReactElement {
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogReuploadOpen, setDialogReuploadOpen] = useState(false);
+  const [dialogVernOpen, setDialogVernOpen] = useState(false);
   const [liftFile, setLiftFile] = useState<File | undefined>();
   const [liftLangs, setLiftLangs] = useState<WritingSystem[] | undefined>();
   const [uploadState, setUploadState] = useState(UploadState.Awaiting);
@@ -41,7 +43,7 @@ export default function ProjectImport(
     if (liftFile) {
       uploadLiftAndGetWritingSystems(liftFile).then(setLiftLangs);
     } else {
-      setDialogOpen(false);
+      setDialogVernOpen(false);
       setLiftLangs(undefined);
     }
   }, [liftFile]);
@@ -50,15 +52,30 @@ export default function ProjectImport(
     // Check whether the project's vernacular writing system is in the LIFT's ldml files.
     const vern = props.project.vernacularWritingSystem.bcp47;
     if (liftLangs && !liftLangs.some((lang) => lang.bcp47 === vern)) {
-      setDialogOpen(true);
+      setDialogVernOpen(true);
     }
   }, [liftLangs, props.project.vernacularWritingSystem.bcp47]);
+
+  const onUploadClick = (): void => {
+    if (props.project.liftImported) {
+      setDialogReuploadOpen(true);
+    } else {
+      uploadWords();
+    }
+  };
+
+  const onReuploadConfirm = (): void => {
+    setDialogReuploadOpen(false);
+    uploadWords();
+  };
 
   const uploadWords = async (): Promise<void> => {
     if (liftFile) {
       // Upload the selected file into the project.
       setUploadState(UploadState.InProgress);
-      const val = await finishUploadLift(props.project.id);
+      const val = props.project.liftImported
+        ? await deleteFrontierAndFinishUploadLift(props.project.id)
+        : await finishUploadLift(props.project.id);
 
       // Toast the number of words uploaded.
       if (val) {
@@ -75,10 +92,58 @@ export default function ProjectImport(
   };
 
   return (
-    <Grid container spacing={1}>
-      <Grid item xs={12}>
+    <Grid2 alignItems="center" container spacing={1}>
+      {/* Upload instructions */}
+      <Grid2 size={12}>
+        {props.project.liftImported ? (
+          <Typography color="error" variant="body2">
+            {t("projectSettings.import.notAllowed")}{" "}
+            {t("projectSettings.import.reuploadWarning")}
+          </Typography>
+        ) : (
+          <Typography variant="body2">
+            {t("projectSettings.import.body")}
+          </Typography>
+        )}
+      </Grid2>
+
+      {/* Choose file button */}
+      <FileInputButton
+        updateFile={setLiftFile}
+        accept=".zip"
+        buttonProps={{
+          "data-testid": ProjectImportIds.ButtonFileSelect,
+          disabled: uploadState === UploadState.Done,
+          id: ProjectImportIds.ButtonFileSelect,
+        }}
+      >
+        {t("projectSettings.import.chooseFile")}
+      </FileInputButton>
+
+      {/* Upload button */}
+      <LoadingDoneButton
+        buttonProps={{
+          "data-testid": ProjectImportIds.ButtonFileSubmit,
+          id: ProjectImportIds.ButtonFileSubmit,
+          onClick: onUploadClick,
+        }}
+        disabled={!liftLangs}
+        done={uploadState === UploadState.Done}
+        loading={uploadState === UploadState.InProgress}
+      >
+        {t("buttons.upload")}
+      </LoadingDoneButton>
+
+      {/* Name of the selected file */}
+      {liftFile && (
+        <Typography variant="body1" noWrap>
+          {t("createProject.fileSelected", { val: liftFile.name })}
+        </Typography>
+      )}
+
+      {/* LIFT instructions */}
+      <Grid2 size={12}>
         <Typography variant="body2">
-          {t("projectSettings.import.body")}{" "}
           <Trans i18nKey="createProject.uploadFormat">
             FillerTextA
             <a href="https://code.google.com/archive/p/lift-standard/">
@@ -87,62 +152,36 @@ export default function ProjectImport(
             FillerTextC
           </Trans>
         </Typography>
-      </Grid>
+      </Grid2>
 
-      <Grid item>
-        {/* Choose file button */}
-        <FileInputButton
-          updateFile={setLiftFile}
-          accept=".zip"
-          buttonProps={{
-            "data-testid": ProjectImportIds.ButtonFileSelect,
-            disabled: uploadState === UploadState.Done,
-            id: ProjectImportIds.ButtonFileSelect,
-          }}
-        >
-          {t("projectSettings.import.chooseFile")}
-        </FileInputButton>
-      </Grid>
-
-      <Grid item>
-        {/* Upload button */}
-        <LoadingDoneButton
-          buttonProps={{
-            "data-testid": ProjectImportIds.ButtonFileSubmit,
-            id: ProjectImportIds.ButtonFileSubmit,
-            onClick: uploadWords,
-          }}
-          disabled={!liftLangs}
-          done={uploadState === UploadState.Done}
-          loading={uploadState === UploadState.InProgress}
-        >
-          {t("buttons.upload")}
-        </LoadingDoneButton>
-      </Grid>
-
-      <Grid item>
-        {/* Displays the name of the selected file */}
-        {liftFile && (
-          <Typography variant="body1" noWrap>
-            {t("createProject.fileSelected", { val: liftFile.name })}
-          </Typography>
-        )}
-      </Grid>
-
+      {/* Dialog if LIFT contents don't match vernacular language */}
       {liftLangs && (
         <CancelConfirmDialog
           buttonIdCancel={ProjectImportIds.ButtonDialogCancel}
           buttonIdConfirm={ProjectImportIds.ButtonDialogConfirm}
           disableBackdropClick
           handleCancel={() => setLiftFile(undefined)}
-          handleConfirm={() => setDialogOpen(false)}
-          open={dialogOpen}
+          handleConfirm={() => setDialogVernOpen(false)}
+          open={dialogVernOpen}
           text={t("projectSettings.import.liftLanguageMismatch", {
             val1: liftLangs.map((ws) => ws.bcp47),
             val2: props.project.vernacularWritingSystem.bcp47,
           })}
         />
       )}
-    </Grid>
+
+      {/* Dialog if uploading a second time */}
+      {props.project.liftImported && (
+        <CancelConfirmDialog
+          buttonIdCancel={ProjectImportIds.ButtonDialogCancel}
+          buttonIdConfirm={ProjectImportIds.ButtonDialogConfirm}
+          disableBackdropClick
+          handleCancel={() => setDialogReuploadOpen(false)}
+          handleConfirm={onReuploadConfirm}
+          open={dialogReuploadOpen}
+          text={t("projectSettings.import.reuploadConfirm")}
+        />
+      )}
+    </Grid2>
   );
 }

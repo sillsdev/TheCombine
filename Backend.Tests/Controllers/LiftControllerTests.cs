@@ -283,6 +283,21 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestDeleteFrontierAndFinishUploadLiftFileNoPermission()
+        {
+            _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _liftController.DeleteFrontierAndFinishUploadLiftFile(_projId).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestDeleteFrontierAndFinishUploadLiftFileInvalidProjectId()
+        {
+            var result = _liftController.DeleteFrontierAndFinishUploadLiftFile("../hack").Result;
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
+        }
+
+        [Test]
         public void TestFinishUploadLiftFileNothingToFinish()
         {
             var proj = Util.RandomProject();
@@ -397,39 +412,6 @@ namespace Backend.Tests.Controllers
             _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = _liftController.DownloadLiftFile(_projId).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
-        }
-
-        [Test]
-        public void TestCanUploadLiftNoPermission()
-        {
-            _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var result = _liftController.CanUploadLift(_projId).Result;
-            Assert.That(result, Is.InstanceOf<ForbidResult>());
-        }
-
-        [Test]
-        public void TestCanUploadLiftInvalidProjectId()
-        {
-            var result = _liftController.CanUploadLift("../hack").Result;
-            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
-        }
-
-        [Test]
-        public void TestCanUploadLiftFalse()
-        {
-            var projId = _projRepo.Create(new Project { Name = "has import", LiftImported = true }).Result!.Id;
-            var result = _liftController.CanUploadLift(projId).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            Assert.That(((OkObjectResult)result).Value, Is.False);
-        }
-
-        [Test]
-        public void TestCanUploadLiftTrue()
-        {
-            var projId = _projRepo.Create(new Project { Name = "has no import", LiftImported = false }).Result!.Id;
-            var result = _liftController.CanUploadLift(projId).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            Assert.That(((OkObjectResult)result).Value, Is.True);
         }
 
         /// <summary>
