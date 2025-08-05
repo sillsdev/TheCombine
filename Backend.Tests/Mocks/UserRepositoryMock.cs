@@ -22,6 +22,12 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_users.Select(user => user.Clone()).ToList());
         }
 
+        public Task<List<User>> GetAllUsersInProject(string projectId)
+        {
+            var users = _users.Where(user => user.ProjectRoles.ContainsKey(projectId));
+            return Task.FromResult(users.Select(user => user.Clone()).ToList());
+        }
+
         public Task<List<User>> GetAllUsersByFilter(string filter)
         {
             var filteredUsers = _users.Where(user =>

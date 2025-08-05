@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,14 +18,16 @@ namespace BackendFramework.Controllers
     public class ProjectController : Controller
     {
         private readonly IProjectRepository _projRepo;
+        private readonly ISpeakerRepository _speakerRepo;
         private readonly IUserRepository _userRepo;
         private readonly IUserRoleRepository _userRoleRepo;
         private readonly IPermissionService _permissionService;
 
-        public ProjectController(IProjectRepository projRepo, IUserRoleRepository userRoleRepo,
+        public ProjectController(IProjectRepository projRepo, ISpeakerRepository speakerRepo, IUserRoleRepository userRoleRepo,
             IUserRepository userRepo, IPermissionService permissionService)
         {
             _projRepo = projRepo;
+            _speakerRepo = speakerRepo;
             _userRepo = userRepo;
             _userRoleRepo = userRoleRepo;
             _permissionService = permissionService;
@@ -215,6 +218,92 @@ namespace BackendFramework.Controllers
 
             var projectIdWithName = await _projRepo.GetProjectIdByName(projectName);
             return Ok(projectIdWithName is not null);
+        }
+
+        private async Task CopySpeakerToProject(Speaker speaker, string projectId)
+        {
+            var speakerCopy = await _speakerRepo.Create(new() { Name = speaker.Name, ProjectId = projectId });
+            if (speaker.Consent != ConsentType.None)
+            {
+                var oldPath = FileStorage.GetConsentFilePath(speaker.Id);
+                var newPath = FileStorage.GetConsentFilePath(speakerCopy.Id);
+                if (oldPath is not null && newPath is not null)
+                {
+                    System.IO.File.Copy(oldPath, newPath);
+                    speakerCopy.Consent = speaker.Consent;
+                    await _speakerRepo.Update(speakerCopy.Id, speakerCopy);
+                }
+            }
+        }
+
+        private async Task CopyProjectSpeakers(string oldProjectId, string newProjectId)
+        {
+            var speakers = await _speakerRepo.GetAllSpeakers(oldProjectId);
+            await Task.WhenAll(speakers.Select(s => CopySpeakerToProject(s, newProjectId)));
+        }
+
+        private async Task CopyProjectUserRoles(string oldProjectId, string newProjectId)
+        {
+            var users = await _userRepo.GetAllUsersInProject(oldProjectId);
+            var userRoles = await _userRoleRepo.GetAllUserRoles(oldProjectId);
+            foreach (var user in users)
+            {
+                var roleId = user.ProjectRoles[oldProjectId];
+                var userRole = userRoles.FirstOrDefault(r => r.Id == roleId);
+                if (userRole is null)
+                {
+                    continue;
+                }
+                var roleCopy = await _userRoleRepo.Create(new() { ProjectId = newProjectId, Role = userRole.Role });
+                if (roleCopy is null)
+                {
+                    continue;
+                }
+                user.ProjectRoles[newProjectId] = roleCopy.Id;
+                await _userRepo.Update(user.Id, user);
+            }
+        }
+
+        [HttpGet("archiveandcopy/{projectId}", Name = "ArchiveAndCopyProject")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ArchiveAndCopyProject(string projectId)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Archive, projectId))
+            {
+                return Forbid();
+            }
+
+            var project = await _projRepo.GetProject(projectId);
+            if (project is null)
+            {
+                return NotFound();
+            }
+
+            var copy = project.Clone();
+
+            // Archive the original project
+            project.Name += DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + "_archived";
+            project.IsActive = false;
+            var result = await _projRepo.Update(projectId, project);
+            if (result != ResultOfUpdate.Updated)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to archive project.");
+            }
+
+            // Create a copy of the project
+            copy.Id = "";
+            copy = await _projRepo.Create(copy);
+            if (copy is null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to copy project.");
+            }
+            await CopyProjectSpeakers(projectId, copy.Id);
+            await CopyProjectUserRoles(projectId, copy.Id);
+
+            return Ok(copy.Id);
         }
     }
 }

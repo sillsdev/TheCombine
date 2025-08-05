@@ -29,6 +29,15 @@ namespace BackendFramework.Repositories
             return users;
         }
 
+        /// <summary> Gets users with roles in specified project </summary>
+        /// <returns> A List of users </returns>
+        public async Task<List<User>> GetAllUsersInProject(string projectId)
+        {
+            var users = await _userDatabase.Users.Find(x => x.ProjectRoles.ContainsKey(projectId)).ToListAsync();
+            users.ForEach(u => u.Sanitize());
+            return users;
+        }
+
         /// <summary> Finds all <see cref="User"/>s matching a given filter </summary>
         public async Task<List<User>> GetAllUsersByFilter(string filter)
         {

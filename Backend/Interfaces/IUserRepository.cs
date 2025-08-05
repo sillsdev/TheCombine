@@ -8,6 +8,7 @@ namespace BackendFramework.Interfaces
     public interface IUserRepository
     {
         Task<List<User>> GetAllUsers();
+        Task<List<User>> GetAllUsersInProject(string projectId);
         Task<List<User>> GetAllUsersByFilter(string filter);
         Task<User?> GetUser(string userId, bool sanitize = true);
         Task<ResultOfUpdate> ChangePassword(string userId, string password);

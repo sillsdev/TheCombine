@@ -457,6 +457,14 @@ export async function restoreProject(projectId: string): Promise<void> {
   await updateProject(project);
 }
 
+export async function archiveAndCopyProject(
+  projectId: string
+): Promise<string> {
+  return (
+    await projectApi.archiveAndCopyProject({ projectId }, defaultOptions())
+  ).data;
+}
+
 /** Returns a boolean indicating whether the specified project name is already taken. */
 export async function projectDuplicateCheck(
   projectName: string

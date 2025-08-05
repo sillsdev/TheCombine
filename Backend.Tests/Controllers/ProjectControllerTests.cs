@@ -34,8 +34,8 @@ namespace Backend.Tests.Controllers
         {
             _projRepo = new ProjectRepositoryMock();
             _userRepo = new UserRepositoryMock();
-            _projController = new ProjectController(
-                _projRepo, new UserRoleRepositoryMock(), _userRepo, new PermissionServiceMock(_userRepo));
+            _projController = new ProjectController(_projRepo, new SpeakerRepositoryMock(),
+                new UserRoleRepositoryMock(), _userRepo, new PermissionServiceMock(_userRepo));
 
             var _userId = _userRepo.Create(new() { Username = "user", Password = "pass" }).Result!.Id;
             _projController.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId(_userId);

@@ -52,6 +52,51 @@ export const ProjectApiAxiosParamCreator = function (
   return {
     /**
      *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    archiveAndCopyProject: async (
+      projectId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("archiveAndCopyProject", "projectId", projectId);
+      const localVarPath = `/v1/projects/archiveandcopy/{projectId}`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -439,6 +484,30 @@ export const ProjectApiFp = function (configuration?: Configuration) {
   return {
     /**
      *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async archiveAndCopyProject(
+      projectId: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.archiveAndCopyProject(
+          projectId,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -644,6 +713,20 @@ export const ProjectApiFactory = function (
   return {
     /**
      *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    archiveAndCopyProject(
+      projectId: string,
+      options?: any
+    ): AxiosPromise<string> {
+      return localVarFp
+        .archiveAndCopyProject(projectId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {Project} project
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -750,6 +833,20 @@ export const ProjectApiFactory = function (
     },
   };
 };
+
+/**
+ * Request parameters for archiveAndCopyProject operation in ProjectApi.
+ * @export
+ * @interface ProjectApiArchiveAndCopyProjectRequest
+ */
+export interface ProjectApiArchiveAndCopyProjectRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof ProjectApiArchiveAndCopyProject
+   */
+  readonly projectId: string;
+}
 
 /**
  * Request parameters for createProject operation in ProjectApi.
@@ -870,6 +967,22 @@ export interface ProjectApiUpdateProjectRequest {
  * @extends {BaseAPI}
  */
 export class ProjectApi extends BaseAPI {
+  /**
+   *
+   * @param {ProjectApiArchiveAndCopyProjectRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ProjectApi
+   */
+  public archiveAndCopyProject(
+    requestParameters: ProjectApiArchiveAndCopyProjectRequest,
+    options?: any
+  ) {
+    return ProjectApiFp(this.configuration)
+      .archiveAndCopyProject(requestParameters.projectId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
   /**
    *
    * @param {ProjectApiCreateProjectRequest} requestParameters Request parameters.
