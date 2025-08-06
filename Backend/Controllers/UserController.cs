@@ -80,6 +80,7 @@ namespace BackendFramework.Controllers
             {
                 Text = $"A password reset has been requested for the user {user.Username}. " +
                     $"Follow this link to reset {user.Username}'s password: {url}\n\n" +
+                    $"(This link will expire in {_passwordResetService.ExpireTime} minutes.)\n\n" +
                     "If you did not request a password reset, please ignore this email."
             };
             if (await _emailService.SendEmail(message))

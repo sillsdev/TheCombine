@@ -17,6 +17,9 @@ namespace BackendFramework.Services
             _userRepo = userRepo;
         }
 
+        /// <summary> The number of minutes after which a token expires. </summary>
+        public int ExpireTime => _passwordResets.ExpireTime;
+
         public async Task<EmailToken> CreatePasswordReset(string email)
         {
             var resetRequest = new EmailToken(email);

@@ -5,6 +5,7 @@ namespace BackendFramework.Interfaces
 {
     public interface IPasswordResetService
     {
+        int ExpireTime { get; }
         Task<EmailToken> CreatePasswordReset(string email);
         Task<bool> ValidateToken(string token);
         Task<bool> ResetPassword(string token, string password);

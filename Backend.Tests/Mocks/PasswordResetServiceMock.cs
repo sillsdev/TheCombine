@@ -12,9 +12,11 @@ namespace Backend.Tests.Mocks
             _boolResponse = response;
         }
 
-        public Task<PasswordReset> CreatePasswordReset(string email)
+        public int ExpireTime => 15; // Default expire time for testing
+
+        public Task<EmailToken> CreatePasswordReset(string email)
         {
-            return Task.FromResult(new PasswordReset(15, email));
+            return Task.FromResult(new EmailToken(email));
         }
 
         public Task ExpirePasswordReset(string email)
