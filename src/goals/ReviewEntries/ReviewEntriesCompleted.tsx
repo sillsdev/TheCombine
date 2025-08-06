@@ -28,7 +28,9 @@ export default function ReviewEntriesCompleted(): ReactElement {
       </Typography>
       {EditsCount(changes)}
       <List>
-        {changes.entryEdits?.map((e) => <EditedEntry edit={e} key={e.newId} />)}
+        {changes.entryEdits?.map((e) => (
+          <EditedEntry edit={e} key={e.newId} />
+        ))}
       </List>
     </>
   );

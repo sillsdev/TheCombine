@@ -43,8 +43,8 @@ describe("DomainStatistics", () => {
     expect(mockGetProjectId).toHaveBeenCalled();
   });
 
-  test("all list items are present", async () => {
-    const listItems = screen.queryAllByRole("listitem");
-    expect(listItems.length).toEqual(mockSemanticDomainCountArray.length);
+  test("all rows are present", async () => {
+    const expectedRowCount = mockSemanticDomainCountArray.length + 1; // +1 for the header row
+    expect(screen.queryAllByRole("row")).toHaveLength(expectedRowCount);
   });
 });
