@@ -1,6 +1,6 @@
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 
-import { MergeUndoIds, Word } from "api/models";
+import { MergeUndoIds, OffOnSetting, Word } from "api/models";
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
@@ -72,7 +72,7 @@ export function updateStepFromData(): Action {
 // Dispatch Functions
 
 export function asyncAddGoal(goal: Goal) {
-  return async (dispatch: StoreStateDispatch) => {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const userEditId = getUserEditId();
     if (userEditId) {
       dispatch(setCurrentGoal(goal));
@@ -86,7 +86,12 @@ export function asyncAddGoal(goal: Goal) {
         if (goal.goalType === GoalType.MergeDups) {
           // Initialize data loading in the backend.
           dispatch(setDataLoadStatus(DataLoadStatus.Loading));
-          await Backend.findDuplicates(5, maxNumSteps(goal.goalType));
+          const currentProj = getState().currentProjectState.project;
+          await Backend.findDuplicates(
+            5, // More than 5 entries doesn't fit well.
+            maxNumSteps(goal.goalType),
+            currentProj.protectedDataMergeAvoidEnabled === OffOnSetting.On
+          );
           // Don't load goal data, since it'll be triggered by a signal from the backend when data is ready.
         } else {
           // Load the goal data, but don't await, to allow a loading screen.

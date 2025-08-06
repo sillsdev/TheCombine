@@ -17,6 +17,7 @@ namespace Backend.Tests.Models
                 DefinitionsEnabled = true,
                 GrammaticalInfoEnabled = true,
                 AutocompleteSetting = OffOnSetting.On,
+                ProtectedDataMergeAvoidEnabled = OffOnSetting.Off,
                 ProtectedDataOverrideEnabled = OffOnSetting.Off,
                 SemDomWritingSystem = new("fr", "Français"),
                 VernacularWritingSystem = new("en", "English", "Calibri"),

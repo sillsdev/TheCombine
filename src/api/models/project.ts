@@ -71,6 +71,12 @@ export interface Project {
    * @type {OffOnSetting}
    * @memberof Project
    */
+  protectedDataMergeAvoidEnabled: OffOnSetting;
+  /**
+   *
+   * @type {OffOnSetting}
+   * @memberof Project
+   */
   protectedDataOverrideEnabled: OffOnSetting;
   /**
    *
