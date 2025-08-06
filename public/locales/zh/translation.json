@@ -264,7 +264,7 @@
     "undo": { "undoDisabled": "撤销不可用" }
   },
   "charInventory": {
-    "title": "创建字符库存",
+    "title": "检查整形图",
     "characters": "字符",
     "examples": "例子",
     "occurrences": "出现次数",
