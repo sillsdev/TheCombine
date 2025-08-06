@@ -52,7 +52,7 @@ namespace Backend.Tests.Services
             _userRepo.Create(user);
 
             var request = _passwordResetService.CreatePasswordReset(Email).Result;
-            request.Created = DateTime.Now.AddMinutes(-_passwordResetService.ExpireTime - 1);
+            request.Created = DateTime.Now.Subtract(_passwordResetService.ExpireTime).AddMinutes(-1);
 
             Assert.That(_passwordResetService.ResetPassword(request.Token, Password).Result, Is.False);
         }

@@ -38,7 +38,7 @@ namespace BackendFramework
 
         public class Settings
         {
-            public const int DefaultEmailTokenExpireTime = 15;
+            public const int DefaultEmailTokenExpireMinutes = 15;
 
             public bool CaptchaEnabled { get; set; }
             public string? CaptchaSecretKey { get; set; }
@@ -52,7 +52,7 @@ namespace BackendFramework
             public string? SmtpPassword { get; set; }
             public string? SmtpAddress { get; set; }
             public string? SmtpFrom { get; set; }
-            public int EmailTokenExpireTime { get; set; }
+            public TimeSpan EmailTokenExpireTime { get; set; }
 
             public Settings()
             {
@@ -60,7 +60,7 @@ namespace BackendFramework
                 ConnectionString = "";
                 CombineDatabase = "";
                 EmailEnabled = false;
-                EmailTokenExpireTime = DefaultEmailTokenExpireTime;
+                EmailTokenExpireTime = TimeSpan.FromMinutes(DefaultEmailTokenExpireMinutes);
             }
         }
 
@@ -217,10 +217,10 @@ namespace BackendFramework
                             emailServiceFailureMessage);
                     }
 
-                    options.EmailTokenExpireTime = int.Parse(CheckedEnvironmentVariable(
-                        "COMBINE_EMAIL_TOKEN_EXPIRE_TIME",
-                        Settings.DefaultEmailTokenExpireTime.ToString(),
-                        $"Using default value: {Settings.DefaultEmailTokenExpireTime}")!);
+                    options.EmailTokenExpireTime = TimeSpan.FromMinutes(int.Parse(CheckedEnvironmentVariable(
+                        "COMBINE_EMAIL_TOKEN_EXPIRE_MINUTES",
+                        Settings.DefaultEmailTokenExpireMinutes.ToString(),
+                        $"Using default value: {Settings.DefaultEmailTokenExpireMinutes}")!));
                 });
 
             // Register concrete types for dependency injection

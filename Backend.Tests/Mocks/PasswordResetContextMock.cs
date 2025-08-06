@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace Backend.Tests.Mocks
     {
         private List<EmailToken> _resets;
 
-        public int ExpireTime => 15;
+        public TimeSpan ExpireTime => TimeSpan.FromMinutes(15); // Default expire time for testing
 
         public PasswordResetContextMock()
         {

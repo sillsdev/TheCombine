@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -12,7 +13,7 @@ namespace Backend.Tests.Mocks
             _boolResponse = response;
         }
 
-        public int ExpireTime => 15; // Default expire time for testing
+        public TimeSpan ExpireTime => TimeSpan.FromMinutes(15); // Default expire time for testing
 
         public Task<EmailToken> CreatePasswordReset(string email)
         {

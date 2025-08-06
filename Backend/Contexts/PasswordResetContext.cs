@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
@@ -11,8 +12,7 @@ namespace BackendFramework.Contexts
     public class PasswordResetContext : IPasswordResetContext
     {
         private readonly IMongoDatabase _db;
-        /// <summary> The number of minutes after which a token expires. </summary>
-        public int ExpireTime { get; }
+        public TimeSpan ExpireTime { get; }
 
         public PasswordResetContext(IOptions<Startup.Settings> options)
         {
