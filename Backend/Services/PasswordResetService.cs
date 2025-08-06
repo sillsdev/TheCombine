@@ -17,9 +17,9 @@ namespace BackendFramework.Services
             _userRepo = userRepo;
         }
 
-        public async Task<PasswordReset> CreatePasswordReset(string email)
+        public async Task<EmailToken> CreatePasswordReset(string email)
         {
-            var resetRequest = new PasswordReset(_passwordResets.ExpireTime, email);
+            var resetRequest = new EmailToken(email);
             await _passwordResets.Insert(resetRequest);
             return resetRequest;
         }
@@ -32,7 +32,7 @@ namespace BackendFramework.Services
         public async Task<bool> ValidateToken(string token)
         {
             var request = await _passwordResets.FindByToken(token);
-            return request is not null && DateTime.Now <= request.ExpireTime;
+            return request is not null && DateTime.Now <= request.Created.AddMinutes(_passwordResets.ExpireTime);
         }
 
         /// <summary> Reset a users password using a Password reset request token. </summary>
@@ -40,7 +40,7 @@ namespace BackendFramework.Services
         public async Task<bool> ResetPassword(string token, string password)
         {
             var request = await _passwordResets.FindByToken(token);
-            if (request is null || DateTime.Now > request.ExpireTime)
+            if (request is null || DateTime.Now > request.Created.AddMinutes(_passwordResets.ExpireTime))
             {
                 return false;
             }

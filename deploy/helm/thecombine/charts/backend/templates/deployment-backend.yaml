@@ -55,6 +55,11 @@ spec:
                 configMapKeyRef:
                   key: COMBINE_EMAIL_ENABLED
                   name: env-backend
+            - name: COMBINE_EMAIL_TOKEN_EXPIRE_TIME
+              valueFrom:
+                configMapKeyRef:
+                  key: COMBINE_EMAIL_TOKEN_EXPIRE_TIME
+                  name: env-backend
             - name: COMBINE_FRONTEND_SERVER_NAME
               valueFrom:
                 configMapKeyRef:
@@ -65,11 +70,6 @@ spec:
                 secretKeyRef:
                   key: COMBINE_JWT_SECRET_KEY
                   name: env-backend-secrets
-            - name: COMBINE_PASSWORD_RESET_EXPIRE_TIME
-              valueFrom:
-                configMapKeyRef:
-                  key: COMBINE_PASSWORD_RESET_EXPIRE_TIME
-                  name: env-backend
             - name: COMBINE_SMTP_ADDRESS
               valueFrom:
                 configMapKeyRef:

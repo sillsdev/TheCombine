@@ -11,16 +11,17 @@ namespace BackendFramework.Contexts
     public class PasswordResetContext : IPasswordResetContext
     {
         private readonly IMongoDatabase _db;
+        /// <summary> The number of minutes after which a token expires. </summary>
         public int ExpireTime { get; }
 
         public PasswordResetContext(IOptions<Startup.Settings> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
             _db = client.GetDatabase(options.Value.CombineDatabase);
-            ExpireTime = options.Value.PassResetExpireTime;
+            ExpireTime = options.Value.EmailTokenExpireTime;
         }
 
-        private IMongoCollection<PasswordReset> PasswordResets => _db.GetCollection<PasswordReset>(
+        private IMongoCollection<EmailToken> PasswordResets => _db.GetCollection<EmailToken>(
             "PasswordResetCollection");
 
         public Task ClearAll(string email)
@@ -28,12 +29,12 @@ namespace BackendFramework.Contexts
             return PasswordResets.DeleteManyAsync(x => x.Email == email);
         }
 
-        public async Task<PasswordReset?> FindByToken(string token)
+        public async Task<EmailToken?> FindByToken(string token)
         {
             return (await PasswordResets.FindAsync(r => r.Token == token)).SingleOrDefault();
         }
 
-        public Task Insert(PasswordReset reset)
+        public Task Insert(EmailToken reset)
         {
             return PasswordResets.InsertOneAsync(reset);
         }

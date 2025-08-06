@@ -38,7 +38,7 @@ namespace BackendFramework
 
         public class Settings
         {
-            public const int DefaultPasswordResetExpireTime = 15;
+            public const int DefaultEmailTokenExpireTime = 15;
 
             public bool CaptchaEnabled { get; set; }
             public string? CaptchaSecretKey { get; set; }
@@ -52,7 +52,7 @@ namespace BackendFramework
             public string? SmtpPassword { get; set; }
             public string? SmtpAddress { get; set; }
             public string? SmtpFrom { get; set; }
-            public int PassResetExpireTime { get; set; }
+            public int EmailTokenExpireTime { get; set; }
 
             public Settings()
             {
@@ -60,7 +60,7 @@ namespace BackendFramework
                 ConnectionString = "";
                 CombineDatabase = "";
                 EmailEnabled = false;
-                PassResetExpireTime = DefaultPasswordResetExpireTime;
+                EmailTokenExpireTime = DefaultEmailTokenExpireTime;
             }
         }
 
@@ -217,10 +217,10 @@ namespace BackendFramework
                             emailServiceFailureMessage);
                     }
 
-                    options.PassResetExpireTime = int.Parse(CheckedEnvironmentVariable(
-                        "COMBINE_PASSWORD_RESET_EXPIRE_TIME",
-                        Settings.DefaultPasswordResetExpireTime.ToString(),
-                        $"Using default value: {Settings.DefaultPasswordResetExpireTime}")!);
+                    options.EmailTokenExpireTime = int.Parse(CheckedEnvironmentVariable(
+                        "COMBINE_EMAIL_TOKEN_EXPIRE_TIME",
+                        Settings.DefaultEmailTokenExpireTime.ToString(),
+                        $"Using default value: {Settings.DefaultEmailTokenExpireTime}")!);
                 });
 
             // Register concrete types for dependency injection
