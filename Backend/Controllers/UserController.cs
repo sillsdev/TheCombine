@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using MimeKit;
 
 namespace BackendFramework.Controllers
 {
@@ -20,23 +18,13 @@ namespace BackendFramework.Controllers
     {
         private readonly IUserRepository _userRepo;
         private readonly ICaptchaService _captchaService;
-        private readonly IEmailService _emailService;
-        private readonly IPasswordResetService _passwordResetService;
         private readonly IPermissionService _permissionService;
 
-        private static readonly string? frontendServer =
-            Environment.GetEnvironmentVariable("COMBINE_FRONTEND_SERVER_NAME");
-
-        private static readonly string frontendDomain =
-            frontendServer is null ? "http://localhost:3000" : $"https://{frontendServer}";
-
-        public UserController(IUserRepository userRepo, IPermissionService permissionService,
-            ICaptchaService captchaService, IEmailService emailService, IPasswordResetService passwordResetService)
+        public UserController(
+            IUserRepository userRepo, ICaptchaService captchaService, IPermissionService permissionService)
         {
             _userRepo = userRepo;
             _captchaService = captchaService;
-            _emailService = emailService;
-            _passwordResetService = passwordResetService;
             _permissionService = permissionService;
         }
 
@@ -48,71 +36,6 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> VerifyCaptchaToken(string token)
         {
             return await _captchaService.VerifyToken(token) ? Ok() : BadRequest();
-        }
-
-        /// <summary> Sends a password reset request </summary>
-        [AllowAnonymous]
-        [HttpPost("forgot", Name = "ResetPasswordRequest")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] string EmailOrUsername)
-        {
-            // Find user attached to email or username.
-            var user = await _userRepo.GetUserByEmailOrUsername(EmailOrUsername, false);
-
-            if (user is null)
-            {
-                // Return Ok to avoid revealing to the frontend whether the user exists.
-                return Ok();
-            }
-
-            // Create password reset.
-            var resetRequest = await _passwordResetService.CreatePasswordReset(user.Email);
-
-            // The url needs to match Path.PwReset in src/types/path.ts.
-            var url = $"{frontendDomain}/pw/reset/{resetRequest.Token}";
-
-            // Create email.
-            var message = new MimeMessage();
-            message.To.Add(new MailboxAddress(user.Name, user.Email));
-            message.Subject = "Combine password reset";
-            message.Body = new TextPart("plain")
-            {
-                Text = $"A password reset has been requested for the user {user.Username}. " +
-                    $"Follow this link to reset {user.Username}'s password: {url}\n\n" +
-                    $"(This link will expire in {_passwordResetService.ExpireTime.TotalMinutes} minutes.)\n\n" +
-                    "If you did not request a password reset, please ignore this email."
-            };
-            if (await _emailService.SendEmail(message))
-            {
-                return Ok();
-            }
-
-            return StatusCode(StatusCodes.Status500InternalServerError);
-        }
-
-        /// <summary> Validates password reset token in url </summary>
-        [AllowAnonymous]
-        [HttpGet("forgot/reset/validate/{token}", Name = "ValidateResetToken")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> ValidateResetToken(string token)
-        {
-            return Ok(await _passwordResetService.ValidateToken(token));
-        }
-
-        /// <summary> Resets a password using a token </summary>
-        [AllowAnonymous]
-        [HttpPost("forgot/reset", Name = "ResetPassword")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> ResetPassword([FromBody, BindRequired] PasswordResetData data)
-        {
-            var result = await _passwordResetService.ResetPassword(data.Token, data.NewPassword);
-            if (result)
-            {
-                return Ok();
-            }
-            return Forbid();
         }
 
         /// <summary> Returns all <see cref="User"/>s </summary>

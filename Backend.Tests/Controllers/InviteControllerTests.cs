@@ -15,8 +15,6 @@ namespace Backend.Tests.Controllers
     {
         private IProjectRepository _projRepo = null!;
         private IUserRepository _userRepo = null!;
-        private IInviteService _inviteService = null!;
-        private IPermissionService _permissionService = null!;
         private InviteController _inviteController = null!;
 
         public void Dispose()
@@ -41,26 +39,28 @@ namespace Backend.Tests.Controllers
         // Test email for an invite that has an expired token.
         private const string EmailExpired = "expired@token.email";
         private const string MissingId = "MISSING_ID";
+        private const string ProjectName = "InviteControllerTests";
 
         [SetUp]
         public async Task Setup()
         {
+            var inviteContext = new InviteContextMock();
             _projRepo = new ProjectRepositoryMock();
             _userRepo = new UserRepositoryMock();
-            _permissionService = new PermissionServiceMock();
-            _inviteService = new InviteService(
-                _projRepo, _userRepo, _permissionService, new UserRoleRepositoryMock(), new EmailServiceMock());
-            _inviteController = new InviteController(_inviteService, _projRepo, _userRepo, _permissionService);
+            var permissionService = new PermissionServiceMock();
+            var inviteService = new InviteService(inviteContext, _userRepo, new UserRoleRepositoryMock(),
+                new EmailServiceMock(), permissionService);
+            _inviteController = new InviteController(_projRepo, _userRepo, inviteService, permissionService);
 
-            var tokenPast = new EmailInvite(-1) { Email = EmailExpired };
-            _tokenExpired = tokenPast.Token;
-            var tokenFuture = new EmailInvite(1) { Email = EmailActive };
-            _tokenActive = tokenFuture.Token;
-            _projId = (await _projRepo.Create(new Project
-            {
-                Name = "InviteControllerTests",
-                InviteTokens = [tokenPast, tokenFuture]
-            }))!.Id;
+            _projId = (await _projRepo.Create(new Project { Name = ProjectName }))!.Id;
+            var inviteActive =
+                new ProjectInvite(_projId, EmailActive, Role.Harvester) { Created = DateTime.Now };
+            await inviteContext.Insert(inviteActive);
+            _tokenActive = inviteActive.Token;
+            var inviteExpired =
+                new ProjectInvite(_projId, EmailExpired, Role.Harvester) { Created = DateTime.Now.AddYears(-1) };
+            await inviteContext.Insert(inviteExpired);
+            _tokenExpired = inviteExpired.Token;
         }
 
         [Test]
@@ -84,13 +84,6 @@ namespace Backend.Tests.Controllers
         {
             var data = new EmailInviteData { ProjectId = MissingId };
             var result = _inviteController.EmailInviteToProject(data).Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
-        }
-
-        [Test]
-        public void TestValidateTokenNoProject()
-        {
-            var result = _inviteController.ValidateToken(MissingId, _tokenActive).Result;
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
 

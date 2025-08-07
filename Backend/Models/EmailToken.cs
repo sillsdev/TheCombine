@@ -4,32 +4,35 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace BackendFramework.Models
 {
-    public class EmailToken
+    public class EmailToken(string email)
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string Id { get; set; } = "";
 
         [BsonElement("email")]
-        public string Email { get; set; }
+        public string Email { get; set; } = email;
 
         [BsonElement("token")]
-        public string Token { get; set; }
+        public string Token { get; set; } = Guid.NewGuid().ToString();
 
         [BsonElement("created")]
-        public DateTime Created { get; set; }
+        public DateTime Created { get; set; } = DateTime.Now;
+    }
 
-        public EmailToken()
-        {
-            Id = "";
-            Email = "";
-            Created = DateTime.Now;
-            Token = Guid.NewGuid().ToString();
-        }
+    public class ProjectInvite(string projectId, string email, Role role) : EmailToken(email)
+    {
+        [BsonElement("projectId")]
+        public string ProjectId { get; set; } = projectId;
 
-        public EmailToken(string email) : this()
+        [BsonElement("role")]
+        public Role Role { get; set; } = role;
+
+        /// <summary> Create a deep copy. </summary>
+        public ProjectInvite Clone()
         {
-            Email = email;
+            // Shallow copy is sufficient.
+            return (ProjectInvite)MemberwiseClone();
         }
     }
 }

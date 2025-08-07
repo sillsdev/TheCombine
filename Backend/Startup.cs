@@ -236,6 +236,9 @@ namespace BackendFramework
             // Email types
             services.AddTransient<IEmailContext, EmailContext>();
             services.AddTransient<IEmailService, EmailService>();
+
+            // Invite types
+            services.AddTransient<IInviteContext, InviteContext>();
             services.AddTransient<IInviteService, InviteService>();
 
             // Lift Service - Singleton to avoid initializing the Sldr multiple times,

@@ -20,9 +20,8 @@ namespace BackendFramework.Controllers
         private readonly IInviteService _inviteService;
         private readonly IPermissionService _permissionService;
 
-        public InviteController(
-            IInviteService inviteService, IProjectRepository projRepo, IUserRepository userRepo,
-            IPermissionService permissionService)
+        public InviteController(IProjectRepository projRepo, IUserRepository userRepo,
+            IInviteService inviteService, IPermissionService permissionService)
         {
             _projRepo = projRepo;
             _userRepo = userRepo;
@@ -54,8 +53,8 @@ namespace BackendFramework.Controllers
                 return NotFound($"projectId: {projectId}");
             }
 
-            var linkWithIdentifier = await _inviteService.CreateLinkWithToken(project, data.Role, data.EmailAddress);
-            await _inviteService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project);
+            var linkWithIdentifier = await _inviteService.CreateLinkWithToken(projectId, data.Role, data.EmailAddress);
+            await _inviteService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project.Name);
             return Ok(linkWithIdentifier);
         }
 
@@ -66,49 +65,20 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> ValidateToken(string projectId, string token)
         {
-            var project = await _projRepo.GetProject(projectId);
-            if (project is null)
+            var status = new EmailInviteStatus(false, false);
+            var invite = await _inviteService.FindByToken(token);
+            User? user = null;
+            if (invite is not null)
             {
-                return NotFound($"projectId: {projectId}");
+                status.IsTokenValid = DateTime.Now < invite.Created.Add(_inviteService.ExpireTime);
+                user = await _userRepo.GetUserByEmail(invite.Email);
+                status.IsUserValid = user is not null && !user.ProjectRoles.ContainsKey(projectId);
             }
-
-            var isTokenValid = false;
-            var tokenObj = new EmailInvite();
-            foreach (var tok in project.InviteTokens)
-            {
-                if (tok.Token == token)
-                {
-                    tokenObj = tok;
-                    if (DateTime.Now < tok.ExpireTime)
-                    {
-                        isTokenValid = true;
-                    }
-                    break;
-                }
-            }
-
-            var users = await _userRepo.GetAllUsers();
-            var currentUser = new User();
-            var isUserRegisteredAndNotInProject = false;
-            foreach (var user in users)
-            {
-                if (user.Email == tokenObj.Email)
-                {
-                    currentUser = user;
-                    if (!user.ProjectRoles.ContainsKey(projectId))
-                    {
-                        isUserRegisteredAndNotInProject = true;
-                    }
-                    break;
-                }
-            }
-
-            var status = new EmailInviteStatus(isTokenValid, isUserRegisteredAndNotInProject);
-            if (!isTokenValid || !isUserRegisteredAndNotInProject)
+            if (invite is null || user is null || !status.IsTokenValid || !status.IsUserValid)
             {
                 return Ok(status);
             }
-            if (await _inviteService.RemoveTokenAndCreateUserRole(project, currentUser, tokenObj))
+            if (await _inviteService.RemoveTokenAndCreateUserRole(projectId, user, invite))
             {
                 return Ok(status);
             }

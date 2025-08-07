@@ -9,32 +9,33 @@ namespace BackendFramework.Services
     /// <summary> More complex functions and application logic for <see cref="Project"/>s </summary>
     public class InviteService : IInviteService
     {
-        private readonly IProjectRepository _projRepo;
+        private readonly IInviteContext _inviteContext;
         private readonly IUserRepository _userRepo;
         private readonly IUserRoleRepository _userRoleRepo;
         private readonly IEmailService _emailService;
         private readonly IPermissionService _permissionService;
 
-        public InviteService(IProjectRepository projRepo, IUserRepository userRepo,
-            IPermissionService permissionService, IUserRoleRepository userRoleRepo, IEmailService emailService)
+        public InviteService(IInviteContext inviteContext, IUserRepository userRepo, IUserRoleRepository userRoleRepo,
+            IEmailService emailService, IPermissionService permissionService)
         {
-            _projRepo = projRepo;
+            _inviteContext = inviteContext;
             _userRepo = userRepo;
             _userRoleRepo = userRoleRepo;
             _emailService = emailService;
             _permissionService = permissionService;
         }
 
-        public async Task<string> CreateLinkWithToken(Project project, Role role, string emailAddress)
+        public TimeSpan ExpireTime => TimeSpan.FromDays(7);
+
+        public async Task<string> CreateLinkWithToken(string projectId, Role role, string emailAddress)
         {
-            var token = new EmailInvite(2, emailAddress, role);
-            project.InviteTokens.Add(token);
-            await _projRepo.Update(project.Id, project);
-            return $"/invite/{project.Id}/{token.Token}?email={emailAddress}";
+            var token = new ProjectInvite(projectId, emailAddress, role);
+            await _inviteContext.Insert(token);
+            return $"/invite/{projectId}/{token.Token}?email={emailAddress}";
         }
 
         public async Task<bool> EmailLink(
-            string emailAddress, string emailMessage, string link, string domain, Project project)
+            string emailAddress, string emailMessage, string link, string domain, string projectName)
         {
             // create email
             var message = new MimeMessage();
@@ -42,39 +43,42 @@ namespace BackendFramework.Services
             message.Subject = "TheCombine Project Invite";
             message.Body = new TextPart("plain")
             {
-                Text = $"You have been invited to a TheCombine project called {project.Name}.\n" +
+                Text = $"You have been invited project '{projectName}' on The Combine.\n" +
                        $"To become a member of this project, go to {domain}{link}.\n" +
                        $"Use this email address during registration: {emailAddress}.\n\n" +
                        $"Message from Project Admin: {emailMessage}\n\n" +
+                       $"(This link will expire in {ExpireTime.TotalDays} days.)\n\n" +
                        "If you did not expect an invite please ignore this email."
             };
             return await _emailService.SendEmail(message);
         }
 
-        public async Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, EmailInvite emailInvite)
+        public async Task<ProjectInvite?> FindByToken(string token)
         {
-            if (emailInvite.Role == Role.Owner)
+            return await _inviteContext.FindByToken(token);
+        }
+
+        public async Task<bool> RemoveTokenAndCreateUserRole(string projectId, User user, ProjectInvite invite)
+        {
+            if (invite.Role == Role.Owner)
             {
                 throw new InviteException("Email invites cannot make project Owners!");
             }
 
             try
             {
-                var userRole = new UserRole { ProjectId = project.Id, Role = emailInvite.Role };
+                var userRole = new UserRole { ProjectId = projectId, Role = invite.Role };
                 userRole = await _userRoleRepo.Create(userRole);
 
                 // Generate the userRoles and update the user
-                user.ProjectRoles.Add(project.Id, userRole.Id);
+                user.ProjectRoles.Add(projectId, userRole.Id);
                 await _userRepo.Update(user.Id, user);
                 // Generate the JWT based on those new userRoles
                 var updatedUser = await _permissionService.MakeJwt(user)
                     ?? throw new PermissionService.InvalidJwtTokenException("Unable to generate JWT.");
 
                 await _userRepo.Update(updatedUser.Id, updatedUser);
-
-                // Removes token and updates user
-                project.InviteTokens.RemoveAll(i => i.Token.Equals(emailInvite.Token, StringComparison.Ordinal));
-                await _projRepo.Update(project.Id, project);
+                await _inviteContext.ClearAll(projectId, invite.Email);
 
                 return true;
             }
