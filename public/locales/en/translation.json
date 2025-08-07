@@ -82,6 +82,7 @@
     "resetRequestInstructions": "We will send a one-time reset link for your account to your email.",
     "submit": "Submit",
     "resetFail": "Password reset error",
+    "resetSuccess": "Password reset successful",
     "resetDone": "If you have correctly entered your email or username, a password reset link has been sent to your email address.",
     "backToLogin": "Back To Login"
   },
@@ -288,6 +289,7 @@
       "searchPlaceholder": "Search...",
       "searchTitle": "Find Users",
       "emailLabel": "Email",
+      "emailMessage": "Message (optional)",
       "toastSuccess": "User added to the project.",
       "toastFail": "Failed to add user to the project."
     },

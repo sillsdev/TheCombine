@@ -39,7 +39,7 @@ export default function ProjectUsersButtonWithConfirmation(
         {t("siteSettings.projectRoles")}
       </Button>
       <Dialog maxWidth={false} onClose={() => setOpen(false)} open={open}>
-        <DialogTitle variant="h5">
+        <DialogTitle>
           {t("siteSettings.projectRoles")}
           <CloseButton close={() => setOpen(false)} />
         </DialogTitle>

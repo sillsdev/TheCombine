@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Grid, Icon } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, Grid2, Icon } from "@mui/material";
 import { ReactElement } from "react";
 
 import { CloseButton, DeleteButtonWithDialog } from "components/Buttons";
@@ -39,16 +39,14 @@ export default function ViewImageDialog(
       </DialogTitle>
       <DialogContent>
         <img src={props.imgSrc || undefined} />
-        <Grid container justifyContent="flex-end">
-          <Grid item>
-            <DeleteButtonWithDialog
-              buttonId={props.buttonIdDelete ?? "delete-image"}
-              buttonLabel={props.buttonLabelDelete ?? "Delete image"}
-              delete={handleDelete}
-              textId={props.deleteTextId ?? ""}
-            />
-          </Grid>
-        </Grid>
+        <Grid2 container justifyContent="flex-end">
+          <DeleteButtonWithDialog
+            buttonId={props.buttonIdDelete ?? "delete-image"}
+            buttonLabel={props.buttonLabelDelete ?? "Delete image"}
+            delete={handleDelete}
+            textId={props.deleteTextId ?? ""}
+          />
+        </Grid2>
       </DialogContent>
     </Dialog>
   );
