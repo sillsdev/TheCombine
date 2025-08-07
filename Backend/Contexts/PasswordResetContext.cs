@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
@@ -12,13 +11,11 @@ namespace BackendFramework.Contexts
     public class PasswordResetContext : IPasswordResetContext
     {
         private readonly IMongoDatabase _db;
-        public TimeSpan ExpireTime { get; }
 
         public PasswordResetContext(IOptions<Startup.Settings> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
             _db = client.GetDatabase(options.Value.CombineDatabase);
-            ExpireTime = options.Value.EmailTokenExpireTime;
         }
 
         private IMongoCollection<EmailToken> PasswordResets => _db.GetCollection<EmailToken>(

@@ -55,11 +55,6 @@ spec:
                 configMapKeyRef:
                   key: COMBINE_EMAIL_ENABLED
                   name: env-backend
-            - name: COMBINE_EMAIL_TOKEN_EXPIRE_MINUTES
-              valueFrom:
-                configMapKeyRef:
-                  key: COMBINE_EMAIL_TOKEN_EXPIRE_MINUTES
-                  name: env-backend
             - name: COMBINE_FRONTEND_SERVER_NAME
               valueFrom:
                 configMapKeyRef:

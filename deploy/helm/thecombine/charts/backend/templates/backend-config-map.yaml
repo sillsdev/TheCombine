@@ -8,7 +8,6 @@ data:
   COMBINE_CAPTCHA_REQUIRED: {{ .Values.global.captchaRequired | quote | lower }}
   COMBINE_CAPTCHA_VERIFY_URL: {{ .Values.captchaVerifyUrl | quote }}
   COMBINE_EMAIL_ENABLED: {{ .Values.global.emailEnabled | quote | lower }}
-  COMBINE_EMAIL_TOKEN_EXPIRE_MINUTES: {{ .Values.combineEmailTokenExpireMinutes | quote }}
   COMBINE_FRONTEND_SERVER_NAME: {{ .Values.global.serverName | quote }}
   COMBINE_SMTP_ADDRESS: {{ .Values.combineSmtpAddress | quote }}
   COMBINE_SMTP_FROM: {{ .Values.combineSmtpFrom | quote }}
