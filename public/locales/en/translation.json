@@ -287,6 +287,7 @@
       "searchPlaceholder": "Search...",
       "searchTitle": "Find Users",
       "emailLabel": "Email",
+      "emailMessage": "Message (optional)",
       "toastSuccess": "User added to the project.",
       "toastFail": "Failed to add user to the project."
     },
