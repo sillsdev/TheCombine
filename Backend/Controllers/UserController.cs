@@ -21,6 +21,7 @@ namespace BackendFramework.Controllers
         private readonly IUserRepository _userRepo;
         private readonly ICaptchaService _captchaService;
         private readonly IEmailService _emailService;
+        private readonly IEmailVerifyService _emailVerifyService;
         private readonly IPasswordResetService _passwordResetService;
         private readonly IPermissionService _permissionService;
 
@@ -31,11 +32,13 @@ namespace BackendFramework.Controllers
             frontendServer is null ? "http://localhost:3000" : $"https://{frontendServer}";
 
         public UserController(IUserRepository userRepo, IPermissionService permissionService,
-            ICaptchaService captchaService, IEmailService emailService, IPasswordResetService passwordResetService)
+            ICaptchaService captchaService, IEmailService emailService,
+            IEmailVerifyService emailVerifyService, IPasswordResetService passwordResetService)
         {
             _userRepo = userRepo;
             _captchaService = captchaService;
             _emailService = emailService;
+            _emailVerifyService = emailVerifyService;
             _passwordResetService = passwordResetService;
             _permissionService = permissionService;
         }
@@ -50,9 +53,55 @@ namespace BackendFramework.Controllers
             return await _captchaService.VerifyToken(token) ? Ok() : BadRequest();
         }
 
-        /// <summary> Sends a password reset request </summary>
+        /// <summary> Sends an email verification request. </summary>
+        [HttpPost("verifyemail/request", Name = "VerifyEmailRequest")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> VerifyEmailRequest([FromBody, BindRequired] string email)
+        {
+            // Find user attached to email address.
+            var user = await _userRepo.GetUserByEmail(email, false);
+
+            if (user is null || !await _permissionService.CanModifyUser(HttpContext, user.Id))
+            {
+                return Forbid();
+            }
+
+            // Create email verify token.
+            var emailToken = await _emailVerifyService.CreateEmailToken(user.Email);
+
+            // The url needs to match Path.EmailVerify in src/types/path.ts.
+            var url = $"{frontendDomain}/email/verify/{emailToken.Token}";
+
+            // Create email.
+            var message = new MimeMessage() { Subject = "The Combine email verification" };
+            message.To.Add(new MailboxAddress(user.Name, user.Email));
+            message.Body = new TextPart("plain")
+            {
+                Text = $"Email verification has been requested for {user.Username}. " +
+                    $"Follow the link to verify {user.Username}'s email address: {url}\n\n" +
+                    "Email verification is required to add users to your projects in The Combine." +
+                    "If you do not wish to verify your email address, you may ignore this email."
+            };
+
+            return await _emailService.SendEmail(message)
+                ? Ok()
+                : StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        /// <summary> Verify email address using a token </summary>
         [AllowAnonymous]
-        [HttpPost("forgot", Name = "ResetPasswordRequest")]
+        [HttpGet("verifyemail/{token}", Name = "VerifyEmail")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> VerifyEmail(string token)
+        {
+            return Ok(await _emailVerifyService.VerifyEmail(token));
+        }
+
+        /// <summary> Sends a password reset request. </summary>
+        [AllowAnonymous]
+        [HttpPost("forgot/request", Name = "ResetPasswordRequest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] string EmailOrUsername)
@@ -66,28 +115,25 @@ namespace BackendFramework.Controllers
                 return Ok();
             }
 
-            // Create password reset.
-            var resetRequest = await _passwordResetService.CreatePasswordReset(user.Email);
+            // Create password reset token.
+            var emailToken = await _emailVerifyService.CreateEmailToken(user.Email);
 
             // The url needs to match Path.PwReset in src/types/path.ts.
-            var url = $"{frontendDomain}/pw/reset/{resetRequest.Token}";
+            var url = $"{frontendDomain}/pw/reset/{emailToken.Token}";
 
             // Create email.
-            var message = new MimeMessage();
+            var message = new MimeMessage() { Subject = "The Combine password reset" };
             message.To.Add(new MailboxAddress(user.Name, user.Email));
-            message.Subject = "Combine password reset";
             message.Body = new TextPart("plain")
             {
                 Text = $"A password reset has been requested for the user {user.Username}. " +
                     $"Follow this link to reset {user.Username}'s password: {url}\n\n" +
                     "If you did not request a password reset, please ignore this email."
             };
-            if (await _emailService.SendEmail(message))
-            {
-                return Ok();
-            }
 
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return await _emailService.SendEmail(message)
+                ? Ok()
+                : StatusCode(StatusCodes.Status500InternalServerError);
         }
 
         /// <summary> Validates password reset token in url </summary>
@@ -107,11 +153,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> ResetPassword([FromBody, BindRequired] PasswordResetData data)
         {
             var result = await _passwordResetService.ResetPassword(data.Token, data.NewPassword);
-            if (result)
-            {
-                return Ok();
-            }
-            return Forbid();
+            return result ? Ok() : Forbid();
         }
 
         /// <summary> Returns all <see cref="User"/>s </summary>

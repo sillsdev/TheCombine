@@ -20,6 +20,7 @@ import {
   getUserIdByEmailOrUsername,
   isEmailOrUsernameAvailable,
   updateUser,
+  verifyEmailRequest,
 } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
 import AnalyticsConsent from "components/AnalyticsConsent";
@@ -69,6 +70,7 @@ export function UserSettings(props: {
 }): ReactElement {
   const dispatch = useAppDispatch();
 
+  const isEmailVerified = props.user.isEmailVerified;
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
   const [email, setEmail] = useState(props.user.email);
@@ -216,6 +218,13 @@ export function UserSettings(props: {
                       }
                       type="email"
                     />
+                    <Button
+                      disabled={isEmailVerified}
+                      onClick={() => verifyEmailRequest(email)}
+                      variant={isEmailVerified ? "outlined" : "contained"}
+                    >
+                      {t(isEmailVerified ? "Email verified!" : "Verify email!")}
+                    </Button>
                   </Grid2>
                 </Stack>
               </Stack>
