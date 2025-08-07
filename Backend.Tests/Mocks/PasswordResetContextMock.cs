@@ -8,12 +8,7 @@ namespace Backend.Tests.Mocks
 {
     internal sealed class PasswordResetContextMock : IPasswordResetContext
     {
-        private List<EmailToken> _resets;
-
-        public PasswordResetContextMock()
-        {
-            _resets = new List<EmailToken>();
-        }
+        private List<EmailToken> _resets = [];
 
         public Task ClearAll(string email)
         {
@@ -29,11 +24,6 @@ namespace Backend.Tests.Mocks
         public List<EmailToken> GetResets()
         {
             return _resets;
-        }
-
-        public void SetResets(List<EmailToken> resets)
-        {
-            _resets = resets;
         }
 
         public Task Insert(EmailToken reset)

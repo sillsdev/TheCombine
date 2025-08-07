@@ -27,12 +27,5 @@ namespace BackendFramework.Models
 
         [BsonElement("role")]
         public Role Role { get; set; } = role;
-
-        /// <summary> Create a deep copy. </summary>
-        public ProjectInvite Clone()
-        {
-            // Shallow copy is sufficient.
-            return (ProjectInvite)MemberwiseClone();
-        }
     }
 }
