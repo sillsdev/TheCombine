@@ -34,7 +34,7 @@ export enum CharInvCompletedTextId {
 }
 
 /** Component to display the full details of changes made during one session of the
- * Create Character Inventory goal. This includes:
+ * Check Orthography goal. This includes:
  * - Changes to inventory status of a character (accepted vs. rejected vs. undecided);
  * - Words changed with the find-and-replace tool. */
 export default function CharInvCompleted(): ReactElement {
@@ -110,7 +110,7 @@ function WordChangesTypography(props: {
 }
 
 /** Component for the goal history timeline, to display a summary of changes made during
- * one session of the Create Character Inventory goal. This includes:
+ * one session of the Check Orthography goal. This includes:
  * - Changes to inventory status of a character (up to 3);
  * - Number of words changed with the find-and-replace tool (only if more than 0). */
 export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {

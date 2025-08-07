@@ -36,6 +36,9 @@ updates:
       docker-deps:
         patterns:
           - "*"
+    ignore:
+      - dependency-name: "node"
+        versions: ["23.x", "24.x", "25.x"]
 
   - package-ecosystem: "pip"
     directories:
@@ -66,3 +69,6 @@ updates:
         update-types:
           - "minor"
           - "patch"
+    ignore:
+      - dependency-name: "@types/node"
+        versions: ["23.x", "24.x", "25.x"]

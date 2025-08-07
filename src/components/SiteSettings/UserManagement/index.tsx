@@ -1,4 +1,3 @@
-import { Grid } from "@mui/material";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
@@ -67,9 +66,7 @@ export default function UserManagement(): ReactElement {
 
   return (
     <>
-      <Grid container spacing={1}>
-        <UserList allUsers={allUsers} handleOpenModal={handleOpenModal} />
-      </Grid>
+      <UserList allUsers={allUsers} handleOpenModal={handleOpenModal} />
 
       <Modal
         isOpen={showModal}

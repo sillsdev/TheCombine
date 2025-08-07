@@ -28,7 +28,6 @@ You can create the release on _GitHub_ as follows:
 3. Fill out the form for the new release:
 
    ![New Release Form](images/new_release_form.png "New Release Form")
-
    1. Fill in the Release Number. Click the _Choose a tag_ dropdown menu; select _Find or create a new tag_; and enter
       the new release version, e.g. `0.7.25`
    2. Enter the _Release title_ with the title `Release` followed by the release number, e.g. `Release 0.7.25`.
