@@ -354,10 +354,12 @@ export async function graylistAdd(wordIds: string[]): Promise<void> {
 /** Start finding list of potential duplicates for merging. */
 export async function findDuplicates(
   maxInList: number,
-  maxLists: number
+  maxLists: number,
+  ignoreProtected = false
 ): Promise<void> {
+  const projectId = LocalStorage.getProjectId();
   await mergeApi.findPotentialDuplicates(
-    { projectId: LocalStorage.getProjectId(), maxInList, maxLists },
+    { ignoreProtected, maxInList, maxLists, projectId },
     defaultOptions()
   );
 }

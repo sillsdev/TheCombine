@@ -130,7 +130,7 @@ namespace Backend.Tests.Controllers
         public void TestFindPotentialDuplicatesNoPermission()
         {
             _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var result = _mergeController.FindPotentialDuplicates("projId", 2, 1).Result;
+            var result = _mergeController.FindPotentialDuplicates("projId", 2, 1, false).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
