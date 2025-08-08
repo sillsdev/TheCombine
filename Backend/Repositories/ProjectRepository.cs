@@ -109,7 +109,6 @@ namespace BackendFramework.Repositories
                 .Set(x => x.CustomFields, project.CustomFields)
                 .Set(x => x.WordFields, project.WordFields)
                 .Set(x => x.PartsOfSpeech, project.PartsOfSpeech)
-                .Set(x => x.InviteTokens, project.InviteTokens)
                 .Set(x => x.WorkshopSchedule, project.WorkshopSchedule);
 
             var updateResult = await _projectDatabase.Projects.UpdateOneAsync(filter, updateDef);

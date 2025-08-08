@@ -6,7 +6,6 @@ export * from "./custom-field";
 export * from "./dataset";
 export * from "./definition";
 export * from "./edit";
-export * from "./email-invite";
 export * from "./email-invite-data";
 export * from "./email-invite-status";
 export * from "./flag";

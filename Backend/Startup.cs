@@ -22,46 +22,35 @@ using static System.Text.Encoding;
 namespace BackendFramework
 {
     [ExcludeFromCodeCoverage]
-    public class Startup
+    public class Startup(ILogger<Startup> logger, IConfiguration configuration)
     {
         private const string LocalhostCorsPolicy = "LocalhostCorsPolicy";
 
-        private readonly ILogger<Startup> _logger;
+        private readonly ILogger<Startup> _logger = logger;
 
-        private IConfiguration Configuration { get; }
-
-        public Startup(ILogger<Startup> logger, IConfiguration configuration)
-        {
-            _logger = logger;
-            Configuration = configuration;
-        }
+        private IConfiguration Configuration { get; } = configuration;
 
         public class Settings
         {
-            public const int DefaultPasswordResetExpireTime = 15;
+            public const int DefaultExpirePasswordResetMinutes = 15;
+            public const int DefaultExpireProjectInviteDays = 7;
 
-            public bool CaptchaEnabled { get; set; }
+            public bool CaptchaEnabled { get; set; } = true;
             public string? CaptchaSecretKey { get; set; }
             public string? CaptchaVerifyUrl { get; set; }
-            public string ConnectionString { get; set; }
-            public string CombineDatabase { get; set; }
+            public string ConnectionString { get; set; } = "";
+            public string CombineDatabase { get; set; } = "";
             public bool EmailEnabled { get; set; }
+            public TimeSpan ExpireTimePasswordReset { get; set; } =
+                TimeSpan.FromMinutes(DefaultExpirePasswordResetMinutes);
+            public TimeSpan ExpireTimeProjectInvite { get; set; } =
+                TimeSpan.FromDays(DefaultExpireProjectInviteDays);
             public string? SmtpServer { get; set; }
             public int? SmtpPort { get; set; }
             public string? SmtpUsername { get; set; }
             public string? SmtpPassword { get; set; }
             public string? SmtpAddress { get; set; }
             public string? SmtpFrom { get; set; }
-            public int PassResetExpireTime { get; set; }
-
-            public Settings()
-            {
-                CaptchaEnabled = true;
-                ConnectionString = "";
-                CombineDatabase = "";
-                EmailEnabled = false;
-                PassResetExpireTime = DefaultPasswordResetExpireTime;
-            }
         }
 
         private sealed class EnvironmentNotConfiguredException : Exception { }
@@ -191,6 +180,16 @@ namespace BackendFramework
                         true)!);
                     if (options.EmailEnabled)
                     {
+                        options.ExpireTimePasswordReset = TimeSpan.FromMinutes(int.Parse(CheckedEnvironmentVariable(
+                            "COMBINE_EXPIRE_PASSWORD_RESET_MINUTES",
+                            Settings.DefaultExpirePasswordResetMinutes.ToString(),
+                            $"Using default value: {Settings.DefaultExpirePasswordResetMinutes}",
+                            true)!));
+                        options.ExpireTimeProjectInvite = TimeSpan.FromDays(int.Parse(CheckedEnvironmentVariable(
+                            "COMBINE_EXPIRE_PROJECT_INVITE_DAYS",
+                            Settings.DefaultExpireProjectInviteDays.ToString(),
+                            $"Using default value: {Settings.DefaultExpireProjectInviteDays}",
+                            true)!));
                         options.SmtpServer = CheckedEnvironmentVariable(
                             "COMBINE_SMTP_SERVER",
                             null,
@@ -216,11 +215,6 @@ namespace BackendFramework
                             null,
                             emailServiceFailureMessage);
                     }
-
-                    options.PassResetExpireTime = int.Parse(CheckedEnvironmentVariable(
-                        "COMBINE_PASSWORD_RESET_EXPIRE_TIME",
-                        Settings.DefaultPasswordResetExpireTime.ToString(),
-                        $"Using default value: {Settings.DefaultPasswordResetExpireTime}")!);
                 });
 
             // Register concrete types for dependency injection
@@ -236,6 +230,9 @@ namespace BackendFramework
             // Email types
             services.AddTransient<IEmailContext, EmailContext>();
             services.AddTransient<IEmailService, EmailService>();
+
+            // Invite types
+            services.AddTransient<IInviteContext, InviteContext>();
             services.AddTransient<IInviteService, InviteService>();
 
             // Lift Service - Singleton to avoid initializing the Sldr multiple times,

@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
@@ -11,31 +12,31 @@ namespace BackendFramework.Contexts
     public class PasswordResetContext : IPasswordResetContext
     {
         private readonly IMongoDatabase _db;
-        public int ExpireTime { get; }
+        public TimeSpan ExpireTime { get; }
 
         public PasswordResetContext(IOptions<Startup.Settings> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
             _db = client.GetDatabase(options.Value.CombineDatabase);
-            ExpireTime = options.Value.PassResetExpireTime;
+            ExpireTime = options.Value.ExpireTimePasswordReset;
         }
 
-        private IMongoCollection<PasswordReset> PasswordResets => _db.GetCollection<PasswordReset>(
+        private IMongoCollection<EmailToken> PasswordResets => _db.GetCollection<EmailToken>(
             "PasswordResetCollection");
 
-        public Task ClearAll(string email)
+        public async Task ClearAll(string email)
         {
-            return PasswordResets.DeleteManyAsync(x => x.Email == email);
+            await PasswordResets.DeleteManyAsync(x => x.Email == email);
         }
 
-        public async Task<PasswordReset?> FindByToken(string token)
+        public async Task<EmailToken?> FindByToken(string token)
         {
             return (await PasswordResets.FindAsync(r => r.Token == token)).SingleOrDefault();
         }
 
-        public Task Insert(PasswordReset reset)
+        public async Task Insert(EmailToken reset)
         {
-            return PasswordResets.InsertOneAsync(reset);
+            await PasswordResets.InsertOneAsync(reset);
         }
     }
 }

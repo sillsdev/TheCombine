@@ -44,10 +44,4 @@ export interface EmailInviteData {
    * @memberof EmailInviteData
    */
   role: Role;
-  /**
-   *
-   * @type {string}
-   * @memberof EmailInviteData
-   */
-  domain: string;
 }

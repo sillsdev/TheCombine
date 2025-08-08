@@ -115,6 +115,11 @@ const bannerApi = new Api.BannerApi(config, BASE_PATH, axiosInstance);
 const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
 const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
 const mergeApi = new Api.MergeApi(config, BASE_PATH, axiosInstance);
+const passwordResetApi = new Api.PasswordResetApi(
+  config,
+  BASE_PATH,
+  axiosInstance
+);
 const projectApi = new Api.ProjectApi(config, BASE_PATH, axiosInstance);
 const semanticDomainApi = new Api.SemanticDomainApi(
   config,
@@ -228,9 +233,8 @@ export async function emailInviteToProject(
   emailAddress: string,
   message: string
 ): Promise<string> {
-  const domain = window.location.origin;
   const resp = await inviteApi.emailInviteToProject(
-    { emailInviteData: { emailAddress, message, projectId, role, domain } },
+    { emailInviteData: { emailAddress, message, projectId, role } },
     defaultOptions()
   );
   return resp.data;
@@ -391,6 +395,31 @@ export async function getGraylistEntries(maxLists: number): Promise<Word[][]> {
     defaultOptions()
   );
   return resp.data;
+}
+
+/* PasswordResetController.cs */
+
+export async function resetPasswordRequest(
+  emailOrUsername: string
+): Promise<boolean> {
+  return await passwordResetApi
+    .resetPasswordRequest({ body: emailOrUsername })
+    .then(() => true)
+    .catch(() => false);
+}
+
+export async function validateResetToken(token: string): Promise<boolean> {
+  return (await passwordResetApi.validateResetToken({ token })).data;
+}
+
+export async function resetPassword(
+  token: string,
+  newPassword: string
+): Promise<boolean> {
+  return await passwordResetApi
+    .resetPassword({ passwordResetData: { token, newPassword } })
+    .then(() => true)
+    .catch(() => false);
 }
 
 /* ProjectController.cs */
@@ -656,29 +685,6 @@ export async function getProgressEstimationLineChartRoot(
 export async function verifyCaptchaToken(token: string): Promise<boolean> {
   return await userApi
     .verifyCaptchaToken({ token })
-    .then(() => true)
-    .catch(() => false);
-}
-
-export async function resetPasswordRequest(
-  emailOrUsername: string
-): Promise<boolean> {
-  return await userApi
-    .resetPasswordRequest({ body: emailOrUsername })
-    .then(() => true)
-    .catch(() => false);
-}
-
-export async function validateResetToken(token: string): Promise<boolean> {
-  return (await userApi.validateResetToken({ token })).data;
-}
-
-export async function resetPassword(
-  token: string,
-  newPassword: string
-): Promise<boolean> {
-  return await userApi
-    .resetPassword({ passwordResetData: { token, newPassword } })
     .then(() => true)
     .catch(() => false);
 }
