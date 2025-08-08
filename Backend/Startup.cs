@@ -22,47 +22,35 @@ using static System.Text.Encoding;
 namespace BackendFramework
 {
     [ExcludeFromCodeCoverage]
-    public class Startup
+    public class Startup(ILogger<Startup> logger, IConfiguration configuration)
     {
         private const string LocalhostCorsPolicy = "LocalhostCorsPolicy";
 
-        private readonly ILogger<Startup> _logger;
+        private readonly ILogger<Startup> _logger = logger;
 
-        private IConfiguration Configuration { get; }
-
-        public Startup(ILogger<Startup> logger, IConfiguration configuration)
-        {
-            _logger = logger;
-            Configuration = configuration;
-        }
+        private IConfiguration Configuration { get; } = configuration;
 
         public class Settings
         {
             public const int DefaultExpirePasswordResetMinutes = 15;
             public const int DefaultExpireProjectInviteDays = 7;
 
-            public bool CaptchaEnabled { get; set; }
+            public bool CaptchaEnabled { get; set; } = true;
             public string? CaptchaSecretKey { get; set; }
             public string? CaptchaVerifyUrl { get; set; }
-            public string ConnectionString { get; set; }
-            public string CombineDatabase { get; set; }
+            public string ConnectionString { get; set; } = "";
+            public string CombineDatabase { get; set; } = "";
             public bool EmailEnabled { get; set; }
-            public TimeSpan ExpireTimePasswordReset { get; set; }
-            public TimeSpan ExpireTimeProjectInvite { get; set; }
+            public TimeSpan ExpireTimePasswordReset { get; set; } =
+                TimeSpan.FromMinutes(DefaultExpirePasswordResetMinutes);
+            public TimeSpan ExpireTimeProjectInvite { get; set; } =
+                TimeSpan.FromDays(DefaultExpireProjectInviteDays);
             public string? SmtpServer { get; set; }
             public int? SmtpPort { get; set; }
             public string? SmtpUsername { get; set; }
             public string? SmtpPassword { get; set; }
             public string? SmtpAddress { get; set; }
             public string? SmtpFrom { get; set; }
-
-            public Settings()
-            {
-                CaptchaEnabled = true;
-                ConnectionString = "";
-                CombineDatabase = "";
-                EmailEnabled = false;
-            }
         }
 
         private sealed class EnvironmentNotConfiguredException : Exception { }

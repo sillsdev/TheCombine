@@ -15,6 +15,17 @@ namespace BackendFramework.Controllers
     {
         private readonly IPasswordResetService _passwordResetService = passwordResetService;
 
+        /// <summary> Resets a password using a token </summary>
+        [AllowAnonymous]
+        [HttpPost("reset", Name = "ResetPassword")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> ResetPassword([FromBody, BindRequired] PasswordResetData data)
+        {
+            var result = await _passwordResetService.ResetPassword(data.Token, data.NewPassword);
+            return result ? Ok() : Forbid();
+        }
+
         /// <summary> Sends a password reset request </summary>
         [AllowAnonymous]
         [HttpPost("", Name = "ResetPasswordRequest")]
@@ -33,21 +44,6 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> ValidateResetToken(string token)
         {
             return Ok(await _passwordResetService.ValidateToken(token));
-        }
-
-        /// <summary> Resets a password using a token </summary>
-        [AllowAnonymous]
-        [HttpPost("reset", Name = "ResetPassword")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> ResetPassword([FromBody, BindRequired] PasswordResetData data)
-        {
-            var result = await _passwordResetService.ResetPassword(data.Token, data.NewPassword);
-            if (result)
-            {
-                return Ok();
-            }
-            return Forbid();
         }
     }
 

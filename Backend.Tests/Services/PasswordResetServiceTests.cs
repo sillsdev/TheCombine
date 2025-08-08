@@ -79,5 +79,30 @@ namespace Backend.Tests.Services
             var yesUserResult = _passwordResetService.ResetPasswordRequest(username).Result;
             Assert.That(yesUserResult, Is.True);
         }
+
+        [Test]
+        public void TestValidateTokenExpired()
+        {
+            var token = new EmailToken(Email)
+            {
+                Created = DateTime.UtcNow.Subtract(_passwordResetContext.ExpireTime).AddMinutes(-1)
+            };
+            _passwordResetContext.Insert(token).Wait();
+            Assert.That(_passwordResetService.ValidateToken(token.Token).Result, Is.False);
+        }
+
+        [Test]
+        public void TestValidateTokenNone()
+        {
+            Assert.That(_passwordResetService.ValidateToken("NotARealToken").Result, Is.False);
+        }
+
+        [Test]
+        public void TestValidateTokenValid()
+        {
+            var token = new EmailToken(Email);
+            _passwordResetContext.Insert(token).Wait();
+            Assert.That(_passwordResetService.ValidateToken(token.Token).Result, Is.True);
+        }
     }
 }

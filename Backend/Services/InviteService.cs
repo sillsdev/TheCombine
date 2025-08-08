@@ -20,6 +20,7 @@ namespace BackendFramework.Services
 
         internal static string CreateLink(ProjectInvite invite)
         {
+            // Matches the Path.ProjInvite route in src\router\appRoutes.tsx
             return $"{FrontendDomain}/invite/{invite.ProjectId}/{invite.Token}?email={invite.Email}";
         }
 
@@ -84,26 +85,36 @@ namespace BackendFramework.Services
             }
         }
 
-        public async Task<EmailInviteStatus> ValidateToken(string projectId, string token)
+        private bool ValidateToken(EmailToken token)
+        {
+            return DateTime.UtcNow < token.Created.Add(_inviteContext.ExpireTime);
+        }
+
+        public async Task<EmailInviteStatus> ValidateProjectToken(string projectId, string token)
         {
             var status = new EmailInviteStatus(false, false);
+
             var invite = await _inviteContext.FindByToken(token);
-            User? user = null;
-            if (invite is not null)
-            {
-                status.IsTokenValid = DateTime.UtcNow < invite.Created.Add(_inviteContext.ExpireTime);
-                user = await _userRepo.GetUserByEmail(invite.Email);
-                status.IsUserValid = user is not null && !user.ProjectRoles.ContainsKey(projectId);
-            }
-            if (invite is null || user is null || !status.IsTokenValid || !status.IsUserValid)
+            if (invite is null)
             {
                 return status;
             }
-            if (await RemoveTokenAndCreateUserRole(projectId, user, invite))
+
+            status.IsTokenValid = ValidateToken(invite);
+            var user = await _userRepo.GetUserByEmail(invite.Email);
+            if (user is null)
             {
                 return status;
             }
-            return new EmailInviteStatus(false, true);
+
+            status.IsUserValid = !user.ProjectRoles.ContainsKey(projectId);
+            if (!status.IsTokenValid || !status.IsUserValid)
+            {
+                return status;
+            }
+
+            var result = await RemoveTokenAndCreateUserRole(projectId, user, invite);
+            return result ? status : new EmailInviteStatus(false, true);
         }
 
         public sealed class InviteException : Exception

@@ -15,6 +15,12 @@ namespace BackendFramework.Services
         private readonly IUserRepository _userRepo = userRepo;
         private readonly IEmailService _emailService = emailService;
 
+        private static string CreateLink(string token)
+        {
+            // Matches the Path.PwReset route in src\router\appRoutes.tsx
+            return $"{FrontendDomain}/pw/reset/{token}";
+        }
+
         internal async Task<EmailToken> CreatePasswordReset(string email)
         {
             var resetRequest = new EmailToken(email);
@@ -55,12 +61,13 @@ namespace BackendFramework.Services
             }
 
             // Create password reset.
-            var resetRequest = await CreatePasswordReset(user.Email);
+            var token = (await CreatePasswordReset(user.Email)).Token;
 
-            // The url needs to match Path.PwReset in src/types/path.ts.
-            var url = $"{FrontendDomain}/pw/reset/{resetRequest.Token}";
+            return await _emailService.SendEmail(CreateEmail(user, CreateLink(token)));
+        }
 
-            // Create email.
+        private MimeMessage CreateEmail(User user, string url)
+        {
             var message = new MimeMessage();
             message.To.Add(new MailboxAddress(user.Name, user.Email));
             message.Subject = "Combine password reset";
@@ -71,18 +78,18 @@ namespace BackendFramework.Services
                     $"(This link will expire in {_passwordResetContext.ExpireTime.TotalMinutes} minutes.)\n\n" +
                     "If you did not request a password reset, please ignore this email."
             };
-            return await _emailService.SendEmail(message);
+            return message;
+        }
+
+        private bool ValidateToken(EmailToken token)
+        {
+            return DateTime.UtcNow <= token.Created.Add(_passwordResetContext.ExpireTime);
         }
 
         public async Task<bool> ValidateToken(string token)
         {
             var request = await _passwordResetContext.FindByToken(token);
             return request is not null && ValidateToken(request);
-        }
-
-        private bool ValidateToken(EmailToken token)
-        {
-            return DateTime.UtcNow <= token.Created.Add(_passwordResetContext.ExpireTime);
         }
     }
 }
