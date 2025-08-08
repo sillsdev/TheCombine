@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using MimeKit;
+using static BackendFramework.Helper.Domain;
 
 namespace BackendFramework.Services
 {
@@ -13,12 +14,6 @@ namespace BackendFramework.Services
         private readonly IPasswordResetContext _passwordResetContext = passwordResetContext;
         private readonly IUserRepository _userRepo = userRepo;
         private readonly IEmailService _emailService = emailService;
-
-        private static readonly string? FrontendServer =
-            Environment.GetEnvironmentVariable("COMBINE_FRONTEND_SERVER_NAME");
-
-        private static readonly string frontendDomain =
-            FrontendServer is null ? "http://localhost:3000" : $"https://{FrontendServer}";
 
         internal async Task<EmailToken> CreatePasswordReset(string email)
         {
@@ -37,7 +32,7 @@ namespace BackendFramework.Services
         public async Task<bool> ResetPassword(string token, string password)
         {
             var request = await _passwordResetContext.FindByToken(token);
-            if (request is null || DateTime.Now > request.Created.Add(_passwordResetContext.ExpireTime))
+            if (request is null || !ValidateToken(request))
             {
                 return false;
             }
@@ -63,7 +58,7 @@ namespace BackendFramework.Services
             var resetRequest = await CreatePasswordReset(user.Email);
 
             // The url needs to match Path.PwReset in src/types/path.ts.
-            var url = $"{frontendDomain}/pw/reset/{resetRequest.Token}";
+            var url = $"{FrontendDomain}/pw/reset/{resetRequest.Token}";
 
             // Create email.
             var message = new MimeMessage();
@@ -82,7 +77,12 @@ namespace BackendFramework.Services
         public async Task<bool> ValidateToken(string token)
         {
             var request = await _passwordResetContext.FindByToken(token);
-            return request is not null && DateTime.Now <= request.Created.Add(_passwordResetContext.ExpireTime);
+            return request is not null && ValidateToken(request);
+        }
+
+        private bool ValidateToken(EmailToken token)
+        {
+            return DateTime.Now <= token.Created.Add(_passwordResetContext.ExpireTime);
         }
     }
 }

@@ -233,9 +233,8 @@ export async function emailInviteToProject(
   emailAddress: string,
   message: string
 ): Promise<string> {
-  const domain = window.location.origin;
   const resp = await inviteApi.emailInviteToProject(
-    { emailInviteData: { emailAddress, message, projectId, role, domain } },
+    { emailInviteData: { emailAddress, message, projectId, role } },
     defaultOptions()
   );
   return resp.data;

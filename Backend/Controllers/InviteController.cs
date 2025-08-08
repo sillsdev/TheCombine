@@ -43,10 +43,7 @@ namespace BackendFramework.Controllers
                 return NotFound($"projectId: {projectId}");
             }
 
-            var invite = await _inviteService.CreateProjectInvite(projectId, data.Role, data.EmailAddress);
-            var link = _inviteService.CreateLink(invite);
-            await _inviteService.EmailLink(data.EmailAddress, data.Message, link, data.Domain, project.Name);
-            return Ok(link);
+            return Ok(await _inviteService.EmailLink(project, data.Role, data.EmailAddress, data.Message));
         }
 
         /// <summary> Validates invite token in url and adds user to project </summary>
@@ -73,8 +70,6 @@ namespace BackendFramework.Controllers
         public string ProjectId { get; set; }
         [Required]
         public Role Role { get; set; }
-        [Required]
-        public string Domain { get; set; }
 
         public EmailInviteData()
         {
@@ -82,7 +77,6 @@ namespace BackendFramework.Controllers
             Message = "";
             ProjectId = "";
             Role = Role.Harvester;
-            Domain = "";
         }
     }
 }

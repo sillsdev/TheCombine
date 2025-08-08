@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using MimeKit;
+using static BackendFramework.Helper.Domain;
 
 namespace BackendFramework.Services
 {
@@ -17,34 +18,40 @@ namespace BackendFramework.Services
         private readonly IEmailService _emailService = emailService;
         private readonly IPermissionService _permissionService = permissionService;
 
-        public string CreateLink(ProjectInvite invite)
+        internal static string CreateLink(ProjectInvite invite)
         {
-            return $"/invite/{invite.ProjectId}/{invite.Token}?email={invite.Email}";
+            return $"{FrontendDomain}/invite/{invite.ProjectId}/{invite.Token}?email={invite.Email}";
         }
-        public async Task<ProjectInvite> CreateProjectInvite(string projectId, Role role, string emailAddress)
+
+        internal async Task<ProjectInvite> CreateProjectInvite(string projectId, Role role, string emailAddress)
         {
             var invite = new ProjectInvite(projectId, emailAddress, role);
             await _inviteContext.Insert(invite);
             return invite;
         }
 
-        public async Task<bool> EmailLink(
-            string emailAddress, string emailMessage, string link, string domain, string projectName)
+        internal MimeMessage CreateEmail(string emailAddress, string emailMessage, string link, string projectName)
         {
-            // create email
             var message = new MimeMessage();
             message.To.Add(new MailboxAddress("FutureCombineUser", emailAddress));
             message.Subject = "TheCombine Project Invite";
             message.Body = new TextPart("plain")
             {
                 Text = $"You have been invited project '{projectName}' on The Combine.\n" +
-                       $"To become a member of this project, go to {domain}{link}.\n" +
+                       $"To become a member of this project, go to {link}.\n" +
                        $"Use this email address during registration: {emailAddress}.\n\n" +
                        $"Message from Project Admin: {emailMessage}\n\n" +
                        $"(This link will expire in {_inviteContext.ExpireTime.TotalDays} days.)\n\n" +
                        "If you did not expect an invite please ignore this email."
             };
-            return await _emailService.SendEmail(message);
+            return message;
+        }
+
+        public async Task<string> EmailLink(Project project, Role role, string emailAddress, string message)
+        {
+            var link = CreateLink(await CreateProjectInvite(project.Id, role, emailAddress));
+            await _emailService.SendEmail(CreateEmail(emailAddress, message, link, project.Name));
+            return link;
         }
 
         internal async Task<bool> RemoveTokenAndCreateUserRole(string projectId, User user, ProjectInvite invite)

@@ -34,7 +34,7 @@ namespace Backend.Tests.Services
         public void TestCreateLink()
         {
             var invite = new ProjectInvite(ProjId, Email, Role.Owner);
-            var url = _inviteService.CreateLink(invite);
+            var url = InviteService.CreateLink(invite);
             Assert.That(url, Does.Contain(Email).And.Contain(ProjId).And.Contain(invite.Token));
         }
 

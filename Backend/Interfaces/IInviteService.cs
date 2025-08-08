@@ -5,9 +5,7 @@ namespace BackendFramework.Interfaces
 {
     public interface IInviteService
     {
-        string CreateLink(ProjectInvite invite);
-        Task<ProjectInvite> CreateProjectInvite(string projectId, Role role, string emailAddress);
-        Task<bool> EmailLink(string emailAddress, string emailMessage, string link, string domain, string projectName);
+        Task<string> EmailLink(Project project, Role role, string emailAddress, string message);
         Task<EmailInviteStatus> ValidateToken(string projectId, string token);
     }
 }
