@@ -2,6 +2,7 @@
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
@@ -9,7 +10,6 @@ namespace Backend.Tests.Controllers
 {
     public class PasswordResetControllerTests : IDisposable
     {
-        private IUserRepository _userRepo = null!;
         private IPasswordResetService _passwordResetService = null!;
         private PasswordResetController _passwordResetController = null!;
 
@@ -30,9 +30,8 @@ namespace Backend.Tests.Controllers
         [SetUp]
         public void Setup()
         {
-            _userRepo = new UserRepositoryMock();
             _passwordResetService = new PasswordResetServiceMock();
-            _passwordResetController = new PasswordResetController(_userRepo, new EmailServiceMock(), _passwordResetService);
+            _passwordResetController = new PasswordResetController(_passwordResetService);
         }
 
         [Test]
@@ -41,13 +40,13 @@ namespace Backend.Tests.Controllers
             // No permissions should be required to request a password reset.
             _passwordResetController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
-            // Returns Ok regardless of if user exists.
-            var noUserResult = _passwordResetController.ResetPasswordRequest("fake-username").Result;
-            Assert.That(noUserResult, Is.TypeOf<OkResult>());
+            ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(false);
+            var falseResult = _passwordResetController.ResetPasswordRequest("username").Result;
+            Assert.That(((StatusCodeResult)falseResult).StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
 
-            var username = _userRepo.Create(new() { Username = "Imarealboy" }).Result!.Username;
-            var yesUserResult = _passwordResetController.ResetPasswordRequest(username).Result;
-            Assert.That(yesUserResult, Is.TypeOf<OkResult>());
+            ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(true);
+            var trueResult = _passwordResetController.ResetPasswordRequest("username").Result;
+            Assert.That(trueResult, Is.TypeOf<OkResult>());
         }
 
         [Test]

@@ -34,10 +34,8 @@ namespace Backend.Tests.Controllers
         private string _projId = null!;
         private string _tokenActive = null!;
         private string _tokenExpired = null!;
-        // Test email for an invite that has an active token.
-        private const string EmailActive = "active@token.email";
-        // Test email for an invite that has an expired token.
-        private const string EmailExpired = "expired@token.email";
+        private const string EmailActive = "active@token.email"; // Test email for an invite with an active token.
+        private const string EmailExpired = "expired@token.email"; // Test email for an invite with an expired token.
         private const string MissingId = "MISSING_ID";
         private const string ProjectName = "InviteControllerTests";
 
@@ -50,7 +48,7 @@ namespace Backend.Tests.Controllers
             var permissionService = new PermissionServiceMock();
             var inviteService = new InviteService(inviteContext, _userRepo, new UserRoleRepositoryMock(),
                 new EmailServiceMock(), permissionService);
-            _inviteController = new InviteController(_projRepo, _userRepo, inviteService, permissionService);
+            _inviteController = new InviteController(_projRepo, inviteService, permissionService);
 
             _projId = (await _projRepo.Create(new Project { Name = ProjectName }))!.Id;
             var inviteActive =

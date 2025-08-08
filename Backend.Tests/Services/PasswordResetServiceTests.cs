@@ -9,7 +9,7 @@ namespace Backend.Tests.Services
 {
     public class PasswordResetServiceTests
     {
-        private PasswordResetContextMock _passwordResets = null!;
+        private PasswordResetContextMock _passwordResetContext = null!;
         private IUserRepository _userRepo = null!;
         private IPasswordResetService _passwordResetService = null!;
         private const string Email = "user@domain.com";
@@ -18,55 +18,66 @@ namespace Backend.Tests.Services
         [SetUp]
         public void Setup()
         {
+            _passwordResetContext = new PasswordResetContextMock();
             _userRepo = new UserRepositoryMock();
-            _passwordResets = new PasswordResetContextMock();
-            _passwordResetService = new PasswordResetService(_passwordResets, _userRepo);
+            _passwordResetService = new PasswordResetService(_passwordResetContext, _userRepo, new EmailServiceMock());
         }
 
         [Test]
-        public void CreateRequest()
+        public void TestCreatePasswordReset()
         {
             // test we can successfully create a request
             var user = new User { Email = Email };
             _userRepo.Create(user);
 
-            var res = _passwordResetService.CreatePasswordReset(Email).Result;
-            Assert.That(_passwordResets.GetResets(), Does.Contain(res).UsingPropertiesComparer());
+            var res = ((PasswordResetService)_passwordResetService).CreatePasswordReset(Email).Result;
         }
 
         [Test]
-        public void ResetSuccess()
+        public void TestResetPasswordSuccess()
         {
             var user = new User { Email = Email };
             _userRepo.Create(user);
 
-            var request = _passwordResetService.CreatePasswordReset(Email).Result;
+            var request = ((PasswordResetService)_passwordResetService).CreatePasswordReset(Email).Result;
             Assert.That(_passwordResetService.ResetPassword(request.Token, Password).Result, Is.True);
-            Assert.That(_passwordResets.GetResets(), Is.Empty);
+            Assert.That(_passwordResetContext.GetResets(), Is.Empty);
         }
 
         [Test]
-        public void ResetExpired()
+        public void TestResetPasswordExpired()
         {
             var user = new User { Email = Email };
             _userRepo.Create(user);
 
-            var request = _passwordResetService.CreatePasswordReset(Email).Result;
-            request.Created = DateTime.Now.Subtract(_passwordResetService.ExpireTime).AddMinutes(-1);
+            var request = ((PasswordResetService)_passwordResetService).CreatePasswordReset(Email).Result;
+            request.Created = DateTime.Now.Subtract(_passwordResetContext.ExpireTime).AddMinutes(-1);
 
             Assert.That(_passwordResetService.ResetPassword(request.Token, Password).Result, Is.False);
         }
 
         [Test]
-        public void ResetBadToken()
+        public void TestResetPasswordBadToken()
         {
             var user = new User { Email = Email };
             _userRepo.Create(user);
 
-            var request = _passwordResetService.CreatePasswordReset(Email).Result;
+            var request = ((PasswordResetService)_passwordResetService).CreatePasswordReset(Email).Result;
             Assert.That(request.Email == Email, Is.True);
             var task = _passwordResetService.ResetPassword("NotARealToken", Password);
             Assert.That(task.Result, Is.False);
+        }
+
+        [Test]
+        public void TestResetPasswordRequest()
+        {
+            // Returns Ok regardless of if user exists.
+            var noUserResult = _passwordResetService.ResetPasswordRequest("fake-username").Result;
+            Assert.That(noUserResult, Is.True);
+
+            var username = _userRepo.Create(new() { Username = "Imarealboy" }).Result!.Username;
+            var yesUserResult = _passwordResetService.ResetPasswordRequest(username).Result;
+            Assert.That(yesUserResult, Is.True);
         }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
@@ -13,21 +12,12 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/invite")]
-    public class InviteController : Controller
+    public class InviteController(
+        IProjectRepository projRepo, IInviteService inviteService, IPermissionService permissionService) : Controller
     {
-        private readonly IProjectRepository _projRepo;
-        private readonly IUserRepository _userRepo;
-        private readonly IInviteService _inviteService;
-        private readonly IPermissionService _permissionService;
-
-        public InviteController(IProjectRepository projRepo, IUserRepository userRepo,
-            IInviteService inviteService, IPermissionService permissionService)
-        {
-            _projRepo = projRepo;
-            _userRepo = userRepo;
-            _inviteService = inviteService;
-            _permissionService = permissionService;
-        }
+        private readonly IProjectRepository _projRepo = projRepo;
+        private readonly IInviteService _inviteService = inviteService;
+        private readonly IPermissionService _permissionService = permissionService;
 
         /// <summary> Generates invite link and sends email containing link </summary>
         [HttpPut(Name = "EmailInviteToProject")]
@@ -65,24 +55,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> ValidateToken(string projectId, string token)
         {
-            var status = new EmailInviteStatus(false, false);
-            var invite = await _inviteService.FindByToken(token);
-            User? user = null;
-            if (invite is not null)
-            {
-                status.IsTokenValid = DateTime.Now < invite.Created.Add(_inviteService.ExpireTime);
-                user = await _userRepo.GetUserByEmail(invite.Email);
-                status.IsUserValid = user is not null && !user.ProjectRoles.ContainsKey(projectId);
-            }
-            if (invite is null || user is null || !status.IsTokenValid || !status.IsUserValid)
-            {
-                return Ok(status);
-            }
-            if (await _inviteService.RemoveTokenAndCreateUserRole(projectId, user, invite))
-            {
-                return Ok(status);
-            }
-            return Ok(new EmailInviteStatus(false, true));
+            return Ok(await _inviteService.ValidateToken(projectId, token));
         }
     }
 
@@ -109,23 +82,6 @@ namespace BackendFramework.Controllers
             ProjectId = "";
             Role = Role.Harvester;
             Domain = "";
-        }
-    }
-
-    /// <remarks>
-    /// This is used in an OpenAPI return value serializer, so its attributes must be defined as properties.
-    /// </remarks>
-    public class EmailInviteStatus
-    {
-        [Required]
-        public bool IsTokenValid { get; set; }
-        [Required]
-        public bool IsUserValid { get; set; }
-
-        public EmailInviteStatus(bool isTokenValid, bool isUserRegistered)
-        {
-            IsTokenValid = isTokenValid;
-            IsUserValid = isUserRegistered;
         }
     }
 }

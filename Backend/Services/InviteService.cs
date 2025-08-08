@@ -7,25 +7,15 @@ using MimeKit;
 namespace BackendFramework.Services
 {
     /// <summary> More complex functions and application logic for <see cref="Project"/>s </summary>
-    public class InviteService : IInviteService
+    public class InviteService(
+        IInviteContext inviteContext, IUserRepository userRepo, IUserRoleRepository userRoleRepo,
+        IEmailService emailService, IPermissionService permissionService) : IInviteService
     {
-        private readonly IInviteContext _inviteContext;
-        private readonly IUserRepository _userRepo;
-        private readonly IUserRoleRepository _userRoleRepo;
-        private readonly IEmailService _emailService;
-        private readonly IPermissionService _permissionService;
-
-        public InviteService(IInviteContext inviteContext, IUserRepository userRepo, IUserRoleRepository userRoleRepo,
-            IEmailService emailService, IPermissionService permissionService)
-        {
-            _inviteContext = inviteContext;
-            _userRepo = userRepo;
-            _userRoleRepo = userRoleRepo;
-            _emailService = emailService;
-            _permissionService = permissionService;
-        }
-
-        public TimeSpan ExpireTime => _inviteContext.ExpireTime;
+        private readonly IInviteContext _inviteContext = inviteContext;
+        private readonly IUserRepository _userRepo = userRepo;
+        private readonly IUserRoleRepository _userRoleRepo = userRoleRepo;
+        private readonly IEmailService _emailService = emailService;
+        private readonly IPermissionService _permissionService = permissionService;
 
         public async Task<string> CreateLinkWithToken(string projectId, Role role, string emailAddress)
         {
@@ -47,18 +37,13 @@ namespace BackendFramework.Services
                        $"To become a member of this project, go to {domain}{link}.\n" +
                        $"Use this email address during registration: {emailAddress}.\n\n" +
                        $"Message from Project Admin: {emailMessage}\n\n" +
-                       $"(This link will expire in {ExpireTime.TotalDays} days.)\n\n" +
+                       $"(This link will expire in {_inviteContext.ExpireTime.TotalDays} days.)\n\n" +
                        "If you did not expect an invite please ignore this email."
             };
             return await _emailService.SendEmail(message);
         }
 
-        public async Task<ProjectInvite?> FindByToken(string token)
-        {
-            return await _inviteContext.FindByToken(token);
-        }
-
-        public async Task<bool> RemoveTokenAndCreateUserRole(string projectId, User user, ProjectInvite invite)
+        internal async Task<bool> RemoveTokenAndCreateUserRole(string projectId, User user, ProjectInvite invite)
         {
             if (invite.Role == Role.Owner)
             {
@@ -86,6 +71,28 @@ namespace BackendFramework.Services
             {
                 return false;
             }
+        }
+
+        public async Task<EmailInviteStatus> ValidateToken(string projectId, string token)
+        {
+            var status = new EmailInviteStatus(false, false);
+            var invite = await _inviteContext.FindByToken(token);
+            User? user = null;
+            if (invite is not null)
+            {
+                status.IsTokenValid = DateTime.Now < invite.Created.Add(_inviteContext.ExpireTime);
+                user = await _userRepo.GetUserByEmail(invite.Email);
+                status.IsUserValid = user is not null && !user.ProjectRoles.ContainsKey(projectId);
+            }
+            if (invite is null || user is null || !status.IsTokenValid || !status.IsUserValid)
+            {
+                return status;
+            }
+            if (await RemoveTokenAndCreateUserRole(projectId, user, invite))
+            {
+                return status;
+            }
+            return new EmailInviteStatus(false, true);
         }
 
         public sealed class InviteException : Exception

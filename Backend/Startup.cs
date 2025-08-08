@@ -199,8 +199,8 @@ namespace BackendFramework
                             true)!));
                         options.ExpireTimeProjectInvite = TimeSpan.FromDays(int.Parse(CheckedEnvironmentVariable(
                             "COMBINE_EXPIRE_PROJECT_INVITE_DAYS",
-                            Settings.DefaultExpirePasswordResetMinutes.ToString(),
-                            $"Using default value: {Settings.DefaultExpirePasswordResetMinutes}",
+                            Settings.DefaultExpireProjectInviteDays.ToString(),
+                            $"Using default value: {Settings.DefaultExpireProjectInviteDays}",
                             true)!));
                         options.SmtpServer = CheckedEnvironmentVariable(
                             "COMBINE_SMTP_SERVER",

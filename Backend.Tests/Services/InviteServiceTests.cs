@@ -36,7 +36,7 @@ namespace Backend.Tests.Services
             var url = _inviteService.CreateLinkWithToken(ProjId, Role.Harvester, Email).Result;
             Assert.That(url, Does.Contain(Email).And.Contain(ProjId));
             var token = url.Split('/').Last().Split('?').First();
-            Assert.That(_inviteService.FindByToken(token).Result, Is.Not.Null);
+            Assert.That(_inviteContext.FindByToken(token).Result, Is.Not.Null);
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace Backend.Tests.Services
         {
             var invite = new ProjectInvite(ProjId, Email, Role.Harvester);
             _inviteContext.Insert(invite).Wait();
-            Assert.That(_inviteService.FindByToken(invite.Token).Result, Is.Not.Null);
+            Assert.That(_inviteContext.FindByToken(invite.Token).Result, Is.Not.Null);
 
             var result = _inviteService.RemoveTokenAndCreateUserRole(ProjId, _user, invite).Result;
             Assert.That(result, Is.True);
@@ -68,11 +68,11 @@ namespace Backend.Tests.Services
         {
             var invite = new ProjectInvite(ProjId, Email, Role.Harvester);
             _inviteContext.Insert(invite).Wait();
-            Assert.That(_inviteService.FindByToken(invite.Token).Result, Is.Not.Null);
+            Assert.That(_inviteContext.FindByToken(invite.Token).Result, Is.Not.Null);
 
             var result = _inviteService.RemoveTokenAndCreateUserRole(ProjId, _user, invite).Result;
             Assert.That(result, Is.True);
-            Assert.That(_inviteService.FindByToken(invite.Token).Result, Is.Null);
+            Assert.That(_inviteContext.FindByToken(invite.Token).Result, Is.Null);
         }
     }
 }

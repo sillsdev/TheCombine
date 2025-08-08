@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -27,5 +28,16 @@ namespace BackendFramework.Models
 
         [BsonElement("role")]
         public Role Role { get; set; } = role;
+    }
+
+    /// <remarks>
+    /// This is used in an OpenAPI return value serializer, so its attributes must be defined as properties.
+    /// </remarks>
+    public class EmailInviteStatus(bool isTokenValid, bool isUserRegistered)
+    {
+        [Required]
+        public bool IsTokenValid { get; set; } = isTokenValid;
+        [Required]
+        public bool IsUserValid { get; set; } = isUserRegistered;
     }
 }
