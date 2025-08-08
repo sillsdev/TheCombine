@@ -23,9 +23,9 @@ namespace BackendFramework.Contexts
 
         private IMongoCollection<ProjectInvite> Invites => _db.GetCollection<ProjectInvite>("InviteCollection");
 
-        public Task ClearAll(string projectId, string email)
+        public async Task ClearAll(string projectId, string email)
         {
-            return Invites.DeleteManyAsync(x => x.ProjectId == projectId && x.Email == email);
+            await Invites.DeleteManyAsync(x => x.ProjectId == projectId && x.Email == email);
         }
 
         public async Task<ProjectInvite?> FindByToken(string token)
@@ -33,9 +33,9 @@ namespace BackendFramework.Contexts
             return (await Invites.FindAsync(r => r.Token == token)).SingleOrDefault();
         }
 
-        public Task Insert(ProjectInvite invite)
+        public async Task Insert(ProjectInvite invite)
         {
-            return Invites.InsertOneAsync(invite);
+            await Invites.InsertOneAsync(invite);
         }
     }
 }

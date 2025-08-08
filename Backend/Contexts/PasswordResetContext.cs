@@ -24,9 +24,9 @@ namespace BackendFramework.Contexts
         private IMongoCollection<EmailToken> PasswordResets => _db.GetCollection<EmailToken>(
             "PasswordResetCollection");
 
-        public Task ClearAll(string email)
+        public async Task ClearAll(string email)
         {
-            return PasswordResets.DeleteManyAsync(x => x.Email == email);
+            await PasswordResets.DeleteManyAsync(x => x.Email == email);
         }
 
         public async Task<EmailToken?> FindByToken(string token)
@@ -34,9 +34,9 @@ namespace BackendFramework.Contexts
             return (await PasswordResets.FindAsync(r => r.Token == token)).SingleOrDefault();
         }
 
-        public Task Insert(EmailToken reset)
+        public async Task Insert(EmailToken reset)
         {
-            return PasswordResets.InsertOneAsync(reset);
+            await PasswordResets.InsertOneAsync(reset);
         }
     }
 }
