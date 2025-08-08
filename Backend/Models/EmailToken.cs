@@ -18,7 +18,7 @@ namespace BackendFramework.Models
         public string Token { get; set; } = Guid.NewGuid().ToString();
 
         [BsonElement("created")]
-        public DateTime Created { get; set; } = DateTime.Now;
+        public DateTime Created { get; set; } = DateTime.UtcNow;
     }
 
     public class ProjectInvite(string projectId, string email, Role role) : EmailToken(email)

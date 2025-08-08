@@ -82,7 +82,7 @@ namespace BackendFramework.Services
 
         private bool ValidateToken(EmailToken token)
         {
-            return DateTime.Now <= token.Created.Add(_passwordResetContext.ExpireTime);
+            return DateTime.UtcNow <= token.Created.Add(_passwordResetContext.ExpireTime);
         }
     }
 }

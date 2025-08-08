@@ -91,7 +91,7 @@ namespace BackendFramework.Services
             User? user = null;
             if (invite is not null)
             {
-                status.IsTokenValid = DateTime.Now < invite.Created.Add(_inviteContext.ExpireTime);
+                status.IsTokenValid = DateTime.UtcNow < invite.Created.Add(_inviteContext.ExpireTime);
                 user = await _userRepo.GetUserByEmail(invite.Email);
                 status.IsUserValid = user is not null && !user.ProjectRoles.ContainsKey(projectId);
             }

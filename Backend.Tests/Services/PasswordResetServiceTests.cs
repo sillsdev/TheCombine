@@ -51,7 +51,7 @@ namespace Backend.Tests.Services
             _userRepo.Create(user);
 
             var request = ((PasswordResetService)_passwordResetService).CreatePasswordReset(Email).Result;
-            request.Created = DateTime.Now.Subtract(_passwordResetContext.ExpireTime).AddMinutes(-1);
+            request.Created = DateTime.UtcNow.Subtract(_passwordResetContext.ExpireTime).AddMinutes(-1);
 
             Assert.That(_passwordResetService.ResetPassword(request.Token, Password).Result, Is.False);
         }

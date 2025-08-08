@@ -52,11 +52,11 @@ namespace Backend.Tests.Controllers
 
             _projId = (await _projRepo.Create(new Project { Name = ProjectName }))!.Id;
             var inviteActive =
-                new ProjectInvite(_projId, EmailActive, Role.Harvester) { Created = DateTime.Now };
+                new ProjectInvite(_projId, EmailActive, Role.Harvester) { Created = DateTime.UtcNow };
             await inviteContext.Insert(inviteActive);
             _tokenActive = inviteActive.Token;
             var inviteExpired =
-                new ProjectInvite(_projId, EmailExpired, Role.Harvester) { Created = DateTime.Now.AddYears(-1) };
+                new ProjectInvite(_projId, EmailExpired, Role.Harvester) { Created = DateTime.UtcNow.AddYears(-1) };
             await inviteContext.Insert(inviteExpired);
             _tokenExpired = inviteExpired.Token;
         }
