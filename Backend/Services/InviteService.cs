@@ -31,7 +31,7 @@ namespace BackendFramework.Services
             return invite;
         }
 
-        internal MimeMessage CreateEmail(string emailAddress, string emailMessage, string link, string projectName)
+        private MimeMessage CreateEmail(string emailAddress, string emailMessage, string link, string projectName)
         {
             var message = new MimeMessage();
             message.To.Add(new MailboxAddress("FutureCombineUser", emailAddress));
@@ -117,11 +117,6 @@ namespace BackendFramework.Services
             return result ? status : new EmailInviteStatus(false, true);
         }
 
-        public sealed class InviteException : Exception
-        {
-            public InviteException() { }
-
-            public InviteException(string msg) : base(msg) { }
-        }
+        public sealed class InviteException(string msg) : Exception(msg);
     }
 }

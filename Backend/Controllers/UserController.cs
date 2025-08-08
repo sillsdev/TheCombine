@@ -14,19 +14,12 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/users")]
-    public class UserController : Controller
+    public class UserController(
+        IUserRepository userRepo, ICaptchaService captchaService, IPermissionService permissionService) : Controller
     {
-        private readonly IUserRepository _userRepo;
-        private readonly ICaptchaService _captchaService;
-        private readonly IPermissionService _permissionService;
-
-        public UserController(
-            IUserRepository userRepo, ICaptchaService captchaService, IPermissionService permissionService)
-        {
-            _userRepo = userRepo;
-            _captchaService = captchaService;
-            _permissionService = permissionService;
-        }
+        private readonly IUserRepository _userRepo = userRepo;
+        private readonly ICaptchaService _captchaService = captchaService;
+        private readonly IPermissionService _permissionService = permissionService;
 
         /// <summary> Verifies a CAPTCHA token </summary>
         [AllowAnonymous]
