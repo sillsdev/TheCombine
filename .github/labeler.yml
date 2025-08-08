@@ -1,0 +1,156 @@
+# https://github.com/actions/labeler?tab=readme-ov-file#create-githublabeleryml
+
+"audio":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/Audio*"
+          - "**/Pronunciations/**"
+          - "**/Speaker*"
+      - all-globs-to-any-file:
+          - "backend/FwLite/**"
+          - "!backend/FwLite/FwHeadless/**"
+
+"bash":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.sh"
+
+"component: DataEntry":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/DataEntry/**"
+
+"component: TreeView":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/TreeView/**"
+
+"dependencies":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*requirements.*"
+          - "package*.json"
+
+"deployment":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "deploy/**"
+          - "docs/deploy/**"
+          - "docs/nuc_instructions_for_use/**"
+          - "docs/release_process/**"
+          - "installer/**"
+          - "maintenance/**"
+          - "nginx/**"
+
+"docker":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/.dockerignore"
+          - "**/Dockerfile"
+          - "**/docker_home/**"
+
+"documentation":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/README.*"
+          - "docs/**"
+
+"font/language":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*dictionary*"
+          - "**/*font*"
+          - "**/*spellChecker*"
+          - "**/*wordlist*"
+          - "**/*writing-system*"
+          - "**/*writingSystem*"
+          - "**/dictionaries/**"
+
+"frontend":
+  - changed-files:
+      - all-globs-to-any-file:
+          - "public/**"
+          - "!public/dictionaries/**"
+          - "!public/locales/**"
+      - all-globs-to-any-file:
+          - "src/**"
+          - "!src/api/**"
+          - "!src/backend.index.ts"
+
+"github_actions":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
+
+"goal":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*UserEdit*.cs"
+          - "**/goal*.ts*"
+          - "**/GoalTimeline/**"
+      - all-globs-to-any-file:
+          - "src/goals/**"
+          - "!**/CharacterInventory/**"
+          - "!**/MergeDuplicates/**"
+          - "!**/ReviewDeferredDuplicates/**"
+          - "!**/ReviewEntries/**"
+
+"goal: CharacterInventory":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/CharacterInventory/**"
+
+"goal: MergeDup":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*DuplicateFinder.cs"
+          - "**/*Merge*.cs"
+          - "**/MergeDuplicates/**"
+          - "**/ReviewDeferredDuplicates/**"
+
+"goal: ReviewEntries":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/ReviewEntries/**"
+
+"import/export":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*Import*.ts*"
+          - "**/*Lift*.cs"
+          - "**/ProjectExport/**"
+
+"login/signUp":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*PasswordReset*.cs"
+          - "**/credentials.ts"
+          - "**/Login/**"
+          - "**/PasswordReset/**"
+          - "**/ProjectExport/**"
+
+########## TODO
+"project":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.py"
+          - "**/*requirements.*"
+      - all-globs-to-any-file:
+          - "public/**"
+          - "!public/dictionaries/**"
+          - "!public/locales/**"
+############
+
+"python":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.py"
+          - "**/*requirements.*"
+
+"test":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*Test*"
+          - "**/*testing*"
+          - "**/tests/**"
+          - "Backend.Tests/**"
