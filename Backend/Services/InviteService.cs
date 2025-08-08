@@ -17,11 +17,15 @@ namespace BackendFramework.Services
         private readonly IEmailService _emailService = emailService;
         private readonly IPermissionService _permissionService = permissionService;
 
-        public async Task<string> CreateLinkWithToken(string projectId, Role role, string emailAddress)
+        public string CreateLink(ProjectInvite invite)
         {
-            var token = new ProjectInvite(projectId, emailAddress, role);
-            await _inviteContext.Insert(token);
-            return $"/invite/{projectId}/{token.Token}?email={emailAddress}";
+            return $"/invite/{invite.ProjectId}/{invite.Token}?email={invite.Email}";
+        }
+        public async Task<ProjectInvite> CreateProjectInvite(string projectId, Role role, string emailAddress)
+        {
+            var invite = new ProjectInvite(projectId, emailAddress, role);
+            await _inviteContext.Insert(invite);
+            return invite;
         }
 
         public async Task<bool> EmailLink(

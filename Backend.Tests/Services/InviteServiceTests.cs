@@ -31,12 +31,21 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestCreateLinkWithToken()
+        public void TestCreateLink()
         {
-            var url = _inviteService.CreateLinkWithToken(ProjId, Role.Harvester, Email).Result;
-            Assert.That(url, Does.Contain(Email).And.Contain(ProjId));
-            var token = url.Split('/').Last().Split('?').First();
-            Assert.That(_inviteContext.FindByToken(token).Result, Is.Not.Null);
+            var invite = new ProjectInvite(ProjId, Email, Role.Owner);
+            var url = _inviteService.CreateLink(invite);
+            Assert.That(url, Does.Contain(Email).And.Contain(ProjId).And.Contain(invite.Token));
+        }
+
+        [Test]
+        public void TestCreateProjectInvite()
+        {
+            var invite = _inviteService.CreateProjectInvite(ProjId, Role.Editor, Email).Result;
+            var result = _inviteContext.FindByToken(invite.Token).Result;
+            Assert.That(result?.Email, Is.EqualTo(Email));
+            Assert.That(result?.ProjectId, Is.EqualTo(ProjId));
+            Assert.That(result?.Role, Is.EqualTo(Role.Editor));
         }
 
         [Test]

@@ -43,9 +43,10 @@ namespace BackendFramework.Controllers
                 return NotFound($"projectId: {projectId}");
             }
 
-            var linkWithIdentifier = await _inviteService.CreateLinkWithToken(projectId, data.Role, data.EmailAddress);
-            await _inviteService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project.Name);
-            return Ok(linkWithIdentifier);
+            var invite = await _inviteService.CreateProjectInvite(projectId, data.Role, data.EmailAddress);
+            var link = _inviteService.CreateLink(invite);
+            await _inviteService.EmailLink(data.EmailAddress, data.Message, link, data.Domain, project.Name);
+            return Ok(link);
         }
 
         /// <summary> Validates invite token in url and adds user to project </summary>
