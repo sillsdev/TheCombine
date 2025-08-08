@@ -25,7 +25,7 @@ namespace BackendFramework.Services
             _permissionService = permissionService;
         }
 
-        public TimeSpan ExpireTime => TimeSpan.FromDays(7);
+        public TimeSpan ExpireTime => _inviteContext.ExpireTime;
 
         public async Task<string> CreateLinkWithToken(string projectId, Role role, string emailAddress)
         {

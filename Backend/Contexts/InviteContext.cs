@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
@@ -11,11 +12,13 @@ namespace BackendFramework.Contexts
     public class InviteContext : IInviteContext
     {
         private readonly IMongoDatabase _db;
+        public TimeSpan ExpireTime { get; }
 
         public InviteContext(IOptions<Startup.Settings> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
             _db = client.GetDatabase(options.Value.CombineDatabase);
+            ExpireTime = options.Value.ExpireTimeProjectInvite;
         }
 
         private IMongoCollection<ProjectInvite> Invites => _db.GetCollection<ProjectInvite>("InviteCollection");

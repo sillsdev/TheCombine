@@ -38,12 +38,17 @@ namespace BackendFramework
 
         public class Settings
         {
+            public const int DefaultExpirePasswordResetMinutes = 15;
+            public const int DefaultExpireProjectInviteDays = 7;
+
             public bool CaptchaEnabled { get; set; }
             public string? CaptchaSecretKey { get; set; }
             public string? CaptchaVerifyUrl { get; set; }
             public string ConnectionString { get; set; }
             public string CombineDatabase { get; set; }
             public bool EmailEnabled { get; set; }
+            public TimeSpan ExpireTimePasswordReset { get; set; }
+            public TimeSpan ExpireTimeProjectInvite { get; set; }
             public string? SmtpServer { get; set; }
             public int? SmtpPort { get; set; }
             public string? SmtpUsername { get; set; }
@@ -187,6 +192,16 @@ namespace BackendFramework
                         true)!);
                     if (options.EmailEnabled)
                     {
+                        options.ExpireTimePasswordReset = TimeSpan.FromMinutes(int.Parse(CheckedEnvironmentVariable(
+                            "COMBINE_EXPIRE_PASSWORD_RESET_MINUTES",
+                            Settings.DefaultExpirePasswordResetMinutes.ToString(),
+                            $"Using default value: {Settings.DefaultExpirePasswordResetMinutes}",
+                            true)!));
+                        options.ExpireTimeProjectInvite = TimeSpan.FromDays(int.Parse(CheckedEnvironmentVariable(
+                            "COMBINE_EXPIRE_PROJECT_INVITE_DAYS",
+                            Settings.DefaultExpirePasswordResetMinutes.ToString(),
+                            $"Using default value: {Settings.DefaultExpirePasswordResetMinutes}",
+                            true)!));
                         options.SmtpServer = CheckedEnvironmentVariable(
                             "COMBINE_SMTP_SERVER",
                             null,

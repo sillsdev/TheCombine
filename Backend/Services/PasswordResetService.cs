@@ -17,7 +17,7 @@ namespace BackendFramework.Services
             _userRepo = userRepo;
         }
 
-        public TimeSpan ExpireTime => TimeSpan.FromMinutes(15);
+        public TimeSpan ExpireTime => _passwordResets.ExpireTime;
 
         public async Task<EmailToken> CreatePasswordReset(string email)
         {

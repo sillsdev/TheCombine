@@ -35,6 +35,8 @@ global:
   includeResourceLimits: false
 
 persistentVolumeSize: 32Gi
+combineExpirePasswordResetMinutes: 15
+combineExpireProjectInviteDays: 7
 combineSmtpAddress: no-reply@thecombine.app
 combineSmtpFrom: "The Combine"
 combineSmtpPort: 587

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +10,8 @@ namespace Backend.Tests.Mocks
     internal sealed class InviteContextMock : IInviteContext
     {
         private List<ProjectInvite> _invites = [];
+
+        public TimeSpan ExpireTime => TimeSpan.FromDays(7); // Default expire time for testing
 
         public Task ClearAll(string projectId, string email)
         {
