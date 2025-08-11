@@ -10,7 +10,6 @@ import { FlagButton, UndoButton } from "components/Buttons";
 import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
 import { MergesCompleted } from "goals/MergeDuplicates/MergeDupsTypes";
 import { type StoreState } from "rootRedux/types";
-import theme from "types/theme";
 import { newFlag } from "types/word";
 import { TypographyWithFont } from "utilities/fontComponents";
 
@@ -53,14 +52,14 @@ export function MergeChange(props: { change: MergeUndoIds }): ReactElement {
   const isDeletion = !change.parentIds.length;
 
   return (
-    <Grid2 container style={{ flexWrap: "nowrap", overflow: "auto" }}>
+    <Grid2 container sx={{ flexWrap: "nowrap", overflow: "auto" }}>
       {isDeletion && <Typography>{t("mergeDups.undo.deleted")}</Typography>}
       {change.childIds.map((id) => (
         <WordBox key={id} wordId={id} />
       ))}
       {!isDeletion && (
         <>
-          <Box alignContent="center" style={{ margin: theme.spacing(1) }}>
+          <Box alignContent="center" sx={{ m: 1 }}>
             <ArrowRightAlt fontSize="large" />
           </Box>
           {change.parentIds.map((id) => (
@@ -116,17 +115,9 @@ function WordBox(props: { wordId: string }): ReactElement {
   }, [word]);
 
   return (
-    <Box style={{ margin: theme.spacing(1) }}>
-      <Paper
-        style={{
-          backgroundColor: "lightgrey",
-          paddingBottom: theme.spacing(1),
-        }}
-      >
-        <Paper
-          square
-          style={{ padding: theme.spacing(1), height: 44, minWidth: 100 }}
-        >
+    <Box sx={{ m: 1 }}>
+      <Paper sx={{ bgcolor: "lightgrey", pb: 1 }}>
+        <Paper square sx={{ height: 44, minWidth: 100, p: 1 }}>
           <Stack direction="row" justifyContent="space-between">
             <TypographyWithFont variant="h5" vernacular>
               {word?.vernacular}
@@ -146,12 +137,12 @@ function SenseCard(sense: Sense): ReactElement {
   return (
     <Card
       key={sense.guid}
-      style={{
-        margin: theme.spacing(1),
-        userSelect: "none",
-        minWidth: 150,
+      sx={{
+        bgcolor: "white",
+        m: 1,
         maxWidth: 300,
-        background: "white",
+        minWidth: 150,
+        userSelect: "none",
       }}
     >
       <SenseCardContent senses={[sense]} />
