@@ -233,10 +233,10 @@ namespace BackendFramework
             // Email types
             services.AddTransient<IEmailContext, EmailContext>();
             services.AddTransient<IEmailService, EmailService>();
-
-            // Invite types
-            services.AddTransient<IInviteContext, InviteContext>();
+            services.AddTransient<IInviteRepository, InviteRepository>();
             services.AddTransient<IInviteService, InviteService>();
+            services.AddTransient<IPasswordResetRepository, PasswordResetRepository>();
+            services.AddTransient<IPasswordResetService, PasswordResetService>();
 
             // Lift Service - Singleton to avoid initializing the Sldr multiple times,
             // also to avoid leaking LanguageTag data
@@ -248,10 +248,6 @@ namespace BackendFramework
             services.AddTransient<IMergeBlacklistRepository, MergeBlacklistRepository>();
             services.AddTransient<IMergeGraylistRepository, MergeGraylistRepository>();
             services.AddSingleton<IMergeService, MergeService>();
-
-            // Password Reset types
-            services.AddTransient<IPasswordResetContext, PasswordResetContext>();
-            services.AddTransient<IPasswordResetService, PasswordResetService>();
 
             // Permission types
             services.AddTransient<IPermissionService, PermissionService>();

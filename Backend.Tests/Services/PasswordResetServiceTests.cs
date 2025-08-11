@@ -1,26 +1,31 @@
 using System;
 using Backend.Tests.Mocks;
+using BackendFramework;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
+using Microsoft.Extensions.Options;
 using NUnit.Framework;
 
 namespace Backend.Tests.Services
 {
     public class PasswordResetServiceTests
     {
-        private PasswordResetContextMock _passwordResetContext = null!;
+        private PasswordResetRepositoryMock _passwordResetRepo = null!;
         private IUserRepository _userRepo = null!;
         private PasswordResetService _passwordResetService = null!;
         private const string Email = "user@domain.com";
         private const string Password = "PasswordResetServiceTestPassword";
+        private readonly TimeSpan _expireTime = TimeSpan.FromDays(7);
 
         [SetUp]
         public void Setup()
         {
-            _passwordResetContext = new PasswordResetContextMock();
+            var options = Options.Create(new Startup.Settings { ExpireTimePasswordReset = _expireTime });
+            _passwordResetRepo = new PasswordResetRepositoryMock();
             _userRepo = new UserRepositoryMock();
-            _passwordResetService = new PasswordResetService(_passwordResetContext, _userRepo, new EmailServiceMock());
+            _passwordResetService = new PasswordResetService(
+                options, _passwordResetRepo, _userRepo, new EmailServiceMock());
         }
 
         [Test]
@@ -29,8 +34,7 @@ namespace Backend.Tests.Services
             // test we can successfully create a request
             var user = new User { Email = Email };
             _userRepo.Create(user);
-
-            var res = _passwordResetService.CreatePasswordReset(Email).Result;
+            _passwordResetService.CreatePasswordReset(Email).Wait();
         }
 
         [Test]
@@ -41,7 +45,7 @@ namespace Backend.Tests.Services
 
             var request = _passwordResetService.CreatePasswordReset(Email).Result;
             Assert.That(_passwordResetService.ResetPassword(request.Token, Password).Result, Is.True);
-            Assert.That(_passwordResetContext.GetResets(), Is.Empty);
+            Assert.That(_passwordResetRepo.GetResets(), Is.Empty);
         }
 
         [Test]
@@ -51,7 +55,7 @@ namespace Backend.Tests.Services
             _userRepo.Create(user);
 
             var request = _passwordResetService.CreatePasswordReset(Email).Result;
-            request.Created = DateTime.UtcNow.Subtract(_passwordResetContext.ExpireTime).AddMinutes(-1);
+            request.Created = DateTime.UtcNow.Subtract(_expireTime).AddMinutes(-1);
 
             Assert.That(_passwordResetService.ResetPassword(request.Token, Password).Result, Is.False);
         }
@@ -85,9 +89,9 @@ namespace Backend.Tests.Services
         {
             var token = new EmailToken(Email)
             {
-                Created = DateTime.UtcNow.Subtract(_passwordResetContext.ExpireTime).AddMinutes(-1)
+                Created = DateTime.UtcNow.Subtract(_expireTime).AddMinutes(-1)
             };
-            _passwordResetContext.Insert(token).Wait();
+            _passwordResetRepo.Insert(token).Wait();
             Assert.That(_passwordResetService.ValidateToken(token.Token).Result, Is.False);
         }
 
@@ -101,7 +105,7 @@ namespace Backend.Tests.Services
         public void TestValidateTokenValid()
         {
             var token = new EmailToken(Email);
-            _passwordResetContext.Insert(token).Wait();
+            _passwordResetRepo.Insert(token).Wait();
             Assert.That(_passwordResetService.ValidateToken(token.Token).Result, Is.True);
         }
     }

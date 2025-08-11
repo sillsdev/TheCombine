@@ -3,15 +3,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using static BackendFramework.Helper.Domain;
 
 namespace BackendFramework.Services
 {
-    public class PasswordResetService(IPasswordResetContext passwordResetContext, IUserRepository userRepo,
-        IEmailService emailService) : IPasswordResetService
+    public class PasswordResetService(IOptions<Startup.Settings> options, IPasswordResetRepository passwordResetRepo,
+        IUserRepository userRepo, IEmailService emailService) : IPasswordResetService
     {
-        private readonly IPasswordResetContext _passwordResetContext = passwordResetContext;
+        private readonly TimeSpan _expireTime = options.Value.ExpireTimePasswordReset;
+        private readonly IPasswordResetRepository _passwordResetRepo = passwordResetRepo;
         private readonly IUserRepository _userRepo = userRepo;
         private readonly IEmailService _emailService = emailService;
 
@@ -24,20 +26,20 @@ namespace BackendFramework.Services
         internal async Task<EmailToken> CreatePasswordReset(string email)
         {
             var resetRequest = new EmailToken(email);
-            await _passwordResetContext.Insert(resetRequest);
+            await _passwordResetRepo.Insert(resetRequest);
             return resetRequest;
         }
 
         internal async Task ExpirePasswordReset(string email)
         {
-            await _passwordResetContext.ClearAll(email);
+            await _passwordResetRepo.ClearAll(email);
         }
 
         /// <summary> Reset a users password using a Password reset request token. </summary>
         /// <returns> Returns false if the request is invalid or expired. </returns>
         public async Task<bool> ResetPassword(string token, string password)
         {
-            var request = await _passwordResetContext.FindByToken(token);
+            var request = await _passwordResetRepo.FindByToken(token);
             if (request is null || !ValidateToken(request))
             {
                 return false;
@@ -75,7 +77,7 @@ namespace BackendFramework.Services
             {
                 Text = $"A password reset has been requested for the user {user.Username}. " +
                     $"Follow this link to reset {user.Username}'s password: {url}\n\n" +
-                    $"(This link will expire in {_passwordResetContext.ExpireTime.TotalMinutes} minutes.)\n\n" +
+                    $"(This link will expire in {_expireTime.TotalMinutes} minutes.)\n\n" +
                     "If you did not request a password reset, please ignore this email."
             };
             return message;
@@ -83,12 +85,12 @@ namespace BackendFramework.Services
 
         private bool ValidateToken(EmailToken token)
         {
-            return DateTime.UtcNow <= token.Created.Add(_passwordResetContext.ExpireTime);
+            return DateTime.UtcNow <= token.Created.Add(_expireTime);
         }
 
         public async Task<bool> ValidateToken(string token)
         {
-            var request = await _passwordResetContext.FindByToken(token);
+            var request = await _passwordResetRepo.FindByToken(token);
             return request is not null && ValidateToken(request);
         }
     }

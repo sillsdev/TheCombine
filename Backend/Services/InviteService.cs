@@ -2,17 +2,19 @@ using System;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using static BackendFramework.Helper.Domain;
 
 namespace BackendFramework.Services
 {
     /// <summary> More complex functions and application logic for <see cref="Project"/>s </summary>
-    public class InviteService(
-        IInviteContext inviteContext, IUserRepository userRepo, IUserRoleRepository userRoleRepo,
-        IEmailService emailService, IPermissionService permissionService) : IInviteService
+    public class InviteService(IOptions<Startup.Settings> options, IInviteRepository inviteRepo,
+        IUserRepository userRepo, IUserRoleRepository userRoleRepo, IEmailService emailService,
+        IPermissionService permissionService) : IInviteService
     {
-        private readonly IInviteContext _inviteContext = inviteContext;
+        private readonly TimeSpan _expireTime = options.Value.ExpireTimeProjectInvite;
+        private readonly IInviteRepository _inviteRepo = inviteRepo;
         private readonly IUserRepository _userRepo = userRepo;
         private readonly IUserRoleRepository _userRoleRepo = userRoleRepo;
         private readonly IEmailService _emailService = emailService;
@@ -27,7 +29,7 @@ namespace BackendFramework.Services
         internal async Task<ProjectInvite> CreateProjectInvite(string projectId, Role role, string emailAddress)
         {
             var invite = new ProjectInvite(projectId, emailAddress, role);
-            await _inviteContext.Insert(invite);
+            await _inviteRepo.Insert(invite);
             return invite;
         }
 
@@ -42,7 +44,7 @@ namespace BackendFramework.Services
                        $"To become a member of this project, go to {link}.\n" +
                        $"Use this email address during registration: {emailAddress}.\n\n" +
                        $"Message from Project Admin: {emailMessage}\n\n" +
-                       $"(This link will expire in {_inviteContext.ExpireTime.TotalDays} days.)\n\n" +
+                       $"(This link will expire in {_expireTime.TotalDays} days.)\n\n" +
                        "If you did not expect an invite please ignore this email."
             };
             return message;
@@ -75,7 +77,7 @@ namespace BackendFramework.Services
                     ?? throw new PermissionService.InvalidJwtTokenException("Unable to generate JWT.");
 
                 await _userRepo.Update(updatedUser.Id, updatedUser);
-                await _inviteContext.ClearAll(projectId, invite.Email);
+                await _inviteRepo.ClearAll(projectId, invite.Email);
 
                 return true;
             }
@@ -87,14 +89,14 @@ namespace BackendFramework.Services
 
         private bool ValidateToken(EmailToken token)
         {
-            return DateTime.UtcNow < token.Created.Add(_inviteContext.ExpireTime);
+            return DateTime.UtcNow < token.Created.Add(_expireTime);
         }
 
         public async Task<EmailInviteStatus> ValidateProjectToken(string projectId, string token)
         {
             var status = new EmailInviteStatus(false, false);
 
-            var invite = await _inviteContext.FindByToken(token);
+            var invite = await _inviteRepo.FindByToken(token);
             if (invite is null)
             {
                 return status;

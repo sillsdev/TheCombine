@@ -1,20 +1,15 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace BackendFramework.Contexts
+namespace BackendFramework.Repositories
 {
     [ExcludeFromCodeCoverage]
-    public class PasswordResetContext(IOptions<Startup.Settings> options, IMongoDbContext mongoDbContext)
-        : IPasswordResetContext
+    public class PasswordResetRepository(IMongoDbContext mongoDbContext) : IPasswordResetRepository
     {
         private readonly IMongoDatabase _db = mongoDbContext.Db;
-
-        public TimeSpan ExpireTime { get; } = options.Value.ExpireTimePasswordReset;
 
         private IMongoCollection<EmailToken> PasswordResets => _db.GetCollection<EmailToken>(
             "PasswordResetCollection");

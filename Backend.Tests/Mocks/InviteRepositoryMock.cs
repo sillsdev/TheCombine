@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,11 +6,9 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    internal sealed class InviteContextMock : IInviteContext
+    internal sealed class InviteRepositoryMock : IInviteRepository
     {
-        private List<ProjectInvite> _invites = [];
-
-        public TimeSpan ExpireTime => TimeSpan.FromDays(7); // Default expire time for testing
+        private readonly List<ProjectInvite> _invites = [];
 
         public Task ClearAll(string projectId, string email)
         {

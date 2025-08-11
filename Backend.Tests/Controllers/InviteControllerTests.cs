@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Backend.Tests.Mocks;
+using BackendFramework;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
@@ -42,22 +44,22 @@ namespace Backend.Tests.Controllers
         [SetUp]
         public async Task Setup()
         {
-            var inviteContext = new InviteContextMock();
+            var inviteRepo = new InviteRepositoryMock();
             _projRepo = new ProjectRepositoryMock();
             _userRepo = new UserRepositoryMock();
             var permissionService = new PermissionServiceMock();
-            var inviteService = new InviteService(inviteContext, _userRepo, new UserRoleRepositoryMock(),
-                new EmailServiceMock(), permissionService);
+            var inviteService = new InviteService(Options.Create(new Startup.Settings()), inviteRepo, _userRepo,
+                new UserRoleRepositoryMock(), new EmailServiceMock(), permissionService);
             _inviteController = new InviteController(_projRepo, inviteService, permissionService);
 
             _projId = (await _projRepo.Create(new Project { Name = ProjectName }))!.Id;
             var inviteActive =
                 new ProjectInvite(_projId, EmailActive, Role.Harvester) { Created = DateTime.UtcNow };
-            await inviteContext.Insert(inviteActive);
+            await inviteRepo.Insert(inviteActive);
             _tokenActive = inviteActive.Token;
             var inviteExpired =
                 new ProjectInvite(_projId, EmailExpired, Role.Harvester) { Created = DateTime.UtcNow.AddYears(-1) };
-            await inviteContext.Insert(inviteExpired);
+            await inviteRepo.Insert(inviteExpired);
             _tokenExpired = inviteExpired.Token;
         }
 

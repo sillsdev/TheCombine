@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,11 +6,9 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    internal sealed class PasswordResetContextMock : IPasswordResetContext
+    internal sealed class PasswordResetRepositoryMock : IPasswordResetRepository
     {
-        private List<EmailToken> _resets = [];
-
-        public TimeSpan ExpireTime => TimeSpan.FromMinutes(15); // Default expire time for testing
+        private readonly List<EmailToken> _resets = [];
 
         public Task ClearAll(string email)
         {

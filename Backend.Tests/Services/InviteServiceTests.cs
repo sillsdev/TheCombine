@@ -1,30 +1,35 @@
+using System;
 using System.Linq;
 using Backend.Tests.Mocks;
+using BackendFramework;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
+using Microsoft.Extensions.Options;
 using NUnit.Framework;
 
 namespace Backend.Tests.Services
 {
     public class InviteServiceTests
     {
-        private IInviteContext _inviteContext = null!;
+        private IInviteRepository _inviteRepo = null!;
         private IUserRepository _userRepo = null!;
         private IUserRoleRepository _userRoleRepo = null!;
         private InviteService _inviteService = null!;
         private const string Email = "user@domain.com";
         private const string ProjId = "test-project-id";
+        private readonly TimeSpan _expireTime = TimeSpan.FromDays(7);
 
         private User _user = null!;
 
         [SetUp]
         public void Setup()
         {
-            _inviteContext = new InviteContextMock();
+            var options = Options.Create(new Startup.Settings { ExpireTimeProjectInvite = _expireTime });
+            _inviteRepo = new InviteRepositoryMock();
             _userRepo = new UserRepositoryMock();
             _userRoleRepo = new UserRoleRepositoryMock();
-            _inviteService = new InviteService(_inviteContext, _userRepo, _userRoleRepo,
+            _inviteService = new InviteService(options, _inviteRepo, _userRepo, _userRoleRepo,
                 new EmailServiceMock(), new PermissionServiceMock(_userRepo));
 
             _user = _userRepo.Create(new User()).Result!;
@@ -42,7 +47,7 @@ namespace Backend.Tests.Services
         public void TestCreateProjectInvite()
         {
             var invite = _inviteService.CreateProjectInvite(ProjId, Role.Editor, Email).Result;
-            var result = _inviteContext.FindByToken(invite.Token).Result;
+            var result = _inviteRepo.FindByToken(invite.Token).Result;
             Assert.That(result?.Email, Is.EqualTo(Email));
             Assert.That(result?.ProjectId, Is.EqualTo(ProjId));
             Assert.That(result?.Role, Is.EqualTo(Role.Editor));
@@ -61,8 +66,8 @@ namespace Backend.Tests.Services
         public void TestRemoveTokenAndCreateUserRoleAddsRole()
         {
             var invite = new ProjectInvite(ProjId, Email, Role.Harvester);
-            _inviteContext.Insert(invite).Wait();
-            Assert.That(_inviteContext.FindByToken(invite.Token).Result, Is.Not.Null);
+            _inviteRepo.Insert(invite).Wait();
+            Assert.That(_inviteRepo.FindByToken(invite.Token).Result, Is.Not.Null);
 
             var result = _inviteService.RemoveTokenAndCreateUserRole(ProjId, _user, invite).Result;
             Assert.That(result, Is.True);
@@ -76,12 +81,12 @@ namespace Backend.Tests.Services
         public void TestRemoveTokenAndCreateUserRoleRemovesToken()
         {
             var invite = new ProjectInvite(ProjId, Email, Role.Harvester);
-            _inviteContext.Insert(invite).Wait();
-            Assert.That(_inviteContext.FindByToken(invite.Token).Result, Is.Not.Null);
+            _inviteRepo.Insert(invite).Wait();
+            Assert.That(_inviteRepo.FindByToken(invite.Token).Result, Is.Not.Null);
 
             var result = _inviteService.RemoveTokenAndCreateUserRole(ProjId, _user, invite).Result;
             Assert.That(result, Is.True);
-            Assert.That(_inviteContext.FindByToken(invite.Token).Result, Is.Null);
+            Assert.That(_inviteRepo.FindByToken(invite.Token).Result, Is.Null);
         }
     }
 }
