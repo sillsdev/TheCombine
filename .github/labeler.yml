@@ -6,9 +6,11 @@
           - "**/Audio*"
           - "**/Pronunciations/**"
           - "**/Speaker*"
-      - all-globs-to-any-file:
-          - "backend/FwLite/**"
-          - "!backend/FwLite/FwHeadless/**"
+
+"backend":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "Backend*/**"
 
 "bash":
   - changed-files:
@@ -23,11 +25,14 @@
 "component: TreeView":
   - changed-files:
       - any-glob-to-any-file:
+          - "**/*emanticDomain*"
+          - "**/semantic_domains/**"
           - "**/TreeView/**"
 
 "dependencies":
   - changed-files:
       - any-glob-to-any-file:
+          - "**/*.csproj"
           - "**/*requirements.*"
           - "package*.json"
 
@@ -46,8 +51,8 @@
   - changed-files:
       - any-glob-to-any-file:
           - "**/.dockerignore"
-          - "**/Dockerfile"
           - "**/docker_home/**"
+          - "**/Dockerfile"
 
 "documentation":
   - changed-files:
@@ -89,7 +94,7 @@
           - "**/goal*.ts*"
           - "**/GoalTimeline/**"
       - all-globs-to-any-file:
-          - "src/goals/**"
+          - "**/goals/**"
           - "!**/CharacterInventory/**"
           - "!**/MergeDuplicates/**"
           - "!**/ReviewDeferredDuplicates/**"
@@ -103,7 +108,7 @@
 "goal: MergeDup":
   - changed-files:
       - any-glob-to-any-file:
-          - "**/*DuplicateFinder.cs"
+          - "**/*Duplicate*.cs"
           - "**/*Merge*.cs"
           - "**/MergeDuplicates/**"
           - "**/ReviewDeferredDuplicates/**"
@@ -123,29 +128,31 @@
 "login/signUp":
   - changed-files:
       - any-glob-to-any-file:
-          - "**/*PasswordReset*.cs"
+          - "**/*Captcha*.cs"
+          - "**/*Password*.cs"
           - "**/credentials.ts"
           - "**/Login/**"
           - "**/PasswordReset/**"
-          - "**/ProjectExport/**"
 
-########## TODO
 "project":
   - changed-files:
       - any-glob-to-any-file:
-          - "**/*.py"
-          - "**/*requirements.*"
+          - "**/*Invite*.cs"
+          - "**/*Project*.cs"
+          - "**/*Statistics*.cs"
+          - "**/*UserRole*.cs"
       - all-globs-to-any-file:
-          - "public/**"
-          - "!public/dictionaries/**"
-          - "!public/locales/**"
-############
+          - "**/Project*/**"
+          - "!**/*Import*"
+          - "!**/ProjectExport/**"
 
 "python":
   - changed-files:
       - any-glob-to-any-file:
           - "**/*.py"
           - "**/*requirements.*"
+          - "pyproject*"
+          - "tox*"
 
 "test":
   - changed-files:
