@@ -9,17 +9,12 @@ using MongoDB.Driver;
 namespace BackendFramework.Contexts
 {
     [ExcludeFromCodeCoverage]
-    public class PasswordResetContext : IPasswordResetContext
+    public class PasswordResetContext(IOptions<Startup.Settings> options, IMongoDbContext mongoDbContext)
+        : IPasswordResetContext
     {
-        private readonly IMongoDatabase _db;
-        public TimeSpan ExpireTime { get; }
+        private readonly IMongoDatabase _db = mongoDbContext.Db;
 
-        public PasswordResetContext(IOptions<Startup.Settings> options)
-        {
-            var client = new MongoClient(options.Value.ConnectionString);
-            _db = client.GetDatabase(options.Value.CombineDatabase);
-            ExpireTime = options.Value.ExpireTimePasswordReset;
-        }
+        public TimeSpan ExpireTime { get; } = options.Value.ExpireTimePasswordReset;
 
         private IMongoCollection<EmailToken> PasswordResets => _db.GetCollection<EmailToken>(
             "PasswordResetCollection");
