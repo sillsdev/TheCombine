@@ -1,25 +1,28 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using BackendFramework.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace BackendFramework.Contexts;
-
-public class MongoDbContext : IMongoDbContext
+namespace BackendFramework.Contexts
 {
-    private MongoClient _mongoClient { get; }
-
-    public IMongoDatabase Db { get; }
-
-    public MongoDbContext(IOptions<Startup.Settings> options)
+    [ExcludeFromCodeCoverage]
+    public class MongoDbContext : IMongoDbContext
     {
-        _mongoClient = new MongoClient(options.Value.ConnectionString);
-        Db = _mongoClient.GetDatabase(options.Value.CombineDatabase);
-    }
+        private MongoClient _mongoClient { get; }
 
-    public void Dispose()
-    {
-        _mongoClient.Dispose();
-        GC.SuppressFinalize(this);
+        public IMongoDatabase Db { get; }
+
+        public MongoDbContext(IOptions<Startup.Settings> options)
+        {
+            _mongoClient = new MongoClient(options.Value.ConnectionString);
+            Db = _mongoClient.GetDatabase(options.Value.CombineDatabase);
+        }
+
+        public void Dispose()
+        {
+            _mongoClient.Dispose();
+            GC.SuppressFinalize(this);
+        }
     }
 }
