@@ -1,4 +1,4 @@
-import { Card, CardContent, Chip, Grid, Typography } from "@mui/material";
+import { Card, CardContent, Chip, Grid2, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -57,13 +57,11 @@ export default function SummarySenseCard(
         />
 
         {/* Semantic domain numbers */}
-        <Grid container spacing={1}>
+        <Grid2 container spacing={1}>
           {domIds.map((id) => (
-            <Grid item key={id}>
-              <Chip label={id} />
-            </Grid>
+            <Chip key={id} label={id} />
           ))}
-        </Grid>
+        </Grid2>
       </CardContent>
     </Card>
   );
