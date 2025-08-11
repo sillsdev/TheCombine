@@ -225,6 +225,9 @@ namespace BackendFramework
 
             // Register concrete types for dependency injection
 
+            // Mongo context for use in repo contexts
+            services.AddSingleton<IMongoDbContext, MongoDbContext>();
+
             // Banner types
             services.AddTransient<IBannerContext, BannerContext>();
             services.AddTransient<IBannerRepository, BannerRepository>();
