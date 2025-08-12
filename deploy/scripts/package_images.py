@@ -167,8 +167,8 @@ def package_middleware(
                     middleware_images.append(match.group(1))
 
     logging.debug(f"Middleware images: {middleware_images}")
-    out_file = f"middleware-airgap-images-{arch}.tar"
-    package_images(middleware_images, image_dir / out_file, arch=arch, debug=debug)
+    out_path = image_dir / f"middleware-airgap-images-{arch}.tar"
+    package_images(middleware_images, out_path, arch=arch, debug=debug)
 
 
 def package_thecombine(
@@ -205,8 +205,8 @@ def package_thecombine(
     logging.debug(f"Combine images: {combine_images}")
 
     # Logout of AWS to allow pulling the images
-    out_file = f"combine-airgap-images-{arch}.tar"
-    package_images(combine_images, image_dir / out_file, arch=arch, debug=debug)
+    out_path = image_dir / f"combine-airgap-images-{arch}.tar"
+    package_images(combine_images, out_path, arch=arch, debug=debug)
 
 
 def main() -> None:
