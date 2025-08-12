@@ -62,20 +62,12 @@ namespace BackendFramework.Controllers
     public class EmailInviteData
     {
         [Required]
-        public string EmailAddress { get; set; }
+        public string EmailAddress { get; set; } = "";
         [Required]
-        public string Message { get; set; }
+        public string Message { get; set; } = "";
         [Required]
-        public string ProjectId { get; set; }
+        public string ProjectId { get; set; } = "";
         [Required]
-        public Role Role { get; set; }
-
-        public EmailInviteData()
-        {
-            EmailAddress = "";
-            Message = "";
-            ProjectId = "";
-            Role = Role.Harvester;
-        }
+        public Role Role { get; set; } = Role.Harvester;
     }
 }

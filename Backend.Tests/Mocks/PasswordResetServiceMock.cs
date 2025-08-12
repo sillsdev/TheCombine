@@ -15,12 +15,12 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_boolResponse);
         }
 
-        public Task<bool> ValidateToken(string token)
+        public Task<bool> ResetPasswordRequest(string EmailOrUsername)
         {
             return Task.FromResult(_boolResponse);
         }
 
-        public Task<bool> ResetPasswordRequest(string EmailOrUsername)
+        public Task<bool> ValidateToken(string token)
         {
             return Task.FromResult(_boolResponse);
         }

@@ -35,15 +35,27 @@ namespace BackendFramework.Services
             await _passwordResetRepo.ClearAll(email);
         }
 
+        internal async Task<EmailToken?> GetValidPasswordReset(string token)
+        {
+            var reset = await _passwordResetRepo.FindByToken(token);
+            return (reset is null || IsPasswordResetValid(reset)) ? reset : null;
+        }
+
+        private bool IsPasswordResetValid(EmailToken reset)
+        {
+            return DateTime.UtcNow < reset.Created.Add(_expireTime);
+        }
+
         /// <summary> Reset a users password using a Password reset request token. </summary>
         /// <returns> Returns false if the request is invalid or expired. </returns>
         public async Task<bool> ResetPassword(string token, string password)
         {
-            var request = await _passwordResetRepo.FindByToken(token);
-            if (request is null || !ValidateToken(request))
+            var request = await GetValidPasswordReset(token);
+            if (request is null)
             {
                 return false;
             }
+
             var user = (await _userRepo.GetAllUsers()).Single(u =>
                 u.Email.Equals(request.Email, StringComparison.OrdinalIgnoreCase));
             await _userRepo.ChangePassword(user.Id, password);
@@ -83,15 +95,9 @@ namespace BackendFramework.Services
             return message;
         }
 
-        private bool ValidateToken(EmailToken token)
-        {
-            return DateTime.UtcNow <= token.Created.Add(_expireTime);
-        }
-
         public async Task<bool> ValidateToken(string token)
         {
-            var request = await _passwordResetRepo.FindByToken(token);
-            return request is not null && ValidateToken(request);
+            return await GetValidPasswordReset(token) is not null;
         }
     }
 }

@@ -8,6 +8,6 @@ namespace BackendFramework.Helper
             Environment.GetEnvironmentVariable("COMBINE_FRONTEND_SERVER_NAME");
 
         public static readonly string FrontendDomain =
-            _frontendServer is null ? "http://localhost:3000" : $"https://{_frontendServer}";
+            string.IsNullOrEmpty(_frontendServer) ? "http://localhost:3000" : $"https://{_frontendServer}";
     }
 }
