@@ -16,7 +16,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "es6"
+    "target": "es2023"
   },
   "include": [".eslintrc.cjs", "public", "src", "scripts"]
 }
