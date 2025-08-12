@@ -25,6 +25,7 @@ import {
   setReviewEntriesColumnOrder,
   setReviewEntriesColumnVisibility,
 } from "components/Project/ProjectActions";
+import { asyncUpdateEntry } from "goals/Redux/GoalActions";
 import * as Cell from "goals/ReviewEntries/ReviewEntriesTable/Cells";
 import * as ff from "goals/ReviewEntries/ReviewEntriesTable/filterFn";
 import * as sf from "goals/ReviewEntries/ReviewEntriesTable/sortingFn";
@@ -173,9 +174,11 @@ export default function ReviewEntriesTable(props: {
     });
   };
 
-  /** Replaces word (`.id === oldId`) in the state
+  /** Adds the word update to the current Goal, then
+   * replaces word (`.id === oldId`) in the state
    * with word (`.id === newId`) fetched from the backend. */
   const replaceWord = async (oldId: string, newId: string): Promise<void> => {
+    await dispatch(asyncUpdateEntry(oldId, newId));
     const newWord = await getWord(newId);
     setData((prev) => {
       // Prevent table from jumping back to first page
