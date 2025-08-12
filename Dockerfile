@@ -33,7 +33,7 @@ RUN npm ci
 
 # Build application.
 COPY . ./
-RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build
+RUN npm run build
 
 # Production environment.
 FROM nginx:1.28.0

@@ -24,6 +24,7 @@ import router from "router/browserRouter";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
 import { convertEditToGoal, maxNumSteps } from "utilities/goalUtilities";
+import { getDuplicates } from "utilities/utilities";
 
 // Action Creation Functions
 
@@ -261,9 +262,7 @@ function checkMergeData(goalData: Word[][]): Word[][] {
     }
     const wordGuids = dups.map((w) => w.guid);
     if (new Set(wordGuids).size < wordGuids.length) {
-      const guids = wordGuids
-        .filter((guid, i) => wordGuids.findLastIndex((g) => g === guid) !== i)
-        .join(", ");
+      const guids = getDuplicates(wordGuids).join(", ");
       errors.push(`${errPrefix}multiple words with the same guid: ${guids}`);
     }
     const senselessWords = dups.filter((w) => !w.senses.length);
@@ -273,9 +272,7 @@ function checkMergeData(goalData: Word[][]): Word[][] {
     }
     const senseGuids = dups.flatMap((w) => w.senses.map((s) => s.guid));
     if (new Set(senseGuids).size < senseGuids.length) {
-      const guids = senseGuids
-        .filter((guid, i) => senseGuids.findLastIndex((g) => g === guid) !== i)
-        .join(", ");
+      const guids = getDuplicates(senseGuids).join(", ");
       errors.push(`${errPrefix}multiple senses with the same guid: ${guids}`);
     }
 
