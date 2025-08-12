@@ -9,8 +9,11 @@
 
 "backend":
   - changed-files:
-      - any-glob-to-any-file:
+      - all-globs-to-any-file:
           - "Backend*/**"
+          - "!**/*.sh"
+          - "!**/*docker*"
+          - "!**/*Docker*"
 
 "bash":
   - changed-files:
@@ -50,9 +53,10 @@
 "docker":
   - changed-files:
       - any-glob-to-any-file:
-          - "**/.dockerignore"
+          - "**/*docker*"
+          - "**/*Docker*"
           - "**/docker_home/**"
-          - "**/Dockerfile"
+          - "Backend/launch.sh"
 
 "documentation":
   - changed-files:

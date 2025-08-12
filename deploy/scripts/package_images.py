@@ -78,9 +78,9 @@ def package_images(image_list: List[str], tar_file: Path, *, debug: bool = False
         container_cli_cmd.extend(["--namespace", "k8s.io"])
 
     # Pull each image
+    pull_cmd = container_cli_cmd + ["pull"]
     for image in image_list:
-        pull_cmd = container_cli_cmd + ["pull", image]
-        run_cmd(pull_cmd, print_cmd=debug, print_output=debug)
+        run_cmd(pull_cmd + [image], print_cmd=debug, print_output=debug)
 
     # Save pulled images into a .tar archive
     save_cmd = container_cli_cmd + ["save"] + image_list + ["-o", str(tar_file)]
@@ -149,9 +149,8 @@ def package_middleware(
                     middleware_images.append(match.group(1))
 
     logging.debug(f"Middleware images: {middleware_images}")
-    package_images(
-        middleware_images, image_dir / "middleware-airgap-images-amd64.tar", debug=debug
-    )
+    out_path = image_dir / "middleware-airgap-images-amd64.tar"
+    package_images(middleware_images, out_path, debug=debug)
 
 
 def package_thecombine(tag: str, image_dir: Path, *, debug: bool = False) -> None:
@@ -186,7 +185,8 @@ def package_thecombine(tag: str, image_dir: Path, *, debug: bool = False) -> Non
     logging.debug(f"Combine images: {combine_images}")
 
     # Logout of AWS to allow pulling the images
-    package_images(combine_images, image_dir / "combine-airgap-images-amd64.tar", debug=debug)
+    out_path = image_dir / "combine-airgap-images-amd64.tar"
+    package_images(combine_images, out_path, debug=debug)
 
 
 def main() -> None:
