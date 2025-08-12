@@ -31,10 +31,11 @@ namespace Backend.Tests.Services
         [Test]
         public void TestCreatePasswordReset()
         {
-            // test we can successfully create a request
             var user = new User { Email = Email };
             _userRepo.Create(user);
-            _passwordResetService.CreatePasswordReset(Email).Wait();
+
+            var request = _passwordResetService.CreatePasswordReset(Email).Result;
+            Assert.That(_passwordResetRepo.GetResets(), Does.Contain(request).UsingPropertiesComparer());
         }
 
         [Test]
