@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@mui/material";
+import { Grid2, Typography } from "@mui/material";
 import { type ReactElement, useEffect, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -75,8 +75,9 @@ export default function ProjectImport(
   };
 
   return (
-    <Grid container spacing={1}>
-      <Grid item xs={12}>
+    <Grid2 alignItems="center" container spacing={1}>
+      {/* Upload/LIFT instructions */}
+      <Grid2 size={12}>
         <Typography variant="body2">
           {t("projectSettings.import.body")}{" "}
           <Trans i18nKey="createProject.uploadFormat">
@@ -87,48 +88,43 @@ export default function ProjectImport(
             FillerTextC
           </Trans>
         </Typography>
-      </Grid>
+      </Grid2>
 
-      <Grid item>
-        {/* Choose file button */}
-        <FileInputButton
-          updateFile={setLiftFile}
-          accept=".zip"
-          buttonProps={{
-            "data-testid": ProjectImportIds.ButtonFileSelect,
-            disabled: uploadState === UploadState.Done,
-            id: ProjectImportIds.ButtonFileSelect,
-          }}
-        >
-          {t("projectSettings.import.chooseFile")}
-        </FileInputButton>
-      </Grid>
+      {/* Choose file button */}
+      <FileInputButton
+        updateFile={setLiftFile}
+        accept=".zip"
+        buttonProps={{
+          "data-testid": ProjectImportIds.ButtonFileSelect,
+          disabled: uploadState === UploadState.Done,
+          id: ProjectImportIds.ButtonFileSelect,
+        }}
+      >
+        {t("projectSettings.import.chooseFile")}
+      </FileInputButton>
 
-      <Grid item>
-        {/* Upload button */}
-        <LoadingDoneButton
-          buttonProps={{
-            "data-testid": ProjectImportIds.ButtonFileSubmit,
-            id: ProjectImportIds.ButtonFileSubmit,
-            onClick: uploadWords,
-          }}
-          disabled={!liftLangs}
-          done={uploadState === UploadState.Done}
-          loading={uploadState === UploadState.InProgress}
-        >
-          {t("buttons.upload")}
-        </LoadingDoneButton>
-      </Grid>
+      {/* Upload button */}
+      <LoadingDoneButton
+        buttonProps={{
+          "data-testid": ProjectImportIds.ButtonFileSubmit,
+          id: ProjectImportIds.ButtonFileSubmit,
+          onClick: uploadWords,
+        }}
+        disabled={!liftLangs}
+        done={uploadState === UploadState.Done}
+        loading={uploadState === UploadState.InProgress}
+      >
+        {t("buttons.upload")}
+      </LoadingDoneButton>
 
-      <Grid item>
-        {/* Displays the name of the selected file */}
-        {liftFile && (
-          <Typography variant="body1" noWrap>
-            {t("createProject.fileSelected", { val: liftFile.name })}
-          </Typography>
-        )}
-      </Grid>
+      {/* Name of the selected file */}
+      {liftFile && (
+        <Typography variant="body1" noWrap>
+          {t("createProject.fileSelected", { val: liftFile.name })}
+        </Typography>
+      )}
 
+      {/* Dialog if LIFT contents don't match vernacular language */}
       {liftLangs && (
         <CancelConfirmDialog
           buttonIdCancel={ProjectImportIds.ButtonDialogCancel}
@@ -143,6 +139,6 @@ export default function ProjectImport(
           })}
         />
       )}
-    </Grid>
+    </Grid2>
   );
 }

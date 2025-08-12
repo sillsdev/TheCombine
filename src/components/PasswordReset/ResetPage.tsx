@@ -1,14 +1,16 @@
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import { Button, Card, Grid, Typography } from "@mui/material";
 import {
-  type FormEvent,
-  type ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid2,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { type FormEvent, type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
+import { toast } from "react-toastify";
 
 import { resetPassword, validateResetToken } from "backend";
 import InvalidLink from "components/InvalidLink";
@@ -16,21 +18,10 @@ import { Path } from "types/path";
 import { NormalizedTextField } from "utilities/fontComponents";
 import { meetsPasswordRequirements } from "utilities/utilities";
 
-export enum PasswordResetTestIds {
+export enum PasswordResetIds {
   Password = "PasswordReset.password",
-  PasswordReqError = "PasswordReset.requirements-error",
   ConfirmPassword = "PasswordReset.confirm-password",
-  PasswordMatchError = "PasswordReset.match-error",
-  PasswordResetFail = "PasswordReset.reset-fail",
-  BackToLoginButton = "PasswordReset.button.back-to-login",
   SubmitButton = "PasswordReset.button.submit",
-}
-
-enum RequestState {
-  None,
-  Attempt,
-  Fail,
-  Success,
 }
 
 export default function PasswordReset(): ReactElement {
@@ -44,26 +35,15 @@ export default function PasswordReset(): ReactElement {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [passwordFitsRequirements, setPasswordFitsRequirements] =
     useState(false);
-  const [requestState, setRequestState] = useState(RequestState.None);
 
-  const validateLink = useCallback(async (): Promise<void> => {
+  useEffect(() => {
     if (token) {
-      setIsValidLink(await validateResetToken(token));
+      validateResetToken(token).then(setIsValidLink);
     }
   }, [token]);
 
-  useEffect(() => {
-    validateLink();
-  });
-
-  const backToLogin = (e: FormEvent<HTMLElement>): void => {
-    e.preventDefault();
-    navigate(Path.Login);
-  };
-
   const onSubmit = async (e: FormEvent<HTMLElement>): Promise<void> => {
     if (token) {
-      setRequestState(RequestState.Attempt);
       await asyncReset(token, password);
       e.preventDefault();
     }
@@ -81,114 +61,71 @@ export default function PasswordReset(): ReactElement {
 
   const asyncReset = async (token: string, password: string): Promise<void> => {
     if (await resetPassword(token, password)) {
-      setRequestState(RequestState.Success);
-      navigate(Path.Login);
+      toast.success(t("passwordReset.resetSuccess"));
     } else {
-      setRequestState(RequestState.Fail);
+      toast.error(t("passwordReset.resetFail"));
     }
+    navigate(Path.Login);
   };
 
   return isValidLink ? (
-    <Grid container justifyContent="center">
-      <Card style={{ padding: 10, width: 450 }}>
-        <form onSubmit={onSubmit}>
-          <Typography variant="h5" align="center" gutterBottom>
-            {t("passwordReset.resetTitle")}
-          </Typography>
-          <Grid item>
+    <Grid2 container justifyContent="center">
+      <Card sx={{ width: 450 }}>
+        <CardHeader
+          title={
+            <Typography align="center" variant="h5">
+              {t("passwordReset.resetTitle")}
+            </Typography>
+          }
+        />
+
+        <CardContent>
+          <Stack alignItems="flex-end" spacing={2}>
             <NormalizedTextField
-              id="password-reset-password1"
-              variant="outlined"
-              label={t("login.password")}
-              type="password"
-              value={password}
-              style={{ width: "100%" }}
-              margin="normal"
               error={!passwordFitsRequirements}
-              inputProps={{ "data-testid": PasswordResetTestIds.Password }}
+              fullWidth
+              helperText={
+                !passwordFitsRequirements && t("login.passwordRequirements")
+              }
+              id="password-reset-password1"
+              inputProps={{ "data-testid": PasswordResetIds.Password }}
+              label={t("login.password")}
               onChange={(e) =>
                 onChangePassword(e.target.value, passwordConfirm)
               }
+              type="password"
+              value={password}
             />
-            {!passwordFitsRequirements && (
-              <Typography
-                id="login.passwordRequirements"
-                data-testid={PasswordResetTestIds.PasswordReqError}
-                variant="body2"
-                style={{ display: "inline", margin: 24, color: "red" }}
-              >
-                {t("login.passwordRequirements")}
-              </Typography>
-            )}
-          </Grid>
-          <Grid item>
+
             <NormalizedTextField
-              id="password-reset-password2"
-              inputProps={{
-                "data-testid": PasswordResetTestIds.ConfirmPassword,
-              }}
-              variant="outlined"
+              error={!isPasswordConfirmed && passwordConfirm.length > 0}
+              fullWidth
+              helperText={
+                !isPasswordConfirmed &&
+                passwordConfirm.length > 0 &&
+                t("login.confirmPasswordError")
+              }
+              id={PasswordResetIds.ConfirmPassword}
+              inputProps={{ "data-testid": PasswordResetIds.ConfirmPassword }}
               label={t("login.confirmPassword")}
+              onChange={(e) => onChangePassword(password, e.target.value)}
               type="password"
               value={passwordConfirm}
-              style={{ width: "100%" }}
-              margin="normal"
-              error={!isPasswordConfirmed && passwordConfirm.length > 0}
-              onChange={(e) => onChangePassword(password, e.target.value)}
             />
-            {!isPasswordConfirmed && passwordConfirm.length > 0 && (
-              <Typography
-                id="login.confirmPasswordError"
-                data-testid={PasswordResetTestIds.PasswordMatchError}
-                variant="body2"
-                style={{ display: "inline", margin: 24, color: "red" }}
-              >
-                {t("login.confirmPasswordError")}
-              </Typography>
-            )}
-          </Grid>
 
-          <Grid container justifyContent="flex-end" spacing={2}>
-            <Grid item>
-              {requestState === RequestState.Fail ? (
-                <>
-                  <Typography
-                    id="passwordReset.resetFail"
-                    data-testid={PasswordResetTestIds.PasswordResetFail}
-                    variant="body2"
-                    style={{ display: "inline", margin: 24, color: "red" }}
-                  >
-                    {t("passwordReset.resetFail")}
-                  </Typography>
-                  <Button
-                    id="password-reset-submit"
-                    variant="contained"
-                    color="primary"
-                    data-testid={PasswordResetTestIds.BackToLoginButton}
-                    onClick={backToLogin}
-                  >
-                    {t("passwordReset.backToLogin")}
-                    &nbsp;
-                    <ExitToAppIcon />
-                  </Button>
-                </>
-              ) : (
-                <Button
-                  id="password-reset-submit"
-                  data-testid={PasswordResetTestIds.SubmitButton}
-                  variant="contained"
-                  color="primary"
-                  disabled={!(passwordFitsRequirements && isPasswordConfirmed)}
-                  onClick={onSubmit}
-                >
-                  {t("passwordReset.submit")}
-                </Button>
-              )}
-            </Grid>
-          </Grid>
-        </form>
+            <Button
+              data-testid={PasswordResetIds.SubmitButton}
+              disabled={!(passwordFitsRequirements && isPasswordConfirmed)}
+              id={PasswordResetIds.SubmitButton}
+              onClick={onSubmit}
+              variant="contained"
+            >
+              {t("passwordReset.submit")}
+            </Button>
+          </Stack>
+        </CardContent>
       </Card>
-    </Grid>
+    </Grid2>
   ) : (
     <InvalidLink textId="passwordReset.invalidURL" />
   );
