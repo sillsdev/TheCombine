@@ -40,7 +40,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run fmt-frontend-check
-      - run: npm run lint
+      - run: NODE_OPTIONS="--max-old-space-size=4096" npm run lint
       - run: npm run build
 
   test_coverage:
