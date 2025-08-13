@@ -56,14 +56,12 @@ For _The Combine_, the QA and Production servers are servers where the Kubernete
 LTOps. The characteristics of these systems are:
 
 - To access these clusters, you will need a WireGuard tunnel config from LTOps.
-
   - On Windows: you can use the [WireGuard app](https://www.wireguard.com/install/) to add a new tunnel from a config
     file.
   - On Linux: `sudo apt install wireguard`, then move the `.conf` file to `/etc/wireguard/<tunnel-name>.conf`, then run
     `sudo wg-quick up <tunnel-name>`. (The last command will have to be run again if you reboot.)
 
 - The Kubernetes cluster has been created as follows:
-
   - [cert-manager](https://cert-manager.io/) is installed
   - an NGINX ingress controller is installed
   - the namespace `thecombine` is created
@@ -160,7 +158,6 @@ To install the OS on a new target machine, such as, a new NUC, follow these step
    <https://ubuntu.com/download/server>).
 
 2. _[Host]_ copy the .iso file to a bootable USB stick:
-
    1. Ubuntu host: Use the _Startup Disk Creator_ (`sudo apt install usb-creator-gtk`), or
    2. Windows host: follow the
       [tutorial](https://ubuntu.com/tutorials/tutorial-create-a-usb-stick-on-windows#1-overview) on ubuntu.com.
@@ -168,7 +165,6 @@ To install the OS on a new target machine, such as, a new NUC, follow these step
 3. _[NUC]_ Connect the NUC to a wired, Ethernet network connection, an HDMI Display and a USB Keyboard.
 
 4. _[NUC]_ Boot the NUC from the bootable media and follow the installation instructions. In particular,
-
    1. You will want the installer to format the entire disk. Using LVM is not recommended.
 
    2. Profile setup
@@ -440,7 +436,6 @@ kubectl [--kubeconfig=<path-to-kubernetes-file>] [-n thecombine] exec -it deploy
 Notes:
 
 - The `--kubeconfig` option is not required if
-
   1.  the `KUBECONFIG` environment variable is set to the path of your kubeconfig file, or
 
   2.  if your kubeconfig file is located in `${HOME}/.kube/config`.

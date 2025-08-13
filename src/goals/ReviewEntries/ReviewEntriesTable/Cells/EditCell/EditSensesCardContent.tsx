@@ -90,9 +90,7 @@ export default function EditSensesCardContent(
         </Stack>
       ) : (
         <SummarySenseCard
-          backgroundColor={
-            changes.some((change) => change) ? yellow[100] : undefined
-          }
+          bgcolor={changes.some((change) => change) ? yellow[100] : undefined}
           senses={props.newSenses.filter(
             (s) => s.accessibility !== Status.Deleted
           )}

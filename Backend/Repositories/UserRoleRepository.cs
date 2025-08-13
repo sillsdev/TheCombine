@@ -11,26 +11,22 @@ namespace BackendFramework.Repositories
 {
     /// <summary> Atomic database functions for <see cref="UserRole"/>s. </summary>
     [ExcludeFromCodeCoverage]
-    public class UserRoleRepository : IUserRoleRepository
+    public class UserRoleRepository(IMongoDbContext dbContext) : IUserRoleRepository
     {
-        private readonly IUserRoleContext _userRoleDatabase;
-
-        public UserRoleRepository(IUserRoleContext collectionSettings)
-        {
-            _userRoleDatabase = collectionSettings;
-        }
+        private readonly IMongoCollection<UserRole> _userRoles =
+            dbContext.Db.GetCollection<UserRole>("UserRolesCollection");
 
         /// <summary> Finds all <see cref="UserRole"/>s with specified projectId </summary>
         public async Task<List<UserRole>> GetAllUserRoles(string projectId)
         {
-            return await _userRoleDatabase.UserRoles.Find(u => u.ProjectId == projectId).ToListAsync();
+            return await _userRoles.Find(u => u.ProjectId == projectId).ToListAsync();
         }
 
         /// <summary> Removes all <see cref="UserRole"/>s for specified <see cref="Project"/> </summary>
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllUserRoles(string projectId)
         {
-            var deleted = await _userRoleDatabase.UserRoles.DeleteManyAsync(u => u.ProjectId == projectId);
+            var deleted = await _userRoles.DeleteManyAsync(u => u.ProjectId == projectId);
             return deleted.DeletedCount != 0;
         }
 
@@ -41,7 +37,7 @@ namespace BackendFramework.Repositories
             var filter = filterDef.And(filterDef.Eq(
                 x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userRoleId));
 
-            var userRoleList = await _userRoleDatabase.UserRoles.FindAsync(filter);
+            var userRoleList = await _userRoles.FindAsync(filter);
             try
             {
                 return await userRoleList.FirstAsync();
@@ -56,7 +52,7 @@ namespace BackendFramework.Repositories
         /// <returns> The UserRole created </returns>
         public async Task<UserRole> Create(UserRole userRole)
         {
-            await _userRoleDatabase.UserRoles.InsertOneAsync(userRole);
+            await _userRoles.InsertOneAsync(userRole);
             return userRole;
         }
 
@@ -68,7 +64,7 @@ namespace BackendFramework.Repositories
             var filter = filterDef.And(filterDef.Eq(
                 x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userRoleId));
 
-            var deleted = await _userRoleDatabase.UserRoles.DeleteOneAsync(filter);
+            var deleted = await _userRoles.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;
         }
 
@@ -78,7 +74,7 @@ namespace BackendFramework.Repositories
         {
             var filter = Builders<UserRole>.Filter.Eq(x => x.Id, userRoleId);
             var updateDef = Builders<UserRole>.Update.Set(x => x.Role, userRole.Role);
-            var updateResult = await _userRoleDatabase.UserRoles.UpdateOneAsync(filter, updateDef);
+            var updateResult = await _userRoles.UpdateOneAsync(filter, updateDef);
 
             if (!updateResult.IsAcknowledged)
             {

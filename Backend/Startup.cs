@@ -225,8 +225,10 @@ namespace BackendFramework
 
             // Register concrete types for dependency injection
 
+            // Mongo context for use in repo contexts
+            services.AddSingleton<IMongoDbContext, MongoDbContext>();
+
             // Banner types
-            services.AddTransient<IBannerContext, BannerContext>();
             services.AddTransient<IBannerRepository, BannerRepository>();
 
             // CAPTCHA types
@@ -243,8 +245,6 @@ namespace BackendFramework
             services.AddSingleton<ILiftService, LiftService>();
 
             // Merge types
-            services.AddTransient<IMergeBlacklistContext, MergeBlacklistContext>();
-            services.AddTransient<IMergeGraylistContext, MergeGraylistContext>();
             services.AddTransient<IMergeBlacklistRepository, MergeBlacklistRepository>();
             services.AddTransient<IMergeGraylistRepository, MergeGraylistRepository>();
             services.AddSingleton<IMergeService, MergeService>();
@@ -257,35 +257,28 @@ namespace BackendFramework
             services.AddTransient<IPermissionService, PermissionService>();
 
             // Project types
-            services.AddTransient<IProjectContext, ProjectContext>();
             services.AddTransient<IProjectRepository, ProjectRepository>();
 
             // Semantic Domain types
-            services.AddSingleton<ISemanticDomainContext, SemanticDomainContext>();
             services.AddSingleton<ISemanticDomainRepository, SemanticDomainRepository>();
 
             // Speaker types
-            services.AddTransient<ISpeakerContext, SpeakerContext>();
             services.AddTransient<ISpeakerRepository, SpeakerRepository>();
 
             // Statistics types
             services.AddSingleton<IStatisticsService, StatisticsService>();
 
             // User types
-            services.AddTransient<IUserContext, UserContext>();
             services.AddTransient<IUserRepository, UserRepository>();
 
             // User Edit types
-            services.AddTransient<IUserEditContext, UserEditContext>();
             services.AddTransient<IUserEditRepository, UserEditRepository>();
             services.AddTransient<IUserEditService, UserEditService>();
 
             // User Role types
-            services.AddTransient<IUserRoleContext, UserRoleContext>();
             services.AddTransient<IUserRoleRepository, UserRoleRepository>();
 
             // Word types (includes Frontier types)
-            services.AddTransient<IWordContext, WordContext>();
             services.AddTransient<IWordRepository, WordRepository>();
             services.AddTransient<IWordService, WordService>();
 

@@ -78,11 +78,13 @@ install-kubernetes () {
   # Setup Kubernetes environment and WiFi Access Point
   cd ${DEPLOY_DIR}/ansible
 
+  # Set -e/--extra-vars for ansible-playbook
+  EXTRA_VARS="-e k8s_user=${whoami}"
   if [ -d "${DEPLOY_DIR}/airgap-images" ] ; then
-    ansible-playbook playbook_desktop_setup.yml -K -e k8s_user=`whoami` -e install_airgap_images=true $(((DEBUG == 1)) && echo "-vv")
-  else
-    ansible-playbook playbook_desktop_setup.yml -K -e k8s_user=`whoami` $(((DEBUG == 1)) && echo "-vv")
+    EXTRA_VARS="${EXTRA_VARS} -e install_airgap_images=true"
   fi
+  
+  ansible-playbook playbook_desktop_setup.yml -K ${EXTRA_VARS} $(((DEBUG == 1)) && echo "-vv")
 }
 
 # Set the KUBECONFIG environment variable so that the cluster can
@@ -138,7 +140,12 @@ install-the-combine () {
   cd ${DEPLOY_DIR}/scripts
   set-combine-env
   set-k3s-env
-  ./setup_combine.py --tag ${COMBINE_VERSION} --repo public.ecr.aws/thecombine --target desktop ${SETUP_OPTS} $(((DEBUG == 1)) && echo "--debug")
+  ./setup_combine.py \
+    $(((DEBUG == 1)) && echo "--debug") \
+    --repo public.ecr.aws/thecombine \
+    --tag ${COMBINE_VERSION} \
+    --target desktop \
+    ${SETUP_OPTS}
   deactivate
 }
 

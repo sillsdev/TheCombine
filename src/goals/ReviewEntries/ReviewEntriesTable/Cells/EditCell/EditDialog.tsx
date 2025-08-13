@@ -36,14 +36,13 @@ import { CancelConfirmDialog } from "components/Dialogs";
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
 import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
-import { addEntryEditToGoal, asyncUpdateGoal } from "goals/Redux/GoalActions";
 import EditSensesCardContent from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditSensesCardContent";
 import {
   cleanWord,
   isSenseChanged,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/utilities";
-import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
-import { type StoreState, type StoreStateDispatch } from "rootRedux/types";
+import { useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 import {
   type FileWithSpeakerId,
   newPronunciation,
@@ -53,14 +52,6 @@ import {
   NormalizedTextField,
   TextFieldWithFont,
 } from "utilities/fontComponents";
-
-/** Add word update to the current goal. */
-function asyncUpdateWord(oldId: string, newId: string) {
-  return async (dispatch: StoreStateDispatch) => {
-    dispatch(addEntryEditToGoal({ newId, oldId }));
-    await dispatch(asyncUpdateGoal());
-  };
-}
 
 /** Update word in the backend */
 export async function updateFrontierWord(
@@ -116,8 +107,6 @@ interface EditDialogProps {
 }
 
 export default function EditDialog(props: EditDialogProps): ReactElement {
-  const dispatch = useAppDispatch();
-
   const analysisWritingSystems = useAppSelector(
     (state: StoreState) =>
       state.currentProjectState.project.analysisWritingSystems
@@ -297,10 +286,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
       props.word.audio
     );
 
-    // Update in goal
-    await dispatch(asyncUpdateWord(props.word.id, newId));
-
-    // Update in ReviewEntries state
+    // Update in goal and ReviewEntries state
     await props.confirm(newId);
 
     // Close

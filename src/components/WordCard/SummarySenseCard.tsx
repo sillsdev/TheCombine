@@ -8,7 +8,7 @@ import SensesTextSummary from "components/WordCard/SensesTextSummary";
 import { groupGramInfo } from "utilities/wordUtilities";
 
 interface SummarySenseCardProps {
-  backgroundColor?: string;
+  bgcolor?: string;
   senses: Sense[];
 }
 
@@ -28,13 +28,8 @@ export default function SummarySenseCard(
   const domIds = [...new Set(semDoms.map((d) => d.id))].sort();
 
   return (
-    <Card
-      style={{
-        backgroundColor: props.backgroundColor || "white",
-        marginBottom: 10,
-      }}
-    >
-      <CardContent style={{ position: "relative" }}>
+    <Card sx={{ bgcolor: props.bgcolor || "white", mb: 1 }}>
+      <CardContent sx={{ position: "relative" }}>
         {/* Parts of speech */}
         {groupedGramInfo.map((info) => (
           <PartOfSpeechButton

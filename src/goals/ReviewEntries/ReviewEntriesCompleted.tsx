@@ -13,7 +13,6 @@ import {
   EntryEdit,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { type StoreState } from "rootRedux/types";
-import theme from "types/theme";
 
 export default function ReviewEntriesCompleted(): ReactElement {
   const changes = useSelector(
@@ -28,7 +27,9 @@ export default function ReviewEntriesCompleted(): ReactElement {
       </Typography>
       {EditsCount(changes)}
       <List>
-        {changes.entryEdits?.map((e) => <EditedEntry edit={e} key={e.newId} />)}
+        {changes.entryEdits?.map((e) => (
+          <EditedEntry edit={e} key={e.newId} />
+        ))}
       </List>
     </>
   );
@@ -65,7 +66,7 @@ function EditedEntry(props: { edit: EntryEdit }): ReactElement {
 
   return (
     <ListItem>
-      <Stack direction="row" spacing={theme.spacing(1)}>
+      <Stack direction="row" spacing={1}>
         {!!oldWord && (
           <Box>
             <WordCard word={oldWord} />
