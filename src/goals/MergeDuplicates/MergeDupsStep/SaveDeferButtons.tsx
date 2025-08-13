@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabel, Grid } from "@mui/material";
+import { Checkbox, FormControlLabel, Grid2 } from "@mui/material";
 import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -13,7 +13,6 @@ import {
 import { asyncAdvanceStep } from "goals/Redux/GoalActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { StoreState } from "rootRedux/types";
-import theme from "types/theme";
 
 export default function SaveDeferButtons(): ReactElement {
   const dispatch = useAppDispatch();
@@ -52,43 +51,41 @@ export default function SaveDeferButtons(): ReactElement {
   };
 
   return (
-    <Grid container justifyContent="flex-start">
-      <Grid item>
-        <LoadingButton
-          loading={isSaving}
-          buttonProps={{
-            style: { marginInlineEnd: theme.spacing(3) },
-            onClick: saveContinue,
-            title: t("mergeDups.helpText.saveAndContinue"),
-            id: "merge-save",
-          }}
-        >
-          {t("buttons.saveAndContinue")}
-        </LoadingButton>
-        <LoadingButton
-          loading={isDeferring}
-          buttonProps={{
-            color: "secondary",
-            style: { marginInlineEnd: theme.spacing(3) },
-            onClick: defer,
-            title: t("mergeDups.helpText.defer"),
-            id: "merge-defer",
-          }}
-        >
-          {t("buttons.defer")}
-        </LoadingButton>
-        {hasProtected && (
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={overrideProtection}
-                onChange={() => dispatch(toggleOverrideProtection())}
-              />
-            }
-            label={t("mergeDups.helpText.protectedOverride")}
-          />
-        )}
-      </Grid>
-    </Grid>
+    <Grid2 container spacing={3}>
+      <LoadingButton
+        loading={isSaving}
+        buttonProps={{
+          onClick: saveContinue,
+          title: t("mergeDups.helpText.saveAndContinue"),
+          id: "merge-save",
+        }}
+      >
+        {t("buttons.saveAndContinue")}
+      </LoadingButton>
+
+      <LoadingButton
+        loading={isDeferring}
+        buttonProps={{
+          color: "secondary",
+          onClick: defer,
+          title: t("mergeDups.helpText.defer"),
+          id: "merge-defer",
+        }}
+      >
+        {t("buttons.defer")}
+      </LoadingButton>
+
+      {hasProtected && (
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={overrideProtection}
+              onChange={() => dispatch(toggleOverrideProtection())}
+            />
+          }
+          label={t("mergeDups.helpText.protectedOverride")}
+        />
+      )}
+    </Grid2>
   );
 }
