@@ -24,7 +24,7 @@ export default function DomainsCell(props: CellProps): ReactElement {
         <Chip
           key={`${dom.id}-${dom.name}`}
           label={`${dom.id}: ${dom.name}`}
-          style={{ color: "inherit" }}
+          sx={{ color: "inherit" }}
         />
       ))}
     </Grid2>

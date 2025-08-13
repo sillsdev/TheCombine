@@ -6,7 +6,7 @@ import {
   Edit,
   RestoreFromTrash,
 } from "@mui/icons-material";
-import { CardContent, Divider, Grid2, Icon, Stack } from "@mui/material";
+import { Box, CardContent, Divider, Grid2, Icon, Stack } from "@mui/material";
 import { grey, yellow } from "@mui/material/colors";
 import { Fragment, type ReactElement, useEffect, useState } from "react";
 
@@ -170,12 +170,12 @@ export function EditSense(props: EditSenseProps): ReactElement {
         )}
       </Stack>
 
-      <div style={{ maxWidth: `calc(100% - 80px)` }}>
+      <Box sx={{ maxWidth: `calc(100% - 80px)` }}>
         <SenseCard
           bgColor={deleted ? grey[500] : props.edited ? yellow[100] : undefined}
           sense={sense}
         />
-      </div>
+      </Box>
 
       <EditSenseDialog
         close={() => setEditing(false)}

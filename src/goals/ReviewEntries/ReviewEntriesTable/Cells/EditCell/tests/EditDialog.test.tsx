@@ -21,10 +21,8 @@ jest.mock(
   "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditSensesCardContent",
   () => ({
     __esModule: true,
-    default: (props: { showSenses: boolean }) => (
-      <div
-        data-testid={props.showSenses ? mockSenseStackId : mockSenseSummaryId}
-      />
+    default: ({ showSenses }: { showSenses: boolean }) => (
+      <div data-testid={showSenses ? mockSenseStackId : mockSenseSummaryId} />
     ),
   })
 );
