@@ -11,26 +11,22 @@ namespace BackendFramework.Repositories
 {
     /// <summary> Atomic database functions for <see cref="Project"/>s. </summary>
     [ExcludeFromCodeCoverage]
-    public class ProjectRepository : IProjectRepository
+    public class ProjectRepository(IMongoDbContext dbContext) : IProjectRepository
     {
-        private readonly IProjectContext _projectDatabase;
-
-        public ProjectRepository(IProjectContext collectionSettings)
-        {
-            _projectDatabase = collectionSettings;
-        }
+        private readonly IMongoCollection<Project> _projects =
+            dbContext.Db.GetCollection<Project>("ProjectsCollection");
 
         /// <summary> Finds all <see cref="Project"/>s </summary>
         public async Task<List<Project>> GetAllProjects()
         {
-            return await _projectDatabase.Projects.Find(_ => true).ToListAsync();
+            return await _projects.Find(_ => true).ToListAsync();
         }
 
         /// <summary> Removes all <see cref="Project"/>s </summary>
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllProjects()
         {
-            var deleted = await _projectDatabase.Projects.DeleteManyAsync(_ => true);
+            var deleted = await _projects.DeleteManyAsync(_ => true);
             return deleted.DeletedCount != 0;
         }
 
@@ -41,7 +37,7 @@ namespace BackendFramework.Repositories
             var filterDef = new FilterDefinitionBuilder<Project>();
             var filter = filterDef.Eq(x => x.Id, projectId);
 
-            var projectList = await _projectDatabase.Projects.FindAsync(filter);
+            var projectList = await _projects.FindAsync(filter);
             try
             {
                 return await projectList.FirstAsync();
@@ -62,7 +58,7 @@ namespace BackendFramework.Repositories
                 return null;
             }
 
-            await _projectDatabase.Projects.InsertOneAsync(project);
+            await _projects.InsertOneAsync(project);
             return project;
         }
 
@@ -70,7 +66,7 @@ namespace BackendFramework.Repositories
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string projectId)
         {
-            var deleted = await _projectDatabase.Projects.DeleteOneAsync(x => x.Id == projectId);
+            var deleted = await _projects.DeleteOneAsync(x => x.Id == projectId);
             return deleted.DeletedCount > 0;
         }
 
@@ -112,7 +108,7 @@ namespace BackendFramework.Repositories
                 .Set(x => x.InviteTokens, project.InviteTokens)
                 .Set(x => x.WorkshopSchedule, project.WorkshopSchedule);
 
-            var updateResult = await _projectDatabase.Projects.UpdateOneAsync(filter, updateDef);
+            var updateResult = await _projects.UpdateOneAsync(filter, updateDef);
 
             if (!updateResult.IsAcknowledged)
             {

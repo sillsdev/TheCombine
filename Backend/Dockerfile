@@ -33,8 +33,7 @@ ENV APP_FILES=${HOME}/.CombineFiles
 
 # Install system dependencies.
 RUN apt-get update \
-  && apt-get install -y \
-  ffmpeg \
+  && apt-get install -y ffmpeg \
   && rm -rf /var/lib/apt/lists/*
 
 # Create the home directory for the new app user.

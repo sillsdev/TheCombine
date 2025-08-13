@@ -12,16 +12,12 @@ namespace BackendFramework.Repositories
 {
     /// <summary> Atomic database functions for <see cref="Word"/>s. </summary>
     [ExcludeFromCodeCoverage]
-    public class WordRepository : IWordRepository
+    public class WordRepository(IMongoDbContext dbContext) : IWordRepository
     {
-        private readonly IWordContext _wordDatabase;
+        private readonly IMongoCollection<Word> _frontier = dbContext.Db.GetCollection<Word>("FrontierCollection");
+        private readonly IMongoCollection<Word> _words = dbContext.Db.GetCollection<Word>("WordsCollection");
 
         private const string otelTagName = "otel.WordRepository";
-
-        public WordRepository(IWordContext collectionSettings)
-        {
-            _wordDatabase = collectionSettings;
-        }
 
         /// <summary>
         /// Creates a mongo filter for all words in a specified project (and optionally with specified vernacular).
@@ -55,7 +51,7 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all words");
 
-            return await _wordDatabase.Words.Find(GetAllProjectWordsFilter(projectId)).ToListAsync();
+            return await _words.Find(GetAllProjectWordsFilter(projectId)).ToListAsync();
         }
 
         /// <summary> Finds <see cref="Word"/> with specified wordId and projectId </summary>
@@ -63,7 +59,7 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting a word");
 
-            var wordList = await _wordDatabase.Words.FindAsync(GetProjectWordFilter(projectId, wordId));
+            var wordList = await _words.FindAsync(GetProjectWordFilter(projectId, wordId));
             try
             {
                 return await wordList.FirstAsync();
@@ -85,8 +81,8 @@ namespace BackendFramework.Repositories
             var filterDef = new FilterDefinitionBuilder<Word>();
             var filter = filterDef.Eq(x => x.ProjectId, projectId);
 
-            var deleted = await _wordDatabase.Words.DeleteManyAsync(filter);
-            await _wordDatabase.Frontier.DeleteManyAsync(filter);
+            var deleted = await _words.DeleteManyAsync(filter);
+            await _frontier.DeleteManyAsync(filter);
             return deleted.DeletedCount != 0;
         }
 
@@ -119,7 +115,7 @@ namespace BackendFramework.Repositories
                 OtelService.StartActivityWithTag(otelTagName, "creating a word in WordsCollection and Frontier");
 
             PopulateBlankWordTimes(word);
-            await _wordDatabase.Words.InsertOneAsync(word);
+            await _words.InsertOneAsync(word);
             await AddFrontier(word);
             return word;
         }
@@ -144,7 +140,7 @@ namespace BackendFramework.Repositories
             {
                 PopulateBlankWordTimes(w);
             }
-            await _wordDatabase.Words.InsertManyAsync(words);
+            await _words.InsertManyAsync(words);
             await AddFrontier(words);
             return words;
         }
@@ -160,7 +156,7 @@ namespace BackendFramework.Repositories
             using var activity = OtelService.StartActivityWithTag(otelTagName, "adding a word to WordsCollection");
 
             PopulateBlankWordTimes(word);
-            await _wordDatabase.Words.InsertOneAsync(word);
+            await _words.InsertOneAsync(word);
             return word;
         }
 
@@ -170,7 +166,7 @@ namespace BackendFramework.Repositories
             using var activity =
                 OtelService.StartActivityWithTag(otelTagName, "checking if WordsCollection has words");
 
-            return await _wordDatabase.Words.Find(GetAllProjectWordsFilter(projectId)).Limit(1).AnyAsync();
+            return await _words.Find(GetAllProjectWordsFilter(projectId)).Limit(1).AnyAsync();
         }
 
         /// <summary> Checks if Frontier for specified <see cref="Project"/> has any words. </summary>
@@ -178,7 +174,7 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier has words");
 
-            return await _wordDatabase.Frontier.Find(GetAllProjectWordsFilter(projectId)).Limit(1).AnyAsync();
+            return await _frontier.Find(GetAllProjectWordsFilter(projectId)).Limit(1).AnyAsync();
         }
 
         /// <summary> Checks if specified word is in Frontier for specified <see cref="Project"/> </summary>
@@ -186,7 +182,7 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier contains a word");
 
-            return (await _wordDatabase.Frontier.CountDocumentsAsync(GetProjectWordFilter(projectId, wordId))) > 0;
+            return (await _frontier.CountDocumentsAsync(GetProjectWordFilter(projectId, wordId))) > 0;
         }
 
         /// <summary> Checks if given words are in the project Frontier. </summary>
@@ -197,7 +193,7 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier contains words");
 
-            return await _wordDatabase.Frontier
+            return await _frontier
                 .CountDocumentsAsync(GetProjectWordsFilter(projectId, wordIds), new() { Limit = count }) == count;
         }
 
@@ -206,7 +202,7 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all Frontier words");
 
-            return await _wordDatabase.Frontier.Find(GetAllProjectWordsFilter(projectId)).ToListAsync();
+            return await _frontier.Find(GetAllProjectWordsFilter(projectId)).ToListAsync();
         }
 
         /// <summary> Finds all <see cref="Word"/>s in Frontier of specified project with specified vern </summary>
@@ -215,7 +211,7 @@ namespace BackendFramework.Repositories
             using var activity =
                 OtelService.StartActivityWithTag(otelTagName, "getting all words from Frontier with vern");
 
-            return await _wordDatabase.Frontier.Find(GetAllProjectWordsFilter(projectId, vernacular)).ToListAsync();
+            return await _frontier.Find(GetAllProjectWordsFilter(projectId, vernacular)).ToListAsync();
         }
 
         /// <summary> Adds a <see cref="Word"/> only to the Frontier </summary>
@@ -225,7 +221,7 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "adding a word to Frontier");
 
-            await _wordDatabase.Frontier.InsertOneAsync(word);
+            await _frontier.InsertOneAsync(word);
             return word;
         }
 
@@ -236,7 +232,7 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "adding words to Frontier");
 
-            await _wordDatabase.Frontier.InsertManyAsync(words);
+            await _frontier.InsertManyAsync(words);
             return words;
         }
 
@@ -246,7 +242,7 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
 
-            var deleted = await _wordDatabase.Frontier.DeleteOneAsync(GetProjectWordFilter(projectId, wordId));
+            var deleted = await _frontier.DeleteOneAsync(GetProjectWordFilter(projectId, wordId));
             return deleted.DeletedCount > 0;
         }
 
@@ -256,7 +252,7 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting words from Frontier");
 
-            var deleted = await _wordDatabase.Frontier.DeleteManyAsync(GetProjectWordsFilter(projectId, wordIds));
+            var deleted = await _frontier.DeleteManyAsync(GetProjectWordsFilter(projectId, wordIds));
             return deleted.DeletedCount;
         }
     }
