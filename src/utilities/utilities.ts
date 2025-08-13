@@ -167,3 +167,15 @@ export function distinctColors(
   }
   return colors.slice(0, n);
 }
+
+/** Given an array, returns an array with items that appear more than once. */
+export function getDuplicates<T>(ids: T[]): T[] {
+  const counts = ids.reduce((map, id) => {
+    map.set(id, (map.get(id) ?? 0) + 1);
+    return map;
+  }, new Map<T, number>());
+
+  return Array.from(counts.entries())
+    .filter(([, count]) => count > 1)
+    .map(([id]) => id);
+}
