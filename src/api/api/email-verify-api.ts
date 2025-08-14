@@ -36,35 +36,27 @@ import {
   BaseAPI,
   RequiredError,
 } from "../base";
-// @ts-ignore
-import { EmailInviteData } from "../models";
-// @ts-ignore
-import { EmailInviteStatus } from "../models";
 /**
- * InviteApi - axios parameter creator
+ * EmailVerifyApi - axios parameter creator
  * @export
  */
-export const InviteApiAxiosParamCreator = function (
+export const EmailVerifyApiAxiosParamCreator = function (
   configuration?: Configuration
 ) {
   return {
     /**
      *
-     * @param {EmailInviteData} emailInviteData
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    emailInviteToProject: async (
-      emailInviteData: EmailInviteData,
+    requestEmailVerify: async (
+      body: string,
       options: any = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'emailInviteData' is not null or undefined
-      assertParamExists(
-        "emailInviteToProject",
-        "emailInviteData",
-        emailInviteData
-      );
-      const localVarPath = `/v1/invite`;
+      // verify required parameter 'body' is not null or undefined
+      assertParamExists("requestEmailVerify", "body", body);
+      const localVarPath = `/v1/users/emailverify`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -73,7 +65,7 @@ export const InviteApiAxiosParamCreator = function (
       }
 
       const localVarRequestOptions = {
-        method: "PUT",
+        method: "POST",
         ...baseOptions,
         ...options,
       };
@@ -91,7 +83,7 @@ export const InviteApiAxiosParamCreator = function (
         ...options.headers,
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
-        emailInviteData,
+        body,
         localVarRequestOptions,
         configuration
       );
@@ -103,23 +95,20 @@ export const InviteApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {string} projectId
      * @param {string} token
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    validateInviteToken: async (
-      projectId: string,
+    validateEmailToken: async (
       token: string,
       options: any = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("validateInviteToken", "projectId", projectId);
       // verify required parameter 'token' is not null or undefined
-      assertParamExists("validateInviteToken", "token", token);
-      const localVarPath = `/v1/invite/{projectId}/validate/{token}`
-        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
-        .replace(`{${"token"}}`, encodeURIComponent(String(token)));
+      assertParamExists("validateEmailToken", "token", token);
+      const localVarPath = `/v1/users/emailverify/validate/{token}`.replace(
+        `{${"token"}}`,
+        encodeURIComponent(String(token))
+      );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -128,7 +117,7 @@ export const InviteApiAxiosParamCreator = function (
       }
 
       const localVarRequestOptions = {
-        method: "PUT",
+        method: "GET",
         ...baseOptions,
         ...options,
       };
@@ -153,29 +142,27 @@ export const InviteApiAxiosParamCreator = function (
 };
 
 /**
- * InviteApi - functional programming interface
+ * EmailVerifyApi - functional programming interface
  * @export
  */
-export const InviteApiFp = function (configuration?: Configuration) {
-  const localVarAxiosParamCreator = InviteApiAxiosParamCreator(configuration);
+export const EmailVerifyApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator =
+    EmailVerifyApiAxiosParamCreator(configuration);
   return {
     /**
      *
-     * @param {EmailInviteData} emailInviteData
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async emailInviteToProject(
-      emailInviteData: EmailInviteData,
+    async requestEmailVerify(
+      body: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.emailInviteToProject(
-          emailInviteData,
-          options
-        );
+        await localVarAxiosParamCreator.requestEmailVerify(body, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -185,27 +172,18 @@ export const InviteApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {string} projectId
      * @param {string} token
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async validateInviteToken(
-      projectId: string,
+    async validateEmailToken(
       token: string,
       options?: any
     ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<EmailInviteStatus>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.validateInviteToken(
-          projectId,
-          token,
-          options
-        );
+        await localVarAxiosParamCreator.validateEmailToken(token, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -217,124 +195,105 @@ export const InviteApiFp = function (configuration?: Configuration) {
 };
 
 /**
- * InviteApi - factory interface
+ * EmailVerifyApi - factory interface
  * @export
  */
-export const InviteApiFactory = function (
+export const EmailVerifyApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
   axios?: AxiosInstance
 ) {
-  const localVarFp = InviteApiFp(configuration);
+  const localVarFp = EmailVerifyApiFp(configuration);
   return {
     /**
      *
-     * @param {EmailInviteData} emailInviteData
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    emailInviteToProject(
-      emailInviteData: EmailInviteData,
-      options?: any
-    ): AxiosPromise<string> {
+    requestEmailVerify(body: string, options?: any): AxiosPromise<void> {
       return localVarFp
-        .emailInviteToProject(emailInviteData, options)
+        .requestEmailVerify(body, options)
         .then((request) => request(axios, basePath));
     },
     /**
      *
-     * @param {string} projectId
      * @param {string} token
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    validateInviteToken(
-      projectId: string,
-      token: string,
-      options?: any
-    ): AxiosPromise<EmailInviteStatus> {
+    validateEmailToken(token: string, options?: any): AxiosPromise<boolean> {
       return localVarFp
-        .validateInviteToken(projectId, token, options)
+        .validateEmailToken(token, options)
         .then((request) => request(axios, basePath));
     },
   };
 };
 
 /**
- * Request parameters for emailInviteToProject operation in InviteApi.
+ * Request parameters for requestEmailVerify operation in EmailVerifyApi.
  * @export
- * @interface InviteApiEmailInviteToProjectRequest
+ * @interface EmailVerifyApiRequestEmailVerifyRequest
  */
-export interface InviteApiEmailInviteToProjectRequest {
+export interface EmailVerifyApiRequestEmailVerifyRequest {
   /**
    *
-   * @type {EmailInviteData}
-   * @memberof InviteApiEmailInviteToProject
+   * @type {string}
+   * @memberof EmailVerifyApiRequestEmailVerify
    */
-  readonly emailInviteData: EmailInviteData;
+  readonly body: string;
 }
 
 /**
- * Request parameters for validateInviteToken operation in InviteApi.
+ * Request parameters for validateEmailToken operation in EmailVerifyApi.
  * @export
- * @interface InviteApiValidateInviteTokenRequest
+ * @interface EmailVerifyApiValidateEmailTokenRequest
  */
-export interface InviteApiValidateInviteTokenRequest {
+export interface EmailVerifyApiValidateEmailTokenRequest {
   /**
    *
    * @type {string}
-   * @memberof InviteApiValidateInviteToken
-   */
-  readonly projectId: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof InviteApiValidateInviteToken
+   * @memberof EmailVerifyApiValidateEmailToken
    */
   readonly token: string;
 }
 
 /**
- * InviteApi - object-oriented interface
+ * EmailVerifyApi - object-oriented interface
  * @export
- * @class InviteApi
+ * @class EmailVerifyApi
  * @extends {BaseAPI}
  */
-export class InviteApi extends BaseAPI {
+export class EmailVerifyApi extends BaseAPI {
   /**
    *
-   * @param {InviteApiEmailInviteToProjectRequest} requestParameters Request parameters.
+   * @param {EmailVerifyApiRequestEmailVerifyRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof InviteApi
+   * @memberof EmailVerifyApi
    */
-  public emailInviteToProject(
-    requestParameters: InviteApiEmailInviteToProjectRequest,
+  public requestEmailVerify(
+    requestParameters: EmailVerifyApiRequestEmailVerifyRequest,
     options?: any
   ) {
-    return InviteApiFp(this.configuration)
-      .emailInviteToProject(requestParameters.emailInviteData, options)
+    return EmailVerifyApiFp(this.configuration)
+      .requestEmailVerify(requestParameters.body, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
-   * @param {InviteApiValidateInviteTokenRequest} requestParameters Request parameters.
+   * @param {EmailVerifyApiValidateEmailTokenRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof InviteApi
+   * @memberof EmailVerifyApi
    */
-  public validateInviteToken(
-    requestParameters: InviteApiValidateInviteTokenRequest,
+  public validateEmailToken(
+    requestParameters: EmailVerifyApiValidateEmailTokenRequest,
     options?: any
   ) {
-    return InviteApiFp(this.configuration)
-      .validateInviteToken(
-        requestParameters.projectId,
-        requestParameters.token,
-        options
-      )
+    return EmailVerifyApiFp(this.configuration)
+      .validateEmailToken(requestParameters.token, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }

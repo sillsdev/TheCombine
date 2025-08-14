@@ -107,7 +107,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestGetMissingUser()
+        public void TestGetUserMissingUser()
         {
             var result = _userController.GetUser("INVALID_USER_ID").Result;
             Assert.That(result, Is.InstanceOf<NotFoundResult>());

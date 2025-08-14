@@ -1,6 +1,7 @@
 export enum Path {
   AppRoot = "/app",
   DataEntry = "/app/data-entry",
+  EmailVerify = "/email/verify",
   GoalCurrent = "/app/goals/current",
   GoalNext = "/app/goals/next",
   Goals = "/app/goals",

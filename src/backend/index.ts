@@ -47,7 +47,9 @@ const config = new Api.Configuration(config_parameters);
 const authenticationUrls = [
   "/users/authenticate",
   "/users/create",
+  "/users/email",
   "/users/forgot",
+  "/users/password",
 ];
 
 /** A list of URL patterns for which the frontend explicitly handles errors
@@ -58,6 +60,7 @@ const whiteListedErrorUrls = [
   "/speakers/update/",
   "/users/authenticate",
   "/users/captcha/",
+  "/verifyemail/",
 ];
 
 // Create an axios instance to allow for attaching interceptors to it.
@@ -112,6 +115,7 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
 const audioApi = new Api.AudioApi(config, BASE_PATH, axiosInstance);
 const avatarApi = new Api.AvatarApi(config, BASE_PATH, axiosInstance);
 const bannerApi = new Api.BannerApi(config, BASE_PATH, axiosInstance);
+const emailVerifyApi = new Api.EmailVerifyApi(config, BASE_PATH, axiosInstance);
 const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
 const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
 const mergeApi = new Api.MergeApi(config, BASE_PATH, axiosInstance);
@@ -225,6 +229,16 @@ export async function updateBanner(siteBanner: SiteBanner): Promise<boolean> {
   return (await bannerApi.updateBanner({ siteBanner }, defaultOptions())).data;
 }
 
+/* PasswordResetController.cs */
+
+export async function verifyEmailRequest(email: string): Promise<void> {
+  await emailVerifyApi.requestEmailVerify({ body: email });
+}
+
+export async function verifyEmail(token: string): Promise<boolean> {
+  return (await emailVerifyApi.validateEmailToken({ token })).data;
+}
+
 /* InviteController.cs */
 
 export async function emailInviteToProject(
@@ -244,8 +258,9 @@ export async function validateLink(
   projectId: string,
   token: string
 ): Promise<EmailInviteStatus> {
-  return (await inviteApi.validateToken({ projectId, token }, defaultOptions()))
-    .data;
+  return (
+    await inviteApi.validateInviteToken({ projectId, token }, defaultOptions())
+  ).data;
 }
 
 /* LiftController.cs */

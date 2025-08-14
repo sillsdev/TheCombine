@@ -48,9 +48,9 @@ namespace BackendFramework.Controllers
 
         /// <summary> Validates invite token in url and adds user to project </summary>
         [AllowAnonymous]
-        [HttpPut("{projectId}/validate/{token}", Name = "ValidateToken")]
+        [HttpPut("{projectId}/validate/{token}", Name = "ValidateInviteToken")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmailInviteStatus))]
-        public async Task<IActionResult> ValidateToken(string projectId, string token)
+        public async Task<IActionResult> ValidateInviteToken(string projectId, string token)
         {
             return Ok(await _inviteService.ValidateProjectToken(projectId, token));
         }

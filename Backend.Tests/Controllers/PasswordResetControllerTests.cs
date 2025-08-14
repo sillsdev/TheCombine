@@ -48,7 +48,8 @@ namespace Backend.Tests.Controllers
 
             _passwordResetService.SetNextBoolResponse(false);
             var falseResult = _passwordResetController.ResetPasswordRequest("username").Result;
-            Assert.That(((StatusCodeResult)falseResult).StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
+            Assert.That(((StatusCodeResult)falseResult).StatusCode,
+                Is.EqualTo(StatusCodes.Status500InternalServerError));
 
             _passwordResetService.SetNextBoolResponse(true);
             var trueResult = _passwordResetController.ResetPasswordRequest("username").Result;

@@ -86,9 +86,9 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestValidateTokenNoTokenNoUser()
+        public void TestValidateInviteTokenNoTokenNoUser()
         {
-            var result = _inviteController.ValidateToken(_projId, "not-a-token").Result;
+            var result = _inviteController.ValidateInviteToken(_projId, "not-a-token").Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
             var value = ((OkObjectResult)result).Value;
             Assert.That(value, Is.InstanceOf<EmailInviteStatus>());
@@ -99,9 +99,9 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestValidateTokenExpiredTokenNoUser()
+        public void TestValidateInviteTokenExpiredTokenNoUser()
         {
-            var result = _inviteController.ValidateToken(_projId, _tokenExpired).Result;
+            var result = _inviteController.ValidateInviteToken(_projId, _tokenExpired).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
             var value = ((OkObjectResult)result).Value;
             Assert.That(value, Is.InstanceOf<EmailInviteStatus>());
@@ -112,9 +112,9 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestValidateTokenFutureTokenNoUser()
+        public void TestValidateInviteTokenFutureTokenNoUser()
         {
-            var result = _inviteController.ValidateToken(_projId, _tokenFuture).Result;
+            var result = _inviteController.ValidateInviteToken(_projId, _tokenFuture).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
             var value = ((OkObjectResult)result).Value;
             Assert.That(value, Is.InstanceOf<EmailInviteStatus>());
@@ -125,9 +125,9 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestValidateTokenValidTokenNoUser()
+        public void TestValidateInviteTokenValidTokenNoUser()
         {
-            var result = _inviteController.ValidateToken(_projId, _tokenActive).Result;
+            var result = _inviteController.ValidateInviteToken(_projId, _tokenActive).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
             var value = ((OkObjectResult)result).Value;
             Assert.That(value, Is.InstanceOf<EmailInviteStatus>());
@@ -138,12 +138,12 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestValidateTokenValidTokenUserAlreadyInProject()
+        public void TestValidateInviteTokenValidTokenUserAlreadyInProject()
         {
             var roles = new Dictionary<string, string> { [_projId] = "role-id" };
             _userRepo.Create(new() { Email = EmailActive, ProjectRoles = roles });
 
-            var result = _inviteController.ValidateToken(_projId, _tokenActive).Result;
+            var result = _inviteController.ValidateInviteToken(_projId, _tokenActive).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
             var value = ((OkObjectResult)result).Value;
             Assert.That(value, Is.InstanceOf<EmailInviteStatus>());
@@ -154,13 +154,13 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestValidateTokenExpiredTokenUserAvailable()
+        public void TestValidateInviteTokenExpiredTokenUserAvailable()
         {
             _userRepo.Create(new() { Id = "other-user" });
             // User with an email address matching an invite with an expired token.
             _userRepo.Create(new() { Id = "invitee", Email = EmailExpired });
 
-            var result = _inviteController.ValidateToken(_projId, _tokenExpired).Result;
+            var result = _inviteController.ValidateInviteToken(_projId, _tokenExpired).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
             var value = ((OkObjectResult)result).Value;
             Assert.That(value, Is.InstanceOf<EmailInviteStatus>());
@@ -171,7 +171,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestValidateTokenValidTokenUserAvailable()
+        public void TestValidateInviteTokenValidTokenUserAvailable()
         {
             // User with an email address matching an invite with an active token.
             _userRepo.Create(new() { Email = EmailActive });
@@ -179,7 +179,7 @@ namespace Backend.Tests.Controllers
             // No permissions should be required to validate a token.
             _inviteController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
-            var result = _inviteController.ValidateToken(_projId, _tokenActive).Result;
+            var result = _inviteController.ValidateInviteToken(_projId, _tokenActive).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
             var value = ((OkObjectResult)result).Value;
             Assert.That(value, Is.InstanceOf<EmailInviteStatus>());

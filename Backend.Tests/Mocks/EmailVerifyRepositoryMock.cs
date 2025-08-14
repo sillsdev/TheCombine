@@ -6,29 +6,29 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    internal sealed class PasswordResetRepositoryMock : IPasswordResetRepository
+    internal sealed class EmailVerifyRepositoryMock : IEmailVerifyRepository
     {
-        private readonly List<EmailToken> _resets = [];
+        private List<EmailToken> _verifies = [];
 
         public Task ClearAll(string email)
         {
-            _resets.RemoveAll(x => x.Email == email);
+            _verifies.RemoveAll(x => x.Email == email);
             return Task.CompletedTask;
         }
 
         public Task<EmailToken?> FindByToken(string token)
         {
-            return Task.FromResult(_resets.FindAll(x => x.Token == token).SingleOrDefault());
+            return Task.FromResult(_verifies.FindAll(x => x.Token == token).SingleOrDefault());
         }
 
-        internal List<EmailToken> GetResets()
+        internal List<EmailToken> GetEmailTokens()
         {
-            return _resets;
+            return _verifies;
         }
 
-        public Task Insert(EmailToken reset)
+        public Task Insert(EmailToken emailToken)
         {
-            _resets.Add(reset);
+            _verifies.Add(emailToken);
             return Task.CompletedTask;
         }
     }

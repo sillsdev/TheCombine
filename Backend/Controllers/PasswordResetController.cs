@@ -31,9 +31,9 @@ namespace BackendFramework.Controllers
         [HttpPost("", Name = "ResetPasswordRequest")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] string EmailOrUsername)
+        public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] string emailOrUsername)
         {
-            var result = await _passwordResetService.ResetPasswordRequest(EmailOrUsername);
+            var result = await _passwordResetService.ResetPasswordRequest(emailOrUsername);
             return result ? Ok() : StatusCode(StatusCodes.Status500InternalServerError);
         }
 
