@@ -34,15 +34,10 @@ jest.mock(
   "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditSenseDialog"
 );
 jest.mock("i18n", () => ({}));
-jest.mock("rootRedux/hooks", () => ({
-  ...jest.requireActual("rootRedux/hooks"),
-  useAppDispatch: () => mockDispatch,
-}));
 
 const mockClose = jest.fn();
 const mockConfirm = jest.fn();
 const mockDeleteAudio = jest.fn();
-const mockDispatch = jest.fn();
 const mockUpdateWord = jest.fn();
 
 const mockTextFieldEvent = (
@@ -116,7 +111,6 @@ describe("EditDialog", () => {
       expect(mockClose).toHaveBeenCalledTimes(1);
       expect(mockConfirm).not.toHaveBeenCalled();
       expect(mockUpdateWord).not.toHaveBeenCalled();
-      expect(mockDispatch).not.toHaveBeenCalled();
     });
 
     test("cancel button opens dialog if changes", async () => {
@@ -147,7 +141,6 @@ describe("EditDialog", () => {
       expect(mockClose).not.toHaveBeenCalled();
       expect(mockConfirm).not.toHaveBeenCalled();
       expect(mockUpdateWord).not.toHaveBeenCalled();
-      expect(mockDispatch).not.toHaveBeenCalled();
 
       // Click the cancel button and confirm the cancel
       await act(async () => {
@@ -164,7 +157,6 @@ describe("EditDialog", () => {
       expect(mockClose).toHaveBeenCalledTimes(1);
       expect(mockConfirm).not.toHaveBeenCalled();
       expect(mockUpdateWord).not.toHaveBeenCalled();
-      expect(mockDispatch).not.toHaveBeenCalled();
     });
 
     test("save button closes if no changes", async () => {
@@ -180,7 +172,6 @@ describe("EditDialog", () => {
       expect(mockClose).toHaveBeenCalledTimes(1);
       expect(mockConfirm).not.toHaveBeenCalled();
       expect(mockUpdateWord).not.toHaveBeenCalled();
-      expect(mockDispatch).not.toHaveBeenCalled();
     });
 
     test("save button saves changes and closes", async () => {
@@ -207,7 +198,6 @@ describe("EditDialog", () => {
       expect(mockUpdateWord).toHaveBeenCalledTimes(1);
       const updatedWord: Word = mockUpdateWord.mock.calls[0][0];
       expect(updatedWord.flag.text).toEqual(newFlagText);
-      expect(mockDispatch).toHaveBeenCalled();
     });
   });
 

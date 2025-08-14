@@ -1,12 +1,11 @@
-using BackendFramework.Models;
 using System.Threading.Tasks;
+using BackendFramework.Models;
 
 namespace BackendFramework.Interfaces
 {
     public interface IEmailVerifyService
     {
-        Task<EmailToken> CreateEmailToken(string email);
-        Task ExpireTokens(string email);
-        Task<bool> VerifyEmail(string token);
+        Task<bool> RequestEmailVerify(User user);
+        Task<bool> ValidateToken(string token);
     }
 }

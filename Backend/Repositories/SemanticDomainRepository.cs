@@ -9,15 +9,16 @@ using System.Collections.Generic;
 
 namespace BackendFramework.Repositories
 {
-    /// <summary> Atomic database functions for the SemanticDomainTree and SemanticDomains collections. </summary>
+    /// <summary>
+    /// Atomic database functions for <see cref="SemanticDomainFull"/>s and <see cref="SemanticDomainTreeNode"/>s.
+    /// </summary>
     [ExcludeFromCodeCoverage]
-    public class SemanticDomainRepository : ISemanticDomainRepository
+    public class SemanticDomainRepository(IMongoDbContext dbContext) : ISemanticDomainRepository
     {
-        private ISemanticDomainContext _context;
-        public SemanticDomainRepository(ISemanticDomainContext context)
-        {
-            _context = context;
-        }
+        private readonly IMongoCollection<SemanticDomainFull> _fullSemanticDomains =
+            dbContext.Db.GetCollection<SemanticDomainFull>("SemanticDomains");
+        private readonly IMongoCollection<SemanticDomainTreeNode> _semanticDomains =
+            dbContext.Db.GetCollection<SemanticDomainTreeNode>("SemanticDomainTree");
 
         public async Task<SemanticDomainTreeNode?> GetSemanticDomainTreeNode(string id, string lang)
         {
@@ -26,7 +27,7 @@ namespace BackendFramework.Repositories
                 filterDef.Eq(x => x.Id, id),
                 filterDef.Eq(x => x.Lang, lang));
 
-            var domain = await _context.SemanticDomains.FindAsync(filter: filter);
+            var domain = await _semanticDomains.FindAsync(filter: filter);
             try
             {
                 return await domain.FirstAsync();
@@ -43,7 +44,7 @@ namespace BackendFramework.Repositories
             var filter = filterDef.And(
                 filterDef.Regex(x => x.Name, new BsonRegularExpression("/^" + name + "$/i")),
                 filterDef.Eq(x => x.Lang, lang));
-            var domain = await _context.SemanticDomains.FindAsync(filter: filter);
+            var domain = await _semanticDomains.FindAsync(filter: filter);
             try
             {
                 return await domain.FirstAsync();
@@ -60,7 +61,7 @@ namespace BackendFramework.Repositories
             var filter = filterDef.And(
                 filterDef.Eq(x => x.Id, id),
                 filterDef.Eq(x => x.Lang, lang));
-            var domain = await _context.FullSemanticDomains.FindAsync(filter);
+            var domain = await _fullSemanticDomains.FindAsync(filter);
             try
             {
                 return await domain.FirstAsync();
@@ -79,7 +80,7 @@ namespace BackendFramework.Repositories
             var filter = filterDef.And(
                 filterDef.Where(x => x.Id != "Sem"),
                 filterDef.Eq(x => x.Lang, lang));
-            var domain = await _context.SemanticDomains.FindAsync(filter: filter);
+            var domain = await _semanticDomains.FindAsync(filter: filter);
             try
             {
                 return await domain.ToListAsync();

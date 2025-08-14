@@ -22,51 +22,44 @@ using static System.Text.Encoding;
 namespace BackendFramework
 {
     [ExcludeFromCodeCoverage]
-    public class Startup
+    public class Startup(ILogger<Startup> logger, IConfiguration configuration)
     {
         private const string LocalhostCorsPolicy = "LocalhostCorsPolicy";
 
-        private readonly ILogger<Startup> _logger;
+        private readonly ILogger<Startup> _logger = logger;
 
-        private IConfiguration Configuration { get; }
-
-        public Startup(ILogger<Startup> logger, IConfiguration configuration)
-        {
-            _logger = logger;
-            Configuration = configuration;
-        }
+        private IConfiguration Configuration { get; } = configuration;
 
         public class Settings
         {
-            public const int DefaultPasswordResetExpireTime = 15;
+            public const int DefaultExpireEmailVerifyMinutes = 15;
+            public const int DefaultExpirePasswordResetMinutes = 15;
+            public const int DefaultExpireProjectInviteDays = 7;
 
-            public bool CaptchaEnabled { get; set; }
+            public bool CaptchaEnabled { get; set; } = true;
             public string? CaptchaSecretKey { get; set; }
             public string? CaptchaVerifyUrl { get; set; }
-            public string ConnectionString { get; set; }
-            public string CombineDatabase { get; set; }
+            public string ConnectionString { get; set; } = "";
+            public string CombineDatabase { get; set; } = "";
             public bool EmailEnabled { get; set; }
+            public TimeSpan ExpireTimeEmailVerify { get; set; } =
+                TimeSpan.FromMinutes(DefaultExpireEmailVerifyMinutes);
+            public TimeSpan ExpireTimePasswordReset { get; set; } =
+                TimeSpan.FromMinutes(DefaultExpirePasswordResetMinutes);
+            public TimeSpan ExpireTimeProjectInvite { get; set; } =
+                TimeSpan.FromDays(DefaultExpireProjectInviteDays);
             public string? SmtpServer { get; set; }
             public int? SmtpPort { get; set; }
             public string? SmtpUsername { get; set; }
             public string? SmtpPassword { get; set; }
             public string? SmtpAddress { get; set; }
             public string? SmtpFrom { get; set; }
-            public int PassResetExpireTime { get; set; }
-
-            public Settings()
-            {
-                CaptchaEnabled = true;
-                ConnectionString = "";
-                CombineDatabase = "";
-                EmailEnabled = false;
-                PassResetExpireTime = DefaultPasswordResetExpireTime;
-            }
         }
 
         private sealed class EnvironmentNotConfiguredException : Exception { }
 
-        private string? CheckedEnvironmentVariable(string name, string? defaultValue, string error = "", bool info = false)
+        private string? CheckedEnvironmentVariable(
+            string name, string? defaultValue, string error = "", bool info = false)
         {
             var contents = Environment.GetEnvironmentVariable(name);
             if (contents is not null)
@@ -83,6 +76,19 @@ namespace BackendFramework
                 _logger.LogError("Environment variable: {Name} is not defined. {Error}", name, error);
             }
             return defaultValue;
+        }
+
+        private int CheckedEnvironmentVariablePositiveInt(string name, int defaultValue)
+        {
+            var info = $"Using default value: {defaultValue}";
+            var strContents = CheckedEnvironmentVariable(name, defaultValue.ToString(), info, true);
+            if (!int.TryParse(strContents, out var intContents) || intContents <= 0)
+            {
+                _logger.LogInformation(
+                    "Environment variable: {Name} failed to parse as a positive int. {Info}", name, info);
+                return defaultValue;
+            }
+            return intContents;
         }
 
         /// <summary> Determine if executing within a container (e.g. Docker). </summary>
@@ -191,6 +197,12 @@ namespace BackendFramework
                         true)!);
                     if (options.EmailEnabled)
                     {
+                        options.ExpireTimeEmailVerify = TimeSpan.FromMinutes(CheckedEnvironmentVariablePositiveInt(
+                            "COMBINE_EXPIRE_EMAIL_VERIFY_MINUTES", Settings.DefaultExpireEmailVerifyMinutes));
+                        options.ExpireTimePasswordReset = TimeSpan.FromMinutes(CheckedEnvironmentVariablePositiveInt(
+                            "COMBINE_EXPIRE_PASSWORD_RESET_MINUTES", Settings.DefaultExpirePasswordResetMinutes));
+                        options.ExpireTimeProjectInvite = TimeSpan.FromDays(CheckedEnvironmentVariablePositiveInt(
+                            "COMBINE_EXPIRE_PROJECT_INVITE_DAYS", Settings.DefaultExpireProjectInviteDays));
                         options.SmtpServer = CheckedEnvironmentVariable(
                             "COMBINE_SMTP_SERVER",
                             null,
@@ -216,17 +228,14 @@ namespace BackendFramework
                             null,
                             emailServiceFailureMessage);
                     }
-
-                    options.PassResetExpireTime = int.Parse(CheckedEnvironmentVariable(
-                        "COMBINE_PASSWORD_RESET_EXPIRE_TIME",
-                        Settings.DefaultPasswordResetExpireTime.ToString(),
-                        $"Using default value: {Settings.DefaultPasswordResetExpireTime}")!);
                 });
 
             // Register concrete types for dependency injection
 
+            // Mongo context for use in repo contexts
+            services.AddSingleton<IMongoDbContext, MongoDbContext>();
+
             // Banner types
-            services.AddTransient<IBannerContext, BannerContext>();
             services.AddTransient<IBannerRepository, BannerRepository>();
 
             // CAPTCHA types
@@ -236,60 +245,48 @@ namespace BackendFramework
             // Email types
             services.AddTransient<IEmailContext, EmailContext>();
             services.AddTransient<IEmailService, EmailService>();
-            services.AddTransient<IInviteService, InviteService>();
-
-            // Email verify types
-            services.AddTransient<IEmailVerifyContext, EmailVerifyContext>();
+            services.AddTransient<IEmailVerifyRepository, EmailVerifyRepository>();
             services.AddTransient<IEmailVerifyService, EmailVerifyService>();
+            services.AddTransient<IInviteRepository, InviteRepository>();
+            services.AddTransient<IInviteService, InviteService>();
+            services.AddTransient<IPasswordResetRepository, PasswordResetRepository>();
+            services.AddTransient<IPasswordResetService, PasswordResetService>();
 
             // Lift Service - Singleton to avoid initializing the Sldr multiple times,
             // also to avoid leaking LanguageTag data
             services.AddSingleton<ILiftService, LiftService>();
 
             // Merge types
-            services.AddTransient<IMergeBlacklistContext, MergeBlacklistContext>();
-            services.AddTransient<IMergeGraylistContext, MergeGraylistContext>();
             services.AddTransient<IMergeBlacklistRepository, MergeBlacklistRepository>();
             services.AddTransient<IMergeGraylistRepository, MergeGraylistRepository>();
             services.AddSingleton<IMergeService, MergeService>();
-
-            // Password Reset types
-            services.AddTransient<IPasswordResetContext, PasswordResetContext>();
-            services.AddTransient<IPasswordResetService, PasswordResetService>();
 
             // Permission types
             services.AddTransient<IPermissionService, PermissionService>();
 
             // Project types
-            services.AddTransient<IProjectContext, ProjectContext>();
             services.AddTransient<IProjectRepository, ProjectRepository>();
 
             // Semantic Domain types
-            services.AddSingleton<ISemanticDomainContext, SemanticDomainContext>();
             services.AddSingleton<ISemanticDomainRepository, SemanticDomainRepository>();
 
             // Speaker types
-            services.AddTransient<ISpeakerContext, SpeakerContext>();
             services.AddTransient<ISpeakerRepository, SpeakerRepository>();
 
             // Statistics types
             services.AddSingleton<IStatisticsService, StatisticsService>();
 
             // User types
-            services.AddTransient<IUserContext, UserContext>();
             services.AddTransient<IUserRepository, UserRepository>();
 
             // User Edit types
-            services.AddTransient<IUserEditContext, UserEditContext>();
             services.AddTransient<IUserEditRepository, UserEditRepository>();
             services.AddTransient<IUserEditService, UserEditService>();
 
             // User Role types
-            services.AddTransient<IUserRoleContext, UserRoleContext>();
             services.AddTransient<IUserRoleRepository, UserRoleRepository>();
 
             // Word types (includes Frontier types)
-            services.AddTransient<IWordContext, WordContext>();
             services.AddTransient<IWordRepository, WordRepository>();
             services.AddTransient<IWordService, WordService>();
 

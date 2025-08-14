@@ -1,56 +1,43 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography;
-using Microsoft.AspNetCore.WebUtilities;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace BackendFramework.Models
 {
-    public class EmailToken
+    public class EmailToken(string email)
     {
-        private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
-        private const int TokenSize = 8;
-
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string Id { get; set; } = "";
 
         [BsonElement("email")]
-        public string Email { get; set; }
+        public string Email { get; set; } = email;
 
         [BsonElement("token")]
-        public string Token { get; set; }
+        public string Token { get; set; } = Guid.NewGuid().ToString();
 
-        [BsonElement("expire_time")]
-        public DateTime ExpireTime { get; set; }
+        [BsonElement("created")]
+        public DateTime Created { get; set; } = DateTime.UtcNow;
+    }
 
-        public EmailToken(int expireTime)
-        {
-            Id = "";
-            Email = "";
-            ExpireTime = DateTime.Now.AddMinutes(expireTime);
+    public class ProjectInvite(string projectId, string email, Role role) : EmailToken(email)
+    {
+        [BsonElement("projectId")]
+        public string ProjectId { get; set; } = projectId;
 
-            var byteToken = new byte[TokenSize];
-            Rng.GetBytes(byteToken);
-            Token = WebEncoders.Base64UrlEncode(byteToken);
-        }
-
-        public EmailToken(int expireTime, string email) : this(expireTime)
-        {
-            Email = email;
-        }
+        [BsonElement("role")]
+        public Role Role { get; set; } = role;
     }
 
     /// <remarks>
-    /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
+    /// This is used in an OpenAPI return value serializer, so its attributes must be defined as properties.
     /// </remarks>
-    public class PasswordResetData
+    public class EmailInviteStatus(bool isTokenValid, bool isUserRegistered)
     {
         [Required]
-        public string NewPassword { get; set; } = "";
-
+        public bool IsTokenValid { get; set; } = isTokenValid;
         [Required]
-        public string Token { get; set; } = "";
+        public bool IsUserValid { get; set; } = isUserRegistered;
     }
 }

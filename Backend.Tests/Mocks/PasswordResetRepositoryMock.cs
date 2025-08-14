@@ -6,11 +6,9 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    internal sealed class PasswordResetContextMock : IPasswordResetContext
+    internal sealed class PasswordResetRepositoryMock : IPasswordResetRepository
     {
-        private List<EmailToken> _resets = [];
-
-        public int ExpireTime => 15;
+        private readonly List<EmailToken> _resets = [];
 
         public Task ClearAll(string email)
         {
@@ -23,19 +21,14 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_resets.FindAll(x => x.Token == token).SingleOrDefault());
         }
 
-        public List<EmailToken> GetResets()
+        internal List<EmailToken> GetResets()
         {
             return _resets;
         }
 
-        public void SetResets(List<EmailToken> resets)
+        public Task Insert(EmailToken reset)
         {
-            _resets = resets;
-        }
-
-        public Task Insert(EmailToken emailToken)
-        {
-            _resets.Add(emailToken);
+            _resets.Add(reset);
             return Task.CompletedTask;
         }
     }

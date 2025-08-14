@@ -10,12 +10,7 @@ namespace Backend.Tests.Mocks
 {
     internal sealed class UserRepositoryMock : IUserRepository
     {
-        private readonly List<User> _users;
-
-        public UserRepositoryMock()
-        {
-            _users = new List<User>();
-        }
+        private readonly List<User> _users = [];
 
         public Task<List<User>> GetAllUsers()
         {

@@ -12,17 +12,12 @@ namespace Backend.Tests.Mocks
             _boolResponse = response;
         }
 
-        public Task<EmailToken> CreateEmailToken(string email)
+        public Task<bool> RequestEmailVerify(User user)
         {
-            return Task.FromResult(new EmailToken(15, email));
+            return Task.FromResult(_boolResponse);
         }
 
-        public Task ExpireTokens(string email)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task<bool> VerifyEmail(string token)
+        public Task<bool> ValidateToken(string token)
         {
             return Task.FromResult(_boolResponse);
         }

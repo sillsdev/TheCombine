@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Models;
 using SIL.Lift.Parsing;
 
 namespace BackendFramework.Interfaces
 {
-    public interface ILiftService
+    public interface ILiftService : IDisposable
     {
         ILiftMerger GetLiftImporterExporter(string projectId, string vernLang, IWordRepository wordRepo);
         Task<bool> LdmlImport(string dirPath, IProjectRepository projRepo, Project project);
