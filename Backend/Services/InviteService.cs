@@ -89,7 +89,7 @@ namespace BackendFramework.Services
 
         private bool ValidateToken(EmailToken token)
         {
-            return DateTime.UtcNow < token.Created.Add(_expireTime);
+            return token.Created < DateTime.UtcNow && DateTime.UtcNow < token.Created.Add(_expireTime);
         }
 
         public async Task<EmailInviteStatus> ValidateProjectToken(string projectId, string token)

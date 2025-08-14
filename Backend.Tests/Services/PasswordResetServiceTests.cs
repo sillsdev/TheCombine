@@ -62,6 +62,18 @@ namespace Backend.Tests.Services
         }
 
         [Test]
+        public void TestResetPasswordFuture()
+        {
+            var user = new User { Email = Email };
+            _userRepo.Create(user);
+
+            var request = _passwordResetService.CreatePasswordReset(Email).Result;
+            request.Created = DateTime.UtcNow.AddDays(1);
+
+            Assert.That(_passwordResetService.ResetPassword(request.Token, Password).Result, Is.False);
+        }
+
+        [Test]
         public void TestResetPasswordBadToken()
         {
             var user = new User { Email = Email };

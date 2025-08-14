@@ -43,7 +43,7 @@ namespace BackendFramework.Services
 
         private bool IsPasswordResetValid(EmailToken reset)
         {
-            return DateTime.UtcNow < reset.Created.Add(_expireTime);
+            return reset.Created < DateTime.UtcNow && DateTime.UtcNow < reset.Created.Add(_expireTime);
         }
 
         /// <summary> Reset a users password using a Password reset request token. </summary>

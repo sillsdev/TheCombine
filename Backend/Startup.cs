@@ -55,7 +55,8 @@ namespace BackendFramework
 
         private sealed class EnvironmentNotConfiguredException : Exception { }
 
-        private string? CheckedEnvironmentVariable(string name, string? defaultValue, string error = "", bool info = false)
+        private string? CheckedEnvironmentVariable(
+            string name, string? defaultValue, string error = "", bool info = false)
         {
             var contents = Environment.GetEnvironmentVariable(name);
             if (contents is not null)
@@ -72,6 +73,19 @@ namespace BackendFramework
                 _logger.LogError("Environment variable: {Name} is not defined. {Error}", name, error);
             }
             return defaultValue;
+        }
+
+        private int CheckedEnvironmentVariablePositiveInt(string name, int defaultValue)
+        {
+            var info = $"Using default value: {defaultValue}";
+            var strContents = CheckedEnvironmentVariable(name, defaultValue.ToString(), info, true);
+            if (!int.TryParse(strContents, out var intContents) || intContents <= 0)
+            {
+                _logger.LogInformation(
+                    "Environment variable: {Name} failed to parse as a positive int. {Info}", name, info);
+                return defaultValue;
+            }
+            return intContents;
         }
 
         /// <summary> Determine if executing within a container (e.g. Docker). </summary>
@@ -180,16 +194,10 @@ namespace BackendFramework
                         true)!);
                     if (options.EmailEnabled)
                     {
-                        options.ExpireTimePasswordReset = TimeSpan.FromMinutes(int.Parse(CheckedEnvironmentVariable(
-                            "COMBINE_EXPIRE_PASSWORD_RESET_MINUTES",
-                            Settings.DefaultExpirePasswordResetMinutes.ToString(),
-                            $"Using default value: {Settings.DefaultExpirePasswordResetMinutes}",
-                            true)!));
-                        options.ExpireTimeProjectInvite = TimeSpan.FromDays(int.Parse(CheckedEnvironmentVariable(
-                            "COMBINE_EXPIRE_PROJECT_INVITE_DAYS",
-                            Settings.DefaultExpireProjectInviteDays.ToString(),
-                            $"Using default value: {Settings.DefaultExpireProjectInviteDays}",
-                            true)!));
+                        options.ExpireTimePasswordReset = TimeSpan.FromMinutes(CheckedEnvironmentVariablePositiveInt(
+                            "COMBINE_EXPIRE_PASSWORD_RESET_MINUTES", Settings.DefaultExpirePasswordResetMinutes));
+                        options.ExpireTimeProjectInvite = TimeSpan.FromDays(CheckedEnvironmentVariablePositiveInt(
+                            "COMBINE_EXPIRE_PROJECT_INVITE_DAYS", Settings.DefaultExpireProjectInviteDays));
                         options.SmtpServer = CheckedEnvironmentVariable(
                             "COMBINE_SMTP_SERVER",
                             null,

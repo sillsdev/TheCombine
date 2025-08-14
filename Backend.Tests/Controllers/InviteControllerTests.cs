@@ -28,8 +28,10 @@ namespace Backend.Tests.Controllers
         private string _projId = null!;
         private string _tokenActive = null!;
         private string _tokenExpired = null!;
+        private string _tokenFuture = null!;
         private const string EmailActive = "active@token.email"; // Test email for an invite with an active token.
         private const string EmailExpired = "expired@token.email"; // Test email for an invite with an expired token.
+        private const string EmailFuture = "dr@who.email"; // Test email for an invite with a future token.
         private const string MissingId = "MISSING_ID";
         private const string ProjectName = "InviteControllerTests";
 
@@ -53,6 +55,10 @@ namespace Backend.Tests.Controllers
                 new ProjectInvite(_projId, EmailExpired, Role.Harvester) { Created = DateTime.UtcNow.AddYears(-1) };
             await inviteRepo.Insert(inviteExpired);
             _tokenExpired = inviteExpired.Token;
+            var inviteFuture =
+                new ProjectInvite(_projId, EmailExpired, Role.Harvester) { Created = DateTime.UtcNow.AddYears(1) };
+            await inviteRepo.Insert(inviteFuture);
+            _tokenFuture = inviteFuture.Token;
         }
 
         [Test]
@@ -96,6 +102,19 @@ namespace Backend.Tests.Controllers
         public void TestValidateTokenExpiredTokenNoUser()
         {
             var result = _inviteController.ValidateToken(_projId, _tokenExpired).Result;
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            var value = ((OkObjectResult)result).Value;
+            Assert.That(value, Is.InstanceOf<EmailInviteStatus>());
+
+            var status = (EmailInviteStatus)value!;
+            Assert.That(status.IsTokenValid, Is.False);
+            Assert.That(status.IsUserValid, Is.False);
+        }
+
+        [Test]
+        public void TestValidateTokenFutureTokenNoUser()
+        {
+            var result = _inviteController.ValidateToken(_projId, _tokenFuture).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
             var value = ((OkObjectResult)result).Value;
             Assert.That(value, Is.InstanceOf<EmailInviteStatus>());
