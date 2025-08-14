@@ -9,7 +9,9 @@ using System.Collections.Generic;
 
 namespace BackendFramework.Repositories
 {
-    /// <summary> Atomic database functions for the SemanticDomainTree and SemanticDomains collections. </summary>
+    /// <summary>
+    /// Atomic database functions for <see cref="SemanticDomainFull"/>s and <see cref="SemanticDomainTreeNode"/>s.
+    /// </summary>
     [ExcludeFromCodeCoverage]
     public class SemanticDomainRepository(IMongoDbContext dbContext) : ISemanticDomainRepository
     {
