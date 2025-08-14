@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -6,7 +6,6 @@ import MergeDragDrop from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop";
 import SaveDeferButtons from "goals/MergeDuplicates/MergeDupsStep/SaveDeferButtons";
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
-import theme from "types/theme";
 
 export default function MergeDupsStep(): ReactElement {
   const wordCount = useAppSelector(
@@ -18,9 +17,10 @@ export default function MergeDupsStep(): ReactElement {
 
   return wordCount ? (
     <>
-      <div style={{ background: "#eee", padding: theme.spacing(1) }}>
+      <Box sx={{ bgcolor: "#eee", p: 1, pb: 0 }}>
         <MergeDragDrop />
-      </div>
+      </Box>
+
       <SaveDeferButtons />
     </>
   ) : (
