@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class InviteControllerTests : IDisposable
+    internal sealed class InviteControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
         private IUserRepository _userRepo = null!;
@@ -21,16 +21,8 @@ namespace Backend.Tests.Controllers
 
         public void Dispose()
         {
-            Dispose(true);
+            _inviteController?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _inviteController?.Dispose();
-            }
         }
 
         private string _projId = null!;

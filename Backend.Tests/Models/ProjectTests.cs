@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Models
 {
-    public class ProjectTests
+    internal sealed class ProjectTests
     {
         [Test]
         public void TestClone()
@@ -34,7 +34,7 @@ namespace Backend.Tests.Models
         }
     }
 
-    public class CustomFieldTests
+    internal sealed class CustomFieldTests
     {
         [Test]
         public void TestClone()
@@ -44,7 +44,7 @@ namespace Backend.Tests.Models
         }
     }
 
-    public class WritingSystemTests
+    internal sealed class WritingSystemTests
     {
         private const string Bcp47 = "lang-1";
         private const string Name = "System 1";

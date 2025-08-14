@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Models
 {
-    public class EmailInviteTests
+    internal sealed class EmailInviteTests
     {
         private const string Email = "user1@thecombine.app";
         private const string Token = "first";

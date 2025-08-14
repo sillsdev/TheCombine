@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Services
 {
-    public class PasswordResetServiceTests
+    internal sealed class PasswordResetServiceTests
     {
         private PasswordResetContextMock _passwordResets = null!;
         private IUserRepository _userRepo = null!;

@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class BannerControllerTests : IDisposable
+    internal sealed class BannerControllerTests : IDisposable
     {
         private IBannerRepository _bannerRepo = null!;
         private IPermissionService _permissionService = null!;
@@ -16,16 +16,8 @@ namespace Backend.Tests.Controllers
 
         public void Dispose()
         {
-            Dispose(true);
+            _bannerController?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _bannerController?.Dispose();
-            }
         }
 
         private const BannerType Type = BannerType.Login;

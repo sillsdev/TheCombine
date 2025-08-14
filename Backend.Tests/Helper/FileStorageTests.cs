@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Helper
 {
-    public class FileStorageTests
+    internal sealed class FileStorageTests
     {
         [Test]
         public void TestFileTypeExtension()

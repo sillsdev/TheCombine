@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Helper
 {
-    public class SanitizationTests
+    internal sealed class SanitizationTests
     {
         private static List<string> _validIds = new()
         {

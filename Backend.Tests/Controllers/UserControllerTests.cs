@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class UserControllerTests : IDisposable
+    internal sealed class UserControllerTests : IDisposable
     {
         private IUserRepository _userRepo = null!;
         private IPasswordResetService _passwordResetService = null!;
@@ -18,16 +18,8 @@ namespace Backend.Tests.Controllers
 
         public void Dispose()
         {
-            Dispose(true);
+            _userController?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _userController?.Dispose();
-            }
         }
 
         [SetUp]

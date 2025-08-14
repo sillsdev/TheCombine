@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Services
 {
-    public class LiftServiceTests : IDisposable
+    internal sealed class LiftServiceTests : IDisposable
     {
         private ISemanticDomainRepository _semDomRepo = null!;
         private ISpeakerRepository _speakerRepo = null!;
@@ -18,16 +18,8 @@ namespace Backend.Tests.Services
 
         public void Dispose()
         {
-            Dispose(true);
+            _liftService?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _liftService?.Dispose();
-            }
         }
 
         [SetUp]
