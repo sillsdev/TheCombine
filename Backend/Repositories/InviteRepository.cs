@@ -6,11 +6,12 @@ using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
 {
+    /// <summary> Atomic database functions for <see cref="ProjectInvite"/>s. </summary>
     [ExcludeFromCodeCoverage]
-    public class InviteRepository(IMongoDbContext mongoDbContext) : IInviteRepository
+    public class InviteRepository(IMongoDbContext dbContext) : IInviteRepository
     {
         private readonly IMongoCollection<ProjectInvite> _invites =
-            mongoDbContext.Db.GetCollection<ProjectInvite>("InviteCollection");
+            dbContext.Db.GetCollection<ProjectInvite>("InviteCollection");
 
         public async Task ClearAll(string projectId, string email)
         {

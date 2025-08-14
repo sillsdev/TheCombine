@@ -6,11 +6,12 @@ using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
 {
+    /// <summary> Atomic database functions for Password Reset <see cref="EmailToken"/>s. </summary>
     [ExcludeFromCodeCoverage]
-    public class PasswordResetRepository(IMongoDbContext mongoDbContext) : IPasswordResetRepository
+    public class PasswordResetRepository(IMongoDbContext dbContext) : IPasswordResetRepository
     {
         private IMongoCollection<EmailToken> _passwordResets =
-            mongoDbContext.Db.GetCollection<EmailToken>("PasswordResetCollection");
+            dbContext.Db.GetCollection<EmailToken>("PasswordResetCollection");
 
         public async Task ClearAll(string email)
         {

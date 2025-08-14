@@ -9,7 +9,7 @@ using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
 {
-    /// <summary> Atomic database functions for <see cref="MergeWordSet"/>s. </summary>
+    /// <summary> Atomic database functions for Graylist <see cref="MergeWordSet"/>s. </summary>
     [ExcludeFromCodeCoverage]
     public class MergeGraylistRepository(IMongoDbContext dbContext) : IMergeGraylistRepository
     {
