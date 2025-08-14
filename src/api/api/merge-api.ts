@@ -112,6 +112,7 @@ export const MergeApiAxiosParamCreator = function (
      * @param {string} projectId
      * @param {number} maxInList
      * @param {number} maxLists
+     * @param {boolean} ignoreProtected
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -119,6 +120,7 @@ export const MergeApiAxiosParamCreator = function (
       projectId: string,
       maxInList: number,
       maxLists: number,
+      ignoreProtected: boolean,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
@@ -127,11 +129,21 @@ export const MergeApiAxiosParamCreator = function (
       assertParamExists("findPotentialDuplicates", "maxInList", maxInList);
       // verify required parameter 'maxLists' is not null or undefined
       assertParamExists("findPotentialDuplicates", "maxLists", maxLists);
+      // verify required parameter 'ignoreProtected' is not null or undefined
+      assertParamExists(
+        "findPotentialDuplicates",
+        "ignoreProtected",
+        ignoreProtected
+      );
       const localVarPath =
-        `/v1/projects/{projectId}/merge/finddups/{maxInList}/{maxLists}`
+        `/v1/projects/{projectId}/merge/finddups/{maxInList}/{maxLists}/{ignoreProtected}`
           .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
           .replace(`{${"maxInList"}}`, encodeURIComponent(String(maxInList)))
-          .replace(`{${"maxLists"}}`, encodeURIComponent(String(maxLists)));
+          .replace(`{${"maxLists"}}`, encodeURIComponent(String(maxLists)))
+          .replace(
+            `{${"ignoreProtected"}}`,
+            encodeURIComponent(String(ignoreProtected))
+          );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -519,6 +531,7 @@ export const MergeApiFp = function (configuration?: Configuration) {
      * @param {string} projectId
      * @param {number} maxInList
      * @param {number} maxLists
+     * @param {boolean} ignoreProtected
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -526,6 +539,7 @@ export const MergeApiFp = function (configuration?: Configuration) {
       projectId: string,
       maxInList: number,
       maxLists: number,
+      ignoreProtected: boolean,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -535,6 +549,7 @@ export const MergeApiFp = function (configuration?: Configuration) {
           projectId,
           maxInList,
           maxLists,
+          ignoreProtected,
           options
         );
       return createRequestFunction(
@@ -744,6 +759,7 @@ export const MergeApiFactory = function (
      * @param {string} projectId
      * @param {number} maxInList
      * @param {number} maxLists
+     * @param {boolean} ignoreProtected
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -751,10 +767,17 @@ export const MergeApiFactory = function (
       projectId: string,
       maxInList: number,
       maxLists: number,
+      ignoreProtected: boolean,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
-        .findPotentialDuplicates(projectId, maxInList, maxLists, options)
+        .findPotentialDuplicates(
+          projectId,
+          maxInList,
+          maxLists,
+          ignoreProtected,
+          options
+        )
         .then((request) => request(axios, basePath));
     },
     /**
@@ -903,6 +926,13 @@ export interface MergeApiFindPotentialDuplicatesRequest {
    * @memberof MergeApiFindPotentialDuplicates
    */
   readonly maxLists: number;
+
+  /**
+   *
+   * @type {boolean}
+   * @memberof MergeApiFindPotentialDuplicates
+   */
+  readonly ignoreProtected: boolean;
 }
 
 /**
@@ -1074,6 +1104,7 @@ export class MergeApi extends BaseAPI {
         requestParameters.projectId,
         requestParameters.maxInList,
         requestParameters.maxLists,
+        requestParameters.ignoreProtected,
         options
       )
       .then((request) => request(this.axios, this.basePath));
