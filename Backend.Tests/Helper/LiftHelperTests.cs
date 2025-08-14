@@ -7,7 +7,7 @@ using BackendFramework.Helper;
 
 namespace Backend.Tests.Helper
 {
-    public class LiftHelperTests
+    internal sealed class LiftHelperTests
     {
         [Test]
         public void EntryUnprotected()

@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Models
 {
-    public class SiteBannerTests
+    internal sealed class SiteBannerTests
     {
         [Test]
         public void TestConstructorTypeIsNone()

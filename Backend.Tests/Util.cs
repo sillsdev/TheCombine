@@ -8,7 +8,7 @@ using static System.Linq.Enumerable;
 
 namespace Backend.Tests
 {
-    public static class Util
+    internal static class Util
     {
         /// <summary> Path to Assets directory from debugging folder </summary>
         public static readonly string AssetsDir = Path.Combine(Directory.GetParent(Directory.GetParent(

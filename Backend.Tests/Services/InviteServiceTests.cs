@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Services
 {
-    public class InviteServiceTests
+    internal sealed class InviteServiceTests
     {
         private IInviteRepository _inviteRepo = null!;
         private IUserRepository _userRepo = null!;
