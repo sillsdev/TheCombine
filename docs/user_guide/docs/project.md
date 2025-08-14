@@ -160,9 +160,16 @@ used for the file names).
 
     Currently, the maximum size of LIFT files supported for import is 100MB.
 
-!!! note "Note"
+When you import a LIFT file into The Combine, it will import every entry with lexeme form or citation form that matches
+the project's vernacular language.
 
-    Currently, only one LIFT file can be imported per project.
+The first time you import into a project, the imported words will be added alongside any words collected in The Combine.
+No automatic deduplication, merging, or syncing will be performed.
+
+If you do a second import, all words in The Combine will be automatically deleted before the new words are imported. Do
+not do a second import unless you have already exported your project and imported it into FieldWorks. Then, if you want
+to do more word collection in The Combine, you can export from FieldWorks and import into the Combine. The previous
+words will be deleted to allow for a clean start with the up-to-date data from FieldWorks.
 
 #### Export {#export}
 
