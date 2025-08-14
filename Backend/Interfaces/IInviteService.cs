@@ -5,8 +5,7 @@ namespace BackendFramework.Interfaces
 {
     public interface IInviteService
     {
-        Task<string> CreateLinkWithToken(Project project, Role role, string emailAddress);
-        Task<bool> EmailLink(string emailAddress, string emailMessage, string link, string domain, Project project);
-        Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, EmailInvite emailInvite);
+        Task<string> EmailLink(Project project, Role role, string emailAddress, string message);
+        Task<EmailInviteStatus> ValidateProjectToken(string projectId, string token);
     }
 }

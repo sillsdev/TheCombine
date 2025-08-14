@@ -27,7 +27,6 @@ namespace Backend.Tests.Models
                 CustomFields = new() { new() { Name = "CustomFieldName", Type = "type" } },
                 WordFields = new() { "some field string" },
                 PartsOfSpeech = new() { "noun", "verb" },
-                InviteTokens = new() { new(10, "user@combine.org", Role.Harvester) },
                 WorkshopSchedule = new() { new(2222, 2, 22), },
             };
             Assert.That(project.Clone(), Is.EqualTo(project).UsingPropertiesComparer());

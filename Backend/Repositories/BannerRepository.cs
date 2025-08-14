@@ -8,7 +8,7 @@ using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
 {
-    /// <summary> Atomic database functions for <see cref="Banner"/> singleton. </summary>
+    /// <summary> Atomic database functions for <see cref="Banner"/>s. </summary>
     [ExcludeFromCodeCoverage]
     public class BannerRepository(IMongoDbContext dbContext) : IBannerRepository
     {

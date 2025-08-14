@@ -1,83 +1,92 @@
+using System;
 using System.Linq;
 using Backend.Tests.Mocks;
+using BackendFramework;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
+using Microsoft.Extensions.Options;
 using NUnit.Framework;
 
 namespace Backend.Tests.Services
 {
     public class InviteServiceTests
     {
-        private IProjectRepository _projRepo = null!;
+        private IInviteRepository _inviteRepo = null!;
         private IUserRepository _userRepo = null!;
         private IUserRoleRepository _userRoleRepo = null!;
-        private IEmailService _emailService = null!;
-        private IPermissionService _permService = null!;
         private InviteService _inviteService = null!;
         private const string Email = "user@domain.com";
+        private const string ProjId = "test-project-id";
+        private readonly TimeSpan _expireTime = TimeSpan.FromDays(7);
 
-
-        private Project _proj = null!;
         private User _user = null!;
 
         [SetUp]
         public void Setup()
         {
-            _projRepo = new ProjectRepositoryMock();
+            var options = Options.Create(new Startup.Settings { ExpireTimeProjectInvite = _expireTime });
+            _inviteRepo = new InviteRepositoryMock();
             _userRepo = new UserRepositoryMock();
             _userRoleRepo = new UserRoleRepositoryMock();
-            _emailService = new EmailServiceMock();
-            _permService = new PermissionServiceMock(_userRepo);
-            _inviteService = new InviteService(_projRepo, _userRepo, _permService, _userRoleRepo, _emailService);
+            _inviteService = new InviteService(options, _inviteRepo, _userRepo, _userRoleRepo,
+                new EmailServiceMock(), new PermissionServiceMock(_userRepo));
 
-            _proj = _projRepo.Create(new Project { Name = "InviteServiceTests" }).Result!;
             _user = _userRepo.Create(new User()).Result!;
         }
 
         [Test]
-        public void TestCreateLinkWithToken()
+        public void TestCreateLink()
         {
-            var url = _inviteService.CreateLinkWithToken(_proj, Role.Harvester, Email).Result;
-            Assert.That(url, Does.Contain(Email));
-            Assert.That(url, Does.Contain(_proj.Id));
-            var token = _projRepo.GetProject(_proj.Id).Result!.InviteTokens.First().Token;
-            Assert.That(url, Does.Contain(token));
+            var invite = new ProjectInvite(ProjId, Email, Role.Owner);
+            var url = InviteService.CreateLink(invite);
+            Assert.That(url, Does.Contain(Email).And.Contain(ProjId).And.Contain(invite.Token));
+        }
+
+        [Test]
+        public void TestCreateProjectInvite()
+        {
+            var invite = _inviteService.CreateProjectInvite(ProjId, Role.Editor, Email).Result;
+            var result = _inviteRepo.FindByToken(invite.Token).Result;
+            Assert.That(result?.Email, Is.EqualTo(Email));
+            Assert.That(result?.ProjectId, Is.EqualTo(ProjId));
+            Assert.That(result?.Role, Is.EqualTo(Role.Editor));
         }
 
         [Test]
         public void TestRemoveTokenAndCreateUserRoleOwnerException()
         {
-            var invite = new EmailInvite { Role = Role.Owner };
+            var invite = new ProjectInvite(ProjId, Email, Role.Owner);
             Assert.That(
-                () => _inviteService.RemoveTokenAndCreateUserRole(_proj, _user, invite),
+                () => _inviteService.RemoveTokenAndCreateUserRole(ProjId, _user, invite),
                 Throws.TypeOf<InviteService.InviteException>());
         }
 
         [Test]
         public void TestRemoveTokenAndCreateUserRoleAddsRole()
         {
-            var result = _inviteService.RemoveTokenAndCreateUserRole(_proj, _user, new EmailInvite()).Result;
+            var invite = new ProjectInvite(ProjId, Email, Role.Harvester);
+            _inviteRepo.Insert(invite).Wait();
+            Assert.That(_inviteRepo.FindByToken(invite.Token).Result, Is.Not.Null);
+
+            var result = _inviteService.RemoveTokenAndCreateUserRole(ProjId, _user, invite).Result;
             Assert.That(result, Is.True);
-            var userRoles = _userRoleRepo.GetAllUserRoles(_proj.Id).Result;
+            var userRoles = _userRoleRepo.GetAllUserRoles(ProjId).Result;
             Assert.That(userRoles, Has.Count.EqualTo(1));
             var userRole = userRoles.First();
-            Assert.That(_userRepo.GetUser(_user.Id).Result!.ProjectRoles[_proj.Id], Is.EqualTo(userRole.Id));
+            Assert.That(_userRepo.GetUser(_user.Id).Result!.ProjectRoles[ProjId], Is.EqualTo(userRole.Id));
         }
 
         [Test]
         public void TestRemoveTokenAndCreateUserRoleRemovesToken()
         {
-            var invite = new EmailInvite(1);
-            _proj.InviteTokens.Add(invite);
-            _ = _projRepo.Update(_proj.Id, _proj).Result;
-            _proj = _projRepo.GetProject(_proj.Id).Result!;
-            Assert.That(_proj.InviteTokens, Has.Count.EqualTo(1));
+            var invite = new ProjectInvite(ProjId, Email, Role.Harvester);
+            _inviteRepo.Insert(invite).Wait();
+            Assert.That(_inviteRepo.FindByToken(invite.Token).Result, Is.Not.Null);
 
-            var result = _inviteService.RemoveTokenAndCreateUserRole(_proj, _user, invite).Result;
+            var result = _inviteService.RemoveTokenAndCreateUserRole(ProjId, _user, invite).Result;
             Assert.That(result, Is.True);
-            _proj = _projRepo.GetProject(_proj.Id).Result!;
-            Assert.That(_proj.InviteTokens, Is.Empty);
+            Assert.That(_inviteRepo.FindByToken(invite.Token).Result, Is.Null);
         }
     }
 }
