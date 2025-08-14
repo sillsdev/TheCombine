@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public sealed class UserControllerTests : IDisposable
+    internal sealed class UserControllerTests : IDisposable
     {
         private IUserRepository _userRepo = null!;
         private UserController _userController = null!;

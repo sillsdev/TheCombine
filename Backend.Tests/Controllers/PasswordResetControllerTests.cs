@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public sealed class PasswordResetControllerTests : IDisposable
+    internal sealed class PasswordResetControllerTests : IDisposable
     {
         private PasswordResetServiceMock _passwordResetService = null!;
         private PasswordResetController _passwordResetController = null!;

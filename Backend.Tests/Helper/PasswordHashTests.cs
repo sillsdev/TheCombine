@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Helper
 {
-    public class PasswordHashTests
+    internal sealed class PasswordHashTests
     {
         private const string Password = "password123";
 

@@ -13,7 +13,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public sealed class InviteControllerTests : IDisposable
+    internal sealed class InviteControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
         private IUserRepository _userRepo = null!;

@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Models
 {
-    public class SpeakerTests
+    internal sealed class SpeakerTests
     {
         private const string Id = "SpeakerTestsId";
         private const string ProjectId = "SpeakerTestsProjectId";
