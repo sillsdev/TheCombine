@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public sealed class EmailVerifyControllerTests : IDisposable
+    internal sealed class EmailVerifyControllerTests : IDisposable
     {
         private EmailVerifyServiceMock _emailVerifyService = null!;
         private IPermissionService _permissionService = null!;
@@ -54,7 +54,8 @@ namespace Backend.Tests.Controllers
         {
             _emailVerifyService.SetNextBoolResponse(false);
             var falseResult = _emailVerifyController.RequestEmailVerify(Email).Result;
-            Assert.That(((StatusCodeResult)falseResult).StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
+            Assert.That(((StatusCodeResult)falseResult).StatusCode,
+                Is.EqualTo(StatusCodes.Status500InternalServerError));
 
             _emailVerifyService.SetNextBoolResponse(true);
             var trueResult = _emailVerifyController.RequestEmailVerify(Email).Result;
@@ -68,12 +69,12 @@ namespace Backend.Tests.Controllers
             _emailVerifyController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
             _emailVerifyService.SetNextBoolResponse(false);
-            var falseResult = _emailVerifyController.ValidateToken("token").Result;
+            var falseResult = _emailVerifyController.ValidateEmailToken("token").Result;
             Assert.That(falseResult, Is.TypeOf<OkObjectResult>());
             Assert.That(((OkObjectResult)falseResult).Value, Is.EqualTo(false));
 
             _emailVerifyService.SetNextBoolResponse(true);
-            var trueResult = _emailVerifyController.ValidateToken("token").Result;
+            var trueResult = _emailVerifyController.ValidateEmailToken("token").Result;
             Assert.That(trueResult, Is.TypeOf<OkObjectResult>());
             Assert.That(((OkObjectResult)trueResult).Value, Is.EqualTo(true));
         }
