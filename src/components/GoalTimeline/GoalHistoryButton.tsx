@@ -10,7 +10,6 @@ import { EditsCount } from "goals/ReviewEntries/ReviewEntriesCompleted";
 import { EntriesEdited } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { Goal, GoalName } from "types/goals";
 import { goalNameToIcon } from "utilities/goalUtilities";
-import { getLocalizedDateTimeString } from "utilities/utilities";
 
 interface GoalHistoryButtonProps {
   goal: Goal;
@@ -24,7 +23,15 @@ export default function GoalHistoryButton(
   const { i18n, t } = useTranslation();
 
   const modifiedFormatted = goal.modified
-    ? getLocalizedDateTimeString(goal.modified, i18n.resolvedLanguage)
+    ? new Date(goal.modified).toLocaleString(i18n.resolvedLanguage, {
+        day: "numeric",
+        hour: "numeric",
+        hour12: true,
+        minute: "2-digit",
+        month: "short",
+        weekday: "short",
+        year: "numeric",
+      })
     : null;
 
   return (
