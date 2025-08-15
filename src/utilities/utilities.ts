@@ -43,12 +43,6 @@ interface DateTimeSeparators {
   time?: string;
 }
 
-export const friendlySep: DateTimeSeparators = {
-  date: "/",
-  dateTime: " ",
-  time: ":",
-};
-
 const pathSep: DateTimeSeparators = {
   date: "-",
   dateTime: "_",
@@ -76,6 +70,21 @@ export function getDateTimeString(
   const dateString = strs.slice(0, 3).join(sep?.date ?? pathSep.date);
   const timeString = strs.slice(3, 6).join(sep?.time ?? pathSep.time);
   return `${dateString}${sep?.dateTime ?? pathSep.dateTime}${timeString}`;
+}
+
+export function getLocalizedDateTimeString(
+  utcString?: string,
+  lang?: string
+): string {
+  return new Date(utcString ?? Date.now()).toLocaleString(lang, {
+    day: "numeric",
+    hour: "numeric",
+    hour12: true,
+    minute: "2-digit",
+    month: "short",
+    weekday: "short",
+    year: "numeric",
+  });
 }
 
 // A general-purpose edit distance.
