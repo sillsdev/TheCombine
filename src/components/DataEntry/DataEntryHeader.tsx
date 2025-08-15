@@ -30,11 +30,11 @@ export default function DataEntryHeader(
       <Switch
         id="questionVisibilitySwitch"
         onChange={() => props.setQuestionVisibility(!props.questionsVisible)}
-        icon={<Help style={{ fontSize: 21 }} />}
-        checkedIcon={<Help style={{ fontSize: 21 }} />}
+        icon={<Help sx={{ fontSize: 19 }} />}
+        checkedIcon={<Help sx={{ fontSize: 19 }} />}
         checked={props.questionsVisible}
         color="primary"
-        style={{ paddingTop: "8px" }}
+        sx={{ pt: "11px" }}
         disabled={!domain.questions.length}
         onKeyDown={(e) => {
           if (e.key === Key.Enter) {

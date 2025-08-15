@@ -34,7 +34,7 @@ export default function ExistingDataTable(
   const closeDrawer = (): void => props.toggleDrawer(false);
 
   const list = (): ReactElement => (
-    <List style={{ minWidth: "300px" }}>
+    <List sx={{ minWidth: "300px" }}>
       {props.domainWords.map((w, i) => (
         <ImmutableExistingData
           glosses={w.glosses}
@@ -54,7 +54,7 @@ export default function ExistingDataTable(
       onClose={closeDrawer}
       onKeyDown={closeDrawer}
       role="presentation"
-      style={{ zIndex: theme.zIndex.drawer + 1 }}
+      sx={{ zIndex: theme.zIndex.drawer + 1 }}
     >
       {list()}
     </Drawer>

@@ -21,7 +21,6 @@ import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog"
 import { focusInput } from "components/DataEntry/utilities";
 import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import { type StoreState } from "rootRedux/types";
-import theme from "types/theme";
 import { FileWithSpeakerId } from "types/word";
 
 export enum NewEntryId {
@@ -308,7 +307,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
 function EnterGrid(): ReactElement {
   const { t } = useTranslation();
   return (
-    <Grid2 size={12} style={{ paddingInlineStart: theme.spacing(1) }}>
+    <Grid2 size={12} sx={{ paddingInlineStart: 1 }}>
       <Typography variant="body2">{t("addWords.pressEnter")}</Typography>
     </Grid2>
   );

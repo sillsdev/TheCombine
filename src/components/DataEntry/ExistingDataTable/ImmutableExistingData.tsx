@@ -1,11 +1,11 @@
-import { Grid2 } from "@mui/material";
-import { CSSProperties, ReactElement } from "react";
+import { Grid2, SxProps } from "@mui/material";
+import { ReactElement } from "react";
 
 import { Gloss } from "api/models";
 import { TypographyWithFont } from "utilities/fontComponents";
 
 /** Style with a top dotted line if the index isn't 0. */
-function TopStyle(index: number, style?: "solid" | "dotted"): CSSProperties {
+function BorderTopSx(index: number, style?: "solid" | "dotted"): SxProps {
   return index ? { borderTopStyle: style ?? "solid", borderTopWidth: 1 } : {};
 }
 
@@ -19,26 +19,22 @@ interface ImmutableExistingDataProps {
 export default function ImmutableExistingData(
   props: ImmutableExistingDataProps
 ): ReactElement {
+  const { glosses, index, vernacular } = props;
+
   return (
     <Grid2 container wrap="nowrap" justifyContent="space-around">
-      <Grid2
-        size={5}
-        style={{ ...TopStyle(props.index), position: "relative" }}
-      >
+      <Grid2 size={5} sx={{ ...BorderTopSx(index), position: "relative" }}>
         <TypographyWithFont variant="body1" vernacular>
-          {props.vernacular}
+          {vernacular}
         </TypographyWithFont>
       </Grid2>
-      <Grid2
-        size={5}
-        style={{ ...TopStyle(props.index), position: "relative" }}
-      >
-        {props.glosses.map((g, i) => (
+      <Grid2 size={5} sx={{ ...BorderTopSx(index), position: "relative" }}>
+        {glosses.map((g, i) => (
           <TypographyWithFont
             analysis
             key={i}
             lang={g.language}
-            style={TopStyle(i, "dotted")}
+            sx={BorderTopSx(i, "dotted")}
             variant="body1"
           >
             {g.def}

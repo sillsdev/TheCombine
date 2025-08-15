@@ -35,7 +35,6 @@ import { uploadFileFromPronunciation } from "components/Pronunciations/utilities
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { type Hash } from "types/hash";
-import theme from "types/theme";
 import {
   FileWithSpeakerId,
   newGloss,
@@ -1016,7 +1015,7 @@ export default function DataEntryTable(
 
   return (
     <form onSubmit={(e?: FormEvent<HTMLFormElement>) => e?.preventDefault()}>
-      <Grid2 container rowSpacing={theme.spacing(2)}>
+      <Grid2 container rowSpacing={2}>
         <Grid2 size={4}>
           <Typography align="center" variant="h5">
             {t("addWords.vernacular")}
