@@ -27,13 +27,10 @@ using static SIL.DictionaryServices.Lift.LiftWriter;
 namespace BackendFramework.Services
 {
     /// <summary> Extension of <see cref="LiftWriter"/> to add audio pronunciation </summary>
-    public class CombineLiftWriter : LiftWriter
+    public class CombineLiftWriter(string path, ByteOrderStyle byteOrderStyle) : LiftWriter(path, byteOrderStyle)
     {
-        public CombineLiftWriter(string path, ByteOrderStyle byteOrderStyle) : base(path, byteOrderStyle) { }
-
         /// <summary> Overrides empty function from the base SIL LiftWriter to properly add pronunciation </summary>
-        protected override void InsertPronunciationIfNeeded(
-            LexEntry entry, List<string> propertiesAlreadyOutput)
+        protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
         {
             if (entry.Pronunciations.Count != 0 && entry.Pronunciations.First().Forms.Length != 0)
             {
@@ -100,10 +97,7 @@ namespace BackendFramework.Services
 #pragma warning restore CA1816, CA2215
     }
 
-    public sealed class MissingProjectException : Exception
-    {
-        public MissingProjectException(string message) : base(message) { }
-    }
+    public sealed class MissingProjectException(string message) : Exception(message);
 
     public class LiftService : ILiftService
     {
@@ -135,6 +129,15 @@ namespace BackendFramework.Services
 
             _liftExports = new ConcurrentDictionary<string, (string, string)>();
             _liftImports = new ConcurrentDictionary<string, string>();
+        }
+
+        public void Dispose()
+        {
+            if (Sldr.IsInitialized)
+            {
+                Sldr.Cleanup();
+            }
+            GC.SuppressFinalize(this);
         }
 
         /// <summary> Invalidate most recent export by no longer storing its exportId. </summary>

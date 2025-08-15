@@ -46,18 +46,21 @@ describe("ResetRequest", () => {
     await renderUserSettings();
 
     // Before
-    const button = screen.getByRole("button");
-    expect(button).toBeDisabled();
+    const login = screen.getByTestId(PasswordRequestIds.ButtonLogin);
+    const submit = screen.getByTestId(PasswordRequestIds.ButtonSubmit);
+    expect(login).toBeEnabled();
+    expect(submit).toBeDisabled();
 
     // Agent
     const field = screen.getByTestId(PasswordRequestIds.FieldEmailOrUsername);
     await agent.type(field, "a");
 
     // After
-    expect(button).toBeEnabled();
+    expect(login).toBeEnabled();
+    expect(submit).toBeEnabled();
   });
 
-  it("after submit, removes text field and submit button and reveals login button", async () => {
+  it("after submit, removes text field and submit button", async () => {
     // Setup
     const agent = userEvent.setup();
     await renderUserSettings();
@@ -66,19 +69,19 @@ describe("ResetRequest", () => {
     expect(
       screen.queryByTestId(PasswordRequestIds.FieldEmailOrUsername)
     ).toBeTruthy();
+    expect(screen.queryByTestId(PasswordRequestIds.ButtonLogin)).toBeTruthy();
     expect(screen.queryByTestId(PasswordRequestIds.ButtonSubmit)).toBeTruthy();
-    expect(screen.queryByTestId(PasswordRequestIds.ButtonLogin)).toBeNull();
 
     // Agent
     const field = screen.getByTestId(PasswordRequestIds.FieldEmailOrUsername);
     await agent.type(field, "a");
-    await agent.click(screen.getByRole("button"));
+    await agent.click(screen.getByTestId(PasswordRequestIds.ButtonSubmit));
 
     // After
     expect(
       screen.queryByTestId(PasswordRequestIds.FieldEmailOrUsername)
     ).toBeNull();
-    expect(screen.queryByTestId(PasswordRequestIds.ButtonSubmit)).toBeNull();
     expect(screen.queryByTestId(PasswordRequestIds.ButtonLogin)).toBeTruthy();
+    expect(screen.queryByTestId(PasswordRequestIds.ButtonSubmit)).toBeNull();
   });
 });

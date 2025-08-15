@@ -116,13 +116,17 @@
     "updateSuccess": "Configurações atualizadas com sucesso."
   },
   "projectExport": {
-    "cannotExportEmpty": "O projeto está vazio. Não é possível exportar um projeto sem palavras."
+    "cancelExport": "Cancelar exportação",
+    "cannotExportEmpty": "O projeto está vazio. Não é possível exportar um projeto sem palavras.",
+    "downloadInProgress": "Baixando projeto: {{ val }}",
+    "exportInProgress": "Exportando projeto: {{ val }}"
   },
   "projectSettings": {
     "project": "Projeto:",
     "tab": {
       "domains": "Domínios Semânticos",
       "export": "Exportar",
+      "importExport": "Importar/Exportar",
       "languages": "Idiomas",
       "users": "Usuários"
     },
@@ -241,7 +245,7 @@
     "undo": { "undoDisabled": "Desfazer indisponível" }
   },
   "charInventory": {
-    "title": "Criar Inventário de Caracteres",
+    "title": "Verificar ortografia",
     "characters": "caracteres",
     "examples": "Exemplos",
     "occurrences": "ocorrências",

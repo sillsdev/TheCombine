@@ -82,6 +82,7 @@
     "resetRequestInstructions": "We will send a one-time reset link for your account to your email.",
     "submit": "Submit",
     "resetFail": "Password reset error",
+    "resetSuccess": "Password reset successful",
     "resetDone": "If you have correctly entered your email or username, a password reset link has been sent to your email address.",
     "backToLogin": "Back To Login"
   },
@@ -286,6 +287,7 @@
       "searchPlaceholder": "Search...",
       "searchTitle": "Find Users",
       "emailLabel": "Email",
+      "emailMessage": "Message (optional)",
       "toastSuccess": "User added to the project.",
       "toastFail": "Failed to add user to the project."
     },
@@ -318,25 +320,32 @@
     "progressMerge": "Merge Set {{ val1 }} of {{ val2 }}"
   },
   "createStrWordInv": {
-    "title": "Create Structural Word Inventory"
+    "title": "Create Structural Word Inventory",
+    "description": "NOT IMPLEMENTED"
   },
   "handleFlags": {
-    "title": "Handle Flags"
+    "title": "Handle Flags",
+    "description": "NOT IMPLEMENTED"
   },
   "reviewDeferredDups": {
-    "title": "Review Deferred Duplicates"
+    "title": "Review Deferred Duplicates",
+    "description": "Revisit potential duplicates that were deferred during Merge Duplicates."
   },
   "spellCheckGloss": {
-    "title": "Spell Check Gloss"
+    "title": "Spell Check Gloss",
+    "description": "NOT IMPLEMENTED"
   },
   "validateChars": {
-    "title": "Validate Characters"
+    "title": "Validate Characters",
+    "description": "NOT IMPLEMENTED"
   },
   "validateStrWords": {
-    "title": "Validate Structural Words"
+    "title": "Validate Structural Words",
+    "description": "NOT IMPLEMENTED"
   },
   "reviewEntries": {
     "title": "Review Entries",
+    "description": "View, sort, filter, and edit entries in the project.",
     "allEntriesPerPageOption": "All",
     "editSense": "Edit sense",
     "discardChanges": "Discard changes?",
@@ -375,7 +384,8 @@
     }
   },
   "charInventory": {
-    "title": "Create Character Inventory",
+    "title": "Check Orthography",
+    "description": "Review characters used in the spelling of vernacular words and check for typos.",
     "characters": "characters",
     "examples": "Examples",
     "occurrences": "occurrences",
@@ -418,6 +428,7 @@
   },
   "mergeDups": {
     "title": "Merge Duplicates",
+    "description": "Review potential duplicates identified by The Combine and merge or eliminate true duplicates.",
     "helpText": {
       "dragCard": "Drag a card here to merge",
       "saveAndContinue": "Save changes and load a new set of words",

@@ -9,35 +9,23 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class UserControllerTests : IDisposable
+    internal sealed class UserControllerTests : IDisposable
     {
         private IUserRepository _userRepo = null!;
-        private IPasswordResetService _passwordResetService = null!;
-        private IPermissionService _permissionService = null!;
         private UserController _userController = null!;
 
         public void Dispose()
         {
-            Dispose(true);
+            _userController?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _userController?.Dispose();
-            }
         }
 
         [SetUp]
         public void Setup()
         {
             _userRepo = new UserRepositoryMock();
-            _passwordResetService = new PasswordResetServiceMock();
-            _permissionService = new PermissionServiceMock(_userRepo);
-            _userController = new UserController(_userRepo, _permissionService,
-                new CaptchaServiceMock(), new EmailServiceMock(), _passwordResetService);
+            _userController = new UserController(
+                _userRepo, new CaptchaServiceMock(), new PermissionServiceMock(_userRepo));
         }
 
         private static User RandomUser()
@@ -59,53 +47,6 @@ namespace Backend.Tests.Controllers
 
             var result = _userController.VerifyCaptchaToken("token").Result;
             Assert.That(result, Is.TypeOf<OkResult>());
-        }
-
-        [Test]
-        public void TestResetPasswordRequest()
-        {
-            // No permissions should be required to request a password reset.
-            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-
-            // Returns Ok regardless of if user exists.
-            var noUserResult = _userController.ResetPasswordRequest("fake-username").Result;
-            Assert.That(noUserResult, Is.TypeOf<OkResult>());
-
-            var username = _userRepo.Create(new() { Username = "Imarealboy" }).Result!.Username;
-            var yesUserResult = _userController.ResetPasswordRequest(username).Result;
-            Assert.That(yesUserResult, Is.TypeOf<OkResult>());
-        }
-
-        [Test]
-        public void TestValidateResetToken()
-        {
-            // No permissions should be required to validate a password reset token.
-            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-
-            ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(false);
-            var falseResult = _userController.ValidateResetToken("token").Result;
-            Assert.That(falseResult, Is.TypeOf<OkObjectResult>());
-            Assert.That(((OkObjectResult)falseResult).Value, Is.EqualTo(false));
-
-            ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(true);
-            var trueResult = _userController.ValidateResetToken("token").Result;
-            Assert.That(trueResult, Is.TypeOf<OkObjectResult>());
-            Assert.That(((OkObjectResult)trueResult).Value, Is.EqualTo(true));
-        }
-
-        [Test]
-        public void TestResetPassword()
-        {
-            // No permissions should be required to reset password via a token.
-            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-
-            ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(false);
-            var falseResult = _userController.ResetPassword(new()).Result;
-            Assert.That(falseResult, Is.TypeOf<ForbidResult>());
-
-            ((PasswordResetServiceMock)_passwordResetService).SetNextBoolResponse(true);
-            var trueResult = _userController.ResetPassword(new()).Result;
-            Assert.That(trueResult, Is.TypeOf<OkResult>());
         }
 
         [Test]

@@ -8,27 +8,22 @@ using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
 {
-    /// <summary> Atomic database functions for <see cref="Banner"/> singleton. </summary>
+    /// <summary> Atomic database functions for <see cref="Banner"/>s. </summary>
     [ExcludeFromCodeCoverage]
-    public class BannerRepository : IBannerRepository
+    public class BannerRepository(IMongoDbContext dbContext) : IBannerRepository
     {
-        private readonly IBannerContext _bannerDatabase;
-
-        public BannerRepository(IBannerContext collectionSettings)
-        {
-            _bannerDatabase = collectionSettings;
-        }
+        private readonly IMongoCollection<Banner> _banners = dbContext.Db.GetCollection<Banner>("BannerCollection");
 
         private async Task<Banner> CreateEmptyBanner(BannerType type)
         {
             var emptyBanner = new Banner { Type = type };
-            await _bannerDatabase.Banners.InsertOneAsync(emptyBanner);
+            await _banners.InsertOneAsync(emptyBanner);
             return emptyBanner;
         }
 
         public async Task<Banner> GetBanner(BannerType type)
         {
-            var bannerList = await _bannerDatabase.Banners.FindAsync(x => x.Type == type);
+            var bannerList = await _banners.FindAsync(x => x.Type == type);
             try
             {
                 return await bannerList.FirstAsync();
@@ -46,7 +41,7 @@ namespace BackendFramework.Repositories
             var updateDef = Builders<Banner>.Update
                 .Set(x => x.Type, banner.Type)
                 .Set(x => x.Text, banner.Text);
-            var updateResult = await _bannerDatabase.Banners.UpdateOneAsync(filter, updateDef);
+            var updateResult = await _banners.UpdateOneAsync(filter, updateDef);
 
             // The singleton for each banner type should always exist, so this case should never happen.
             if (!updateResult.IsAcknowledged)

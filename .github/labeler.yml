@@ -1,0 +1,167 @@
+# https://github.com/actions/labeler?tab=readme-ov-file#create-githublabeleryml
+
+"audio":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/Audio*"
+          - "**/Pronunciations/**"
+          - "**/Speaker*"
+
+"backend":
+  - changed-files:
+      - all-globs-to-any-file:
+          - "Backend*/**"
+          - "!**/*.sh"
+          - "!**/*docker*"
+          - "!**/*Docker*"
+
+"bash":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.sh"
+
+"component: DataEntry":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/DataEntry/**"
+
+"component: TreeView":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*emanticDomain*"
+          - "**/semantic_domains/**"
+          - "**/TreeView/**"
+
+"dependencies":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.csproj"
+          - "**/*requirements.*"
+          - "package*.json"
+
+"deployment":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "deploy/**"
+          - "docs/deploy/**"
+          - "docs/nuc_instructions_for_use/**"
+          - "docs/release_process/**"
+          - "installer/**"
+          - "maintenance/**"
+          - "nginx/**"
+
+"docker":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*docker*"
+          - "**/*Docker*"
+          - "**/docker_home/**"
+          - "Backend/launch.sh"
+
+"documentation":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/README.*"
+          - "docs/**"
+
+"font/language":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*dictionary*"
+          - "**/*font*"
+          - "**/*spellChecker*"
+          - "**/*wordlist*"
+          - "**/*writing-system*"
+          - "**/*writingSystem*"
+          - "**/dictionaries/**"
+
+"frontend":
+  - changed-files:
+      - all-globs-to-any-file:
+          - "public/**"
+          - "!public/dictionaries/**"
+          - "!public/locales/**"
+      - all-globs-to-any-file:
+          - "src/**"
+          - "!src/api/**"
+          - "!src/backend.index.ts"
+
+"github_actions":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
+
+"goal":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*UserEdit*.cs"
+          - "**/goal*.ts*"
+          - "**/GoalTimeline/**"
+      - all-globs-to-any-file:
+          - "**/goals/**"
+          - "!**/CharacterInventory/**"
+          - "!**/MergeDuplicates/**"
+          - "!**/ReviewDeferredDuplicates/**"
+          - "!**/ReviewEntries/**"
+
+"goal: CharacterInventory":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/CharacterInventory/**"
+
+"goal: MergeDup":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*Duplicate*.cs"
+          - "**/*Merge*.cs"
+          - "**/MergeDuplicates/**"
+          - "**/ReviewDeferredDuplicates/**"
+
+"goal: ReviewEntries":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/ReviewEntries/**"
+
+"import/export":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*Import*.ts*"
+          - "**/*Lift*.cs"
+          - "**/ProjectExport/**"
+
+"login/signUp":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*Captcha*.cs"
+          - "**/*Password*.cs"
+          - "**/credentials.ts"
+          - "**/Login/**"
+          - "**/PasswordReset/**"
+
+"project":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*Invite*.cs"
+          - "**/*Project*.cs"
+          - "**/*Statistics*.cs"
+          - "**/*UserRole*.cs"
+      - all-globs-to-any-file:
+          - "**/Project*/**"
+          - "!**/*Import*"
+          - "!**/ProjectExport/**"
+
+"python":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.py"
+          - "**/*requirements.*"
+          - "pyproject*"
+          - "tox*"
+
+"test":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*Test*"
+          - "**/*testing*"
+          - "**/tests/**"
+          - "Backend.Tests/**"

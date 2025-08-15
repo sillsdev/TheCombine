@@ -35,7 +35,7 @@ beforeEach(async () => {
     render(
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
-          <Statistics />{" "}
+          <Statistics />
         </ThemeProvider>
       </StyledEngineProvider>
     );

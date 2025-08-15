@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Services
 {
-    public class PermissionServiceTests
+    internal sealed class PermissionServiceTests
     {
         private IUserRepository _userRepo = null!;
         private IUserRoleRepository _userRoleRepo = null!;

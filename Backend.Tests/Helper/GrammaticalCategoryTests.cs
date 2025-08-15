@@ -5,7 +5,7 @@ using static BackendFramework.Helper.GrammaticalCategory;
 
 namespace Backend.Tests.Helper
 {
-    public class GrammaticalCategoryTests
+    internal sealed class GrammaticalCategoryTests
     {
         private static List<string> _blank = new()
         {

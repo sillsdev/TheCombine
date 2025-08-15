@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Models
 {
-    public class UserEditTests
+    internal sealed class UserEditTests
     {
         [Test]
         public void TestClone()
@@ -14,7 +14,7 @@ namespace Backend.Tests.Models
         }
     }
 
-    public class UserEditStepWrapperTests
+    internal sealed class UserEditStepWrapperTests
     {
         [Test]
         public void TestConstructorStepIndexIsNull()
@@ -24,7 +24,7 @@ namespace Backend.Tests.Models
         }
     }
 
-    public class EditTests
+    internal sealed class EditTests
     {
         [Test]
         public void TestClone()

@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Models
 {
-    public class WordTests
+    internal sealed class WordTests
     {
         private const string Vernacular = "fr";
         private const string Text = "Text";
@@ -90,7 +90,7 @@ namespace Backend.Tests.Models
         }
     }
 
-    public class PronunciationTests
+    internal sealed class PronunciationTests
     {
         [Test]
         public void TestConstructorProtectedIsFalse()
@@ -108,7 +108,7 @@ namespace Backend.Tests.Models
 
     }
 
-    public class NoteTests
+    internal sealed class NoteTests
     {
         private const string Language = "fr";
         private const string Text = "Text";
@@ -192,7 +192,7 @@ namespace Backend.Tests.Models
         }
     }
 
-    public class FlagTests
+    internal sealed class FlagTests
     {
         private const string Text = "Text";
         private const string Text2 = "Different Text";
