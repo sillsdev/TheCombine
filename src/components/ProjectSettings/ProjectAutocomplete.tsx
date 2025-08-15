@@ -6,6 +6,12 @@ import { useTranslation } from "react-i18next";
 import { OffOnSetting } from "api/models";
 import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 
+export enum ProjectAutocompleteTextId {
+  MenuItemOff = "projectSettings.autocomplete.off",
+  MenuItemOn = "projectSettings.autocomplete.on",
+  Tooltip = "projectSettings.autocomplete.hint",
+}
+
 export default function ProjectAutocomplete(
   props: ProjectSettingProps
 ): ReactElement {
@@ -27,15 +33,15 @@ export default function ProjectAutocomplete(
         }
       >
         <MenuItem value={OffOnSetting.Off}>
-          {t("projectSettings.autocomplete.off")}
+          {t(ProjectAutocompleteTextId.MenuItemOff)}
         </MenuItem>
         <MenuItem value={OffOnSetting.On}>
-          {t("projectSettings.autocomplete.on")}
+          {t(ProjectAutocompleteTextId.MenuItemOn)}
         </MenuItem>
       </Select>
 
       <Tooltip
-        title={t("projectSettings.autocomplete.hint")}
+        title={t(ProjectAutocompleteTextId.Tooltip)}
         placement={document.body.dir === "rtl" ? "left" : "right"}
       >
         <HelpOutline fontSize="small" />
