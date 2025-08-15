@@ -2,7 +2,7 @@ import { Flag as FlagFilled, FlagOutlined } from "@mui/icons-material";
 import { Fragment, type ReactElement, useEffect, useState } from "react";
 
 import { type Flag } from "api/models";
-import { IconButtonWithTooltip } from "components/Buttons";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import { DeleteEditTextDialog } from "components/Dialogs";
 
 interface FlagButtonProps {

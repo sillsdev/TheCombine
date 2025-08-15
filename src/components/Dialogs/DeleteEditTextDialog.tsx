@@ -120,11 +120,11 @@ export default function DeleteEditTextDialog(
         <NormalizedTextField
           variant="standard"
           autoFocus
-          data-testid={props.textFieldId}
           value={text}
           onChange={(event) => setText(event.target.value)}
           onKeyPress={confirmIfEnter}
           InputProps={{ endAdornment }}
+          inputProps={{ "data-testid": props.textFieldId }}
           id={props.textFieldId}
         />
       </DialogContent>
