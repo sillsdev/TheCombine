@@ -22,7 +22,7 @@ import PronunciationsBackend from "components/Pronunciations/PronunciationsBacke
 import SenseCard from "components/WordCard/SenseCard";
 import SummarySenseCard from "components/WordCard/SummarySenseCard";
 import { TypographyWithFont } from "utilities/fontComponents";
-import { friendlySep, getDateTimeString } from "utilities/utilities";
+import { getLocalizedDateTimeString } from "utilities/utilities";
 
 interface WordCardProps {
   languages?: string[];
@@ -46,7 +46,7 @@ export default function WordCard(props: WordCardProps): ReactElement {
   const { audio, editedBy, flag, id, note, senses } = word;
   const [full, setFull] = useState(false);
   const [username, setUsername] = useState("");
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   useEffect(() => {
     if (provenance && editedBy?.length) {
@@ -145,7 +145,10 @@ export default function WordCard(props: WordCardProps): ReactElement {
             {t("wordCard.wordId", { val: id })}
             <br />
             {t("wordCard.wordModified", {
-              val: getDateTimeString(word.modified, friendlySep),
+              val: getLocalizedDateTimeString(
+                word.modified,
+                i18n.resolvedLanguage
+              ),
             })}
             {!!username && (
               <>
