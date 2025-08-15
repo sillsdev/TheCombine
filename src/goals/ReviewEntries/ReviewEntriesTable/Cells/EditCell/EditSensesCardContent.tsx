@@ -6,9 +6,9 @@ import {
   Edit,
   RestoreFromTrash,
 } from "@mui/icons-material";
-import { CardContent, Divider, Grid, Icon } from "@mui/material";
+import { Box, CardContent, Divider, Grid2, Icon, Stack } from "@mui/material";
 import { grey, yellow } from "@mui/material/colors";
-import { type ReactElement, useEffect, useState } from "react";
+import { Fragment, type ReactElement, useEffect, useState } from "react";
 
 import { type Sense, Status } from "api/models";
 import { IconButtonWithTooltip } from "components/Buttons";
@@ -18,7 +18,7 @@ import EditSenseDialog from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCe
 import { isSenseChanged } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/utilities";
 import { newSense } from "types/word";
 
-enum EditSensesId {
+export enum EditSensesId {
   ButtonSenseAdd = "add-sense-button",
   ButtonSenseBumpDownPrefix = "bump-up-sense-button-",
   ButtonSenseBumpUpPrefix = "bump-down-sense-button-",
@@ -55,35 +55,39 @@ export default function EditSensesCardContent(
   return (
     <CardContent>
       {props.showSenses ? (
-        <>
+        <Stack role="list" spacing={1}>
           {props.newSenses.map((s, i) => (
-            <EditSense
-              bumpSenseDown={
-                i < props.newSenses.length - 1
-                  ? () => props.moveSense(i, i + 1)
-                  : undefined
-              }
-              bumpSenseUp={i ? () => props.moveSense(i, i - 1) : undefined}
-              edited={changes[i]}
-              key={s.guid}
-              sense={s}
-              toggleSenseDeleted={() => props.toggleSenseDeleted(i)}
-              updateSense={props.updateOrAddSense}
-            />
+            <Fragment key={s.guid}>
+              <EditSense
+                bumpSenseDown={
+                  i < props.newSenses.length - 1
+                    ? () => props.moveSense(i, i + 1)
+                    : undefined
+                }
+                bumpSenseUp={i ? () => props.moveSense(i, i - 1) : undefined}
+                edited={changes[i]}
+                sense={s}
+                toggleSenseDeleted={() => props.toggleSenseDeleted(i)}
+                updateSense={props.updateOrAddSense}
+              />
+              <Divider />
+            </Fragment>
           ))}
+
           <IconButtonWithTooltip
             buttonId={EditSensesId.ButtonSenseAdd}
             icon={<Add />}
             onClick={() => setAddSense(true)}
             size="small"
           />
+
           <EditSenseDialog
             close={() => setAddSense(false)}
             isOpen={addSense}
             save={props.updateOrAddSense}
             sense={newSense()}
           />
-        </>
+        </Stack>
       ) : (
         <SummarySenseCard
           bgcolor={changes.some((change) => change) ? yellow[100] : undefined}
@@ -111,88 +115,74 @@ export function EditSense(props: EditSenseProps): ReactElement {
   const [editing, setEditing] = useState(false);
 
   return (
-    <>
-      <Grid container>
-        {props.bumpSenseDown || props.bumpSenseUp ? (
-          <Grid item>
-            <Grid container direction="column">
-              <Grid item>
-                <IconButtonWithTooltip
-                  buttonId={`${EditSensesId.ButtonSenseBumpUpPrefix}${sense.guid}`}
-                  icon={props.bumpSenseUp ? <ArrowUpward /> : <Icon />}
-                  onClick={props.bumpSenseUp}
-                  size="small"
-                />
-              </Grid>
-              <Grid item>
-                <IconButtonWithTooltip
-                  buttonId={`${EditSensesId.ButtonSenseBumpDownPrefix}${sense.guid}`}
-                  icon={props.bumpSenseDown ? <ArrowDownward /> : <Icon />}
-                  onClick={props.bumpSenseDown}
-                  size="small"
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-        ) : null}
-        <Grid item>
-          <Grid container direction="column">
-            {deleted ? (
-              <Grid item>
-                <IconButtonWithTooltip
-                  buttonId={`${EditSensesId.ButtonSenseRestorePrefix}${sense.guid}`}
-                  icon={<RestoreFromTrash />}
-                  onClick={props.toggleSenseDeleted}
-                  size="small"
-                />
-              </Grid>
-            ) : (
-              <>
-                <Grid item>
-                  <IconButtonWithTooltip
-                    buttonId={`${EditSensesId.ButtonSenseDeletePrefix}${sense.guid}`}
-                    icon={<Delete />}
-                    onClick={
-                      sense.accessibility === Status.Protected
-                        ? undefined
-                        : props.toggleSenseDeleted
-                    }
-                    size="small"
-                    textId={
-                      sense.accessibility === Status.Protected
-                        ? "reviewEntries.deleteDisabled"
-                        : undefined
-                    }
-                  />
-                </Grid>
-                <Grid item>
-                  <IconButtonWithTooltip
-                    buttonId={`${EditSensesId.ButtonSenseEditPrefix}${sense.guid}`}
-                    icon={<Edit />}
-                    onClick={() => setEditing(true)}
-                    size="small"
-                  />
-                </Grid>
-              </>
-            )}
-          </Grid>
-        </Grid>
-        <Grid item sx={{ maxWidth: `calc(100% - 80px)` }}>
-          <SenseCard
-            bgColor={
-              deleted ? grey[500] : props.edited ? yellow[100] : undefined
-            }
-            sense={sense}
+    <Grid2 container role="listitem">
+      {props.bumpSenseDown || props.bumpSenseUp ? (
+        <Stack>
+          <IconButtonWithTooltip
+            buttonId={`${EditSensesId.ButtonSenseBumpUpPrefix}${sense.guid}`}
+            icon={props.bumpSenseUp ? <ArrowUpward /> : <Icon />}
+            onClick={props.bumpSenseUp}
+            size="small"
           />
-        </Grid>
-        <EditSenseDialog
-          close={() => setEditing(false)}
-          isOpen={editing}
-          save={props.updateSense}
+
+          <IconButtonWithTooltip
+            buttonId={`${EditSensesId.ButtonSenseBumpDownPrefix}${sense.guid}`}
+            icon={props.bumpSenseDown ? <ArrowDownward /> : <Icon />}
+            onClick={props.bumpSenseDown}
+            size="small"
+          />
+        </Stack>
+      ) : null}
+
+      <Stack>
+        {deleted ? (
+          <IconButtonWithTooltip
+            buttonId={`${EditSensesId.ButtonSenseRestorePrefix}${sense.guid}`}
+            icon={<RestoreFromTrash />}
+            onClick={props.toggleSenseDeleted}
+            size="small"
+          />
+        ) : (
+          <>
+            <IconButtonWithTooltip
+              buttonId={`${EditSensesId.ButtonSenseDeletePrefix}${sense.guid}`}
+              icon={<Delete />}
+              onClick={
+                sense.accessibility === Status.Protected
+                  ? undefined
+                  : props.toggleSenseDeleted
+              }
+              size="small"
+              textId={
+                sense.accessibility === Status.Protected
+                  ? "reviewEntries.deleteDisabled"
+                  : undefined
+              }
+            />
+
+            <IconButtonWithTooltip
+              buttonId={`${EditSensesId.ButtonSenseEditPrefix}${sense.guid}`}
+              icon={<Edit />}
+              onClick={() => setEditing(true)}
+              size="small"
+            />
+          </>
+        )}
+      </Stack>
+
+      <Box sx={{ maxWidth: `calc(100% - 80px)` }}>
+        <SenseCard
+          bgColor={deleted ? grey[500] : props.edited ? yellow[100] : undefined}
           sense={sense}
         />
-      </Grid>
-      <Divider sx={{ mb: 1 }} />
-    </>
+      </Box>
+
+      <EditSenseDialog
+        close={() => setEditing(false)}
+        isOpen={editing}
+        save={props.updateSense}
+        sense={sense}
+      />
+    </Grid2>
   );
 }
