@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Helper
 {
-    public class DuplicateFinderTests
+    internal sealed class DuplicateFinderTests
     {
         private DuplicateFinder _dupFinder = null!;
         private List<Word> _frontier = null!;

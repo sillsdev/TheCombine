@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Models
 {
-    public class UserRoleTests
+    internal sealed class UserRoleTests
     {
         private const string Id = "one";
         private const string ProjectId = "first";
@@ -18,7 +18,7 @@ namespace Backend.Tests.Models
         }
     }
 
-    public class ProjectRoleTests
+    internal sealed class ProjectRoleTests
     {
         [Test]
         public void TestClone()

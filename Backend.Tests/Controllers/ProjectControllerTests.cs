@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class ProjectControllerTests : IDisposable
+    internal sealed class ProjectControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
         private IUserRepository _userRepo = null!;
@@ -17,16 +17,8 @@ namespace Backend.Tests.Controllers
 
         public void Dispose()
         {
-            Dispose(true);
+            _projController?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _projController?.Dispose();
-            }
         }
 
         [SetUp]

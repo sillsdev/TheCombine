@@ -9,23 +9,15 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class SemanticDomainControllerTests : IDisposable
+    internal sealed class SemanticDomainControllerTests : IDisposable
     {
         private ISemanticDomainRepository _semDomRepository = null!;
         private SemanticDomainController _semDomController = null!;
 
         public void Dispose()
         {
-            Dispose(true);
+            _semDomController?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _semDomController?.Dispose();
-            }
         }
 
         private const string Id = "1";
