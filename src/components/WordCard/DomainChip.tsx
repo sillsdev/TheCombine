@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { SemanticDomain } from "api/models";
 import { getUser } from "backend";
-import { friendlySep, getDateTimeString } from "utilities/utilities";
+import { getLocalizedDateTimeString } from "utilities/utilities";
 
 export function domainLabel(domain: SemanticDomain): string {
   return `${domain.id}: ${domain.name}`;
@@ -12,15 +12,16 @@ export function domainLabel(domain: SemanticDomain): string {
 
 interface DomainChipProps {
   domain: SemanticDomain;
+  onlyId?: boolean;
   provenance?: boolean;
 }
 
 export default function DomainChip(props: DomainChipProps): ReactElement {
-  const { provenance } = props;
-  const { created, userId } = props.domain;
+  const { domain, onlyId, provenance } = props;
+  const { created, id, userId } = domain;
 
   const [username, setUsername] = useState("");
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   useEffect(() => {
     if (provenance && userId) {
@@ -29,14 +30,20 @@ export default function DomainChip(props: DomainChipProps): ReactElement {
   }, [provenance, userId]);
 
   const hoverText = [];
+  if (onlyId) {
+    hoverText.push(domainLabel(domain));
+  }
   if (provenance && created) {
-    const val = getDateTimeString(created, friendlySep);
+    const val = getLocalizedDateTimeString(created, i18n.resolvedLanguage);
     hoverText.push(t("wordCard.domainAdded", { val }));
   }
   if (provenance && username) {
     hoverText.push(t("wordCard.user", { val: username }));
   }
   return (
-    <Chip label={domainLabel(props.domain)} title={hoverText.join("\n")} />
+    <Chip
+      label={onlyId ? id : domainLabel(domain)}
+      title={hoverText.join("\n")}
+    />
   );
 }
