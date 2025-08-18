@@ -66,12 +66,18 @@ export function getDateTimeString(
     date.getSeconds(),
   ];
   const strs = vals.map((value) => (value < 10 ? `0${value}` : `${value}`));
-  // TODO: Consider localization of the date-time formatting.
   const dateString = strs.slice(0, 3).join(sep?.date ?? pathSep.date);
   const timeString = strs.slice(3, 6).join(sep?.time ?? pathSep.time);
   return `${dateString}${sep?.dateTime ?? pathSep.dateTime}${timeString}`;
 }
 
+/** Uses `Date.toLocaleString`. Example outputs:
+ * - (`lang="ar"`) الاثنين، 18 أغسطس 2025، 9:23 ص
+ * - (`lang="en"`) Mon, Aug 18, 2025, 9:23 AM
+ * - (`lang="es"`) lun, 18 ago 2025, 9:23 a. m.
+ * - (`lang="fr"`) lun. 18 août 2025, 9:23 AM
+ * - (`lang="pt"`) seg., 18 de ago. de 2025, 9:23 AM
+ * - (`lang="zh"`) 2025年8月18日周一 上午9:23 */
 export function getLocalizedDateTimeString(
   utcString?: string,
   lang?: string

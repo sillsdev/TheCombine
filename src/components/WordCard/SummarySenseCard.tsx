@@ -57,7 +57,7 @@ export default function SummarySenseCard(
         {/* Semantic domain numbers */}
         <Grid2 container spacing={1}>
           {sortedDoms.map((dom) => (
-            <DomainChip domain={dom} onlyId key={dom.id} />
+            <DomainChip domain={dom} key={dom.id} onlyId />
           ))}
         </Grid2>
       </CardContent>
