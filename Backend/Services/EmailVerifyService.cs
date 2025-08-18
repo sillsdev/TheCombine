@@ -29,7 +29,7 @@ namespace BackendFramework.Services
             return result == Helper.ResultOfUpdate.Updated || result == Helper.ResultOfUpdate.NoChange;
         }
 
-        internal async Task<EmailToken?> GetValidEmailVerify(string token)
+        private async Task<EmailToken?> GetValidEmailVerify(string token)
         {
             var verify = await _emailVerifyRepo.FindByToken(token);
             return (verify is null || IsEmailVerifyValid(verify)) ? verify : null;

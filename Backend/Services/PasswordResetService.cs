@@ -30,7 +30,7 @@ namespace BackendFramework.Services
             return resetRequest;
         }
 
-        internal async Task<EmailToken?> GetValidPasswordReset(string token)
+        private async Task<EmailToken?> GetValidPasswordReset(string token)
         {
             var reset = await _passwordResetRepo.FindByToken(token);
             return (reset is null || IsPasswordResetValid(reset)) ? reset : null;

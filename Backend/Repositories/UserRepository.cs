@@ -66,7 +66,7 @@ namespace BackendFramework.Repositories
             }
         }
 
-        /// <summary> Finds <see cref="User"/> with specified Email and set IsEmailVerified to true. </summary>
+        /// <summary> Finds <see cref="User"/> with specified Email and sets IsEmailVerified to true. </summary>
         public async Task<ResultOfUpdate> VerifyEmail(string email)
         {
             var filter = Builders<User>.Filter.Eq(x => x.Email, email);

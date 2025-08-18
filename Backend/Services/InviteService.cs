@@ -8,7 +8,6 @@ using static BackendFramework.Helper.Domain;
 
 namespace BackendFramework.Services
 {
-    /// <summary> More complex functions and application logic for <see cref="Project"/>s </summary>
     public class InviteService(IOptions<Startup.Settings> options, IInviteRepository inviteRepo,
         IUserRepository userRepo, IUserRoleRepository userRoleRepo, IEmailService emailService,
         IPermissionService permissionService) : IInviteService
