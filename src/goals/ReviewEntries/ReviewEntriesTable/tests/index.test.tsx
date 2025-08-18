@@ -4,7 +4,10 @@ import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
 import { defaultState } from "components/Project/ProjectReduxTypes";
-import ReviewEntriesTable from "goals/ReviewEntries/ReviewEntriesTable";
+import ReviewEntriesTable, {
+  ColumnHeaderTextId,
+  ColumnId,
+} from "goals/ReviewEntries/ReviewEntriesTable";
 import {
   mockWords,
   sortOrder,
@@ -133,8 +136,8 @@ describe("ReviewEntriesTable", () => {
   });
 
   describe("definitionsEnabled & grammaticalInfoEnabled", () => {
-    const defTextId = "reviewEntries.columns.definitions";
-    const posTextId = "reviewEntries.columns.partOfSpeech";
+    const defTextId = ColumnHeaderTextId[ColumnId.Definitions];
+    const posTextId = ColumnHeaderTextId[ColumnId.PartOfSpeech];
 
     test("show definitions when definitionsEnabled is true", async () => {
       await renderReviewEntriesTable(true, false);

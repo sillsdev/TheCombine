@@ -82,6 +82,20 @@ export enum ColumnId {
   Vernacular = "vernacular",
 }
 
+export const ColumnHeaderTextId: Record<ColumnId, string> = {
+  [ColumnId.Definitions]: "reviewEntries.columns.definitions",
+  [ColumnId.Domains]: "reviewEntries.columns.domains",
+  [ColumnId.Delete]: "reviewEntries.columns.delete",
+  [ColumnId.Edit]: "reviewEntries.columns.edit",
+  [ColumnId.Flag]: "reviewEntries.columns.flag",
+  [ColumnId.Glosses]: "reviewEntries.columns.glosses",
+  [ColumnId.Note]: "reviewEntries.columns.note",
+  [ColumnId.PartOfSpeech]: "reviewEntries.columns.partOfSpeech",
+  [ColumnId.Pronunciations]: "reviewEntries.columns.pronunciations",
+  [ColumnId.Senses]: "reviewEntries.columns.sensesCount",
+  [ColumnId.Vernacular]: "reviewEntries.columns.vernacular",
+};
+
 // Constants for pagination state.
 const rowsPerPage = [10, 100];
 const initPaginationState: MRT_PaginationState = {
@@ -217,7 +231,7 @@ export default function ReviewEntriesTable(props: {
       ),
       enableHiding: false,
       Header: "",
-      header: t("reviewEntries.columns.edit"),
+      header: t(ColumnHeaderTextId[ColumnId.Edit]),
       id: ColumnId.Edit,
       size: IconColumnSize,
       visibleInShowHideMenu: false,
@@ -229,7 +243,7 @@ export default function ReviewEntriesTable(props: {
       enableColumnOrdering: false,
       enableHiding: false,
       filterFn: ff.filterFnString,
-      header: t("reviewEntries.columns.vernacular"),
+      header: t(ColumnHeaderTextId[ColumnId.Vernacular]),
       id: ColumnId.Vernacular,
       size: BaselineColumnSize - 40,
       sortingFn: sf.sortingFnVernacular(vernLang),
@@ -240,7 +254,7 @@ export default function ReviewEntriesTable(props: {
       enableFilterMatchHighlighting: false,
       filterFn: "equals",
       Header: <Typography>#</Typography>,
-      header: t("reviewEntries.columns.sensesCount"),
+      header: t(ColumnHeaderTextId[ColumnId.Senses]),
       id: ColumnId.Senses,
       muiTableHeadCellProps: {
         sx: {
@@ -257,7 +271,7 @@ export default function ReviewEntriesTable(props: {
     columnHelper.accessor((w) => w.senses.flatMap((s) => s.definitions), {
       Cell: ({ row }: CellProps) => <Cell.Definitions word={row.original} />,
       filterFn: ff.filterFnDefinitions,
-      header: t("reviewEntries.columns.definitions"),
+      header: t(ColumnHeaderTextId[ColumnId.Definitions]),
       id: ColumnId.Definitions,
       size: BaselineColumnSize + 20,
       sortingFn: sf.sortingFnDefinitions,
@@ -268,7 +282,7 @@ export default function ReviewEntriesTable(props: {
     columnHelper.accessor((w) => w.senses.flatMap((s) => s.glosses), {
       Cell: ({ row }: CellProps) => <Cell.Glosses word={row.original} />,
       filterFn: ff.filterFnGlosses,
-      header: t("reviewEntries.columns.glosses"),
+      header: t(ColumnHeaderTextId[ColumnId.Glosses]),
       id: ColumnId.Glosses,
       sortingFn: sf.sortingFnGlosses,
     }),
@@ -285,7 +299,7 @@ export default function ReviewEntriesTable(props: {
         value: g,
       })),
       filterVariant: "select",
-      header: t("reviewEntries.columns.partOfSpeech"),
+      header: t(ColumnHeaderTextId[ColumnId.PartOfSpeech]),
       id: ColumnId.PartOfSpeech,
       sortingFn: sf.sortingFnPartOfSpeech,
       visibleInShowHideMenu: grammaticalInfoEnabled,
@@ -295,7 +309,7 @@ export default function ReviewEntriesTable(props: {
     columnHelper.accessor((w) => w.senses.flatMap((s) => s.semanticDomains), {
       Cell: ({ row }: CellProps) => <Cell.Domains word={row.original} />,
       filterFn: ff.filterFnDomains,
-      header: t("reviewEntries.columns.domains"),
+      header: t(ColumnHeaderTextId[ColumnId.Domains]),
       id: ColumnId.Domains,
       sortingFn: sf.sortingFnDomains,
     }),
@@ -312,7 +326,7 @@ export default function ReviewEntriesTable(props: {
           <PlayArrow fontSize="small" sx={{ color: "success.main" }} />
         </>
       ),
-      header: t("reviewEntries.columns.pronunciations"),
+      header: t(ColumnHeaderTextId[ColumnId.Pronunciations]),
       id: ColumnId.Pronunciations,
       muiTableHeadCellProps: {
         sx: {
@@ -331,7 +345,7 @@ export default function ReviewEntriesTable(props: {
     columnHelper.accessor((w) => w.note.text || undefined, {
       Cell: ({ row }: CellProps) => <Cell.Note word={row.original} />,
       filterFn: ff.filterFnString,
-      header: t("reviewEntries.columns.note"),
+      header: t(ColumnHeaderTextId[ColumnId.Note]),
       id: ColumnId.Note,
       size: BaselineColumnSize - 40,
       sortingFn: sf.sortingFnNote,
@@ -342,7 +356,7 @@ export default function ReviewEntriesTable(props: {
       Cell: ({ row }: CellProps) => <Cell.Flag word={row.original} />,
       filterFn: ff.filterFnFlag,
       Header: <FlagIcon fontSize="small" sx={{ color: "error.main" }} />,
-      header: t("reviewEntries.columns.flag"),
+      header: t(ColumnHeaderTextId[ColumnId.Flag]),
       id: ColumnId.Flag,
       muiTableHeadCellProps: {
         sx: {
@@ -365,7 +379,7 @@ export default function ReviewEntriesTable(props: {
       ),
       enableHiding: false,
       Header: "",
-      header: t("reviewEntries.columns.delete"),
+      header: t(ColumnHeaderTextId[ColumnId.Delete]),
       id: ColumnId.Delete,
       size: IconColumnSize,
       visibleInShowHideMenu: false,

@@ -83,6 +83,16 @@ export enum EditDialogId {
   TextFieldVernacular = "edit-dialog-vernacular-textfield",
 }
 
+export enum EditDialogTextId {
+  CardFlag = "reviewEntries.columns.flag",
+  CardNote = "reviewEntries.columns.note",
+  CardPronunciations = "reviewEntries.columns.pronunciations",
+  CardSenses = "reviewEntries.columns.senses",
+  CardVernacular = "reviewEntries.columns.vernacular",
+  DialogCancel = "reviewEntries.discardChanges",
+  TitlePrefix = "reviewEntries.columns.edit",
+}
+
 enum EditField {
   Flag,
   Note,
@@ -333,12 +343,12 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
         handleCancel={() => setCancelDialog(false)}
         handleConfirm={cancelAndClose}
         open={cancelDialog}
-        text="reviewEntries.discardChanges"
+        text={EditDialogTextId.DialogCancel}
       />
       <Dialog fullWidth maxWidth="lg" open>
         <DialogTitle>
           <Grid2 container justifyContent="space-between">
-            {`${t("reviewEntries.columns.edit")} : ${props.word.vernacular}`}
+            {`${t(EditDialogTextId.TitlePrefix)} : ${props.word.vernacular}`}
 
             <div>
               <IconButton
@@ -364,7 +374,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
           <Stack spacing={3}>
             {/* Vernacular */}
             <Card sx={bgStyle(EditField.Vernacular)}>
-              <CardHeader title={t("reviewEntries.columns.vernacular")} />
+              <CardHeader title={t(EditDialogTextId.CardVernacular)} />
               <CardContent>
                 <TextFieldWithFont
                   id={EditDialogId.TextFieldVernacular}
@@ -402,7 +412,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
                     </IconButton>
                   )
                 }
-                title={t("reviewEntries.columns.senses")}
+                title={t(EditDialogTextId.CardSenses)}
               />
               <EditSensesCardContent
                 moveSense={moveSense}
@@ -416,7 +426,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
 
             {/* Pronunciations */}
             <Card sx={bgStyle(EditField.Pronunciations)}>
-              <CardHeader title={t("reviewEntries.columns.pronunciations")} />
+              <CardHeader title={t(EditDialogTextId.CardPronunciations)} />
               <CardContent>
                 <PronunciationsFrontend
                   elemBetweenRecordAndPlay={
@@ -441,7 +451,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
             <Card sx={bgStyle(EditField.Note)}>
               <CardHeader
                 action={noteLangSelect}
-                title={t("reviewEntries.columns.note")}
+                title={t(EditDialogTextId.CardNote)}
               />
               <CardContent>
                 <TextFieldWithFont
@@ -459,7 +469,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
 
             {/* Flag */}
             <Card sx={bgStyle(EditField.Flag)}>
-              <CardHeader title={t("reviewEntries.columns.flag")} />
+              <CardHeader title={t(EditDialogTextId.CardFlag)} />
               <CardContent>
                 <IconButton onClick={toggleFlag}>
                   {newWord.flag.active ? (

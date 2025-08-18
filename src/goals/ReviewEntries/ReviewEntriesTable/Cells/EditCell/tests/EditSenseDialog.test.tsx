@@ -6,6 +6,7 @@ import configureMockStore from "redux-mock-store";
 import { Project, type Sense } from "api/models";
 import EditSenseDialog, {
   EditSenseDialogId,
+  EditSenseDialogTextId,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditSenseDialog";
 import { type StoreState, defaultState } from "rootRedux/types";
 import { newSense } from "types/word";
@@ -123,8 +124,8 @@ describe("EditSenseDialog", () => {
   });
 
   describe("definitionsEnabled & grammaticalInfoEnabled", () => {
-    const definitionsTitle = "reviewEntries.columns.definitions";
-    const partOfSpeechTitle = "reviewEntries.columns.partOfSpeech";
+    const definitionsTitle = EditSenseDialogTextId.CardDefinitions;
+    const partOfSpeechTitle = EditSenseDialogTextId.CardPartOfSpeech;
 
     test("show definitions when definitionsEnabled is true", async () => {
       await renderEditSenseDialog(true, false);

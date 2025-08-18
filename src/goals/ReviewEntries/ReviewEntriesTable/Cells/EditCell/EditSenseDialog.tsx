@@ -57,6 +57,16 @@ export enum EditSenseDialogId {
   TextFieldGlossPrefix = "edit-sense-gloss-textfield-",
 }
 
+export enum EditSenseDialogTextId {
+  CardDefinitions = "reviewEntries.columns.definitions",
+  CardGlosses = "reviewEntries.columns.glosses",
+  CardPartOfSpeech = "reviewEntries.columns.partOfSpeech",
+  CardPartOfSpeechUnspecified = "grammaticalCategory.group.Unspecified",
+  CardSemanticDomains = "reviewEntries.columns.domains",
+  DialogCancel = "reviewEntries.discardChanges",
+  Title = "reviewEntries.editSense",
+}
+
 export enum EditSenseField {
   Definitions,
   Glosses,
@@ -181,12 +191,12 @@ export default function EditSenseDialog(
         handleCancel={() => setCancelDialog(false)}
         handleConfirm={cancelAndClose}
         open={cancelDialog}
-        text="reviewEntries.discardChanges"
+        text={EditSenseDialogTextId.DialogCancel}
       />
       <Dialog fullWidth maxWidth="sm" open={props.isOpen}>
         <DialogTitle>
           <Grid2 container justifyContent="space-between">
-            {t("reviewEntries.editSense")}
+            {t(EditSenseDialogTextId.Title)}
 
             <div>
               <IconButton
@@ -213,7 +223,7 @@ export default function EditSenseDialog(
             {/* Definitions */}
             {definitionsEnabled && (
               <Card sx={bgStyle(EditSenseField.Definitions)}>
-                <CardHeader title={t("reviewEntries.columns.definitions")} />
+                <CardHeader title={t(EditSenseDialogTextId.CardDefinitions)} />
                 <CardContent>
                   <DefinitionList
                     defaultLang={analysisWritingSystems[0]}
@@ -230,7 +240,7 @@ export default function EditSenseDialog(
 
             {/* Glosses */}
             <Card sx={bgStyle(EditSenseField.Glosses)}>
-              <CardHeader title={t("reviewEntries.columns.glosses")} />
+              <CardHeader title={t(EditSenseDialogTextId.CardGlosses)} />
               <CardContent>
                 <GlossList
                   defaultLang={analysisWritingSystems[0]}
@@ -245,12 +255,12 @@ export default function EditSenseDialog(
             {/* Part of Speech */}
             {grammaticalInfoEnabled && (
               <Card sx={bgStyle(EditSenseField.GrammaticalInfo)}>
-                <CardHeader title={t("reviewEntries.columns.partOfSpeech")} />
+                <CardHeader title={t(EditSenseDialogTextId.CardPartOfSpeech)} />
                 <CardContent>
                   {newSense.grammaticalInfo.catGroup ===
                   GramCatGroup.Unspecified ? (
                     <Typography>
-                      {t("grammaticalCategory.group.Unspecified")}
+                      {t(EditSenseDialogTextId.CardPartOfSpeechUnspecified)}
                     </Typography>
                   ) : (
                     <PartOfSpeechButton
@@ -264,7 +274,9 @@ export default function EditSenseDialog(
 
             {/* Semantic Domains */}
             <Card sx={bgStyle(EditSenseField.SemanticDomains)}>
-              <CardHeader title={t("reviewEntries.columns.domains")} />
+              <CardHeader
+                title={t(EditSenseDialogTextId.CardSemanticDomains)}
+              />
               <CardContent>
                 <DomainList
                   buttonIdAdd={EditSenseDialogId.ButtonSemDomAdd}
