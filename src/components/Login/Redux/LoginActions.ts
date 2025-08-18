@@ -1,7 +1,7 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
 import { User } from "api/models";
-import * as backend from "backend";
+import { addUser, authenticateUser } from "backend";
 import {
   setIsAdminTrueAction,
   setLoginAttemptAction,
@@ -56,17 +56,14 @@ export function asyncLogIn(
 ) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(loginAttempt(emailOrUsername));
-    await backend
-      .authenticateUser(emailOrUsername, password)
+    await authenticateUser(emailOrUsername, password)
       .then(async (user: User) => {
         if (user.isAdmin) {
           dispatch(setIsAdminTrue());
         }
         dispatch(loginSuccess());
+        onSuccess?.();
         router.navigate(Path.ProjScreen);
-        if (onSuccess) {
-          onSuccess();
-        }
       })
       .catch((err) =>
         dispatch(loginFailure(`${err.response?.status ?? err.message}`))
@@ -87,13 +84,10 @@ export function asyncSignUp(
     // Create new user
     const user = newUser(name, username, password);
     user.email = email;
-    await backend
-      .addUser(user)
+    await addUser(user)
       .then(() => {
         dispatch(signupSuccess());
-        if (onSignupSuccess) {
-          onSignupSuccess();
-        }
+        onSignupSuccess?.();
         setTimeout(async () => {
           dispatch(asyncLogIn(username, password, onLoginSuccess));
         }, 1000);

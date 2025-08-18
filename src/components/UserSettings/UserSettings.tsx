@@ -19,8 +19,8 @@ import { OffOnSetting, User } from "api/models";
 import {
   getUserIdByEmailOrUsername,
   isEmailOrUsernameAvailable,
+  requestEmailVerify,
   updateUser,
-  verifyEmailRequest,
 } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
 import AnalyticsConsent from "components/AnalyticsConsent";
@@ -220,7 +220,7 @@ export function UserSettings(props: {
                     />
                     <Button
                       disabled={isEmailVerified}
-                      onClick={() => verifyEmailRequest(email)}
+                      onClick={() => requestEmailVerify(email)}
                       variant={isEmailVerified ? "outlined" : "contained"}
                     >
                       {t(isEmailVerified ? "Email verified!" : "Verify email!")}

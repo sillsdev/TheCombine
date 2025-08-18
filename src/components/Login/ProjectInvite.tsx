@@ -1,7 +1,7 @@
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
-import * as backend from "backend";
+import { validateInviteToken } from "backend";
 import InvalidLink from "components/InvalidLink";
 import Signup from "components/Login/Signup";
 import { Path } from "types/path";
@@ -13,7 +13,7 @@ export default function ProjectInvite(): ReactElement {
 
   const validateLink = useCallback(async (): Promise<void> => {
     if (project && token) {
-      const status = await backend.validateLink(project, token);
+      const status = await validateInviteToken(project, token);
       if (status.isTokenValid && status.isUserValid) {
         navigate(Path.Login);
         return;
@@ -24,11 +24,11 @@ export default function ProjectInvite(): ReactElement {
 
   useEffect(() => {
     validateLink();
-  });
+  }, [validateLink]);
 
   return isValidLink ? (
-    <Signup returnToEmailInvite={validateLink} />
+    <Signup onSignup={() => validateInviteToken(project!, token!)} />
   ) : (
-    <InvalidLink textId="invite.invalidInvitationURL" />
+    <InvalidLink titleTextId="invite.invalidInvitationURL" />
   );
 }

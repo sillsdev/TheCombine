@@ -4,7 +4,6 @@ import {
   CardContent,
   CardHeader,
   Grid2,
-  Stack,
   Typography,
 } from "@mui/material";
 import { type ReactElement, useEffect, useState } from "react";
@@ -26,14 +25,18 @@ export default function EmailVerify(): ReactElement {
   useEffect(() => {
     if (token) {
       verifyEmail(token)
-        .then(() => setSuccess(true))
-        .catch();
-      setLoaded(true);
+        .then(setSuccess)
+        .finally(() => setLoaded(true));
     }
   }, [token]);
 
   if (loaded && !success) {
-    return <InvalidLink textId={"Email verification failed."} />;
+    return (
+      <InvalidLink
+        bodyTextId="emailVerify.invalidText"
+        titleTextId="emailVerify.invalidTitle"
+      />
+    );
   }
 
   return (
@@ -42,21 +45,18 @@ export default function EmailVerify(): ReactElement {
         <CardHeader
           title={
             <Typography align="center" variant="h5">
-              {t("Verifying email address")}
+              {t(success ? "emailVerify.success" : "emailVerify.verifying")}
             </Typography>
           }
         />
         <CardContent>
           {success && (
-            <Stack spacing={2}>
-              <Typography>{t("Success!")}</Typography>
-              <Button
-                onClick={() => navigate(Path.AppRoot)}
-                variant="contained"
-              >
-                {t("Return to The Combine")}
-              </Button>
-            </Stack>
+            <Button
+              onClick={() => navigate(Path.ProjScreen)}
+              variant="contained"
+            >
+              {t("emailVerify.returnButton")}
+            </Button>
           )}
         </CardContent>
       </Card>

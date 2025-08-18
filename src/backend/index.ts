@@ -231,8 +231,8 @@ export async function updateBanner(siteBanner: SiteBanner): Promise<boolean> {
 
 /* PasswordResetController.cs */
 
-export async function verifyEmailRequest(email: string): Promise<void> {
-  await emailVerifyApi.requestEmailVerify({ body: email });
+export async function requestEmailVerify(email: string): Promise<void> {
+  await emailVerifyApi.requestEmailVerify({ body: email }, defaultOptions());
 }
 
 export async function verifyEmail(token: string): Promise<boolean> {
@@ -254,7 +254,7 @@ export async function emailInviteToProject(
   return resp.data;
 }
 
-export async function validateLink(
+export async function validateInviteToken(
   projectId: string,
   token: string
 ): Promise<EmailInviteStatus> {

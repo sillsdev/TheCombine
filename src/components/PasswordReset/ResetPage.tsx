@@ -127,6 +127,6 @@ export default function PasswordReset(): ReactElement {
       </Card>
     </Grid2>
   ) : (
-    <InvalidLink textId="passwordReset.invalidURL" />
+    <InvalidLink titleTextId="passwordReset.invalidURL" />
   );
 }

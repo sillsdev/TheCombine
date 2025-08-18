@@ -18,7 +18,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { verifyEmailRequest } from "backend";
+import { requestEmailVerify } from "backend";
 import { LoadingDoneButton } from "components/Buttons";
 import Captcha from "components/Login/Captcha";
 import { asyncSignUp } from "components/Login/Redux/LoginActions";
@@ -94,7 +94,7 @@ export const signupFieldId: Record<SignupField, SignupId> = {
 const punycode = require("punycode/");
 
 interface SignupProps {
-  returnToEmailInvite?: () => void;
+  onSignup?: () => void;
 }
 
 /** The Signup page (also used for ProjectInvite) */
@@ -171,12 +171,11 @@ export default function Signup(props: SignupProps): ReactElement {
     if (Object.values(err).some((e) => e)) {
       setFieldError(err);
     } else {
-      const beforeLogin = props.returnToEmailInvite;
-      const afterLogin = RuntimeConfig.getInstance().isOffline()
+      const onLogin = RuntimeConfig.getInstance().isOffline()
         ? undefined
-        : async () => await verifyEmailRequest(email).catch();
+        : async () => await requestEmailVerify(email);
       await dispatch(
-        asyncSignUp(name, username, email, password1, beforeLogin, afterLogin)
+        asyncSignUp(name, username, email, password1, props.onSignup, onLogin)
       );
     }
   };

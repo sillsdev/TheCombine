@@ -47,6 +47,13 @@
     "statistics": "Data Statistics",
     "projectSettings": "Project Settings"
   },
+  "emailVerify": {
+    "invalidText": "The link may have expired or already been used.",
+    "invalidTitle": "Email verification failed",
+    "returnButton": "Return to The Combine",
+    "success": "Email address verified!",
+    "verifying": "Verifying email address..."
+  },
   "invite": {
     "invalidInvitationURL": "Project Invitation link is invalid."
   },
