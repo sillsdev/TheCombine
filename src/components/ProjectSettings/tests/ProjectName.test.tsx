@@ -31,6 +31,7 @@ describe("ProjectName", () => {
     mockSetProject.mockResolvedValueOnce({});
     await userEvent.click(saveButton);
     expect(mockSetProject).toHaveBeenCalledWith({ ...mockProject, name });
+    expect(mockToastError).not.toHaveBeenCalled();
   });
 
   it("toasts on error", async () => {
