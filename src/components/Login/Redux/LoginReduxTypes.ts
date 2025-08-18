@@ -8,6 +8,7 @@ export enum LoginStatus {
 export interface LoginState {
   error: string;
   isAdmin: boolean;
+  isEmailVerified: boolean;
   loginStatus: LoginStatus;
   signupStatus: LoginStatus;
   username: string;
@@ -16,6 +17,7 @@ export interface LoginState {
 export const defaultState: LoginState = {
   error: "",
   isAdmin: false,
+  isEmailVerified: false,
   loginStatus: LoginStatus.Default,
   signupStatus: LoginStatus.Default,
   username: "",

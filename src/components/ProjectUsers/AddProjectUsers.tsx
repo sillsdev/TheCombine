@@ -32,6 +32,9 @@ interface AddProjectUsersProps {
 export default function AddProjectUsers(
   props: AddProjectUsersProps
 ): ReactElement {
+  const emailIsVerified = useAppSelector(
+    (state: StoreState) => state.loginState.isEmailVerified
+  );
   const projectUsers = useAppSelector(
     (state: StoreState) => state.currentProjectState.users
   );
@@ -56,6 +59,16 @@ export default function AddProjectUsers(
           toast.error(t("projectSettings.invite.toastFail"));
         });
     }
+  }
+
+  if (RuntimeConfig.getInstance().emailServicesEnabled() && !emailIsVerified) {
+    return (
+      <Typography>
+        {t(
+          "You must verify your email address to add other users to your project."
+        )}
+      </Typography>
+    );
   }
 
   return (

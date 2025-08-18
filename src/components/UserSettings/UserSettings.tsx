@@ -1,4 +1,10 @@
-import { Email, HelpOutline, Phone } from "@mui/icons-material";
+import {
+  Email,
+  HelpOutline,
+  MarkEmailRead,
+  MarkEmailUnread,
+  Phone,
+} from "@mui/icons-material";
 import {
   Button,
   Card,
@@ -14,6 +20,7 @@ import {
 import { enqueueSnackbar } from "notistack";
 import { FormEvent, Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 import { OffOnSetting, User } from "api/models";
 import {
@@ -24,10 +31,12 @@ import {
 } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
 import AnalyticsConsent from "components/AnalyticsConsent";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import { asyncLoadSemanticDomains } from "components/Project/ProjectActions";
 import ClickableAvatar from "components/UserSettings/ClickableAvatar";
 import { updateLangFromUser } from "i18n";
-import { useAppDispatch } from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { StoreState } from "rootRedux/types";
 import { RuntimeConfig } from "types/runtimeConfig";
 import theme from "types/theme";
 import { uiWritingSystems } from "types/writingSystem";
@@ -69,8 +78,10 @@ export function UserSettings(props: {
   setUser: (user?: User) => void;
 }): ReactElement {
   const dispatch = useAppDispatch();
+  const isEmailVerified = useAppSelector(
+    (state: StoreState) => state.loginState.isEmailVerified
+  );
 
-  const isEmailVerified = props.user.isEmailVerified;
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
   const [email, setEmail] = useState(props.user.email);
@@ -82,6 +93,7 @@ export function UserSettings(props: {
   );
   const [emailTaken, setEmailTaken] = useState(false);
   const [avatar, setAvatar] = useState(getAvatar());
+  const [emailVerifySent, setEmailVerifySent] = useState(false);
 
   const { t } = useTranslation();
 
@@ -133,6 +145,15 @@ export function UserSettings(props: {
     } else {
       setEmailTaken(true);
     }
+  }
+
+  async function sendVerifyEmail(): Promise<void> {
+    await requestEmailVerify(email)
+      .then(() => {
+        setEmailVerifySent(true);
+        toast.success(t("Verification email sent. Please check your email."));
+      })
+      .catch(() => toast.error(t("Failed to send verification email.")));
   }
 
   return (
@@ -197,7 +218,22 @@ export function UserSettings(props: {
                 </Stack>
 
                 <Stack alignItems="center" direction="row" spacing={1}>
-                  <Email />
+                  {isEmailVerified ? (
+                    <Tooltip title={t("Email verification completed")}>
+                      <MarkEmailRead />
+                    </Tooltip>
+                  ) : emailVerifySent ? (
+                    <IconButtonWithTooltip
+                      icon={<MarkEmailUnread />}
+                      textId="Check your email"
+                    />
+                  ) : (
+                    <IconButtonWithTooltip
+                      icon={<Email sx={{ color: "error.main" }} />}
+                      onClick={sendVerifyEmail}
+                      textId="Verify email to add users to your projects"
+                    />
+                  )}
 
                   <Grid2 size="grow">
                     <TextField
@@ -218,13 +254,6 @@ export function UserSettings(props: {
                       }
                       type="email"
                     />
-                    <Button
-                      disabled={isEmailVerified}
-                      onClick={() => requestEmailVerify(email)}
-                      variant={isEmailVerified ? "outlined" : "contained"}
-                    >
-                      {t(isEmailVerified ? "Email verified!" : "Verify email!")}
-                    </Button>
                   </Grid2>
                 </Stack>
               </Stack>

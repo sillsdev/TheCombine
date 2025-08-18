@@ -12,9 +12,12 @@ import { useNavigate, useParams } from "react-router";
 
 import { verifyEmail } from "backend";
 import InvalidLink from "components/InvalidLink";
+import { setIsEmailVerifiedTrue } from "components/Login/Redux/LoginActions";
+import { useAppDispatch } from "rootRedux/hooks";
 import { Path } from "types/path";
 
 export default function EmailVerify(): ReactElement {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { token } = useParams();
   const { t } = useTranslation();
@@ -29,6 +32,13 @@ export default function EmailVerify(): ReactElement {
         .finally(() => setLoaded(true));
     }
   }, [token]);
+
+  useEffect(() => {
+    if (success) {
+      // BUG: the user could be logged in with a different account than they just verified.
+      dispatch(setIsEmailVerifiedTrue());
+    }
+  }, [dispatch, success]);
 
   if (loaded && !success) {
     return (

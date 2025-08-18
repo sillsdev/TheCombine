@@ -4,6 +4,7 @@ import { User } from "api/models";
 import { addUser, authenticateUser } from "backend";
 import {
   setIsAdminTrueAction,
+  setIsEmailVerifiedTrueAction,
   setLoginAttemptAction,
   setLoginFailureAction,
   setLoginSuccessAction,
@@ -21,6 +22,10 @@ import { newUser } from "types/user";
 /** Don't export! Only to be used when an admin logs in. */
 function setIsAdminTrue(): PayloadAction {
   return setIsAdminTrueAction();
+}
+
+export function setIsEmailVerifiedTrue(): PayloadAction {
+  return setIsEmailVerifiedTrueAction();
 }
 
 export function loginAttempt(username: string): PayloadAction {
@@ -60,6 +65,9 @@ export function asyncLogIn(
       .then(async (user: User) => {
         if (user.isAdmin) {
           dispatch(setIsAdminTrue());
+        }
+        if (user.isEmailVerified) {
+          dispatch(setIsEmailVerifiedTrue());
         }
         dispatch(loginSuccess());
         onSuccess?.();
