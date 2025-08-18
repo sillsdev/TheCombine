@@ -17,7 +17,7 @@ import {
   exit,
   setRejectedCharacters,
   setValidCharacters,
-  uploadInventory,
+  uploadAndExit,
 } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
@@ -51,7 +51,7 @@ export default function CharacterEntry(): ReactElement {
 
   const save = async (): Promise<void> => {
     setSaveInProgress(true);
-    await dispatch(uploadInventory());
+    await dispatch(uploadAndExit());
   };
 
   return (
