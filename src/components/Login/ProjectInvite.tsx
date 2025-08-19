@@ -20,7 +20,7 @@ export default function ProjectInvite(): ReactElement {
       }
       setIsValidLink(status.isTokenValid);
     }
-  }, [project, token, navigate]);
+  }, [navigate, project, token]);
 
   useEffect(() => {
     validateLink();
