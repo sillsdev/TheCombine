@@ -1,9 +1,10 @@
-import { Card, CardContent, Chip, Grid2, Typography } from "@mui/material";
+import { Card, CardContent, Grid2, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, Sense } from "api/models";
 import { PartOfSpeechButton } from "components/Buttons";
+import DomainChip from "components/WordCard/DomainChip";
 import SensesTextSummary from "components/WordCard/SensesTextSummary";
 import { groupGramInfo } from "utilities/wordUtilities";
 
@@ -23,9 +24,11 @@ export default function SummarySenseCard(
     props.senses.map((s) => s.grammaticalInfo)
   ).filter((info) => info.catGroup !== GramCatGroup.Unspecified);
 
-  // Create a list of distinct semantic domain ids.
+  // Create a list of semantic domains with distinct ids.
   const semDoms = props.senses.flatMap((s) => s.semanticDomains);
-  const domIds = [...new Set(semDoms.map((d) => d.id))].sort();
+  const sortedDoms = [...new Set(semDoms.map((d) => d.id))]
+    .sort()
+    .map((id) => semDoms.find((dom) => dom.id === id)!);
 
   return (
     <Card sx={{ bgcolor: props.bgcolor || "white", mb: 1 }}>
@@ -53,8 +56,8 @@ export default function SummarySenseCard(
 
         {/* Semantic domain numbers */}
         <Grid2 container spacing={1}>
-          {domIds.map((id) => (
-            <Chip key={id} label={id} />
+          {sortedDoms.map((dom) => (
+            <DomainChip domain={dom} key={dom.id} onlyId />
           ))}
         </Grid2>
       </CardContent>
