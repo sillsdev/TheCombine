@@ -1,5 +1,6 @@
 import {
   Email,
+  ForwardToInbox,
   HelpOutline,
   MarkEmailRead,
   MarkEmailUnread,
@@ -25,7 +26,6 @@ import { OffOnSetting, User } from "api/models";
 import { isEmailOkay, requestEmailVerify, updateUser } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
 import AnalyticsConsent from "components/AnalyticsConsent";
-import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import { asyncLoadSemanticDomains } from "components/Project/ProjectActions";
 import ClickableAvatar from "components/UserSettings/ClickableAvatar";
 import { updateLangFromUser } from "i18n";
@@ -58,12 +58,11 @@ export enum UserSettingsTextId {
   SelectGlossSuggestionOff = "projectSettings.autocomplete.off",
   SelectGlossSuggestionOn = "projectSettings.autocomplete.on",
   SelectUiLangDefault = "userSettings.uiLanguageDefault",
-  ToastEmailVerificationFailed = "userSettings.emailVerify.verificationFailed",
-  ToastEmailVerificationSent = "userSettings.emailVerify.verificationSent",
+  ToastEmailVerificationSent = "userSettings.verifyEmail.verificationSent",
   ToastUpdateSuccess = "userSettings.updateSuccess",
-  TooltipEmailUnverified = "userSettings.emailVerify.emailUnverified",
-  TooltipEmailVerified = "userSettings.emailVerify.emailVerified",
-  TooltipEmailVerifying = "userSettings.emailVerify.emailVerifying",
+  TooltipEmailUnverified = "userSettings.verifyEmail.emailUnverified",
+  TooltipEmailVerified = "userSettings.verifyEmail.emailVerified",
+  TooltipEmailVerifying = "userSettings.verifyEmail.emailVerifying",
   TooltipGlossSuggestion = "userSettings.glossSuggestionHint",
   TypographyAnalyticsConsent = "userSettings.analyticsConsent.title",
   TypographyAnalyticsConsentNo = "userSettings.analyticsConsent.consentNo",
@@ -161,14 +160,9 @@ export function UserSettings(props: {
         await updateUser({ ...props.user, email });
         props.setUser({ ...props.user, email });
       }
-      await requestEmailVerify(email)
-        .then(() => {
-          setEmailVerifySent(true);
-          toast.success(t(UserSettingsTextId.ToastEmailVerificationSent));
-        })
-        .catch(() =>
-          toast.error(t(UserSettingsTextId.ToastEmailVerificationFailed))
-        );
+      await requestEmailVerify(email);
+      setEmailVerifySent(true);
+      toast.success(t(UserSettingsTextId.ToastEmailVerificationSent));
     } else {
       setEmailTaken(true);
     }
@@ -240,23 +234,25 @@ export function UserSettings(props: {
                     // Email icon if The Combine has no email capability.
                     <Email />
                   ) : isEmailVerified ? (
-                    // Email-w/-check icon if email has been verified.
+                    // Email-with-check icon if email has been verified.
                     <Tooltip title={t(UserSettingsTextId.TooltipEmailVerified)}>
                       <MarkEmailRead />
                     </Tooltip>
                   ) : emailVerifySent ? (
-                    // Disabled email-w/-dot button if verification is pending.
-                    <IconButtonWithTooltip
-                      icon={<MarkEmailUnread />}
-                      textId={UserSettingsTextId.TooltipEmailVerifying}
-                    />
+                    // Orange email-with-dot icon if verification is pending.
+                    <Tooltip
+                      title={t(UserSettingsTextId.TooltipEmailVerifying)}
+                    >
+                      <MarkEmailUnread sx={{ color: "warning.main" }} />
+                    </Tooltip>
                   ) : (
-                    // Red email button if email never verified.
-                    <IconButtonWithTooltip
-                      icon={<Email sx={{ color: "error.main" }} />}
+                    // Red email-with-arrow button if email never verified.
+                    <Tooltip
                       onClick={sendVerifyEmail}
-                      textId={UserSettingsTextId.TooltipEmailUnverified}
-                    />
+                      title={t(UserSettingsTextId.TooltipEmailUnverified)}
+                    >
+                      <ForwardToInbox sx={{ color: "error.main" }} />
+                    </Tooltip>
                   )}
 
                   <Grid2 size="grow">

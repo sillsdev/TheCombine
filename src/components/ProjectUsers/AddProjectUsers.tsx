@@ -1,5 +1,5 @@
 import { Email } from "@mui/icons-material";
-import { Button, IconButton, Stack, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
@@ -71,25 +71,25 @@ export default function AddProjectUsers(
     const onSubmit = (): void => {
       setEmailVerifySent(true);
       setShowVerifyModal(false);
-      toast.success(t("userSettings.emailVerify.verificationSent"));
+      toast.success(t("userSettings.verifyEmail.verificationSent"));
     };
 
     return (
-      <>
-        <Typography>{t("userSettings.emailVerify.emailUnverified")}</Typography>
+      <Stack alignItems="flex-start" spacing={1}>
+        <Typography>{t("userSettings.verifyEmail.description")}</Typography>
 
-        <IconButton
+        <Button
           disabled={emailVerifySent}
           onClick={() => setShowVerifyModal(true)}
+          startIcon={<Email />}
+          variant="contained"
         >
-          <Email />
-        </IconButton>
-
-        {emailVerifySent && (
-          <Typography>
-            {t("userSettings.emailVerify.emailVerifying")}
-          </Typography>
-        )}
+          {t(
+            emailVerifySent
+              ? "userSettings.verifyEmail.emailVerifying"
+              : "userSettings.verifyEmail.button"
+          )}
+        </Button>
 
         <Modal
           isOpen={showVerifyModal}
@@ -101,7 +101,7 @@ export default function AddProjectUsers(
             onSubmit={onSubmit}
           />
         </Modal>
-      </>
+      </Stack>
     );
   }
 

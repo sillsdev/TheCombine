@@ -153,13 +153,14 @@
       "consentYes": "You have consented to our use of analytics cookies.",
       "title": "Analytics cookies"
     },
-    "emailVerify": {
-      "emailUnverified": "Verify email to add users to your projects.",
-      "emailVerified": "Email verification completed.",
-      "emailVerifying": "Check your email.",
-      "verificationFailed": "Failed to send verification email.",
-      "verificationSent": "Verification email sent. Please check your email.",
-      "verifyEmail": "Verify your email"
+    "verifyEmail": {
+      "button": "Verify email",
+      "description": "To add users to your project, you must verify your email address.",
+      "emailUnverified": "Verify email to add users to projects",
+      "emailVerified": "Email verification completed",
+      "emailVerifying": "Check your email",
+      "title": "Verify email address",
+      "verificationSent": "Verification email sent. Please check your email."
     },
     "contact": "Contact info",
     "glossSuggestion": "Gloss spelling suggestions",

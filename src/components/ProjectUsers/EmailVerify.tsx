@@ -43,7 +43,7 @@ export default function EmailVerify(props: EmailVerifyProps): ReactElement {
       <Stack spacing={2}>
         {/* Title */}
         <Typography align="center" variant="h6">
-          {t("userSettings.emailVerify.emailUnverified")}
+          {t("userSettings.verifyEmail.title")}
         </Typography>
 
         {/* Email address */}
@@ -66,7 +66,7 @@ export default function EmailVerify(props: EmailVerifyProps): ReactElement {
           </Button>
 
           <Button disabled={!isValid} onClick={onSubmit} variant="contained">
-            {t("userSettings.emailVerify.verifyEmail")}
+            {t("userSettings.verifyEmail.button")}
           </Button>
         </Grid2>
       </Stack>
