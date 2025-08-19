@@ -33,7 +33,8 @@ import { NormalizedTextField } from "utilities/fontComponents";
 import {
   meetsPasswordRequirements,
   meetsUsernameRequirements,
-} from "utilities/utilities";
+  normalizeEmail,
+} from "utilities/userUtilities";
 
 export enum SignupField {
   Email = "email",
@@ -87,11 +88,6 @@ export const signupFieldId: Record<SignupField, SignupId> = {
   [SignupField.Password2]: SignupId.FieldPassword2,
   [SignupField.Username]: SignupId.FieldUsername,
 };
-
-// Chrome silently converts non-ASCII characters in a Textfield of type="email".
-// Use punycode.toUnicode() to convert them from punycode back to Unicode.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const punycode = require("punycode/");
 
 interface SignupProps {
   onSignup?: () => void;
@@ -153,9 +149,7 @@ export default function Signup(props: SignupProps): ReactElement {
     // Trim whitespace off fields.
     const name = fieldText[SignupField.Name].trim();
     const username = fieldText[SignupField.Username].trim();
-    const email = punycode
-      .toUnicode(fieldText[SignupField.Email].trim())
-      .normalize("NFC");
+    const email = normalizeEmail(fieldText[SignupField.Email]);
     const password1 = fieldText[SignupField.Password1].trim();
     const password2 = fieldText[SignupField.Password2].trim();
 
@@ -232,7 +226,7 @@ export default function Signup(props: SignupProps): ReactElement {
               <TextField
                 {...defaultTextFieldProps(SignupField.Email)}
                 autoComplete="email"
-                type="email"
+                type="email" // silently converts input to punycode
               />
 
               {/* Password field */}

@@ -16,7 +16,7 @@ import { resetPassword, validateResetToken } from "backend";
 import InvalidLink from "components/InvalidLink";
 import { Path } from "types/path";
 import { NormalizedTextField } from "utilities/fontComponents";
-import { meetsPasswordRequirements } from "utilities/utilities";
+import { meetsPasswordRequirements } from "utilities/userUtilities";
 
 export enum PasswordResetIds {
   Password = "PasswordReset.password",

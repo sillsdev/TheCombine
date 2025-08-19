@@ -33,7 +33,7 @@ import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
 import { NormalizedTextField } from "utilities/fontComponents";
 import { openUserGuide } from "utilities/pathUtilities";
-import { meetsPasswordRequirements } from "utilities/utilities";
+import { meetsPasswordRequirements } from "utilities/userUtilities";
 
 export enum LoginId {
   ButtonLogIn = "login-log-in-button",

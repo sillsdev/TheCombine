@@ -773,6 +773,16 @@ export async function deleteUser(userId: string): Promise<void> {
   await userApi.deleteUser({ userId }, defaultOptions());
 }
 
+/** Checks whether email address is okay: unchanged or not taken by a different user. */
+export async function isEmailOkay(email: string): Promise<boolean> {
+  const user = await getCurrentUser();
+  return (
+    email === user.email ||
+    (await isEmailOrUsernameAvailable(email)) ||
+    (await getUserIdByEmailOrUsername(email)) === user.id
+  );
+}
+
 /* UserEditController.cs */
 
 /** Adds goal, or updates if goal with same guid already exists. */

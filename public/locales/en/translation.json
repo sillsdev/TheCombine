@@ -153,6 +153,14 @@
       "consentYes": "You have consented to our use of analytics cookies.",
       "title": "Analytics cookies"
     },
+    "emailVerify": {
+      "emailUnverified": "Verify email to add users to your projects.",
+      "emailVerified": "Email verification completed.",
+      "emailVerifying": "Check your email.",
+      "verificationFailed": "Failed to send verification email.",
+      "verificationSent": "Verification email sent. Please check your email.",
+      "verifyEmail": "Verify your email"
+    },
     "contact": "Contact info",
     "glossSuggestion": "Gloss spelling suggestions",
     "glossSuggestionHint": "In Data Entry, give spelling suggestions for the Gloss being typed.",
