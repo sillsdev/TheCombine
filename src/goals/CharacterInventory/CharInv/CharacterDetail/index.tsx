@@ -49,7 +49,10 @@ export default function CharacterDetail(
         <CharacterWords character={props.character} />
       </Grid2>
       <Grid2 size={12}>
-        <FindAndReplace initialFindValue={props.character} />
+        <FindAndReplace
+          close={() => props.close()}
+          initialFindValue={props.character}
+        />
       </Grid2>
     </Grid2>
   );

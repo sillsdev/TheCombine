@@ -1,15 +1,16 @@
-import renderer from "react-test-renderer";
+import "@testing-library/jest-dom";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import SortOptions, {
   SortOptionsProps,
-  reverseButtonId,
 } from "components/ProjectUsers/SortOptions";
 
-let testRenderer: renderer.ReactTestRenderer;
-
-const renderSortOptions = (props: Partial<SortOptionsProps> = {}): void => {
-  renderer.act(() => {
-    testRenderer = renderer.create(
+const renderSortOptions = async (
+  props: Partial<SortOptionsProps> = {}
+): Promise<void> => {
+  await act(async () => {
+    render(
       <SortOptions
         includeEmail={props.includeEmail}
         onChange={props.onChange ?? jest.fn()}
@@ -24,17 +25,16 @@ beforeEach(() => {
 });
 
 describe("SortOptions", () => {
-  it("has no reverse button when no reverse function provided", () => {
-    renderSortOptions();
-    const button = testRenderer.root.findAllByProps({ id: reverseButtonId });
-    expect(button).toHaveLength(0);
+  it("has no reverse button when no reverse function provided", async () => {
+    await renderSortOptions();
+    expect(screen.queryByRole("button")).toBeNull();
   });
 
-  it("has reverse button when reverse function provided", () => {
+  it("has reverse button when reverse function provided", async () => {
     const mockReverse = jest.fn();
-    renderSortOptions({ onReverseClick: mockReverse });
-    const button = testRenderer.root.findByProps({ id: reverseButtonId });
-    button.props.onClick();
+    await renderSortOptions({ onReverseClick: mockReverse });
+    expect(mockReverse).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole("button"));
     expect(mockReverse).toHaveBeenCalledTimes(1);
   });
 });
