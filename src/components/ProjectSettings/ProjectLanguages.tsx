@@ -217,17 +217,19 @@ export default function ProjectLanguages(
       />
 
       <IconButton
+        data-testid={ProjectLanguagesId.ButtonAddAnalysisLangConfirm}
         disabled={!isNewLang}
-        onClick={() => addAnalysisWritingSystem()}
         id={ProjectLanguagesId.ButtonAddAnalysisLangConfirm}
+        onClick={() => addAnalysisWritingSystem()}
         size="large"
       >
         <Done />
       </IconButton>
 
       <IconButton
-        onClick={() => resetState()}
+        data-testid={ProjectLanguagesId.ButtonAddAnalysisLangClear}
         id={ProjectLanguagesId.ButtonAddAnalysisLangClear}
+        onClick={() => resetState()}
         size="large"
       >
         <Clear />
@@ -257,22 +259,26 @@ export default function ProjectLanguages(
   const vernacularLanguageEditor = (): ReactElement => (
     <Stack spacing={1}>
       <NormalizedTextField
-        variant="standard"
+        autoFocus
         id={ProjectLanguagesId.FieldEditVernacularName}
-        value={newVernName}
-        onChange={(e) => setNewVernName(e.target.value)}
+        inputProps={{
+          "data-testid": ProjectLanguagesId.FieldEditVernacularName,
+        }}
         onBlur={() => {
           setChangeVernName(false);
           setNewVernName(props.project.vernacularWritingSystem.name);
         }}
-        autoFocus
+        onChange={(e) => setNewVernName(e.target.value)}
+        value={newVernName}
+        variant="standard"
       />
 
       <Button
-        variant="contained"
+        data-testid={ProjectLanguagesId.ButtonEditVernacularNameSave}
         id={ProjectLanguagesId.ButtonEditVernacularNameSave}
         onClick={() => updateVernacularName()}
         onMouseDown={(e) => e.preventDefault()}
+        variant="contained"
       >
         {t("buttons.save")}
       </Button>
@@ -374,12 +380,13 @@ export function SemanticDomainLanguage(
         )
       ) : (
         <Select
-          variant="standard"
+          data-testid={ProjectLanguagesId.SelectSemDomLang}
           id={ProjectLanguagesId.SelectSemDomLang}
-          value={props.project.semDomWritingSystem.bcp47}
           onChange={(event: SelectChangeEvent<string>) =>
             setSemDomWritingSystem(event.target.value as string)
           }
+          value={props.project.semDomWritingSystem.bcp47}
+          variant="standard"
           /* Use `displayEmpty` and a conditional `renderValue` function to force
            * something to appear when the menu is closed and its value is "" */
           displayEmpty

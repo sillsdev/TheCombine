@@ -1,19 +1,21 @@
-import { Select } from "@mui/material";
-import renderer from "react-test-renderer";
+import "@testing-library/jest-dom";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import { OffOnSetting } from "api/models";
-import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
+import ProjectAutocomplete, {
+  ProjectAutocompleteTextId,
+} from "components/ProjectSettings/ProjectAutocomplete";
 import { randomProject } from "types/project";
 
 const mockSetProject = jest.fn();
 
 const mockProject = randomProject();
-
-let testRenderer: renderer.ReactTestRenderer;
+mockProject.autocompleteSetting = OffOnSetting.Off;
 
 const renderAutocomplete = async (): Promise<void> => {
-  await renderer.act(async () => {
-    testRenderer = renderer.create(
+  await act(async () => {
+    render(
       <ProjectAutocomplete project={mockProject} setProject={mockSetProject} />
     );
   });
@@ -22,13 +24,15 @@ const renderAutocomplete = async (): Promise<void> => {
 describe("ProjectAutocomplete", () => {
   it("updates project autocomplete", async () => {
     await renderAutocomplete();
-    const selectChange = testRenderer.root.findByType(Select).props.onChange;
-    await renderer.act(async () => selectChange({ target: { value: "Off" } }));
-    expect(mockSetProject).toHaveBeenCalledWith({
-      ...mockProject,
-      autocompleteSetting: OffOnSetting.Off,
-    });
-    await renderer.act(async () => selectChange({ target: { value: "On" } }));
+    expect(
+      screen.queryByText(ProjectAutocompleteTextId.MenuItemOff)
+    ).toBeTruthy();
+    expect(screen.queryByText(ProjectAutocompleteTextId.MenuItemOn)).toBeNull();
+
+    await userEvent.click(screen.getByRole("combobox"));
+    await userEvent.click(
+      screen.getByText(ProjectAutocompleteTextId.MenuItemOn)
+    );
     expect(mockSetProject).toHaveBeenCalledWith({
       ...mockProject,
       autocompleteSetting: OffOnSetting.On,
