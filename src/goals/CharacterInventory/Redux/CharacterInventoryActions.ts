@@ -109,7 +109,6 @@ export function uploadInventory() {
     const project = getState().currentProjectState.project;
     const charChanges = getCharChanges(project, charInvState);
     if (!charChanges.length) {
-      exit();
       return;
     }
     await dispatch(
@@ -122,6 +121,12 @@ export function uploadInventory() {
     const changes = getState().goalsState.currentGoal.changes as CharInvChanges;
     dispatch(addCharInvChangesToGoal({ ...changes, charChanges }));
     await dispatch(asyncUpdateGoal());
+  };
+}
+
+export function uploadAndExit() {
+  return async (dispatch: StoreStateDispatch) => {
+    await dispatch(uploadInventory());
     exit();
   };
 }
@@ -188,6 +193,9 @@ function addWordChanges(wordChanges: FindAndReplaceChange) {
  * - Update the in-state character inventory. */
 export function findAndReplace(find: string, replace: string) {
   return async (dispatch: StoreStateDispatch) => {
+    // First save pending inventory changes so they won't be lost.
+    await dispatch(uploadInventory());
+
     const changedWords = (await getFrontierWords()).filter((w) =>
       w.vernacular.includes(find)
     );

@@ -1,5 +1,6 @@
-import { Button, TextField } from "@mui/material";
-import renderer from "react-test-renderer";
+import "@testing-library/jest-dom";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import ProjectName from "components/ProjectSettings/ProjectName";
 import { randomProject } from "types/project";
@@ -9,45 +10,39 @@ jest.mock("react-toastify", () => ({
 }));
 
 const mockToastError = jest.fn();
-
 const mockSetProject = jest.fn();
 
 const mockProject = randomProject();
 
-let testRenderer: renderer.ReactTestRenderer;
-
 const renderName = async (): Promise<void> => {
-  await renderer.act(async () => {
-    testRenderer = renderer.create(
-      <ProjectName project={mockProject} setProject={mockSetProject} />
-    );
+  await act(async () => {
+    render(<ProjectName project={mockProject} setProject={mockSetProject} />);
   });
 };
 
 describe("ProjectName", () => {
   it("updates project name", async () => {
     await renderName();
-    const textField = testRenderer.root.findByType(TextField);
-    const saveButton = testRenderer.root.findByType(Button);
+    const textField = screen.getByRole("textbox");
+    const saveButton = screen.getByRole("button");
     const name = "new-project-name";
+    await userEvent.clear(textField);
+    await userEvent.type(textField, name);
     mockSetProject.mockResolvedValueOnce({});
-    await renderer.act(async () =>
-      textField.props.onChange({ target: { value: name } })
-    );
-    await renderer.act(async () => saveButton.props.onClick());
+    await userEvent.click(saveButton);
     expect(mockSetProject).toHaveBeenCalledWith({ ...mockProject, name });
+    expect(mockToastError).not.toHaveBeenCalled();
   });
 
   it("toasts on error", async () => {
     await renderName();
-    const textField = testRenderer.root.findByType(TextField);
-    const saveButton = testRenderer.root.findByType(Button);
-    await renderer.act(async () =>
-      textField.props.onChange({ target: { value: "new-name" } })
-    );
+    const textField = screen.getByRole("textbox");
+    const saveButton = screen.getByRole("button");
+    await userEvent.clear(textField);
+    await userEvent.type(textField, "whatever");
     mockSetProject.mockRejectedValueOnce({});
     expect(mockToastError).not.toHaveBeenCalled();
-    await renderer.act(async () => saveButton.props.onClick());
+    await userEvent.click(saveButton);
     expect(mockToastError).toHaveBeenCalledTimes(1);
   });
 });

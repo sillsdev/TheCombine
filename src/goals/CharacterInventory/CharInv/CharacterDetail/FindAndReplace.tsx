@@ -17,6 +17,7 @@ export enum FindAndReplaceId {
 }
 
 interface FindAndReplaceProps {
+  close: () => void;
   initialFindValue: string;
 }
 
@@ -47,6 +48,7 @@ export default function FindAndReplace(
       )
     );
     setWarningDialogOpen(false);
+    props.close();
   };
 
   const dialogText = (
