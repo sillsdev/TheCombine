@@ -1,13 +1,5 @@
 import { colorblindSafePalette, HEX } from "types/theme";
 
-export function meetsPasswordRequirements(password: string): boolean {
-  return password.length >= 8;
-}
-
-export function meetsUsernameRequirements(username: string): boolean {
-  return username.length >= 3;
-}
-
 export function randElement<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }

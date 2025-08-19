@@ -21,7 +21,7 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_resets.FindAll(x => x.Token == token).SingleOrDefault());
         }
 
-        public List<EmailToken> GetResets()
+        internal List<EmailToken> GetResets()
         {
             return _resets;
         }

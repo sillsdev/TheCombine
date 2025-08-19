@@ -30,12 +30,7 @@ namespace BackendFramework.Services
             return resetRequest;
         }
 
-        internal async Task ExpirePasswordReset(string email)
-        {
-            await _passwordResetRepo.ClearAll(email);
-        }
-
-        internal async Task<EmailToken?> GetValidPasswordReset(string token)
+        private async Task<EmailToken?> GetValidPasswordReset(string token)
         {
             var reset = await _passwordResetRepo.FindByToken(token);
             return (reset is null || IsPasswordResetValid(reset)) ? reset : null;
@@ -59,14 +54,14 @@ namespace BackendFramework.Services
             var user = (await _userRepo.GetAllUsers()).Single(u =>
                 u.Email.Equals(request.Email, StringComparison.OrdinalIgnoreCase));
             await _userRepo.ChangePassword(user.Id, password);
-            await ExpirePasswordReset(request.Email);
+            await _passwordResetRepo.ClearAll(request.Email);
             return true;
         }
 
-        public async Task<bool> ResetPasswordRequest(string EmailOrUsername)
+        public async Task<bool> ResetPasswordRequest(string emailOrUsername)
         {
             // Find user attached to email or username.
-            var user = await _userRepo.GetUserByEmailOrUsername(EmailOrUsername, false);
+            var user = await _userRepo.GetUserByEmailOrUsername(emailOrUsername, false);
 
             if (user is null)
             {
@@ -84,7 +79,7 @@ namespace BackendFramework.Services
         {
             var message = new MimeMessage();
             message.To.Add(new MailboxAddress(user.Name, user.Email));
-            message.Subject = "Combine password reset";
+            message.Subject = "The Combine password reset";
             message.Body = new TextPart("plain")
             {
                 Text = $"A password reset has been requested for the user {user.Username}. " +

@@ -15,7 +15,7 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_boolResponse);
         }
 
-        public Task<bool> ResetPasswordRequest(string EmailOrUsername)
+        public Task<bool> ResetPasswordRequest(string emailOrUsername)
         {
             return Task.FromResult(_boolResponse);
         }
