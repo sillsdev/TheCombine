@@ -1,4 +1,4 @@
-import { Drawer, Grid, List, SxProps } from "@mui/material";
+import { Drawer, Grid2, List, SxProps } from "@mui/material";
 import { Fragment, ReactElement } from "react";
 
 import { SemanticDomain } from "api/models";
@@ -34,7 +34,7 @@ export default function ExistingDataTable(
   const closeDrawer = (): void => props.toggleDrawer(false);
 
   const list = (): ReactElement => (
-    <List style={{ minWidth: "300px" }}>
+    <List sx={{ minWidth: "300px" }}>
       {props.domainWords.map((w, i) => (
         <ImmutableExistingData
           glosses={w.glosses}
@@ -54,7 +54,7 @@ export default function ExistingDataTable(
       onClose={closeDrawer}
       onKeyDown={closeDrawer}
       role="presentation"
-      style={{ zIndex: theme.zIndex.drawer + 1 }}
+      sx={{ zIndex: theme.zIndex.drawer + 1 }}
     >
       {list()}
     </Drawer>
@@ -66,9 +66,9 @@ export default function ExistingDataTable(
   };
 
   const renderSidePanel = (): ReactElement => (
-    <Grid item md={5} lg={4} sx={sxScrollOverflow}>
+    <Grid2 size={{ md: 5, lg: 4, xl: 3 }} sx={sxScrollOverflow}>
       {list()}
-    </Grid>
+    </Grid2>
   );
 
   return props.typeDrawer ? renderDrawer() : renderSidePanel();
