@@ -100,7 +100,7 @@ namespace BackendFramework.Models
         /// <summary>
         /// Is set to true after a user has verified their email address.
         /// </summary>
-        [BsonElement("IsEmailVerified")]
+        [BsonElement("isEmailVerified")]
         public bool IsEmailVerified { get; set; }
 
         public User()

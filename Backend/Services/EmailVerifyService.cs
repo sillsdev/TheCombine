@@ -26,7 +26,7 @@ namespace BackendFramework.Services
 
             var result = await _userRepo.VerifyEmail(emailToken.Email);
             await _emailVerifyRepo.ClearAll(emailToken.Email);
-            return result == Helper.ResultOfUpdate.Updated || result == Helper.ResultOfUpdate.NoChange;
+            return result == Helper.ResultOfUpdate.Updated;
         }
 
         private async Task<EmailToken?> GetValidEmailVerify(string token)

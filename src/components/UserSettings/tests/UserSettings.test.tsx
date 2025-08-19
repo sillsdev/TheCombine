@@ -22,8 +22,8 @@ jest.mock("notistack", () => ({
 
 jest.mock("backend", () => ({
   isEmailOkay: (emailOrUsername: string) => mockIsEmailOkay(emailOrUsername),
-  updateUser: (user: User) => mockUpdateUser(user),
   requestEmailVerify: () => Promise.resolve(),
+  updateUser: (user: User) => mockUpdateUser(user),
 }));
 jest.mock("backend/localStorage", () => ({
   getAvatar: () => mockGetAvatar(),

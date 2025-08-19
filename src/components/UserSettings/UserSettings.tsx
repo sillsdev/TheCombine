@@ -17,7 +17,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { FormEvent, Fragment, ReactElement, useState } from "react";
+import { FormEvent, Fragment, ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -95,7 +95,8 @@ export function UserSettings(props: {
 
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
-  const [email, setEmail] = useState(props.user.email);
+  const [email, setEmail] = useState("");
+  const [emailPunycode, setEmailPunycode] = useState(props.user.email);
   const [displayConsent, setDisplayConsent] = useState(false);
   const [analyticsOn, setAnalyticsOn] = useState(props.user.analyticsOn);
   const [uiLang, setUiLang] = useState(props.user.uiLang ?? "");
@@ -108,6 +109,12 @@ export function UserSettings(props: {
 
   const { t } = useTranslation();
 
+  useEffect(() => {
+    setEmail(normalizeEmail(emailPunycode));
+    setEmailTaken(false);
+    setEmailVerifySent(false);
+  }, [emailPunycode]);
+
   const handleConsentChange = (consentVal?: boolean): void => {
     setAnalyticsOn(consentVal ?? analyticsOn);
     setDisplayConsent(false);
@@ -117,19 +124,19 @@ export function UserSettings(props: {
   const disabled =
     name === props.user.name &&
     phone === props.user.phone &&
-    normalizeEmail(email) === props.user.email &&
+    email === props.user.email &&
     analyticsOn === props.user.analyticsOn &&
     uiLang === (props.user.uiLang ?? "") &&
     glossSuggestion === props.user.glossSuggestion;
 
   async function onSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
-    if (await isEmailOkay(normalizeEmail(email))) {
+    if (await isEmailOkay(email)) {
       await updateUser({
         ...props.user,
         name,
         phone,
-        email: normalizeEmail(email),
+        email,
         analyticsOn,
         uiLang,
         glossSuggestion,
@@ -149,14 +156,22 @@ export function UserSettings(props: {
   }
 
   async function sendVerifyEmail(): Promise<void> {
-    await requestEmailVerify(email)
-      .then(() => {
-        setEmailVerifySent(true);
-        toast.success(t(UserSettingsTextId.ToastEmailVerificationSent));
-      })
-      .catch(() =>
-        toast.error(t(UserSettingsTextId.ToastEmailVerificationFailed))
-      );
+    if (await isEmailOkay(email)) {
+      if (email !== props.user.email) {
+        await updateUser({ ...props.user, email });
+        props.setUser({ ...props.user, email });
+      }
+      await requestEmailVerify(email)
+        .then(() => {
+          setEmailVerifySent(true);
+          toast.success(t(UserSettingsTextId.ToastEmailVerificationSent));
+        })
+        .catch(() =>
+          toast.error(t(UserSettingsTextId.ToastEmailVerificationFailed))
+        );
+    } else {
+      setEmailTaken(true);
+    }
   }
 
   return (
@@ -253,12 +268,9 @@ export function UserSettings(props: {
                       required
                       fullWidth
                       variant="outlined"
-                      value={email}
+                      value={emailPunycode}
                       label={t(UserSettingsTextId.FieldEmail)}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        setEmailTaken(false);
-                      }}
+                      onChange={(e) => setEmailPunycode(e.target.value)}
                       error={emailTaken}
                       helperText={
                         emailTaken
