@@ -50,33 +50,43 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestRequestEmailVerify()
+        public void TestRequestEmailVerifyFalse()
         {
             _emailVerifyService.SetNextBoolResponse(false);
-            var falseResult = _emailVerifyController.RequestEmailVerify(Email).Result;
-            Assert.That(((StatusCodeResult)falseResult).StatusCode,
-                Is.EqualTo(StatusCodes.Status500InternalServerError));
-
-            _emailVerifyService.SetNextBoolResponse(true);
-            var trueResult = _emailVerifyController.RequestEmailVerify(Email).Result;
-            Assert.That(trueResult, Is.TypeOf<OkResult>());
+            var result = _emailVerifyController.RequestEmailVerify(Email).Result;
+            Assert.That(((StatusCodeResult)result).StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
         }
 
         [Test]
-        public void TestValidateResetToken()
+        public void TestRequestEmailVerifyTrue()
+        {
+            _emailVerifyService.SetNextBoolResponse(true);
+            var result = _emailVerifyController.RequestEmailVerify(Email).Result;
+            Assert.That(result, Is.TypeOf<OkResult>());
+        }
+
+        [Test]
+        public void TestValidateResetTokenFalse()
         {
             // No permissions should be required to validate a password reset token.
             _emailVerifyController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
             _emailVerifyService.SetNextBoolResponse(false);
-            var falseResult = _emailVerifyController.ValidateEmailToken("token").Result;
-            Assert.That(falseResult, Is.TypeOf<OkObjectResult>());
-            Assert.That(((OkObjectResult)falseResult).Value, Is.EqualTo(false));
+            var result = _emailVerifyController.ValidateEmailToken("token").Result;
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)result).Value, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void TestValidateResetTokenTrue()
+        {
+            // No permissions should be required to validate a password reset token.
+            _emailVerifyController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
             _emailVerifyService.SetNextBoolResponse(true);
-            var trueResult = _emailVerifyController.ValidateEmailToken("token").Result;
-            Assert.That(trueResult, Is.TypeOf<OkObjectResult>());
-            Assert.That(((OkObjectResult)trueResult).Value, Is.EqualTo(true));
+            var result = _emailVerifyController.ValidateEmailToken("token").Result;
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)result).Value, Is.EqualTo(true));
         }
     }
 }

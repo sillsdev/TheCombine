@@ -21,9 +21,9 @@ namespace Backend.Tests.Services
             var options = Options.Create(new Startup.Settings { ExpireTimeEmailVerify = _expireTime });
             _emailVerifyRepo = new EmailVerifyRepositoryMock();
             var userRepo = new UserRepositoryMock();
+            _emailVerifyService = new EmailVerifyService(options, _emailVerifyRepo, userRepo, new EmailServiceMock());
+
             userRepo.Create(new() { Email = Email }).Wait();
-            _emailVerifyService = new EmailVerifyService(
-                options, _emailVerifyRepo, userRepo, new EmailServiceMock());
         }
 
         [Test]

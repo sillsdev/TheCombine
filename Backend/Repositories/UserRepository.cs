@@ -245,7 +245,7 @@ namespace BackendFramework.Repositories
 
             // Do not allow updating admin privileges or validating email unless explicitly allowed
             //     (e.g. admin creation CLI).
-            // This prevents a user from modifying this field and privilege escalating.
+            // This prevents a user from modifying these fields and privilege escalating.
             if (updateIsAdmin)
             {
                 updateDef = updateDef.Set(x => x.IsAdmin, user.IsAdmin)

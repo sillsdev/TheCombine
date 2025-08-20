@@ -60,7 +60,6 @@ const whiteListedErrorUrls = [
   "/speakers/update/",
   "/users/authenticate",
   "/users/captcha/",
-  "/verifyemail/",
 ];
 
 // Create an axios instance to allow for attaching interceptors to it.
@@ -229,7 +228,7 @@ export async function updateBanner(siteBanner: SiteBanner): Promise<boolean> {
   return (await bannerApi.updateBanner({ siteBanner }, defaultOptions())).data;
 }
 
-/* PasswordResetController.cs */
+/* EmailVerifyController.cs */
 
 export async function requestEmailVerify(email: string): Promise<void> {
   await emailVerifyApi.requestEmailVerify({ body: email }, defaultOptions());
