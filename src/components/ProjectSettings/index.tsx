@@ -38,7 +38,7 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
 import { Permission, type Project } from "api/models";
-import { canUploadLift, getCurrentPermissions } from "backend";
+import { getCurrentPermissions } from "backend";
 import {
   asyncRefreshProjectUsers,
   asyncSetNewCurrentProject,
@@ -98,7 +98,6 @@ export default function ProjectSettingsComponent(): ReactElement {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const [imports, setImports] = useState<boolean>(false);
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [tab, setTab] = useState(ProjectSettingsTab.Languages);
 
@@ -109,9 +108,6 @@ export default function ProjectSettingsComponent(): ReactElement {
   }, [project.id]);
 
   useEffect(() => {
-    if (permissions.includes(Permission.Import)) {
-      canUploadLift().then(setImports);
-    }
     if (permissions.includes(Permission.DeleteEditSettingsAndUsers)) {
       dispatch(asyncRefreshProjectUsers(project.id));
     }
@@ -269,13 +265,7 @@ export default function ProjectSettingsComponent(): ReactElement {
               icon={<CloudUpload data-testid={Setting.Import} />}
               title={t("projectSettings.import.header")}
               body={
-                imports ? (
-                  <ProjectImport project={project} setProject={setNewProject} />
-                ) : (
-                  <Typography variant="body2">
-                    {t("projectSettings.import.notAllowed")}
-                  </Typography>
-                )
+                <ProjectImport project={project} setProject={setNewProject} />
               }
             />
           )}
