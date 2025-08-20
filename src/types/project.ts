@@ -11,6 +11,7 @@ export function newProject(name = ""): Project {
     definitionsEnabled: false,
     grammaticalInfoEnabled: false,
     autocompleteSetting: OffOnSetting.On,
+    protectedDataMergeAvoidEnabled: OffOnSetting.Off,
     protectedDataOverrideEnabled: OffOnSetting.Off,
     semanticDomains: [],
     semDomWritingSystem: newWritingSystem(),
