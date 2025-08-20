@@ -32,7 +32,7 @@ namespace BackendFramework
 
         public class Settings
         {
-            public const int DefaultExpirePasswordResetMinutes = 15;
+            public const int DefaultExpirePasswordResetMinutes = 60;
             public const int DefaultExpireProjectInviteDays = 7;
 
             public bool CaptchaEnabled { get; set; } = true;
