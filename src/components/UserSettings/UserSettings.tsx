@@ -11,9 +11,9 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { enqueueSnackbar } from "notistack";
-import { FormEvent, Fragment, ReactElement, useState } from "react";
+import { FormEvent, Fragment, ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 import { OffOnSetting, User } from "api/models";
 import {
@@ -31,11 +31,7 @@ import { RuntimeConfig } from "types/runtimeConfig";
 import theme from "types/theme";
 import { uiWritingSystems } from "types/writingSystem";
 import { NormalizedTextField } from "utilities/fontComponents";
-
-// Chrome silently converts non-ASCII characters in a Textfield of type="email".
-// Use punycode.toUnicode() to convert them from punycode back to Unicode.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const punycode = require("punycode/");
+import { normalizeEmail } from "utilities/userUtilities";
 
 export enum UserSettingsIds {
   ButtonChangeConsent = "user-settings-change-consent",
@@ -58,11 +54,6 @@ export default function UserSettingsGetUser(): ReactElement {
   );
 }
 
-/** Text field of type="email" silently converted its input from Unicode to punycode.
-This function trims whitespace, and converts to normalized Unicode. */
-const normalizeEmail = (email: string): string =>
-  punycode.toUnicode(email.trim()).normalize("NFC");
-
 export function UserSettings(props: {
   user: User;
   setUser: (user?: User) => void;
@@ -72,6 +63,7 @@ export function UserSettings(props: {
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
   const [email, setEmail] = useState(props.user.email);
+  const [emailPunycode, setEmailPunycode] = useState(props.user.email);
   const [displayConsent, setDisplayConsent] = useState(false);
   const [analyticsOn, setAnalyticsOn] = useState(props.user.analyticsOn);
   const [uiLang, setUiLang] = useState(props.user.uiLang ?? "");
@@ -83,13 +75,17 @@ export function UserSettings(props: {
 
   const { t } = useTranslation();
 
+  useEffect(() => {
+    setEmail(normalizeEmail(emailPunycode));
+    setEmailTaken(false);
+  }, [emailPunycode]);
+
   /** Checks whether email address is okay: unchanged or not taken by a different user. */
   async function isEmailOkay(): Promise<boolean> {
-    const unicodeEmail = normalizeEmail(email);
     return (
-      unicodeEmail === props.user.email ||
-      (await isEmailOrUsernameAvailable(unicodeEmail)) ||
-      (await getUserIdByEmailOrUsername(unicodeEmail)) === props.user.id
+      email === props.user.email ||
+      (await isEmailOrUsernameAvailable(email)) ||
+      (await getUserIdByEmailOrUsername(email)) === props.user.id
     );
   }
 
@@ -102,7 +98,7 @@ export function UserSettings(props: {
   const disabled =
     name === props.user.name &&
     phone === props.user.phone &&
-    normalizeEmail(email) === props.user.email &&
+    email === props.user.email &&
     analyticsOn === props.user.analyticsOn &&
     uiLang === (props.user.uiLang ?? "") &&
     glossSuggestion === props.user.glossSuggestion;
@@ -114,7 +110,7 @@ export function UserSettings(props: {
         ...props.user,
         name,
         phone,
-        email: normalizeEmail(email),
+        email,
         analyticsOn,
         uiLang,
         glossSuggestion,
@@ -126,7 +122,7 @@ export function UserSettings(props: {
         await dispatch(asyncLoadSemanticDomains());
       }
 
-      enqueueSnackbar(t("userSettings.updateSuccess"));
+      toast.success(t("userSettings.updateSuccess"));
       props.setUser(getCurrentUser());
     } else {
       setEmailTaken(true);
@@ -198,23 +194,22 @@ export function UserSettings(props: {
                   <Email />
 
                   <Grid2 size="grow">
+                    {/* Don't use NormalizedTextField for type="email".
+                    At best, it doesn't normalize, because of the punycode. */}
                     <TextField
                       id={UserSettingsIds.FieldEmail}
                       inputProps={{ "data-testid": UserSettingsIds.FieldEmail }}
                       required
                       fullWidth
                       variant="outlined"
-                      value={email}
+                      value={emailPunycode}
                       label={t("login.email")}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        setEmailTaken(false);
-                      }}
+                      onChange={(e) => setEmailPunycode(e.target.value)}
                       error={emailTaken}
                       helperText={
                         emailTaken ? t("login.emailTaken") : undefined
                       }
-                      type="email"
+                      type="email" // silently converts input to punycode
                     />
                   </Grid2>
                 </Stack>

@@ -240,12 +240,13 @@ export async function emailInviteToProject(
   return resp.data;
 }
 
-export async function validateLink(
+export async function validateInviteToken(
   projectId: string,
   token: string
 ): Promise<EmailInviteStatus> {
-  return (await inviteApi.validateToken({ projectId, token }, defaultOptions()))
-    .data;
+  return (
+    await inviteApi.validateInviteToken({ projectId, token }, defaultOptions())
+  ).data;
 }
 
 /* LiftController.cs */

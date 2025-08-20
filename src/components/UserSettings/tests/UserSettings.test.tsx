@@ -16,11 +16,6 @@ const mockIsEmailOrUsernameAvailable = jest.fn();
 const mockSetUser = jest.fn();
 const mockUpdateUser = jest.fn();
 
-jest.mock("notistack", () => ({
-  ...jest.requireActual("notistack"),
-  enqueueSnackbar: jest.fn(),
-}));
-
 jest.mock("backend", () => ({
   getUserIdByEmailOrUsername: (emailOrUsername: string) =>
     mockGetUserIdByEmailOrUsername(emailOrUsername),
