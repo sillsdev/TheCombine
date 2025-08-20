@@ -7,12 +7,22 @@ import { isEmailOkay, requestEmailVerify, updateUser } from "backend";
 import { getCurrentUser } from "backend/localStorage";
 import { NormalizedTextField } from "utilities/fontComponents";
 
-interface EmailVerifyProps {
+export enum RequestEmailVerifyTextId {
+  ButtonCancel = "buttons.cancel",
+  ButtonSubmit = "userSettings.verifyEmail.button",
+  FieldEmail = "login.email",
+  FieldEmailTaken = "login.isTaken",
+  Title = "userSettings.verifyEmail.title",
+}
+
+interface RequestEmailVerifyProps {
   onCancel: () => void;
   onSubmit: () => void;
 }
 
-export default function EmailVerify(props: EmailVerifyProps): ReactElement {
+export default function RequestEmailVerify(
+  props: RequestEmailVerifyProps
+): ReactElement {
   const [currentUser] = useState(getCurrentUser()!);
   const [email, setEmail] = useState(currentUser.email);
   const [isTaken, setIsTaken] = useState(false);
@@ -43,7 +53,7 @@ export default function EmailVerify(props: EmailVerifyProps): ReactElement {
       <Stack spacing={2}>
         {/* Title */}
         <Typography align="center" variant="h6">
-          {t("userSettings.verifyEmail.title")}
+          {t(RequestEmailVerifyTextId.Title)}
         </Typography>
 
         {/* Email address */}
@@ -51,8 +61,10 @@ export default function EmailVerify(props: EmailVerifyProps): ReactElement {
           autoFocus
           error={isTaken}
           fullWidth
-          helperText={isTaken ? t("login.isTaken") : undefined}
-          label={t("login.email")}
+          helperText={
+            isTaken ? t(RequestEmailVerifyTextId.FieldEmailTaken) : undefined
+          }
+          label={t(RequestEmailVerifyTextId.FieldEmail)}
           onChange={(e) => setEmail(e.target.value)}
           required
           slotProps={{ htmlInput: { maxLength: 320 } }}
@@ -62,11 +74,11 @@ export default function EmailVerify(props: EmailVerifyProps): ReactElement {
         {/* Buttons: cancel, submit */}
         <Grid2 container justifyContent="flex-end" spacing={2}>
           <Button onClick={props.onCancel} variant="outlined">
-            {t("buttons.cancel")}
+            {t(RequestEmailVerifyTextId.ButtonCancel)}
           </Button>
 
           <Button disabled={!isValid} onClick={onSubmit} variant="contained">
-            {t("userSettings.verifyEmail.button")}
+            {t(RequestEmailVerifyTextId.ButtonSubmit)}
           </Button>
         </Grid2>
       </Stack>

@@ -9,7 +9,7 @@ import { Role } from "api/models";
 import { addOrUpdateUserRole } from "backend";
 import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
 import EmailInvite from "components/ProjectUsers/EmailInvite";
-import EmailVerify from "components/ProjectUsers/EmailVerify";
+import RequestEmailVerify from "components/ProjectUsers/RequestEmailVerify";
 import UserList from "components/ProjectUsers/UserList";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
@@ -96,7 +96,7 @@ export default function AddProjectUsers(
           onRequestClose={() => setShowVerifyModal(false)}
           style={customStyles}
         >
-          <EmailVerify
+          <RequestEmailVerify
             onCancel={() => setShowVerifyModal(false)}
             onSubmit={onSubmit}
           />

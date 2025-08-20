@@ -16,6 +16,14 @@ import { setIsEmailVerifiedTrue } from "components/Login/Redux/LoginActions";
 import { useAppDispatch } from "rootRedux/hooks";
 import { Path } from "types/path";
 
+export enum EmailVerifyTextId {
+  ButtonReturn = "emailVerify.returnButton",
+  InvalidLinkBody = "emailVerify.invalidText",
+  InvalidLinkTitle = "emailVerify.invalidTitle",
+  TitleSuccess = "emailVerify.success",
+  TitleVerifying = "emailVerify.verifying",
+}
+
 export default function EmailVerify(): ReactElement {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -43,8 +51,8 @@ export default function EmailVerify(): ReactElement {
   if (loaded && !success) {
     return (
       <InvalidLink
-        bodyTextId="emailVerify.invalidText"
-        titleTextId="emailVerify.invalidTitle"
+        bodyTextId={EmailVerifyTextId.InvalidLinkBody}
+        titleTextId={EmailVerifyTextId.InvalidLinkTitle}
       />
     );
   }
@@ -55,7 +63,11 @@ export default function EmailVerify(): ReactElement {
         <CardHeader
           title={
             <Typography align="center" variant="h5">
-              {t(success ? "emailVerify.success" : "emailVerify.verifying")}
+              {t(
+                success
+                  ? EmailVerifyTextId.TitleSuccess
+                  : EmailVerifyTextId.TitleVerifying
+              )}
             </Typography>
           }
         />
@@ -65,7 +77,7 @@ export default function EmailVerify(): ReactElement {
               onClick={() => navigate(Path.ProjScreen)}
               variant="contained"
             >
-              {t("emailVerify.returnButton")}
+              {t(EmailVerifyTextId.ButtonReturn)}
             </Button>
           )}
         </CardContent>
