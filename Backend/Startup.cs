@@ -32,6 +32,7 @@ namespace BackendFramework
 
         public class Settings
         {
+            public const int DefaultExpireEmailVerifyMinutes = 60;
             public const int DefaultExpirePasswordResetMinutes = 60;
             public const int DefaultExpireProjectInviteDays = 7;
 
@@ -41,6 +42,8 @@ namespace BackendFramework
             public string ConnectionString { get; set; } = "";
             public string CombineDatabase { get; set; } = "";
             public bool EmailEnabled { get; set; }
+            public TimeSpan ExpireTimeEmailVerify { get; set; } =
+                TimeSpan.FromMinutes(DefaultExpireEmailVerifyMinutes);
             public TimeSpan ExpireTimePasswordReset { get; set; } =
                 TimeSpan.FromMinutes(DefaultExpirePasswordResetMinutes);
             public TimeSpan ExpireTimeProjectInvite { get; set; } =
@@ -194,6 +197,8 @@ namespace BackendFramework
                         true)!);
                     if (options.EmailEnabled)
                     {
+                        options.ExpireTimeEmailVerify = TimeSpan.FromMinutes(CheckedEnvironmentVariablePositiveInt(
+                            "COMBINE_EXPIRE_EMAIL_VERIFY_MINUTES", Settings.DefaultExpireEmailVerifyMinutes));
                         options.ExpireTimePasswordReset = TimeSpan.FromMinutes(CheckedEnvironmentVariablePositiveInt(
                             "COMBINE_EXPIRE_PASSWORD_RESET_MINUTES", Settings.DefaultExpirePasswordResetMinutes));
                         options.ExpireTimeProjectInvite = TimeSpan.FromDays(CheckedEnvironmentVariablePositiveInt(
@@ -240,6 +245,8 @@ namespace BackendFramework
             // Email types
             services.AddTransient<IEmailContext, EmailContext>();
             services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IEmailVerifyRepository, EmailVerifyRepository>();
+            services.AddTransient<IEmailVerifyService, EmailVerifyService>();
             services.AddTransient<IInviteRepository, InviteRepository>();
             services.AddTransient<IInviteService, InviteService>();
             services.AddTransient<IPasswordResetRepository, PasswordResetRepository>();

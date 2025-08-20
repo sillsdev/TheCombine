@@ -18,6 +18,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
+import { requestEmailVerify } from "backend";
 import { LoadingDoneButton } from "components/Buttons";
 import Captcha from "components/Login/Captcha";
 import { asyncSignUp } from "components/Login/Redux/LoginActions";
@@ -27,6 +28,7 @@ import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import router from "router/browserRouter";
 import { Path } from "types/path";
+import { RuntimeConfig } from "types/runtimeConfig";
 import { NormalizedTextField } from "utilities/fontComponents";
 import {
   meetsPasswordRequirements,
@@ -163,8 +165,11 @@ export default function Signup(props: SignupProps): ReactElement {
     if (Object.values(err).some((e) => e)) {
       setFieldError(err);
     } else {
+      const onLogin = RuntimeConfig.getInstance().isOffline()
+        ? undefined
+        : async () => await requestEmailVerify(email);
       await dispatch(
-        asyncSignUp(name, username, email, password1, props.onSignup)
+        asyncSignUp(name, username, email, password1, props.onSignup, onLogin)
       );
     }
   };

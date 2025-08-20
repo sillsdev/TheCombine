@@ -66,6 +66,26 @@ namespace BackendFramework.Repositories
             }
         }
 
+        /// <summary> Finds <see cref="User"/> with specified Email and sets IsEmailVerified to true. </summary>
+        public async Task<ResultOfUpdate> VerifyEmail(string email)
+        {
+            var filter = Builders<User>.Filter.Eq(x => x.Email, email);
+            var updateDef = Builders<User>.Update.Set(x => x.IsEmailVerified, true);
+
+            var updateResult = await _users.UpdateOneAsync(filter, updateDef);
+            if (!updateResult.IsAcknowledged)
+            {
+                return ResultOfUpdate.NotFound;
+            }
+
+            if (updateResult.ModifiedCount > 0)
+            {
+                return ResultOfUpdate.Updated;
+            }
+
+            return ResultOfUpdate.NoChange;
+        }
+
         /// <summary> Finds <see cref="User"/> with specified userId and changes it's password </summary>
         public async Task<ResultOfUpdate> ChangePassword(string userId, string password)
         {
@@ -223,12 +243,13 @@ namespace BackendFramework.Repositories
                 updateDef = updateDef.Set(x => x.Token, user.Token);
             }
 
-            // Do not allow updating admin privileges unless explicitly allowed
+            // Do not allow updating admin privileges or validating email unless explicitly allowed
             //     (e.g. admin creation CLI).
-            // This prevents a user from modifying this field and privilege escalating.
+            // This prevents a user from modifying these fields and privilege escalating.
             if (updateIsAdmin)
             {
-                updateDef = updateDef.Set(x => x.IsAdmin, user.IsAdmin);
+                updateDef = updateDef.Set(x => x.IsAdmin, user.IsAdmin)
+                    .Set(x => x.IsEmailVerified, user.IsEmailVerified);
             }
 
             var updateResult = await _users.UpdateOneAsync(filter, updateDef);

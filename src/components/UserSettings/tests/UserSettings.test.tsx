@@ -11,16 +11,13 @@ import { newUser } from "types/user";
 
 const mockGetAvatar = jest.fn();
 const mockGetCurrentUser = jest.fn();
-const mockGetUserIdByEmailOrUsername = jest.fn();
-const mockIsEmailOrUsernameAvailable = jest.fn();
+const mockIsEmailOkay = jest.fn();
 const mockSetUser = jest.fn();
 const mockUpdateUser = jest.fn();
 
 jest.mock("backend", () => ({
-  getUserIdByEmailOrUsername: (emailOrUsername: string) =>
-    mockGetUserIdByEmailOrUsername(emailOrUsername),
-  isEmailOrUsernameAvailable: (emailOrUsername: string) =>
-    mockIsEmailOrUsernameAvailable(emailOrUsername),
+  isEmailOkay: (emailOrUsername: string) => mockIsEmailOkay(emailOrUsername),
+  requestEmailVerify: () => Promise.resolve(),
   updateUser: (user: User) => mockUpdateUser(user),
 }));
 jest.mock("backend/localStorage", () => ({
@@ -53,8 +50,7 @@ const mockUser = (): User => {
 const setupMocks = (): void => {
   mockGetAvatar.mockReturnValue("");
   mockGetCurrentUser.mockReturnValue(mockUser());
-  mockGetUserIdByEmailOrUsername.mockResolvedValue(mockUserId);
-  mockIsEmailOrUsernameAvailable.mockResolvedValue(true);
+  mockIsEmailOkay.mockResolvedValue(true);
   mockSetUser.mockImplementation(async () => {});
   mockUpdateUser.mockImplementation((user: User) => user);
 };
@@ -156,8 +152,7 @@ describe("UserSettings", () => {
     await renderUserSettings(mockUser());
 
     await agent.type(screen.getByTestId(UserSettingsIds.FieldEmail), "a");
-    mockIsEmailOrUsernameAvailable.mockResolvedValueOnce(false);
-    mockGetUserIdByEmailOrUsername.mockResolvedValue("other-user-id");
+    mockIsEmailOkay.mockResolvedValueOnce(false);
 
     await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
     expect(mockUpdateUser).toHaveBeenCalledTimes(0);

@@ -47,6 +47,13 @@
     "statistics": "Data Statistics",
     "projectSettings": "Project Settings"
   },
+  "emailVerify": {
+    "invalidText": "The link may have expired or already been used.",
+    "invalidTitle": "Email verification failed",
+    "returnButton": "Return to The Combine",
+    "success": "Email address verified!",
+    "verifying": "Verifying email address..."
+  },
   "invite": {
     "invalidInvitationURL": "Project Invitation link is invalid."
   },
@@ -145,6 +152,15 @@
       "consentNo": "You have not consented to our use of analytics cookies.",
       "consentYes": "You have consented to our use of analytics cookies.",
       "title": "Analytics cookies"
+    },
+    "verifyEmail": {
+      "button": "Verify email",
+      "description": "To add users to your project, you must verify your email address.",
+      "emailUnverified": "Verify email to add users to projects",
+      "emailVerified": "Email verification completed",
+      "emailVerifying": "Check your email",
+      "title": "Verify email address",
+      "verificationSent": "Verification email sent. Please check your email."
     },
     "contact": "Contact info",
     "glossSuggestion": "Gloss spelling suggestions",
