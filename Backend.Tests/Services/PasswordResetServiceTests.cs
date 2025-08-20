@@ -16,7 +16,7 @@ namespace Backend.Tests.Services
         private PasswordResetService _passwordResetService = null!;
         private const string Email = "user@domain.com";
         private const string Password = "PasswordResetServiceTestPassword";
-        private readonly TimeSpan _expireTime = TimeSpan.FromDays(7);
+        private readonly TimeSpan _expireTime = TimeSpan.FromMinutes(60);
 
         [SetUp]
         public void Setup()

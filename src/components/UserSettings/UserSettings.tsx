@@ -94,7 +94,7 @@ export function UserSettings(props: {
 
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(props.user.email);
   const [emailPunycode, setEmailPunycode] = useState(props.user.email);
   const [displayConsent, setDisplayConsent] = useState(false);
   const [analyticsOn, setAnalyticsOn] = useState(props.user.analyticsOn);

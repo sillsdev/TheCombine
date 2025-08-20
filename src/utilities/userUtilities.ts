@@ -1,5 +1,3 @@
-// Chrome silently converts non-ASCII characters in a Textfield of type="email".
-// Use punycode.toUnicode() to convert them from punycode back to Unicode.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const punycode = require("punycode/");
 

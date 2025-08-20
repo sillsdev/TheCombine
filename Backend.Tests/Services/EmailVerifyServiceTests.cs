@@ -13,7 +13,7 @@ namespace Backend.Tests.Services
         private EmailVerifyRepositoryMock _emailVerifyRepo = null!;
         private EmailVerifyService _emailVerifyService = null!;
         private const string Email = "user@domain.com";
-        private readonly TimeSpan _expireTime = TimeSpan.FromMinutes(15);
+        private readonly TimeSpan _expireTime = TimeSpan.FromMinutes(60);
 
         [SetUp]
         public void Setup()
