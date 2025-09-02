@@ -6,18 +6,22 @@ import { User } from "api/models";
 import UserSettingsGetUser, {
   UserSettings,
   UserSettingsIds,
+  UserSettingsTextId,
 } from "components/UserSettings/UserSettings";
 import { newUser } from "types/user";
 
+const mockEmailServiceEnabled = jest.fn();
 const mockGetAvatar = jest.fn();
 const mockGetCurrentUser = jest.fn();
 const mockIsEmailOkay = jest.fn();
+const mockIsOffline = jest.fn();
+const mockRequestEmailVerify = jest.fn();
 const mockSetUser = jest.fn();
 const mockUpdateUser = jest.fn();
 
 jest.mock("backend", () => ({
   isEmailOkay: (emailOrUsername: string) => mockIsEmailOkay(emailOrUsername),
-  requestEmailVerify: () => Promise.resolve(),
+  requestEmailVerify: (email: string) => mockRequestEmailVerify(email),
   updateUser: (user: User) => mockUpdateUser(user),
 }));
 jest.mock("backend/localStorage", () => ({
@@ -29,7 +33,15 @@ jest.mock("components/Project/ProjectActions", () => ({
 }));
 jest.mock("rootRedux/hooks", () => ({
   useAppDispatch: () => jest.fn(),
-  useAppSelector: () => jest.fn(),
+  useAppSelector: () => undefined,
+}));
+jest.mock("types/runtimeConfig", () => ({
+  RuntimeConfig: {
+    getInstance: () => ({
+      emailServicesEnabled: mockEmailServiceEnabled,
+      isOffline: mockIsOffline,
+    }),
+  },
 }));
 
 // Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`
@@ -156,5 +168,86 @@ describe("UserSettings", () => {
 
     await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
     expect(mockUpdateUser).toHaveBeenCalledTimes(0);
+  });
+
+  describe("email verification", () => {
+    it("isn't available when email is disabled", async () => {
+      mockEmailServiceEnabled.mockReturnValue(false);
+      await renderUserSettings(mockUser());
+
+      expect(
+        screen.queryByLabelText(UserSettingsTextId.TooltipEmailUnverified)
+      ).toBeNull();
+      expect(
+        screen.queryByLabelText(UserSettingsTextId.TooltipEmailVerified)
+      ).toBeNull();
+      expect(
+        screen.queryByLabelText(UserSettingsTextId.TooltipEmailVerifying)
+      ).toBeNull();
+    });
+
+    it("doesn't update user or request email verification when email is taken", async () => {
+      const agent = userEvent.setup();
+      mockEmailServiceEnabled.mockReturnValue(true);
+      await renderUserSettings(mockUser());
+      mockIsEmailOkay.mockResolvedValueOnce(false);
+
+      await agent.click(
+        screen.getByLabelText(UserSettingsTextId.TooltipEmailUnverified)
+      );
+      expect(mockRequestEmailVerify).not.toHaveBeenCalled();
+      expect(mockUpdateUser).not.toHaveBeenCalled();
+
+      expect(
+        screen.queryByLabelText(UserSettingsTextId.TooltipEmailUnverified)
+      ).toBeTruthy();
+      expect(
+        screen.queryByLabelText(UserSettingsTextId.TooltipEmailVerifying)
+      ).toBeNull();
+    });
+
+    it("requests email verification but doesn't update user when email is unchanged", async () => {
+      const agent = userEvent.setup();
+      mockEmailServiceEnabled.mockReturnValue(true);
+      await renderUserSettings(mockUser());
+      mockIsEmailOkay.mockResolvedValueOnce(true);
+
+      await agent.click(
+        screen.getByLabelText(UserSettingsTextId.TooltipEmailUnverified)
+      );
+      expect(mockRequestEmailVerify).toHaveBeenCalledTimes(1);
+      expect(mockUpdateUser).not.toHaveBeenCalled();
+
+      expect(
+        screen.queryByLabelText(UserSettingsTextId.TooltipEmailUnverified)
+      ).toBeNull();
+      expect(
+        screen.queryByLabelText(UserSettingsTextId.TooltipEmailVerifying)
+      ).toBeTruthy();
+    });
+
+    it("updates user and requests email verification when email is changed", async () => {
+      const agent = userEvent.setup();
+      mockEmailServiceEnabled.mockReturnValue(true);
+      await renderUserSettings(mockUser());
+
+      const emailField = screen.getByTestId(UserSettingsIds.FieldEmail);
+      await agent.clear(emailField);
+      await agent.type(emailField, "valid@and.free");
+      mockIsEmailOkay.mockResolvedValueOnce(true);
+
+      await agent.click(
+        screen.getByLabelText(UserSettingsTextId.TooltipEmailUnverified)
+      );
+      expect(mockRequestEmailVerify).toHaveBeenCalledTimes(1);
+      expect(mockUpdateUser).toHaveBeenCalledTimes(1);
+
+      expect(
+        screen.queryByLabelText(UserSettingsTextId.TooltipEmailUnverified)
+      ).toBeNull();
+      expect(
+        screen.queryByLabelText(UserSettingsTextId.TooltipEmailVerifying)
+      ).toBeTruthy();
+    });
   });
 });
