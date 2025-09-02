@@ -1,11 +1,10 @@
 import "@testing-library/jest-dom";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, Matcher, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { User } from "api/models";
 import UserSettingsGetUser, {
   UserSettings,
-  UserSettingsIds,
   UserSettingsTextId,
 } from "components/UserSettings/UserSettings";
 import { newUser } from "types/user";
@@ -86,38 +85,37 @@ const renderUserSettingsGetUser = async (): Promise<void> => {
   });
 };
 
+// Use regex for label matching to allow the * on a required field.
+const emailLabelRegEx = new RegExp(UserSettingsTextId.FieldEmail);
+const nameLabelRegEx = new RegExp(UserSettingsTextId.FieldName);
+const phoneLabelRegEx = new RegExp(UserSettingsTextId.FieldPhone);
+
 describe("UserSettings", () => {
   it("renders with user info", async () => {
     const user = mockUser();
     await renderUserSettings(user);
 
-    const emailField = screen.getByTestId(UserSettingsIds.FieldEmail);
-    expect(emailField).toHaveValue(user.email);
-
-    const nameField = screen.getByTestId(UserSettingsIds.FieldName);
-    expect(nameField).toHaveValue(user.name);
-
-    const phoneField = screen.getByTestId(UserSettingsIds.FieldPhone);
-    expect(phoneField).toHaveValue(user.phone);
+    expect(screen.getByLabelText(emailLabelRegEx)).toHaveValue(user.email);
+    expect(screen.getByLabelText(nameLabelRegEx)).toHaveValue(user.name);
+    expect(screen.getByLabelText(phoneLabelRegEx)).toHaveValue(user.phone);
   });
 
   it("disables button until something is changed", async () => {
     const agent = userEvent.setup();
     await renderUserSettings();
+    const submitButton = screen.getByText(UserSettingsTextId.ButtonSubmit);
 
-    const submitButton = screen.getByTestId(UserSettingsIds.ButtonSubmit);
-
-    const typeAndCheckEnabled = async (id: UserSettingsIds): Promise<void> => {
+    const typeAndCheckAndDelete = async (label: Matcher): Promise<void> => {
       expect(submitButton).toBeDisabled();
-      const field = screen.getByTestId(id);
+      const field = screen.getByLabelText(label);
       await agent.type(field, "?");
       expect(submitButton).toBeEnabled();
       await agent.type(field, "{backspace}");
     };
 
-    await typeAndCheckEnabled(UserSettingsIds.FieldEmail);
-    await typeAndCheckEnabled(UserSettingsIds.FieldName);
-    await typeAndCheckEnabled(UserSettingsIds.FieldPhone);
+    await typeAndCheckAndDelete(emailLabelRegEx);
+    await typeAndCheckAndDelete(nameLabelRegEx);
+    await typeAndCheckAndDelete(phoneLabelRegEx);
   });
 
   it("disables button when change is saved", async () => {
@@ -125,11 +123,11 @@ describe("UserSettings", () => {
     const stringToType = "a"; // Valid final character of an email address.
     const user = mockUser();
     await renderUserSettingsGetUser();
-    const submitButton = screen.getByTestId(UserSettingsIds.ButtonSubmit);
+    const submitButton = screen.getByText(UserSettingsTextId.ButtonSubmit);
 
-    const typeAndCheckEnabled = async (id: UserSettingsIds): Promise<void> => {
+    const typeAndCheckEnabled = async (label: Matcher): Promise<void> => {
       expect(submitButton).toBeDisabled();
-      await agent.type(screen.getByTestId(id), stringToType);
+      await agent.type(screen.getByLabelText(label), stringToType);
       expect(submitButton).toBeEnabled();
       await agent.click(submitButton);
       expect(submitButton).toBeDisabled();
@@ -137,25 +135,25 @@ describe("UserSettings", () => {
 
     user.email += stringToType;
     mockGetCurrentUser.mockReturnValueOnce({ ...user });
-    await typeAndCheckEnabled(UserSettingsIds.FieldEmail);
+    await typeAndCheckEnabled(emailLabelRegEx);
 
     user.name += stringToType;
     mockGetCurrentUser.mockReturnValueOnce({ ...user });
-    await typeAndCheckEnabled(UserSettingsIds.FieldName);
+    await typeAndCheckEnabled(nameLabelRegEx);
 
     user.phone += stringToType;
     mockGetCurrentUser.mockReturnValueOnce({ ...user });
-    await typeAndCheckEnabled(UserSettingsIds.FieldPhone);
+    await typeAndCheckEnabled(phoneLabelRegEx);
   });
 
   it("updates user when something is changed and submitted", async () => {
     const agent = userEvent.setup();
     await renderUserSettings();
 
-    await agent.type(screen.getByTestId(UserSettingsIds.FieldName), "a");
+    await agent.type(screen.getByLabelText(nameLabelRegEx), "a");
     expect(mockUpdateUser).toHaveBeenCalledTimes(0);
 
-    await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
+    await agent.click(screen.getByText(UserSettingsTextId.ButtonSubmit));
     expect(mockUpdateUser).toHaveBeenCalledTimes(1);
   });
 
@@ -163,10 +161,10 @@ describe("UserSettings", () => {
     const agent = userEvent.setup();
     await renderUserSettings(mockUser());
 
-    await agent.type(screen.getByTestId(UserSettingsIds.FieldEmail), "a");
+    await agent.type(screen.getByLabelText(emailLabelRegEx), "a");
     mockIsEmailOkay.mockResolvedValueOnce(false);
 
-    await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
+    await agent.click(screen.getByText(UserSettingsTextId.ButtonSubmit));
     expect(mockUpdateUser).toHaveBeenCalledTimes(0);
   });
 
@@ -231,7 +229,7 @@ describe("UserSettings", () => {
       mockEmailServiceEnabled.mockReturnValue(true);
       await renderUserSettings(mockUser());
 
-      const emailField = screen.getByTestId(UserSettingsIds.FieldEmail);
+      const emailField = screen.getByLabelText(emailLabelRegEx);
       await agent.clear(emailField);
       await agent.type(emailField, "valid@and.free");
       mockIsEmailOkay.mockResolvedValueOnce(true);

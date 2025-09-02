@@ -32,12 +32,11 @@ import { updateLangFromUser } from "i18n";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { StoreState } from "rootRedux/types";
 import { RuntimeConfig } from "types/runtimeConfig";
-import theme from "types/theme";
 import { uiWritingSystems } from "types/writingSystem";
 import { NormalizedTextField } from "utilities/fontComponents";
 import { normalizeEmail } from "utilities/userUtilities";
 
-export enum UserSettingsIds {
+enum UserSettingsIds {
   ButtonChangeConsent = "user-settings-change-consent",
   ButtonSubmit = "user-settings-submit",
   FieldEmail = "user-settings-email",
@@ -186,17 +185,13 @@ export function UserSettings(props: {
                     value={name}
                     label={t(UserSettingsTextId.FieldName)}
                     onChange={(e) => setName(e.target.value)}
-                    inputProps={{
-                      "data-testid": UserSettingsIds.FieldName,
-                      maxLength: 100,
-                    }}
-                    style={{ margin: theme.spacing(1), marginInlineStart: 0 }}
+                    slotProps={{ htmlInput: { maxLength: 100 } }}
+                    sx={{ m: 1, marginInlineStart: 0 }}
                   />
 
                   <Typography
-                    data-testid={UserSettingsIds.FieldUsername}
                     id={UserSettingsIds.FieldUsername}
-                    style={{ color: "grey" }}
+                    sx={{ color: "grey" }}
                     variant="subtitle2"
                   >
                     {t(UserSettingsTextId.TypographyUsername)}
@@ -218,7 +213,6 @@ export function UserSettings(props: {
                   <Grid2 size="grow">
                     <NormalizedTextField
                       id={UserSettingsIds.FieldPhone}
-                      inputProps={{ "data-testid": UserSettingsIds.FieldPhone }}
                       fullWidth
                       variant="outlined"
                       value={phone}
@@ -260,7 +254,6 @@ export function UserSettings(props: {
                     At best, it doesn't normalize, because of the punycode. */}
                     <TextField
                       id={UserSettingsIds.FieldEmail}
-                      inputProps={{ "data-testid": UserSettingsIds.FieldEmail }}
                       required
                       fullWidth
                       variant="outlined"
@@ -287,7 +280,6 @@ export function UserSettings(props: {
 
                 <Select
                   variant="standard"
-                  data-testid={UserSettingsIds.SelectUiLang}
                   id={UserSettingsIds.SelectUiLang}
                   value={uiLang}
                   onChange={(e) => setUiLang(e.target.value ?? "")}
@@ -319,7 +311,6 @@ export function UserSettings(props: {
 
                 <Stack direction="row">
                   <Select
-                    data-testid={UserSettingsIds.SelectGlossSuggestion}
                     id={UserSettingsIds.SelectGlossSuggestion}
                     onChange={(e) =>
                       setGlossSuggestion(e.target.value as OffOnSetting)
@@ -360,7 +351,6 @@ export function UserSettings(props: {
                   </Typography>
 
                   <Button
-                    data-testid={UserSettingsIds.ButtonChangeConsent}
                     id={UserSettingsIds.ButtonChangeConsent}
                     onClick={() => setDisplayConsent(true)}
                     variant="outlined"
@@ -380,7 +370,6 @@ export function UserSettings(props: {
               {/* Save button */}
               <Grid2 container justifyContent="flex-end">
                 <Button
-                  data-testid={UserSettingsIds.ButtonSubmit}
                   disabled={disabled}
                   id={UserSettingsIds.ButtonSubmit}
                   type="submit"
