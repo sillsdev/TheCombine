@@ -265,6 +265,8 @@
       "body": "Imported data will be added to this project. The Combine will make no attempt to deduplicate, overwrite, or sync.",
       "chooseFile": "Choose File",
       "notAllowed": "You have already imported a LIFT file to this project.",
+      "reuploadWarning": "You may upload a new LIFT file, but it will overwrite all words in this project.",
+      "reuploadConfirm": "All words in this project will be deleted and replaced with words from the new LIFT file. Are you sure you want to proceed?",
       "wordsUploaded": "Words uploaded: {{ val }}",
       "noWordsUploaded": "The LIFT file has no words in this project's vernacular language.",
       "liftLanguageMismatch": "The languages in this LIFT file ({{ val1 }}) do not include the project's vernacular language ({{ val2 }}). Likely no words will be imported. Are you sure you want to proceed?"

@@ -277,22 +277,21 @@ export async function uploadLiftAndGetWritingSystems(
   return resp.data;
 }
 
-/** Add data from a LIFT file that was uploaded earlier in the project's creation. */
+/** Add data from a LIFT file that was uploaded earlier (to check writing systems). */
 export async function finishUploadLift(projectId: string): Promise<number> {
   const options = { headers: authHeader() };
   return (await liftApi.finishUploadLiftFile({ projectId }, options)).data;
 }
 
-/** Upload a LIFT file and add its data to the specified project. */
-export async function uploadLift(
-  projectId: string,
-  file: File
+/** Delete all words in the project frontier and add data from a LIFT file that was
+ * uploaded earlier (to check writing systems). */
+export async function deleteFrontierAndFinishUploadLift(
+  projectId: string
 ): Promise<number> {
-  const resp = await liftApi.uploadLiftFile(
-    { projectId, file },
-    fileUploadOptions()
-  );
-  return resp.data;
+  const options = { headers: authHeader() };
+  return (
+    await liftApi.deleteFrontierAndFinishUploadLiftFile({ projectId }, options)
+  ).data;
 }
 
 /** Tell the backend to create a LIFT file for the project. */
@@ -328,12 +327,6 @@ export async function deleteLift(): Promise<void> {
   /* The backend deletes by user, not by project,
    * but a nonempty projectId in the url is still required. */
   await liftApi.deleteLiftFile({ projectId: "nonempty" }, defaultOptions());
-}
-
-/** Check if the current project doesn't already have uploaded data. */
-export async function canUploadLift(): Promise<boolean> {
-  const projectId = LocalStorage.getProjectId();
-  return (await liftApi.canUploadLift({ projectId }, defaultOptions())).data;
 }
 
 /* MergeController.cs */
