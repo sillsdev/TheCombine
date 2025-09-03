@@ -47,7 +47,9 @@ const config = new Api.Configuration(config_parameters);
 const authenticationUrls = [
   "/users/authenticate",
   "/users/create",
+  "/users/email",
   "/users/forgot",
+  "/users/password",
 ];
 
 /** A list of URL patterns for which the frontend explicitly handles errors
@@ -112,6 +114,7 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
 const audioApi = new Api.AudioApi(config, BASE_PATH, axiosInstance);
 const avatarApi = new Api.AvatarApi(config, BASE_PATH, axiosInstance);
 const bannerApi = new Api.BannerApi(config, BASE_PATH, axiosInstance);
+const emailVerifyApi = new Api.EmailVerifyApi(config, BASE_PATH, axiosInstance);
 const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
 const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
 const mergeApi = new Api.MergeApi(config, BASE_PATH, axiosInstance);
@@ -223,6 +226,16 @@ export async function getBannerText(type: BannerType): Promise<string> {
 
 export async function updateBanner(siteBanner: SiteBanner): Promise<boolean> {
   return (await bannerApi.updateBanner({ siteBanner }, defaultOptions())).data;
+}
+
+/* EmailVerifyController.cs */
+
+export async function requestEmailVerify(email: string): Promise<void> {
+  await emailVerifyApi.requestEmailVerify({ body: email }, defaultOptions());
+}
+
+export async function verifyEmail(token: string): Promise<boolean> {
+  return (await emailVerifyApi.validateEmailToken({ token })).data;
 }
 
 /* InviteController.cs */
@@ -757,6 +770,16 @@ export async function updateUser(user: User): Promise<void> {
 /** Note: Only usable by site admins. */
 export async function deleteUser(userId: string): Promise<void> {
   await userApi.deleteUser({ userId }, defaultOptions());
+}
+
+/** Checks whether email address is okay: unchanged or not taken by a different user. */
+export async function isEmailOkay(email: string): Promise<boolean> {
+  const user = await getCurrentUser();
+  return (
+    email === user.email ||
+    (await isEmailOrUsernameAvailable(email)) ||
+    (await getUserIdByEmailOrUsername(email)) === user.id
+  );
 }
 
 /* UserEditController.cs */

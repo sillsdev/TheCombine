@@ -55,6 +55,11 @@ spec:
                 configMapKeyRef:
                   key: COMBINE_EMAIL_ENABLED
                   name: env-backend
+            - name: COMBINE_EXPIRE_EMAIL_VERIFY_MINUTES
+              valueFrom:
+                configMapKeyRef:
+                  key: COMBINE_EXPIRE_EMAIL_VERIFY_MINUTES
+                  name: env-backend
             - name: COMBINE_EXPIRE_PASSWORD_RESET_MINUTES
               valueFrom:
                 configMapKeyRef:
