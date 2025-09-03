@@ -8,6 +8,8 @@ data:
   COMBINE_CAPTCHA_REQUIRED: {{ .Values.global.captchaRequired | quote | lower }}
   COMBINE_CAPTCHA_VERIFY_URL: {{ .Values.captchaVerifyUrl | quote }}
   COMBINE_EMAIL_ENABLED: {{ .Values.global.emailEnabled | quote | lower }}
+  COMBINE_EXPIRE_EMAIL_VERIFY_MINUTES:
+    {{ .Values.global.combineExpireEmailVerifyMinutes | quote | lower }}
   COMBINE_EXPIRE_PASSWORD_RESET_MINUTES:
     {{ .Values.global.combineExpirePasswordResetMinutes | quote | lower }}
   COMBINE_EXPIRE_PROJECT_INVITE_DAYS:

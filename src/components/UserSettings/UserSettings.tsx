@@ -1,4 +1,11 @@
-import { Email, HelpOutline, Phone } from "@mui/icons-material";
+import {
+  Email,
+  ForwardToInbox,
+  HelpOutline,
+  MarkEmailRead,
+  MarkEmailUnread,
+  Phone,
+} from "@mui/icons-material";
 import {
   Button,
   Card,
@@ -16,24 +23,20 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import { OffOnSetting, User } from "api/models";
-import {
-  getUserIdByEmailOrUsername,
-  isEmailOrUsernameAvailable,
-  updateUser,
-} from "backend";
+import { isEmailOkay, requestEmailVerify, updateUser } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
 import AnalyticsConsent from "components/AnalyticsConsent";
 import { asyncLoadSemanticDomains } from "components/Project/ProjectActions";
 import ClickableAvatar from "components/UserSettings/ClickableAvatar";
 import { updateLangFromUser } from "i18n";
-import { useAppDispatch } from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { StoreState } from "rootRedux/types";
 import { RuntimeConfig } from "types/runtimeConfig";
-import theme from "types/theme";
 import { uiWritingSystems } from "types/writingSystem";
 import { NormalizedTextField } from "utilities/fontComponents";
 import { normalizeEmail } from "utilities/userUtilities";
 
-export enum UserSettingsIds {
+enum UserSettingsIds {
   ButtonChangeConsent = "user-settings-change-consent",
   ButtonSubmit = "user-settings-submit",
   FieldEmail = "user-settings-email",
@@ -42,6 +45,31 @@ export enum UserSettingsIds {
   FieldUsername = "user-settings-username",
   SelectGlossSuggestion = "user-settings-gloss-suggestion",
   SelectUiLang = "user-settings-ui-lang",
+}
+
+export enum UserSettingsTextId {
+  ButtonChangeConsent = "userSettings.analyticsConsent.button",
+  ButtonSubmit = "buttons.save",
+  FieldEmail = "login.email",
+  FieldEmailTaken = "login.emailTaken",
+  FieldName = "login.name",
+  FieldPhone = "userSettings.phone",
+  SelectGlossSuggestionOff = "projectSettings.autocomplete.off",
+  SelectGlossSuggestionOn = "projectSettings.autocomplete.on",
+  SelectUiLangDefault = "userSettings.uiLanguageDefault",
+  ToastEmailVerificationSent = "userSettings.verifyEmail.verificationSent",
+  ToastUpdateSuccess = "userSettings.updateSuccess",
+  TooltipEmailUnverified = "userSettings.verifyEmail.emailUnverified",
+  TooltipEmailVerified = "userSettings.verifyEmail.emailVerified",
+  TooltipEmailVerifying = "userSettings.verifyEmail.emailVerifying",
+  TooltipGlossSuggestion = "userSettings.glossSuggestionHint",
+  TypographyAnalyticsConsent = "userSettings.analyticsConsent.title",
+  TypographyAnalyticsConsentNo = "userSettings.analyticsConsent.consentNo",
+  TypographyAnalyticsConsentYes = "userSettings.analyticsConsent.consentYes",
+  TypographyContact = "userSettings.contact",
+  TypographyGlossSuggestion = "userSettings.glossSuggestion",
+  TypographyUiLang = "userSettings.uiLanguage",
+  TypographyUsername = "login.username",
 }
 
 export default function UserSettingsGetUser(): ReactElement {
@@ -59,6 +87,9 @@ export function UserSettings(props: {
   setUser: (user?: User) => void;
 }): ReactElement {
   const dispatch = useAppDispatch();
+  const isEmailVerified = useAppSelector(
+    (state: StoreState) => state.loginState.isEmailVerified
+  );
 
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
@@ -72,22 +103,15 @@ export function UserSettings(props: {
   );
   const [emailTaken, setEmailTaken] = useState(false);
   const [avatar, setAvatar] = useState(getAvatar());
+  const [emailVerifySent, setEmailVerifySent] = useState(false);
 
   const { t } = useTranslation();
 
   useEffect(() => {
     setEmail(normalizeEmail(emailPunycode));
     setEmailTaken(false);
+    setEmailVerifySent(false);
   }, [emailPunycode]);
-
-  /** Checks whether email address is okay: unchanged or not taken by a different user. */
-  async function isEmailOkay(): Promise<boolean> {
-    return (
-      email === props.user.email ||
-      (await isEmailOrUsernameAvailable(email)) ||
-      (await getUserIdByEmailOrUsername(email)) === props.user.id
-    );
-  }
 
   const handleConsentChange = (consentVal?: boolean): void => {
     setAnalyticsOn(consentVal ?? analyticsOn);
@@ -105,7 +129,7 @@ export function UserSettings(props: {
 
   async function onSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
-    if (await isEmailOkay()) {
+    if (await isEmailOkay(email)) {
       await updateUser({
         ...props.user,
         name,
@@ -122,8 +146,22 @@ export function UserSettings(props: {
         await dispatch(asyncLoadSemanticDomains());
       }
 
-      toast.success(t("userSettings.updateSuccess"));
+      toast.success(t(UserSettingsTextId.ToastUpdateSuccess));
       props.setUser(getCurrentUser());
+    } else {
+      setEmailTaken(true);
+    }
+  }
+
+  async function sendVerifyEmail(): Promise<void> {
+    if (await isEmailOkay(email)) {
+      if (email !== props.user.email) {
+        await updateUser({ ...props.user, email });
+        props.setUser({ ...props.user, email });
+      }
+      await requestEmailVerify(email);
+      setEmailVerifySent(true);
+      toast.success(t(UserSettingsTextId.ToastEmailVerificationSent));
     } else {
       setEmailTaken(true);
     }
@@ -145,22 +183,18 @@ export function UserSettings(props: {
                     fullWidth
                     variant="outlined"
                     value={name}
-                    label={t("login.name")}
+                    label={t(UserSettingsTextId.FieldName)}
                     onChange={(e) => setName(e.target.value)}
-                    inputProps={{
-                      "data-testid": UserSettingsIds.FieldName,
-                      maxLength: 100,
-                    }}
-                    style={{ margin: theme.spacing(1), marginInlineStart: 0 }}
+                    slotProps={{ htmlInput: { maxLength: 100 } }}
+                    sx={{ m: 1, marginInlineStart: 0 }}
                   />
 
                   <Typography
-                    data-testid={UserSettingsIds.FieldUsername}
                     id={UserSettingsIds.FieldUsername}
-                    style={{ color: "grey" }}
+                    sx={{ color: "grey" }}
                     variant="subtitle2"
                   >
-                    {t("login.username")}
+                    {t(UserSettingsTextId.TypographyUsername)}
                     {": "}
                     {props.user.username}
                   </Typography>
@@ -170,7 +204,7 @@ export function UserSettings(props: {
               {/* Contact: phone, email */}
               <Stack spacing={2}>
                 <Typography variant="h6">
-                  {t("userSettings.contact")}
+                  {t(UserSettingsTextId.TypographyContact)}
                 </Typography>
 
                 <Stack alignItems="center" direction="row" spacing={1}>
@@ -179,11 +213,10 @@ export function UserSettings(props: {
                   <Grid2 size="grow">
                     <NormalizedTextField
                       id={UserSettingsIds.FieldPhone}
-                      inputProps={{ "data-testid": UserSettingsIds.FieldPhone }}
                       fullWidth
                       variant="outlined"
                       value={phone}
-                      label={t("userSettings.phone")}
+                      label={t(UserSettingsTextId.FieldPhone)}
                       onChange={(e) => setPhone(e.target.value)}
                       type="tel"
                     />
@@ -191,23 +224,47 @@ export function UserSettings(props: {
                 </Stack>
 
                 <Stack alignItems="center" direction="row" spacing={1}>
-                  <Email />
+                  {!RuntimeConfig.getInstance().emailServicesEnabled() ? (
+                    // Email icon if The Combine has no email capability.
+                    <Email />
+                  ) : isEmailVerified ? (
+                    // Email-with-check icon if email has been verified.
+                    <Tooltip title={t(UserSettingsTextId.TooltipEmailVerified)}>
+                      <MarkEmailRead />
+                    </Tooltip>
+                  ) : emailVerifySent ? (
+                    // Orange email-with-dot icon if verification is pending.
+                    <Tooltip
+                      title={t(UserSettingsTextId.TooltipEmailVerifying)}
+                    >
+                      <MarkEmailUnread sx={{ color: "warning.main" }} />
+                    </Tooltip>
+                  ) : (
+                    // Red email-with-arrow button if email never verified.
+                    <Tooltip
+                      onClick={sendVerifyEmail}
+                      title={t(UserSettingsTextId.TooltipEmailUnverified)}
+                    >
+                      <ForwardToInbox sx={{ color: "error.main" }} />
+                    </Tooltip>
+                  )}
 
                   <Grid2 size="grow">
                     {/* Don't use NormalizedTextField for type="email".
                     At best, it doesn't normalize, because of the punycode. */}
                     <TextField
                       id={UserSettingsIds.FieldEmail}
-                      inputProps={{ "data-testid": UserSettingsIds.FieldEmail }}
                       required
                       fullWidth
                       variant="outlined"
                       value={emailPunycode}
-                      label={t("login.email")}
+                      label={t(UserSettingsTextId.FieldEmail)}
                       onChange={(e) => setEmailPunycode(e.target.value)}
                       error={emailTaken}
                       helperText={
-                        emailTaken ? t("login.emailTaken") : undefined
+                        emailTaken
+                          ? t(UserSettingsTextId.FieldEmailTaken)
+                          : undefined
                       }
                       type="email" // silently converts input to punycode
                     />
@@ -218,12 +275,11 @@ export function UserSettings(props: {
               {/* UI language */}
               <Stack alignItems="flex-start" spacing={2}>
                 <Typography variant="h6">
-                  {t("userSettings.uiLanguage")}
+                  {t(UserSettingsTextId.TypographyUiLang)}
                 </Typography>
 
                 <Select
                   variant="standard"
-                  data-testid={UserSettingsIds.SelectUiLang}
                   id={UserSettingsIds.SelectUiLang}
                   value={uiLang}
                   onChange={(e) => setUiLang(e.target.value ?? "")}
@@ -233,11 +289,11 @@ export function UserSettings(props: {
                   renderValue={
                     uiLang
                       ? undefined
-                      : () => t("userSettings.uiLanguageDefault")
+                      : () => t(UserSettingsTextId.SelectUiLangDefault)
                   }
                 >
                   <MenuItem value={""}>
-                    {t("userSettings.uiLanguageDefault")}
+                    {t(UserSettingsTextId.SelectUiLangDefault)}
                   </MenuItem>
                   {uiWritingSystems.map((ws) => (
                     <MenuItem key={ws.bcp47} value={ws.bcp47}>
@@ -250,12 +306,11 @@ export function UserSettings(props: {
               {/* Gloss spelling suggestions */}
               <Stack alignItems="flex-start" spacing={2}>
                 <Typography variant="h6">
-                  {t("userSettings.glossSuggestion")}
+                  {t(UserSettingsTextId.TypographyGlossSuggestion)}
                 </Typography>
 
                 <Stack direction="row">
                   <Select
-                    data-testid={UserSettingsIds.SelectGlossSuggestion}
                     id={UserSettingsIds.SelectGlossSuggestion}
                     onChange={(e) =>
                       setGlossSuggestion(e.target.value as OffOnSetting)
@@ -264,15 +319,15 @@ export function UserSettings(props: {
                     variant="standard"
                   >
                     <MenuItem value={OffOnSetting.Off}>
-                      {t("projectSettings.autocomplete.off")}
+                      {t(UserSettingsTextId.SelectGlossSuggestionOff)}
                     </MenuItem>
                     <MenuItem value={OffOnSetting.On}>
-                      {t("projectSettings.autocomplete.on")}
+                      {t(UserSettingsTextId.SelectGlossSuggestionOn)}
                     </MenuItem>
                   </Select>
 
                   <Tooltip
-                    title={t("userSettings.glossSuggestionHint")}
+                    title={t(UserSettingsTextId.TooltipGlossSuggestion)}
                     placement={document.body.dir === "rtl" ? "left" : "right"}
                   >
                     <HelpOutline fontSize="small" />
@@ -284,24 +339,23 @@ export function UserSettings(props: {
               {!RuntimeConfig.getInstance().isOffline() && (
                 <Stack alignItems="flex-start" spacing={2}>
                   <Typography variant="h6">
-                    {t("userSettings.analyticsConsent.title")}
+                    {t(UserSettingsTextId.TypographyAnalyticsConsent)}
                   </Typography>
 
                   <Typography>
                     {t(
                       analyticsOn
-                        ? "userSettings.analyticsConsent.consentYes"
-                        : "userSettings.analyticsConsent.consentNo"
+                        ? UserSettingsTextId.TypographyAnalyticsConsentYes
+                        : UserSettingsTextId.TypographyAnalyticsConsentNo
                     )}
                   </Typography>
 
                   <Button
-                    data-testid={UserSettingsIds.ButtonChangeConsent}
                     id={UserSettingsIds.ButtonChangeConsent}
                     onClick={() => setDisplayConsent(true)}
                     variant="outlined"
                   >
-                    {t("userSettings.analyticsConsent.button")}
+                    {t(UserSettingsTextId.ButtonChangeConsent)}
                   </Button>
 
                   {displayConsent && (
@@ -316,13 +370,12 @@ export function UserSettings(props: {
               {/* Save button */}
               <Grid2 container justifyContent="flex-end">
                 <Button
-                  data-testid={UserSettingsIds.ButtonSubmit}
                   disabled={disabled}
                   id={UserSettingsIds.ButtonSubmit}
                   type="submit"
                   variant="contained"
                 >
-                  {t("buttons.save")}
+                  {t(UserSettingsTextId.ButtonSubmit)}
                 </Button>
               </Grid2>
             </Stack>
