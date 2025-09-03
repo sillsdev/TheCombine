@@ -1,103 +1,91 @@
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { ReactElement } from "react";
 import { Provider } from "react-redux";
-import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { Word } from "api/models";
-import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
+import MockBypassCloseButton from "components/Buttons/CloseButton";
 import VernDialog, {
   VernList,
 } from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
+import { defaultState } from "rootRedux/types";
 import theme from "types/theme";
 import { testWordList } from "types/word";
 import { defaultWritingSystem } from "types/writingSystem";
 
-// Replace <MenuItem> with <div> to eliminate console error:
-//  MUI: Unable to set focus to a MenuItem whose component has not been rendered.
-jest.mock("@mui/material/MenuItem", () => "div");
+jest.mock("components/Buttons", () => ({
+  CloseButton: MockBypassCloseButton,
+}));
 
-let testRenderer: renderer.ReactTestRenderer;
-
-const mockState = {
-  currentProjectState: {
-    project: { analysisWritingSystems: [defaultWritingSystem] },
-  },
-};
-const mockStore = configureMockStore()(mockState);
+const mockOnSelect = jest.fn();
+const mockStore = configureMockStore()(defaultState);
 
 describe("VernDialog", () => {
-  it("handles empty list", () => {
-    createVernDialogInstance([], true);
-    const vernList = testRenderer.root.findAllByType(VernList);
-    expect(vernList).toHaveLength(0);
+  it("handles empty list", async () => {
+    await renderOpenVernDialog([]);
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("has the correct number of menu items", async () => {
+    const words = testWordList();
+    await renderOpenVernDialog(words);
+    expect(screen.queryAllByRole("menuitem")).toHaveLength(words.length + 1);
   });
 });
 
 describe("VernList", () => {
-  it("handles empty list", () => {
-    createVernListInstance([], jest.fn());
-    const menuItems = testRenderer.root.findAllByType(StyledMenuItem);
-    expect(menuItems).toHaveLength(1);
+  it("handles empty list", async () => {
+    await renderVernList([]);
+    expect(screen.queryAllByRole("menuitem")).toHaveLength(1);
   });
 
-  it("closes dialog when selecting the last menu item", () => {
-    const closeDialogMockCallback = jest.fn();
-    const words = testWordList();
-    createVernListInstance(words, closeDialogMockCallback);
-    const menuItems = testRenderer.root.findAllByType(StyledMenuItem);
-    expect(closeDialogMockCallback).toHaveBeenCalledTimes(0);
-    menuItems[menuItems.length - 1].props.onClick();
-    expect(closeDialogMockCallback).toHaveBeenCalledTimes(1);
+  it("triggers onSelect when selecting the last menu item", async () => {
+    await renderVernList(testWordList());
+    const menuItems = screen.queryAllByRole("menuitem");
+    expect(mockOnSelect).toHaveBeenCalledTimes(0);
+    await userEvent.click(menuItems[menuItems.length - 1]);
+    expect(mockOnSelect).toHaveBeenCalledTimes(1);
   });
 
-  it("has the correct number of menu items", () => {
+  it("has the correct number of menu items", async () => {
     const words = testWordList();
-    createVernListInstance(words, jest.fn());
-    const menuItems = testRenderer.root.findAllByType(StyledMenuItem);
-    expect(menuItems).toHaveLength(words.length + 1);
+    await renderVernList(words);
+    expect(screen.queryAllByRole("menuitem")).toHaveLength(words.length + 1);
   });
 });
 
-function createVernDialogInstance(
-  _vernacularWords: Word[],
-  open: boolean
-): void {
-  renderer.act(() => {
-    testRenderer = renderer.create(
+async function renderElemWithProviders(elem: ReactElement): Promise<void> {
+  await act(async () => {
+    render(
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
-          <Provider store={mockStore}>
-            <VernDialog
-              vernacularWords={_vernacularWords}
-              open={open}
-              handleClose={jest.fn()}
-              analysisLang={defaultWritingSystem.bcp47}
-            />
-          </Provider>
+          <Provider store={mockStore}>{elem}</Provider>
         </ThemeProvider>
       </StyledEngineProvider>
     );
   });
 }
 
-function createVernListInstance(
-  _vernacularWords: Word[],
-  _mockCallback: jest.Mock
-): void {
-  renderer.act(() => {
-    testRenderer = renderer.create(
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
-          <Provider store={mockStore}>
-            <VernList
-              vernacular="mockVern"
-              vernacularWords={_vernacularWords}
-              onSelect={_mockCallback}
-              analysisLang={defaultWritingSystem.bcp47}
-            />
-          </Provider>
-        </ThemeProvider>
-      </StyledEngineProvider>
-    );
-  });
+async function renderOpenVernDialog(vernacularWords: Word[]): Promise<void> {
+  await renderElemWithProviders(
+    <VernDialog
+      analysisLang={defaultWritingSystem.bcp47}
+      handleClose={jest.fn()}
+      open
+      vernacularWords={vernacularWords}
+    />
+  );
+}
+
+async function renderVernList(vernacularWords: Word[]): Promise<void> {
+  await renderElemWithProviders(
+    <VernList
+      analysisLang={defaultWritingSystem.bcp47}
+      onSelect={mockOnSelect}
+      vernacular="mockVern"
+      vernacularWords={vernacularWords}
+    />
+  );
 }
