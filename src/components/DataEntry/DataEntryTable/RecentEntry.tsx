@@ -12,7 +12,13 @@ import PronunciationsBackend from "components/Pronunciations/PronunciationsBacke
 import { FileWithSpeakerId, newGloss } from "types/word";
 import { firstGlossText } from "utilities/wordUtilities";
 
-const idAffix = "recent-entry";
+export enum RecentEntryIdPrefix {
+  ButtonDelete = "recent-entry-delete-",
+  ButtonNote = "recent-entry-note-",
+  Row = "recent-entry-",
+  TextFieldGloss = "recent-entry-gloss-",
+  TextFieldVernacular = "recent-entry-vernacular-",
+}
 
 export interface RecentEntryProps {
   rowIndex: number;
@@ -78,7 +84,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
     <Grid2
       alignItems="center"
       container
-      id={`${idAffix}-${props.rowIndex}`}
+      id={`${RecentEntryIdPrefix.Row}${props.rowIndex}`}
       spacing={1}
     >
       <Grid2 size={4} sx={{ px: 1 }}>
@@ -91,7 +97,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
             vernacular && props.focusNewEntry();
           }}
           vernacularLang={props.vernacularLang}
-          textFieldId={`${idAffix}-${props.rowIndex}-vernacular`}
+          textFieldId={`${RecentEntryIdPrefix.TextFieldVernacular}${props.rowIndex}`}
         />
       </Grid2>
 
@@ -105,16 +111,16 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
             gloss && props.focusNewEntry();
           }}
           analysisLang={props.analysisLang}
-          textFieldId={`${idAffix}-${props.rowIndex}-gloss`}
+          textFieldId={`${RecentEntryIdPrefix.TextFieldGloss}${props.rowIndex}`}
         />
       </Grid2>
 
       <Grid2 size={1}>
         <NoteButton
+          buttonId={`${RecentEntryIdPrefix.ButtonNote}${props.rowIndex}`}
           disabled={editing || props.disabled}
           noteText={props.entry.note.text}
           updateNote={handleUpdateNote}
-          buttonId={`${idAffix}-${props.rowIndex}-note`}
         />
       </Grid2>
 
@@ -136,8 +142,8 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
       <Grid2 size={1}>
         <DeleteEntry
           removeEntry={handleRemoveEntry}
-          buttonId={`${idAffix}-${props.rowIndex}-delete`}
-          confirmId={"addWords.deleteRowWarning"}
+          buttonId={`${RecentEntryIdPrefix.ButtonDelete}${props.rowIndex}`}
+          confirmId="addWords.deleteRowWarning"
           disabled={editing || props.disabled}
         />
       </Grid2>
