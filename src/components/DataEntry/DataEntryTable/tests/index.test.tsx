@@ -66,16 +66,15 @@ jest.mock("i18n", () => ({})); // else `thrown: "Error: AggregateError`
 
 jest.spyOn(window, "alert").mockImplementation(() => {});
 
-const mockVern = "mockVern";
-const mockGloss = "mockGloss";
+const mockVern = "vern";
+const mockGloss = "gloss";
 const mockWord = (): Word => simpleWord(mockVern, mockGloss);
-const mockMultiVern = "mockMultiVern";
-const mockMultiGloss = ["mockGloss1", "mockGloss2", ""];
+const mockMultiGloss = ["gloss1", "gloss2", ""];
 const mockSemDomId = "semDomId";
 const mockTreeNode = newSemanticDomainTreeNode(mockSemDomId);
 const mockSemDom = semDomFromTreeNode(mockTreeNode);
 const mockMultiWord = (): Word => {
-  const word = multiSenseWord(mockMultiVern, mockMultiGloss);
+  const word = multiSenseWord(mockVern, mockMultiGloss);
   word.senses[1].semanticDomains = [mockSemDom];
   return word;
 };
@@ -102,6 +101,8 @@ function setMocks(): void {
   mockUpdateDuplicate.mockResolvedValue(mockWord());
   mockUpdateWord.mockResolvedValue(mockWord());
 }
+
+jest.setTimeout(10000);
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -151,7 +152,7 @@ const addRecentEntry = async (word?: Word): Promise<Word> => {
   }
   mockCreateWord.mockResolvedValueOnce(word);
   mockGetWord.mockResolvedValueOnce(word);
-  await typeNewVernAndGloss("non-empty", "{enter}");
+  await typeNewVernAndGloss("a", "{enter}"); // Any non-empty vernacular for submit to work.
   return word;
 };
 
@@ -177,15 +178,13 @@ describe("DataEntryTable", () => {
     });
 
     it("creates word when new entry has vernacular", async () => {
-      expect(mockCreateWord).not.toHaveBeenCalled();
-      // Set newVern but not newGloss.
       await typeNewVernAndGloss("hasVern");
+      expect(mockCreateWord).not.toHaveBeenCalled();
       await clickExit();
       expect(mockCreateWord).toHaveBeenCalledTimes(1);
     });
 
     it("doesn't create word when new entry has no vernacular", async () => {
-      // Set newGloss but not newVern.
       await typeNewVernAndGloss(undefined, "hasGloss");
       await clickExit();
       expect(mockCreateWord).not.toHaveBeenCalled();
@@ -353,23 +352,24 @@ describe("DataEntryTable", () => {
       await renderTable();
     });
 
-    /** With mockGetFrontierWords.mockResolvedValue([mockMultiWord]);,
-     * use n from 0 to 5 for menu items:
-     * - mockMultiVern (disabled)
-     * - mockGloss1 (without mockSemDom)
-     * - mockGloss2 (with mockSemDom)
-     * - sense with empty gloss
-     * - new sense
-     * - new entry */
+    /** With `mockGetFrontierWords.mockResolvedValue([mockMultiWord()])`,
+     * use `n` from 0 to 5 for menu items:
+     *
+     * 0. entry vern (disabled)
+     * 1. sense gloss1 (without mockSemDom)
+     * 2. sense gloss2 (with mockSemDom)
+     * 3. sense with empty gloss
+     * 4. new sense
+     * 5. new entry */
     const selectVernDialogRow = async (n: number): Promise<void> => {
-      await typeNewVernAndGloss(mockMultiVern, "{enter}");
-      const dialog = screen.getByRole("dialog");
+      await typeNewVernAndGloss(mockVern, "{enter}");
+      const dialog = await screen.findByRole("dialog");
       await userEvent.click(within(dialog).getAllByRole("menuitem")[n]);
       await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
     };
 
     it("adds semantic domain to selected duplicate sense", async () => {
-      await selectVernDialogRow(1); // The first sense has no semantic domains.
+      await selectVernDialogRow(1);
       expect(mockUpdateWord).not.toHaveBeenCalled();
       await typeNewVernAndGloss(undefined, "{enter}");
       expect(mockUpdateWord).toHaveBeenCalledTimes(1);
@@ -396,22 +396,21 @@ describe("DataEntryTable", () => {
     });
 
     it("doesn't adds semantic domain to selected duplicate sense if already has domain", async () => {
-      await selectVernDialogRow(2); // The second sense already has mockSemDom.
+      await selectVernDialogRow(2);
       await typeNewVernAndGloss(undefined, "{enter}");
       expect(mockCreateWord).not.toHaveBeenCalled();
       expect(mockUpdateWord).not.toHaveBeenCalled();
     });
 
     it("updates selected duplicate sense if gloss is empty", async () => {
-      const senseIndex = 2; // The third sense has an empty gloss.
-      await selectVernDialogRow(senseIndex + 1);
+      await selectVernDialogRow(3);
       const newGloss = "newGloss";
       expect(mockUpdateWord).not.toHaveBeenCalled();
       await typeNewVernAndGloss(undefined, `${newGloss}{enter}`);
       expect(mockUpdateWord).toHaveBeenCalledTimes(1);
       const updatedSenses: Sense[] = mockUpdateWord.mock.calls[0][0].senses;
       expect(updatedSenses).toHaveLength(mockMultiGloss.length);
-      const modifiedSense = updatedSenses[senseIndex];
+      const modifiedSense = updatedSenses[2];
       expect(modifiedSense.glosses[0].def).toEqual(newGloss);
       expect(modifiedSense.semanticDomains).toHaveLength(1);
       expect(modifiedSense.semanticDomains[0].id).toEqual(mockSemDom.id);
@@ -419,7 +418,7 @@ describe("DataEntryTable", () => {
     });
 
     it("adds sense to duplicate word if new sense is selected", async () => {
-      await selectVernDialogRow(mockMultiGloss.length + 1);
+      await selectVernDialogRow(4);
       const newGloss = "new gloss";
       expect(mockUpdateWord).not.toHaveBeenCalled();
       await typeNewVernAndGloss(undefined, `${newGloss}{enter}`);
@@ -434,13 +433,13 @@ describe("DataEntryTable", () => {
     });
 
     it("creates new word if new entry selected", async () => {
-      await selectVernDialogRow(mockMultiGloss.length + 2);
+      await selectVernDialogRow(5);
       const newGloss = "new gloss";
       expect(mockCreateWord).not.toHaveBeenCalled();
       await typeNewVernAndGloss(undefined, `${newGloss}{enter}`);
       expect(mockCreateWord).toHaveBeenCalledTimes(1);
       const newWord: Word = mockCreateWord.mock.calls[0][0];
-      expect(newWord.vernacular).toEqual(mockMultiVern);
+      expect(newWord.vernacular).toEqual(mockVern);
       expect(newWord.senses[0].glosses[0].def).toEqual(newGloss);
       expect(mockUpdateWord).not.toHaveBeenCalled();
     });

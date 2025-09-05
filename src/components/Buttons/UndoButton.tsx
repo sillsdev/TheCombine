@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { CancelConfirmDialog } from "components/Dialogs";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 
 interface UndoButtonProps {
   buttonIdEnabled?: string;

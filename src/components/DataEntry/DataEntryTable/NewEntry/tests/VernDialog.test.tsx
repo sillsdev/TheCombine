@@ -6,7 +6,6 @@ import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
 import { Word } from "api/models";
-import MockBypassCloseButton from "components/Buttons/CloseButton";
 import VernDialog, {
   VernList,
 } from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
@@ -14,10 +13,6 @@ import { defaultState } from "rootRedux/types";
 import theme from "types/theme";
 import { testWordList } from "types/word";
 import { defaultWritingSystem } from "types/writingSystem";
-
-jest.mock("components/Buttons", () => ({
-  CloseButton: MockBypassCloseButton,
-}));
 
 const mockOnSelect = jest.fn();
 const mockStore = configureMockStore()(defaultState);

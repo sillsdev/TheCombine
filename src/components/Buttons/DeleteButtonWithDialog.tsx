@@ -2,7 +2,7 @@ import { Delete } from "@mui/icons-material";
 import { ReactElement, useState } from "react";
 
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
-import { CancelConfirmDialog } from "components/Dialogs";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 
 interface DeleteButtonWithDialogProps {
   buttonId: string;

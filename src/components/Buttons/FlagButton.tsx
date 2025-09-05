@@ -3,7 +3,7 @@ import { Fragment, type ReactElement, useEffect, useState } from "react";
 
 import { type Flag } from "api/models";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
-import { DeleteEditTextDialog } from "components/Dialogs";
+import DeleteEditTextDialog from "components/Dialogs/DeleteEditTextDialog";
 
 interface FlagButtonProps {
   buttonId?: string;
