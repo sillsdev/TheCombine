@@ -2,7 +2,6 @@ import "@testing-library/jest-dom";
 import {
   type RenderOptions,
   act,
-  cleanup,
   render,
   screen,
 } from "@testing-library/react";
@@ -36,8 +35,6 @@ beforeEach(() => {
   jest.clearAllMocks();
   setupMocks();
 });
-
-afterEach(cleanup);
 
 const ResetPageProviders = ({
   children,

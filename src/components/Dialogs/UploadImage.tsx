@@ -2,7 +2,8 @@ import { Grid2, Typography } from "@mui/material";
 import { FormEvent, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { FileInputButton, LoadingDoneButton } from "components/Buttons";
+import FileInputButton from "components/Buttons/FileInputButton";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 
 interface ImageUploadProps {
   doneCallback?: () => void;

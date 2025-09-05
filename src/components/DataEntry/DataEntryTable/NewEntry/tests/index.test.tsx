@@ -1,32 +1,19 @@
-import { type ReactElement, createRef } from "react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { createRef } from "react";
 import { Provider } from "react-redux";
-import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import {
-  GlossWithSuggestions,
-  VernWithSuggestions,
-} from "components/DataEntry/DataEntryTable/EntryCellComponents";
 import NewEntry, {
   NewEntryId,
 } from "components/DataEntry/DataEntryTable/NewEntry";
 import { newWritingSystem } from "types/writingSystem";
 
-jest.mock(
-  "@mui/material/Autocomplete",
-  () => (props: any) => mockAutocomplete(props)
-);
-
-jest.mock("components/Project/ProjectActions", () => ({}));
-jest.mock("components/Pronunciations/PronunciationsFrontend", () => "div");
-
-/** Bypass the Autocomplete and render its internal input with the props of both. */
-const mockAutocomplete = (props: {
-  renderInput: (params: any) => ReactElement;
-}): ReactElement => {
-  const { renderInput, ...params } = props;
-  return renderInput(params);
-};
+jest.mock("components/DataEntry/utilities.ts", () => ({
+  ...jest.requireActual("components/DataEntry/utilities.ts"),
+  focusInput: jest.fn(),
+}));
+jest.mock("components/Pronunciations/PronunciationsFrontend", () => jest.fn());
 
 const mockAddNewAudio = jest.fn();
 const mockAddNewEntry = jest.fn();
@@ -42,15 +29,13 @@ const mockUpdateWordWithNewGloss = jest.fn();
 
 const mockStore = configureMockStore()({ treeViewState: { open: false } });
 
-let renderer: ReactTestRenderer;
-
 const renderNewEntry = async (
   vern = "",
   gloss = "",
   note = ""
 ): Promise<void> => {
   await act(async () => {
-    renderer = create(
+    render(
       <Provider store={mockStore}>
         <NewEntry
           analysisLang={newWritingSystem()}
@@ -81,43 +66,59 @@ const renderNewEntry = async (
   });
 };
 
+/** Fire all Enter key events on the given element.
+ * (For use with fake timers, since they don't play well with `userEvent`.) */
+const fireEnterOnElement = async (elem: Element): Promise<void> => {
+  const enterOptions = { charCode: 13, code: "Enter", key: "Enter" };
+  await act(async () => {
+    fireEvent.keyDown(elem, enterOptions);
+    fireEvent.keyPress(elem, enterOptions);
+    fireEvent.keyUp(elem, enterOptions);
+  });
+};
+
 beforeEach(() => {
   jest.resetAllMocks();
 });
 
+afterEach(() => {
+  jest.clearAllTimers();
+  jest.useRealTimers();
+});
+
 describe("NewEntry", () => {
+  const getVernAndGlossFields = (): {
+    vernField: HTMLElement;
+    glossField: HTMLElement;
+  } => {
+    const vernAndGlossFields = screen.getAllByRole("combobox");
+    expect(vernAndGlossFields).toHaveLength(2);
+    const [vernField, glossField] = vernAndGlossFields;
+    return { vernField, glossField };
+  };
+
   it("does not submit without a vernacular", async () => {
     await renderNewEntry("", "gloss");
-    await act(async () => {
-      renderer.root.findByType(GlossWithSuggestions).props.handleEnter();
-    });
+    await userEvent.type(getVernAndGlossFields().glossField, "{enter}");
     expect(mockAddNewEntry).not.toHaveBeenCalled();
   });
 
   it("does not submit with vernacular Enter if gloss is empty", async () => {
     await renderNewEntry("vern", "");
-    await act(async () => {
-      renderer.root.findByType(VernWithSuggestions).props.handleEnter();
-    });
+    await userEvent.type(getVernAndGlossFields().vernField, "{enter}");
     expect(mockAddNewEntry).not.toHaveBeenCalled();
   });
 
   it("does submit with gloss Enter if gloss is empty", async () => {
     await renderNewEntry("vern", "");
-    await act(async () => {
-      renderer.root.findByType(GlossWithSuggestions).props.handleEnter();
-    });
+    await userEvent.type(getVernAndGlossFields().glossField, "{enter}");
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
   });
 
   it("resets when the delete button is clicked", async () => {
     await renderNewEntry();
     expect(mockResetNewEntry).not.toHaveBeenCalled();
-    await act(async () => {
-      renderer.root
-        .findByProps({ id: NewEntryId.ButtonDelete })
-        .props.onClick();
-    });
+    await userEvent.click(screen.getByTestId(NewEntryId.ButtonDelete));
     expect(mockResetNewEntry).toHaveBeenCalledTimes(1);
   });
 
@@ -131,9 +132,7 @@ describe("NewEntry", () => {
     );
 
     // Submit a new entry
-    await act(async () => {
-      renderer.root.findByType(GlossWithSuggestions).props.handleEnter();
-    });
+    await fireEnterOnElement(getVernAndGlossFields().glossField);
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
     expect(mockResetNewEntry).not.toHaveBeenCalled();
 
@@ -143,8 +142,6 @@ describe("NewEntry", () => {
     });
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
     expect(mockResetNewEntry).toHaveBeenCalledTimes(1);
-
-    jest.useRealTimers();
   });
 
   it("doesn't allow double submission", async () => {
@@ -157,17 +154,13 @@ describe("NewEntry", () => {
     );
 
     // Submit a new entry
-    const gloss = renderer.root.findByType(GlossWithSuggestions);
-    await act(async () => {
-      gloss.props.handleEnter();
-    });
+    const { glossField } = getVernAndGlossFields();
+    await fireEnterOnElement(glossField);
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
     expect(mockResetNewEntry).not.toHaveBeenCalled();
 
     // Attempt a second submission before the first one completes
-    await act(async () => {
-      gloss.props.handleEnter();
-    });
+    await fireEnterOnElement(glossField);
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
     expect(mockResetNewEntry).not.toHaveBeenCalled();
 
@@ -177,7 +170,5 @@ describe("NewEntry", () => {
     });
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
     expect(mockResetNewEntry).toHaveBeenCalledTimes(1);
-
-    jest.useRealTimers();
   });
 });

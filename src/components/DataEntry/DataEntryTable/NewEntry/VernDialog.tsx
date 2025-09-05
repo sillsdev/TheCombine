@@ -16,7 +16,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, type Word } from "api/models";
-import { CloseButton } from "components/Buttons";
+import CloseButton from "components/Buttons/CloseButton";
 import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
 import SensesTextSummary from "components/WordCard/SensesTextSummary";
 import DomainsCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/DomainsCell";

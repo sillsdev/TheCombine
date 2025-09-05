@@ -1,7 +1,8 @@
 import { Dialog, DialogContent, DialogTitle, Grid2, Icon } from "@mui/material";
 import { ReactElement } from "react";
 
-import { CloseButton, DeleteButtonWithDialog } from "components/Buttons";
+import CloseButton from "components/Buttons/CloseButton";
+import DeleteButtonWithDialog from "components/Buttons/DeleteButtonWithDialog";
 
 interface ViewImageDialogProps {
   close: () => void;

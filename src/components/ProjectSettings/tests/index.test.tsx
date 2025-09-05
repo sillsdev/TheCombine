@@ -2,7 +2,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "@testing-library/jest-dom";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import { Store } from "redux";
@@ -96,8 +96,6 @@ beforeAll(async () => {
 beforeEach(() => {
   resetMocks();
 });
-
-afterEach(cleanup);
 
 const isPanelVisible = (tab: ProjectSettingsTab): void => {
   const panels = screen.queryAllByRole("tabpanel");
