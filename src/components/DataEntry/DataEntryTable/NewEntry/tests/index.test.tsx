@@ -16,7 +16,7 @@ import NewEntry, {
 import { newWritingSystem } from "types/writingSystem";
 
 jest.mock("components/DataEntry/utilities.ts", () => ({
-  focusInput: () => jest.fn(),
+  focusInput: jest.fn(),
 }));
 jest.mock("components/Pronunciations/PronunciationsFrontend", () => jest.fn());
 
