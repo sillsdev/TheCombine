@@ -34,12 +34,12 @@ import * as goalUtilities from "utilities/goalUtilities";
 
 jest.mock("backend", () => ({
   addGoalToUserEdit: (...args: any[]) => mockAddGoalToUserEdit(...args),
-  addStepToGoal: () => jest.fn(),
+  addStepToGoal: jest.fn(),
   createUserEdit: () => mockCreateUserEdit(),
-  findDuplicates: () => jest.fn(),
+  findDuplicates: jest.fn(),
   getGraylistEntries: () => Promise.resolve([]),
   getUserEditById: (...args: any[]) => mockGetUserEditById(...args),
-  hasGraylistEntries: () => jest.fn(),
+  hasGraylistEntries: jest.fn(),
   retrieveDuplicates: () => mockRetrieveDuplicates(),
 }));
 jest.mock("router/browserRouter", () => ({

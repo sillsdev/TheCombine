@@ -1,4 +1,10 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
@@ -44,7 +50,12 @@ async function renderAudioPlayer(canDelete = false): Promise<void> {
 
 beforeEach(() => {
   jest.clearAllMocks();
+});
+
+afterEach(() => {
   jest.clearAllTimers();
+  jest.useRealTimers();
+  cleanup();
 });
 
 describe("Pronunciations", () => {

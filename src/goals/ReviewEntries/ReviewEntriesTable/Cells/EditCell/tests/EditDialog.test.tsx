@@ -13,7 +13,7 @@ import { newSense, newWord } from "types/word";
 import { defaultWritingSystem } from "types/writingSystem";
 
 jest.mock("backend", () => ({
-  deleteAudio: () => jest.fn(),
+  deleteAudio: jest.fn(),
   updateWord: (word: Word) => mockUpdateWord(word),
 }));
 jest.mock("components/Pronunciations/AudioRecorder");

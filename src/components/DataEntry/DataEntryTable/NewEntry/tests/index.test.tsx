@@ -78,10 +78,13 @@ const enterOptions = { charCode: 13, code: "Enter", key: "Enter" };
 
 beforeEach(() => {
   jest.resetAllMocks();
-  jest.clearAllTimers();
 });
 
-afterEach(cleanup);
+afterEach(() => {
+  jest.clearAllTimers();
+  jest.useRealTimers();
+  cleanup();
+});
 
 describe("NewEntry", () => {
   const getVernAndGlossFields = (): {

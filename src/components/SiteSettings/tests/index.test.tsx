@@ -14,9 +14,10 @@ jest.mock("backend", () => ({
   getBannerText: (...args: any[]) => mockGetBannerText(...args),
 }));
 jest.mock("components/Project/ProjectActions", () => ({
-  clearCurrentProject: () => jest.fn(),
+  clearCurrentProject: jest.fn(),
 }));
 jest.mock("rootRedux/hooks", () => ({
+  ...jest.requireActual("rootRedux/hooks"),
   useAppDispatch: () => jest.fn(),
 }));
 

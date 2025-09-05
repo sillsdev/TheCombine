@@ -18,6 +18,7 @@ jest.mock("backend", () => ({
   verifyEmail: (token: string) => mockVerifyEmail(token),
 }));
 jest.mock("rootRedux/hooks", () => ({
+  ...jest.requireActual("rootRedux/hooks"),
   useAppDispatch: () => jest.fn(),
 }));
 
