@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { act, cleanup } from "@testing-library/react";
+import { act } from "@testing-library/react";
 
 import { Edit, MergeUndoIds, User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
@@ -99,8 +99,6 @@ beforeEach(() => {
   setMockFunctions();
   setupLocalStorage();
 });
-
-afterEach(cleanup);
 
 describe("setCurrentGoal", () => {
   it("calls setCurrentGoal() with no arguments", async () => {

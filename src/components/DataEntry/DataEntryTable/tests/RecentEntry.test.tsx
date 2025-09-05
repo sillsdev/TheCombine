@@ -1,6 +1,6 @@
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import "@testing-library/jest-dom";
-import { act, cleanup, render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
@@ -59,8 +59,6 @@ beforeEach(() => {
   jest.resetAllMocks();
   agent = userEvent.setup();
 });
-
-afterEach(cleanup);
 
 // Use regex for id matching to allow for added row index.
 const deleteButtonIdRegEx = new RegExp(RecentEntryIdPrefix.ButtonDelete);

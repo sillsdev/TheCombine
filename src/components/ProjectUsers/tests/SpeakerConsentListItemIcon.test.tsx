@@ -1,6 +1,6 @@
 import { PlayArrow } from "@mui/icons-material";
 import "@testing-library/jest-dom";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ReactElement } from "react";
 
@@ -54,8 +54,6 @@ beforeEach(() => {
   jest.clearAllMocks();
   setMockFunctions();
 });
-
-afterEach(cleanup);
 
 describe("SpeakerConsentListItemIcon", () => {
   describe("ConsentType.None", () => {

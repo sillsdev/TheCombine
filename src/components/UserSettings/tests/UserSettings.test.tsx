@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { act, cleanup, Matcher, render, screen } from "@testing-library/react";
+import { act, Matcher, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { User } from "api/models";
@@ -70,8 +70,6 @@ beforeEach(() => {
   jest.clearAllMocks();
   setupMocks();
 });
-
-afterEach(cleanup);
 
 const renderUserSettings = async (user = mockUser()): Promise<void> => {
   await act(async () => {

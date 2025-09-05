@@ -2,7 +2,6 @@ import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import "@testing-library/jest-dom";
 import {
   act,
-  cleanup,
   render,
   screen,
   waitForElementToBeRemoved,
@@ -111,8 +110,6 @@ beforeEach(() => {
   setMocks();
   agent = userEvent.setup();
 });
-
-afterEach(cleanup);
 
 const renderTable = async (): Promise<void> => {
   await act(async () => {
