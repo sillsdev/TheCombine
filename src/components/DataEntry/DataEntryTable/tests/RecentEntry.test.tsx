@@ -1,7 +1,7 @@
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import "@testing-library/jest-dom";
 import { act, cleanup, render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import userEvent, { UserEvent } from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
@@ -53,8 +53,11 @@ async function renderWithWord(word: Word): Promise<void> {
   });
 }
 
+let agent: UserEvent;
+
 beforeEach(() => {
   jest.resetAllMocks();
+  agent = userEvent.setup();
 });
 
 afterEach(cleanup);
@@ -104,14 +107,14 @@ describe("ExistingEntry", () => {
       expect(audio).toBeEnabled();
       expect(del).toBeEnabled();
 
-      await userEvent.clear(vernField);
-      await userEvent.type(vernField, mockText);
+      await agent.clear(vernField);
+      await agent.type(vernField, mockText);
       expect(note).toBeDisabled();
       expect(audio).toBeDisabled();
       expect(del).toBeDisabled();
 
-      await userEvent.clear(vernField);
-      await userEvent.type(vernField, mockVern);
+      await agent.clear(vernField);
+      await agent.type(vernField, mockVern);
       expect(note).toBeEnabled();
       expect(audio).toBeEnabled();
       expect(del).toBeEnabled();
@@ -121,14 +124,14 @@ describe("ExistingEntry", () => {
       await renderWithWord(mockWord);
       const { vernField, glossField } = getVernAndGlossFields();
 
-      await userEvent.clear(vernField);
-      await userEvent.type(vernField, mockVern);
-      await userEvent.click(glossField);
+      await agent.clear(vernField);
+      await agent.type(vernField, mockVern);
+      await agent.click(glossField);
       expect(mockUpdateVern).toHaveBeenCalledTimes(0);
 
-      await userEvent.clear(vernField);
-      await userEvent.type(vernField, mockText);
-      await userEvent.click(glossField);
+      await agent.clear(vernField);
+      await agent.type(vernField, mockText);
+      await agent.click(glossField);
       expect(mockUpdateVern).toHaveBeenCalledWith(0, mockText);
     });
   });
@@ -145,14 +148,14 @@ describe("ExistingEntry", () => {
       expect(audio).toBeEnabled();
       expect(del).toBeEnabled();
 
-      await userEvent.clear(glossField);
-      await userEvent.type(glossField, mockText);
+      await agent.clear(glossField);
+      await agent.type(glossField, mockText);
       expect(note).toBeDisabled();
       expect(audio).toBeDisabled();
       expect(del).toBeDisabled();
 
-      await userEvent.clear(glossField);
-      await userEvent.type(glossField, mockGloss);
+      await agent.clear(glossField);
+      await agent.type(glossField, mockGloss);
       expect(note).toBeEnabled();
       expect(audio).toBeEnabled();
       expect(del).toBeEnabled();
@@ -162,14 +165,14 @@ describe("ExistingEntry", () => {
       await renderWithWord(mockWord);
       const { vernField, glossField } = getVernAndGlossFields();
 
-      await userEvent.clear(glossField);
-      await userEvent.type(glossField, mockGloss);
-      await userEvent.click(vernField);
+      await agent.clear(glossField);
+      await agent.type(glossField, mockGloss);
+      await agent.click(vernField);
       expect(mockUpdateGloss).toHaveBeenCalledTimes(0);
 
-      await userEvent.clear(glossField);
-      await userEvent.type(glossField, mockText);
-      await userEvent.click(vernField);
+      await agent.clear(glossField);
+      await agent.type(glossField, mockText);
+      await agent.click(vernField);
       expect(mockUpdateGloss).toHaveBeenCalledWith(0, mockText);
     });
   });
@@ -177,11 +180,11 @@ describe("ExistingEntry", () => {
   describe("note", () => {
     it("updates text", async () => {
       await renderWithWord(mockWord);
-      await userEvent.click(screen.getByTestId(noteButtonIdRegEx));
+      await agent.click(screen.getByTestId(noteButtonIdRegEx));
       const dialog = screen.getByRole("dialog");
       const noteField = within(dialog).getByRole("textbox");
-      await userEvent.type(noteField, mockText);
-      await userEvent.click(screen.getByText(noteConfirmButtonText));
+      await agent.type(noteField, mockText);
+      await agent.click(screen.getByText(noteConfirmButtonText));
       expect(mockUpdateNote).toHaveBeenCalledWith(0, mockText);
     });
   });

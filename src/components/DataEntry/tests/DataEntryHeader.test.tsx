@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { act, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
@@ -20,6 +20,8 @@ const newDomainWithQuestions = (): SemanticDomainFull => ({
 beforeEach(() => {
   jest.clearAllMocks();
 });
+
+afterEach(cleanup);
 
 describe("DataEntryHeader", () => {
   it("No questions should disable switch and show no questions", async () => {

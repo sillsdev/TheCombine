@@ -8,7 +8,7 @@ import {
   waitForElementToBeRemoved,
   within,
 } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import userEvent, { UserEvent } from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 import { v4 } from "uuid";
@@ -104,9 +104,12 @@ function setMocks(): void {
 
 jest.setTimeout(10000);
 
+let agent: UserEvent;
+
 beforeEach(() => {
   jest.clearAllMocks();
   setMocks();
+  agent = userEvent.setup();
 });
 
 afterEach(cleanup);
@@ -138,10 +141,10 @@ const typeNewVernAndGloss = async (
   const newEntry = screen.getAllByRole("row").pop()!;
   const [vernField, glossField] = within(newEntry).getAllByRole("combobox");
   if (vern) {
-    await userEvent.type(vernField, vern);
+    await agent.type(vernField, vern);
   }
   if (gloss) {
-    await userEvent.type(glossField, gloss);
+    await agent.type(glossField, gloss);
   }
 };
 
@@ -169,7 +172,7 @@ describe("DataEntryTable", () => {
     beforeEach(async () => await renderTable());
 
     const clickExit = async (): Promise<void> =>
-      await userEvent.click(screen.getByText(DataEntryTableTextId.ButtonExit));
+      await agent.click(screen.getByText(DataEntryTableTextId.ButtonExit));
 
     it("hides questions", async () => {
       expect(mockHideQuestions).not.toHaveBeenCalled();
@@ -364,7 +367,7 @@ describe("DataEntryTable", () => {
     const selectVernDialogRow = async (n: number): Promise<void> => {
       await typeNewVernAndGloss(mockVern, "{enter}");
       const dialog = await screen.findByRole("dialog");
-      await userEvent.click(within(dialog).getAllByRole("menuitem")[n]);
+      await agent.click(within(dialog).getAllByRole("menuitem")[n]);
       await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
     };
 
@@ -487,12 +490,10 @@ describe("DataEntryTable", () => {
       expect(within(newEntry).getByDisplayValue(glossDef)).toBeTruthy();
 
       const noteText = "newNote";
-      await userEvent.click(
-        within(newEntry).getByTestId(NewEntryId.ButtonNote)
-      );
+      await agent.click(within(newEntry).getByTestId(NewEntryId.ButtonNote));
       const noteDialog = screen.getByRole("dialog");
-      await userEvent.type(within(noteDialog).getByRole("textbox"), noteText);
-      await userEvent.click(within(noteDialog).getByText("buttons.confirm"));
+      await agent.type(within(noteDialog).getByRole("textbox"), noteText);
+      await agent.click(within(noteDialog).getByText("buttons.confirm"));
       await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
       expect(within(newEntry).getByLabelText(noteText)).toBeTruthy();
 
@@ -532,12 +533,12 @@ describe("DataEntryTable", () => {
       await addRecentEntry();
       const rows = screen.getAllByRole("row");
       expect(rows).toHaveLength(2);
-      await userEvent.click(
+      await agent.click(
         within(rows[0]).getByTestId(
           new RegExp(RecentEntryIdPrefix.ButtonDelete)
         )
       );
-      await userEvent.click(screen.getByText("buttons.confirm"));
+      await agent.click(screen.getByText("buttons.confirm"));
       expect(screen.getAllByRole("row")).toHaveLength(1);
     });
   });
@@ -547,7 +548,6 @@ describe("DataEntryTable", () => {
 
     it("changes the recent entry's vernacular", async () => {
       // Setup the scenario
-      const agent = userEvent.setup();
       const word = await addRecentEntry();
       expect(mockUpdateWord).not.toHaveBeenCalled();
 
@@ -569,7 +569,6 @@ describe("DataEntryTable", () => {
 
     it("changes the recent entry's gloss", async () => {
       // Setup the scenario
-      const agent = userEvent.setup();
       const word = await addRecentEntry();
       expect(mockUpdateWord).not.toHaveBeenCalled();
 

@@ -72,9 +72,16 @@ const renderNewEntry = async (
   });
 };
 
-/** Enter key event options for fireEvent, for use with fake timers
- * (since fake timers and userEvent don't play nice). */
-const enterOptions = { charCode: 13, code: "Enter", key: "Enter" };
+/** Fire all Enter key events on the given element.
+ * (For use with fake timers, since they don't play well with `userEvent`.) */
+const fireEnterOnElement = async (elem: Element): Promise<void> => {
+  const enterOptions = { charCode: 13, code: "Enter", key: "Enter" };
+  await act(async () => {
+    fireEvent.keyDown(elem, enterOptions);
+    fireEvent.keyPress(elem, enterOptions);
+    fireEvent.keyUp(elem, enterOptions);
+  });
+};
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -132,12 +139,7 @@ describe("NewEntry", () => {
     );
 
     // Submit a new entry
-    const { glossField } = getVernAndGlossFields();
-    await act(async () => {
-      fireEvent.keyDown(glossField, enterOptions);
-      fireEvent.keyPress(glossField, enterOptions);
-      fireEvent.keyUp(glossField, enterOptions);
-    });
+    await fireEnterOnElement(getVernAndGlossFields().glossField);
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
     expect(mockResetNewEntry).not.toHaveBeenCalled();
 
@@ -160,20 +162,12 @@ describe("NewEntry", () => {
 
     // Submit a new entry
     const { glossField } = getVernAndGlossFields();
-    await act(async () => {
-      fireEvent.keyDown(glossField, enterOptions);
-      fireEvent.keyPress(glossField, enterOptions);
-      fireEvent.keyUp(glossField, enterOptions);
-    });
+    await fireEnterOnElement(glossField);
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
     expect(mockResetNewEntry).not.toHaveBeenCalled();
 
     // Attempt a second submission before the first one completes
-    await act(async () => {
-      fireEvent.keyDown(glossField, enterOptions);
-      fireEvent.keyPress(glossField, enterOptions);
-      fireEvent.keyUp(glossField, enterOptions);
-    });
+    await fireEnterOnElement(glossField);
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
     expect(mockResetNewEntry).not.toHaveBeenCalled();
 
