@@ -2,7 +2,6 @@ import "@testing-library/jest-dom";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import MockBypassLoadableButton from "components/Buttons/LoadingDoneButton";
 import MockCaptcha from "components/Login/tests/MockCaptcha";
 import ResetRequest, {
   PasswordRequestIds,
@@ -14,9 +13,6 @@ jest.mock("react-router", () => ({
 
 jest.mock("backend", () => ({
   resetPasswordRequest: (...args: any[]) => mockResetPasswordRequest(...args),
-}));
-jest.mock("components/Buttons", () => ({
-  LoadingDoneButton: MockBypassLoadableButton,
 }));
 jest.mock("components/Login/Captcha", () => MockCaptcha);
 

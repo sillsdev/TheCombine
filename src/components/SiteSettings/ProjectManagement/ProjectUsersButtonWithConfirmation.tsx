@@ -9,7 +9,7 @@ import {
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { CloseButton } from "components/Buttons";
+import CloseButton from "components/Buttons/CloseButton";
 import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
 import ActiveProjectUsers from "components/ProjectUsers/ActiveProjectUsers";
 import AddProjectUsers from "components/ProjectUsers/AddProjectUsers";

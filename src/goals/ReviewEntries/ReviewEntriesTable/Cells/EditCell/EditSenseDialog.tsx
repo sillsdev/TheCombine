@@ -30,8 +30,8 @@ import {
   type Sense,
   type WritingSystem,
 } from "api/models";
-import { PartOfSpeechButton } from "components/Buttons";
-import { CancelConfirmDialog } from "components/Dialogs";
+import PartOfSpeechButton from "components/Buttons/PartOfSpeechButton";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import TreeView from "components/TreeView";
 import {
   areDefinitionsSame,

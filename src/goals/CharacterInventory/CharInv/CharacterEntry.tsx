@@ -12,7 +12,7 @@ import {
 import { ReactElement, ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { LoadingButton } from "components/Buttons";
+import LoadingButton from "components/Buttons/LoadingButton";
 import {
   exit,
   setRejectedCharacters,

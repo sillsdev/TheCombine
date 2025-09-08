@@ -19,8 +19,8 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import { type SemanticDomain, type SemanticDomainFull } from "api";
-import { IconButtonWithTooltip } from "components/Buttons";
-import { CancelConfirmDialog } from "components/Dialogs";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 import TreeView from "components/TreeView";
 import i18n from "i18n";

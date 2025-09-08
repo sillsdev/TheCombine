@@ -7,7 +7,7 @@ import validator from "validator";
 import { Role } from "api/models";
 import * as backend from "backend";
 import { getProjectId } from "backend/localStorage";
-import { LoadingDoneButton } from "components/Buttons";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import { NormalizedTextField } from "utilities/fontComponents";
 
 export enum EmailInviteTextId {

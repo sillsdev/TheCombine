@@ -19,7 +19,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 import { requestEmailVerify } from "backend";
-import { LoadingDoneButton } from "components/Buttons";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import Captcha from "components/Login/Captcha";
 import { asyncSignUp } from "components/Login/Redux/LoginActions";
 import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";

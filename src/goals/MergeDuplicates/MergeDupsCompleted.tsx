@@ -6,7 +6,8 @@ import { useSelector } from "react-redux";
 
 import { Flag, MergeUndoIds, Sense, Word } from "api/models";
 import { getFrontierWords, getWord, undoMerge } from "backend";
-import { FlagButton, UndoButton } from "components/Buttons";
+import FlagButton from "components/Buttons/FlagButton";
+import UndoButton from "components/Buttons/UndoButton";
 import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
 import { MergesCompleted } from "goals/MergeDuplicates/MergeDupsTypes";
 import { type StoreState } from "rootRedux/types";

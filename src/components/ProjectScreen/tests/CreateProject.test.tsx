@@ -27,10 +27,9 @@ jest.mock("backend", () => ({
   projectDuplicateCheck: () => mockProjectDuplicateCheck(),
   uploadLiftAndGetWritingSystems: () => mockUploadLiftAndGetWritingSystems(),
 }));
-jest.mock("components/Buttons", () => ({
-  ...jest.requireActual("components/Buttons"),
-  /** Mocked with Button that triggers the `updateFile` prop when clicked. */
-  FileInputButton: (props: {
+jest.mock("components/Buttons/FileInputButton", () => ({
+  __esModule: true,
+  default: (props: {
     /** Includes ids and styling. */
     buttonProps?: ButtonProps & { "data-testid"?: string };
     /** Clicking will call this with a mock file with nonempty file name. */

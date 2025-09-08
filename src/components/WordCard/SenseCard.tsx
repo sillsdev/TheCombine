@@ -2,7 +2,7 @@ import { Card, CardContent } from "@mui/material";
 import { type ReactElement } from "react";
 
 import { GramCatGroup, type Sense } from "api/models";
-import { PartOfSpeechButton } from "components/Buttons";
+import PartOfSpeechButton from "components/Buttons/PartOfSpeechButton";
 import DomainChipsGrid from "components/WordCard/DomainChipsGrid";
 import SenseCardText from "components/WordCard/SenseCardText";
 

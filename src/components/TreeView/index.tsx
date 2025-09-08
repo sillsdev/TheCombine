@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
 import { type SemanticDomain, type WritingSystem } from "api/models";
-import { IconButtonWithTooltip } from "components/Buttons";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import {
   initTreeDomain,
   setDomainLanguage,
