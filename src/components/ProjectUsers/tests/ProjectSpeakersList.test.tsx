@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import ProjectSpeakersList, {
@@ -39,6 +39,12 @@ beforeEach(() => {
   mockUpdateSpeakerName.mockResolvedValue("");
 });
 
+const typeInDialogAndConfirm = async (text: string): Promise<void> => {
+  const dialog = screen.getByRole("dialog");
+  await userEvent.type(within(dialog).getByRole("textbox"), text);
+  await userEvent.click(within(dialog).getByText("buttons.confirm"));
+};
+
 describe("ProjectSpeakersList", () => {
   it("shows list item for each speakers, +1 for add-a-speaker", async () => {
     await renderProjectSpeakersList();
@@ -58,13 +64,7 @@ describe("ProjectSpeakersList", () => {
     await userEvent.click(editButton);
 
     // Add whitespace to the current name
-    await userEvent.type(
-      screen.getByTestId(ProjectSpeakersId.TextFieldEdit),
-      "  "
-    );
-    await userEvent.click(
-      screen.getByTestId(ProjectSpeakersId.ButtonEditConfirm)
-    );
+    await typeInDialogAndConfirm("  ");
 
     // Ensure no name update was submitted
     expect(mockUpdateSpeakerName).not.toHaveBeenCalled();
@@ -73,13 +73,7 @@ describe("ProjectSpeakersList", () => {
     await userEvent.click(editButton);
 
     // Add non-whitespace
-    await userEvent.type(
-      screen.getByTestId(ProjectSpeakersId.TextFieldEdit),
-      "!"
-    );
-    await userEvent.click(
-      screen.getByTestId(ProjectSpeakersId.ButtonEditConfirm)
-    );
+    await typeInDialogAndConfirm("!");
 
     // Ensure the name update was submitted
     expect(mockUpdateSpeakerName.mock.calls[0][1]).toEqual(`${speaker.name}!`);
@@ -93,13 +87,7 @@ describe("ProjectSpeakersList", () => {
 
     // Submit the name of the speaker with extra whitespace
     const name = "Ms. Nym";
-    await userEvent.type(
-      screen.getByTestId(ProjectSpeakersId.TextFieldAdd),
-      ` ${name}\t `
-    );
-    await userEvent.click(
-      screen.getByTestId(ProjectSpeakersId.ButtonAddConfirm)
-    );
+    await typeInDialogAndConfirm(` ${name}\t `);
 
     // Ensure new speaker was submitted with trimmed name
     expect(mockCreateSpeaker.mock.calls[0][0]).toEqual(name);

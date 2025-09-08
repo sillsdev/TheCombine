@@ -19,13 +19,7 @@ import SpeakerConsentListItemIcon from "components/ProjectUsers/SpeakerConsentLi
 
 export enum ProjectSpeakersId {
   ButtonAdd = "speaker-add-button",
-  ButtonAddCancel = "speaker-add-cancel-button",
-  ButtonAddConfirm = "speaker-add-confirm-button",
-  ButtonDeleteCancel = "speaker-delete-cancel-button",
-  ButtonDeleteConfirm = "speaker-delete-confirm-button",
   ButtonDeletePrefix = "speaker-delete-button-",
-  ButtonEditCancel = "speaker-edit-cancel-button",
-  ButtonEditConfirm = "speaker-edit-confirm-button",
   ButtonEditPrefix = "speaker-edit-button-",
   TextFieldAdd = "speaker-add-textfield",
   TextFieldEdit = "speaker-edit-textfield",
@@ -113,8 +107,6 @@ function EditSpeakerNameListItemIcon(props: ProjSpeakerProps): ReactElement {
       />
       {open && (
         <EditTextDialog
-          buttonIdCancel={ProjectSpeakersId.ButtonEditCancel}
-          buttonIdConfirm={ProjectSpeakersId.ButtonEditConfirm}
           close={() => setOpen(false)}
           open={open}
           text={props.speaker.name}
@@ -137,8 +129,6 @@ function DeleteSpeakerListItemIcon(props: ProjSpeakerProps): ReactElement {
     <ListItemIcon>
       <DeleteButtonWithDialog
         buttonId={`${ProjectSpeakersId.ButtonDeletePrefix}${props.speaker.id}`}
-        buttonIdCancel={ProjectSpeakersId.ButtonDeleteCancel}
-        buttonIdConfirm={ProjectSpeakersId.ButtonDeleteConfirm}
         delete={handleDelete}
         textId={
           props.speaker.consent === ConsentType.None
@@ -184,8 +174,6 @@ export function AddSpeakerListItem(props: AddSpeakerProps): ReactElement {
         />
       </ListItemIcon>
       <SubmitTextDialog
-        buttonIdCancel={ProjectSpeakersId.ButtonAddCancel}
-        buttonIdConfirm={ProjectSpeakersId.ButtonAddConfirm}
         close={() => setOpen(false)}
         open={open}
         submitText={handleSubmitText}
