@@ -2,7 +2,7 @@ import { type ReactElement } from "react";
 
 import { Status } from "api/models";
 import { deleteFrontierWord } from "backend";
-import { DeleteButtonWithDialog } from "components/Buttons";
+import DeleteButtonWithDialog from "components/Buttons/DeleteButtonWithDialog";
 import { type CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 
 const buttonIdCancel = "delete-cancel";

@@ -2,7 +2,6 @@ import "@testing-library/jest-dom";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import MockBypassLoadableButton from "components/Buttons/LoadingDoneButton";
 import EmailInvite, {
   EmailInviteTextId,
 } from "components/ProjectUsers/EmailInvite";
@@ -15,9 +14,6 @@ jest.mock("backend", () => ({
 }));
 jest.mock("backend/localStorage", () => ({
   getProjectId: () => "mockId",
-}));
-jest.mock("components/Buttons", () => ({
-  LoadingDoneButton: MockBypassLoadableButton,
 }));
 
 const mockAddToProject = jest.fn();

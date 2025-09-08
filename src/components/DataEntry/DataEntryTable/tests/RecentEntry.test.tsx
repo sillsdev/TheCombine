@@ -9,14 +9,14 @@ import {
 import configureMockStore from "redux-mock-store";
 
 import { Word } from "api/models";
-import { NoteButton } from "components/Buttons";
+import NoteButton from "components/Buttons/NoteButton";
 import {
   DeleteEntry,
   GlossWithSuggestions,
   VernWithSuggestions,
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
-import { EditTextDialog } from "components/Dialogs";
+import EditTextDialog from "components/Dialogs/EditTextDialog";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";

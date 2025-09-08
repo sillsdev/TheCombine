@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { v4 } from "uuid";
 
 import { appBarHeight } from "components/AppBar/AppBarTypes";
-import { CancelConfirmDialog } from "components/Dialogs";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import DropWord from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DropWord";
 import { trashId } from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/MergeDragDropTypes";
 import SidebarDrop from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/SidebarDrop";

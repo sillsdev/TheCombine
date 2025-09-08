@@ -13,7 +13,7 @@ import { type KeyboardEvent, type ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
-import { LoadingButton } from "components/Buttons";
+import LoadingButton from "components/Buttons/LoadingButton";
 import { NormalizedTextField } from "utilities/fontComponents";
 
 interface DeleteEditTextDialogProps {

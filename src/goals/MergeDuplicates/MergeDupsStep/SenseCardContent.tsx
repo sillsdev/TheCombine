@@ -4,7 +4,8 @@ import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, type Sense, Status } from "api/models";
-import { IconButtonWithTooltip, PartOfSpeechButton } from "components/Buttons";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import PartOfSpeechButton from "components/Buttons/PartOfSpeechButton";
 import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import DomainChipsGrid from "components/WordCard/DomainChipsGrid";
 import SenseCardText from "components/WordCard/SenseCardText";

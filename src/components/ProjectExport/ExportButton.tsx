@@ -5,8 +5,8 @@ import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { hasFrontierWords } from "backend";
-import { LoadingButton } from "components/Buttons";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import LoadingButton from "components/Buttons/LoadingButton";
 import {
   asyncExportProject,
   asyncCancelExport,

@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 
 import { BannerType } from "api/models";
 import { getBannerText } from "backend";
-import { LoadingButton } from "components/Buttons";
+import LoadingButton from "components/Buttons/LoadingButton";
 import Captcha from "components/Login/Captcha";
 import { asyncLogIn } from "components/Login/Redux/LoginActions";
 import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";

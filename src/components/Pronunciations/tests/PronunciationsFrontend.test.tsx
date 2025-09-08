@@ -11,9 +11,6 @@ import { newPronunciation } from "types/word";
 jest.mock("components/AppBar/SpeakerMenu", () => ({
   SpeakerMenuList: () => <div />,
 }));
-jest.mock("components/Dialogs", () => ({
-  ButtonConfirmation: () => <div />,
-}));
 
 // Built-in data-testid values for the MUI Icons
 const testIdPlay = "PlayArrowIcon";

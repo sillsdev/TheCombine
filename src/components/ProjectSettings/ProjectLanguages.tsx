@@ -24,7 +24,7 @@ import { toast } from "react-toastify";
 
 import { type WritingSystem } from "api/models";
 import { getFrontierWords } from "backend";
-import { IconButtonWithTooltip } from "components/Buttons";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 import theme from "types/theme";
 import { newWritingSystem, semDomWritingSystems } from "types/writingSystem";

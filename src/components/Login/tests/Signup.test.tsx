@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
-import MockBypassLoadableButton from "components/Buttons/LoadingDoneButton";
 import { defaultState as loginState } from "components/Login/Redux/LoginReduxTypes";
 import Signup, {
   SignupField,
@@ -16,10 +15,6 @@ import MockCaptcha from "components/Login/tests/MockCaptcha";
 
 jest.mock("backend", () => ({
   getBannerText: () => Promise.resolve(""),
-}));
-jest.mock("components/Buttons", () => ({
-  ...jest.requireActual("components/Buttons"),
-  LoadingDoneButton: MockBypassLoadableButton,
 }));
 jest.mock("components/Login/Captcha", () => ({
   __esModule: true,

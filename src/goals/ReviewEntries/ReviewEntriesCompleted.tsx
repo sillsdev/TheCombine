@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 import { Word } from "api/models";
 import { getWord, isInFrontier, updateWord } from "backend";
-import { UndoButton } from "components/Buttons";
+import UndoButton from "components/Buttons/UndoButton";
 import WordCard from "components/WordCard";
 import {
   EntriesEdited,

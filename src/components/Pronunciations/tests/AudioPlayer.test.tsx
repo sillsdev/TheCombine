@@ -15,9 +15,6 @@ jest.mock("backend", () => ({
 jest.mock("components/AppBar/SpeakerMenu", () => ({
   SpeakerMenuList: () => <div />,
 }));
-jest.mock("components/Dialogs", () => ({
-  ButtonConfirmation: () => <div />,
-}));
 jest.mock("rootRedux/hooks", () => {
   return {
     ...jest.requireActual("rootRedux/hooks"),
