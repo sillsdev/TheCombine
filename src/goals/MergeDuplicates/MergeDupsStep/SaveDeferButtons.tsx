@@ -3,7 +3,7 @@ import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { OffOnSetting } from "api/models";
-import { LoadingButton } from "components/Buttons";
+import LoadingButton from "components/Buttons/LoadingButton";
 import {
   deferMerge,
   mergeAll,

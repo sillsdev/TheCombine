@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { Pronunciation, Word, WritingSystem } from "api/models";
-import { NoteButton } from "components/Buttons";
+import NoteButton from "components/Buttons/NoteButton";
 import {
   DeleteEntry,
   GlossWithSuggestions,

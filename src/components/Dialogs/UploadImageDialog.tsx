@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogTitle, Icon } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import { CloseButton } from "components/Buttons";
+import CloseButton from "components/Buttons/CloseButton";
 import UploadImage from "components/Dialogs/UploadImage";
 
 interface UploadImageDialogProps {

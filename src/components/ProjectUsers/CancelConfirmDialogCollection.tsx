@@ -10,7 +10,7 @@ import {
   changeProjectOwner,
   removeUserRole,
 } from "backend";
-import { CancelConfirmDialog } from "components/Dialogs";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
 import { useAppDispatch } from "rootRedux/hooks";
 

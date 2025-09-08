@@ -13,11 +13,9 @@ import { useTranslation } from "react-i18next";
 
 import { Word } from "api/models";
 import { getUser } from "backend";
-import {
-  FlagButton,
-  IconButtonWithTooltip,
-  NoteButton,
-} from "components/Buttons";
+import FlagButton from "components/Buttons/FlagButton";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import NoteButton from "components/Buttons/NoteButton";
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
 import SenseCard from "components/WordCard/SenseCard";
 import SummarySenseCard from "components/WordCard/SummarySenseCard";

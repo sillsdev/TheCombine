@@ -6,7 +6,7 @@ import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Project } from "api/models";
-import { LoadingButton } from "components/Buttons";
+import LoadingButton from "components/Buttons/LoadingButton";
 
 interface DateSelectorProps {
   close: () => void;

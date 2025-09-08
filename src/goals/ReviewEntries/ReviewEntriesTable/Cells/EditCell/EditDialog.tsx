@@ -32,7 +32,7 @@ import { toast } from "react-toastify";
 
 import { type Pronunciation, type Sense, Status, type Word } from "api/models";
 import { deleteAudio, updateWord } from "backend";
-import { CancelConfirmDialog } from "components/Dialogs";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
 import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";

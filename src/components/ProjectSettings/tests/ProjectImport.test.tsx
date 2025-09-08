@@ -1,17 +1,9 @@
 import { act, render, screen } from "@testing-library/react";
 
-import MockBypassFileInputButton from "components/Buttons/FileInputButton";
-import MockBypassLoadableButton from "components/Buttons/LoadingDoneButton";
 import ProjectImport, {
   ProjectImportIds,
 } from "components/ProjectSettings/ProjectImport";
 import { randomProject } from "types/project";
-
-jest.mock("components/Buttons", () => ({
-  ...jest.requireActual("components/Buttons"),
-  FileInputButton: MockBypassFileInputButton,
-  LoadingDoneButton: MockBypassLoadableButton,
-}));
 
 const renderImport = async (): Promise<void> => {
   await act(async () => {

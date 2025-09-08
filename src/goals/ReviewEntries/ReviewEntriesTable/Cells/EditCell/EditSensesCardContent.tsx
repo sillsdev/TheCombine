@@ -11,7 +11,7 @@ import { grey, yellow } from "@mui/material/colors";
 import { Fragment, type ReactElement, useEffect, useState } from "react";
 
 import { type Sense, Status } from "api/models";
-import { IconButtonWithTooltip } from "components/Buttons";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import SenseCard from "components/WordCard/SenseCard";
 import SummarySenseCard from "components/WordCard/SummarySenseCard";
 import EditSenseDialog from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditSenseDialog";

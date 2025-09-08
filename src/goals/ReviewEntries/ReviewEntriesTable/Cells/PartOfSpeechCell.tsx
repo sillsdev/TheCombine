@@ -2,7 +2,7 @@ import { Grid2 } from "@mui/material";
 import { type ReactElement } from "react";
 
 import { type GrammaticalInfo, type Sense } from "api/models";
-import { PartOfSpeechButton } from "components/Buttons";
+import PartOfSpeechButton from "components/Buttons/PartOfSpeechButton";
 import { type CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 
 /** Collect all distinct sense.grammaticalInfo values. */

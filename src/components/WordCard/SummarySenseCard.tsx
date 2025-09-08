@@ -3,7 +3,7 @@ import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, Sense } from "api/models";
-import { PartOfSpeechButton } from "components/Buttons";
+import PartOfSpeechButton from "components/Buttons/PartOfSpeechButton";
 import DomainChip from "components/WordCard/DomainChip";
 import SensesTextSummary from "components/WordCard/SensesTextSummary";
 import { groupGramInfo } from "utilities/wordUtilities";

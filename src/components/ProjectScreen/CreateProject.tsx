@@ -22,7 +22,8 @@ import { Trans, useTranslation } from "react-i18next";
 
 import { type WritingSystem } from "api/models";
 import { projectDuplicateCheck, uploadLiftAndGetWritingSystems } from "backend";
-import { FileInputButton, LoadingDoneButton } from "components/Buttons";
+import FileInputButton from "components/Buttons/FileInputButton";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import {
   asyncCreateProject,
   asyncFinishProject,
