@@ -6,7 +6,7 @@ import UserList from "components/ProjectUsers/UserList";
 import { newUserStub } from "types/user";
 
 jest.mock("backend", () => ({
-  avatarSrc: () => jest.fn(),
+  avatarSrc: jest.fn(),
   getUsersByFilter: () => mockGetUsersByFilter(),
 }));
 

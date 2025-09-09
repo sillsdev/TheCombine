@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router";
 
@@ -18,6 +18,7 @@ jest.mock("backend", () => ({
   verifyEmail: (token: string) => mockVerifyEmail(token),
 }));
 jest.mock("rootRedux/hooks", () => ({
+  ...jest.requireActual("rootRedux/hooks"),
   useAppDispatch: () => jest.fn(),
 }));
 
@@ -25,8 +26,6 @@ const mockNavigate = jest.fn();
 const mockVerifyEmail = jest.fn();
 
 beforeEach(jest.clearAllMocks);
-
-afterEach(cleanup);
 
 async function renderEmailVerify(): Promise<void> {
   await act(async () => {
