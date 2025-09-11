@@ -72,10 +72,7 @@ export default function FindAndReplace(
         variant="outlined"
         style={{ width: "100%" }}
         margin="normal"
-        inputProps={{
-          "data-testid": FindAndReplaceId.FieldFind,
-          maxLength: 100,
-        }}
+        slotProps={{ htmlInput: { maxLength: 100 } }}
         vernacular
       />
       <TextFieldWithFont
@@ -86,10 +83,7 @@ export default function FindAndReplace(
         variant="outlined"
         style={{ width: "100%" }}
         margin="normal"
-        inputProps={{
-          "data-testid": FindAndReplaceId.FieldReplace,
-          maxLength: 100,
-        }}
+        slotProps={{ htmlInput: { maxLength: 100 } }}
         vernacular
       />
       <Button

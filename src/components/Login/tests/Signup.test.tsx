@@ -8,7 +8,6 @@ import Signup, {
   SignupField,
   SignupId,
   SignupText,
-  signupFieldId,
   signupFieldTextId,
 } from "components/Login/Signup";
 import MockCaptcha from "components/Login/tests/MockCaptcha";
@@ -61,8 +60,8 @@ const typeInFields = async (textRecord: Partial<SignupText>): Promise<void> => {
     if (!text) {
       continue;
     }
-    const id = signupFieldId[field as SignupField];
-    await userEvent.type(screen.getByTestId(id), text);
+    const id = signupFieldTextId[field as SignupField];
+    await userEvent.type(screen.getByLabelText(new RegExp(id)), text);
   }
 };
 

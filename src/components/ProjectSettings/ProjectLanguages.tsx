@@ -261,9 +261,6 @@ export default function ProjectLanguages(
       <NormalizedTextField
         autoFocus
         id={ProjectLanguagesId.FieldEditVernacularName}
-        inputProps={{
-          "data-testid": ProjectLanguagesId.FieldEditVernacularName,
-        }}
         onBlur={() => {
           setChangeVernName(false);
           setNewVernName(props.project.vernacularWritingSystem.name);

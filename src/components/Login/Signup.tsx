@@ -177,11 +177,11 @@ export default function Signup(props: SignupProps): ReactElement {
   const defaultTextFieldProps = (field: SignupField): TextFieldProps => ({
     error: fieldError[field],
     id: signupFieldId[field],
-    inputProps: { "data-testid": signupFieldId[field], maxLength: 100 },
     label: t(signupFieldTextId[field]),
     margin: "normal",
     onChange: (e) => updateField(e, field),
     required: true,
+    slotProps: { htmlInput: { maxLength: 100 } },
     style: { width: "100%" },
     value: fieldText[field],
     variant: "outlined",

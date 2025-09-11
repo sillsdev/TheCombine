@@ -9,7 +9,10 @@ import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
 import CharInv from "goals/CharacterInventory/CharInv";
-import { CharInvCancelSaveIds } from "goals/CharacterInventory/CharInv/CharacterEntry";
+import {
+  CancelDialogTextId,
+  CharacterEntryTextId,
+} from "goals/CharacterInventory/CharInv/CharacterEntry";
 import { defaultState } from "rootRedux/types";
 
 jest.mock("goals/CharacterInventory/Redux/CharacterInventoryActions", () => ({
@@ -50,34 +53,26 @@ describe("CharInv", () => {
 
   it("saves inventory on save", async () => {
     expect(mockUploadAndExit).toHaveBeenCalledTimes(0);
-    await userEvent.click(screen.getByTestId(CharInvCancelSaveIds.ButtonSave));
+    await userEvent.click(screen.getByText(CharacterEntryTextId.ButtonSave));
     expect(mockUploadAndExit).toHaveBeenCalledTimes(1);
   });
 
   it("opens a dialogue on cancel, closes on no", async () => {
     expect(screen.queryByRole("dialog")).toBeNull();
-    await userEvent.click(
-      screen.getByTestId(CharInvCancelSaveIds.ButtonCancel)
-    );
+    await userEvent.click(screen.getByText(CharacterEntryTextId.ButtonCancel));
     expect(screen.queryByRole("dialog")).toBeTruthy();
 
-    await userEvent.click(
-      screen.getByTestId(CharInvCancelSaveIds.DialogCancelButtonNo)
-    );
+    await userEvent.click(screen.getByText(CancelDialogTextId.ButtonNo));
     // Wait for dialog removal, else it's only hidden.
     await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
     expect(screen.queryByRole("dialog")).toBeNull();
   });
 
   it("exits on cancel-yes", async () => {
-    await userEvent.click(
-      screen.getByTestId(CharInvCancelSaveIds.ButtonCancel)
-    );
+    await userEvent.click(screen.getByText(CharacterEntryTextId.ButtonCancel));
     expect(mockExit).toHaveBeenCalledTimes(0);
 
-    await userEvent.click(
-      screen.getByTestId(CharInvCancelSaveIds.DialogCancelButtonYes)
-    );
+    await userEvent.click(screen.getByText(CancelDialogTextId.ButtonYes));
     expect(mockExit).toHaveBeenCalledTimes(1);
   });
 });

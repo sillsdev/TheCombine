@@ -55,9 +55,7 @@ describe("ProjectLanguages", () => {
     await userEvent.click(
       screen.getByTestId(ProjectLanguagesId.ButtonEditVernacularName)
     );
-    const vernField = screen.getByTestId(
-      ProjectLanguagesId.FieldEditVernacularName
-    );
+    const vernField = screen.getByRole("textbox");
     await userEvent.clear(vernField);
     await userEvent.type(vernField, newName);
     await userEvent.click(

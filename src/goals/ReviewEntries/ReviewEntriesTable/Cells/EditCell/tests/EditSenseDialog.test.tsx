@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
@@ -50,6 +50,13 @@ const renderEditSenseDialog = async (
   });
 };
 
+const getGlossFields = (): HTMLElement[] => {
+  const region = screen
+    .getByText(EditSenseDialogTextId.CardGlosses)
+    .closest('[role="region"]') as HTMLElement;
+  return within(region).getAllByRole("textbox");
+};
+
 beforeEach(async () => {
   jest.clearAllMocks();
 });
@@ -71,8 +78,7 @@ describe("EditSenseDialog", () => {
 
     test("cancel button opens dialog if changes", async () => {
       // Make a change
-      const testId = `${EditSenseDialogId.TextFieldGlossPrefix}0`;
-      await userEvent.type(screen.getByTestId(testId), "glossier");
+      await userEvent.type(getGlossFields()[0], "glossier");
 
       // Click the cancel button and cancel the cancel
       await userEvent.click(screen.getByTestId(EditSenseDialogId.ButtonCancel));
@@ -106,8 +112,7 @@ describe("EditSenseDialog", () => {
 
     test("save button saves changes and closes", async () => {
       // Make a change
-      const testId = `${EditSenseDialogId.TextFieldGlossPrefix}0`;
-      const glossField = screen.getByTestId(testId);
+      const glossField = getGlossFields()[0];
       await userEvent.clear(glossField);
       const newGlossText = "New gloss!";
       await userEvent.type(glossField, newGlossText);

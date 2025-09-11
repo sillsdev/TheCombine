@@ -104,9 +104,9 @@ export default function Login(): ReactElement {
 
   const defaultTextFieldProps = (id?: string): TextFieldProps => ({
     id,
-    inputProps: { "data-testid": id, maxLength: 100 },
     margin: "normal",
     required: true,
+    slotProps: { htmlInput: { maxLength: 100 } },
     style: { width: "100%" },
     variant: "outlined",
   });
