@@ -99,7 +99,6 @@ export default function ResetRequest(): ReactElement {
                   </Button>
 
                   <LoadingDoneButton
-                    buttonProps={{ type: "submit", variant: "contained" }}
                     disabled={!emailOrUsername || !isVerified}
                     loading={isLoading}
                   >

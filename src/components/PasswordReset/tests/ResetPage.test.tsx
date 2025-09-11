@@ -67,15 +67,11 @@ describe("PasswordReset", () => {
     await customRender(<PasswordReset />);
 
     const shortPassword = "foo";
-    const passwdField = screen.getByLabelText(
-      PasswordResetTextId.FieldPassword1
-    );
-    const passwdConfirm = screen.getByLabelText(
-      PasswordResetTextId.FieldPassword2
-    );
+    const pw1Field = screen.getByLabelText(PasswordResetTextId.FieldPassword1);
+    const pw2Field = screen.getByLabelText(PasswordResetTextId.FieldPassword2);
 
-    await user.type(passwdField, shortPassword);
-    await user.type(passwdConfirm, shortPassword);
+    await user.type(pw1Field, shortPassword);
+    await user.type(pw2Field, shortPassword);
 
     expect(screen.getByRole("button")).toBeDisabled();
   });
@@ -86,18 +82,14 @@ describe("PasswordReset", () => {
 
     const passwordEntry = "password";
     const confirmEntry = "passward";
-    const passwdField = screen.getByLabelText(
-      PasswordResetTextId.FieldPassword1
-    );
-    const passwdConfirm = screen.getByLabelText(
-      PasswordResetTextId.FieldPassword2
-    );
+    const pw1Field = screen.getByLabelText(PasswordResetTextId.FieldPassword1);
+    const pw2Field = screen.getByLabelText(PasswordResetTextId.FieldPassword2);
     expect(
       screen.queryByText(PasswordResetTextId.FieldPassword2Error)
     ).toBeNull();
 
-    await user.type(passwdField, passwordEntry);
-    await user.type(passwdConfirm, confirmEntry);
+    await user.type(pw1Field, passwordEntry);
+    await user.type(pw2Field, confirmEntry);
 
     expect(screen.getByRole("button")).toBeDisabled();
     expect(
@@ -110,15 +102,11 @@ describe("PasswordReset", () => {
     await customRender(<PasswordReset />);
 
     const passwordEntry = "password";
-    const passwdField = screen.getByLabelText(
-      PasswordResetTextId.FieldPassword1
-    );
-    const passwdConfirm = screen.getByLabelText(
-      PasswordResetTextId.FieldPassword2
-    );
+    const pw1Field = screen.getByLabelText(PasswordResetTextId.FieldPassword1);
+    const pw2Field = screen.getByLabelText(PasswordResetTextId.FieldPassword2);
 
-    await user.type(passwdField, passwordEntry);
-    await user.type(passwdConfirm, passwordEntry);
+    await user.type(pw1Field, passwordEntry);
+    await user.type(pw2Field, passwordEntry);
 
     expect(screen.getByRole("button")).toBeEnabled();
   });

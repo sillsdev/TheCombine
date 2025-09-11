@@ -85,14 +85,10 @@ export default function EmailInvite(props: InviteProps): ReactElement {
         {/* Submit button */}
         <Grid2 container justifyContent="flex-end">
           <LoadingDoneButton
+            buttonProps={{ onClick: onSubmit }}
             disabled={!isValid}
-            loading={isLoading}
             done={isDone}
-            buttonProps={{
-              id: "project-user-invite-submit",
-              onClick: () => onSubmit(),
-              variant: "contained",
-            }}
+            loading={isLoading}
           >
             {t(EmailInviteTextId.ButtonSubmit)}
           </LoadingDoneButton>

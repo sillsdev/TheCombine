@@ -6,7 +6,6 @@ import configureMockStore from "redux-mock-store";
 import { defaultState as loginState } from "components/Login/Redux/LoginReduxTypes";
 import Signup, {
   SignupField,
-  SignupId,
   SignupText,
   signupFieldTextId,
 } from "components/Login/Signup";
@@ -68,7 +67,7 @@ const typeInFields = async (textRecord: Partial<SignupText>): Promise<void> => {
 /** Clicks the submit button and checks that only the specified field errors. */
 const submitAndCheckError = async (id?: SignupField): Promise<void> => {
   // Submit the form.
-  await userEvent.click(screen.getByTestId(SignupId.ButtonSignUp));
+  await userEvent.click(screen.getByText("login.signUp"));
 
   // Only the specified field should error.
   Object.values(SignupField).forEach((val) => {
