@@ -11,11 +11,10 @@ import {
   getAllSpeakers,
   updateSpeakerName,
 } from "backend";
-import {
-  DeleteButtonWithDialog,
-  IconButtonWithTooltip,
-} from "components/Buttons";
-import { EditTextDialog, SubmitTextDialog } from "components/Dialogs";
+import DeleteButtonWithDialog from "components/Buttons/DeleteButtonWithDialog";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import EditTextDialog from "components/Dialogs/EditTextDialog";
+import SubmitTextDialog from "components/Dialogs/SubmitTextDialog";
 import SpeakerConsentListItemIcon from "components/ProjectUsers/SpeakerConsentListItemIcon";
 
 export enum ProjectSpeakersId {

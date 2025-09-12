@@ -18,7 +18,8 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { LoadingDoneButton } from "components/Buttons";
+import { requestEmailVerify } from "backend";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import Captcha from "components/Login/Captcha";
 import { asyncSignUp } from "components/Login/Redux/LoginActions";
 import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
@@ -27,11 +28,13 @@ import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import router from "router/browserRouter";
 import { Path } from "types/path";
+import { RuntimeConfig } from "types/runtimeConfig";
 import { NormalizedTextField } from "utilities/fontComponents";
 import {
   meetsPasswordRequirements,
   meetsUsernameRequirements,
-} from "utilities/utilities";
+  normalizeEmail,
+} from "utilities/userUtilities";
 
 export enum SignupField {
   Email = "email",
@@ -86,13 +89,8 @@ export const signupFieldId: Record<SignupField, SignupId> = {
   [SignupField.Username]: SignupId.FieldUsername,
 };
 
-// Chrome silently converts non-ASCII characters in a Textfield of type="email".
-// Use punycode.toUnicode() to convert them from punycode back to Unicode.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const punycode = require("punycode/");
-
 interface SignupProps {
-  returnToEmailInvite?: () => void;
+  onSignup?: () => void;
 }
 
 /** The Signup page (also used for ProjectInvite) */
@@ -151,9 +149,7 @@ export default function Signup(props: SignupProps): ReactElement {
     // Trim whitespace off fields.
     const name = fieldText[SignupField.Name].trim();
     const username = fieldText[SignupField.Username].trim();
-    const email = punycode
-      .toUnicode(fieldText[SignupField.Email].trim())
-      .normalize("NFC");
+    const email = normalizeEmail(fieldText[SignupField.Email]);
     const password1 = fieldText[SignupField.Password1].trim();
     const password2 = fieldText[SignupField.Password2].trim();
 
@@ -169,8 +165,11 @@ export default function Signup(props: SignupProps): ReactElement {
     if (Object.values(err).some((e) => e)) {
       setFieldError(err);
     } else {
+      const onLogin = RuntimeConfig.getInstance().isOffline()
+        ? undefined
+        : async () => await requestEmailVerify(email);
       await dispatch(
-        asyncSignUp(name, username, email, password1, props.returnToEmailInvite)
+        asyncSignUp(name, username, email, password1, props.onSignup, onLogin)
       );
     }
   };
@@ -227,7 +226,7 @@ export default function Signup(props: SignupProps): ReactElement {
               <TextField
                 {...defaultTextFieldProps(SignupField.Email)}
                 autoComplete="email"
-                type="email"
+                type="email" // silently converts input to punycode
               />
 
               {/* Password field */}

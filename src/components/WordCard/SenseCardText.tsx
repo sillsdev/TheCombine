@@ -1,14 +1,15 @@
 import {
+  Box,
+  SxProps,
   Table,
   TableBody,
   TableCell,
   TableRow,
   Typography,
 } from "@mui/material";
-import { CSSProperties, ReactElement } from "react";
+import { ReactElement } from "react";
 
 import { Sense } from "api/models";
-import theme from "types/theme";
 import { TypographyWithFont } from "utilities/fontComponents";
 
 interface SenseInLanguage {
@@ -70,10 +71,10 @@ export default function SenseCardText(props: SenseCardTextProps): ReactElement {
   );
 }
 
-const defStyle: CSSProperties = {
+const defSx: SxProps = {
   borderInlineStart: "1px solid black",
-  marginBottom: theme.spacing(1),
-  paddingInlineStart: theme.spacing(1),
+  mb: 1,
+  paddingInlineStart: 1,
 };
 
 interface SenseTextRowsProps {
@@ -87,18 +88,14 @@ function SenseTextRows(props: SenseTextRowsProps): ReactElement {
     <>
       {/* Gloss */}
       <TableRow key={lang}>
-        <TableCell style={{ borderBottom: "none" }}>
+        <TableCell sx={{ borderBottom: "none" }}>
           <Typography variant="caption">
             {lang}
             {":"}
           </Typography>
         </TableCell>
-        <TableCell style={{ borderBottom: "none" }}>
-          <TypographyWithFont
-            lang={lang}
-            style={{ marginBottom: theme.spacing(1) }}
-            variant="h6"
-          >
+        <TableCell sx={{ borderBottom: "none" }}>
+          <TypographyWithFont lang={lang} sx={{ mb: 1 }} variant="h6">
             {props.senseInLang.glossText}
           </TypographyWithFont>
         </TableCell>
@@ -107,13 +104,13 @@ function SenseTextRows(props: SenseTextRowsProps): ReactElement {
       {/* Definition */}
       {!!props.senseInLang.definitionText && !props.hideDefs && (
         <TableRow key={lang + "def"}>
-          <TableCell style={{ borderBottom: "none" }} />
-          <TableCell style={{ borderBottom: "none" }}>
-            <div style={defStyle}>
+          <TableCell sx={{ borderBottom: "none" }} />
+          <TableCell sx={{ borderBottom: "none" }}>
+            <Box sx={defSx}>
               <TypographyWithFont color="textSecondary" lang={lang}>
                 {props.senseInLang.definitionText}
               </TypographyWithFont>
-            </div>
+            </Box>
           </TableCell>
         </TableRow>
       )}

@@ -10,22 +10,14 @@ using static BackendFramework.Otel.OtelKernel;
 
 namespace Backend.Tests.Otel
 {
-    public class OtelKernelTests : IDisposable
+    internal sealed class OtelKernelTests : IDisposable
     {
         private LocationEnricher _locationEnricher = null!;
 
         public void Dispose()
         {
-            Dispose(true);
+            _locationEnricher?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _locationEnricher?.Dispose();
-            }
         }
 
         [Test]

@@ -3,15 +3,11 @@ import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
-import MockBypassCancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import CharacterDetail from "goals/CharacterInventory/CharInv/CharacterDetail";
 import { FindAndReplaceId } from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace";
 import { defaultState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { type StoreState } from "rootRedux/types";
 
-jest.mock("components/Dialogs", () => ({
-  CancelConfirmDialog: MockBypassCancelConfirmDialog,
-}));
 jest.mock("goals/CharacterInventory/Redux/CharacterInventoryActions", () => ({
   findAndReplace: () => mockFindAndReplace(),
 }));

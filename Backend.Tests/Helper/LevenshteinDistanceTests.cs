@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Helper
 {
-    public class LevenshteinDistanceTests
+    internal sealed class LevenshteinDistanceTests
     {
         private IEditDistance _levDist = null!;
 

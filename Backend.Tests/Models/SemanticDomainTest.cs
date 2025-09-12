@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Models
 {
-    public class SemanticDomainTests
+    internal sealed class SemanticDomainTests
     {
         [Test]
         public void TestClone()
@@ -69,7 +69,7 @@ namespace Backend.Tests.Models
         }
     }
 
-    public class SemanticDomainFullTests
+    internal sealed class SemanticDomainFullTests
     {
         [Test]
         public void TestClone()

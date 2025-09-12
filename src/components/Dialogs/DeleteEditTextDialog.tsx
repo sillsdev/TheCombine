@@ -13,7 +13,7 @@ import { type KeyboardEvent, type ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
-import { LoadingButton } from "components/Buttons";
+import LoadingButton from "components/Buttons/LoadingButton";
 import { NormalizedTextField } from "utilities/fontComponents";
 
 interface DeleteEditTextDialogProps {
@@ -120,11 +120,11 @@ export default function DeleteEditTextDialog(
         <NormalizedTextField
           variant="standard"
           autoFocus
-          data-testid={props.textFieldId}
           value={text}
           onChange={(event) => setText(event.target.value)}
           onKeyPress={confirmIfEnter}
           InputProps={{ endAdornment }}
+          inputProps={{ "data-testid": props.textFieldId }}
           id={props.textFieldId}
         />
       </DialogContent>

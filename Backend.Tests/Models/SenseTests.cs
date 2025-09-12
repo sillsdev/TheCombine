@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Models
 {
-    public class SenseTests
+    internal sealed class SenseTests
     {
         [Test]
         public void TestClone()
@@ -80,7 +80,7 @@ namespace Backend.Tests.Models
         }
     }
 
-    public class DefinitionTests
+    internal sealed class DefinitionTests
     {
         private const string Language = "fr";
         private const string Text = "Test definition text";
@@ -102,7 +102,7 @@ namespace Backend.Tests.Models
         }
     }
 
-    public class GlossTests
+    internal sealed class GlossTests
     {
         private const string Language = "fr";
         private const string Def = "def";
@@ -124,7 +124,7 @@ namespace Backend.Tests.Models
         }
     }
 
-    public class GrammaticalInfoTests
+    internal sealed class GrammaticalInfoTests
     {
         private const GramCatGroup CatGroup = GramCatGroup.Other;
         private const string GrammaticalCategory = "abcdefg";

@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Otel
 {
-    public class OtelServiceTests
+    internal sealed class OtelServiceTests
     {
         [Test]
         public static void TestStartActivityWithTag()

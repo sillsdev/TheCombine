@@ -7,8 +7,9 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Grid,
+  Grid2,
   IconButton,
+  Stack,
   Typography,
 } from "@mui/material";
 import { grey, yellow } from "@mui/material/colors";
@@ -29,8 +30,8 @@ import {
   type Sense,
   type WritingSystem,
 } from "api/models";
-import { PartOfSpeechButton } from "components/Buttons";
-import { CancelConfirmDialog } from "components/Dialogs";
+import PartOfSpeechButton from "components/Buttons/PartOfSpeechButton";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import TreeView from "components/TreeView";
 import {
   areDefinitionsSame,
@@ -54,6 +55,16 @@ export enum EditSenseDialogId {
   ButtonSemDomDeletePrefix = "edit-sense-delete-semantic-domain-button-",
   TextFieldDefinitionPrefix = "edit-sense-definition-textfield-",
   TextFieldGlossPrefix = "edit-sense-gloss-textfield-",
+}
+
+export enum EditSenseDialogTextId {
+  CardDefinitions = "reviewEntries.columns.definitions",
+  CardGlosses = "reviewEntries.columns.glosses",
+  CardPartOfSpeech = "reviewEntries.columns.partOfSpeech",
+  CardPartOfSpeechUnspecified = "grammaticalCategory.group.Unspecified",
+  CardSemanticDomains = "reviewEntries.columns.domains",
+  DialogCancel = "reviewEntries.discardChanges",
+  Title = "reviewEntries.editSense",
 }
 
 export enum EditSenseField {
@@ -180,110 +191,104 @@ export default function EditSenseDialog(
         handleCancel={() => setCancelDialog(false)}
         handleConfirm={cancelAndClose}
         open={cancelDialog}
-        text="reviewEntries.discardChanges"
+        text={EditSenseDialogTextId.DialogCancel}
       />
       <Dialog fullWidth maxWidth="sm" open={props.isOpen}>
         <DialogTitle>
-          <Grid container justifyContent="space-between">
-            <Grid item>{t("reviewEntries.editSense")}</Grid>
-            <Grid item>
+          <Grid2 container justifyContent="space-between">
+            {t(EditSenseDialogTextId.Title)}
+
+            <div>
               <IconButton
+                data-testid={EditSenseDialogId.ButtonSave}
                 id={EditSenseDialogId.ButtonSave}
                 onClick={saveAndClose}
               >
-                <Check sx={{ color: (t) => t.palette.success.main }} />
+                <Check sx={{ color: "success.main" }} />
               </IconButton>
+
               <IconButton
+                data-testid={EditSenseDialogId.ButtonCancel}
                 id={EditSenseDialogId.ButtonCancel}
                 onClick={conditionalCancel}
               >
-                <Close sx={{ color: (t) => t.palette.error.main }} />
+                <Close sx={{ color: "error.main" }} />
               </IconButton>
-            </Grid>
-          </Grid>
+            </div>
+          </Grid2>
         </DialogTitle>
+
         <DialogContent>
-          <Grid
-            container
-            direction="column"
-            justifyContent="flex-start"
-            spacing={3}
-          >
+          <Stack spacing={3}>
             {/* Definitions */}
             {definitionsEnabled && (
-              <Grid item>
-                <Card sx={bgStyle(EditSenseField.Definitions)}>
-                  <CardHeader title={t("reviewEntries.columns.definitions")} />
-                  <CardContent>
-                    <DefinitionList
-                      defaultLang={analysisWritingSystems[0]}
-                      definitions={newSense.definitions}
-                      error={noDefinitionOrGloss}
-                      onChange={updateDefinitions}
-                      textFieldIdPrefix={
-                        EditSenseDialogId.TextFieldDefinitionPrefix
-                      }
-                    />
-                  </CardContent>
-                </Card>
-              </Grid>
+              <Card sx={bgStyle(EditSenseField.Definitions)}>
+                <CardHeader title={t(EditSenseDialogTextId.CardDefinitions)} />
+                <CardContent>
+                  <DefinitionList
+                    defaultLang={analysisWritingSystems[0]}
+                    definitions={newSense.definitions}
+                    error={noDefinitionOrGloss}
+                    onChange={updateDefinitions}
+                    textFieldIdPrefix={
+                      EditSenseDialogId.TextFieldDefinitionPrefix
+                    }
+                  />
+                </CardContent>
+              </Card>
             )}
 
             {/* Glosses */}
-            <Grid item>
-              <Card sx={bgStyle(EditSenseField.Glosses)}>
-                <CardHeader title={t("reviewEntries.columns.glosses")} />
-                <CardContent>
-                  <GlossList
-                    defaultLang={analysisWritingSystems[0]}
-                    error={noDefinitionOrGloss}
-                    glosses={newSense.glosses}
-                    onChange={updateGlosses}
-                    textFieldIdPrefix={EditSenseDialogId.TextFieldGlossPrefix}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
+            <Card sx={bgStyle(EditSenseField.Glosses)}>
+              <CardHeader title={t(EditSenseDialogTextId.CardGlosses)} />
+              <CardContent>
+                <GlossList
+                  defaultLang={analysisWritingSystems[0]}
+                  error={noDefinitionOrGloss}
+                  glosses={newSense.glosses}
+                  onChange={updateGlosses}
+                  textFieldIdPrefix={EditSenseDialogId.TextFieldGlossPrefix}
+                />
+              </CardContent>
+            </Card>
 
             {/* Part of Speech */}
             {grammaticalInfoEnabled && (
-              <Grid item>
-                <Card sx={bgStyle(EditSenseField.GrammaticalInfo)}>
-                  <CardHeader title={t("reviewEntries.columns.partOfSpeech")} />
-                  <CardContent>
-                    {newSense.grammaticalInfo.catGroup ===
-                    GramCatGroup.Unspecified ? (
-                      <Typography>
-                        {t("grammaticalCategory.group.Unspecified")}
-                      </Typography>
-                    ) : (
-                      <PartOfSpeechButton
-                        buttonId={EditSenseDialogId.ButtonPartOfSpeech}
-                        gramInfo={newSense.grammaticalInfo}
-                      />
-                    )}
-                  </CardContent>
-                </Card>
-              </Grid>
+              <Card sx={bgStyle(EditSenseField.GrammaticalInfo)}>
+                <CardHeader title={t(EditSenseDialogTextId.CardPartOfSpeech)} />
+                <CardContent>
+                  {newSense.grammaticalInfo.catGroup ===
+                  GramCatGroup.Unspecified ? (
+                    <Typography>
+                      {t(EditSenseDialogTextId.CardPartOfSpeechUnspecified)}
+                    </Typography>
+                  ) : (
+                    <PartOfSpeechButton
+                      buttonId={EditSenseDialogId.ButtonPartOfSpeech}
+                      gramInfo={newSense.grammaticalInfo}
+                    />
+                  )}
+                </CardContent>
+              </Card>
             )}
 
             {/* Semantic Domains */}
-            <Grid item>
-              <Card sx={bgStyle(EditSenseField.SemanticDomains)}>
-                <CardHeader title={t("reviewEntries.columns.domains")} />
-                <CardContent>
-                  <DomainList
-                    buttonIdAdd={EditSenseDialogId.ButtonSemDomAdd}
-                    buttonIdPrefixDelete={
-                      EditSenseDialogId.ButtonSemDomDeletePrefix
-                    }
-                    domains={newSense.semanticDomains}
-                    onChange={updateDomains}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
+            <Card sx={bgStyle(EditSenseField.SemanticDomains)}>
+              <CardHeader
+                title={t(EditSenseDialogTextId.CardSemanticDomains)}
+              />
+              <CardContent>
+                <DomainList
+                  buttonIdAdd={EditSenseDialogId.ButtonSemDomAdd}
+                  buttonIdPrefixDelete={
+                    EditSenseDialogId.ButtonSemDomDeletePrefix
+                  }
+                  domains={newSense.semanticDomains}
+                  onChange={updateDomains}
+                />
+              </CardContent>
+            </Card>
+          </Stack>
         </DialogContent>
       </Dialog>
     </>
@@ -337,6 +342,7 @@ function DefinitionTextField(props: DefinitionTextFieldProps): ReactElement {
       error={props.error}
       fullWidth
       id={props.textFieldId}
+      inputProps={{ "data-testid": props.textFieldId }}
       label={props.definition.language}
       lang={props.definition.language}
       margin="dense"
@@ -399,6 +405,7 @@ function GlossTextField(props: GlossTextFieldProps): ReactElement {
       error={props.error}
       fullWidth
       id={props.textFieldId}
+      inputProps={{ "data-testid": props.textFieldId }}
       label={props.gloss.language}
       lang={props.gloss.language}
       margin="dense"
@@ -450,33 +457,34 @@ function DomainList(props: DomainListProps): ReactElement {
 
   return (
     <>
-      <Grid container direction="row" spacing={2}>
+      <Grid2 alignItems="center" container spacing={2}>
         {props.domains.length > 0 ? (
           props.domains.map((domain, index) => (
-            <Grid item key={`${domain.id}_${domain.name}`}>
-              <Chip
-                id={`${props.buttonIdPrefixDelete}${index}`}
-                label={`${domain.id}: ${domain.name}`}
-                onDelete={() => deleteDomain(domain.id)}
-              />
-            </Grid>
+            <Chip
+              data-testid={`${props.buttonIdPrefixDelete}${index}`}
+              id={`${props.buttonIdPrefixDelete}${index}`}
+              key={`${domain.id}_${domain.name}`}
+              label={`${domain.id}: ${domain.name}`}
+              onDelete={() => deleteDomain(domain.id)}
+            />
           ))
         ) : (
-          <Grid item xs>
+          <Grid2 size="grow">
             <Chip color="secondary" label={t("reviewEntries.noDomain")} />
-          </Grid>
+          </Grid2>
         )}
         <IconButton
+          data-testid={props.buttonIdAdd}
           id={props.buttonIdAdd}
           onClick={(e) => {
             e.currentTarget.blur(); // else dialog reopens when domain selected with Enter
             setAddingDom(true);
           }}
-          size="large"
         >
           <Add />
         </IconButton>
-      </Grid>
+      </Grid2>
+
       <Dialog fullScreen open={addingDom}>
         <TreeView
           exit={() => setAddingDom(false)}

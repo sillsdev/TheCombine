@@ -10,8 +10,9 @@ import {
   getProject,
   uploadLiftAndGetWritingSystems,
 } from "backend";
-import { FileInputButton, LoadingDoneButton } from "components/Buttons";
-import { CancelConfirmDialog } from "components/Dialogs";
+import FileInputButton from "components/Buttons/FileInputButton";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 
 enum UploadState {

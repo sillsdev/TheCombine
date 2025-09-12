@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
 import { resetPasswordRequest } from "backend";
-import { LoadingDoneButton } from "components/Buttons";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import Captcha from "components/Login/Captcha";
 import { Path } from "types/path";
 import { NormalizedTextField } from "utilities/fontComponents";

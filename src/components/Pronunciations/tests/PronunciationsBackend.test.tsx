@@ -11,9 +11,6 @@ import { newPronunciation } from "types/word";
 jest.mock("components/AppBar/SpeakerMenu", () => ({
   SpeakerMenuList: () => <div />,
 }));
-jest.mock("components/Dialogs", () => ({
-  ButtonConfirmation: () => <div />,
-}));
 
 // Test variables
 const mockAudio = ["a.wav", "b.wav"].map((f) => newPronunciation(f));

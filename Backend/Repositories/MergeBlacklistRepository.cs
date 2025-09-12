@@ -9,23 +9,19 @@ using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
 {
-    /// <summary> Atomic database functions for <see cref="MergeWordSet"/>s. </summary>
+    /// <summary> Atomic database functions for Blacklist <see cref="MergeWordSet"/>s. </summary>
     [ExcludeFromCodeCoverage]
-    public class MergeBlacklistRepository : IMergeBlacklistRepository
+    public class MergeBlacklistRepository(IMongoDbContext dbContext) : IMergeBlacklistRepository
     {
-        private readonly IMergeBlacklistContext _mergeBlacklistDatabase;
-
-        public MergeBlacklistRepository(IMergeBlacklistContext collectionSettings)
-        {
-            _mergeBlacklistDatabase = collectionSettings;
-        }
+        private readonly IMongoCollection<MergeWordSet> _mergeBlacklist =
+            dbContext.Db.GetCollection<MergeWordSet>("MergeBlacklistCollection");
 
         /// <summary> Finds all <see cref="MergeWordSet"/>s for specified <see cref="Project"/>. </summary>
         public async Task<List<MergeWordSet>> GetAllSets(string projectId, string? userId = null)
         {
             var listFind = userId is null ?
-                _mergeBlacklistDatabase.MergeBlacklist.Find(e => e.ProjectId == projectId) :
-                _mergeBlacklistDatabase.MergeBlacklist.Find(e => e.ProjectId == projectId && e.UserId == userId);
+                _mergeBlacklist.Find(e => e.ProjectId == projectId) :
+                _mergeBlacklist.Find(e => e.ProjectId == projectId && e.UserId == userId);
             return await listFind.ToListAsync();
         }
 
@@ -33,7 +29,7 @@ namespace BackendFramework.Repositories
         /// <returns> A bool: success of operation. </returns>
         public async Task<bool> DeleteAllSets(string projectId)
         {
-            var deleted = await _mergeBlacklistDatabase.MergeBlacklist.DeleteManyAsync(u => u.ProjectId == projectId);
+            var deleted = await _mergeBlacklist.DeleteManyAsync(u => u.ProjectId == projectId);
             return deleted.DeletedCount != 0;
         }
 
@@ -45,7 +41,7 @@ namespace BackendFramework.Repositories
                 filterDef.Eq(x => x.ProjectId, projectId),
                 filterDef.Eq(x => x.Id, entryId));
 
-            var blacklistEntryList = await _mergeBlacklistDatabase.MergeBlacklist.FindAsync(filter);
+            var blacklistEntryList = await _mergeBlacklist.FindAsync(filter);
             try
             {
                 return await blacklistEntryList.FirstAsync();
@@ -60,7 +56,7 @@ namespace BackendFramework.Repositories
         /// <returns> The MergeWordSet created. </returns>
         public async Task<MergeWordSet> Create(MergeWordSet wordSetEntry)
         {
-            await _mergeBlacklistDatabase.MergeBlacklist.InsertOneAsync(wordSetEntry);
+            await _mergeBlacklist.InsertOneAsync(wordSetEntry);
             return wordSetEntry;
         }
 
@@ -72,7 +68,7 @@ namespace BackendFramework.Repositories
             var filter = filterDef.And(
                 filterDef.Eq(x => x.ProjectId, projectId),
                 filterDef.Eq(x => x.Id, entryId));
-            var deleted = await _mergeBlacklistDatabase.MergeBlacklist.DeleteOneAsync(filter);
+            var deleted = await _mergeBlacklist.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;
         }
 
@@ -86,7 +82,7 @@ namespace BackendFramework.Repositories
                 .Set(x => x.UserId, wordSetEntry.UserId)
                 .Set(x => x.WordIds, wordSetEntry.WordIds);
 
-            var updateResult = await _mergeBlacklistDatabase.MergeBlacklist.UpdateOneAsync(filter, updateDef);
+            var updateResult = await _mergeBlacklist.UpdateOneAsync(filter, updateDef);
             if (!updateResult.IsAcknowledged)
             {
                 return ResultOfUpdate.NotFound;

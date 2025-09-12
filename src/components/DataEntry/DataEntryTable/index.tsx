@@ -1,9 +1,7 @@
 import { ExitToApp, List as ListIcon } from "@mui/icons-material";
-import { Button, Grid, Typography } from "@mui/material";
-import { enqueueSnackbar } from "notistack";
+import { Button, Grid2, Typography } from "@mui/material";
 import {
   FormEvent,
-  Fragment,
   ReactElement,
   useCallback,
   useContext,
@@ -13,6 +11,7 @@ import {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import { v4 } from "uuid";
 
 import {
@@ -36,7 +35,6 @@ import { uploadFileFromPronunciation } from "components/Pronunciations/utilities
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { type Hash } from "types/hash";
-import theme from "types/theme";
 import {
   FileWithSpeakerId,
   newGloss,
@@ -52,8 +50,14 @@ import SpellCheckerContext from "utilities/spellCheckerContext";
 import { LevenshteinDistance } from "utilities/utilities";
 import { firstGlossText } from "utilities/wordUtilities";
 
-export const exitButtonId = "exit-to-domain-tree";
 export const maxSuggestions = 5;
+
+export enum DataEntryTableTextId {
+  ButtonExit = "buttons.exit",
+  ColumnHeaderGloss = "addWords.glosses",
+  ColumnHeaderVernacular = "addWords.vernacular",
+  ToastSenseExists = "addWords.senseInWord",
+}
 
 interface DataEntryTableProps {
   semanticDomain: SemanticDomainTreeNode;
@@ -815,8 +819,11 @@ export default function DataEntryTable(
         oldSense.glosses.some((g) => g.def === gloss && g.language === lang) &&
         oldSense.semanticDomains.some((d) => d.id === semDom.id)
       ) {
-        enqueueSnackbar(
-          t("addWords.senseInWord", { val1: oldWord.vernacular, val2: gloss })
+        toast.warning(
+          t(DataEntryTableTextId.ToastSenseExists, {
+            val1: oldWord.vernacular,
+            val2: gloss,
+          })
         );
         if (state.newAudio.length) {
           await addAudiosToBackend(oldWord.id, state.newAudio);
@@ -847,8 +854,11 @@ export default function DataEntryTable(
       if (sense.glosses?.some((g) => g.def === gloss && g.language === lang)) {
         if (sense.semanticDomains.some((d) => d.id === semDom.id)) {
           // User is trying to add a sense that already exists.
-          enqueueSnackbar(
-            t("addWords.senseInWord", { val1: oldWord.vernacular, val2: gloss })
+          toast.warning(
+            t(DataEntryTableTextId.ToastSenseExists, {
+              val1: oldWord.vernacular,
+              val2: gloss,
+            })
           );
           if (state.newAudio.length) {
             await addAudiosToBackend(oldWord.id, state.newAudio);
@@ -1017,38 +1027,24 @@ export default function DataEntryTable(
 
   return (
     <form onSubmit={(e?: FormEvent<HTMLFormElement>) => e?.preventDefault()}>
-      <input type="submit" style={{ display: "none" }} />
-      <Grid container>
-        <Grid item xs={4}>
-          <Typography
-            variant="h5"
-            align="center"
-            style={{
-              marginTop: theme.spacing(2),
-              marginBottom: theme.spacing(2),
-            }}
-          >
-            {t("addWords.vernacular")}
+      <Grid2 container rowSpacing={2}>
+        <Grid2 size={4}>
+          <Typography align="center" variant="h5">
+            {t(DataEntryTableTextId.ColumnHeaderVernacular)}
           </Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <Typography
-            variant="h5"
-            align="center"
-            style={{
-              marginTop: theme.spacing(2),
-              marginBottom: theme.spacing(2),
-            }}
-          >
-            {t("addWords.glosses")}
+        </Grid2>
+
+        <Grid2 size={4}>
+          <Typography align="center" variant="h5">
+            {t(DataEntryTableTextId.ColumnHeaderGloss)}
           </Typography>
-        </Grid>
+        </Grid2>
 
         {state.recentWords.map((wordAccess, index) => (
-          <Grid
-            item
+          <Grid2
             key={`${wordAccess.word.id}_${wordAccess.senseGuid}`}
-            xs={12}
+            role="row"
+            size={12}
           >
             <RecentEntry
               rowIndex={index}
@@ -1068,10 +1064,10 @@ export default function DataEntryTable(
                 wordAccess.word.id
               )}
             />
-          </Grid>
+          </Grid2>
         ))}
 
-        <Grid item xs={12}>
+        <Grid2 role="row" size={12}>
           <NewEntry
             analysisLang={analysisLang}
             vernacularLang={vernacularLang}
@@ -1097,38 +1093,29 @@ export default function DataEntryTable(
             suggestedDups={state.suggestedDups}
             suggestedVerns={state.suggestedVerns}
           />
-        </Grid>
-      </Grid>
+        </Grid2>
 
-      <Grid container justifyContent="space-between" spacing={3}>
-        <Grid item>
+        <Grid2 container justifyContent="space-between" size={12}>
           {props.hasDrawerButton ? (
-            <Button
-              id="toggle-existing-data"
-              style={{ marginTop: theme.spacing(2) }}
-              onClick={props.showExistingData}
-            >
-              <ListIcon fontSize={"medium"} color={"inherit"} />
+            <Button id="toggle-existing-data" onClick={props.showExistingData}>
+              <ListIcon />
             </Button>
           ) : (
-            <Fragment />
+            <div />
           )}
-        </Grid>
-        <Grid item>
+
           <Button
-            id={exitButtonId}
-            type="submit"
+            id="exit-to-domain-tree"
             variant="contained"
             color={highlightExitButton ? "primary" : "secondary"}
-            style={{ marginTop: theme.spacing(2) }}
             endIcon={<ExitToApp />}
             tabIndex={-1}
             onClick={handleExit}
           >
-            {t("buttons.exit")}
+            {t(DataEntryTableTextId.ButtonExit)}
           </Button>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </form>
   );
 }

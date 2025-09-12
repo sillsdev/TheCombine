@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Helper
 {
-    public class TimeTests
+    internal sealed class TimeTests
     {
         [Test]
         public void TestToUtcIso8601()

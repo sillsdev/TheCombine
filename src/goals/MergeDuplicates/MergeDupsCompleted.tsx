@@ -1,16 +1,16 @@
 import { ArrowRightAlt } from "@mui/icons-material";
-import { Card, Grid, Paper, Typography } from "@mui/material";
+import { Box, Card, Grid2, Paper, Stack, Typography } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { Flag, MergeUndoIds, Sense, Word } from "api/models";
 import { getFrontierWords, getWord, undoMerge } from "backend";
-import { FlagButton, UndoButton } from "components/Buttons";
+import FlagButton from "components/Buttons/FlagButton";
+import UndoButton from "components/Buttons/UndoButton";
 import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
 import { MergesCompleted } from "goals/MergeDuplicates/MergeDupsTypes";
 import { type StoreState } from "rootRedux/types";
-import theme from "types/theme";
 import { newFlag } from "types/word";
 import { TypographyWithFont } from "utilities/fontComponents";
 
@@ -53,48 +53,42 @@ export function MergeChange(props: { change: MergeUndoIds }): ReactElement {
   const isDeletion = !change.parentIds.length;
 
   return (
-    <Grid container style={{ flexWrap: "nowrap", overflow: "auto" }}>
+    <Grid2 container sx={{ flexWrap: "nowrap", overflow: "auto" }}>
       {isDeletion && <Typography>{t("mergeDups.undo.deleted")}</Typography>}
       {change.childIds.map((id) => (
-        <WordPaper key={id} wordId={id} />
+        <WordBox key={id} wordId={id} />
       ))}
       {!isDeletion && (
         <>
-          <Grid style={{ margin: theme.spacing(1) }}>
-            <ArrowRightAlt
-              fontSize="large"
-              style={{
-                position: "relative",
-                left: "50%",
-                top: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            />
-          </Grid>
+          <Box alignContent="center" sx={{ m: 1 }}>
+            <ArrowRightAlt fontSize="large" />
+          </Box>
           {change.parentIds.map((id) => (
-            <WordPaper key={id} wordId={id} />
+            <WordBox key={id} wordId={id} />
           ))}
         </>
       )}
-      <UndoButton
-        buttonIdEnabled={`merge-undo-${change.parentIds.join("-")}`}
-        buttonIdCancel="merge-undo-cancel"
-        buttonIdConfirm="merge-undo-confirm"
-        textIdDialog={
-          isDeletion
-            ? "mergeDups.undo.undoDeleteDialog"
-            : "mergeDups.undo.undoDialog"
-        }
-        textIdDisabled="mergeDups.undo.undoDisabled"
-        textIdEnabled={
-          isDeletion ? "mergeDups.undo.undoDelete" : "mergeDups.undo.undo"
-        }
-        isUndoAllowed={handleIsUndoAllowed}
-        undo={async () => {
-          await undoMerge(change);
-        }}
-      />
-    </Grid>
+      <Box alignContent="center">
+        <UndoButton
+          buttonIdEnabled={`merge-undo-${change.parentIds.join("-")}`}
+          buttonIdCancel="merge-undo-cancel"
+          buttonIdConfirm="merge-undo-confirm"
+          textIdDialog={
+            isDeletion
+              ? "mergeDups.undo.undoDeleteDialog"
+              : "mergeDups.undo.undoDialog"
+          }
+          textIdDisabled="mergeDups.undo.undoDisabled"
+          textIdEnabled={
+            isDeletion ? "mergeDups.undo.undoDelete" : "mergeDups.undo.undo"
+          }
+          isUndoAllowed={handleIsUndoAllowed}
+          undo={async () => {
+            await undoMerge(change);
+          }}
+        />
+      </Box>
+    </Grid2>
   );
 }
 
@@ -110,11 +104,7 @@ export function doWordsIncludeMerges(
   );
 }
 
-interface WordPaperProps {
-  wordId: string;
-}
-
-function WordPaper(props: WordPaperProps): ReactElement {
+function WordBox(props: { wordId: string }): ReactElement {
   const [word, setWord] = useState<Word | undefined>();
   const [flag, setFlag] = useState<Flag>(newFlag());
 
@@ -126,33 +116,21 @@ function WordPaper(props: WordPaperProps): ReactElement {
   }, [word]);
 
   return (
-    <Grid key={props.wordId} style={{ margin: theme.spacing(1) }}>
-      <Paper
-        style={{
-          backgroundColor: "lightgrey",
-          paddingBottom: theme.spacing(1),
-        }}
-      >
-        <Paper
-          square
-          style={{ padding: theme.spacing(1), height: 44, minWidth: 100 }}
-        >
-          <Grid container justifyContent="space-between">
-            <Grid>
-              <TypographyWithFont variant="h5" vernacular>
-                {word?.vernacular}
-              </TypographyWithFont>
-            </Grid>
-            <Grid>
-              <FlagButton flag={flag} buttonId={`word-${props.wordId}-flag`} />
-            </Grid>
-          </Grid>
+    <Box sx={{ m: 1 }}>
+      <Paper sx={{ bgcolor: "lightgrey", pb: 1 }}>
+        <Paper square sx={{ height: 44, minWidth: 100, p: 1 }}>
+          <Stack direction="row" justifyContent="space-between">
+            <TypographyWithFont variant="h5" vernacular>
+              {word?.vernacular}
+            </TypographyWithFont>
+            <FlagButton flag={flag} buttonId={`word-${props.wordId}-flag`} />
+          </Stack>
         </Paper>
         <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
           {word?.senses?.map(SenseCard)}
         </div>
       </Paper>
-    </Grid>
+    </Box>
   );
 }
 
@@ -160,12 +138,12 @@ function SenseCard(sense: Sense): ReactElement {
   return (
     <Card
       key={sense.guid}
-      style={{
-        margin: theme.spacing(1),
-        userSelect: "none",
-        minWidth: 150,
+      sx={{
+        bgcolor: "white",
+        m: 1,
         maxWidth: 300,
-        background: "white",
+        minWidth: 150,
+        userSelect: "none",
       }}
     >
       <SenseCardContent senses={[sense]} />

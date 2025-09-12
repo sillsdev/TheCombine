@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class AudioControllerTests : IDisposable
+    internal sealed class AudioControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
         private IWordRepository _wordRepo = null!;
@@ -21,16 +21,8 @@ namespace Backend.Tests.Controllers
 
         public void Dispose()
         {
-            Dispose(true);
+            _audioController?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _audioController?.Dispose();
-            }
         }
 
         private string _projId = null!;

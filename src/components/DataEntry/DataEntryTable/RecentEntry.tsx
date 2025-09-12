@@ -1,19 +1,24 @@
-import { Grid } from "@mui/material";
+import { Grid2 } from "@mui/material";
 import { ReactElement, memo, useState } from "react";
 
 import { Pronunciation, Word, WritingSystem } from "api/models";
-import { NoteButton } from "components/Buttons";
+import NoteButton from "components/Buttons/NoteButton";
 import {
   DeleteEntry,
   GlossWithSuggestions,
   VernWithSuggestions,
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
-import theme from "types/theme";
 import { FileWithSpeakerId, newGloss } from "types/word";
 import { firstGlossText } from "utilities/wordUtilities";
 
-const idAffix = "recent-entry";
+export enum RecentEntryIdPrefix {
+  ButtonDelete = "recent-entry-delete-",
+  ButtonNote = "recent-entry-note-",
+  Row = "recent-entry-",
+  TextFieldGloss = "recent-entry-gloss-",
+  TextFieldVernacular = "recent-entry-vernacular-",
+}
 
 export interface RecentEntryProps {
   rowIndex: number;
@@ -76,12 +81,13 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
     props.updateNote(props.rowIndex, noteText);
 
   return (
-    <Grid alignItems="center" container id={`${idAffix}-${props.rowIndex}`}>
-      <Grid
-        item
-        xs={4}
-        style={{ paddingInline: theme.spacing(2), position: "relative" }}
-      >
+    <Grid2
+      alignItems="center"
+      container
+      id={`${RecentEntryIdPrefix.Row}${props.rowIndex}`}
+      spacing={1}
+    >
+      <Grid2 size={4} sx={{ px: 1 }}>
         <VernWithSuggestions
           vernacular={vernacular}
           isDisabled={props.disabled || props.entry.senses.length > 1}
@@ -91,14 +97,11 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
             vernacular && props.focusNewEntry();
           }}
           vernacularLang={props.vernacularLang}
-          textFieldId={`${idAffix}-${props.rowIndex}-vernacular`}
+          textFieldId={`${RecentEntryIdPrefix.TextFieldVernacular}${props.rowIndex}`}
         />
-      </Grid>
-      <Grid
-        item
-        xs={4}
-        style={{ paddingInline: theme.spacing(2), position: "relative" }}
-      >
+      </Grid2>
+
+      <Grid2 size={4} sx={{ px: 1 }}>
         <GlossWithSuggestions
           gloss={gloss}
           isDisabled={props.disabled}
@@ -108,26 +111,20 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
             gloss && props.focusNewEntry();
           }}
           analysisLang={props.analysisLang}
-          textFieldId={`${idAffix}-${props.rowIndex}-gloss`}
+          textFieldId={`${RecentEntryIdPrefix.TextFieldGloss}${props.rowIndex}`}
         />
-      </Grid>
-      <Grid
-        item
-        xs={1}
-        style={{ paddingInline: theme.spacing(1), position: "relative" }}
-      >
+      </Grid2>
+
+      <Grid2 size={1}>
         <NoteButton
+          buttonId={`${RecentEntryIdPrefix.ButtonNote}${props.rowIndex}`}
           disabled={editing || props.disabled}
           noteText={props.entry.note.text}
           updateNote={handleUpdateNote}
-          buttonId={`${idAffix}-${props.rowIndex}-note`}
         />
-      </Grid>
-      <Grid
-        item
-        xs={2}
-        style={{ paddingInline: theme.spacing(1), position: "relative" }}
-      >
+      </Grid2>
+
+      <Grid2 size={2}>
         <PronunciationsBackend
           audio={props.entry.audio}
           disabled={editing || props.disabled}
@@ -140,20 +137,17 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
             props.addAudioToWord(props.entry.id, file);
           }}
         />
-      </Grid>
-      <Grid
-        item
-        xs={1}
-        style={{ paddingInline: theme.spacing(1), position: "relative" }}
-      >
+      </Grid2>
+
+      <Grid2 size={1}>
         <DeleteEntry
           removeEntry={handleRemoveEntry}
-          buttonId={`${idAffix}-${props.rowIndex}-delete`}
-          confirmId={"addWords.deleteRowWarning"}
+          buttonId={`${RecentEntryIdPrefix.ButtonDelete}${props.rowIndex}`}
+          confirmId="addWords.deleteRowWarning"
           disabled={editing || props.disabled}
         />
-      </Grid>
-    </Grid>
+      </Grid2>
+    </Grid2>
   );
 }
 

@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Services
 {
-    public class WordServiceTests
+    internal sealed class WordServiceTests
     {
         private IWordRepository _wordRepo = null!;
         private IWordService _wordService = null!;

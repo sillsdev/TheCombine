@@ -1,19 +1,18 @@
 import { ArrowRightAlt } from "@mui/icons-material";
-import { Grid, List, ListItem, Typography } from "@mui/material";
+import { Box, List, ListItem, Stack, Typography } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { Word } from "api/models";
 import { getWord, isInFrontier, updateWord } from "backend";
-import { UndoButton } from "components/Buttons";
+import UndoButton from "components/Buttons/UndoButton";
 import WordCard from "components/WordCard";
 import {
   EntriesEdited,
   EntryEdit,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { type StoreState } from "rootRedux/types";
-import theme from "types/theme";
 
 export default function ReviewEntriesCompleted(): ReactElement {
   const changes = useSelector(
@@ -67,31 +66,36 @@ function EditedEntry(props: { edit: EntryEdit }): ReactElement {
 
   return (
     <ListItem>
-      <Grid container rowSpacing={4} wrap="nowrap">
-        <Grid item>{!!oldWord && <WordCard word={oldWord} />}</Grid>
-        <Grid key={"arrow"} style={{ margin: theme.spacing(1) }}>
-          <ArrowRightAlt
-            fontSize="large"
-            style={{
-              position: "relative",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
+      <Stack direction="row" spacing={1}>
+        {!!oldWord && (
+          <Box>
+            <WordCard word={oldWord} />
+          </Box>
+        )}
+
+        <Box alignContent="center">
+          <ArrowRightAlt fontSize="large" />
+        </Box>
+
+        {!!newWord && (
+          <Box>
+            <WordCard word={newWord} />
+          </Box>
+        )}
+
+        <Box alignContent="center">
+          <UndoButton
+            buttonIdEnabled={`edit-undo-${props.edit.newId}`}
+            buttonIdCancel="edit-undo-cancel"
+            buttonIdConfirm="edit-undo-confirm"
+            textIdDialog="reviewEntries.undo.undoDialog"
+            textIdDisabled="reviewEntries.undo.undoDisabled"
+            textIdEnabled="reviewEntries.undo.undo"
+            isUndoAllowed={() => isInFrontier(newId)}
+            undo={() => undoEdit(props.edit)}
           />
-        </Grid>
-        <Grid item>{!!newWord && <WordCard word={newWord} />}</Grid>
-        <UndoButton
-          buttonIdEnabled={`edit-undo-${props.edit.newId}`}
-          buttonIdCancel="edit-undo-cancel"
-          buttonIdConfirm="edit-undo-confirm"
-          textIdDialog="reviewEntries.undo.undoDialog"
-          textIdDisabled="reviewEntries.undo.undoDisabled"
-          textIdEnabled="reviewEntries.undo.undo"
-          isUndoAllowed={() => isInFrontier(newId)}
-          undo={() => undoEdit(props.edit)}
-        />
-      </Grid>
+        </Box>
+      </Stack>
     </ListItem>
   );
 }

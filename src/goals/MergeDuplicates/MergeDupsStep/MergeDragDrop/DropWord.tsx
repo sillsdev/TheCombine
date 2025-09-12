@@ -12,11 +12,9 @@ import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { type Flag } from "api/models";
-import {
-  FlagButton,
-  IconButtonWithTooltip,
-  NoteButton,
-} from "components/Buttons";
+import FlagButton from "components/Buttons/FlagButton";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import NoteButton from "components/Buttons/NoteButton";
 import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import { AudioSummary } from "components/WordCard";
 import DragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DragSense";

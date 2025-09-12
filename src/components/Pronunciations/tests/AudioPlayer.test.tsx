@@ -15,9 +15,6 @@ jest.mock("backend", () => ({
 jest.mock("components/AppBar/SpeakerMenu", () => ({
   SpeakerMenuList: () => <div />,
 }));
-jest.mock("components/Dialogs", () => ({
-  ButtonConfirmation: () => <div />,
-}));
 jest.mock("rootRedux/hooks", () => {
   return {
     ...jest.requireActual("rootRedux/hooks"),
@@ -44,7 +41,11 @@ async function renderAudioPlayer(canDelete = false): Promise<void> {
 
 beforeEach(() => {
   jest.clearAllMocks();
+});
+
+afterEach(() => {
   jest.clearAllTimers();
+  jest.useRealTimers();
 });
 
 describe("Pronunciations", () => {

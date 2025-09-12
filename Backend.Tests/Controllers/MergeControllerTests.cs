@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class MergeControllerTests : IDisposable
+    internal sealed class MergeControllerTests : IDisposable
     {
         private IMergeBlacklistRepository _mergeBlacklistRepo = null!;
         private IMergeGraylistRepository _mergeGraylistRepo = null!;
@@ -24,16 +24,8 @@ namespace Backend.Tests.Controllers
 
         public void Dispose()
         {
-            Dispose(true);
+            _mergeController?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _mergeController?.Dispose();
-            }
         }
 
         [SetUp]

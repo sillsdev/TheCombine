@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 
 import { Project } from "api/models";
 import { getAllProjects } from "backend";
-import { IconButtonWithTooltip } from "components/Buttons";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectArchive from "components/ProjectSettings/ProjectArchive";
 import ProjectUsersButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectUsersButtonWithConfirmation";

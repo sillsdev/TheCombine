@@ -92,23 +92,19 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 
 2. [Chocolatey][chocolatey] (Windows only): a Windows package manager.
 3. [Node.js 22 (LTS)](https://nodejs.org/en/download/)
-
    - On Windows, if using [Chocolatey][chocolatey]: `choco install nodejs-lts`
    - On Ubuntu, follow
      [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using the
      appropriate Node.js version.
 
 4. [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-
    - On Ubuntu, if using Snap: `sudo snap install dotnet-sdk --classic --channel 8.0/stable`
 
 5. [MongoDB](https://mongodb.com/docs/manual/administration/install-community/) provides instructions on how to install
    the current release of MongoDB.
-
    - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
 
    After installation:
-
    - Add mongo's `/bin` directory to your PATH environment variable.
    - Disable automatically start of the `mongod` service on your development host.
    - If `mongosh` is not a recognized command, you may have to separately install the
@@ -122,7 +118,6 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 7. [Python](#python): The Python section of this document has instructions for installing _Python 3_ on each of the
    supported platforms and how to setup your virtual environment.
 8. [FFmpeg](https://www.ffmpeg.org/download.html) and add its `/bin` to your PATH.
-
    - On Mac:
      - If using [homebrew](https://formulae.brew.sh/formula/ffmpeg): `brew install ffmpeg`
      - If manually installing from the FFmpeg website, install both `ffmpeg` and `ffprobe`
@@ -131,7 +126,6 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
 10. [nuget-license](https://github.com/sensslen/nuget-license) `dotnet tool update --global nuget-license`
 11. Tools for generating the self installer (Linux only):
-
     - [makeself](https://makeself.io/) - a tool to make self-extracting archives in Unix
     - [pandoc](https://pandoc.org/installing.html#linux) - a tool to convert Markdown documents to PDF.
     - `weasyprint` a PDF engine for `pandoc`.
@@ -147,7 +141,6 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 1. _(Optional)_ If you want the email services to work you will need to set the following environment variables. These
    `COMBINE_SMTP_` values must be kept secret, so ask your email administrator to supply them. Set them in your
    `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the _System_ app (Windows).
-
    - `COMBINE_EMAIL_ENABLED=true`
    - `COMBINE_SMTP_SERVER`
    - `COMBINE_SMTP_PORT`
@@ -1181,7 +1174,7 @@ The process for configuring and deploying _TheCombine_ for production targets is
 - [Redux tutorials](https://redux.js.org/tutorials/typescript-quick-start)
 - [React-i18next](https://react.i18next.com/) (text localization)
 - [Jest](https://jestjs.io/docs/getting-started) (unit testing)
-- [React-Test-Renderer](https://reactjs.org/docs/test-renderer.html) (unit testing)
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) (unit testing)
 
 ### Kubernetes/Helm
 
@@ -1189,7 +1182,6 @@ The process for configuring and deploying _TheCombine_ for production targets is
 - [Kubernetes Tutorials](https://kubernetes.io/docs/tutorials/)
 - [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
 - [Helm Documentation](https://helm.sh/docs/) has links for:
-
   - [Introduction](https://helm.sh/docs/intro/),
   - [Topic Guides](https://helm.sh/docs/topics/),
   - [Best Practices](https://helm.sh/docs/chart_best_practices),

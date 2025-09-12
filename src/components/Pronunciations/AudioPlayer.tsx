@@ -23,7 +23,7 @@ import { useTranslation } from "react-i18next";
 import { Pronunciation, Speaker } from "api/models";
 import { getSpeaker } from "backend";
 import { SpeakerMenuList } from "components/AppBar/SpeakerMenu";
-import { ButtonConfirmation } from "components/Dialogs";
+import ButtonConfirmation from "components/Dialogs/ButtonConfirmation";
 import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import {
   playing,

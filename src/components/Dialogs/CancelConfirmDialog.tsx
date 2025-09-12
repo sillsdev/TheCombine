@@ -9,7 +9,7 @@ import {
 import { type ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { LoadingButton } from "components/Buttons";
+import LoadingButton from "components/Buttons/LoadingButton";
 
 interface CancelConfirmDialogProps {
   open: boolean;

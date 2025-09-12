@@ -5,9 +5,11 @@ api.ts
 api/audio-api.ts
 api/avatar-api.ts
 api/banner-api.ts
+api/email-verify-api.ts
 api/invite-api.ts
 api/lift-api.ts
 api/merge-api.ts
+api/password-reset-api.ts
 api/project-api.ts
 api/semantic-domain-api.ts
 api/speaker-api.ts
@@ -31,7 +33,6 @@ models/definition.ts
 models/edit.ts
 models/email-invite-data.ts
 models/email-invite-status.ts
-models/email-invite.ts
 models/flag.ts
 models/gloss.ts
 models/gram-cat-group.ts
