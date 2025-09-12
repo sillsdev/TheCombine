@@ -95,7 +95,7 @@ namespace BackendFramework.Repositories
             var filterDef = new FilterDefinitionBuilder<Word>();
             var filter = filterDef.Eq(x => x.ProjectId, projectId);
 
-            var deleted = await _wordDatabase.Frontier.DeleteManyAsync(filter);
+            var deleted = await _frontier.DeleteManyAsync(filter);
             return deleted.DeletedCount != 0;
         }
 
