@@ -1,5 +1,11 @@
 import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
-import { FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  FormControl,
+  Grid2,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -42,53 +48,54 @@ export default function CharacterList(): ReactElement {
 
   return (
     <>
-      <Grid item xs={12}>
-        <FormControl variant="standard">
-          <InputLabel htmlFor="sort-order">
-            {t("charInventory.sortBy")}
-          </InputLabel>
-          <Select
-            variant="standard"
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value as SortOrder)}
-            inputProps={{ id: "sort-order" }}
-          >
-            <MenuItem value={SortOrder.CharacterAscending}>
-              {t("charInventory.characters")}
-              <ArrowUpward fontSize="small" />
-            </MenuItem>
-            <MenuItem value={SortOrder.CharacterDescending}>
-              {t("charInventory.characters")}
-              <ArrowDownward fontSize="small" />
-            </MenuItem>
-            <MenuItem value={SortOrder.OccurrencesAscending}>
-              {t("charInventory.occurrences")}
-              <ArrowUpward fontSize="small" />
-            </MenuItem>
-            <MenuItem value={SortOrder.OccurrencesDescending}>
-              {t("charInventory.occurrences")}
-              <ArrowDownward fontSize="small" />
-            </MenuItem>
-            <MenuItem value={SortOrder.Status}>
-              {t("charInventory.status")}
-            </MenuItem>
-          </Select>
-        </FormControl>
-      </Grid>
-      {
-        /* The grid of character tiles */
-        orderedChars.map((character) => (
-          <CharacterCard
-            key={character.character}
-            char={character.character}
-            count={character.occurrences}
-            status={character.status}
-            onClick={() => selectCharacter(character.character)}
-            fontHeight={fontHeight}
-            cardWidth={cardWidth}
-          />
-        ))
-      }
+      <FormControl variant="standard">
+        <InputLabel htmlFor="sort-order">
+          {t("charInventory.sortBy")}
+        </InputLabel>
+        <Select
+          variant="standard"
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value as SortOrder)}
+          inputProps={{ id: "sort-order" }}
+        >
+          <MenuItem value={SortOrder.CharacterAscending}>
+            {t("charInventory.characters")}
+            <ArrowUpward fontSize="small" />
+          </MenuItem>
+          <MenuItem value={SortOrder.CharacterDescending}>
+            {t("charInventory.characters")}
+            <ArrowDownward fontSize="small" />
+          </MenuItem>
+          <MenuItem value={SortOrder.OccurrencesAscending}>
+            {t("charInventory.occurrences")}
+            <ArrowUpward fontSize="small" />
+          </MenuItem>
+          <MenuItem value={SortOrder.OccurrencesDescending}>
+            {t("charInventory.occurrences")}
+            <ArrowDownward fontSize="small" />
+          </MenuItem>
+          <MenuItem value={SortOrder.Status}>
+            {t("charInventory.status")}
+          </MenuItem>
+        </Select>
+      </FormControl>
+
+      <Grid2 container>
+        {
+          /* The grid of character tiles */
+          orderedChars.map((character) => (
+            <CharacterCard
+              key={character.character}
+              char={character.character}
+              count={character.occurrences}
+              status={character.status}
+              onClick={() => selectCharacter(character.character)}
+              fontHeight={fontHeight}
+              cardWidth={cardWidth}
+            />
+          ))
+        }
+      </Grid2>
     </>
   );
 }

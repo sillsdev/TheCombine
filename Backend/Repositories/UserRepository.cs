@@ -12,19 +12,14 @@ namespace BackendFramework.Repositories
 {
     /// <summary> Atomic database functions for <see cref="User"/>s. </summary>
     [ExcludeFromCodeCoverage]
-    public class UserRepository : IUserRepository
+    public class UserRepository(IMongoDbContext dbContext) : IUserRepository
     {
-        private readonly IUserContext _userDatabase;
-
-        public UserRepository(IUserContext collectionSettings)
-        {
-            _userDatabase = collectionSettings;
-        }
+        private readonly IMongoCollection<User> _users = dbContext.Db.GetCollection<User>("UsersCollection");
 
         /// <summary> Finds all <see cref="User"/>s </summary>
         public async Task<List<User>> GetAllUsers()
         {
-            var users = await _userDatabase.Users.Find(_ => true).ToListAsync();
+            var users = await _users.Find(_ => true).ToListAsync();
             users.ForEach(u => u.Sanitize());
             return users;
         }
@@ -42,7 +37,7 @@ namespace BackendFramework.Repositories
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllUsers()
         {
-            var deleted = await _userDatabase.Users.DeleteManyAsync(_ => true);
+            var deleted = await _users.DeleteManyAsync(_ => true);
             return deleted.DeletedCount != 0;
         }
 
@@ -54,7 +49,7 @@ namespace BackendFramework.Repositories
             var filterDef = new FilterDefinitionBuilder<User>();
             var filter = filterDef.Eq(x => x.Id, userId);
 
-            var userList = await _userDatabase.Users.FindAsync(filter);
+            var userList = await _users.FindAsync(filter);
 
             try
             {
@@ -71,6 +66,26 @@ namespace BackendFramework.Repositories
             }
         }
 
+        /// <summary> Finds <see cref="User"/> with specified Email and sets IsEmailVerified to true. </summary>
+        public async Task<ResultOfUpdate> VerifyEmail(string email)
+        {
+            var filter = Builders<User>.Filter.Eq(x => x.Email, email);
+            var updateDef = Builders<User>.Update.Set(x => x.IsEmailVerified, true);
+
+            var updateResult = await _users.UpdateOneAsync(filter, updateDef);
+            if (!updateResult.IsAcknowledged)
+            {
+                return ResultOfUpdate.NotFound;
+            }
+
+            if (updateResult.ModifiedCount > 0)
+            {
+                return ResultOfUpdate.Updated;
+            }
+
+            return ResultOfUpdate.NoChange;
+        }
+
         /// <summary> Finds <see cref="User"/> with specified userId and changes it's password </summary>
         public async Task<ResultOfUpdate> ChangePassword(string userId, string password)
         {
@@ -80,7 +95,7 @@ namespace BackendFramework.Repositories
             var updateDef = Builders<User>.Update
                 .Set(x => x.Password, Convert.ToBase64String(hash));
 
-            var updateResult = await _userDatabase.Users.UpdateOneAsync(filter, updateDef);
+            var updateResult = await _users.UpdateOneAsync(filter, updateDef);
             if (!updateResult.IsAcknowledged)
             {
                 return ResultOfUpdate.NotFound;
@@ -110,7 +125,7 @@ namespace BackendFramework.Repositories
 
             // Replace password with encoded, hashed password.
             user.Password = Convert.ToBase64String(hash);
-            await _userDatabase.Users.InsertOneAsync(user);
+            await _users.InsertOneAsync(user);
             user.Sanitize();
             return user;
         }
@@ -119,7 +134,7 @@ namespace BackendFramework.Repositories
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string userId)
         {
-            var deleted = await _userDatabase.Users.DeleteOneAsync(x => x.Id == userId);
+            var deleted = await _users.DeleteOneAsync(x => x.Id == userId);
             return deleted.DeletedCount > 0;
         }
 
@@ -127,7 +142,7 @@ namespace BackendFramework.Repositories
         /// <returns> A string with the userid, or null if not found </returns>
         public async Task<User?> GetUserByEmail(string email, bool sanitize = true)
         {
-            var user = (await _userDatabase.Users.FindAsync(
+            var user = (await _users.FindAsync(
                 x => x.Email.Equals(email, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
             if (sanitize && user is not null)
             {
@@ -140,7 +155,7 @@ namespace BackendFramework.Repositories
         /// <returns> A string with the userid, or null if not found </returns>
         public async Task<User?> GetUserByEmailOrUsername(string emailOrUsername, bool sanitize = true)
         {
-            var user = (await _userDatabase.Users.FindAsync(u =>
+            var user = (await _users.FindAsync(u =>
                 u.Username.Equals(emailOrUsername, StringComparison.OrdinalIgnoreCase) ||
                 u.Email.Equals(emailOrUsername, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
             if (sanitize && user is not null)
@@ -154,7 +169,7 @@ namespace BackendFramework.Repositories
         /// <returns> A string with the userid, or null if not found </returns>
         public async Task<User?> GetUserByUsername(string username, bool sanitize = true)
         {
-            var user = (await _userDatabase.Users.FindAsync(
+            var user = (await _users.FindAsync(
                 x => x.Username.Equals(username, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
             if (sanitize && user is not null)
             {
@@ -228,15 +243,16 @@ namespace BackendFramework.Repositories
                 updateDef = updateDef.Set(x => x.Token, user.Token);
             }
 
-            // Do not allow updating admin privileges unless explicitly allowed
+            // Do not allow updating admin privileges or validating email unless explicitly allowed
             //     (e.g. admin creation CLI).
-            // This prevents a user from modifying this field and privilege escalating.
+            // This prevents a user from modifying these fields and privilege escalating.
             if (updateIsAdmin)
             {
-                updateDef = updateDef.Set(x => x.IsAdmin, user.IsAdmin);
+                updateDef = updateDef.Set(x => x.IsAdmin, user.IsAdmin)
+                    .Set(x => x.IsEmailVerified, user.IsEmailVerified);
             }
 
-            var updateResult = await _userDatabase.Users.UpdateOneAsync(filter, updateDef);
+            var updateResult = await _users.UpdateOneAsync(filter, updateDef);
             if (!updateResult.IsAcknowledged)
             {
                 return ResultOfUpdate.NotFound;

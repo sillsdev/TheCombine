@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 
 import { type Word } from "api/models";
 import { areInFrontier, getWord, revertWords } from "backend";
-import { UndoButton } from "components/Buttons";
+import UndoButton from "components/Buttons/UndoButton";
 import WordCard from "components/WordCard";
 import CharacterStatusText from "goals/CharacterInventory/CharInv/CharacterList/CharacterStatusText";
 import {
@@ -23,11 +23,14 @@ import {
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 
-export enum CharInvCompletedId {
-  TypographyNoCharChanges = "no-char-changes-typography",
-  TypographyNoWordChanges = "no-word-changes-typography",
-  TypographyWordChanges = "word-changes-typography",
-  TypographyWordsUndo = "words-undo-typography",
+export enum CharInvCompletedTextId {
+  CharChangesMore = "charInventory.changes.more",
+  CharChangesNone = "charInventory.changes.noCharChanges",
+  Title = "charInventory.title",
+  WordChanges = "charInventory.changes.wordChanges",
+  WordChangesNone = "charInventory.changes.noWordChangesFindReplace",
+  WordChangesUndo = "charInventory.undo.undoWords",
+  WordChangesWithString = "charInventory.changes.wordChangesWithStrings",
 }
 
 /** Component to display the full details of changes made during one session of the
@@ -46,16 +49,16 @@ export default function CharInvCompleted(): ReactElement {
     <Stack spacing={1} sx={{ p: 2 }}>
       {/* Title */}
       <Typography component="h1" variant="h4">
-        {t("charInventory.title")}
+        {t(CharInvCompletedTextId.Title)}
       </Typography>
 
       {/* Inventory changes */}
-      <div>
+      <div role="list">
         {changes.charChanges.length ? (
           changes.charChanges.map((c) => <CharChange change={c} key={c[0]} />)
         ) : (
-          <Typography id={CharInvCompletedId.TypographyNoCharChanges}>
-            {t("charInventory.changes.noCharChanges")}
+          <Typography role="listitem">
+            {t(CharInvCompletedTextId.CharChangesNone)}
           </Typography>
         )}
       </div>
@@ -71,9 +74,7 @@ export default function CharInvCompleted(): ReactElement {
       ) : (
         <>
           <Divider />
-          <Typography id={CharInvCompletedId.TypographyNoWordChanges}>
-            {t("charInventory.changes.noWordChangesFindReplace")}
-          </Typography>
+          <Typography>{t(CharInvCompletedTextId.WordChangesNone)}</Typography>
         </>
       )}
     </Stack>
@@ -97,16 +98,14 @@ function WordChangesTypography(props: {
   const wordCount = changes.flatMap((wc) => Object.keys(wc.words)).length;
   const description =
     changes.length === 1
-      ? t("charInventory.changes.wordChangesWithStrings", {
+      ? t(CharInvCompletedTextId.WordChangesWithString, {
           val1: changes[0].find,
           val2: changes[0].replace,
         })
-      : t("charInventory.changes.wordChanges");
+      : t(CharInvCompletedTextId.WordChanges);
 
   return (
-    <Typography id={CharInvCompletedId.TypographyWordChanges}>
-      {`${description} ${wordCount}`}
-    </Typography>
+    <Typography role="listitem">{`${description} ${wordCount}`}</Typography>
   );
 }
 
@@ -121,11 +120,9 @@ export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
 
   const noChanges = !(charChanges?.length || wordChanges?.length);
   return noChanges ? (
-    <Typography id={CharInvCompletedId.TypographyNoCharChanges}>
-      {t("charInventory.changes.noCharChanges")}
-    </Typography>
+    <Typography>{t(CharInvCompletedTextId.CharChangesNone)}</Typography>
   ) : (
-    <Stack alignItems="flex-start">
+    <Stack alignItems="flex-start" role="list">
       <CharChangesRows changeLimit={changeLimit} charChanges={charChanges} />
       <WordChangesTypography wordChanges={wordChanges} />
     </Stack>
@@ -134,7 +131,7 @@ export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
 
 /** Components summarizing changes to status of inventory characters
  * (or null if no status changes). */
-export function CharChangesRows(props: {
+function CharChangesRows(props: {
   changeLimit: number;
   charChanges?: CharacterChange[];
 }): ReactElement | null {
@@ -150,9 +147,9 @@ export function CharChangesRows(props: {
       {charChanges.slice(0, changeLimit - 1).map((c) => (
         <CharChange change={c} key={c[0]} />
       ))}
-      <Typography>
+      <Typography role="listitem">
         {`+${charChanges.length - (changeLimit - 1)} `}
-        {t("charInventory.changes.more")}
+        {t(CharInvCompletedTextId.CharChangesMore)}
       </Typography>
     </>
   ) : (
@@ -167,7 +164,7 @@ export function CharChangesRows(props: {
 /** One-line display of the inventory status change of a character. */
 export function CharChange(props: { change: CharacterChange }): ReactElement {
   return (
-    <div>
+    <div role="listitem">
       <Typography display="inline">{`${props.change[0]}: `}</Typography>
       <CharacterStatusText status={props.change[1]} inline />
       <Typography display="inline" variant="body2">
@@ -189,8 +186,8 @@ function WordChanges(props: {
   const wordLimit = 5;
 
   const undoWordsTypography = inFrontier.length ? (
-    <Typography id={CharInvCompletedId.TypographyWordsUndo}>
-      {t("charInventory.undo.undoWords", {
+    <Typography>
+      {t(CharInvCompletedTextId.WordChangesUndo, {
         val1: inFrontier.length,
         val2: entries.length,
       })}
@@ -212,8 +209,8 @@ function WordChanges(props: {
 
   return (
     <div>
-      <Typography id={CharInvCompletedId.TypographyWordChanges}>
-        {t("charInventory.changes.wordChangesWithStrings", {
+      <Typography>
+        {t(CharInvCompletedTextId.WordChangesWithString, {
           val1: props.wordChanges.find,
           val2: props.wordChanges.replace,
         })}
@@ -225,7 +222,7 @@ function WordChanges(props: {
         {entries.length > wordLimit ? (
           <Typography>
             {`+${entries.length - wordLimit} ${t(
-              "charInventory.changes.more"
+              CharInvCompletedTextId.CharChangesMore
             )}`}
           </Typography>
         ) : null}

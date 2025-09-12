@@ -1,3 +1,4 @@
+using System;
 using Backend.Tests.Mocks;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
@@ -5,7 +6,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Services
 {
-    public class LiftServiceTests
+    internal sealed class LiftServiceTests : IDisposable
     {
         private ISemanticDomainRepository _semDomRepo = null!;
         private ISpeakerRepository _speakerRepo = null!;
@@ -14,6 +15,12 @@ namespace Backend.Tests.Services
         private const string FileName = "file.lift-ranges";
         private const string ExportId = "LiftServiceTestsExportId";
         private const string UserId = "LiftServiceTestsUserId";
+
+        public void Dispose()
+        {
+            _liftService?.Dispose();
+            GC.SuppressFinalize(this);
+        }
 
         [SetUp]
         public void Setup()

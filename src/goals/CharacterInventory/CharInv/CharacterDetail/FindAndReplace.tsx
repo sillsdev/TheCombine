@@ -3,7 +3,7 @@ import { type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { CancelConfirmDialog } from "components/Dialogs";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import { findAndReplace } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
 import { useAppDispatch } from "rootRedux/hooks";
 import { TextFieldWithFont } from "utilities/fontComponents";
@@ -17,6 +17,7 @@ export enum FindAndReplaceId {
 }
 
 interface FindAndReplaceProps {
+  close: () => void;
   initialFindValue: string;
 }
 
@@ -47,6 +48,7 @@ export default function FindAndReplace(
       )
     );
     setWarningDialogOpen(false);
+    props.close();
   };
 
   const dialogText = (

@@ -19,7 +19,6 @@ export function newProject(name = ""): Project {
     analysisWritingSystems: [newWritingSystem()],
     validCharacters: [],
     rejectedCharacters: [],
-    inviteTokens: [],
   };
 }
 

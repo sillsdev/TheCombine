@@ -24,6 +24,7 @@ import router from "router/browserRouter";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
 import { convertEditToGoal, maxNumSteps } from "utilities/goalUtilities";
+import { getDuplicates } from "utilities/utilities";
 
 // Action Creation Functions
 
@@ -206,6 +207,14 @@ export function dispatchStepData(goal: Goal) {
   };
 }
 
+/** Add entry update to the current goal. */
+export function asyncUpdateEntry(oldId: string, newId: string) {
+  return async (dispatch: StoreStateDispatch) => {
+    dispatch(addEntryEditToGoal({ newId, oldId }));
+    await dispatch(asyncUpdateGoal());
+  };
+}
+
 // Helper Functions
 
 export function getUserEditId(): string | undefined {
@@ -252,20 +261,26 @@ async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
 function checkMergeData(goalData: Word[][]): Word[][] {
   return goalData.filter((dups) => {
     const errors: string[] = [];
+    const errPrefix = "Set of potential duplicates has ";
     if (dups.length < 2) {
-      errors.push("Set of duplicates doesn't have at least 2 words!");
+      errors.push(`${errPrefix}fewer than 2 words!`);
     }
     const wordGuids = dups.map((w) => w.guid);
     if (new Set(wordGuids).size < wordGuids.length) {
-      errors.push("Set of duplicates has multiple words with the same guid!");
+      const guids = getDuplicates(wordGuids).join(", ");
+      errors.push(`${errPrefix}multiple words with the same guid: ${guids}`);
     }
-    if (dups.some((w) => !w.senses.length)) {
-      errors.push("Set of duplicates has a word with no senses!");
+    const senselessWords = dups.filter((w) => !w.senses.length);
+    if (senselessWords.length) {
+      const senselessGuids = senselessWords.map((w) => w.guid).join(", ");
+      errors.push(`${errPrefix}word(s) with no senses: ${senselessGuids}`);
     }
     const senseGuids = dups.flatMap((w) => w.senses.map((s) => s.guid));
     if (new Set(senseGuids).size < senseGuids.length) {
-      errors.push("Set of duplicates has multiple senses with the same guid!");
+      const guids = getDuplicates(senseGuids).join(", ");
+      errors.push(`${errPrefix}multiple senses with the same guid: ${guids}`);
     }
+
     if (errors.length) {
       if (dups.length > 1) {
         Backend.blacklistAdd(dups.map((w) => w.id));
@@ -277,6 +292,7 @@ function checkMergeData(goalData: Word[][]): Word[][] {
       console.error(dups);
       return false; // Skip bad merge set.
     }
+
     return true; // Include good merge set.
   });
 }

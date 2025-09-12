@@ -3,7 +3,6 @@ import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
 import { GramCatGroup, type Sense } from "api/models";
-import MockBypassPartOfSpeechButton from "components/Buttons/PartOfSpeechButton";
 import { defaultState } from "components/Project/ProjectReduxTypes";
 import { domainLabel } from "components/WordCard/DomainChip";
 import SenseCard, { partOfSpeechButtonId } from "components/WordCard/SenseCard";
@@ -11,10 +10,6 @@ import { type StoreState } from "rootRedux/types";
 import { Hash } from "types/hash";
 import { newSemanticDomain } from "types/semanticDomain";
 import { newSense } from "types/word";
-
-jest.mock("components/Buttons", () => ({
-  PartOfSpeechButton: MockBypassPartOfSpeechButton,
-}));
 
 const mockSemDomNames: Hash<string> = { ["1"]: "I", ["2"]: "II" };
 const mockState = (): Partial<StoreState> => ({

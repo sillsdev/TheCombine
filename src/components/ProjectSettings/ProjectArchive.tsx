@@ -4,7 +4,7 @@ import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { archiveProject, restoreProject } from "backend";
-import { ButtonConfirmation } from "components/Dialogs";
+import ButtonConfirmation from "components/Dialogs/ButtonConfirmation";
 import { themeColors } from "types/theme";
 
 interface ProjectArchiveProps extends ButtonProps {

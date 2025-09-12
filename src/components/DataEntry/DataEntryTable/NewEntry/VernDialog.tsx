@@ -1,7 +1,7 @@
 import {
   Dialog,
   DialogContent,
-  Grid,
+  Grid2,
   ListItemText,
   MenuList,
   Typography,
@@ -16,7 +16,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, type Word } from "api/models";
-import { CloseButton } from "components/Buttons";
+import CloseButton from "components/Buttons/CloseButton";
 import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
 import SensesTextSummary from "components/WordCard/SensesTextSummary";
 import DomainsCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/DomainsCell";
@@ -117,7 +117,7 @@ export function VernList(props: VernListProps): ReactElement {
       <StyledMenuItem
         key={sense?.guid ?? word.id}
         onClick={() => props.onSelect(word.id, sense?.guid)}
-        sx={isSense ? { marginInlineStart: theme.spacing(4) } : conditionalGrey}
+        sx={isSense ? { marginInlineStart: 4 } : conditionalGrey}
       >
         <DialogListItemText
           isSubitem={isSense}
@@ -163,7 +163,7 @@ export function VernList(props: VernListProps): ReactElement {
         <StyledMenuItem
           key={`${word.id}-new-sense`}
           onClick={() => props.onSelect(word.id, "")}
-          sx={{ marginInlineStart: theme.spacing(4) }}
+          sx={{ marginInlineStart: 4 }}
         >
           <DialogListItemText isSubitem text={t("addWords.newSense")} />
         </StyledMenuItem>
@@ -214,51 +214,38 @@ interface DialogListItemTextProps {
 const DialogListItemText = (props: DialogListItemTextProps): ReactElement => {
   return (
     <ListItemText>
-      <Grid
+      <Grid2
         alignItems="center"
         columnSpacing={4}
         container
         justifyContent="align-start"
         rowSpacing={1}
       >
-        <Grid item xs="auto">
-          <Typography variant={props.isSubitem ? "h6" : "h5"}>
-            {props.text}
-          </Typography>
-        </Grid>
+        <Typography variant={props.isSubitem ? "h6" : "h5"}>
+          {props.text}
+        </Typography>
+
         {!!props.word && (
           <>
             {props.showGlosses && (
-              <Grid item xs="auto">
-                <SensesTextSummary
-                  definitionsOrGlosses="glosses"
-                  maxLengthPerSense={20}
-                  senses={props.word.senses}
-                />
-              </Grid>
+              <SensesTextSummary
+                definitionsOrGlosses="glosses"
+                maxLengthPerSense={20}
+                senses={props.word.senses}
+              />
             )}
             {props.showDefinitions && (
-              <Grid item xs="auto">
-                <SensesTextSummary
-                  definitionsOrGlosses="definitions"
-                  maxLengthPerSense={50}
-                  senses={props.word.senses}
-                />
-              </Grid>
+              <SensesTextSummary
+                definitionsOrGlosses="definitions"
+                maxLengthPerSense={50}
+                senses={props.word.senses}
+              />
             )}
-            {props.showPartOfSpeech && (
-              <Grid item xs="auto">
-                <PartOfSpeechCell word={props.word} />
-              </Grid>
-            )}
-            {props.showDomain && (
-              <Grid item xs>
-                <DomainsCell word={props.word} />
-              </Grid>
-            )}
+            {props.showPartOfSpeech && <PartOfSpeechCell word={props.word} />}
+            {props.showDomain && <DomainsCell word={props.word} />}
           </>
         )}
-      </Grid>
+      </Grid2>
     </ListItemText>
   );
 };

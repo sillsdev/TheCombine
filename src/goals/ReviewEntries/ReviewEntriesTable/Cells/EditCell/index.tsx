@@ -1,7 +1,7 @@
 import { Edit } from "@mui/icons-material";
 import { type ReactElement, useState } from "react";
 
-import { IconButtonWithTooltip } from "components/Buttons";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import { type CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 import EditDialog from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditDialog";
 

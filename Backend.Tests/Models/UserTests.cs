@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Models
 {
-    public class UserTests
+    internal sealed class UserTests
     {
         [Test]
         public void TestClone()
@@ -42,7 +42,7 @@ namespace Backend.Tests.Models
         }
     }
 
-    public class CredentialsTests
+    internal sealed class CredentialsTests
     {
         [Test]
         public void TestConstructor()

@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Services
 {
-    public class MergeServiceTests
+    internal sealed class MergeServiceTests
     {
         private IMergeBlacklistRepository _mergeBlacklistRepo = null!;
         private IMergeGraylistRepository _mergeGraylistRepo = null!;

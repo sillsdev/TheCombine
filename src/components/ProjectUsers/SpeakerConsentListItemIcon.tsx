@@ -10,12 +10,10 @@ import {
   removeConsent,
   uploadConsent,
 } from "backend";
-import { IconButtonWithTooltip } from "components/Buttons";
-import {
-  RecordAudioDialog,
-  UploadImageDialog,
-  ViewImageDialog,
-} from "components/Dialogs";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import RecordAudioDialog from "components/Dialogs/RecordAudioDialog";
+import UploadImageDialog from "components/Dialogs/UploadImageDialog";
+import ViewImageDialog from "components/Dialogs/ViewImageDialog";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import { newPronunciation } from "types/word";
 

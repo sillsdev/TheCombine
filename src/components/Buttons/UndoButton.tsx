@@ -1,8 +1,8 @@
-import { Button, Grid } from "@mui/material";
+import { Button } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { CancelConfirmDialog } from "components/Dialogs";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 
 interface UndoButtonProps {
   buttonIdEnabled?: string;
@@ -30,35 +30,27 @@ export default function UndoButton(props: UndoButtonProps): ReactElement {
     }
   }, [isUndoAllowed, undoDialogOpen]);
 
-  return (
-    <Grid container direction="column" justifyContent="center">
-      {isUndoEnabled ? (
-        <div>
-          <Button
-            aria-label={props.buttonLabelEnabled ?? "Undo"}
-            data-testid={props.buttonIdEnabled}
-            id={props.buttonIdEnabled}
-            onClick={() => setUndoDialogOpen(true)}
-            variant="outlined"
-          >
-            {t(props.textIdEnabled)}
-          </Button>
-          <CancelConfirmDialog
-            open={undoDialogOpen}
-            text={props.textIdDialog}
-            handleCancel={() => setUndoDialogOpen(false)}
-            handleConfirm={() =>
-              props.undo().then(() => setUndoDialogOpen(false))
-            }
-            buttonIdCancel={props.buttonIdCancel}
-            buttonIdConfirm={props.buttonIdConfirm}
-          />
-        </div>
-      ) : (
-        <div>
-          <Button disabled>{t(props.textIdDisabled)}</Button>
-        </div>
-      )}
-    </Grid>
+  return isUndoEnabled ? (
+    <>
+      <Button
+        aria-label={props.buttonLabelEnabled ?? "Undo"}
+        data-testid={props.buttonIdEnabled}
+        id={props.buttonIdEnabled}
+        onClick={() => setUndoDialogOpen(true)}
+        variant="outlined"
+      >
+        {t(props.textIdEnabled)}
+      </Button>
+      <CancelConfirmDialog
+        open={undoDialogOpen}
+        text={props.textIdDialog}
+        handleCancel={() => setUndoDialogOpen(false)}
+        handleConfirm={() => props.undo().then(() => setUndoDialogOpen(false))}
+        buttonIdCancel={props.buttonIdCancel}
+        buttonIdConfirm={props.buttonIdConfirm}
+      />
+    </>
+  ) : (
+    <Button disabled>{t(props.textIdDisabled)}</Button>
   );
 }

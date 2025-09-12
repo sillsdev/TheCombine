@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { act, cleanup } from "@testing-library/react";
+import { act } from "@testing-library/react";
 
 import { Edit, MergeUndoIds, User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
@@ -34,12 +34,12 @@ import * as goalUtilities from "utilities/goalUtilities";
 
 jest.mock("backend", () => ({
   addGoalToUserEdit: (...args: any[]) => mockAddGoalToUserEdit(...args),
-  addStepToGoal: () => jest.fn(),
+  addStepToGoal: jest.fn(),
   createUserEdit: () => mockCreateUserEdit(),
-  findDuplicates: () => jest.fn(),
+  findDuplicates: jest.fn(),
   getGraylistEntries: () => Promise.resolve([]),
   getUserEditById: (...args: any[]) => mockGetUserEditById(...args),
-  hasGraylistEntries: () => jest.fn(),
+  hasGraylistEntries: jest.fn(),
   retrieveDuplicates: () => mockRetrieveDuplicates(),
 }));
 jest.mock("router/browserRouter", () => ({
@@ -99,8 +99,6 @@ beforeEach(() => {
   setMockFunctions();
   setupLocalStorage();
 });
-
-afterEach(cleanup);
 
 describe("setCurrentGoal", () => {
   it("calls setCurrentGoal() with no arguments", async () => {
