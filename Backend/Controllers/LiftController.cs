@@ -82,6 +82,37 @@ namespace BackendFramework.Controllers
             return Ok(Language.GetWritingSystems(extractedLiftRootPath));
         }
 
+        /// <summary> Replace all words with data from a directory containing a .lift file </summary>
+        /// <returns> Number of words added </returns>
+        [HttpPost("deletefrontierandfinishupload", Name = "DeleteFrontierAndFinishUploadLiftFile")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
+        public async Task<IActionResult> DeleteFrontierAndFinishUploadLiftFile(string projectId)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import, projectId))
+            {
+                return Forbid();
+            }
+            var userId = _permissionService.GetUserId(HttpContext);
+
+            // Sanitize projectId
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+
+            // Delete all frontier words and load the LIFT data
+            await _wordRepo.DeleteAllFrontierWords(projectId);
+            return await FinishUploadLiftFile(projectId, userId, true);
+        }
+
         /// <summary> Adds data from a directory containing a .lift file </summary>
         /// <returns> Number of words added </returns>
         [HttpPost("finishupload", Name = "FinishUploadLiftFile")]
@@ -100,7 +131,7 @@ namespace BackendFramework.Controllers
             return await FinishUploadLiftFile(projectId, userId);
         }
 
-        internal async Task<IActionResult> FinishUploadLiftFile(string projectId, string userId)
+        internal async Task<IActionResult> FinishUploadLiftFile(string projectId, string userId, bool allowReupload = false)
         {
             // Sanitize projectId
             try
@@ -113,7 +144,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure LIFT file has not already been imported.
-            if (!await _projRepo.CanImportLift(projectId))
+            if (!allowReupload && !await _projRepo.CanImportLift(projectId))
             {
                 return BadRequest("A LIFT file has already been uploaded into this project.");
             }
@@ -252,6 +283,12 @@ namespace BackendFramework.Controllers
             {
                 _logger.LogError(e, "Error importing LIFT file into project {ProjectId}.", projectId);
                 return BadRequest("Error processing the LIFT data. Contact support for help.");
+            }
+
+            // Don't update project if no words were imported in the project's vernacular language.
+            if (countWordsImported == 0)
+            {
+                return Ok(0);
             }
 
             var project = await _projRepo.GetProject(projectId);
@@ -445,32 +482,6 @@ namespace BackendFramework.Controllers
 
             _liftService.DeleteExport(userId);
             return Ok(userId);
-        }
-
-        /// <summary> Check if LIFT import has already happened for this project </summary>
-        /// <returns> A bool </returns>
-        [HttpGet("check", Name = "CanUploadLift")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
-        public async Task<IActionResult> CanUploadLift(string projectId)
-        {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import, projectId))
-            {
-                return Forbid();
-            }
-
-            // Sanitize user input
-            try
-            {
-                projectId = Sanitization.SanitizeId(projectId);
-            }
-            catch
-            {
-                return new UnsupportedMediaTypeResult();
-            }
-
-            return Ok(await _projRepo.CanImportLift(projectId));
         }
     }
 }

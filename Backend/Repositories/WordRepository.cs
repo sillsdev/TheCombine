@@ -86,6 +86,19 @@ namespace BackendFramework.Repositories
             return deleted.DeletedCount != 0;
         }
 
+        /// <summary> Removes all <see cref="Word"/>s from the Frontier for specified <see cref="Project"/> </summary>
+        /// <returns> A bool: success of operation </returns>
+        public async Task<bool> DeleteAllFrontierWords(string projectId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting all words from Frontier");
+
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.Eq(x => x.ProjectId, projectId);
+
+            var deleted = await _frontier.DeleteManyAsync(filter);
+            return deleted.DeletedCount != 0;
+        }
+
         /// <summary>
         /// If the <see cref="Word"/> Created or Modified times are blank, fill them in the current time.
         /// </summary>
