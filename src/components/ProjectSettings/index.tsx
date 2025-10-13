@@ -54,7 +54,7 @@ import ProjectLanguages, {
   SemanticDomainLanguage,
 } from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
-import ProjectProtectedOverride from "components/ProjectSettings/ProjectProtectedOverride";
+import ProjectProtectedData from "components/ProjectSettings/ProjectProtectedData";
 import ProjectSchedule from "components/ProjectSettings/ProjectSchedule";
 import ProjectSelect from "components/ProjectSettings/ProjectSelect";
 import ActiveProjectUsers from "components/ProjectUsers/ActiveProjectUsers";
@@ -175,13 +175,13 @@ export default function ProjectSettingsComponent(): ReactElement {
             />
           )}
 
-          {/* Protected data override toggle */}
+          {/* Protected data management */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <BaseSettings
               icon={<RemoveModerator data-testid={Setting.ProtectOverride} />}
-              title={t("projectSettings.protectedDataOverride.label")}
+              title={t("projectSettings.protectedData.label")}
               body={
-                <ProjectProtectedOverride
+                <ProjectProtectedData
                   project={project}
                   setProject={updateProject}
                 />

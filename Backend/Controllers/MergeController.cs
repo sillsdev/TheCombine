@@ -114,10 +114,12 @@ namespace BackendFramework.Controllers
         /// <param name="projectId"> Id of project in which to search the frontier for potential duplicates. </param>
         /// <param name="maxInList"> Max number of words allowed within a list of potential duplicates. </param>
         /// <param name="maxLists"> Max number of lists of potential duplicates. </param>
-        [HttpGet("finddups/{maxInList:int}/{maxLists:int}", Name = "FindPotentialDuplicates")]
+        /// <param name="ignoreProtected"> Whether to require each set to have at least one unprotected word. </param>
+        [HttpGet("finddups/{maxInList:int}/{maxLists:int}/{ignoreProtected:bool}", Name = "FindPotentialDuplicates")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> FindPotentialDuplicates(string projectId, int maxInList, int maxLists)
+        public async Task<IActionResult> FindPotentialDuplicates(
+            string projectId, int maxInList, int maxLists, bool ignoreProtected)
         {
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.MergeAndReviewEntries, projectId))
@@ -132,14 +134,16 @@ namespace BackendFramework.Controllers
             // Run the task without waiting for completion.
             // This Task will be scheduled within the existing Async executor thread pool efficiently.
             // See: https://stackoverflow.com/a/64614779/1398841
-            _ = Task.Run(() => GetDuplicatesThenSignal(projectId, maxInList, maxLists, userId));
+            _ = Task.Run(() => GetDuplicatesThenSignal(projectId, maxInList, maxLists, userId, ignoreProtected));
 
             return Ok();
         }
 
-        internal async Task<bool> GetDuplicatesThenSignal(string projectId, int maxInList, int maxLists, string userId)
+        internal async Task<bool> GetDuplicatesThenSignal(
+            string projectId, int maxInList, int maxLists, string userId, bool ignoreProtected = false)
         {
-            var success = await _mergeService.GetAndStorePotentialDuplicates(projectId, maxInList, maxLists, userId);
+            var success = await _mergeService.GetAndStorePotentialDuplicates(
+                projectId, maxInList, maxLists, userId, ignoreProtected);
             if (success)
             {
                 await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId);
