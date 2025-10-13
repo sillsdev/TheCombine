@@ -62,11 +62,18 @@ entry, rather than creating a (mostly) duplicate to something previously entered
 (This does not affect spelling suggestions for the gloss, since those suggestions are based on a dictionary independent
 of existing project data.)
 
-#### Protected Data Override
+#### Protected Data Management
 
-The default setting is Off. Change this to On to allow project users in Merge Duplicates to override the
-[protection](goals.md#protected-entries-and-senses) of words and senses that were imported with data not handled by The
-Combine.
+This section has two Off/On setting toggles related to the [protection](goals.md#protected-entries-and-senses) of words
+and senses that were imported with data not handled by The Combine. Both settings are off by default.
+
+Turn on "Avoid protected sets in Merge Duplicates" to make the Merge Duplicates tool only show sets of potential
+duplicates with at least one word that isn't protected. This will avoid sets of mature entries imported from FieldWorks
+and promote merging entries collected in The Combine.
+
+Turn on "Allow data protection override in Merge Duplicates" to allow project users in Merge Duplicates to manually
+override protection of words and senses. If anybody tries to merge or delete a protected entry or senses, The Combine
+warns them of the fields that will be lost.
 
 #### Archive Project
 
