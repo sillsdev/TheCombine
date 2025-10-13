@@ -379,14 +379,14 @@ namespace BackendFramework.Services
         /// </summary>
         /// <returns> bool: true if successful or false if a newer request has begun. </returns>
         public async Task<bool> GetAndStorePotentialDuplicates(
-            string projectId, int maxInList, int maxLists, string userId)
+            string projectId, int maxInList, int maxLists, string userId, bool ignoreProtected = false)
         {
             var counter = Interlocked.Increment(ref _mergeCounter);
             if (StoreDups(userId, counter, null) != counter)
             {
                 return false;
             }
-            var dups = await GetPotentialDuplicates(projectId, maxInList, maxLists, userId);
+            var dups = await GetPotentialDuplicates(projectId, maxInList, maxLists, userId, ignoreProtected);
             // Store the potential duplicates for user to retrieve later.
             return StoreDups(userId, counter, dups) == counter;
         }
@@ -395,7 +395,7 @@ namespace BackendFramework.Services
         /// Get Lists of potential duplicate <see cref="Word"/>s in specified <see cref="Project"/>'s frontier.
         /// </summary>
         private async Task<List<List<Word>>> GetPotentialDuplicates(
-            string projectId, int maxInList, int maxLists, string? userId = null)
+            string projectId, int maxInList, int maxLists, string? userId = null, bool ignoreProtected = false)
         {
             var dupFinder = new DuplicateFinder(maxInList, maxLists, 2);
 
@@ -405,13 +405,13 @@ namespace BackendFramework.Services
                 (await IsInMergeGraylist(projectId, wordIds, userId));
 
             // First pass, only look for words with identical vernacular.
-            var wordLists = await dupFinder.GetIdenticalVernWords(collection, isUnavailableSet);
+            var wordLists = await dupFinder.GetIdenticalVernWords(collection, isUnavailableSet, ignoreProtected);
 
             // If no such sets found, look for similar words.
             if (wordLists.Count == 0)
             {
                 collection = await _wordRepo.GetFrontier(projectId);
-                wordLists = await dupFinder.GetSimilarWords(collection, isUnavailableSet);
+                wordLists = await dupFinder.GetSimilarWords(collection, isUnavailableSet, ignoreProtected);
             }
 
             return wordLists;
