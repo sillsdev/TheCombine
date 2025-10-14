@@ -52,13 +52,13 @@ export const LiftApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    canUploadLift: async (
+    cancelLiftExport: async (
       projectId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("canUploadLift", "projectId", projectId);
-      const localVarPath = `/v1/projects/{projectId}/lift/check`.replace(
+      assertParamExists("cancelLiftExport", "projectId", projectId);
+      const localVarPath = `/v1/projects/{projectId}/lift/cancelexport`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
       );
@@ -97,16 +97,21 @@ export const LiftApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    cancelLiftExport: async (
+    deleteFrontierAndFinishUploadLiftFile: async (
       projectId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("cancelLiftExport", "projectId", projectId);
-      const localVarPath = `/v1/projects/{projectId}/lift/cancelexport`.replace(
-        `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
+      assertParamExists(
+        "deleteFrontierAndFinishUploadLiftFile",
+        "projectId",
+        projectId
       );
+      const localVarPath =
+        `/v1/projects/{projectId}/lift/deletefrontierandfinishupload`.replace(
+          `{${"projectId"}}`,
+          encodeURIComponent(String(projectId))
+        );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -115,7 +120,7 @@ export const LiftApiAxiosParamCreator = function (
       }
 
       const localVarRequestOptions = {
-        method: "GET",
+        method: "POST",
         ...baseOptions,
         ...options,
       };
@@ -451,16 +456,14 @@ export const LiftApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async canUploadLift(
+    async cancelLiftExport(
       projectId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.canUploadLift(
-        projectId,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.cancelLiftExport(projectId, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -474,14 +477,17 @@ export const LiftApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async cancelLiftExport(
+    async deleteFrontierAndFinishUploadLiftFile(
       projectId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.cancelLiftExport(projectId, options);
+        await localVarAxiosParamCreator.deleteFrontierAndFinishUploadLiftFile(
+          projectId,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -656,9 +662,9 @@ export const LiftApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    canUploadLift(projectId: string, options?: any): AxiosPromise<boolean> {
+    cancelLiftExport(projectId: string, options?: any): AxiosPromise<boolean> {
       return localVarFp
-        .canUploadLift(projectId, options)
+        .cancelLiftExport(projectId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -667,9 +673,12 @@ export const LiftApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    cancelLiftExport(projectId: string, options?: any): AxiosPromise<boolean> {
+    deleteFrontierAndFinishUploadLiftFile(
+      projectId: string,
+      options?: any
+    ): AxiosPromise<number> {
       return localVarFp
-        .cancelLiftExport(projectId, options)
+        .deleteFrontierAndFinishUploadLiftFile(projectId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -755,20 +764,6 @@ export const LiftApiFactory = function (
 };
 
 /**
- * Request parameters for canUploadLift operation in LiftApi.
- * @export
- * @interface LiftApiCanUploadLiftRequest
- */
-export interface LiftApiCanUploadLiftRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof LiftApiCanUploadLift
-   */
-  readonly projectId: string;
-}
-
-/**
  * Request parameters for cancelLiftExport operation in LiftApi.
  * @export
  * @interface LiftApiCancelLiftExportRequest
@@ -778,6 +773,20 @@ export interface LiftApiCancelLiftExportRequest {
    *
    * @type {string}
    * @memberof LiftApiCancelLiftExport
+   */
+  readonly projectId: string;
+}
+
+/**
+ * Request parameters for deleteFrontierAndFinishUploadLiftFile operation in LiftApi.
+ * @export
+ * @interface LiftApiDeleteFrontierAndFinishUploadLiftFileRequest
+ */
+export interface LiftApiDeleteFrontierAndFinishUploadLiftFileRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof LiftApiDeleteFrontierAndFinishUploadLiftFile
    */
   readonly projectId: string;
 }
@@ -889,22 +898,6 @@ export interface LiftApiUploadLiftFileAndGetWritingSystemsRequest {
 export class LiftApi extends BaseAPI {
   /**
    *
-   * @param {LiftApiCanUploadLiftRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof LiftApi
-   */
-  public canUploadLift(
-    requestParameters: LiftApiCanUploadLiftRequest,
-    options?: any
-  ) {
-    return LiftApiFp(this.configuration)
-      .canUploadLift(requestParameters.projectId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
    * @param {LiftApiCancelLiftExportRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -916,6 +909,25 @@ export class LiftApi extends BaseAPI {
   ) {
     return LiftApiFp(this.configuration)
       .cancelLiftExport(requestParameters.projectId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {LiftApiDeleteFrontierAndFinishUploadLiftFileRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof LiftApi
+   */
+  public deleteFrontierAndFinishUploadLiftFile(
+    requestParameters: LiftApiDeleteFrontierAndFinishUploadLiftFileRequest,
+    options?: any
+  ) {
+    return LiftApiFp(this.configuration)
+      .deleteFrontierAndFinishUploadLiftFile(
+        requestParameters.projectId,
+        options
+      )
       .then((request) => request(this.axios, this.basePath));
   }
 

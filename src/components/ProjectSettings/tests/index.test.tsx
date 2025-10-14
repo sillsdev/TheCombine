@@ -25,7 +25,6 @@ import { setMatchMedia } from "utilities/testingLibraryUtilities";
 jest.mock("react-router", () => ({ useNavigate: jest.fn() }));
 
 jest.mock("backend", () => ({
-  canUploadLift: () => Promise.resolve(false),
   getAllActiveProjects: () => Promise.resolve([]),
   getAllSpeakers: () => Promise.resolve([]),
   getAllUsers: () => Promise.resolve([]),
