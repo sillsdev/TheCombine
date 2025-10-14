@@ -20,8 +20,6 @@ export interface TreeSearchProps {
   animate: (domain: SemanticDomainTreeNode) => Promise<void>;
 }
 
-export const testId = "testSearch";
-
 export default function TreeSearch(props: TreeSearchProps): ReactElement {
   const { t } = useTranslation();
   const { input, handleChange, searchAndSelectDomain, searchError, setInput } =
@@ -42,7 +40,6 @@ export default function TreeSearch(props: TreeSearchProps): ReactElement {
 
   return (
     <NormalizedTextField
-      InputLabelProps={{ shrink: true }}
       id="domain-tree-search-field"
       label={t("treeView.findDomain")}
       onKeyDown={stopPropagation}
@@ -50,7 +47,7 @@ export default function TreeSearch(props: TreeSearchProps): ReactElement {
       onKeyUp={handleOnKeyUp}
       margin="normal"
       autoComplete="off"
-      inputProps={{ "data-testid": testId, maxLength: 99 }}
+      slotProps={{ htmlInput: { maxLength: 99 }, inputLabel: { shrink: true } }}
       value={input}
       error={searchError}
       helperText={searchError ? t("treeView.domainNotFound") : undefined}

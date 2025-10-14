@@ -373,14 +373,11 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
         <DialogContent>
           <Stack spacing={3}>
             {/* Vernacular */}
-            <Card sx={bgStyle(EditField.Vernacular)}>
+            <Card role="region" sx={bgStyle(EditField.Vernacular)}>
               <CardHeader title={t(EditDialogTextId.CardVernacular)} />
               <CardContent>
                 <TextFieldWithFont
                   id={EditDialogId.TextFieldVernacular}
-                  inputProps={{
-                    "data-testid": EditDialogId.TextFieldVernacular,
-                  }}
                   label={vernLang}
                   onChange={(e) =>
                     setNewWord((prev) => ({
@@ -395,7 +392,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
             </Card>
 
             {/* Senses */}
-            <Card sx={bgStyle(EditField.Senses)}>
+            <Card role="region" sx={bgStyle(EditField.Senses)}>
               <CardHeader
                 action={
                   newWord.senses.length > 1 && (
@@ -425,7 +422,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
             </Card>
 
             {/* Pronunciations */}
-            <Card sx={bgStyle(EditField.Pronunciations)}>
+            <Card role="region" sx={bgStyle(EditField.Pronunciations)}>
               <CardHeader title={t(EditDialogTextId.CardPronunciations)} />
               <CardContent>
                 <PronunciationsFrontend
@@ -448,7 +445,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
             </Card>
 
             {/* Note */}
-            <Card sx={bgStyle(EditField.Note)}>
+            <Card role="region" sx={bgStyle(EditField.Note)}>
               <CardHeader
                 action={noteLangSelect}
                 title={t(EditDialogTextId.CardNote)}
@@ -458,7 +455,6 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
                   analysis
                   fullWidth
                   id={EditDialogId.TextFieldNote}
-                  inputProps={{ "data-testid": EditDialogId.TextFieldNote }}
                   lang={newWord.note.language}
                   multiline
                   onChange={(e) => updateNoteText(e.target.value)}
@@ -468,7 +464,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
             </Card>
 
             {/* Flag */}
-            <Card sx={bgStyle(EditField.Flag)}>
+            <Card role="region" sx={bgStyle(EditField.Flag)}>
               <CardHeader title={t(EditDialogTextId.CardFlag)} />
               <CardContent>
                 <IconButton onClick={toggleFlag}>
@@ -480,7 +476,6 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
                 </IconButton>
                 <NormalizedTextField
                   id={EditDialogId.TextFieldFlag}
-                  inputProps={{ "data-testid": EditDialogId.TextFieldFlag }}
                   onChange={(e) => updateFlag(e.target.value)}
                   value={newWord.flag.active ? newWord.flag.text : ""}
                 />

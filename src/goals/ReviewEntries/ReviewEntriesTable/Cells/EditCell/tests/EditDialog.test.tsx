@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
@@ -7,6 +7,7 @@ import { type Word } from "api/models";
 import { type CurrentProjectState } from "components/Project/ProjectReduxTypes";
 import EditDialog, {
   EditDialogId,
+  EditDialogTextId,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditDialog";
 import { newProject } from "types/project";
 import { newSense, newWord } from "types/word";
@@ -61,6 +62,13 @@ const renderEditDialog = async (): Promise<void> =>
     );
   });
 
+const getRegionField = (titleId: EditDialogTextId): HTMLElement => {
+  const region = screen
+    .getByText(titleId)
+    .closest('[role="region"]') as HTMLElement;
+  return within(region).getByRole("textbox");
+};
+
 beforeEach(async () => {
   jest.clearAllMocks();
   mockUpdateWord.mockImplementation((w: Word) =>
@@ -83,7 +91,7 @@ describe("EditDialog", () => {
 
     test("cancel button opens dialog if changes", async () => {
       // Make a change
-      const noteField = screen.getByTestId(EditDialogId.TextFieldNote);
+      const noteField = getRegionField(EditDialogTextId.CardNote);
       await userEvent.type(noteField, "New note!");
 
       // Click the cancel button and cancel the cancel
@@ -121,7 +129,7 @@ describe("EditDialog", () => {
 
     test("save button saves changes and closes", async () => {
       // Make a change
-      const flagField = screen.getByTestId(EditDialogId.TextFieldFlag);
+      const flagField = getRegionField(EditDialogTextId.CardFlag);
       const newFlagText = "New flag!";
       await userEvent.type(flagField, newFlagText);
 

@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 
 import MockCaptcha from "components/Login/tests/MockCaptcha";
 import ResetRequest, {
-  PasswordRequestIds,
+  ResetRequestTextId,
 } from "components/PasswordReset/Request";
 
 jest.mock("react-router", () => ({
@@ -40,14 +40,13 @@ describe("ResetRequest", () => {
     await renderUserSettings();
 
     // Before
-    const login = screen.getByTestId(PasswordRequestIds.ButtonLogin);
-    const submit = screen.getByTestId(PasswordRequestIds.ButtonSubmit);
+    const login = screen.getByText(ResetRequestTextId.ButtonLogin);
+    const submit = screen.getByText(ResetRequestTextId.ButtonSubmit);
     expect(login).toBeEnabled();
     expect(submit).toBeDisabled();
 
     // Agent
-    const field = screen.getByTestId(PasswordRequestIds.FieldEmailOrUsername);
-    await agent.type(field, "a");
+    await agent.type(screen.getByRole("textbox"), "a");
 
     // After
     expect(login).toBeEnabled();
@@ -60,22 +59,17 @@ describe("ResetRequest", () => {
     await renderUserSettings();
 
     // Before
-    expect(
-      screen.queryByTestId(PasswordRequestIds.FieldEmailOrUsername)
-    ).toBeTruthy();
-    expect(screen.queryByTestId(PasswordRequestIds.ButtonLogin)).toBeTruthy();
-    expect(screen.queryByTestId(PasswordRequestIds.ButtonSubmit)).toBeTruthy();
+    expect(screen.queryByText(ResetRequestTextId.ButtonLogin)).toBeTruthy();
+    const submit = screen.getByText(ResetRequestTextId.ButtonSubmit);
+    expect(submit).toBeTruthy();
 
     // Agent
-    const field = screen.getByTestId(PasswordRequestIds.FieldEmailOrUsername);
-    await agent.type(field, "a");
-    await agent.click(screen.getByTestId(PasswordRequestIds.ButtonSubmit));
+    await agent.type(screen.getByRole("textbox"), "a");
+    await agent.click(submit);
 
     // After
-    expect(
-      screen.queryByTestId(PasswordRequestIds.FieldEmailOrUsername)
-    ).toBeNull();
-    expect(screen.queryByTestId(PasswordRequestIds.ButtonLogin)).toBeTruthy();
-    expect(screen.queryByTestId(PasswordRequestIds.ButtonSubmit)).toBeNull();
+    expect(screen.queryByRole("textbox")).toBeNull();
+    expect(screen.queryByText(ResetRequestTextId.ButtonLogin)).toBeTruthy();
+    expect(screen.queryByText(ResetRequestTextId.ButtonSubmit)).toBeNull();
   });
 });

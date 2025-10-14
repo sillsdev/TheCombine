@@ -90,8 +90,7 @@ export default function SubmitTextDialog(
           value={text}
           onChange={(event) => setText(event.target.value)}
           onKeyPress={confirmIfEnter}
-          InputProps={{ endAdornment }}
-          inputProps={{ "data-testid": props.textFieldId }}
+          slotProps={{ input: { endAdornment } }}
           id={props.textFieldId}
         />
       </DialogContent>

@@ -21,11 +21,17 @@ enum UploadState {
   Done,
 }
 
-export enum ProjectImportIds {
-  ButtonDialogCancel = "project-import-dialog-cancel-button",
-  ButtonDialogConfirm = "project-import-dialog-confirm-button",
-  ButtonFileSelect = "project-import-file-select-button",
-  ButtonFileSubmit = "project-import-file-submit-button",
+export enum ProjectImportTextId {
+  ButtonChoose = "projectSettings.import.chooseFile",
+  ButtonUpload = "buttons.upload",
+  DialogLanguageMismatch = "projectSettings.import.liftLanguageMismatch",
+  FileSelected = "createProject.fileSelected",
+  Instructions = "projectSettings.import.body",
+  ReuploadConfirm = "projectSettings.import.reuploadConfirm",
+  ReuploadWarning = "projectSettings.import.reuploadWarning",
+  ToastFail = "projectSettings.import.noWordsUploaded",
+  ToastSuccess = "projectSettings.import.wordsUploaded",
+  UploadedAlready = "projectSettings.import.notAllowed",
 }
 
 export default function ProjectImport(
@@ -80,9 +86,9 @@ export default function ProjectImport(
 
       // Toast the number of words uploaded.
       if (val) {
-        toast.success(t("projectSettings.import.wordsUploaded", { val }));
+        toast.success(t(ProjectImportTextId.ToastSuccess, { val }));
       } else {
-        toast.warning(t("projectSettings.import.noWordsUploaded"));
+        toast.warning(t(ProjectImportTextId.ToastFail));
       }
 
       // Clean up.
@@ -98,12 +104,12 @@ export default function ProjectImport(
       <Grid2 size={12}>
         {props.project.liftImported ? (
           <Typography color="error" variant="body2">
-            {t("projectSettings.import.notAllowed")}{" "}
-            {t("projectSettings.import.reuploadWarning")}
+            {t(ProjectImportTextId.UploadedAlready)}{" "}
+            {t(ProjectImportTextId.ReuploadWarning)}
           </Typography>
         ) : (
           <Typography variant="body2">
-            {t("projectSettings.import.body")}
+            {t(ProjectImportTextId.Instructions)}
           </Typography>
         )}
       </Grid2>
@@ -112,33 +118,25 @@ export default function ProjectImport(
       <FileInputButton
         updateFile={setLiftFile}
         accept=".zip"
-        buttonProps={{
-          "data-testid": ProjectImportIds.ButtonFileSelect,
-          disabled: uploadState === UploadState.Done,
-          id: ProjectImportIds.ButtonFileSelect,
-        }}
+        buttonProps={{ disabled: uploadState === UploadState.Done }}
       >
-        {t("projectSettings.import.chooseFile")}
+        {t(ProjectImportTextId.ButtonChoose)}
       </FileInputButton>
 
       {/* Upload button */}
       <LoadingDoneButton
-        buttonProps={{
-          "data-testid": ProjectImportIds.ButtonFileSubmit,
-          id: ProjectImportIds.ButtonFileSubmit,
-          onClick: onUploadClick,
-        }}
+        buttonProps={{ onClick: onUploadClick }}
         disabled={!liftLangs}
         done={uploadState === UploadState.Done}
         loading={uploadState === UploadState.InProgress}
       >
-        {t("buttons.upload")}
+        {t(ProjectImportTextId.ButtonUpload)}
       </LoadingDoneButton>
 
       {/* Name of the selected file */}
       {liftFile && (
         <Typography variant="body1" noWrap>
-          {t("createProject.fileSelected", { val: liftFile.name })}
+          {t(ProjectImportTextId.FileSelected, { val: liftFile.name })}
         </Typography>
       )}
 
@@ -158,13 +156,11 @@ export default function ProjectImport(
       {/* Dialog if LIFT contents don't match vernacular language */}
       {liftLangs && (
         <CancelConfirmDialog
-          buttonIdCancel={ProjectImportIds.ButtonDialogCancel}
-          buttonIdConfirm={ProjectImportIds.ButtonDialogConfirm}
           disableBackdropClick
           handleCancel={() => setLiftFile(undefined)}
           handleConfirm={() => setDialogVernOpen(false)}
           open={dialogVernOpen}
-          text={t("projectSettings.import.liftLanguageMismatch", {
+          text={t(ProjectImportTextId.DialogLanguageMismatch, {
             val1: liftLangs.map((ws) => ws.bcp47),
             val2: props.project.vernacularWritingSystem.bcp47,
           })}
@@ -174,13 +170,11 @@ export default function ProjectImport(
       {/* Dialog if uploading a second time */}
       {props.project.liftImported && (
         <CancelConfirmDialog
-          buttonIdCancel={ProjectImportIds.ButtonDialogCancel}
-          buttonIdConfirm={ProjectImportIds.ButtonDialogConfirm}
           disableBackdropClick
           handleCancel={() => setDialogReuploadOpen(false)}
           handleConfirm={onReuploadConfirm}
           open={dialogReuploadOpen}
-          text={t("projectSettings.import.reuploadConfirm")}
+          text={t(ProjectImportTextId.ReuploadConfirm)}
         />
       )}
     </Grid2>

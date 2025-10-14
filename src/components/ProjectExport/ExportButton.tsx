@@ -17,7 +17,7 @@ import { type StoreState } from "rootRedux/types";
 
 interface ExportButtonProps {
   projectId: string;
-  buttonProps?: ButtonProps & { "data-testid"?: string };
+  buttonProps?: ButtonProps;
 }
 
 /** A button for exporting project to LIFT file. */

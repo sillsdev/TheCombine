@@ -1,3 +1,4 @@
+import "@testing-library/jest-dom";
 import { act, render, renderHook, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { type ChangeEvent, type KeyboardEvent } from "react";
@@ -8,7 +9,6 @@ import * as backend from "backend";
 import TreeSearch, {
   type TreeSearchProps,
   insertDecimalPoints,
-  testId,
   useTreeSearch,
 } from "components/TreeView/TreeSearch";
 import domMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
@@ -28,10 +28,6 @@ const testProps: TreeSearchProps = {
 beforeEach(() => {
   jest.clearAllMocks();
 });
-
-function getSearchInput(): HTMLInputElement {
-  return screen.getByTestId(testId);
-}
 
 function setupSpies(domain: SemanticDomainTreeNode | undefined): void {
   jest.spyOn(backend, "getSemanticDomainTreeNode").mockResolvedValue(domain);
@@ -110,20 +106,22 @@ describe("TreeSearch", () => {
   describe("Integration tests, verify component uses hooks to achieve desired UX", () => {
     it("typing non-matching domain search data does not clear input, or attempt to navigate", async () => {
       render(<TreeSearch {...testProps} />);
-      expect(getSearchInput().value).toEqual("");
+      const textField = screen.getByRole("textbox");
+      expect(textField).toHaveValue("");
       const searchText = "flibbertigibbet";
-      await userEvent.type(getSearchInput(), `${searchText}{enter}`);
-      expect(getSearchInput().value).toEqual(searchText);
+      await userEvent.type(textField, `${searchText}{enter}`);
+      expect(textField).toHaveValue(searchText);
       // verify that no attempt to switch domains happened
       expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
     });
 
     it("typing valid domain number navigates and clears input", async () => {
       render(<TreeSearch {...testProps} />);
-      expect(getSearchInput().value).toEqual("");
+      const textField = screen.getByRole("textbox");
+      expect(textField).toHaveValue("");
       setupSpies(domMap[mapIds.lastKid]);
-      await userEvent.type(getSearchInput(), `${mapIds.lastKid}{enter}`);
-      expect(getSearchInput().value).toEqual("");
+      await userEvent.type(textField, `${mapIds.lastKid}{enter}`);
+      expect(textField).toHaveValue("");
       // verify that we would switch to the domain requested
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(domMap[mapIds.lastKid]);
     });

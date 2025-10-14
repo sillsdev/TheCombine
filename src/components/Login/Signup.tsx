@@ -70,23 +70,12 @@ export const signupFieldTextId: SignupText = {
   [SignupField.Username]: "login.username",
 };
 
-export enum SignupId {
-  ButtonLogIn = "signup-log-in-button",
-  ButtonSignUp = "signup-sign-up-button",
-  FieldEmail = "signup-email-field",
-  FieldName = "signup-name-field",
-  FieldPassword1 = "signup-password1-field",
-  FieldPassword2 = "signup-password2-field",
-  FieldUsername = "signup-username-field",
-  Form = "signup-form",
-}
-
-export const signupFieldId: Record<SignupField, SignupId> = {
-  [SignupField.Email]: SignupId.FieldEmail,
-  [SignupField.Name]: SignupId.FieldName,
-  [SignupField.Password1]: SignupId.FieldPassword1,
-  [SignupField.Password2]: SignupId.FieldPassword2,
-  [SignupField.Username]: SignupId.FieldUsername,
+export const signupFieldId: SignupText = {
+  [SignupField.Email]: "signup-email-field",
+  [SignupField.Name]: "signup-name-field",
+  [SignupField.Password1]: "signup-password1-field",
+  [SignupField.Password2]: "signup-password2-field",
+  [SignupField.Username]: "signup-username-field",
 };
 
 interface SignupProps {
@@ -177,11 +166,11 @@ export default function Signup(props: SignupProps): ReactElement {
   const defaultTextFieldProps = (field: SignupField): TextFieldProps => ({
     error: fieldError[field],
     id: signupFieldId[field],
-    inputProps: { "data-testid": signupFieldId[field], maxLength: 100 },
     label: t(signupFieldTextId[field]),
     margin: "normal",
     onChange: (e) => updateField(e, field),
     required: true,
+    slotProps: { htmlInput: { maxLength: 100 } },
     style: { width: "100%" },
     value: fieldText[field],
     variant: "outlined",
@@ -200,7 +189,7 @@ export default function Signup(props: SignupProps): ReactElement {
         />
 
         <CardContent>
-          <form id={SignupId.Form} onSubmit={signUp}>
+          <form onSubmit={signUp}>
             <Stack spacing={2}>
               {/* Name field */}
               <NormalizedTextField
@@ -263,8 +252,6 @@ export default function Signup(props: SignupProps): ReactElement {
               {/* Back-to-login and Sign-up buttons */}
               <Stack direction="row" justifyContent="flex-end" spacing={2}>
                 <Button
-                  data-testid={SignupId.ButtonLogIn}
-                  id={SignupId.ButtonLogIn}
                   onClick={() => router.navigate(Path.Login)}
                   variant="outlined"
                 >
@@ -272,11 +259,6 @@ export default function Signup(props: SignupProps): ReactElement {
                 </Button>
 
                 <LoadingDoneButton
-                  buttonProps={{
-                    "data-testid": SignupId.ButtonSignUp,
-                    id: SignupId.ButtonSignUp,
-                    type: "submit",
-                  }}
                   disabled={!isVerified}
                   done={signupStatus === LoginStatus.Success}
                   doneText={t("login.signUpSuccess")}

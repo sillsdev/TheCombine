@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { themeColors } from "types/theme";
 
 interface LoadingDoneButtonProps {
-  buttonProps?: ButtonProps & { "data-testid"?: string };
+  buttonProps?: ButtonProps;
   children?: ReactNode;
   disabled?: boolean;
   done?: boolean;
