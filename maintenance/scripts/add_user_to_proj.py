@@ -24,7 +24,7 @@ from combine_app import CombineApp, Role
 def parse_args() -> argparse.Namespace:
     """Parse the command line arguments."""
     parser = argparse.ArgumentParser(
-        description="Add a user to a project on TheCombine. "
+        description="Add a user to a project on The Combine."
         "The user can be specified by username or e-mail address.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )

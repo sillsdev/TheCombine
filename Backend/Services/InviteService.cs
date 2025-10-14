@@ -36,7 +36,7 @@ namespace BackendFramework.Services
         {
             var message = new MimeMessage();
             message.To.Add(new MailboxAddress("FutureCombineUser", emailAddress));
-            message.Subject = "TheCombine Project Invite";
+            message.Subject = "The Combine Project Invite";
             message.Body = new TextPart("plain")
             {
                 Text = $"You have been invited project '{projectName}' on The Combine.\n" +

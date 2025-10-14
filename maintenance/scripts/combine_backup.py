@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create a backup of TheCombine and push the file to AWS S3 service."""
+"""Create a backup of The Combine and push the file to AWS S3 service."""
 
 import argparse
 from datetime import datetime
@@ -19,7 +19,7 @@ from script_step import ScriptStep
 def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
     parser = argparse.ArgumentParser(
-        description="Backup TheCombine database and backend files and push to AWS S3 bucket.",
+        description="Backup The Combine database and backend files and push to AWS S3 bucket.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
@@ -29,7 +29,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Create a backup of TheCombine database and backend files."""
+    """Create a backup of The Combine database and backend files."""
     args = parse_args()
     if args.verbose:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)

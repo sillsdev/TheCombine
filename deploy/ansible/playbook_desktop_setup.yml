@@ -3,7 +3,7 @@
 # Playbook: playbook_desktop_setup.yml
 #
 # playbook_desktop_setup.yml installs the packages and
-# configuration files that are required to run TheCombine
+# configuration files that are required to run The Combine
 # as containers managed by a Kubernetes cluster on localhost.
 #
 ##############################################################

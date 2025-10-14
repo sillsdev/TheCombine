@@ -60,7 +60,7 @@ duplicates with at least one word that isn't protected. This will avoid sets of 
 and promote merging entries collected in The Combine.
 
 Turn on "Allow data protection override in Merge Duplicates" to allow project users in Merge Duplicates to manually
-override protection of words and senses. If anybody tries to merge or delete a protected entry or senses, The Combine
+override protection of words and senses. If anybody tries to merge or delete a protected entry or sense, The Combine
 warns them of the fields that will be lost.
 
 #### 存档项目
@@ -163,7 +163,7 @@ automatically. The filename is the project id.
 
 #### Export pronunciation speakers
 
-When a project is exported from TheCombine and imported into FieldWorks, if a pronunciation has an associated speaker,
+When a project is exported from The Combine and imported into FieldWorks, if a pronunciation has an associated speaker,
 the speaker name will be added as a pronunciation label. The consent files can be found in the zipped export, but will
 not be imported into FieldWorks.
 
