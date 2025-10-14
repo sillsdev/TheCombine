@@ -47,6 +47,13 @@
     "statistics": "Estadísticas de datos",
     "projectSettings": "Configuración del proyecto"
   },
+  "emailVerify": {
+    "invalidText": "Es posible que el enlace haya caducado o ya se haya utilizado.",
+    "invalidTitle": "Error al verificar el correo electrónico",
+    "returnButton": "Volver a The Combine",
+    "success": "¡Dirección de correo electronico verificada!",
+    "verifying": "Verificando la dirección de correo electrónico..."
+  },
   "invite": {
     "invalidInvitationURL": "El enlace de invitación al proyecto no es válido."
   },
@@ -82,6 +89,7 @@
     "resetRequestInstructions": "Le enviaremos a su correo electrónico un enlace para restablecer su cuenta una sola vez.",
     "submit": "Enviar",
     "resetFail": "Error al restablecer la contraseña",
+    "resetSuccess": "La contraseña se restableció con éxito",
     "resetDone": "Si ha introducido correctamente su dirección de correo electrónico o su nombre de usuario, se le habrá enviado un enlace para restablecer la contraseña.",
     "backToLogin": "Volver al inicio de sesión"
   },
@@ -142,6 +150,15 @@
       "consentNo": "Usted no ha aceptado nuestro uso de cookies de análisis.",
       "consentYes": "Usted ha consentido nuestro uso de cookies de análisis.",
       "title": "Cookies de análisis"
+    },
+    "verifyEmail": {
+      "button": "Verificar el correo electrónico",
+      "description": "Para añadir usuarios a su proyecto, debe verificar su dirección de correo electrónico.",
+      "emailUnverified": "Verifique el correo electrónico para añadir usuarios a los proyectos",
+      "emailVerified": "Verificación de correo electrónico completada",
+      "emailVerifying": "Revise su correo electrónico",
+      "title": "Verificar la dirección de correo electrónico",
+      "verificationSent": "Se envió el correo de verificación. Por favor, revise su correo electrónico."
     },
     "contact": "Información de contacto",
     "glossSuggestion": "Sugerencias de ortografía de las glosas",
@@ -246,6 +263,8 @@
       "body": "Los datos importados se añadirán a este proyecto. The Combine no hará ningún intento de deduplicar, sobrescribir o sincronizar.",
       "chooseFile": "Elegir archivo",
       "notAllowed": "Ya ha importado un archivo LIFT a este proyecto.",
+      "reuploadWarning": "Puede subir un nuevo archivo LIFT, pero sobrescribirá todas las palabras de este proyecto.",
+      "reuploadConfirm": "Todas las palabras de este proyecto se eliminarán y se sustituirán por las palabras del nuevo archivo LIFT. ¿Está seguro de que desea continuar?",
       "wordsUploaded": "Palabras subidas: {{ val }}",
       "noWordsUploaded": "El archivo LIFT no tiene palabras en el idioma vernáculo de este proyecto.",
       "liftLanguageMismatch": "Los idiomas de este archivo LIFT ({{ val1 }}) no incluyen el idioma vernáculo del proyecto ({{ val2 }}). Probablemente no se importarán ningunas palabras. ¿Está seguro de que desea continuar?"
@@ -271,9 +290,16 @@
       "on": "Encendido",
       "hint": "En la entrada de datos, sugiera las lenguas vernáculas existentes similares a la lengua vernácula que se está escribiendo."
     },
-    "protectedDataOverride": {
-      "hint": "En combinar duplicados, permita anular la protección de palabras y sentidos protegidos.",
-      "label": "Anulación de datos protegidos"
+    "protectedData": {
+      "label": "Administración de datos protegidos",
+      "avoidInMerge": {
+        "hint": "En Combinar duplicados, omitir conjuntos que sólo tienen palabras protegidas. Esto evitará conjuntos de entradas maduras importadas de FieldWorks y promoverá la fusión de entradas recopiladas en The Combine.",
+        "label": "Evitar conjuntos protegidos en Combinar duplicados"
+      },
+      "override": {
+        "hint": "En Combinar duplicados, permitir la anulación de la protección de palabras y acepciones protegidas.",
+        "label": "Permitir la anulación de la protección de datos en Combinar duplicados"
+      }
     },
     "invite": {
       "inviteByEmailLabel": "Invitar por correo electrónico",
@@ -282,6 +308,7 @@
       "searchPlaceholder": "Buscar...",
       "searchTitle": "Buscar usuarios",
       "emailLabel": "Correo electrónico",
+      "emailMessage": "Mensaje (opcional)",
       "toastSuccess": "Usuario agregado al proyecto.",
       "toastFail": "Error al agregar usuario al proyecto."
     },

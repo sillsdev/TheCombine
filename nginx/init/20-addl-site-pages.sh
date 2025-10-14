@@ -3,11 +3,11 @@
 echo "Creating templates for ${CERT_ADDL_DOMAINS}"
 
 ################################################################
-# The current model for TheCombine is that CERT_ADDL_DOMAINS
-# only defined when TheCombine is being moved to a new URL.
+# The current model for The Combine is that CERT_ADDL_DOMAINS
+# only defined when The Combine is being moved to a new URL.
 # In this case, the environment variables are defined as:
-#   SERVER_NAME:       New URL for TheCombine
-#   CERT_ADDL_DOMAINS: Old URL(s) for TheCombine
+#   SERVER_NAME:       New URL for The Combine
+#   CERT_ADDL_DOMAINS: Old URL(s) for The Combine
 # This script will generate a page that redirects the users to
 # the new URL.
 ################################################################

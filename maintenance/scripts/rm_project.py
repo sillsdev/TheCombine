@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Remove a project and its associated data from TheCombine.
+Remove a project and its associated data from The Combine.
 
 To delete a project from the database, we need to delete:
  1. documents in the every collection with entries with a projectId field that matches the project
@@ -40,7 +40,7 @@ def parse_args() -> argparse.Namespace:
         "the backend containers.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("projects", nargs="*", help="Project(s) to be removed from TheCombine.")
+    parser.add_argument("projects", nargs="*", help="Project(s) to be removed from The Combine.")
     parser.add_argument(
         "--verbose", action="store_true", help="Print intermediate values to aid in debugging"
     )
@@ -63,7 +63,7 @@ def db_delete_from_projects(project_id: str) -> str:
 
 
 def main() -> None:
-    """Remove a project and its associated data from TheCombine."""
+    """Remove a project and its associated data from The Combine."""
     args = parse_args()
     combine = CombineApp()
 

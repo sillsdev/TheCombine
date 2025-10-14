@@ -3,7 +3,7 @@
 # Playbook: playbook_nuc_setup.yml
 #
 # playbook_nuc_setup.yml installs the packages and
-# configuration files that are required to run TheCombine
+# configuration files that are required to run The Combine
 # as Docker containers managed by a Kubernetes cluster on
 # a target PC, such as an Intel NUC.
 #
