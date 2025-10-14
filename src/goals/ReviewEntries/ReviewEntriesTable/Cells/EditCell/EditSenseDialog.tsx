@@ -222,7 +222,7 @@ export default function EditSenseDialog(
           <Stack spacing={3}>
             {/* Definitions */}
             {definitionsEnabled && (
-              <Card sx={bgStyle(EditSenseField.Definitions)}>
+              <Card role="region" sx={bgStyle(EditSenseField.Definitions)}>
                 <CardHeader title={t(EditSenseDialogTextId.CardDefinitions)} />
                 <CardContent>
                   <DefinitionList
@@ -239,7 +239,7 @@ export default function EditSenseDialog(
             )}
 
             {/* Glosses */}
-            <Card sx={bgStyle(EditSenseField.Glosses)}>
+            <Card role="region" sx={bgStyle(EditSenseField.Glosses)}>
               <CardHeader title={t(EditSenseDialogTextId.CardGlosses)} />
               <CardContent>
                 <GlossList
@@ -254,7 +254,7 @@ export default function EditSenseDialog(
 
             {/* Part of Speech */}
             {grammaticalInfoEnabled && (
-              <Card sx={bgStyle(EditSenseField.GrammaticalInfo)}>
+              <Card role="region" sx={bgStyle(EditSenseField.GrammaticalInfo)}>
                 <CardHeader title={t(EditSenseDialogTextId.CardPartOfSpeech)} />
                 <CardContent>
                   {newSense.grammaticalInfo.catGroup ===
@@ -273,7 +273,7 @@ export default function EditSenseDialog(
             )}
 
             {/* Semantic Domains */}
-            <Card sx={bgStyle(EditSenseField.SemanticDomains)}>
+            <Card role="region" sx={bgStyle(EditSenseField.SemanticDomains)}>
               <CardHeader
                 title={t(EditSenseDialogTextId.CardSemanticDomains)}
               />
@@ -342,7 +342,6 @@ function DefinitionTextField(props: DefinitionTextFieldProps): ReactElement {
       error={props.error}
       fullWidth
       id={props.textFieldId}
-      inputProps={{ "data-testid": props.textFieldId }}
       label={props.definition.language}
       lang={props.definition.language}
       margin="dense"
@@ -353,7 +352,6 @@ function DefinitionTextField(props: DefinitionTextFieldProps): ReactElement {
         )
       }
       value={props.definition.text}
-      variant="outlined"
     />
   );
 }
@@ -405,7 +403,6 @@ function GlossTextField(props: GlossTextFieldProps): ReactElement {
       error={props.error}
       fullWidth
       id={props.textFieldId}
-      inputProps={{ "data-testid": props.textFieldId }}
       label={props.gloss.language}
       lang={props.gloss.language}
       margin="dense"
@@ -414,7 +411,6 @@ function GlossTextField(props: GlossTextFieldProps): ReactElement {
         props.onChange(newGloss(event.target.value, props.gloss.language))
       }
       value={props.gloss.def}
-      variant="outlined"
     />
   );
 }

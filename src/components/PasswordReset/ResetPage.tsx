@@ -18,10 +18,16 @@ import { Path } from "types/path";
 import { NormalizedTextField } from "utilities/fontComponents";
 import { meetsPasswordRequirements } from "utilities/userUtilities";
 
-export enum PasswordResetIds {
-  Password = "PasswordReset.password",
-  ConfirmPassword = "PasswordReset.confirm-password",
-  SubmitButton = "PasswordReset.button.submit",
+export enum PasswordResetTextId {
+  ButtonSubmit = "passwordReset.submit",
+  FieldPassword1 = "login.password",
+  FieldPassword1Hint = "login.passwordRequirements",
+  FieldPassword2 = "login.confirmPassword",
+  FieldPassword2Error = "login.confirmPasswordError",
+  Invalid = "passwordReset.invalidURL",
+  ToastSuccess = "passwordReset.resetSuccess",
+  ToastFail = "passwordReset.resetFail",
+  Title = "passwordReset.resetTitle",
 }
 
 export default function PasswordReset(): ReactElement {
@@ -61,9 +67,9 @@ export default function PasswordReset(): ReactElement {
 
   const asyncReset = async (token: string, password: string): Promise<void> => {
     if (await resetPassword(token, password)) {
-      toast.success(t("passwordReset.resetSuccess"));
+      toast.success(t(PasswordResetTextId.ToastSuccess));
     } else {
-      toast.error(t("passwordReset.resetFail"));
+      toast.error(t(PasswordResetTextId.ToastFail));
     }
     navigate(Path.Login);
   };
@@ -74,7 +80,7 @@ export default function PasswordReset(): ReactElement {
         <CardHeader
           title={
             <Typography align="center" variant="h5">
-              {t("passwordReset.resetTitle")}
+              {t(PasswordResetTextId.Title)}
             </Typography>
           }
         />
@@ -85,11 +91,11 @@ export default function PasswordReset(): ReactElement {
               error={!passwordFitsRequirements}
               fullWidth
               helperText={
-                !passwordFitsRequirements && t("login.passwordRequirements")
+                !passwordFitsRequirements &&
+                t(PasswordResetTextId.FieldPassword1Hint)
               }
               id="password-reset-password1"
-              inputProps={{ "data-testid": PasswordResetIds.Password }}
-              label={t("login.password")}
+              label={t(PasswordResetTextId.FieldPassword1)}
               onChange={(e) =>
                 onChangePassword(e.target.value, passwordConfirm)
               }
@@ -103,30 +109,26 @@ export default function PasswordReset(): ReactElement {
               helperText={
                 !isPasswordConfirmed &&
                 passwordConfirm.length > 0 &&
-                t("login.confirmPasswordError")
+                t(PasswordResetTextId.FieldPassword2Error)
               }
-              id={PasswordResetIds.ConfirmPassword}
-              inputProps={{ "data-testid": PasswordResetIds.ConfirmPassword }}
-              label={t("login.confirmPassword")}
+              label={t(PasswordResetTextId.FieldPassword2)}
               onChange={(e) => onChangePassword(password, e.target.value)}
               type="password"
               value={passwordConfirm}
             />
 
             <Button
-              data-testid={PasswordResetIds.SubmitButton}
               disabled={!(passwordFitsRequirements && isPasswordConfirmed)}
-              id={PasswordResetIds.SubmitButton}
               onClick={onSubmit}
               variant="contained"
             >
-              {t("passwordReset.submit")}
+              {t(PasswordResetTextId.ButtonSubmit)}
             </Button>
           </Stack>
         </CardContent>
       </Card>
     </Grid2>
   ) : (
-    <InvalidLink titleTextId="passwordReset.invalidURL" />
+    <InvalidLink titleTextId={PasswordResetTextId.Invalid} />
   );
 }

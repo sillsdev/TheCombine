@@ -17,10 +17,14 @@ import Captcha from "components/Login/Captcha";
 import { Path } from "types/path";
 import { NormalizedTextField } from "utilities/fontComponents";
 
-export enum PasswordRequestIds {
-  ButtonLogin = "password-request-login",
-  ButtonSubmit = "password-request-submit",
-  FieldEmailOrUsername = "password-request-text",
+export enum ResetRequestTextId {
+  ButtonSubmit = "passwordReset.submit",
+  ButtonLogin = "login.backToLogin",
+  Done = "passwordReset.resetDone",
+  FieldEmailOrUsername = "passwordReset.emailOrUsername",
+  FieldEmailOrUsernameError = "passwordReset.resetFail",
+  Instructions = "passwordReset.resetRequestInstructions",
+  Title = "passwordReset.resetRequestTitle",
 }
 
 export default function ResetRequest(): ReactElement {
@@ -53,7 +57,7 @@ export default function ResetRequest(): ReactElement {
         <CardHeader
           title={
             <Typography align="center" variant="h5">
-              {t("passwordReset.resetRequestTitle")}
+              {t(ResetRequestTextId.Title)}
             </Typography>
           }
         />
@@ -61,32 +65,23 @@ export default function ResetRequest(): ReactElement {
         <CardContent>
           {isDone ? (
             <Stack alignItems="flex-end" spacing={2}>
-              <Typography>{t("passwordReset.resetDone")}</Typography>
+              <Typography>{t(ResetRequestTextId.Done)}</Typography>
 
-              <Button
-                data-testid={PasswordRequestIds.ButtonLogin}
-                id={PasswordRequestIds.ButtonLogin}
-                onClick={() => navigate(Path.Login)}
-                variant="contained"
-              >
-                {t("login.backToLogin")}
+              <Button onClick={() => navigate(Path.Login)} variant="contained">
+                {t(ResetRequestTextId.ButtonLogin)}
               </Button>
             </Stack>
           ) : (
             <form onSubmit={onSubmit}>
               <Stack spacing={1}>
-                <Typography>
-                  {t("passwordReset.resetRequestInstructions")}
-                </Typography>
+                <Typography>{t(ResetRequestTextId.Instructions)}</Typography>
 
                 <NormalizedTextField
                   fullWidth
-                  helperText={isError && t("passwordReset.resetFail")}
-                  id={PasswordRequestIds.FieldEmailOrUsername}
-                  inputProps={{
-                    "data-testid": PasswordRequestIds.FieldEmailOrUsername,
-                  }}
-                  label={t("passwordReset.emailOrUsername")}
+                  helperText={
+                    isError && t(ResetRequestTextId.FieldEmailOrUsernameError)
+                  }
+                  label={t(ResetRequestTextId.FieldEmailOrUsername)}
                   onChange={(e) => setEmailOrUsername(e.target.value)}
                   required
                   value={emailOrUsername}
@@ -97,25 +92,17 @@ export default function ResetRequest(): ReactElement {
                 {/* Back-to-login and Submit buttons */}
                 <Stack direction="row" justifyContent="flex-end" spacing={2}>
                   <Button
-                    data-testid={PasswordRequestIds.ButtonLogin}
-                    id={PasswordRequestIds.ButtonLogin}
                     onClick={() => navigate(Path.Login)}
                     variant="outlined"
                   >
-                    {t("login.backToLogin")}
+                    {t(ResetRequestTextId.ButtonLogin)}
                   </Button>
 
                   <LoadingDoneButton
-                    buttonProps={{
-                      "data-testid": PasswordRequestIds.ButtonSubmit,
-                      id: PasswordRequestIds.ButtonSubmit,
-                      type: "submit",
-                      variant: "contained",
-                    }}
                     disabled={!emailOrUsername || !isVerified}
                     loading={isLoading}
                   >
-                    {t("passwordReset.submit")}
+                    {t(ResetRequestTextId.ButtonSubmit)}
                   </LoadingDoneButton>
                 </Stack>
               </Stack>

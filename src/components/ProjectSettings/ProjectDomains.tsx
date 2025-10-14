@@ -376,9 +376,6 @@ export function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
             <TextFieldWithFont
               analysis
               id={ProjectDomainsId.FieldDomainAddDialogName}
-              inputProps={{
-                "data-testid": ProjectDomainsId.FieldDomainAddDialogName,
-              }}
               lang={props.lang}
               onChange={(e) => setName(e.target.value)}
               value={name}

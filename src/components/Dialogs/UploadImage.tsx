@@ -63,11 +63,7 @@ export default function ImageUpload(props: ImageUploadProps): ReactElement {
           {t("buttons.browse")}
         </FileInputButton>
 
-        <LoadingDoneButton
-          loading={loading}
-          done={done}
-          buttonProps={{ type: "submit", id: "image-upload-save" }}
-        >
+        <LoadingDoneButton done={done} loading={loading}>
           {t("buttons.save")}
         </LoadingDoneButton>
       </Grid2>
