@@ -70,7 +70,7 @@ export default function MergeDragDrop(): ReactElement {
     const srcWord = words[srcWordId];
 
     // Check if the sense itself is protected.
-    const isProtectedSense = src.isSenseProtected && !src.order;
+    const isProtectedSense = !!(src.isSenseProtected && !src.order);
     // Check if this is the only sense in a protected word.
     const isOnlySenseInProtectedWord =
       srcWord?.protected && Object.keys(srcWord.sensesGuids).length === 1;
