@@ -49,7 +49,7 @@ describe("ImageUpload", () => {
     // Click Browse button to select a file
     const browseButton = screen.getByRole("button", { name: /browse/i });
     await userEvent.click(browseButton);
-    
+
     // Save button should now be enabled
     const saveButton = screen.getByRole("button", { name: /save/i });
     expect(saveButton).toBeEnabled();
@@ -58,15 +58,15 @@ describe("ImageUpload", () => {
   it("calls uploadImage when Save is clicked with a file selected", async () => {
     // Mock uploadImage to return a resolved promise
     mockUploadImage.mockResolvedValue(undefined);
-    
+
     // Click Browse button to select a file
     const browseButton = screen.getByRole("button", { name: /browse/i });
     await userEvent.click(browseButton);
-    
+
     // Click the Save button
     const saveButton = screen.getByRole("button", { name: /save/i });
     await userEvent.click(saveButton);
-    
+
     // Verify uploadImage was called
     expect(mockUploadImage).toHaveBeenCalledWith(mockFile);
   });
