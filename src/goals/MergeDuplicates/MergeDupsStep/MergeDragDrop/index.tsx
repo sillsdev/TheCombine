@@ -108,7 +108,6 @@ export default function MergeDragDrop(): ReactElement {
 
         if (overrideProtection) {
           // ... unless protection override is active and user confirms.
-          // Include both sense and word reasons since the sense is being deleted.
           const protectReason = getProtectReason(true, true);
           setOverride({ deletePayload: src, protectReason });
         } else {
@@ -137,7 +136,6 @@ export default function MergeDragDrop(): ReactElement {
 
         if (overrideProtection) {
           // ... unless protection override is active and user confirms.
-          // Include both sense and word reasons since the sense is being merged.
           const protectReason = getProtectReason(true, true);
           setOverride({ combinePayload, protectReason });
         } else {
@@ -172,7 +170,6 @@ export default function MergeDragDrop(): ReactElement {
         const movePayload: MoveSensePayload = { destOrder, destWordId, src };
 
         if (isOnlySenseInProtectedWord) {
-          // Only include word reasons since the sense is just being moved, not deleted.
           const protectReason = getProtectReason(false, true);
           setOverride({ movePayload, protectReason });
           return;
@@ -197,7 +194,6 @@ export default function MergeDragDrop(): ReactElement {
 
           if (overrideProtection) {
             // ... unless protection override is active and user confirms.
-            // Include sense reasons only if displacing from top position.
             const protectReason = getProtectReason(fromTop, false);
             setOverride({ orderPayload, protectReason });
           } else {
