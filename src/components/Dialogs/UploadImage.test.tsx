@@ -40,7 +40,7 @@ beforeEach(async () => {
 });
 
 describe("ImageUpload", () => {
-  it("renders with Save button disabled when no file is selected", async () => {
+  it("renders with Save button disabled when no file is selected", () => {
     const saveButton = screen.getByRole("button", { name: /save/i });
     expect(saveButton).toBeDisabled();
   });
@@ -56,7 +56,6 @@ describe("ImageUpload", () => {
   });
 
   it("calls uploadImage when Save is clicked with a file selected", async () => {
-    // Mock uploadImage to return a resolved promise
     mockUploadImage.mockResolvedValue(undefined);
 
     // Click Browse button to select a file
