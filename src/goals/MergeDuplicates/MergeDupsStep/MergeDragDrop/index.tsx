@@ -73,9 +73,11 @@ export default function MergeDragDrop(): ReactElement {
     const isOnlySenseInProtectedWord =
       srcWord?.protected && Object.keys(srcWord.sensesGuids).length === 1;
 
-    // Helper function to generate protection override warning text.
-    // includeSense: whether to include sense protection reasons in the warning.
-    // includeWord: whether to include word protection reasons in the warning.
+    /**
+     * Generate protection override warning text.
+     * @param includeSense Whether to include sense protection reasons in the warning.
+     * @param includeWord Whether to include word protection reasons in the warning.
+     */
     function getProtectReason(
       includeSense: boolean,
       includeWord: boolean
