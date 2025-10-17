@@ -204,7 +204,7 @@ export default function MergeDragDrop(): ReactElement {
 
           if (overrideProtection) {
             // ... unless protection override is active and user confirms.
-            const protectReason = getProtectReason(fromTop, false);
+            const protectReason = getProtectReason(fromTop || toTop, false);
             setOverride({ orderPayload, protectReason });
           } else {
             toast.warning(t("mergeDups.helpText.orderProtectedSidebarWarning"));
