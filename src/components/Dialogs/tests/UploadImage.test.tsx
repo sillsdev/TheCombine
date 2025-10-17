@@ -20,15 +20,15 @@ jest.mock("components/Buttons/FileInputButton", () => ({
   ),
 }));
 
-const mockUploadImage = jest.fn();
 const mockDoneCallback = jest.fn();
+const mockUploadImage = jest.fn();
 
 const renderImageUpload = async (): Promise<void> => {
   await act(async () => {
     render(
       <ImageUpload
-        uploadImage={mockUploadImage}
         doneCallback={mockDoneCallback}
+        uploadImage={mockUploadImage}
       />
     );
   });
