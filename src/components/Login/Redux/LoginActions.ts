@@ -24,7 +24,8 @@ function setIsAdminTrue(): PayloadAction {
   return setIsAdminTrueAction();
 }
 
-export function setIsEmailVerifiedTrue(): PayloadAction {
+/** Don't export! Only to be used when an email-verified user logs in. */
+function setIsEmailVerifiedTrue(): PayloadAction {
   return setIsEmailVerifiedTrueAction();
 }
 
