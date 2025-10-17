@@ -19,7 +19,7 @@ namespace BackendFramework.Services
         private readonly IEmailService _emailService = emailService;
         private readonly IPermissionService _permissionService = permissionService;
 
-        private const int MaxInviteMessageLength = 10000;
+        private const int MaxInviteMessageLength = 1000;
 
         internal static string CreateLink(ProjectInvite invite)
         {
