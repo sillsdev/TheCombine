@@ -46,6 +46,9 @@ namespace Backend.Tests.Controllers
                 new UserRoleRepositoryMock(), new EmailServiceMock(), permissionService);
             _inviteController = new InviteController(_projRepo, inviteService, permissionService);
 
+            var _userId = (await _userRepo.Create(new() { Name = "Signore Inviter", Username = "inviter" }))!.Id;
+            _inviteController.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId(_userId);
+
             _projId = (await _projRepo.Create(new Project { Name = ProjectName }))!.Id;
             var inviteActive =
                 new ProjectInvite(_projId, EmailActive, Role.Harvester) { Created = DateTime.UtcNow };
@@ -56,7 +59,7 @@ namespace Backend.Tests.Controllers
             await inviteRepo.Insert(inviteExpired);
             _tokenExpired = inviteExpired.Token;
             var inviteFuture =
-                new ProjectInvite(_projId, EmailExpired, Role.Harvester) { Created = DateTime.UtcNow.AddYears(1) };
+                new ProjectInvite(_projId, EmailFuture, Role.Harvester) { Created = DateTime.UtcNow.AddYears(1) };
             await inviteRepo.Insert(inviteFuture);
             _tokenFuture = inviteFuture.Token;
         }
