@@ -82,9 +82,9 @@ namespace BackendFramework.Services
             message.Subject = "The Combine password reset";
             message.Body = new TextPart("plain")
             {
-                Text = $"A password reset has been requested for the user {user.Username}. " +
-                    $"Follow this link to reset {user.Username}'s password: {url}\n\n" +
-                    $"(This link will expire in {_expireTime.TotalMinutes} minutes.)\n\n" +
+                Text = $"A password reset has been requested for {user.Name} (username: {user.Username}).\n\n" +
+                    $"Follow this link to reset your password: {url}\n\n" +
+                    $"(Link will expire in {_expireTime.TotalMinutes} minutes.)\n\n" +
                     "If you did not request a password reset, please ignore this email."
             };
             return message;

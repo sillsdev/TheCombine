@@ -37,13 +37,15 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
+            var inviterId = _permissionService.GetUserId(HttpContext);
+
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
                 return NotFound($"projectId: {projectId}");
             }
 
-            return Ok(await _inviteService.EmailLink(project, data.Role, data.EmailAddress, data.Message));
+            return Ok(await _inviteService.EmailLink(project, data.Role, data.EmailAddress, inviterId, data.Message));
         }
 
         /// <summary> Validates invite token in url and adds user to project </summary>

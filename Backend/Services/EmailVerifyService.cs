@@ -60,10 +60,10 @@ namespace BackendFramework.Services
             message.Subject = "The Combine email verification";
             message.Body = new TextPart("plain")
             {
-                Text = $"Email verification has been requested for the user {user.Username}. " +
-                    $"Follow the link to verify {user.Username}'s email address: {url}\n\n" +
-                    "Email verification is required to add users to your projects in The Combine." +
-                    $"(This link will expire in {_expireTime.TotalMinutes} minutes.)\n\n" +
+                Text = $"Email verification has been requested for {user.Name} (username: {user.Username}).\n\n" +
+                    "Email verification is required to add users to your projects in The Combine.\n\n" +
+                    $"Follow this link to verify your email address: {url}\n\n" +
+                    $"(Link will expire in {_expireTime.TotalMinutes} minutes.)\n\n" +
                     "If you do not wish to verify your email address, you may ignore this email."
             };
             return message;
