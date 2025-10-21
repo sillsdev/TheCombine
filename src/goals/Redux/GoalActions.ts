@@ -208,7 +208,7 @@ export function dispatchStepData(goal: Goal) {
 }
 
 /** Add entry update to the current goal. */
-export function asyncUpdateEntry(oldId: string, newId: string) {
+export function asyncUpdateEntry(oldId: string, newId?: string) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(addEntryEditToGoal({ newId, oldId }));
     await dispatch(asyncUpdateGoal());

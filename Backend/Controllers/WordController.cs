@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -252,6 +253,32 @@ namespace BackendFramework.Controllers
             var userId = _permissionService.GetUserId(HttpContext);
             await _wordService.Update(projectId, userId, wordId, word);
             return Ok(word.Id);
+        }
+
+        /// <summary> Restore a deleted <see cref="Word"/>. </summary>
+        /// <returns> bool: true if success; false if failure </returns>
+        [HttpGet("retore/{wordId}", Name = "RestoreWord")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Boolean))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> RestoreWord(
+            string projectId, string wordId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating words");
+
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
+            {
+                return Forbid();
+            }
+            var document = await _wordRepo.GetWord(projectId, wordId);
+            if (document is null)
+            {
+                return NotFound();
+            }
+
+            // Add the found id to the updated word.
+            var success = await _wordService.RestoreFrontierWords(projectId, [wordId]);
+            return Ok(success);
         }
 
         /// <summary> Revert words from an dictionary of word ids (key: to revert to; value: from frontier). </summary>

@@ -924,6 +924,15 @@ export async function isInFrontier(
   return (await wordApi.isInFrontier(params, defaultOptions())).data;
 }
 
+export async function restoreWord(
+  wordId: string,
+  projectId?: string
+): Promise<boolean> {
+  projectId ||= LocalStorage.getProjectId();
+  const params = { projectId, wordId };
+  return (await wordApi.restoreWord(params, defaultOptions())).data;
+}
+
 /** Revert word updates given in dictionary of word ids:
  * - key: id of word to revert to;
  * - value: id of word in frontier. */

@@ -17,7 +17,7 @@ export default function DeleteCell(props: CellProps): ReactElement {
   async function deleteWord(): Promise<void> {
     await deleteFrontierWord(id);
     if (props.delete) {
-      props.delete(id);
+      await props.delete(id);
     }
   }
 
