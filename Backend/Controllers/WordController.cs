@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -236,7 +235,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UpdateWord(
             string projectId, string wordId, [FromBody, BindRequired] Word word)
         {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating words");
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a word");
 
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
@@ -256,29 +255,25 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Restore a deleted <see cref="Word"/>. </summary>
-        /// <returns> bool: true if success; false if failure </returns>
-        [HttpGet("retore/{wordId}", Name = "RestoreWord")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Boolean))]
+        /// <returns> bool: true if restored; false if already in frontier. </returns>
+        [HttpGet("restore/{wordId}", Name = "RestoreWord")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> RestoreWord(
-            string projectId, string wordId)
+        public async Task<IActionResult> RestoreWord(string projectId, string wordId)
         {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating words");
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring a word");
 
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
             }
-            var document = await _wordRepo.GetWord(projectId, wordId);
-            if (document is null)
+            if (await _wordRepo.GetWord(projectId, wordId) is null)
             {
                 return NotFound();
             }
 
-            // Add the found id to the updated word.
-            var success = await _wordService.RestoreFrontierWords(projectId, [wordId]);
-            return Ok(success);
+            return Ok(await _wordService.RestoreFrontierWords(projectId, [wordId]));
         }
 
         /// <summary> Revert words from an dictionary of word ids (key: to revert to; value: from frontier). </summary>

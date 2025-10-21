@@ -513,7 +513,7 @@ export const WordApiAxiosParamCreator = function (
       assertParamExists("restoreWord", "projectId", projectId);
       // verify required parameter 'wordId' is not null or undefined
       assertParamExists("restoreWord", "wordId", wordId);
-      const localVarPath = `/v1/projects/{projectId}/words/retore/{wordId}`
+      const localVarPath = `/v1/projects/{projectId}/words/restore/{wordId}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
         .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)));
       // use dummy base URL string because the URL constructor only accepts absolute URLs.

@@ -381,13 +381,15 @@ namespace Backend.Tests.Controllers
         public async Task TestRestoreWord()
         {
             var word = await _wordRepo.Create(Util.RandomWord(ProjId));
-            var result = await _wordRepo.DeleteFrontier(ProjId, word.Id);
+            await _wordRepo.DeleteFrontier(ProjId, word.Id);
 
             Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
             Assert.That(await _wordRepo.GetFrontier(ProjId), Is.Empty);
 
-            await _wordController.RestoreWord(ProjId, word.Id);
+            var result = await _wordController.RestoreWord(ProjId, word.Id);
 
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)result).Value, Is.True);
             Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
             Assert.That(await _wordRepo.GetFrontier(ProjId), Does.Contain(word).UsingPropertiesComparer());
         }

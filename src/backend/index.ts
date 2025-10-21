@@ -924,6 +924,7 @@ export async function isInFrontier(
   return (await wordApi.isInFrontier(params, defaultOptions())).data;
 }
 
+/** Restore a word that was deleted from the frontier. */
 export async function restoreWord(
   wordId: string,
   projectId?: string
