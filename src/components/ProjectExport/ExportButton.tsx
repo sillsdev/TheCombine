@@ -5,8 +5,8 @@ import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { hasFrontierWords } from "backend";
-import { LoadingButton } from "components/Buttons";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import LoadingButton from "components/Buttons/LoadingButton";
 import {
   asyncExportProject,
   asyncCancelExport,
@@ -17,10 +17,10 @@ import { type StoreState } from "rootRedux/types";
 
 interface ExportButtonProps {
   projectId: string;
-  buttonProps?: ButtonProps & { "data-testid"?: string };
+  buttonProps?: ButtonProps;
 }
 
-/** A button for exporting project to Lift file */
+/** A button for exporting project to LIFT file. */
 export default function ExportButton(props: ExportButtonProps): ReactElement {
   const dispatch = useAppDispatch();
   const [exports, setExports] = useState(false);

@@ -1,26 +1,18 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { act } from "react";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
-import MockBypassLoadableButton from "components/Buttons/LoadingDoneButton";
 import { defaultState as loginState } from "components/Login/Redux/LoginReduxTypes";
 import Signup, {
   SignupField,
-  SignupId,
   SignupText,
-  signupFieldId,
   signupFieldTextId,
 } from "components/Login/Signup";
 import MockCaptcha from "components/Login/tests/MockCaptcha";
 
 jest.mock("backend", () => ({
   getBannerText: () => Promise.resolve(""),
-}));
-jest.mock("components/Buttons", () => ({
-  ...jest.requireActual("components/Buttons"),
-  LoadingDoneButton: MockBypassLoadableButton,
 }));
 jest.mock("components/Login/Captcha", () => ({
   __esModule: true,
@@ -67,15 +59,15 @@ const typeInFields = async (textRecord: Partial<SignupText>): Promise<void> => {
     if (!text) {
       continue;
     }
-    const id = signupFieldId[field as SignupField];
-    await userEvent.type(screen.getByTestId(id), text);
+    const id = signupFieldTextId[field as SignupField];
+    await userEvent.type(screen.getByLabelText(new RegExp(id)), text);
   }
 };
 
 /** Clicks the submit button and checks that only the specified field errors. */
 const submitAndCheckError = async (id?: SignupField): Promise<void> => {
   // Submit the form.
-  await act(async () => screen.getByTestId(SignupId.ButtonSignUp).click());
+  await userEvent.click(screen.getByText("login.signUp"));
 
   // Only the specified field should error.
   Object.values(SignupField).forEach((val) => {

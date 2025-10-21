@@ -10,26 +10,22 @@ namespace BackendFramework.Repositories
 {
     /// <summary> Atomic database functions for <see cref="UserEdit"/>s. </summary>
     [ExcludeFromCodeCoverage]
-    public class UserEditRepository : IUserEditRepository
+    public class UserEditRepository(IMongoDbContext dbContext) : IUserEditRepository
     {
-        private readonly IUserEditContext _userEditDatabase;
-
-        public UserEditRepository(IUserEditContext collectionSettings)
-        {
-            _userEditDatabase = collectionSettings;
-        }
+        private readonly IMongoCollection<UserEdit> _userEdits =
+            dbContext.Db.GetCollection<UserEdit>("UserEditsCollection");
 
         /// <summary> Finds all <see cref="UserEdit"/>s with specified projectId </summary>
         public async Task<List<UserEdit>> GetAllUserEdits(string projectId)
         {
-            return await _userEditDatabase.UserEdits.Find(u => u.ProjectId == projectId).ToListAsync();
+            return await _userEdits.Find(u => u.ProjectId == projectId).ToListAsync();
         }
 
         /// <summary> Removes all <see cref="UserEdit"/>s for specified <see cref="Project"/> </summary>
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllUserEdits(string projectId)
         {
-            var deleted = await _userEditDatabase.UserEdits.DeleteManyAsync(u => u.ProjectId == projectId);
+            var deleted = await _userEdits.DeleteManyAsync(u => u.ProjectId == projectId);
             return deleted.DeletedCount != 0;
         }
 
@@ -40,7 +36,7 @@ namespace BackendFramework.Repositories
             var filter = filterDef.And(filterDef.Eq(
                 x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userEditId));
 
-            var userEditList = await _userEditDatabase.UserEdits.FindAsync(filter);
+            var userEditList = await _userEdits.FindAsync(filter);
 
             try
             {
@@ -56,7 +52,7 @@ namespace BackendFramework.Repositories
         /// <returns> The UserEdit created </returns>
         public async Task<UserEdit> Create(UserEdit userEdit)
         {
-            await _userEditDatabase.UserEdits.InsertOneAsync(userEdit);
+            await _userEdits.InsertOneAsync(userEdit);
             return userEdit;
         }
 
@@ -68,7 +64,7 @@ namespace BackendFramework.Repositories
             var filter = filterDef.And(filterDef.Eq(
                 x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userEditId));
 
-            var deleted = await _userEditDatabase.UserEdits.DeleteOneAsync(filter);
+            var deleted = await _userEdits.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;
         }
 
@@ -80,7 +76,7 @@ namespace BackendFramework.Repositories
             var filter = filterDef.And(filterDef.Eq(
                 x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userEditId));
 
-            var result = await _userEditDatabase.UserEdits.ReplaceOneAsync(filter, userEdit);
+            var result = await _userEdits.ReplaceOneAsync(filter, userEdit);
             return result.ModifiedCount == 1;
         }
     }

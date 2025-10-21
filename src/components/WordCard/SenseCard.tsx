@@ -2,7 +2,7 @@ import { Card, CardContent } from "@mui/material";
 import { type ReactElement } from "react";
 
 import { GramCatGroup, type Sense } from "api/models";
-import { PartOfSpeechButton } from "components/Buttons";
+import PartOfSpeechButton from "components/Buttons/PartOfSpeechButton";
 import DomainChipsGrid from "components/WordCard/DomainChipsGrid";
 import SenseCardText from "components/WordCard/SenseCardText";
 
@@ -28,13 +28,8 @@ export default function SenseCard(props: SenseCardProps): ReactElement {
   const semDoms = props.sense.semanticDomains;
 
   return (
-    <Card
-      style={{
-        backgroundColor: props.bgColor || "white",
-        marginBottom: 10,
-      }}
-    >
-      <CardContent style={{ position: "relative" }}>
+    <Card sx={{ bgcolor: props.bgColor || "white" }}>
+      <CardContent sx={{ position: "relative" }}>
         {/* Part of speech (if any) */}
         <div style={{ insetInlineStart: 0, position: "absolute", top: 0 }}>
           {gramInfo.catGroup !== GramCatGroup.Unspecified && (

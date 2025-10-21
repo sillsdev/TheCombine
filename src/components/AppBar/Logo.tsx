@@ -1,6 +1,6 @@
 import { Button, Theme, useMediaQuery } from "@mui/material";
 import { ReactElement } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import { buttonMinHeight } from "components/AppBar/AppBarTypes";
 import { small, white } from "resources/logo";

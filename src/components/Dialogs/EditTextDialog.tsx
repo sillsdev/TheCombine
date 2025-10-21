@@ -98,11 +98,10 @@ export default function EditTextDialog(
         <NormalizedTextField
           variant="standard"
           autoFocus
-          data-testid={props.textFieldId}
           value={text}
           onChange={(event) => setText(event.target.value)}
           onKeyPress={confirmIfEnter}
-          InputProps={{ endAdornment }}
+          slotProps={{ input: { endAdornment } }}
           id={props.textFieldId}
         />
       </DialogContent>

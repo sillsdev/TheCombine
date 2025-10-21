@@ -5,9 +5,11 @@ api.ts
 api/audio-api.ts
 api/avatar-api.ts
 api/banner-api.ts
+api/email-verify-api.ts
 api/invite-api.ts
 api/lift-api.ts
 api/merge-api.ts
+api/password-reset-api.ts
 api/project-api.ts
 api/semantic-domain-api.ts
 api/speaker-api.ts
@@ -31,7 +33,6 @@ models/definition.ts
 models/edit.ts
 models/email-invite-data.ts
 models/email-invite-status.ts
-models/email-invite.ts
 models/flag.ts
 models/gloss.ts
 models/gram-cat-group.ts
@@ -43,7 +44,6 @@ models/merge-words.ts
 models/note.ts
 models/off-on-setting.ts
 models/password-reset-data.ts
-models/password-reset-request-data.ts
 models/permission.ts
 models/project-role.ts
 models/project.ts
@@ -64,6 +64,7 @@ models/user-created-project.ts
 models/user-edit-step-wrapper.ts
 models/user-edit.ts
 models/user-role.ts
+models/user-stub.ts
 models/user.ts
 models/word.ts
 models/words-per-day-per-user-count.ts

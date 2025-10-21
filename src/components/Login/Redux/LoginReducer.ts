@@ -10,6 +10,12 @@ const loginSlice = createSlice({
   name: "loginState",
   initialState: defaultState,
   reducers: {
+    setIsAdminTrueAction: (state) => {
+      state.isAdmin = true;
+    },
+    setIsEmailVerifiedTrueAction: (state) => {
+      state.isEmailVerified = true;
+    },
     setLoginAttemptAction: (state, action) => {
       state.error = "";
       state.loginStatus = LoginStatus.InProgress;
@@ -42,6 +48,8 @@ const loginSlice = createSlice({
 });
 
 export const {
+  setIsAdminTrueAction,
+  setIsEmailVerifiedTrueAction,
   setLoginAttemptAction,
   setLoginFailureAction,
   setLoginSuccessAction,

@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class BannerControllerTests : IDisposable
+    internal sealed class BannerControllerTests : IDisposable
     {
         private IBannerRepository _bannerRepo = null!;
         private IPermissionService _permissionService = null!;
@@ -16,16 +16,8 @@ namespace Backend.Tests.Controllers
 
         public void Dispose()
         {
-            Dispose(true);
+            _bannerController?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _bannerController?.Dispose();
-            }
         }
 
         private const BannerType Type = BannerType.Login;
@@ -58,11 +50,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestGetBannerNoPermission()
+        public void TestGetBanner()
         {
             var updateResult = (ObjectResult)_bannerController.UpdateBanner(_siteBanner).Result;
             Assert.That(updateResult.Value, Is.True);
+
+            // No permissions should be required to get a banner.
             _bannerController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
             var bannerResult = (ObjectResult)_bannerController.GetBanner(Type).Result;
             Assert.That(bannerResult.Value, Is.EqualTo(_siteBanner).UsingPropertiesComparer());
         }

@@ -1,16 +1,36 @@
 import { KeyboardArrowDown } from "@mui/icons-material";
-import { Button, Collapse, Grid } from "@mui/material";
+import {
+  Button,
+  Collapse,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid2,
+} from "@mui/material";
 import { ReactElement, ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import LoadingButton from "components/Buttons/LoadingButton";
 import {
+  exit,
   setRejectedCharacters,
   setValidCharacters,
+  uploadAndExit,
 } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import theme from "types/theme";
 import { TextFieldWithFont } from "utilities/fontComponents";
+
+export enum CharacterEntryTextId {
+  ButtonCancel = "buttons.cancel",
+  ButtonSave = "buttons.save",
+  FieldAccepted = "charInventory.characterSet.acceptedCharacters",
+  FieldRejected = "charInventory.characterSet.rejectedCharacters",
+  ToggleAdvanced = "charInventory.characterSet.advanced",
+}
 
 /**
  * Allows for viewing and entering accepted and rejected characters in a
@@ -23,56 +43,83 @@ export default function CharacterEntry(): ReactElement {
     (state: StoreState) => state.characterInventoryState
   );
 
-  const [checked, setChecked] = useState(false);
+  const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+  const [saveInProgress, setSaveInProgress] = useState(false);
 
   const { t } = useTranslation();
 
-  return (
-    <Grid item xs={12}>
-      <Grid
-        container
-        style={{
-          background: "whitesmoke",
-          borderTop: "1px solid #ccc",
-          padding: theme.spacing(1),
-        }}
-        spacing={2}
-      >
-        <Button
-          id="character-entry-submit"
-          onClick={() => setChecked(!checked)}
-        >
-          {t("charInventory.characterSet.advanced")}{" "}
-          <KeyboardArrowDown
-            style={{
-              transform: checked ? "rotate(180deg)" : "rotate(0deg)",
-              transition: "all 200ms",
-            }}
-          />
-        </Button>
-        <Collapse in={checked} style={{ width: "100%" }}>
-          {/* Input for accepted characters */}
-          <Grid item xs={12}>
-            <CharactersInput
-              characters={validCharacters}
-              id="valid-characters-input"
-              label={t("charInventory.characterSet.acceptedCharacters")}
-              setCharacters={(chars) => dispatch(setValidCharacters(chars))}
-            />
-          </Grid>
+  const save = async (): Promise<void> => {
+    setSaveInProgress(true);
+    await dispatch(uploadAndExit());
+  };
 
-          {/* Input for rejected characters */}
-          <Grid item xs={12}>
-            <CharactersInput
-              characters={rejectedCharacters}
-              id="rejected-characters-input"
-              label={t("charInventory.characterSet.rejectedCharacters")}
-              setCharacters={(chars) => dispatch(setRejectedCharacters(chars))}
+  return (
+    <div
+      style={{
+        background: "whitesmoke",
+        border: "1px solid #ccc",
+        padding: theme.spacing(1),
+      }}
+    >
+      <Grid2 container alignContent="center" justifyContent="space-between">
+        <Grid2 container spacing={2}>
+          {/* Save button */}
+          <LoadingButton
+            buttonProps={{ onClick: () => save() }}
+            loading={saveInProgress}
+          >
+            {t(CharacterEntryTextId.ButtonSave)}
+          </LoadingButton>
+
+          {/* Cancel button */}
+          <Button
+            color="secondary"
+            onClick={() => setCancelDialogOpen(true)}
+            variant="contained"
+          >
+            {t(CharacterEntryTextId.ButtonCancel)}
+          </Button>
+
+          {/* Cancel yes/no dialog */}
+          <CancelDialog
+            onClose={() => setCancelDialogOpen(false)}
+            open={cancelDialogOpen}
+          />
+        </Grid2>
+
+        {/* Advanced toggle-button */}
+        <Button
+          endIcon={
+            <KeyboardArrowDown
+              style={{
+                transform: advancedOpen ? "rotate(180deg)" : "rotate(0deg)",
+                transition: "all 200ms",
+              }}
             />
-          </Grid>
-        </Collapse>
-      </Grid>
-    </Grid>
+          }
+          onClick={() => setAdvancedOpen((prev) => !prev)}
+        >
+          {t(CharacterEntryTextId.ToggleAdvanced)}
+        </Button>
+      </Grid2>
+
+      <Collapse in={advancedOpen}>
+        {/* Input for accepted characters */}
+        <CharactersInput
+          characters={validCharacters}
+          label={t(CharacterEntryTextId.FieldAccepted)}
+          setCharacters={(chars) => dispatch(setValidCharacters(chars))}
+        />
+
+        {/* Input for rejected characters */}
+        <CharactersInput
+          characters={rejectedCharacters}
+          label={t(CharacterEntryTextId.FieldRejected)}
+          setCharacters={(chars) => dispatch(setRejectedCharacters(chars))}
+        />
+      </Collapse>
+    </div>
   );
 }
 
@@ -89,16 +136,59 @@ function CharactersInput(props: CharactersInputProps): ReactElement {
       autoComplete="off"
       fullWidth
       id={props.id}
-      inputProps={{ spellCheck: false, style: { letterSpacing: 5 } }}
       label={props.label}
       name="characters"
       onChange={(e) =>
         props.setCharacters(e.target.value.replace(/\s/g, "").split(""))
       }
-      style={{ maxWidth: 512, marginTop: theme.spacing(1) }}
+      slotProps={{
+        htmlInput: { spellCheck: false, style: { letterSpacing: 5 } },
+      }}
+      style={{ marginTop: theme.spacing(2) }}
       value={props.characters.join("")}
-      variant="outlined"
       vernacular
     />
+  );
+}
+
+export enum CancelDialogTextId {
+  ButtonNo = "charInventory.dialog.no",
+  ButtonYes = "charInventory.dialog.yes",
+  Content = "charInventory.dialog.content",
+  Title = "charInventory.dialog.title",
+}
+
+interface CancelDialogProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+/** "Are you sure?" dialog for the cancel button */
+function CancelDialog(props: CancelDialogProps): ReactElement {
+  const { t } = useTranslation();
+
+  return (
+    <Dialog onClose={() => props.onClose()} open={props.open}>
+      <DialogTitle>{t(CancelDialogTextId.Title)}</DialogTitle>
+
+      <DialogContent>
+        <DialogContentText>{t(CancelDialogTextId.Content)}</DialogContentText>
+      </DialogContent>
+
+      <DialogActions>
+        <Button
+          autoFocus
+          color="secondary"
+          onClick={() => exit()}
+          variant="contained"
+        >
+          {t(CancelDialogTextId.ButtonYes)}
+        </Button>
+
+        <Button onClick={() => props.onClose()}>
+          {t(CancelDialogTextId.ButtonNo)}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }

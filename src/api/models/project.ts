@@ -13,7 +13,6 @@
  */
 
 import { CustomField } from "./custom-field";
-import { EmailInvite } from "./email-invite";
 import { OffOnSetting } from "./off-on-setting";
 import { SemanticDomainFull } from "./semantic-domain-full";
 import { WritingSystem } from "./writing-system";
@@ -66,6 +65,12 @@ export interface Project {
    * @memberof Project
    */
   autocompleteSetting: OffOnSetting;
+  /**
+   *
+   * @type {OffOnSetting}
+   * @memberof Project
+   */
+  protectedDataMergeAvoidEnabled: OffOnSetting;
   /**
    *
    * @type {OffOnSetting}
@@ -126,12 +131,6 @@ export interface Project {
    * @memberof Project
    */
   partsOfSpeech?: Array<string> | null;
-  /**
-   *
-   * @type {Array<EmailInvite>}
-   * @memberof Project
-   */
-  inviteTokens: Array<EmailInvite>;
   /**
    *
    * @type {Array<string>}

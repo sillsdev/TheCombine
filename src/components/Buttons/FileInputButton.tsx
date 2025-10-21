@@ -5,7 +5,7 @@ import { ReactElement, ReactNode } from "react";
 interface BrowseProps {
   updateFile: (file: File) => void;
   accept?: string;
-  buttonProps?: ButtonProps & { "data-testid"?: string };
+  buttonProps?: ButtonProps;
   children?: ReactNode;
 }
 

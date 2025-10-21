@@ -47,6 +47,13 @@
     "statistics": "Estadísticas de datos",
     "projectSettings": "Configuración del proyecto"
   },
+  "emailVerify": {
+    "invalidText": "Es posible que el enlace haya caducado o ya se haya utilizado.",
+    "invalidTitle": "Error al verificar el correo electrónico",
+    "returnButton": "Volver a The Combine",
+    "success": "¡Dirección de correo electronico verificada!",
+    "verifying": "Verificando la dirección de correo electrónico..."
+  },
   "invite": {
     "invalidInvitationURL": "El enlace de invitación al proyecto no es válido."
   },
@@ -82,6 +89,7 @@
     "resetRequestInstructions": "Le enviaremos a su correo electrónico un enlace para restablecer su cuenta una sola vez.",
     "submit": "Enviar",
     "resetFail": "Error al restablecer la contraseña",
+    "resetSuccess": "La contraseña se restableció con éxito",
     "resetDone": "Si ha introducido correctamente su dirección de correo electrónico o su nombre de usuario, se le habrá enviado un enlace para restablecer la contraseña.",
     "backToLogin": "Volver al inicio de sesión"
   },
@@ -143,6 +151,15 @@
       "consentYes": "Usted ha consentido nuestro uso de cookies de análisis.",
       "title": "Cookies de análisis"
     },
+    "verifyEmail": {
+      "button": "Verificar el correo electrónico",
+      "description": "Para añadir usuarios a su proyecto, debe verificar su dirección de correo electrónico.",
+      "emailUnverified": "Verifique el correo electrónico para añadir usuarios a los proyectos",
+      "emailVerified": "Verificación de correo electrónico completada",
+      "emailVerifying": "Revise su correo electrónico",
+      "title": "Verificar la dirección de correo electrónico",
+      "verificationSent": "Se envió el correo de verificación. Por favor, revise su correo electrónico."
+    },
     "contact": "Información de contacto",
     "glossSuggestion": "Sugerencias de ortografía de las glosas",
     "glossSuggestionHint": "En Introducción de datos, ofrece sugerencias ortográficas para la glosa que se está escribiendo.",
@@ -153,6 +170,7 @@
     "uploadAvatarTitle": "Establecer avatar de usuario"
   },
   "projectExport": {
+    "cancelExport": "Cancelar exportación",
     "cannotExportEmpty": "El proyecto está vacío. No se puede exportar un proyecto sin palabras.",
     "downloadInProgress": "Descargando proyecto: {{ val }}",
     "exportFailed": "Error al exportar el proyecto {{ val }}. Haga clic para borrar este mensaje.",
@@ -245,6 +263,8 @@
       "body": "Los datos importados se añadirán a este proyecto. The Combine no hará ningún intento de deduplicar, sobrescribir o sincronizar.",
       "chooseFile": "Elegir archivo",
       "notAllowed": "Ya ha importado un archivo LIFT a este proyecto.",
+      "reuploadWarning": "Puede subir un nuevo archivo LIFT, pero sobrescribirá todas las palabras de este proyecto.",
+      "reuploadConfirm": "Todas las palabras de este proyecto se eliminarán y se sustituirán por las palabras del nuevo archivo LIFT. ¿Está seguro de que desea continuar?",
       "wordsUploaded": "Palabras subidas: {{ val }}",
       "noWordsUploaded": "El archivo LIFT no tiene palabras en el idioma vernáculo de este proyecto.",
       "liftLanguageMismatch": "Los idiomas de este archivo LIFT ({{ val1 }}) no incluyen el idioma vernáculo del proyecto ({{ val2 }}). Probablemente no se importarán ningunas palabras. ¿Está seguro de que desea continuar?"
@@ -270,9 +290,16 @@
       "on": "Encendido",
       "hint": "En la entrada de datos, sugiera las lenguas vernáculas existentes similares a la lengua vernácula que se está escribiendo."
     },
-    "protectedDataOverride": {
-      "hint": "En combinar duplicados, permita anular la protección de palabras y sentidos protegidos.",
-      "label": "Anulación de datos protegidos"
+    "protectedData": {
+      "label": "Administración de datos protegidos",
+      "avoidInMerge": {
+        "hint": "En Combinar duplicados, omitir conjuntos que sólo tienen palabras protegidas. Esto evitará conjuntos de entradas maduras importadas de FieldWorks y promoverá la fusión de entradas recopiladas en The Combine.",
+        "label": "Evitar conjuntos protegidos en Combinar duplicados"
+      },
+      "override": {
+        "hint": "En Combinar duplicados, permitir la anulación de la protección de palabras y acepciones protegidas.",
+        "label": "Permitir la anulación de la protección de datos en Combinar duplicados"
+      }
     },
     "invite": {
       "inviteByEmailLabel": "Invitar por correo electrónico",
@@ -281,6 +308,7 @@
       "searchPlaceholder": "Buscar...",
       "searchTitle": "Buscar usuarios",
       "emailLabel": "Correo electrónico",
+      "emailMessage": "Mensaje (opcional)",
       "toastSuccess": "Usuario agregado al proyecto.",
       "toastFail": "Error al agregar usuario al proyecto."
     },
@@ -312,14 +340,33 @@
     "progress": "Paso {{ val1 }} de {{ val2 }}",
     "progressMerge": "Conjunto de combinación {{ val1 }} de {{ val2 }}"
   },
-  "createStrWordInv": { "title": "Crear inventario de palabras estructurales" },
-  "handleFlags": { "title": "Manejar banderas" },
-  "reviewDeferredDups": { "title": "Revisar duplicados aplazados" },
-  "spellCheckGloss": { "title": "Corregir la ortografía del glosario" },
-  "validateChars": { "title": "Validar caracteres" },
-  "validateStrWords": { "title": "Validar los caracteres estructurales" },
+  "createStrWordInv": {
+    "title": "Crear inventario de palabras estructurales",
+    "description": "NO IMPLEMENTADO"
+  },
+  "handleFlags": {
+    "title": "Manejar banderas",
+    "description": "NO IMPLEMENTADO"
+  },
+  "reviewDeferredDups": {
+    "title": "Revisar duplicados aplazados",
+    "description": "Revisar los duplicados potenciales que se aplazaron al usar Combinar duplicados."
+  },
+  "spellCheckGloss": {
+    "title": "Corregir la ortografía del glosario",
+    "description": "NO IMPLEMENTADO"
+  },
+  "validateChars": {
+    "title": "Validar caracteres",
+    "description": "NO IMPLEMENTADO"
+  },
+  "validateStrWords": {
+    "title": "Validar los caracteres estructurales",
+    "description": "NO IMPLEMENTADO"
+  },
   "reviewEntries": {
     "title": "Revisar entradas",
+    "description": "Ver, ordenar, filtrar y editar entradas del proyecto.",
     "allEntriesPerPageOption": "Todos",
     "editSense": "Editar acepción",
     "discardChanges": "Descartar los cambios?",
@@ -356,7 +403,8 @@
     }
   },
   "charInventory": {
-    "title": "Crear inventario de caracteres",
+    "title": "Comprobar ortografía",
+    "description": "Revisar los caracteres utilizados en la ortografía de las palabras vernáculas y comprobar si hay errores tipográficos.",
     "characters": "caracteres",
     "examples": "Ejemplos",
     "occurrences": "ocurrencias",
@@ -399,6 +447,7 @@
   },
   "mergeDups": {
     "title": "Combinar duplicados",
+    "description": "Revisar los duplicados potenciales identificados por The Combine y combinar o eliminar los duplicados verdaderos.",
     "helpText": {
       "dragCard": "Arrastre una tarjeta aquí para combinarla",
       "saveAndContinue": "Guardar los cambios y cargar un nuevo conjunto de palabras",

@@ -1,54 +1,98 @@
-using BackendFramework.Models;
-using BackendFramework.Interfaces;
-using System.Threading.Tasks;
-using System.Linq;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
+using BackendFramework.Interfaces;
+using BackendFramework.Models;
+using Microsoft.Extensions.Options;
+using MimeKit;
+using static BackendFramework.Helper.Domain;
 
 namespace BackendFramework.Services
 {
-    public class PasswordResetService : IPasswordResetService
+    public class PasswordResetService(IOptions<Startup.Settings> options, IPasswordResetRepository passwordResetRepo,
+        IUserRepository userRepo, IEmailService emailService) : IPasswordResetService
     {
-        private readonly IPasswordResetContext _passwordResets;
-        private readonly IUserRepository _userRepo;
+        private readonly TimeSpan _expireTime = options.Value.ExpireTimePasswordReset;
+        private readonly IPasswordResetRepository _passwordResetRepo = passwordResetRepo;
+        private readonly IUserRepository _userRepo = userRepo;
+        private readonly IEmailService _emailService = emailService;
 
-        public PasswordResetService(IPasswordResetContext passwordResets, IUserRepository userRepo)
+        private static string CreateLink(string token)
         {
-            _passwordResets = passwordResets;
-            _userRepo = userRepo;
+            // Matches the Path.PwReset route in src\router\appRoutes.tsx
+            return $"{FrontendDomain}/pw/reset/{token}";
         }
 
-        public async Task<PasswordReset> CreatePasswordReset(string email)
+        internal async Task<EmailToken> CreatePasswordReset(string email)
         {
-            var resetRequest = new PasswordReset(_passwordResets.ExpireTime, email);
-            await _passwordResets.Insert(resetRequest);
+            var resetRequest = new EmailToken(email);
+            await _passwordResetRepo.Insert(resetRequest);
             return resetRequest;
         }
 
-        public async Task ExpirePasswordReset(string email)
+        private async Task<EmailToken?> GetValidPasswordReset(string token)
         {
-            await _passwordResets.ClearAll(email);
+            var reset = await _passwordResetRepo.FindByToken(token);
+            return (reset is null || IsPasswordResetValid(reset)) ? reset : null;
         }
 
-        public async Task<bool> ValidateToken(string token)
+        private bool IsPasswordResetValid(EmailToken reset)
         {
-            var request = await _passwordResets.FindByToken(token);
-            return request is not null && DateTime.Now <= request.ExpireTime;
+            return reset.Created < DateTime.UtcNow && DateTime.UtcNow < reset.Created.Add(_expireTime);
         }
 
         /// <summary> Reset a users password using a Password reset request token. </summary>
         /// <returns> Returns false if the request is invalid or expired. </returns>
         public async Task<bool> ResetPassword(string token, string password)
         {
-            var request = await _passwordResets.FindByToken(token);
-            if (request is null || DateTime.Now > request.ExpireTime)
+            var request = await GetValidPasswordReset(token);
+            if (request is null)
             {
                 return false;
             }
+
             var user = (await _userRepo.GetAllUsers()).Single(u =>
                 u.Email.Equals(request.Email, StringComparison.OrdinalIgnoreCase));
             await _userRepo.ChangePassword(user.Id, password);
-            await ExpirePasswordReset(request.Email);
+            await _passwordResetRepo.ClearAll(request.Email);
             return true;
+        }
+
+        public async Task<bool> ResetPasswordRequest(string emailOrUsername)
+        {
+            // Find user attached to email or username.
+            var user = await _userRepo.GetUserByEmailOrUsername(emailOrUsername, false);
+
+            if (user is null)
+            {
+                // Return true to avoid revealing to the frontend whether the user exists.
+                return true;
+            }
+
+            // Create password reset.
+            var token = (await CreatePasswordReset(user.Email)).Token;
+
+            return await _emailService.SendEmail(CreateEmail(user, CreateLink(token)));
+        }
+
+        private MimeMessage CreateEmail(User user, string url)
+        {
+            var message = new MimeMessage();
+            message.To.Add(new MailboxAddress(user.Name, user.Email));
+            message.Subject = "The Combine password reset";
+            message.Body = new TextPart("plain")
+            {
+                Text = $"A password reset has been requested for {user.Name} (username: {user.Username}).\n\n" +
+                    $"Follow this link to reset your password: {url}\n\n" +
+                    $"(Link will expire in {_expireTime.TotalMinutes} minutes.)\n\n" +
+                    "If you did not request a password reset, please ignore this email."
+            };
+            return message;
+        }
+
+        public async Task<bool> ValidateToken(string token)
+        {
+            return await GetValidPasswordReset(token) is not null;
         }
     }
 }

@@ -1,42 +1,42 @@
-import { Email, HelpOutline, Phone } from "@mui/icons-material";
+import {
+  Email,
+  ForwardToInbox,
+  HelpOutline,
+  MarkEmailRead,
+  MarkEmailUnread,
+  Phone,
+} from "@mui/icons-material";
 import {
   Button,
   Card,
   CardContent,
-  Grid,
+  Grid2,
   MenuItem,
   Select,
+  Stack,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { enqueueSnackbar } from "notistack";
-import { FormEvent, Fragment, ReactElement, useState } from "react";
+import { FormEvent, Fragment, ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 import { OffOnSetting, User } from "api/models";
-import {
-  getUserByEmailOrUsername,
-  isEmailOrUsernameAvailable,
-  updateUser,
-} from "backend";
+import { isEmailOkay, requestEmailVerify, updateUser } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
 import AnalyticsConsent from "components/AnalyticsConsent";
 import { asyncLoadSemanticDomains } from "components/Project/ProjectActions";
 import ClickableAvatar from "components/UserSettings/ClickableAvatar";
 import { updateLangFromUser } from "i18n";
-import { useAppDispatch } from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { StoreState } from "rootRedux/types";
 import { RuntimeConfig } from "types/runtimeConfig";
-import theme from "types/theme";
 import { uiWritingSystems } from "types/writingSystem";
 import { NormalizedTextField } from "utilities/fontComponents";
+import { normalizeEmail } from "utilities/userUtilities";
 
-// Chrome silently converts non-ASCII characters in a Textfield of type="email".
-// Use punycode.toUnicode() to convert them from punycode back to Unicode.
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const punycode = require("punycode/");
-
-export enum UserSettingsIds {
+enum UserSettingsIds {
   ButtonChangeConsent = "user-settings-change-consent",
   ButtonSubmit = "user-settings-submit",
   FieldEmail = "user-settings-email",
@@ -45,6 +45,31 @@ export enum UserSettingsIds {
   FieldUsername = "user-settings-username",
   SelectGlossSuggestion = "user-settings-gloss-suggestion",
   SelectUiLang = "user-settings-ui-lang",
+}
+
+export enum UserSettingsTextId {
+  ButtonChangeConsent = "userSettings.analyticsConsent.button",
+  ButtonSubmit = "buttons.save",
+  FieldEmail = "login.email",
+  FieldEmailTaken = "login.emailTaken",
+  FieldName = "login.name",
+  FieldPhone = "userSettings.phone",
+  SelectGlossSuggestionOff = "projectSettings.autocomplete.off",
+  SelectGlossSuggestionOn = "projectSettings.autocomplete.on",
+  SelectUiLangDefault = "userSettings.uiLanguageDefault",
+  ToastEmailVerificationSent = "userSettings.verifyEmail.verificationSent",
+  ToastUpdateSuccess = "userSettings.updateSuccess",
+  TooltipEmailUnverified = "userSettings.verifyEmail.emailUnverified",
+  TooltipEmailVerified = "userSettings.verifyEmail.emailVerified",
+  TooltipEmailVerifying = "userSettings.verifyEmail.emailVerifying",
+  TooltipGlossSuggestion = "userSettings.glossSuggestionHint",
+  TypographyAnalyticsConsent = "userSettings.analyticsConsent.title",
+  TypographyAnalyticsConsentNo = "userSettings.analyticsConsent.consentNo",
+  TypographyAnalyticsConsentYes = "userSettings.analyticsConsent.consentYes",
+  TypographyContact = "userSettings.contact",
+  TypographyGlossSuggestion = "userSettings.glossSuggestion",
+  TypographyUiLang = "userSettings.uiLanguage",
+  TypographyUsername = "login.username",
 }
 
 export default function UserSettingsGetUser(): ReactElement {
@@ -57,20 +82,19 @@ export default function UserSettingsGetUser(): ReactElement {
   );
 }
 
-/** Text field of type="email" silently converted its input from Unicode to punycode.
-This function trims whitespace, and converts to normalized Unicode. */
-const normalizeEmail = (email: string): string =>
-  punycode.toUnicode(email.trim()).normalize("NFC");
-
 export function UserSettings(props: {
   user: User;
   setUser: (user?: User) => void;
 }): ReactElement {
   const dispatch = useAppDispatch();
+  const isEmailVerified = useAppSelector(
+    (state: StoreState) => state.loginState.isEmailVerified
+  );
 
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
   const [email, setEmail] = useState(props.user.email);
+  const [emailPunycode, setEmailPunycode] = useState(props.user.email);
   const [displayConsent, setDisplayConsent] = useState(false);
   const [analyticsOn, setAnalyticsOn] = useState(props.user.analyticsOn);
   const [uiLang, setUiLang] = useState(props.user.uiLang ?? "");
@@ -79,18 +103,15 @@ export function UserSettings(props: {
   );
   const [emailTaken, setEmailTaken] = useState(false);
   const [avatar, setAvatar] = useState(getAvatar());
+  const [emailVerifySent, setEmailVerifySent] = useState(false);
 
   const { t } = useTranslation();
 
-  /** Checks whether email address is okay: unchanged or not taken by a different user. */
-  async function isEmailOkay(): Promise<boolean> {
-    const unicodeEmail = normalizeEmail(email);
-    return (
-      unicodeEmail === props.user.email ||
-      (await isEmailOrUsernameAvailable(unicodeEmail)) ||
-      (await getUserByEmailOrUsername(unicodeEmail)).id === props.user.id
-    );
-  }
+  useEffect(() => {
+    setEmail(normalizeEmail(emailPunycode));
+    setEmailTaken(false);
+    setEmailVerifySent(false);
+  }, [emailPunycode]);
 
   const handleConsentChange = (consentVal?: boolean): void => {
     setAnalyticsOn(consentVal ?? analyticsOn);
@@ -101,19 +122,19 @@ export function UserSettings(props: {
   const disabled =
     name === props.user.name &&
     phone === props.user.phone &&
-    normalizeEmail(email) === props.user.email &&
+    email === props.user.email &&
     analyticsOn === props.user.analyticsOn &&
     uiLang === (props.user.uiLang ?? "") &&
     glossSuggestion === props.user.glossSuggestion;
 
   async function onSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
-    if (await isEmailOkay()) {
+    if (await isEmailOkay(email)) {
       await updateUser({
         ...props.user,
         name,
         phone,
-        email: normalizeEmail(email),
+        email,
         analyticsOn,
         uiLang,
         glossSuggestion,
@@ -125,147 +146,171 @@ export function UserSettings(props: {
         await dispatch(asyncLoadSemanticDomains());
       }
 
-      enqueueSnackbar(t("userSettings.updateSuccess"));
+      toast.success(t(UserSettingsTextId.ToastUpdateSuccess));
       props.setUser(getCurrentUser());
     } else {
       setEmailTaken(true);
     }
   }
 
+  async function sendVerifyEmail(): Promise<void> {
+    if (await isEmailOkay(email)) {
+      if (email !== props.user.email) {
+        await updateUser({ ...props.user, email });
+        props.setUser({ ...props.user, email });
+      }
+      await requestEmailVerify(email);
+      setEmailVerifySent(true);
+      toast.success(t(UserSettingsTextId.ToastEmailVerificationSent));
+    } else {
+      setEmailTaken(true);
+    }
+  }
+
   return (
-    <Grid container justifyContent="center">
-      <Card style={{ width: 450 }}>
-        <form onSubmit={(e) => onSubmit(e)}>
-          <CardContent>
-            <Grid item container spacing={6}>
-              <Grid item container spacing={2} alignItems="center">
-                <Grid item>
-                  <ClickableAvatar avatar={avatar} setAvatar={setAvatar} />
-                </Grid>
-                <Grid item xs>
+    <Grid2 container justifyContent="center">
+      <Card sx={{ width: 450 }}>
+        <CardContent>
+          <form onSubmit={(e) => onSubmit(e)}>
+            <Stack spacing={6}>
+              {/* ID: avatar, name, username */}
+              <Stack alignItems="center" direction="row" spacing={2}>
+                <ClickableAvatar avatar={avatar} setAvatar={setAvatar} />
+
+                <Grid2 size="grow">
                   <NormalizedTextField
                     id={UserSettingsIds.FieldName}
                     fullWidth
                     variant="outlined"
                     value={name}
-                    label={t("login.name")}
+                    label={t(UserSettingsTextId.FieldName)}
                     onChange={(e) => setName(e.target.value)}
-                    inputProps={{
-                      "data-testid": UserSettingsIds.FieldName,
-                      maxLength: 100,
-                    }}
-                    style={{ margin: theme.spacing(1), marginInlineStart: 0 }}
+                    slotProps={{ htmlInput: { maxLength: 100 } }}
+                    sx={{ m: 1, marginInlineStart: 0 }}
                   />
+
                   <Typography
-                    data-testid={UserSettingsIds.FieldUsername}
                     id={UserSettingsIds.FieldUsername}
-                    style={{ color: "grey" }}
+                    sx={{ color: "grey" }}
                     variant="subtitle2"
                   >
-                    {t("login.username")}
+                    {t(UserSettingsTextId.TypographyUsername)}
                     {": "}
                     {props.user.username}
                   </Typography>
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Stack>
 
-              <Grid item container spacing={2}>
-                <Grid item>
-                  <Typography variant="h6">
-                    {t("userSettings.contact")}
-                  </Typography>
-                </Grid>
+              {/* Contact: phone, email */}
+              <Stack spacing={2}>
+                <Typography variant="h6">
+                  {t(UserSettingsTextId.TypographyContact)}
+                </Typography>
 
-                <Grid item container spacing={1} alignItems="center">
-                  <Grid item>
-                    <Phone />
-                  </Grid>
-                  <Grid item xs>
+                <Stack alignItems="center" direction="row" spacing={1}>
+                  <Phone />
+
+                  <Grid2 size="grow">
                     <NormalizedTextField
                       id={UserSettingsIds.FieldPhone}
-                      inputProps={{ "data-testid": UserSettingsIds.FieldPhone }}
                       fullWidth
                       variant="outlined"
                       value={phone}
-                      label={t("userSettings.phone")}
+                      label={t(UserSettingsTextId.FieldPhone)}
                       onChange={(e) => setPhone(e.target.value)}
                       type="tel"
                     />
-                  </Grid>
-                </Grid>
+                  </Grid2>
+                </Stack>
 
-                <Grid item container spacing={1} alignItems="center">
-                  <Grid item>
+                <Stack alignItems="center" direction="row" spacing={1}>
+                  {!RuntimeConfig.getInstance().emailServicesEnabled() ? (
+                    // Email icon if The Combine has no email capability.
                     <Email />
-                  </Grid>
-                  <Grid item xs>
+                  ) : isEmailVerified ? (
+                    // Email-with-check icon if email has been verified.
+                    <Tooltip title={t(UserSettingsTextId.TooltipEmailVerified)}>
+                      <MarkEmailRead />
+                    </Tooltip>
+                  ) : emailVerifySent ? (
+                    // Orange email-with-dot icon if verification is pending.
+                    <Tooltip
+                      title={t(UserSettingsTextId.TooltipEmailVerifying)}
+                    >
+                      <MarkEmailUnread sx={{ color: "warning.main" }} />
+                    </Tooltip>
+                  ) : (
+                    // Red email-with-arrow button if email never verified.
+                    <Tooltip
+                      onClick={sendVerifyEmail}
+                      title={t(UserSettingsTextId.TooltipEmailUnverified)}
+                    >
+                      <ForwardToInbox sx={{ color: "error.main" }} />
+                    </Tooltip>
+                  )}
+
+                  <Grid2 size="grow">
+                    {/* Don't use NormalizedTextField for type="email".
+                    At best, it doesn't normalize, because of the punycode. */}
                     <TextField
                       id={UserSettingsIds.FieldEmail}
-                      inputProps={{ "data-testid": UserSettingsIds.FieldEmail }}
                       required
                       fullWidth
                       variant="outlined"
-                      value={email}
-                      label={t("login.email")}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        setEmailTaken(false);
-                      }}
+                      value={emailPunycode}
+                      label={t(UserSettingsTextId.FieldEmail)}
+                      onChange={(e) => setEmailPunycode(e.target.value)}
                       error={emailTaken}
                       helperText={
-                        emailTaken ? t("login.emailTaken") : undefined
+                        emailTaken
+                          ? t(UserSettingsTextId.FieldEmailTaken)
+                          : undefined
                       }
-                      type="email"
+                      type="email" // silently converts input to punycode
                     />
-                  </Grid>
-                </Grid>
-              </Grid>
+                  </Grid2>
+                </Stack>
+              </Stack>
 
-              <Grid item container spacing={2}>
-                <Grid item xs={12}>
-                  <Typography variant="h6">
-                    {t("userSettings.uiLanguage")}
-                  </Typography>
-                </Grid>
+              {/* UI language */}
+              <Stack alignItems="flex-start" spacing={2}>
+                <Typography variant="h6">
+                  {t(UserSettingsTextId.TypographyUiLang)}
+                </Typography>
 
-                <Grid item>
-                  <Select
-                    variant="standard"
-                    data-testid={UserSettingsIds.SelectUiLang}
-                    id={UserSettingsIds.SelectUiLang}
-                    value={uiLang}
-                    onChange={(e) => setUiLang(e.target.value ?? "")}
-                    /* Use `displayEmpty` and a conditional `renderValue` function to force
-                     * something to appear when the menu is closed and its value is "" */
-                    displayEmpty
-                    renderValue={
-                      uiLang
-                        ? undefined
-                        : () => t("userSettings.uiLanguageDefault")
-                    }
-                  >
-                    <MenuItem value={""}>
-                      {t("userSettings.uiLanguageDefault")}
+                <Select
+                  variant="standard"
+                  id={UserSettingsIds.SelectUiLang}
+                  value={uiLang}
+                  onChange={(e) => setUiLang(e.target.value ?? "")}
+                  /* Use `displayEmpty` and a conditional `renderValue` function to force
+                   * something to appear when the menu is closed and its value is "" */
+                  displayEmpty
+                  renderValue={
+                    uiLang
+                      ? undefined
+                      : () => t(UserSettingsTextId.SelectUiLangDefault)
+                  }
+                >
+                  <MenuItem value={""}>
+                    {t(UserSettingsTextId.SelectUiLangDefault)}
+                  </MenuItem>
+                  {uiWritingSystems.map((ws) => (
+                    <MenuItem key={ws.bcp47} value={ws.bcp47}>
+                      {`${ws.bcp47} (${ws.name})`}
                     </MenuItem>
-                    {uiWritingSystems.map((ws) => (
-                      <MenuItem key={ws.bcp47} value={ws.bcp47}>
-                        {`${ws.bcp47} (${ws.name})`}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Grid>
-              </Grid>
+                  ))}
+                </Select>
+              </Stack>
 
-              <Grid item container spacing={2}>
-                <Grid item xs={12}>
-                  <Typography variant="h6">
-                    {t("userSettings.glossSuggestion")}
-                  </Typography>
-                </Grid>
+              {/* Gloss spelling suggestions */}
+              <Stack alignItems="flex-start" spacing={2}>
+                <Typography variant="h6">
+                  {t(UserSettingsTextId.TypographyGlossSuggestion)}
+                </Typography>
 
-                <Grid item>
+                <Stack direction="row">
                   <Select
-                    data-testid={UserSettingsIds.SelectGlossSuggestion}
                     id={UserSettingsIds.SelectGlossSuggestion}
                     onChange={(e) =>
                       setGlossSuggestion(e.target.value as OffOnSetting)
@@ -274,76 +319,69 @@ export function UserSettings(props: {
                     variant="standard"
                   >
                     <MenuItem value={OffOnSetting.Off}>
-                      {t("projectSettings.autocomplete.off")}
+                      {t(UserSettingsTextId.SelectGlossSuggestionOff)}
                     </MenuItem>
                     <MenuItem value={OffOnSetting.On}>
-                      {t("projectSettings.autocomplete.on")}
+                      {t(UserSettingsTextId.SelectGlossSuggestionOn)}
                     </MenuItem>
                   </Select>
-                </Grid>
 
-                <Grid item>
                   <Tooltip
-                    title={t("userSettings.glossSuggestionHint")}
+                    title={t(UserSettingsTextId.TooltipGlossSuggestion)}
                     placement={document.body.dir === "rtl" ? "left" : "right"}
                   >
                     <HelpOutline fontSize="small" />
                   </Tooltip>
-                </Grid>
-              </Grid>
+                </Stack>
+              </Stack>
 
+              {/* Analytics consent */}
               {!RuntimeConfig.getInstance().isOffline() && (
-                <Grid item container spacing={2}>
-                  <Grid item xs={12}>
-                    <Typography variant="h6">
-                      {t("userSettings.analyticsConsent.title")}
-                    </Typography>
-                  </Grid>
+                <Stack alignItems="flex-start" spacing={2}>
+                  <Typography variant="h6">
+                    {t(UserSettingsTextId.TypographyAnalyticsConsent)}
+                  </Typography>
 
-                  <Grid item>
-                    <Typography>
-                      {t(
-                        analyticsOn
-                          ? "userSettings.analyticsConsent.consentYes"
-                          : "userSettings.analyticsConsent.consentNo"
-                      )}
-                    </Typography>
-                  </Grid>
+                  <Typography>
+                    {t(
+                      analyticsOn
+                        ? UserSettingsTextId.TypographyAnalyticsConsentYes
+                        : UserSettingsTextId.TypographyAnalyticsConsentNo
+                    )}
+                  </Typography>
 
-                  <Grid item>
-                    <Button
-                      data-testid={UserSettingsIds.ButtonChangeConsent}
-                      id={UserSettingsIds.ButtonChangeConsent}
-                      onClick={() => setDisplayConsent(true)}
-                      variant="outlined"
-                    >
-                      {t("userSettings.analyticsConsent.button")}
-                    </Button>
-                  </Grid>
+                  <Button
+                    id={UserSettingsIds.ButtonChangeConsent}
+                    onClick={() => setDisplayConsent(true)}
+                    variant="outlined"
+                  >
+                    {t(UserSettingsTextId.ButtonChangeConsent)}
+                  </Button>
+
                   {displayConsent && (
                     <AnalyticsConsent
                       onChangeConsent={handleConsentChange}
                       required={false}
                     />
                   )}
-                </Grid>
+                </Stack>
               )}
 
-              <Grid item container justifyContent="flex-end">
+              {/* Save button */}
+              <Grid2 container justifyContent="flex-end">
                 <Button
-                  data-testid={UserSettingsIds.ButtonSubmit}
                   disabled={disabled}
                   id={UserSettingsIds.ButtonSubmit}
                   type="submit"
                   variant="contained"
                 >
-                  {t("buttons.save")}
+                  {t(UserSettingsTextId.ButtonSubmit)}
                 </Button>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </form>
+              </Grid2>
+            </Stack>
+          </form>
+        </CardContent>
       </Card>
-    </Grid>
+    </Grid2>
   );
 }

@@ -27,7 +27,7 @@ namespace BackendFramework.Helper
         /// each with multiple <see cref="Word"/>s having a common Vernacular.
         /// </summary>
         public async Task<List<List<Word>>> GetIdenticalVernWords(
-            List<Word> collection, Func<List<string>, Task<bool>> isUnavailableSet)
+            List<Word> collection, Func<List<string>, Task<bool>> isUnavailableSet, bool ignoreProtected = false)
         {
             var wordLists = new List<List<Word>> { Capacity = _maxLists };
             while (collection.Count > 0 && wordLists.Count < _maxLists)
@@ -45,6 +45,13 @@ namespace BackendFramework.Helper
                 ids.AddRange(similarWords.Select(w => w.Id));
                 if (await isUnavailableSet(ids))
                 {
+                    continue;
+                }
+
+                if (ignoreProtected && word.Accessibility == Status.Protected
+                    && similarWords.All(w => w.Accessibility == Status.Protected))
+                {
+                    // If all the words are protected, skip this set.
                     continue;
                 }
 
@@ -81,11 +88,13 @@ namespace BackendFramework.Helper
         /// the outer list is ordered by similarity of the first two items in each inner List.
         /// </returns>
         public async Task<List<List<Word>>> GetSimilarWords(
-            List<Word> collection, Func<List<string>, Task<bool>> isUnavailableSet)
+            List<Word> collection, Func<List<string>, Task<bool>> isUnavailableSet, bool ignoreProtected = false)
         {
             var similarWordsLists = collection.AsParallel()
                 .Select(w => GetSimilarToWord(w, collection))
-                .Where(wl => wl.Count > 1).ToList();
+                .Where(
+                    wl => wl.Count > 1 && (!ignoreProtected || wl.Any(w => w.Item2.Accessibility != Status.Protected)))
+                .ToList();
 
             var best = new List<List<Word>>();
             var bestIds = new List<string>();

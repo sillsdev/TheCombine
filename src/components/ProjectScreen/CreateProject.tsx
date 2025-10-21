@@ -2,7 +2,7 @@ import { Cancel } from "@mui/icons-material";
 import {
   Card,
   CardContent,
-  Grid,
+  Grid2,
   IconButton,
   MenuItem,
   Select,
@@ -22,7 +22,8 @@ import { Trans, useTranslation } from "react-i18next";
 
 import { type WritingSystem } from "api/models";
 import { projectDuplicateCheck, uploadLiftAndGetWritingSystems } from "backend";
-import { FileInputButton, LoadingDoneButton } from "components/Buttons";
+import FileInputButton from "components/Buttons/FileInputButton";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import {
   asyncCreateProject,
   asyncFinishProject,
@@ -32,11 +33,22 @@ import theme from "types/theme";
 import { newWritingSystem } from "types/writingSystem";
 import { NormalizedTextField } from "utilities/fontComponents";
 
-export const buttonIdSelectFile = "create-project-select-file";
-export const buttonIdSubmit = "create-project-submit";
-export const fieldIdName = "create-project-name";
-export const formId = "create-project-form";
-export const selectIdVern = "create-proj-select-vern";
+export enum CreateProjectTextId {
+  Create = "createProject.create",
+  CreateSuccess = "createProject.success",
+  LangAnalysis = "projectSettings.language.analysisLanguage",
+  LangAnalysisInfo = "createProject.language",
+  LangVernacular = "projectSettings.language.vernacularLanguage",
+  Name = "createProject.name",
+  NameTaken = "createProject.nameTaken",
+  Required = "login.required",
+  SelectLanguage = "createProject.languageSelect",
+  SelectOther = "createProject.languageOptionOther",
+  Upload = "createProject.upload?",
+  UploadBrowse = "buttons.browse",
+  UploadInfo = "createProject.uploadFormat",
+  UploadSelected = "createProject.fileSelected",
+}
 
 const vernIdNone = "selectLanguageOptionNone";
 const vernIdOther = "selectLanguageOptionOther";
@@ -133,7 +145,7 @@ export default function CreateProject(): ReactElement {
 
     const menuItems = [
       <MenuItem key={vernIdNone} value={vernIdNone}>
-        {t("createProject.languageSelect")}
+        {t(CreateProjectTextId.SelectLanguage)}
       </MenuItem>,
     ];
     menuItems.push(
@@ -145,7 +157,7 @@ export default function CreateProject(): ReactElement {
     );
     menuItems.push(
       <MenuItem key={vernIdOther} value={vernIdOther}>
-        {t("createProject.languageOptionOther")}
+        {t(CreateProjectTextId.SelectOther)}
       </MenuItem>
     );
 
@@ -161,7 +173,7 @@ export default function CreateProject(): ReactElement {
     };
 
     return (
-      <Select defaultValue={vernIdNone} id={selectIdVern} onChange={onChange}>
+      <Select defaultValue={vernIdNone} onChange={onChange}>
         {menuItems}
       </Select>
     );
@@ -199,16 +211,16 @@ export default function CreateProject(): ReactElement {
 
   return (
     <Card style={{ width: "100%", maxWidth: 450 }}>
-      <form id={formId} onSubmit={(e) => createProject(e)}>
+      <form onSubmit={(e) => createProject(e)}>
         <CardContent>
           {/* Title */}
           <Typography variant="h5" align="center" gutterBottom>
-            {t("createProject.create")}
+            {t(CreateProjectTextId.Create)}
           </Typography>
+
           {/* Project name */}
           <NormalizedTextField
-            id={fieldIdName}
-            label={t("createProject.name")}
+            label={t(CreateProjectTextId.Name)}
             value={name}
             onChange={updateName}
             variant="outlined"
@@ -216,10 +228,11 @@ export default function CreateProject(): ReactElement {
             margin="normal"
             error={error["empty"] || error["nameTaken"]}
             helperText={
-              (error["empty"] && t("login.required")) ||
-              (error["nameTaken"] && t("createProject.nameTaken"))
+              (error["empty"] && t(CreateProjectTextId.Required)) ||
+              (error["nameTaken"] && t(CreateProjectTextId.NameTaken))
             }
           />
+
           {/* File upload */}
           <div
             style={{
@@ -232,20 +245,17 @@ export default function CreateProject(): ReactElement {
               style={{ marginTop: theme.spacing(2) }}
               display="inline"
             >
-              {t("createProject.upload?")}
+              {t(CreateProjectTextId.Upload)}
             </Typography>
             <FileInputButton
               updateFile={(file: File) => updateLanguageData(file)}
               accept=".zip"
-              buttonProps={{
-                id: buttonIdSelectFile,
-                style: { margin: theme.spacing(1) },
-              }}
+              buttonProps={{ sx: { m: 1 } }}
             >
-              {t("buttons.browse")}
+              {t(CreateProjectTextId.UploadBrowse)}
             </FileInputButton>
             <Typography variant="caption" display="block">
-              <Trans i18nKey="createProject.uploadFormat">
+              <Trans i18nKey={CreateProjectTextId.UploadInfo}>
                 FillerTextA
                 <a href="https://code.google.com/archive/p/lift-standard/">
                   FillerTextB
@@ -256,16 +266,19 @@ export default function CreateProject(): ReactElement {
             {/* Uploaded file name and remove button */}
             {languageData && (
               <Typography variant="body2" style={{ margin: theme.spacing(1) }}>
-                {t("createProject.fileSelected", { val: languageData.name })}
+                {t(CreateProjectTextId.UploadSelected, {
+                  val: languageData.name,
+                })}
                 <IconButton size="small" onClick={() => updateLanguageData()}>
                   <Cancel />
                 </IconButton>
               </Typography>
             )}
           </div>
+
           {/* Vernacular language picker */}
           <Typography style={{ marginTop: theme.spacing(1) }}>
-            {t("projectSettings.language.vernacularLanguage")}
+            {t(CreateProjectTextId.LangVernacular)}
           </Typography>
           {vernLangSelect()}
           {(vernLangIsOther || !vernLangOptions.length) && (
@@ -280,12 +293,13 @@ export default function CreateProject(): ReactElement {
               t={languagePickerStrings_en}
             />
           )}
+
           {/* Analysis language picker */}
           <Typography style={{ marginTop: theme.spacing(1) }}>
-            {t("projectSettings.language.analysisLanguage")}
+            {t(CreateProjectTextId.LangAnalysis)}
           </Typography>
           {languageData ? (
-            t("createProject.language")
+            t(CreateProjectTextId.LangAnalysisInfo)
           ) : (
             <LanguagePicker
               value={analysisLang.bcp47}
@@ -298,24 +312,24 @@ export default function CreateProject(): ReactElement {
               t={languagePickerStrings_en}
             />
           )}
+
           {/* Form submission button */}
-          <Grid
+          <Grid2
             container
             justifyContent="flex-end"
             style={{ marginTop: theme.spacing(1) }}
           >
             <LoadingDoneButton
-              buttonProps={{ color: "primary", id: buttonIdSubmit }}
               disabled={
                 !name.trim() || !vernLang.bcp47 || vernLang.bcp47 === undBcp47
               }
               done={success}
-              doneText={t("createProject.success")}
+              doneText={t(CreateProjectTextId.CreateSuccess)}
               loading={loading}
             >
-              {t("createProject.create")}
+              {t(CreateProjectTextId.Create)}
             </LoadingDoneButton>
-          </Grid>
+          </Grid2>
         </CardContent>
       </form>
     </Card>

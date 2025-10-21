@@ -9,11 +9,12 @@ import {
 } from "@mui/icons-material";
 import {
   Button,
-  Grid,
+  Grid2,
   IconButton,
   MenuItem,
   Select,
   SelectChangeEvent,
+  Stack,
   Typography,
 } from "@mui/material";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
@@ -23,7 +24,7 @@ import { toast } from "react-toastify";
 
 import { type WritingSystem } from "api/models";
 import { getFrontierWords } from "backend";
-import { IconButtonWithTooltip } from "components/Buttons";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 import theme from "types/theme";
 import { newWritingSystem, semDomWritingSystems } from "types/writingSystem";
@@ -192,50 +193,48 @@ export default function ProjectLanguages(
   );
 
   const addAnalysisLangPicker = (): ReactElement => (
-    <Grid container spacing={1} alignItems="center">
-      <Grid item>
-        <LanguagePicker
-          value={newLang.bcp47}
-          setCode={(bcp47: string) =>
-            setNewLang((prev: WritingSystem) => ({ ...prev, bcp47 }))
-          }
-          name={newLang.name}
-          setName={(name: string) =>
-            setNewLang((prev: WritingSystem) => ({ ...prev, name }))
-          }
-          font={newLang.font}
-          setFont={(font: string) =>
-            setNewLang((prev: WritingSystem) => ({ ...prev, font }))
-          }
-          setDir={(rtl: boolean) =>
-            setNewLang((prev: WritingSystem) => ({
-              ...prev,
-              rtl: rtl || undefined,
-            }))
-          }
-          t={languagePickerStrings_en}
-        />
-      </Grid>{" "}
-      <Grid item>
-        <IconButton
-          disabled={!isNewLang}
-          onClick={() => addAnalysisWritingSystem()}
-          id={ProjectLanguagesId.ButtonAddAnalysisLangConfirm}
-          size="large"
-        >
-          <Done />
-        </IconButton>
-      </Grid>{" "}
-      <Grid item>
-        <IconButton
-          onClick={() => resetState()}
-          id={ProjectLanguagesId.ButtonAddAnalysisLangClear}
-          size="large"
-        >
-          <Clear />
-        </IconButton>
-      </Grid>
-    </Grid>
+    <Grid2 alignItems="center" container spacing={1}>
+      <LanguagePicker
+        value={newLang.bcp47}
+        setCode={(bcp47: string) =>
+          setNewLang((prev: WritingSystem) => ({ ...prev, bcp47 }))
+        }
+        name={newLang.name}
+        setName={(name: string) =>
+          setNewLang((prev: WritingSystem) => ({ ...prev, name }))
+        }
+        font={newLang.font}
+        setFont={(font: string) =>
+          setNewLang((prev: WritingSystem) => ({ ...prev, font }))
+        }
+        setDir={(rtl: boolean) =>
+          setNewLang((prev: WritingSystem) => ({
+            ...prev,
+            rtl: rtl || undefined,
+          }))
+        }
+        t={languagePickerStrings_en}
+      />
+
+      <IconButton
+        data-testid={ProjectLanguagesId.ButtonAddAnalysisLangConfirm}
+        disabled={!isNewLang}
+        id={ProjectLanguagesId.ButtonAddAnalysisLangConfirm}
+        onClick={() => addAnalysisWritingSystem()}
+        size="large"
+      >
+        <Done />
+      </IconButton>
+
+      <IconButton
+        data-testid={ProjectLanguagesId.ButtonAddAnalysisLangClear}
+        id={ProjectLanguagesId.ButtonAddAnalysisLangClear}
+        onClick={() => resetState()}
+        size="large"
+      >
+        <Clear />
+      </IconButton>
+    </Grid2>
   );
 
   const vernacularLanguageDisplay = (): ReactElement => (
@@ -258,32 +257,29 @@ export default function ProjectLanguages(
   );
 
   const vernacularLanguageEditor = (): ReactElement => (
-    <Grid container spacing={1}>
-      <Grid item xs={12}>
-        <NormalizedTextField
-          variant="standard"
-          id={ProjectLanguagesId.FieldEditVernacularName}
-          value={newVernName}
-          onChange={(e) => setNewVernName(e.target.value)}
-          onBlur={() => {
-            setChangeVernName(false);
-            setNewVernName(props.project.vernacularWritingSystem.name);
-          }}
-          autoFocus
-        />
-      </Grid>
-      <Grid item>
-        <Button
-          variant="contained"
-          color="primary"
-          id={ProjectLanguagesId.ButtonEditVernacularNameSave}
-          onClick={() => updateVernacularName()}
-          onMouseDown={(e) => e.preventDefault()}
-        >
-          {t("buttons.save")}
-        </Button>
-      </Grid>
-    </Grid>
+    <Stack spacing={1}>
+      <NormalizedTextField
+        autoFocus
+        id={ProjectLanguagesId.FieldEditVernacularName}
+        onBlur={() => {
+          setChangeVernName(false);
+          setNewVernName(props.project.vernacularWritingSystem.name);
+        }}
+        onChange={(e) => setNewVernName(e.target.value)}
+        value={newVernName}
+        variant="standard"
+      />
+
+      <Button
+        data-testid={ProjectLanguagesId.ButtonEditVernacularNameSave}
+        id={ProjectLanguagesId.ButtonEditVernacularNameSave}
+        onClick={() => updateVernacularName()}
+        onMouseDown={(e) => e.preventDefault()}
+        variant="contained"
+      >
+        {t("buttons.save")}
+      </Button>
+    </Stack>
   );
 
   return (
@@ -328,30 +324,22 @@ function ImmutableWritingSystem(
 ): ReactElement {
   const { t } = useTranslation();
 
+  const number = props.index === undefined ? "" : `${props.index + 1}. `;
+  const wsText: string[] = [];
+  if (props.ws.name) {
+    wsText.push(`${t("projectSettings.language.name")}: ${props.ws.name}`);
+  }
+  wsText.push(`${t("projectSettings.language.bcp47")}: ${props.ws.bcp47}`);
+  if (props.ws.font) {
+    wsText.push(`${t("projectSettings.language.font")}: ${props.ws.font}`);
+  }
+  const text = number + wsText.join(", ");
+
   return (
-    <Grid container spacing={1}>
-      {props.index !== undefined && (
-        <Grid item>
-          <Typography>{`${props.index + 1}. `}</Typography>
-        </Grid>
-      )}
-      <Grid item>
-        {!!props.ws.name && (
-          <Typography display="inline">
-            {`${t("projectSettings.language.name")}: ${props.ws.name}, `}
-          </Typography>
-        )}
-        <Typography display="inline">
-          {`${t("projectSettings.language.bcp47")}: ${props.ws.bcp47}`}
-        </Typography>
-        {!!props.ws.font && (
-          <Typography display="inline">
-            {`, ${t("projectSettings.language.font")}: ${props.ws.font}`}
-          </Typography>
-        )}
-      </Grid>
-      <Grid item>{props.buttons}</Grid>
-    </Grid>
+    <Grid2 container spacing={1}>
+      <Typography>{text}</Typography>
+      {props.buttons}
+    </Grid2>
   );
 }
 
@@ -389,12 +377,13 @@ export function SemanticDomainLanguage(
         )
       ) : (
         <Select
-          variant="standard"
+          data-testid={ProjectLanguagesId.SelectSemDomLang}
           id={ProjectLanguagesId.SelectSemDomLang}
-          value={props.project.semDomWritingSystem.bcp47}
           onChange={(event: SelectChangeEvent<string>) =>
             setSemDomWritingSystem(event.target.value as string)
           }
+          value={props.project.semDomWritingSystem.bcp47}
+          variant="standard"
           /* Use `displayEmpty` and a conditional `renderValue` function to force
            * something to appear when the menu is closed and its value is "" */
           displayEmpty

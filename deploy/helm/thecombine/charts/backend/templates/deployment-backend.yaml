@@ -55,16 +55,31 @@ spec:
                 configMapKeyRef:
                   key: COMBINE_EMAIL_ENABLED
                   name: env-backend
+            - name: COMBINE_EXPIRE_EMAIL_VERIFY_MINUTES
+              valueFrom:
+                configMapKeyRef:
+                  key: COMBINE_EXPIRE_EMAIL_VERIFY_MINUTES
+                  name: env-backend
+            - name: COMBINE_EXPIRE_PASSWORD_RESET_MINUTES
+              valueFrom:
+                configMapKeyRef:
+                  key: COMBINE_EXPIRE_PASSWORD_RESET_MINUTES
+                  name: env-backend
+            - name: COMBINE_EXPIRE_PROJECT_INVITE_DAYS
+              valueFrom:
+                configMapKeyRef:
+                  key: COMBINE_EXPIRE_PROJECT_INVITE_DAYS
+                  name: env-backend
+            - name: COMBINE_FRONTEND_SERVER_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: COMBINE_FRONTEND_SERVER_NAME
+                  name: env-backend
             - name: COMBINE_JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:
                   key: COMBINE_JWT_SECRET_KEY
                   name: env-backend-secrets
-            - name: COMBINE_PASSWORD_RESET_EXPIRE_TIME
-              valueFrom:
-                configMapKeyRef:
-                  key: COMBINE_PASSWORD_RESET_EXPIRE_TIME
-                  name: env-backend
             - name: COMBINE_SMTP_ADDRESS
               valueFrom:
                 configMapKeyRef:

@@ -6,7 +6,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    sealed internal class StatisticsServiceMock : IStatisticsService
+    internal sealed class StatisticsServiceMock : IStatisticsService
     {
         public Task<List<SemanticDomainCount>> GetSemanticDomainCounts(string projectId, string lang)
         {

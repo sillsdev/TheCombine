@@ -22,8 +22,7 @@
 [localization-ui-badge]: https://img.shields.io/badge/User%20Interface-Ar%20En%20Es%20Fr%20Pt%20Zh-blue
 [github-actions-frontend]: https://github.com/sillsdev/TheCombine/actions/workflows/frontend.yml
 [github-actions-backend]: https://github.com/sillsdev/TheCombine/actions/workflows/backend.yml
-[localization-sd-badge]:
-  https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Id%20Ml%20My%20Pt%20Ru%20Sw%20Zh-blue
+[localization-sd-badge]: https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Id%20Ml%20My%20Pt%20Ru%20Sw%20Zh-blue
 [localization-ug-badge]: https://img.shields.io/badge/User%20Guide-En%20Es%20Zh-blue
 [localization-crowdin-combine]: https://crowdin.com/project/the-combine
 [localization-crowdin-flex]: https://crowdin.com/project/fieldworks
@@ -91,24 +90,20 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    ```
 
 2. [Chocolatey][chocolatey] (Windows only): a Windows package manager.
-3. [Node.js 20 (LTS)](https://nodejs.org/en/download/)
-
+3. [Node.js 22 (LTS)](https://nodejs.org/en/download/)
    - On Windows, if using [Chocolatey][chocolatey]: `choco install nodejs-lts`
    - On Ubuntu, follow
      [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using the
      appropriate Node.js version.
 
 4. [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-
    - On Ubuntu, if using Snap: `sudo snap install dotnet-sdk --classic --channel 8.0/stable`
 
 5. [MongoDB](https://mongodb.com/docs/manual/administration/install-community/) provides instructions on how to install
    the current release of MongoDB.
-
    - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
 
    After installation:
-
    - Add mongo's `/bin` directory to your PATH environment variable.
    - Disable automatically start of the `mongod` service on your development host.
    - If `mongosh` is not a recognized command, you may have to separately install the
@@ -122,7 +117,6 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 7. [Python](#python): The Python section of this document has instructions for installing _Python 3_ on each of the
    supported platforms and how to setup your virtual environment.
 8. [FFmpeg](https://www.ffmpeg.org/download.html) and add its `/bin` to your PATH.
-
    - On Mac:
      - If using [homebrew](https://formulae.brew.sh/formula/ffmpeg): `brew install ffmpeg`
      - If manually installing from the FFmpeg website, install both `ffmpeg` and `ffprobe`
@@ -131,7 +125,6 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
 10. [nuget-license](https://github.com/sensslen/nuget-license) `dotnet tool update --global nuget-license`
 11. Tools for generating the self installer (Linux only):
-
     - [makeself](https://makeself.io/) - a tool to make self-extracting archives in Unix
     - [pandoc](https://pandoc.org/installing.html#linux) - a tool to convert Markdown documents to PDF.
     - `weasyprint` a PDF engine for `pandoc`.
@@ -147,7 +140,6 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 1. _(Optional)_ If you want the email services to work you will need to set the following environment variables. These
    `COMBINE_SMTP_` values must be kept secret, so ask your email administrator to supply them. Set them in your
    `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the _System_ app (Windows).
-
    - `COMBINE_EMAIL_ENABLED=true`
    - `COMBINE_SMTP_SERVER`
    - `COMBINE_SMTP_PORT`
@@ -228,8 +220,8 @@ environment. This will be denoted with the `(venv)` prefix on the prompt.
 With an active virtual environment, install Python development requirements for this project:
 
 ```bash
-python -m pip install --upgrade pip pip-tools
-python -m piptools sync dev-requirements.txt
+python -m pip -q install --upgrade pip pip-tools
+python -m piptools sync -q dev-requirements.txt
 ```
 
 The following Python scripts can now be run from the virtual environment.
@@ -246,10 +238,17 @@ To run all Python linting steps:
 tox
 ```
 
-To upgrade all pinned dependencies:
+To upgrade all pinned development dependencies:
 
 ```bash
 python -m piptools compile --upgrade dev-requirements.in
+```
+
+To upgrade the pinned dependencies for deployment:
+
+```bash
+cd deploy
+python -m piptools compile --upgrade requirements.in
 ```
 
 To upgrade the pinned dependencies for the Maintenance container:
@@ -477,8 +476,8 @@ To browse the database locally during development, open [MongoDB Compass](https:
 ### Add or Update Dictionary Files
 
 The dictionary files for spell-check functionality in _The Combine_ are split into parts to allow lazy-loading, for the
-sake of devices with limited bandwidth. There are scripts for generating these files in `src/resources/dictionaries/`;
-files in this directory should _not_ be manually edited.
+sake of devices with limited bandwidth. There are scripts for generating these files in `public/dictionaries/` and
+`src/resources/dictionaries/`; files in this directory should _not_ be manually edited.
 
 The bash script `scripts/fetch_wordlists.sh` is used to fetch dictionary files for a given language (e.g., `es`) from
 the [LibreOffice dictionaries](https://github.com/LibreOffice/dictionaries) and convert them to raw wordlists (e.g.,
@@ -490,26 +489,24 @@ currently supported can be manually added as a case in this script.
 ```
 
 The python script `scripts/split_dictionary.py` takes a wordlist textfile (e.g., `src/resources/dictionaries/es.txt`),
-splits it into multiple TypeScript files (e.g., into `src/resources/dictionaries/es/` with index file
-`.../es/index.ts`), and updates `src/resources/dictionaries/index.ts` accordingly. Run the script within a Python
-virtual environment, with `-h`/`--help` to see its usage details.
+splits it into multiple text files (e.g., `public/dictionaries/es/u*.dic`), creates a TypeScript file to load them
+(e.g., `src/resources/dictionaries/es.ts`), and updates `src/resources/dictionaries/index.ts` accordingly. Run the
+script within a Python virtual environment, with `-h`/`--help` to see its usage details.
 
 ```bash
 python scripts/split_dictionary.py --help
 ```
 
 For some languages, the wordlist is too large for practical use. Generally try to keep the folder for each language
-under 2.5 MB, to avoid such errors as
-`FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory` in the Kubernetes build. For smaller
-folder sizes, default maximum word-lengths are automatically imposed for some languages: (`ar`, `es`, `fr`, `hi`, `pt`,
-`ru`). Use `-m`/`--max` to override the defaults, with `-m -1` to force no limit.
+under 2.5 MB. For smaller folder sizes, default maximum word-lengths are automatically imposed for some languages:
+(`ar`, `es`, `fr`, `hi`, `pt`, `ru`). Use `-m`/`--max` to override the defaults, with `-m -1` to force no limit.
 
 Adjust the `-t`/`--threshold` and `-T`/`--Threshold` parameters to split a wordlist into more, smaller files; e.g.:
 
 - `python scripts/split_dictionary.py -l es -T 15000`
 - `python scripts/split_dictionary.py -l sw -t 1500`
 
-The top of each language's `index.ts` file states which values of `-m`, `-t`, and `-T` were used for that language.
+The top of each language's `.ts` file states which values of `-m`, `-t`, and `-T` were used for that language.
 
 ### Cleanup Local Repository
 
@@ -978,13 +975,13 @@ Task: add an existing user to a project
 Run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- add_user_to_proj.py --project <PROJECT_NAME> --user <USER>
+kubectl -n thecombine exec -it deployment/maintenance -- add_user_to_proj.py --project <PROJECT_NAME> --user <USER>
 ```
 
 For additional options, run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- add_user_to_proj.py --help`
+kubectl -n thecombine exec -it deployment/maintenance -- add_user_to_proj.py --help
 ```
 
 #### Backup _TheCombine_
@@ -994,7 +991,7 @@ Task: Backup the CombineDatabase and the Backend files to the Amazon Simple Stor
 Run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- combine_backup.py [--verbose]
+kubectl -n thecombine exec -it deployment/maintenance -- combine_backup.py [--verbose]
 ```
 
 Notes:
@@ -1012,7 +1009,7 @@ Task: Delete a project
 Run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- rm_project.py <PROJECT_NAME>
+kubectl -n thecombine exec -it deployment/maintenance -- rm_project.py <PROJECT_NAME>
 ```
 
 You may specify more than one `<PROJECT_NAME>` to delete multiple projects.
@@ -1024,7 +1021,7 @@ Task: Restore the CombineDatabase and the Backend files from a backup stored on 
 Run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- combine_restore.py [--verbose] [BACKUP_NAME]
+kubectl -n thecombine exec -it deployment/maintenance -- combine_restore.py [--verbose] [BACKUP_NAME]
 ```
 
 Note:
@@ -1176,7 +1173,7 @@ The process for configuring and deploying _TheCombine_ for production targets is
 - [Redux tutorials](https://redux.js.org/tutorials/typescript-quick-start)
 - [React-i18next](https://react.i18next.com/) (text localization)
 - [Jest](https://jestjs.io/docs/getting-started) (unit testing)
-- [React-Test-Renderer](https://reactjs.org/docs/test-renderer.html) (unit testing)
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) (unit testing)
 - [Parcel](https://parceljs.org/docs/) (bundler/builder)
 
 ### Kubernetes/Helm
@@ -1185,7 +1182,6 @@ The process for configuring and deploying _TheCombine_ for production targets is
 - [Kubernetes Tutorials](https://kubernetes.io/docs/tutorials/)
 - [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
 - [Helm Documentation](https://helm.sh/docs/) has links for:
-
   - [Introduction](https://helm.sh/docs/intro/),
   - [Topic Guides](https://helm.sh/docs/topics/),
   - [Best Practices](https://helm.sh/docs/chart_best_practices),

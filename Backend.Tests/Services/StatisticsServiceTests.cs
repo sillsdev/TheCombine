@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Services
 {
-    public class StatisticsServiceTests
+    internal sealed class StatisticsServiceTests
     {
         private ISemanticDomainRepository _domainRepo = null!;
         private IUserRepository _userRepo = null!;

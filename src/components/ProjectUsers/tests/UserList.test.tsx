@@ -1,22 +1,22 @@
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { User } from "api/models";
+import { UserStub } from "api/models";
 import UserList from "components/ProjectUsers/UserList";
-import { newUser } from "types/user";
+import { newUserStub } from "types/user";
 
 jest.mock("backend", () => ({
-  avatarSrc: () => jest.fn(),
-  getAllUsers: () => mockGetAllUsers(),
+  avatarSrc: jest.fn(),
+  getUsersByFilter: () => mockGetUsersByFilter(),
 }));
 
-const mockGetAllUsers = jest.fn();
+const mockGetUsersByFilter = jest.fn();
 
-const userA: User = { ...newUser("NameA", "userA"), id: "A" };
-const userB: User = { ...newUser("NameB", "userB"), id: "B" };
+const userA: UserStub = { ...newUserStub("NameA", "userA"), id: "A" };
+const userB: UserStub = { ...newUserStub("NameB", "userB"), id: "B" };
 const mockUsers = [userA, userB];
 
-const renderUserList = async (users: User[] = []): Promise<void> => {
+const renderUserList = async (users: UserStub[] = []): Promise<void> => {
   await act(async () => {
     render(
       <UserList
@@ -34,15 +34,15 @@ beforeEach(() => {
 
 describe("UserList", () => {
   it("shows no users by default", async () => {
-    mockGetAllUsers.mockResolvedValue(mockUsers);
+    mockGetUsersByFilter.mockResolvedValue([]);
     await renderUserList(mockUsers);
     expect(screen.queryAllByRole("listitem")).toHaveLength(0);
   });
 
   it("shows user when filter has a match", async () => {
-    mockGetAllUsers.mockResolvedValue(mockUsers);
+    mockGetUsersByFilter.mockResolvedValue([userA]);
     await renderUserList();
-    await userEvent.type(screen.getByRole("textbox"), mockUsers[0].name);
+    await userEvent.type(screen.getByRole("textbox"), userA.name);
     expect(screen.queryAllByRole("listitem")).toHaveLength(1);
   });
 });

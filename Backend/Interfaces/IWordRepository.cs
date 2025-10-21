@@ -12,9 +12,11 @@ namespace BackendFramework.Interfaces
         Task<List<Word>> Create(List<Word> words);
         Task<Word> Add(Word word);
         Task<bool> DeleteAllWords(string projectId);
+        Task<bool> DeleteAllFrontierWords(string projectId);
         Task<bool> HasWords(string projectId);
         Task<bool> HasFrontierWords(string projectId);
         Task<bool> IsInFrontier(string projectId, string wordId);
+        Task<bool> AreInFrontier(string projectId, List<string> wordIds, int count);
         Task<List<Word>> GetFrontier(string projectId);
         Task<List<Word>> GetFrontierWithVernacular(string projectId, string vernacular);
         Task<Word> AddFrontier(Word word);

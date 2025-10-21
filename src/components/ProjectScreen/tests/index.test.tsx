@@ -7,7 +7,8 @@ import theme from "types/theme";
 jest.mock("components/ProjectScreen/ChooseProject", () => "div");
 jest.mock("components/ProjectScreen/CreateProject", () => "div");
 jest.mock("rootRedux/hooks", () => ({
-  useAppDispatch: () => () => mockDispatch(),
+  ...jest.requireActual("rootRedux/hooks"),
+  useAppDispatch: () => mockDispatch,
 }));
 
 const mockDispatch = jest.fn();

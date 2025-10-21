@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import SiteSettings, { SiteSettingsTab } from "components/SiteSettings";
@@ -13,7 +13,13 @@ jest.mock("backend", () => ({
   getAllUsers: (...args: any[]) => mockGetAllUsers(...args),
   getBannerText: (...args: any[]) => mockGetBannerText(...args),
 }));
-jest.mock("components/Project/ProjectActions", () => ({}));
+jest.mock("components/Project/ProjectActions", () => ({
+  clearCurrentProject: jest.fn(),
+}));
+jest.mock("rootRedux/hooks", () => ({
+  ...jest.requireActual("rootRedux/hooks"),
+  useAppDispatch: () => jest.fn(),
+}));
 
 const setupMocks = (): void => {
   mockGetAllProjects.mockResolvedValue([]);
@@ -25,8 +31,6 @@ beforeEach(() => {
   jest.clearAllMocks();
   setupMocks();
 });
-
-afterEach(cleanup);
 
 const renderSiteSettings = async (): Promise<void> => {
   await act(async () => {

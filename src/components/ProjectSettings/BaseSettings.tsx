@@ -3,7 +3,8 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Grid,
+  Box,
+  Stack,
   Typography,
 } from "@mui/material";
 import { type ReactElement, type ReactNode } from "react";
@@ -15,6 +16,8 @@ interface BaseSettingsProps {
   icon: ReactNode;
   /** If maxWidth not specified, defaults to 700px. */
   maxWidth?: string | number;
+  /** If minWidth not specified, defaults to Accordion's default. */
+  minWidth?: string | number;
   /** Setting title (goes second in `AccordionSummary` after icon). */
   title: ReactNode;
 }
@@ -29,17 +32,14 @@ export default function BaseSettings(props: BaseSettingsProps): ReactElement {
         background: (theme) => theme.palette.background.default,
         border: (theme) => `1px solid ${theme.palette.divider}`,
         maxWidth: props.maxWidth || "700px",
+        minWidth: props.minWidth,
       }}
     >
       <AccordionSummary expandIcon={<ExpandMore />}>
-        <Grid container spacing={2} style={{ flexWrap: "nowrap" }}>
-          <Grid item style={{ marginTop: 4, color: "grey" }}>
-            {props.icon}
-          </Grid>
-          <Grid item>
-            <Typography variant="h5">{props.title}</Typography>
-          </Grid>
-        </Grid>
+        <Stack direction="row" spacing={1}>
+          <Box sx={{ color: "grey", paddingTop: 0.5 }}>{props.icon}</Box>
+          <Typography variant="h5">{props.title}</Typography>
+        </Stack>
       </AccordionSummary>
       <AccordionDetails>{props.body}</AccordionDetails>
     </Accordion>

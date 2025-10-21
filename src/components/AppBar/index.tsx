@@ -1,6 +1,6 @@
-import { AppBar, Grid, Toolbar } from "@mui/material";
+import { AppBar, Stack, Toolbar } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 
 import { getProjectId } from "backend/localStorage";
 import { appBarHeight } from "components/AppBar/AppBarTypes";
@@ -26,25 +26,32 @@ export default function AppBarComponent(): ReactElement {
     <div className="NavigationBar" style={{ marginBottom: topBarHeight }}>
       <AppBar
         position="fixed"
-        style={{ maxHeight: appBarHeight, zIndex: theme.zIndex.drawer + 1 }}
+        sx={{ maxHeight: appBarHeight, zIndex: theme.zIndex.drawer + 1 }}
       >
         <Toolbar>
-          <Grid container justifyContent="space-between" alignItems="center">
-            <Grid item>
+          <Stack
+            alignItems="center"
+            direction="row"
+            justifyContent="space-between"
+            sx={{ flexGrow: 1 }}
+          >
+            <div>
               <Logo />
               {!!getProjectId() && (
                 <NavigationButtons currentTab={currentTab} />
               )}
-            </Grid>
-            <Grid item>
+            </div>
+
+            <div>
               {!!getProjectId() && <ProjectButtons currentTab={currentTab} />}
               <DownloadButton colorSecondary />
-            </Grid>
-            <Grid item>
+            </div>
+
+            <div>
               <UserMenu currentTab={currentTab} />
               <UserGuideButton />
-            </Grid>
-          </Grid>
+            </div>
+          </Stack>
         </Toolbar>
       </AppBar>
     </div>

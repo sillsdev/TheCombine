@@ -108,15 +108,15 @@ export const InviteApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    validateToken: async (
+    validateInviteToken: async (
       projectId: string,
       token: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("validateToken", "projectId", projectId);
+      assertParamExists("validateInviteToken", "projectId", projectId);
       // verify required parameter 'token' is not null or undefined
-      assertParamExists("validateToken", "token", token);
+      assertParamExists("validateInviteToken", "token", token);
       const localVarPath = `/v1/invite/{projectId}/validate/{token}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
         .replace(`{${"token"}}`, encodeURIComponent(String(token)));
@@ -190,7 +190,7 @@ export const InviteApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async validateToken(
+    async validateInviteToken(
       projectId: string,
       token: string,
       options?: any
@@ -200,11 +200,12 @@ export const InviteApiFp = function (configuration?: Configuration) {
         basePath?: string
       ) => AxiosPromise<EmailInviteStatus>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.validateToken(
-        projectId,
-        token,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.validateInviteToken(
+          projectId,
+          token,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -247,13 +248,13 @@ export const InviteApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    validateToken(
+    validateInviteToken(
       projectId: string,
       token: string,
       options?: any
     ): AxiosPromise<EmailInviteStatus> {
       return localVarFp
-        .validateToken(projectId, token, options)
+        .validateInviteToken(projectId, token, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -274,22 +275,22 @@ export interface InviteApiEmailInviteToProjectRequest {
 }
 
 /**
- * Request parameters for validateToken operation in InviteApi.
+ * Request parameters for validateInviteToken operation in InviteApi.
  * @export
- * @interface InviteApiValidateTokenRequest
+ * @interface InviteApiValidateInviteTokenRequest
  */
-export interface InviteApiValidateTokenRequest {
+export interface InviteApiValidateInviteTokenRequest {
   /**
    *
    * @type {string}
-   * @memberof InviteApiValidateToken
+   * @memberof InviteApiValidateInviteToken
    */
   readonly projectId: string;
 
   /**
    *
    * @type {string}
-   * @memberof InviteApiValidateToken
+   * @memberof InviteApiValidateInviteToken
    */
   readonly token: string;
 }
@@ -319,17 +320,17 @@ export class InviteApi extends BaseAPI {
 
   /**
    *
-   * @param {InviteApiValidateTokenRequest} requestParameters Request parameters.
+   * @param {InviteApiValidateInviteTokenRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof InviteApi
    */
-  public validateToken(
-    requestParameters: InviteApiValidateTokenRequest,
+  public validateInviteToken(
+    requestParameters: InviteApiValidateInviteTokenRequest,
     options?: any
   ) {
     return InviteApiFp(this.configuration)
-      .validateToken(
+      .validateInviteToken(
         requestParameters.projectId,
         requestParameters.token,
         options

@@ -1,3 +1,4 @@
+using System;
 using Backend.Tests.Mocks;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
@@ -5,16 +6,21 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Services
 {
-    public class LiftServiceTests
+    internal sealed class LiftServiceTests : IDisposable
     {
         private ISemanticDomainRepository _semDomRepo = null!;
         private ISpeakerRepository _speakerRepo = null!;
         private ILiftService _liftService = null!;
 
         private const string FileName = "file.lift-ranges";
-        private const string ProjId = "LiftServiceTestsProjId";
         private const string ExportId = "LiftServiceTestsExportId";
         private const string UserId = "LiftServiceTestsUserId";
+
+        public void Dispose()
+        {
+            _liftService?.Dispose();
+            GC.SuppressFinalize(this);
+        }
 
         [SetUp]
         public void Setup()
@@ -25,7 +31,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void ExportInProgressTest()
+        public void TestExportInProgress()
         {
             Assert.That(_liftService.IsExportInProgress(UserId), Is.False);
             _liftService.SetExportInProgress(UserId, ExportId);
@@ -35,7 +41,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void StoreRetrieveDeleteExportTest()
+        public void TestStoreRetrieveDeleteExport()
         {
             Assert.That(_liftService.RetrieveExport(UserId), Is.Null);
             Assert.That(_liftService.DeleteExport(UserId), Is.False);
@@ -53,7 +59,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void StoreOnlyValidExportsTest()
+        public void TestStoreOnlyValidExports()
         {
             _liftService.SetExportInProgress(UserId, ExportId);
             _liftService.StoreExport(UserId, FileName, "expiredExportId");
@@ -63,7 +69,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void StoreRetrieveDeleteImportTest()
+        public void TestStoreRetrieveDeleteImport()
         {
             Assert.That(_liftService.RetrieveImport(UserId), Is.Null);
             Assert.That(_liftService.DeleteImport(UserId), Is.False);

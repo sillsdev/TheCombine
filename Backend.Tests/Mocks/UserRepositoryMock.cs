@@ -8,18 +8,22 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    sealed internal class UserRepositoryMock : IUserRepository
+    internal sealed class UserRepositoryMock : IUserRepository
     {
-        private readonly List<User> _users;
-
-        public UserRepositoryMock()
-        {
-            _users = new List<User>();
-        }
+        private readonly List<User> _users = [];
 
         public Task<List<User>> GetAllUsers()
         {
             return Task.FromResult(_users.Select(user => user.Clone()).ToList());
+        }
+
+        public Task<List<User>> GetAllUsersByFilter(string filter)
+        {
+            var filteredUsers = _users.Where(user =>
+                user.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                user.Email.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                user.Username.Contains(filter, StringComparison.OrdinalIgnoreCase));
+            return Task.FromResult(filteredUsers.Select(user => user.Clone()).ToList());
         }
 
         public Task<User?> GetUser(string userId, bool sanitize = true)
@@ -76,20 +80,25 @@ namespace Backend.Tests.Mocks
 
         public Task<ResultOfUpdate> Update(string userId, User user, bool updateIsAdmin = false)
         {
-            var foundUser = _users.Single(u => u.Id == userId);
+            var foundUser = _users.SingleOrDefault(u => u.Id == userId);
+            if (foundUser is null)
+            {
+                return Task.FromResult(ResultOfUpdate.NotFound);
+            }
 
             if (!updateIsAdmin)
             {
                 user.IsAdmin = foundUser.IsAdmin;
             }
 
-            var rmCount = _users.RemoveAll(u => u.Id == userId);
-            if (rmCount == 0)
-            {
-                return Task.FromResult(ResultOfUpdate.NotFound);
-            }
-
+            _users.RemoveAll(u => u.Id == userId);
             _users.Add(user.Clone());
+            return Task.FromResult(ResultOfUpdate.Updated);
+        }
+
+        public Task<ResultOfUpdate> VerifyEmail(string userId)
+        {
+            // TODO: more sophisticated mock
             return Task.FromResult(ResultOfUpdate.Updated);
         }
 
@@ -100,8 +109,5 @@ namespace Backend.Tests.Mocks
         }
     }
 
-    internal sealed class UserCreationException : Exception
-    {
-        public UserCreationException() { }
-    }
+    internal sealed class UserCreationException : Exception;
 }

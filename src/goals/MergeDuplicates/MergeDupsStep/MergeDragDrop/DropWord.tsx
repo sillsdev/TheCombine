@@ -1,3 +1,4 @@
+import { Droppable } from "@hello-pangea/dnd";
 import { WarningOutlined } from "@mui/icons-material";
 import {
   Card,
@@ -8,15 +9,12 @@ import {
   Typography,
 } from "@mui/material";
 import { type ReactElement } from "react";
-import { Droppable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 
 import { type Flag } from "api/models";
-import {
-  FlagButton,
-  IconButtonWithTooltip,
-  NoteButton,
-} from "components/Buttons";
+import FlagButton from "components/Buttons/FlagButton";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import NoteButton from "components/Buttons/NoteButton";
 import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import { AudioSummary } from "components/WordCard";
 import DragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DragSense";
@@ -131,7 +129,7 @@ export function DropWordCardHeader(
 
   // Compute how many audio pronunciations the word will have post-merge.
   const otherIds = moves[props.wordId] ?? [];
-  const otherCount = otherIds.reduce((sum, id) => sum + counts[id], 0);
+  const otherCount = otherIds.reduce((sum, id) => sum + (counts[id] ?? 0), 0);
   const audioCount = (treeWord?.audioCount ?? 0) + otherCount;
 
   // Reset vern if not in vern list.

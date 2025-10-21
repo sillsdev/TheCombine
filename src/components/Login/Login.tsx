@@ -3,8 +3,10 @@ import {
   Button,
   Card,
   CardContent,
-  Grid,
+  CardHeader,
+  Grid2,
   Link,
+  Stack,
   TextFieldProps,
   Typography,
 } from "@mui/material";
@@ -19,7 +21,7 @@ import { useTranslation } from "react-i18next";
 
 import { BannerType } from "api/models";
 import { getBannerText } from "backend";
-import { LoadingButton } from "components/Buttons";
+import LoadingButton from "components/Buttons/LoadingButton";
 import Captcha from "components/Login/Captcha";
 import { asyncLogIn } from "components/Login/Redux/LoginActions";
 import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
@@ -29,9 +31,9 @@ import { type StoreState } from "rootRedux/types";
 import router from "router/browserRouter";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
-import theme from "types/theme";
 import { NormalizedTextField } from "utilities/fontComponents";
 import { openUserGuide } from "utilities/pathUtilities";
+import { meetsPasswordRequirements } from "utilities/userUtilities";
 
 export enum LoginId {
   ButtonLogIn = "login-log-in-button",
@@ -46,6 +48,7 @@ export enum LoginTextId {
   ButtonLogin = "login.login",
   ButtonSignUp = "login.signUp",
   Error401 = "login.failed",
+  ErrorPassword = "login.passwordRequirements",
   ErrorUnknown = "login.failedUnknownReason",
   FieldError = "login.required",
   LabelPassword = "login.password",
@@ -90,147 +93,138 @@ export default function Login(): ReactElement {
   const logIn = (e: FormEvent): void => {
     e.preventDefault();
     const p = password.trim();
+    const pOk = meetsPasswordRequirements(p);
     const u = username.trim();
-    setPasswordError(!p);
+    setPasswordError(!pOk);
     setUsernameError(!u);
-    if (p && u) {
+    if (pOk && u) {
       dispatch(asyncLogIn(u, p));
     }
   };
 
   const defaultTextFieldProps = (id?: string): TextFieldProps => ({
     id,
-    inputProps: { "data-testid": id, maxLength: 100 },
     margin: "normal",
     required: true,
+    slotProps: { htmlInput: { maxLength: 100 } },
     style: { width: "100%" },
     variant: "outlined",
   });
 
   return (
-    <Grid container justifyContent="center">
-      <Card style={{ width: 450 }}>
-        <form id={LoginId.Form} onSubmit={logIn}>
-          <CardContent>
-            {/* Title */}
-            <Typography variant="h5" align="center" gutterBottom>
+    <Grid2 container justifyContent="center">
+      <Card sx={{ width: 450 }}>
+        {/* Title */}
+        <CardHeader
+          title={
+            <Typography align="center" variant="h5">
               {t(LoginTextId.Title)}
             </Typography>
+          }
+        />
 
-            {/* Username field */}
-            <NormalizedTextField
-              {...defaultTextFieldProps(LoginId.FieldUsername)}
-              autoComplete="username"
-              autoFocus
-              error={usernameError}
-              helperText={usernameError ? t(LoginTextId.FieldError) : undefined}
-              label={t(LoginTextId.LabelUsername)}
-              onChange={handleUpdateUsername}
-              value={username}
-            />
+        <CardContent>
+          <form id={LoginId.Form} onSubmit={logIn}>
+            <Stack spacing={2}>
+              {/* Username field */}
+              <NormalizedTextField
+                {...defaultTextFieldProps(LoginId.FieldUsername)}
+                autoComplete="username"
+                autoFocus
+                error={usernameError}
+                helperText={
+                  usernameError ? t(LoginTextId.FieldError) : undefined
+                }
+                label={t(LoginTextId.LabelUsername)}
+                onChange={handleUpdateUsername}
+                value={username}
+              />
 
-            {/* Password field */}
-            <NormalizedTextField
-              {...defaultTextFieldProps(LoginId.FieldPassword)}
-              autoComplete="current-password"
-              error={passwordError}
-              helperText={passwordError ? t(LoginTextId.FieldError) : undefined}
-              label={t(LoginTextId.LabelPassword)}
-              onChange={handleUpdatePassword}
-              type="password"
-              value={password}
-            />
+              {/* Password field */}
+              <NormalizedTextField
+                {...defaultTextFieldProps(LoginId.FieldPassword)}
+                autoComplete="current-password"
+                error={passwordError}
+                helperText={
+                  passwordError
+                    ? password
+                      ? t(LoginTextId.ErrorPassword)
+                      : t(LoginTextId.FieldError)
+                    : undefined
+                }
+                label={t(LoginTextId.LabelPassword)}
+                onChange={handleUpdatePassword}
+                type="password"
+                value={password}
+              />
 
-            {/* "Forgot password?" link to reset password */}
-            {RuntimeConfig.getInstance().emailServicesEnabled() && (
-              <Typography>
-                <Link
-                  href={"#"}
-                  onClick={() => router.navigate(Path.PwRequest)}
-                  underline="hover"
-                  variant="subtitle2"
-                >
-                  {t(LoginTextId.LinkForgotPassword)}
-                </Link>
-              </Typography>
-            )}
+              {/* "Forgot password?" link to reset password */}
+              {RuntimeConfig.getInstance().emailServicesEnabled() && (
+                <Typography>
+                  <Link
+                    href={"#"}
+                    onClick={() => router.navigate(Path.PwRequest)}
+                    underline="hover"
+                    variant="subtitle2"
+                  >
+                    {t(LoginTextId.LinkForgotPassword)}
+                  </Link>
+                </Typography>
+              )}
 
-            {/* "Failed to log in" */}
-            {status === LoginStatus.Failure && (
-              <Typography
-                style={{ color: "red", marginBottom: 24, marginTop: 24 }}
-                variant="body2"
-              >
-                {t(
-                  loginError.includes("401")
-                    ? LoginTextId.Error401
-                    : LoginTextId.ErrorUnknown
-                )}
-              </Typography>
-            )}
+              {/* "Failed to log in" */}
+              {status === LoginStatus.Failure && (
+                <Typography sx={{ color: "error.main" }} variant="body2">
+                  {t(
+                    loginError.includes("401")
+                      ? LoginTextId.Error401
+                      : LoginTextId.ErrorUnknown
+                  )}
+                </Typography>
+              )}
 
-            <Captcha setSuccess={setIsVerified} />
+              <Captcha setSuccess={setIsVerified} />
 
-            {/* User Guide, Sign Up, and Log In buttons */}
-            <Grid container justifyContent="space-between">
-              <Grid item xs={1}>
-                <Button
-                  data-testid={LoginId.ButtonUserGuide}
-                  id={LoginId.ButtonUserGuide}
-                  onClick={() => openUserGuide()}
-                >
-                  <Help />
-                </Button>
-              </Grid>
-
-              <Grid
-                container
-                item
-                justifyContent="flex-end"
-                spacing={2}
-                xs="auto"
-              >
-                <Grid item>
+              {/* User Guide, Sign Up, and Log In buttons */}
+              <Grid2 container spacing={2}>
+                <Grid2 size="grow">
                   <Button
-                    data-testid={LoginId.ButtonSignUp}
-                    id={LoginId.ButtonSignUp}
-                    onClick={() => router.navigate(Path.Signup)}
-                    variant="outlined"
+                    data-testid={LoginId.ButtonUserGuide}
+                    id={LoginId.ButtonUserGuide}
+                    onClick={() => openUserGuide()}
                   >
-                    {t(LoginTextId.ButtonSignUp)}
+                    <Help />
                   </Button>
-                </Grid>
+                </Grid2>
 
-                <Grid item>
-                  <LoadingButton
-                    buttonProps={{
-                      "data-testid": LoginId.ButtonLogIn,
-                      id: LoginId.ButtonLogIn,
-                      type: "submit",
-                    }}
-                    disabled={!isVerified}
-                    loading={status === LoginStatus.InProgress}
-                  >
-                    {t(LoginTextId.ButtonLogin)}
-                  </LoadingButton>
-                </Grid>
-              </Grid>
-            </Grid>
+                <Button
+                  data-testid={LoginId.ButtonSignUp}
+                  id={LoginId.ButtonSignUp}
+                  onClick={() => router.navigate(Path.Signup)}
+                  variant="outlined"
+                >
+                  {t(LoginTextId.ButtonSignUp)}
+                </Button>
 
-            {/* Login announcement banner */}
-            {!!banner && (
-              <Typography
-                style={{
-                  marginTop: theme.spacing(2),
-                  padding: theme.spacing(1),
-                }}
-              >
-                {banner}
-              </Typography>
-            )}
-          </CardContent>
-        </form>
+                <LoadingButton
+                  buttonProps={{
+                    "data-testid": LoginId.ButtonLogIn,
+                    id: LoginId.ButtonLogIn,
+                    type: "submit",
+                  }}
+                  disabled={!isVerified}
+                  loading={status === LoginStatus.InProgress}
+                >
+                  {t(LoginTextId.ButtonLogin)}
+                </LoadingButton>
+              </Grid2>
+
+              {/* Login announcement banner */}
+              {!!banner && <Typography>{banner}</Typography>}
+            </Stack>
+          </form>
+        </CardContent>
       </Card>
-    </Grid>
+    </Grid2>
   );
 }

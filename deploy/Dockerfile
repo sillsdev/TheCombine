@@ -5,7 +5,7 @@
 #   - Intel/AMD 64-bit
 ############################################################
 
-FROM python:3.12.8-slim-bookworm
+FROM python:3.12.10-slim-bookworm
 
 USER root
 
@@ -16,7 +16,8 @@ RUN apt-get update && \
   rm -rf /var/lib/apt/lists/*
 
 # Install kubectl and helm
-RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+RUN MACH=amd64 && \
+  curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/${MACH}/kubectl" && \
   install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
   curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
   chmod 700 get_helm.sh && \

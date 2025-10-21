@@ -62,11 +62,18 @@ entry, rather than creating a (mostly) duplicate to something previously entered
 (This does not affect spelling suggestions for the gloss, since those suggestions are based on a dictionary independent
 of existing project data.)
 
-#### Protected Data Override
+#### Protected Data Management
 
-The default setting is Off. Change this to On to allow project users in Merge Duplicates to override the
-[protection](goals.md#protected-entries-and-senses) of words and senses that were imported with data not handled by The
-Combine.
+This section has two Off/On setting toggles related to the [protection](goals.md#protected-entries-and-senses) of words
+and senses that were imported with data not handled by The Combine. Both settings are off by default.
+
+Turn on "Avoid protected sets in Merge Duplicates" to make the Merge Duplicates tool only show sets of potential
+duplicates with at least one word that isn't protected. This will avoid sets of mature entries imported from FieldWorks
+and promote merging entries collected in The Combine.
+
+Turn on "Allow data protection override in Merge Duplicates" to allow project users in Merge Duplicates to manually
+override protection of words and senses. If anybody tries to merge or delete a protected entry or sense, The Combine
+warns them of the fields that will be lost.
 
 #### Archive Project
 
@@ -160,9 +167,16 @@ used for the file names).
 
     Currently, the maximum size of LIFT files supported for import is 100MB.
 
-!!! note "Note"
+When you import a LIFT file into The Combine, it will import every entry with lexeme form or citation form that matches
+the project's vernacular language.
 
-    Currently, only one LIFT file can be imported per project.
+The first time you import into a project, the imported words will be added alongside any words collected in The Combine.
+No automatic deduplication, merging, or syncing will be performed.
+
+If you do a second import, all words in The Combine will be automatically deleted before the new words are imported. Do
+not do a second import unless you have already exported your project and imported it into FieldWorks. Then, if you want
+to do more word collection in The Combine, you can export from FieldWorks and import into the Combine. The previous
+words will be deleted to allow for a clean start with the up-to-date data from FieldWorks.
 
 #### Export {#export}
 
@@ -179,7 +193,7 @@ download. When the data is gathered, the download will begin automatically. The 
 
 #### Export pronunciation speakers
 
-When a project is exported from TheCombine and imported into FieldWorks, if a pronunciation has an associated speaker,
+When a project is exported from The Combine and imported into FieldWorks, if a pronunciation has an associated speaker,
 the speaker name will be added as a pronunciation label. The consent files can be found in the zipped export, but will
 not be imported into FieldWorks.
 

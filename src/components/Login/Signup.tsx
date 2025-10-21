@@ -2,7 +2,9 @@ import {
   Button,
   Card,
   CardContent,
-  Grid,
+  CardHeader,
+  Grid2,
+  Stack,
   TextField,
   TextFieldProps,
   Typography,
@@ -16,7 +18,8 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { LoadingDoneButton } from "components/Buttons";
+import { requestEmailVerify } from "backend";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import Captcha from "components/Login/Captcha";
 import { asyncSignUp } from "components/Login/Redux/LoginActions";
 import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
@@ -25,11 +28,13 @@ import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import router from "router/browserRouter";
 import { Path } from "types/path";
+import { RuntimeConfig } from "types/runtimeConfig";
 import { NormalizedTextField } from "utilities/fontComponents";
 import {
   meetsPasswordRequirements,
   meetsUsernameRequirements,
-} from "utilities/utilities";
+  normalizeEmail,
+} from "utilities/userUtilities";
 
 export enum SignupField {
   Email = "email",
@@ -65,32 +70,16 @@ export const signupFieldTextId: SignupText = {
   [SignupField.Username]: "login.username",
 };
 
-export enum SignupId {
-  ButtonLogIn = "signup-log-in-button",
-  ButtonSignUp = "signup-sign-up-button",
-  FieldEmail = "signup-email-field",
-  FieldName = "signup-name-field",
-  FieldPassword1 = "signup-password1-field",
-  FieldPassword2 = "signup-password2-field",
-  FieldUsername = "signup-username-field",
-  Form = "signup-form",
-}
-
-export const signupFieldId: Record<SignupField, SignupId> = {
-  [SignupField.Email]: SignupId.FieldEmail,
-  [SignupField.Name]: SignupId.FieldName,
-  [SignupField.Password1]: SignupId.FieldPassword1,
-  [SignupField.Password2]: SignupId.FieldPassword2,
-  [SignupField.Username]: SignupId.FieldUsername,
+export const signupFieldId: SignupText = {
+  [SignupField.Email]: "signup-email-field",
+  [SignupField.Name]: "signup-name-field",
+  [SignupField.Password1]: "signup-password1-field",
+  [SignupField.Password2]: "signup-password2-field",
+  [SignupField.Username]: "signup-username-field",
 };
 
-// Chrome silently converts non-ASCII characters in a Textfield of type="email".
-// Use punycode.toUnicode() to convert them from punycode back to Unicode.
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const punycode = require("punycode/");
-
 interface SignupProps {
-  returnToEmailInvite?: () => void;
+  onSignup?: () => void;
 }
 
 /** The Signup page (also used for ProjectInvite) */
@@ -149,9 +138,7 @@ export default function Signup(props: SignupProps): ReactElement {
     // Trim whitespace off fields.
     const name = fieldText[SignupField.Name].trim();
     const username = fieldText[SignupField.Username].trim();
-    const email = punycode
-      .toUnicode(fieldText[SignupField.Email].trim())
-      .normalize("NFC");
+    const email = normalizeEmail(fieldText[SignupField.Email]);
     const password1 = fieldText[SignupField.Password1].trim();
     const password2 = fieldText[SignupField.Password2].trim();
 
@@ -167,8 +154,11 @@ export default function Signup(props: SignupProps): ReactElement {
     if (Object.values(err).some((e) => e)) {
       setFieldError(err);
     } else {
+      const onLogin = RuntimeConfig.getInstance().isOffline()
+        ? undefined
+        : async () => await requestEmailVerify(email);
       await dispatch(
-        asyncSignUp(name, username, email, password1, props.returnToEmailInvite)
+        asyncSignUp(name, username, email, password1, props.onSignup, onLogin)
       );
     }
   };
@@ -176,107 +166,99 @@ export default function Signup(props: SignupProps): ReactElement {
   const defaultTextFieldProps = (field: SignupField): TextFieldProps => ({
     error: fieldError[field],
     id: signupFieldId[field],
-    inputProps: { "data-testid": signupFieldId[field], maxLength: 100 },
     label: t(signupFieldTextId[field]),
     margin: "normal",
     onChange: (e) => updateField(e, field),
     required: true,
+    slotProps: { htmlInput: { maxLength: 100 } },
     style: { width: "100%" },
     value: fieldText[field],
     variant: "outlined",
   });
 
   return (
-    <Grid container justifyContent="center">
-      <Card style={{ width: 450 }}>
-        <form id={SignupId.Form} onSubmit={signUp}>
-          <CardContent>
-            {/* Title */}
-            <Typography align="center" gutterBottom variant="h5">
+    <Grid2 container justifyContent="center">
+      <Card sx={{ width: 450 }}>
+        {/* Title */}
+        <CardHeader
+          title={
+            <Typography align="center" variant="h5">
               {t("login.signUpNew")}
             </Typography>
+          }
+        />
 
-            {/* Name field */}
-            <NormalizedTextField
-              {...defaultTextFieldProps(SignupField.Name)}
-              autoComplete="name"
-              autoFocus
-              helperText={
-                fieldError[SignupField.Name] ? t("login.required") : undefined
-              }
-            />
+        <CardContent>
+          <form onSubmit={signUp}>
+            <Stack spacing={2}>
+              {/* Name field */}
+              <NormalizedTextField
+                {...defaultTextFieldProps(SignupField.Name)}
+                autoComplete="name"
+                autoFocus
+                helperText={
+                  fieldError[SignupField.Name] ? t("login.required") : undefined
+                }
+              />
 
-            {/* Username field */}
-            <NormalizedTextField
-              {...defaultTextFieldProps(SignupField.Username)}
-              autoComplete="username"
-              helperText={t("login.usernameRequirements")}
-              onBlur={() => checkUsername()}
-            />
+              {/* Username field */}
+              <NormalizedTextField
+                {...defaultTextFieldProps(SignupField.Username)}
+                autoComplete="username"
+                helperText={t("login.usernameRequirements")}
+                onBlur={() => checkUsername()}
+              />
 
-            {/* Email field */}
-            {/* Don't use NormalizedTextField for type="email".
-            At best, it doesn't normalize, because of the punycode. */}
-            <TextField
-              {...defaultTextFieldProps(SignupField.Email)}
-              autoComplete="email"
-              type="email"
-            />
+              {/* Email field */}
+              {/* Don't use NormalizedTextField for type="email".
+              At best, it doesn't normalize, because of the punycode. */}
+              <TextField
+                {...defaultTextFieldProps(SignupField.Email)}
+                autoComplete="email"
+                type="email" // silently converts input to punycode
+              />
 
-            {/* Password field */}
-            <NormalizedTextField
-              {...defaultTextFieldProps(SignupField.Password1)}
-              autoComplete="new-password"
-              helperText={t("login.passwordRequirements")}
-              onBlur={() => checkPassword1()}
-              type="password"
-            />
+              {/* Password field */}
+              <NormalizedTextField
+                {...defaultTextFieldProps(SignupField.Password1)}
+                autoComplete="new-password"
+                helperText={t("login.passwordRequirements")}
+                onBlur={() => checkPassword1()}
+                type="password"
+              />
 
-            {/* Confirm Password field */}
-            <NormalizedTextField
-              {...defaultTextFieldProps(SignupField.Password2)}
-              autoComplete="new-password"
-              helperText={
-                fieldError[SignupField.Password2]
-                  ? t("login.confirmPasswordError")
-                  : undefined
-              }
-              onBlur={() => checkPassword2()}
-              type="password"
-            />
+              {/* Confirm Password field */}
+              <NormalizedTextField
+                {...defaultTextFieldProps(SignupField.Password2)}
+                autoComplete="new-password"
+                helperText={
+                  fieldError[SignupField.Password2]
+                    ? t("login.confirmPasswordError")
+                    : undefined
+                }
+                onBlur={() => checkPassword2()}
+                type="password"
+              />
 
-            {/* "Failed to sign up" */}
-            {!!error && (
-              <Typography
-                style={{ color: "red", marginBottom: 24, marginTop: 24 }}
-                variant="body2"
-              >
-                {t(error)}
-              </Typography>
-            )}
+              {/* "Failed to sign up" */}
+              {!!error && (
+                <Typography sx={{ color: "error.main" }} variant="body2">
+                  {t(error)}
+                </Typography>
+              )}
 
-            <Captcha setSuccess={setIsVerified} />
+              <Captcha setSuccess={setIsVerified} />
 
-            {/* Sign Up and Log In buttons */}
-            <Grid container justifyContent="flex-end" spacing={2}>
-              <Grid item>
+              {/* Back-to-login and Sign-up buttons */}
+              <Stack direction="row" justifyContent="flex-end" spacing={2}>
                 <Button
-                  data-testid={SignupId.ButtonLogIn}
-                  id={SignupId.ButtonLogIn}
                   onClick={() => router.navigate(Path.Login)}
-                  type="button"
                   variant="outlined"
                 >
                   {t("login.backToLogin")}
                 </Button>
-              </Grid>
-              <Grid item>
+
                 <LoadingDoneButton
-                  buttonProps={{
-                    color: "primary",
-                    "data-testid": SignupId.ButtonSignUp,
-                    id: SignupId.ButtonSignUp,
-                  }}
                   disabled={!isVerified}
                   done={signupStatus === LoginStatus.Success}
                   doneText={t("login.signUpSuccess")}
@@ -284,11 +266,11 @@ export default function Signup(props: SignupProps): ReactElement {
                 >
                   {t("login.signUp")}
                 </LoadingDoneButton>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </form>
+              </Stack>
+            </Stack>
+          </form>
+        </CardContent>
       </Card>
-    </Grid>
+    </Grid2>
   );
 }

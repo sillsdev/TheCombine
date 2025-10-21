@@ -88,4 +88,27 @@ describe("utilities/utilities", () => {
       });
     });
   });
+
+  describe("distinctColors", () => {
+    it("returns empty array for n<1", () => {
+      expect(utilities.distinctColors(-1)).toHaveLength(0);
+      expect(utilities.distinctColors(0)).toHaveLength(0);
+      expect(utilities.distinctColors(0.5)).toHaveLength(0);
+    });
+
+    const maxN = 40;
+
+    it(`throws for n > ${maxN}`, () => {
+      expect(() => {
+        utilities.distinctColors(maxN + 1);
+      }).toThrow();
+    });
+
+    it("generates valid colors", () => {
+      const colors = utilities.distinctColors(maxN);
+      colors.forEach((color) => {
+        expect(/^#[0-9a-f]{6}$/.test(color)).toBeTruthy();
+      });
+    });
+  });
 });

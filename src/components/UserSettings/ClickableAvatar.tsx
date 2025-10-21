@@ -3,8 +3,8 @@ import { Avatar } from "@mui/material";
 import { ReactElement, useState } from "react";
 
 import { uploadAvatar } from "backend";
-import { getAvatar, getUserId } from "backend/localStorage";
-import { UploadImageDialog } from "components/Dialogs";
+import { getAvatar } from "backend/localStorage";
+import UploadImageDialog from "components/Dialogs/UploadImageDialog";
 
 const avatarStyle = { height: 60, width: 60 };
 const avatarOverlayStyle = {
@@ -53,7 +53,7 @@ export default function ClickableAvatar(
         close={closeDialog}
         open={avatarDialogOpen}
         titleId="userSettings.uploadAvatarTitle"
-        uploadImage={(imgFile: File) => uploadAvatar(getUserId(), imgFile)}
+        uploadImage={(imgFile: File) => uploadAvatar(imgFile)}
       />
     </>
   );

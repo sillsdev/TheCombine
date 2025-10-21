@@ -38,7 +38,7 @@ from script_step import ScriptStep
 def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
     parser = argparse.ArgumentParser(
-        description="Restore TheCombine database and backend files from a file in AWS S3.",
+        description="Restore The Combine database and backend files from a file in AWS S3.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
@@ -60,7 +60,7 @@ def aws_strip_bucket(obj_name: str) -> str:
 
 
 def main() -> None:
-    """Restore TheCombine from a backup stored in the AWS S3 service."""
+    """Restore The Combine from a backup stored in the AWS S3 service."""
     args = parse_args()
     if args.verbose:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)

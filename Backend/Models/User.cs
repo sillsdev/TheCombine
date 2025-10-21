@@ -11,113 +11,97 @@ namespace BackendFramework.Models
         [Required]
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string Id { get; set; } = "";
 
         [Required]
         [BsonElement("avatar")]
-        public string Avatar { get; set; }
+        public string Avatar { get; set; } = "";
 
         [Required]
         [BsonElement("hasAvatar")]
-        public bool HasAvatar { get; set; }
+        public bool HasAvatar { get; set; } = false;
 
         [Required]
         [BsonElement("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         [Required]
         [BsonElement("email")]
-        public string Email { get; set; }
+        public string Email { get; set; } = "";
 
         [Required]
         [BsonElement("phone")]
-        public string Phone { get; set; }
+        public string Phone { get; set; } = "";
 
         /// <summary>
         /// Other form of contact if phone/email are unavailable.
         /// Not implemented in frontend.
         /// </summary>
         [BsonElement("otherConnectionField")]
-        public string OtherConnectionField { get; set; }
+        public string OtherConnectionField { get; set; } = "";
 
         /// <summary> Maps a projectId to a userEditId </summary>
         [Required]
         [BsonElement("workedProjects")]
-        public Dictionary<string, string> WorkedProjects { get; set; }
+        public Dictionary<string, string> WorkedProjects { get; set; } = [];
 
         /// <summary> Maps a projectId to a userRoleId </summary>
         [Required]
         [BsonElement("projectRoles")]
-        public Dictionary<string, string> ProjectRoles { get; set; }
+        public Dictionary<string, string> ProjectRoles { get; set; } = [];
 
         /// <summary>
         /// If the user has consented for audio/video containing them to be used.
         /// Not implemented in frontend.
         /// </summary>
         [BsonElement("agreement")]
-        public bool Agreement { get; set; }
+        public bool Agreement { get; set; } = false;
 
         [Required]
         [BsonElement("password")]
-        public string Password { get; set; }
+        public string Password { get; set; } = "";
 
         [Required]
         [BsonElement("username")]
-        public string Username { get; set; }
+        public string Username { get; set; } = "";
 
         /// <summary>
         /// Is false if user rejects analytics, true otherwise.
         /// User can update consent anytime.
         /// </summary>
         [BsonElement("analyticsOn")]
-        public bool AnalyticsOn { get; set; }
+        public bool AnalyticsOn { get; set; } = true;
 
         /// <summary>
         /// Is set permanently to true once user first accepts or rejects analytics upon login.
         /// </summary>
         [BsonElement("answeredConsent")]
-        public bool AnsweredConsent { get; set; }
+        public bool AnsweredConsent { get; set; } = false;
 
         [BsonElement("uiLang")]
-        public string UILang { get; set; }
+        public string UILang { get; set; } = "";
 
         [Required]
         [BsonElement("glossSuggestion")]
         [BsonRepresentation(BsonType.String)]
-        public OffOnSetting GlossSuggestion { get; set; }
+        public OffOnSetting GlossSuggestion { get; set; } = OffOnSetting.On;
 
         [Required]
         [BsonElement("token")]
-        public string Token { get; set; }
+        public string Token { get; set; } = "";
 
         /// <summary>
         /// Is set to true if the user is a Database Admin, implicitly grants ALL permissions for ALL Projects
         /// </summary>
         [Required]
         [BsonElement("isAdmin")]
-        public bool IsAdmin { get; set; }
+        public bool IsAdmin { get; set; } = false;
 
-        public User()
-        {
-            Id = "";
-            Avatar = "";
-            HasAvatar = false;
-            Name = "";
-            Email = "";
-            Phone = "";
-            OtherConnectionField = "";
-            Agreement = false;
-            Password = "";
-            Username = "";
-            AnalyticsOn = true;
-            AnsweredConsent = false;
-            UILang = "";
-            GlossSuggestion = OffOnSetting.On;
-            Token = "";
-            IsAdmin = false;
-            WorkedProjects = new();
-            ProjectRoles = new();
-        }
+        /// <summary>
+        /// Is set to true after a user has verified their email address.
+        /// </summary>
+        [BsonElement("isEmailVerified")]
+        public bool IsEmailVerified { get; set; } = false;
 
         /// <summary> Create a deep copy. </summary>
         public User Clone()
@@ -137,6 +121,23 @@ namespace BackendFramework.Models
         }
     }
 
+    public class UserStub(User user)
+    {
+        [Required]
+        public string Id { get; set; } = user.Id;
+
+        [Required]
+        public string Name { get; set; } = user.Name;
+
+        [Required]
+        public string Username { get; set; } = user.Username;
+
+        [Required]
+        public bool HasAvatar { get; set; } = user.HasAvatar;
+
+        public string? RoleId { get; set; }
+    }
+
     /// <summary> Contains email/username and password for authentication. </summary>
     /// <remarks>
     /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
@@ -144,14 +145,8 @@ namespace BackendFramework.Models
     public class Credentials
     {
         [Required]
-        public string EmailOrUsername { get; set; }
+        public string EmailOrUsername { get; set; } = "";
         [Required]
-        public string Password { get; set; }
-
-        public Credentials()
-        {
-            EmailOrUsername = "";
-            Password = "";
-        }
+        public string Password { get; set; } = "";
     }
 }

@@ -2,18 +2,17 @@ import "@testing-library/jest-dom";
 import {
   type RenderOptions,
   act,
-  cleanup,
   render,
   screen,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { type ReactElement, type ReactNode } from "react";
 import { Provider } from "react-redux";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router";
 import configureMockStore from "redux-mock-store";
 
 import PasswordReset, {
-  PasswordResetTestIds,
+  PasswordResetTextId,
 } from "components/PasswordReset/ResetPage";
 import { Path } from "types/path";
 
@@ -36,8 +35,6 @@ beforeEach(() => {
   jest.clearAllMocks();
   setupMocks();
 });
-
-afterEach(cleanup);
 
 const ResetPageProviders = ({
   children,
@@ -65,118 +62,60 @@ const customRender = async (
 };
 
 describe("PasswordReset", () => {
-  it("renders with password length error", async () => {
+  it("disables button when password too short", async () => {
     const user = userEvent.setup();
     await customRender(<PasswordReset />);
 
     const shortPassword = "foo";
-    const passwdField = screen.getByTestId(PasswordResetTestIds.Password);
-    const passwdConfirm = screen.getByTestId(
-      PasswordResetTestIds.ConfirmPassword
-    );
+    const pw1Field = screen.getByLabelText(PasswordResetTextId.FieldPassword1);
+    const pw2Field = screen.getByLabelText(PasswordResetTextId.FieldPassword2);
 
-    await user.type(passwdField, shortPassword);
-    await user.type(passwdConfirm, shortPassword);
+    await user.type(pw1Field, shortPassword);
+    await user.type(pw2Field, shortPassword);
 
-    const reqErrors = screen.queryAllByTestId(
-      PasswordResetTestIds.PasswordReqError
-    );
-    const confirmErrors = screen.queryAllByTestId(
-      PasswordResetTestIds.PasswordMatchError
-    );
-    const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
-
-    expect(reqErrors.length).toBeGreaterThan(0);
-    expect(confirmErrors.length).toBe(0);
-    expect(submitButton.closest("button")).toBeDisabled();
+    expect(screen.getByRole("button")).toBeDisabled();
   });
 
-  it("renders with password match error", async () => {
+  it("disables button when passwords don't match", async () => {
     const user = userEvent.setup();
     await customRender(<PasswordReset />);
 
     const passwordEntry = "password";
     const confirmEntry = "passward";
-    const passwdField = screen.getByTestId(PasswordResetTestIds.Password);
-    const passwdConfirm = screen.getByTestId(
-      PasswordResetTestIds.ConfirmPassword
-    );
+    const pw1Field = screen.getByLabelText(PasswordResetTextId.FieldPassword1);
+    const pw2Field = screen.getByLabelText(PasswordResetTextId.FieldPassword2);
+    expect(
+      screen.queryByText(PasswordResetTextId.FieldPassword2Error)
+    ).toBeNull();
 
-    await user.type(passwdField, passwordEntry);
-    await user.type(passwdConfirm, confirmEntry);
+    await user.type(pw1Field, passwordEntry);
+    await user.type(pw2Field, confirmEntry);
 
-    const reqErrors = screen.queryAllByTestId(
-      PasswordResetTestIds.PasswordReqError
-    );
-    const confirmErrors = screen.queryAllByTestId(
-      PasswordResetTestIds.PasswordMatchError
-    );
-    const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
-
-    expect(reqErrors.length).toBe(0);
-    expect(confirmErrors.length).toBeGreaterThan(0);
-    expect(submitButton.closest("button")).toBeDisabled();
+    expect(screen.getByRole("button")).toBeDisabled();
+    expect(
+      screen.queryByText(PasswordResetTextId.FieldPassword2Error)
+    ).toBeTruthy();
   });
 
-  it("renders with no password errors", async () => {
+  it("enables button when passwords are long enough and match", async () => {
     const user = userEvent.setup();
     await customRender(<PasswordReset />);
 
     const passwordEntry = "password";
-    const confirmEntry = "password";
-    const passwdField = screen.getByTestId(PasswordResetTestIds.Password);
-    const passwdConfirm = screen.getByTestId(
-      PasswordResetTestIds.ConfirmPassword
-    );
+    const pw1Field = screen.getByLabelText(PasswordResetTextId.FieldPassword1);
+    const pw2Field = screen.getByLabelText(PasswordResetTextId.FieldPassword2);
 
-    await user.type(passwdField, passwordEntry);
-    await user.type(passwdConfirm, confirmEntry);
+    await user.type(pw1Field, passwordEntry);
+    await user.type(pw2Field, passwordEntry);
 
-    const reqErrors = screen.queryAllByTestId(
-      PasswordResetTestIds.PasswordReqError
-    );
-    const confirmErrors = screen.queryAllByTestId(
-      PasswordResetTestIds.PasswordMatchError
-    );
-    const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
-
-    expect(reqErrors.length).toBe(0);
-    expect(confirmErrors.length).toBe(0);
-    expect(submitButton.closest("button")).toBeEnabled();
-  });
-
-  it("renders with expire error", async () => {
-    // rerender the component with the resetFailure prop set.
-    const user = userEvent.setup();
-    await customRender(<PasswordReset />);
-
-    const passwordEntry = "password";
-    const confirmEntry = "password";
-    const passwdField = screen.getByTestId(PasswordResetTestIds.Password);
-    const passwdConfirm = screen.getByTestId(
-      PasswordResetTestIds.ConfirmPassword
-    );
-
-    await user.type(passwdField, passwordEntry);
-    await user.type(passwdConfirm, confirmEntry);
-
-    const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
-    mockPasswordReset.mockResolvedValueOnce(false);
-    await user.click(submitButton);
-
-    const resetErrors = screen.queryAllByTestId(
-      PasswordResetTestIds.PasswordResetFail
-    );
-    expect(resetErrors.length).toBeGreaterThan(0);
+    expect(screen.getByRole("button")).toBeEnabled();
   });
 
   it("renders the InvalidLink component if token not valid", async () => {
     mockValidateResetToken.mockResolvedValueOnce(false);
     await customRender(<PasswordReset />);
-    for (const id of Object.values(PasswordResetTestIds)) {
-      expect(screen.queryAllByTestId(id)).toHaveLength(0);
-    }
-    // The textId will show up as text because t() is mocked to return its input.
-    expect(screen.queryAllByText("passwordReset.invalidURL")).toBeTruthy();
+
+    expect(screen.queryByRole("textbox")).toBeNull();
+    expect(screen.getByText(PasswordResetTextId.Invalid)).toBeTruthy();
   });
 });

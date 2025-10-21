@@ -1,6 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { act } from "react";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
@@ -40,14 +39,14 @@ const renderLogin = async (): Promise<void> => {
 };
 
 /** Type the given value into the field with the given ID. */
-const typeInField = async (id: LoginId, value: string): Promise<void> => {
-  await userEvent.type(screen.getByTestId(id), value);
+const typeInField = async (id: LoginTextId, value: string): Promise<void> => {
+  await userEvent.type(screen.getByLabelText(new RegExp(id)), value);
 };
 
 /** Click the Login button and confirm whether the field with the given ID has an error. */
 const loginAndCheckError = async (errorId?: LoginId): Promise<void> => {
   // Login button click
-  await act(async () => screen.getByTestId(LoginId.ButtonLogIn).click());
+  await userEvent.click(screen.getByTestId(LoginId.ButtonLogIn));
 
   // Username field check
   const userLabel = screen.getByText(LoginTextId.LabelUsername);
@@ -85,22 +84,22 @@ describe("Login", () => {
     // Don't test with empty username or password, because those prevent submission.
 
     it("errors when username is whitespace", async () => {
-      await typeInField(LoginId.FieldUsername, "    ");
-      await typeInField(LoginId.FieldPassword, "nonempty");
+      await typeInField(LoginTextId.LabelUsername, "    ");
+      await typeInField(LoginTextId.LabelPassword, "nonempty");
 
       await loginAndCheckError(LoginId.FieldUsername);
     });
 
     it("errors when password is whitespace", async () => {
-      await typeInField(LoginId.FieldUsername, "nonempty");
-      await typeInField(LoginId.FieldPassword, "   ");
+      await typeInField(LoginTextId.LabelUsername, "nonempty");
+      await typeInField(LoginTextId.LabelPassword, "   ");
 
       await loginAndCheckError(LoginId.FieldPassword);
     });
 
     it("submits when username and password are valid", async () => {
-      await typeInField(LoginId.FieldUsername, "nonempty");
-      await typeInField(LoginId.FieldPassword, "nonempty");
+      await typeInField(LoginTextId.LabelUsername, "nonempty");
+      await typeInField(LoginTextId.LabelPassword, "nonempty");
 
       await loginAndCheckError();
     });

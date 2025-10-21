@@ -1,13 +1,15 @@
-import { Button, Grid, Typography } from "@mui/material";
+import { Email } from "@mui/icons-material";
+import { Button, Stack, Typography } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
 
-import { Role, User } from "api/models";
-import * as backend from "backend";
+import { Role } from "api/models";
+import { addOrUpdateUserRole } from "backend";
 import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
 import EmailInvite from "components/ProjectUsers/EmailInvite";
+import RequestEmailVerify from "components/ProjectUsers/RequestEmailVerify";
 import UserList from "components/ProjectUsers/UserList";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
@@ -24,6 +26,8 @@ const customStyles = {
   },
 };
 
+const emailIsEnabled = RuntimeConfig.getInstance().emailServicesEnabled();
+
 interface AddProjectUsersProps {
   projectId: string;
   siteAdmin?: boolean;
@@ -32,21 +36,26 @@ interface AddProjectUsersProps {
 export default function AddProjectUsers(
   props: AddProjectUsersProps
 ): ReactElement {
+  const emailIsVerified = useAppSelector(
+    (state: StoreState) => state.loginState.isEmailVerified
+  );
   const projectUsers = useAppSelector(
     (state: StoreState) => state.currentProjectState.users
   );
   const dispatch = useAppDispatch();
-  const [showModal, setShowModal] = useState<boolean>(false);
+
+  const [emailVerifySent, setEmailVerifySent] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
   const { t } = useTranslation();
 
   useEffect(() => {
     Modal.setAppElement("body");
   }, [projectUsers]);
 
-  function addToProject(user: User): void {
-    if (!projectUsers.map((u) => u.id).includes(user.id)) {
-      backend
-        .addOrUpdateUserRole(props.projectId, Role.Harvester, user.id)
+  function addToProject(userId: string): void {
+    if (!projectUsers.some((u) => u.id === userId)) {
+      addOrUpdateUserRole(props.projectId, Role.Harvester, userId)
         .then(() => {
           toast.success(t("projectSettings.invite.toastSuccess"));
           dispatch(asyncRefreshProjectUsers(props.projectId));
@@ -58,47 +67,76 @@ export default function AddProjectUsers(
     }
   }
 
-  return (
-    <>
-      <Grid container spacing={1}>
-        <UserList
-          addToProject={addToProject}
-          minSearchLength={props.siteAdmin ? 1 : 3}
-          projectUsers={projectUsers}
-        />
-      </Grid>
+  if (emailIsEnabled && !emailIsVerified) {
+    const onSubmit = (): void => {
+      setEmailVerifySent(true);
+      setShowVerifyModal(false);
+      toast.success(t("userSettings.verifyEmail.verificationSent"));
+    };
 
-      {RuntimeConfig.getInstance().emailServicesEnabled() && (
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <Typography>{t("projectSettings.invite.or")}</Typography>
-          </Grid>
+    return (
+      <Stack alignItems="flex-start" spacing={1}>
+        <Typography>{t("userSettings.verifyEmail.description")}</Typography>
 
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              onClick={() => setShowModal(true)}
-              id="project-user-invite"
-            >
-              {t("projectSettings.invite.inviteByEmailLabel")}
-            </Button>
-          </Grid>
-        </Grid>
-      )}
-
-      {RuntimeConfig.getInstance().emailServicesEnabled() && (
-        <Modal
-          isOpen={showModal}
-          style={customStyles}
-          shouldCloseOnOverlayClick
-          onRequestClose={() => setShowModal(false)}
+        <Button
+          disabled={emailVerifySent}
+          onClick={() => setShowVerifyModal(true)}
+          startIcon={<Email />}
+          variant="contained"
         >
-          <EmailInvite
-            addToProject={addToProject}
-            close={() => setShowModal(false)}
+          {t(
+            emailVerifySent
+              ? "userSettings.verifyEmail.emailVerifying"
+              : "userSettings.verifyEmail.button"
+          )}
+        </Button>
+
+        <Modal
+          isOpen={showVerifyModal}
+          onRequestClose={() => setShowVerifyModal(false)}
+          style={customStyles}
+        >
+          <RequestEmailVerify
+            onCancel={() => setShowVerifyModal(false)}
+            onSubmit={onSubmit}
           />
         </Modal>
+      </Stack>
+    );
+  }
+
+  return (
+    <Stack alignItems="flex-start" spacing={1}>
+      <UserList
+        addToProject={addToProject}
+        minSearchLength={props.siteAdmin ? 1 : 3}
+        projectUsers={projectUsers}
+      />
+
+      {emailIsEnabled && (
+        <>
+          <Typography>{t("projectSettings.invite.or")}</Typography>
+
+          <Button
+            id="project-user-invite"
+            onClick={() => setShowInviteModal(true)}
+            variant="contained"
+          >
+            {t("projectSettings.invite.inviteByEmailLabel")}
+          </Button>
+
+          <Modal
+            isOpen={showInviteModal}
+            onRequestClose={() => setShowInviteModal(false)}
+            style={customStyles}
+          >
+            <EmailInvite
+              addToProject={addToProject}
+              close={() => setShowInviteModal(false)}
+            />
+          </Modal>
+        </>
       )}
-    </>
+    </Stack>
   );
 }

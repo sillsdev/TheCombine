@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class AudioControllerTests : IDisposable
+    internal sealed class AudioControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
         private IWordRepository _wordRepo = null!;
@@ -21,16 +21,8 @@ namespace Backend.Tests.Controllers
 
         public void Dispose()
         {
-            Dispose(true);
+            _audioController?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _audioController?.Dispose();
-            }
         }
 
         private string _projId = null!;
@@ -58,6 +50,7 @@ namespace Backend.Tests.Controllers
         public void TestUploadAudioFileUnauthorized()
         {
             _audioController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
             var result = _audioController.UploadAudioFile(_projId, _wordId, _file).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
 
@@ -82,7 +75,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestUploadConsentNullFile()
+        public void TestUploadAudioFileNullFile()
         {
             var result = _audioController.UploadAudioFile(_projId, _wordId, null).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
@@ -92,15 +85,26 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestUploadConsentEmptyFile()
+        public void TestUploadAudioFileEmptyFile()
         {
-            // Use 0 for the third argument
+            // Use 0 for the third argument to simulate an empty file.
             _file = new FormFile(_stream, 0, 0, "Name", FileName);
 
             var result = _audioController.UploadAudioFile(_projId, _wordId, _file).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+
             result = _audioController.UploadAudioFile(_projId, _wordId, "speakerId", _file).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+
+        [Test]
+        public void TestUploadAudioFileNoWord()
+        {
+            var result = _audioController.UploadAudioFile(_projId, "not-a-word", _file).Result;
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+
+            result = _audioController.UploadAudioFile(_projId, "not-a-word", "speakerId", _file).Result;
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
 
         [Test]
@@ -115,30 +119,59 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDownloadAudioFileInvalidArguments()
         {
-            var result = _audioController.DownloadAudioFile("invalid/projId", "wordId", "fileName");
+            var result = _audioController.DownloadAudioFile("invalid/projId", "fileName");
             Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
 
-            result = _audioController.DownloadAudioFile("projId", "invalid/wordId", "fileName");
-            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
-
-            result = _audioController.DownloadAudioFile("projId", "wordId", "invalid/fileName");
+            result = _audioController.DownloadAudioFile("projId", "invalid/fileName");
             Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
         }
 
         [Test]
         public void TestDownloadAudioFileNoFile()
         {
-            var result = _audioController.DownloadAudioFile("projId", "wordId", "fileName");
+            var result = _audioController.DownloadAudioFile("projId", "fileName");
             Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
         }
 
         [Test]
-        public void DeleteAudio()
+        public void TestDeleteAudioFileUnauthorized()
+        {
+            _audioController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _audioController.DeleteAudioFile(_projId, _wordId, _file.FileName).Result;
+            Assert.That(result, Is.TypeOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestDeleteAudioFileInvalidArguments()
+        {
+            var result = _audioController.DeleteAudioFile("in/va/lid", _wordId, _file.FileName).Result;
+            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
+
+            result = _audioController.DeleteAudioFile(_projId, "in/va/lid", _file.FileName).Result;
+            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
+
+            result = _audioController.DeleteAudioFile(_projId, _wordId, "in/va/lid").Result;
+            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
+        }
+
+        [Test]
+        public void TestDeleteAudioFileNoWordWithAudio()
+        {
+            var result = _audioController.DeleteAudioFile(_projId, "not-a-word", _file.FileName).Result;
+            Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
+
+            var wordId = _wordRepo.Create(Util.RandomWord(_projId)).Result.Id;
+            result = _audioController.DeleteAudioFile(_projId, wordId, _file.FileName).Result;
+            Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
+        }
+
+        [Test]
+        public void TestDeleteAudioFile()
         {
             // Refill test database
             _wordRepo.DeleteAllWords(_projId);
             var origWord = Util.RandomWord(_projId);
-            var fileName = "a.wav";
+            const string fileName = "a.wav";
             origWord.Audio.Add(new Pronunciation(fileName));
             var wordId = _wordRepo.Create(origWord).Result.Id;
 

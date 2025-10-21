@@ -1,70 +1,59 @@
-import { Card, Grid, ListItem, List } from "@mui/material";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import { ReactElement, useState, useEffect } from "react";
 
 import { SemanticDomainUserCount } from "api/models";
 import { getSemanticDomainUserCount } from "backend";
 import * as LocalStorage from "backend/localStorage";
-import { ColumnHead, TableCell } from "components/Statistics/TableCells";
+import { Cell, HeadCell } from "components/Statistics/TableCells";
 
-interface UserStatisticsProps {
-  lang: string;
-}
-
-export default function UserStatistics(
-  props: UserStatisticsProps
-): ReactElement {
+export default function UserStatistics(): ReactElement {
   const [domainUserCountList, setDomainUserCountList] = useState<
     SemanticDomainUserCount[]
   >([]);
 
   useEffect(() => {
     const updateSemanticDomainUserCounts = async (): Promise<void> => {
-      const counts = await getUserStatistics(
-        LocalStorage.getProjectId(),
-        props.lang
-      );
+      const counts = await getUserStatistics(LocalStorage.getProjectId());
       if (counts !== undefined) {
         return setDomainUserCountList(counts);
       }
     };
     updateSemanticDomainUserCounts();
-  }, [props.lang]);
+  }, []);
 
   async function getUserStatistics(
-    projectId: string,
-    lang?: string
+    projectId: string
   ): Promise<SemanticDomainUserCount[] | undefined> {
-    return await getSemanticDomainUserCount(projectId, lang);
+    return await getSemanticDomainUserCount(projectId);
   }
 
   return (
-    <Grid container justifyContent="center">
-      <Card style={{ width: 600 }}>
-        <List>
-          <Grid container wrap="nowrap" justifyContent="space-around">
-            <ColumnHead titleId={"statistics.column.username"} />
-            <ColumnHead titleId={"statistics.column.domainCount"} />
-            <ColumnHead titleId={"statistics.column.senseCount"} />
-          </Grid>
-        </List>
-        <List>
+    <TableContainer component={Paper} sx={{ maxWidth: 700 }}>
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <HeadCell titleId={"statistics.column.username"} />
+            <HeadCell titleId={"statistics.column.domainCount"} />
+            <HeadCell titleId={"statistics.column.senseCount"} />
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {domainUserCountList.map((t) => (
-            <TableRow key={t.id} counts={t} />
+            <TableRow key={t.id}>
+              <Cell text={t.username} />
+              <Cell text={t.domainCount} />
+              <Cell text={t.wordCount} />
+            </TableRow>
           ))}
-        </List>
-      </Card>
-    </Grid>
-  );
-}
-
-function TableRow(props: { counts: SemanticDomainUserCount }): ReactElement {
-  return (
-    <ListItem style={{ minWidth: "600px" }}>
-      <Grid container wrap="nowrap" justifyContent="space-around">
-        <TableCell text={props.counts.username} />
-        <TableCell text={props.counts.domainCount} />
-        <TableCell text={props.counts.wordCount} />
-      </Grid>
-    </ListItem>
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }

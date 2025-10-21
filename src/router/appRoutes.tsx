@@ -1,6 +1,7 @@
 import loadable from "@loadable/component";
-import { RouteObject } from "react-router-dom";
+import { RouteObject } from "react-router";
 
+import EmailVerify from "components/EmailVerify";
 import LandingPage from "components/LandingPage";
 import Login from "components/Login/Login";
 import ProjectInvite from "components/Login/ProjectInvite";
@@ -27,6 +28,10 @@ export const appRoutes: RouteObject[] = [
         <AppWithBar />
       </RequireAuth>
     ),
+  },
+  {
+    path: `${Path.EmailVerify}/:token`,
+    element: <EmailVerify />,
   },
   {
     path: Path.Login,

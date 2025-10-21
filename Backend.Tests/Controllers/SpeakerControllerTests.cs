@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class SpeakerControllerTests : IDisposable
+    internal sealed class SpeakerControllerTests : IDisposable
     {
         private ISpeakerRepository _speakerRepo = null!;
         private PermissionServiceMock _permissionService = null!;
@@ -19,16 +19,8 @@ namespace Backend.Tests.Controllers
 
         public void Dispose()
         {
-            Dispose(true);
+            _speakerController?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _speakerController?.Dispose();
-            }
         }
 
         private const string ProjId = "proj-id";
@@ -105,7 +97,7 @@ namespace Backend.Tests.Controllers
         public void TestGetSpeakerNoSpeaker()
         {
             var result = _speakerController.GetSpeaker(ProjId, "other-id").Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
@@ -164,7 +156,7 @@ namespace Backend.Tests.Controllers
         public void TestDeleteSpeakerNoSpeaker()
         {
             var result = _speakerController.DeleteSpeaker(ProjId, "other-id").Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
@@ -187,7 +179,7 @@ namespace Backend.Tests.Controllers
         public void TestRemoveConsentNoSpeaker()
         {
             var result = _speakerController.RemoveConsent(ProjId, "other-id").Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
@@ -201,13 +193,13 @@ namespace Backend.Tests.Controllers
 
             // Remove consent
             var result = _speakerController.RemoveConsent(ProjId, _speaker.Id).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(result, Is.InstanceOf<OkResult>());
             consentInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result!.Consent;
             Assert.That(consentInRepo, Is.EqualTo(ConsentType.None));
 
             // Try to remove again
             result = _speakerController.RemoveConsent(ProjId, _speaker.Id).Result;
-            Assert.That(((ObjectResult)result).StatusCode, Is.EqualTo(StatusCodes.Status304NotModified));
+            Assert.That(((StatusCodeResult)result).StatusCode, Is.EqualTo(StatusCodes.Status304NotModified));
         }
 
         [Test]
@@ -222,7 +214,7 @@ namespace Backend.Tests.Controllers
         public void TestUpdateSpeakerNameNoSpeaker()
         {
             var result = _speakerController.UpdateSpeakerName(ProjId, "other-id", "Mr. New").Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
@@ -248,7 +240,7 @@ namespace Backend.Tests.Controllers
         {
             const string NewName = "Mr. New";
             var result = _speakerController.UpdateSpeakerName(ProjId, _speaker.Id, NewName).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(result, Is.InstanceOf<OkResult>());
             var nameInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result!.Name;
             Assert.That(nameInRepo, Is.EqualTo(NewName));
         }
@@ -275,7 +267,7 @@ namespace Backend.Tests.Controllers
         public void TestUploadConsentNoSpeaker()
         {
             var result = _speakerController.UploadConsent(ProjId, "other", _file).Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
@@ -288,7 +280,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUploadConsentEmptyFile()
         {
-            // Use 0 for the third argument
+            // Use 0 for the third argument to simulate an empty file.
             _file = new FormFile(_stream, 0, 0, "name", FileName)
             {
                 Headers = new HeaderDictionary(),
@@ -341,7 +333,7 @@ namespace Backend.Tests.Controllers
         public void TestDownloadSpeakerFileNoFile()
         {
             var result = _speakerController.DownloadConsent("speakerId");
-            Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
+            Assert.That(result, Is.TypeOf<NotFoundResult>());
         }
     }
 }

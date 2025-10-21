@@ -14,8 +14,8 @@ const mockGetDomainSenseUserStatistics = jest.fn();
 const mockGetProjectId = jest.fn();
 
 jest.mock("backend", () => ({
-  getSemanticDomainUserCount: (projectId: string, lang?: string) =>
-    mockGetDomainSenseUserStatistics(projectId, lang),
+  getSemanticDomainUserCount: (projectId: string) =>
+    mockGetDomainSenseUserStatistics(projectId),
 }));
 
 jest.mock("backend/localStorage", () => ({
@@ -33,7 +33,7 @@ beforeEach(async () => {
   jest.clearAllMocks();
   setMockFunctions();
   await act(async () => {
-    render(<UserStatistics lang={""} />);
+    render(<UserStatistics />);
   });
 });
 
@@ -42,8 +42,8 @@ describe("UserStatistics", () => {
     expect(mockGetProjectId).toHaveBeenCalled();
   });
 
-  test("all list items are present", async () => {
-    const listItems = screen.queryAllByRole("listitem");
-    expect(listItems.length).toEqual(mockSemanticDomainUserCountArray.length);
+  test("all rows are present", async () => {
+    const expectedRowCount = mockSemanticDomainUserCountArray.length + 1; // +1 for the header row
+    expect(screen.queryAllByRole("row")).toHaveLength(expectedRowCount);
   });
 });

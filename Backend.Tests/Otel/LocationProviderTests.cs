@@ -13,7 +13,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Otel
 {
-    public class LocationProviderTests
+    internal sealed class LocationProviderTests
     {
         private readonly IPAddress TestIpAddress = new([100, 0, 0, 0]);
         private IHttpContextAccessor _contextAccessor = null!;

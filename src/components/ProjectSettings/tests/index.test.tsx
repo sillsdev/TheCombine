@@ -2,14 +2,13 @@ import { ThemeProvider } from "@mui/material/styles";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "@testing-library/jest-dom";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import { Store } from "redux";
 import configureMockStore from "redux-mock-store";
 
 import { Permission } from "api/models";
-import { defaultState as exportProjectState } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import ProjectSettings, {
   ProjectSettingsTab,
   Setting,
@@ -18,14 +17,14 @@ import {
   whichSettings,
   whichTabs,
 } from "components/ProjectSettings/tests/SettingsTabTypes";
+import { defaultState } from "rootRedux/types";
 import { randomProject } from "types/project";
 import theme from "types/theme";
 import { setMatchMedia } from "utilities/testingLibraryUtilities";
 
-jest.mock("react-router-dom", () => ({ useNavigate: jest.fn() }));
+jest.mock("react-router", () => ({ useNavigate: jest.fn() }));
 
 jest.mock("backend", () => ({
-  canUploadLift: () => Promise.resolve(false),
   getAllActiveProjects: () => Promise.resolve([]),
   getAllSpeakers: () => Promise.resolve([]),
   getAllUsers: () => Promise.resolve([]),
@@ -33,9 +32,7 @@ jest.mock("backend", () => ({
   getUserRoles: () => Promise.resolve([]),
   hasFrontierWords: () => Promise.resolve(false),
 }));
-jest.mock("components/Project/ProjectActions");
-// Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`
-jest.mock("i18n", () => ({ language: "" }));
+jest.mock("i18n", () => ({ language: "" })); // else `thrown: "Error: AggregateError`
 jest.mock("rootRedux/hooks", () => {
   return {
     ...jest.requireActual("rootRedux/hooks"),
@@ -51,8 +48,8 @@ const createMockStore = (hasSchedule = false): Store => {
     project.workshopSchedule = [new Date().toString()];
   }
   return configureMockStore()({
-    currentProjectState: { project, users: [] },
-    exportProjectState,
+    ...defaultState,
+    currentProjectState: { ...defaultState.currentProjectState, project },
   });
 };
 
@@ -98,8 +95,6 @@ beforeAll(async () => {
 beforeEach(() => {
   resetMocks();
 });
-
-afterEach(cleanup);
 
 const isPanelVisible = (tab: ProjectSettingsTab): void => {
   const panels = screen.queryAllByRole("tabpanel");

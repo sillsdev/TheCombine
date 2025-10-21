@@ -41,6 +41,11 @@ namespace BackendFramework.Models
         public OffOnSetting AutocompleteSetting { get; set; }
 
         [Required]
+        [BsonElement("protectedDataMergeAvoidEnabled")]
+        [BsonRepresentation(BsonType.String)]
+        public OffOnSetting ProtectedDataMergeAvoidEnabled { get; set; }
+
+        [Required]
         [BsonElement("protectedDataOverrideEnabled")]
         [BsonRepresentation(BsonType.String)]
         public OffOnSetting ProtectedDataOverrideEnabled { get; set; }
@@ -82,10 +87,6 @@ namespace BackendFramework.Models
         [BsonElement("partsOfSpeech")]
         public List<string> PartsOfSpeech { get; set; }
 
-        [Required]
-        [BsonElement("inviteToken")]
-        public List<EmailInvite> InviteTokens { get; set; }
-
         [BsonElement("workshopSchedule")]
         public List<DateTime> WorkshopSchedule { get; set; }
 
@@ -98,6 +99,7 @@ namespace BackendFramework.Models
             DefinitionsEnabled = false;
             GrammaticalInfoEnabled = false;
             AutocompleteSetting = OffOnSetting.On;
+            ProtectedDataMergeAvoidEnabled = OffOnSetting.Off;
             ProtectedDataOverrideEnabled = OffOnSetting.Off;
             SemDomWritingSystem = new();
             VernacularWritingSystem = new();
@@ -108,7 +110,6 @@ namespace BackendFramework.Models
             CustomFields = new();
             WordFields = new();
             PartsOfSpeech = new();
-            InviteTokens = new();
             WorkshopSchedule = new();
         }
 
@@ -124,6 +125,7 @@ namespace BackendFramework.Models
                 DefinitionsEnabled = DefinitionsEnabled,
                 GrammaticalInfoEnabled = GrammaticalInfoEnabled,
                 AutocompleteSetting = AutocompleteSetting,
+                ProtectedDataMergeAvoidEnabled = ProtectedDataMergeAvoidEnabled,
                 ProtectedDataOverrideEnabled = ProtectedDataOverrideEnabled,
                 SemDomWritingSystem = SemDomWritingSystem.Clone(),
                 VernacularWritingSystem = VernacularWritingSystem.Clone(),
@@ -134,7 +136,6 @@ namespace BackendFramework.Models
                 CustomFields = CustomFields.Select(cf => cf.Clone()).ToList(),
                 WordFields = WordFields.Select(wf => wf).ToList(),
                 PartsOfSpeech = PartsOfSpeech.Select(ps => ps).ToList(),
-                InviteTokens = InviteTokens.Select(it => it.Clone()).ToList(),
                 WorkshopSchedule = WorkshopSchedule.Select(dt => dt).ToList(),
             };
         }

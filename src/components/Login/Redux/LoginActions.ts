@@ -1,7 +1,10 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-import * as backend from "backend";
+import { User } from "api/models";
+import { addUser, authenticateUser } from "backend";
 import {
+  setIsAdminTrueAction,
+  setIsEmailVerifiedTrueAction,
   setLoginAttemptAction,
   setLoginFailureAction,
   setLoginSuccessAction,
@@ -15,6 +18,16 @@ import { Path } from "types/path";
 import { newUser } from "types/user";
 
 // Action Creation Functions
+
+/** Don't export! Only to be used when an admin logs in. */
+function setIsAdminTrue(): PayloadAction {
+  return setIsAdminTrueAction();
+}
+
+/** Don't export! Only to be used when an email-verified user logs in. */
+function setIsEmailVerifiedTrue(): PayloadAction {
+  return setIsEmailVerifiedTrueAction();
+}
 
 export function loginAttempt(username: string): PayloadAction {
   return setLoginAttemptAction(username);
@@ -42,13 +55,23 @@ export function signupSuccess(): PayloadAction {
 
 // Dispatch Functions
 
-export function asyncLogIn(emailOrUsername: string, password: string) {
+export function asyncLogIn(
+  emailOrUsername: string,
+  password: string,
+  onSuccess?: () => void
+) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(loginAttempt(emailOrUsername));
-    await backend
-      .authenticateUser(emailOrUsername, password)
-      .then(async () => {
+    await authenticateUser(emailOrUsername, password)
+      .then(async (user: User) => {
+        if (user.isAdmin) {
+          dispatch(setIsAdminTrue());
+        }
+        if (user.isEmailVerified) {
+          dispatch(setIsEmailVerifiedTrue());
+        }
         dispatch(loginSuccess());
+        onSuccess?.();
         router.navigate(Path.ProjScreen);
       })
       .catch((err) =>
@@ -62,22 +85,20 @@ export function asyncSignUp(
   username: string,
   email: string,
   password: string,
-  onSuccess?: () => void
+  onSignupSuccess?: () => void,
+  onLoginSuccess?: () => void
 ) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(signupAttempt(username));
     // Create new user
     const user = newUser(name, username, password);
     user.email = email;
-    await backend
-      .addUser(user)
+    await addUser(user)
       .then(() => {
         dispatch(signupSuccess());
-        if (onSuccess) {
-          onSuccess();
-        }
-        setTimeout(() => {
-          dispatch(asyncLogIn(username, password));
+        onSignupSuccess?.();
+        setTimeout(async () => {
+          dispatch(asyncLogIn(username, password, onLoginSuccess));
         }, 1000);
       })
       .catch((err) =>

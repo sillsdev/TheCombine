@@ -1,16 +1,19 @@
 import { Announcement, List, People } from "@mui/icons-material";
-import { Box, Grid, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Stack, Tab, Tabs, Typography } from "@mui/material";
 import {
   type ReactElement,
   type ReactNode,
   type SyntheticEvent,
+  useEffect,
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
 
+import { clearCurrentProject } from "components/Project/ProjectActions";
 import Banners from "components/SiteSettings/Banners";
 import ProjectManagement from "components/SiteSettings/ProjectManagement";
 import UserManagement from "components/SiteSettings/UserManagement";
+import { useAppDispatch } from "rootRedux/hooks";
 
 export const enum SiteSettingsTab {
   Projects,
@@ -19,9 +22,11 @@ export const enum SiteSettingsTab {
 }
 
 export default function SiteSettings(): ReactElement {
-  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
 
   const [tab, setTab] = useState(SiteSettingsTab.Projects);
+
+  useEffect(() => dispatch(clearCurrentProject()), [dispatch]);
 
   const handleChange = (_e: SyntheticEvent, val: SiteSettingsTab): void =>
     setTab(val);
@@ -34,10 +39,7 @@ export default function SiteSettings(): ReactElement {
             data-testid={SiteSettingsTab.Projects}
             id={SiteSettingsTab.Projects.toString()}
             label={
-              <Grid container>
-                <List />
-                <Typography>{t("siteSettings.projectList")}</Typography>
-              </Grid>
+              <TabLabel icon={<List />} textId="siteSettings.projectList" />
             }
             value={SiteSettingsTab.Projects}
           />
@@ -45,10 +47,7 @@ export default function SiteSettings(): ReactElement {
             data-testid={SiteSettingsTab.Users}
             id={SiteSettingsTab.Users.toString()}
             label={
-              <Grid container>
-                <People />
-                <Typography>{t("siteSettings.userList")}</Typography>
-              </Grid>
+              <TabLabel icon={<People />} textId="siteSettings.userList" />
             }
             value={SiteSettingsTab.Users}
           />
@@ -56,10 +55,10 @@ export default function SiteSettings(): ReactElement {
             data-testid={SiteSettingsTab.Banners}
             id={SiteSettingsTab.Banners.toString()}
             label={
-              <Grid container>
-                <Announcement />
-                <Typography>{t("siteSettings.banners.title")}</Typography>
-              </Grid>
+              <TabLabel
+                icon={<Announcement />}
+                textId="siteSettings.banners.title"
+              />
             }
             value={SiteSettingsTab.Banners}
           />
@@ -75,6 +74,21 @@ export default function SiteSettings(): ReactElement {
         <Banners />
       </TabPanel>
     </>
+  );
+}
+
+interface TabLabelProps {
+  icon: ReactElement;
+  textId: string;
+}
+
+function TabLabel(props: TabLabelProps): ReactElement {
+  const { t } = useTranslation();
+  return (
+    <Stack direction="row">
+      {props.icon}
+      <Typography>{t(props.textId)}</Typography>
+    </Stack>
   );
 }
 

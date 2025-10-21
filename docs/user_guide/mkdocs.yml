@@ -39,7 +39,7 @@ plugins:
             Account: Cuenta
             Projects: Proyectos
             Data Entry: Entrada de datos
-            Data Cleanup: Depuración de datos
+            Data Cleanup: Limpieza de datos
             Admin: Administración
         - locale: zh
           name: 中文
@@ -49,7 +49,7 @@ plugins:
             Account: 账号
             Projects: 项目
             Data Entry: 词条输入
-            Data Cleanup: 数据清理
+            Data Cleanup: 清理数据
             Admin: 管理
   - search:
       lang: [en, es, zh]

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Create a backup of TheCombine and push the file to AWS S3 service."""
+"""Create a backup of The Combine and push the file to AWS S3 service."""
 
 import argparse
 from datetime import datetime
 import logging
 import os
 from pathlib import Path
+from shutil import rmtree
 import sys
 import tarfile
 import tempfile
@@ -19,7 +20,7 @@ from script_step import ScriptStep
 def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
     parser = argparse.ArgumentParser(
-        description="Backup TheCombine database and backend files and push to AWS S3 bucket.",
+        description="Backup The Combine database and backend files and push to AWS S3 bucket.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
@@ -29,7 +30,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Create a backup of TheCombine database and backend files."""
+    """Create a backup of The Combine database and backend files."""
     args = parse_args()
     if args.verbose:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
@@ -82,34 +83,39 @@ def main() -> None:
         if check_backup_results.returncode != 0:
             print("No database backup file - most likely empty database.", file=sys.stderr)
             sys.exit(0)
-        combine.kubectl(
-            [
-                "cp",
-                f"{db_pod}:/{db_files_subdir}",
-                str(Path(backup_dir) / db_files_subdir),
-            ]
-        )
 
-        step.print("Copy the backend files.")
+        step.print("Locate the backend files.")
         backend_pod = combine.get_pod_id(CombineApp.Component.Backend)
         if not backend_pod:
             print("Cannot find the backend container.", file=sys.stderr)
             sys.exit(1)
-        combine.kubectl(
-            [
-                "cp",
-                f"{backend_pod}:/home/app/{backend_files_subdir}/",
-                str(Path(backup_dir) / backend_files_subdir),
-            ]
-        )
 
         step.print("Create the tarball for the backup.")
         # cd to backup_dir so that files in the tarball are relative to the backup_dir
         os.chdir(backup_dir)
 
         with tarfile.open(backup_file, "x:gz") as tar:
-            for name in (backend_files_subdir, db_files_subdir):
-                tar.add(name)
+            # cp, tar, and rm the db subdir
+            combine.kubectl(
+                [
+                    "cp",
+                    f"{db_pod}:/{db_files_subdir}",
+                    str(Path(backup_dir) / db_files_subdir),
+                ]
+            )
+            tar.add(db_files_subdir)
+            rmtree(db_files_subdir)
+
+            # cp, tar, and rm the backend subdir
+            combine.kubectl(
+                [
+                    "cp",
+                    f"{backend_pod}:/home/app/{backend_files_subdir}/",
+                    str(Path(backup_dir) / backend_files_subdir),
+                ]
+            )
+            tar.add(backend_files_subdir)
+            rmtree(backend_files_subdir)
 
         step.print("Push backup to AWS S3 storage.")
         aws.push(backup_file, aws_file)

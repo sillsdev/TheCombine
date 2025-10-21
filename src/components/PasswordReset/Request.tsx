@@ -1,18 +1,30 @@
-import { Button, Card, Grid, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid2,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { FormEvent, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import { resetPasswordRequest } from "backend";
-import { LoadingDoneButton } from "components/Buttons";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import Captcha from "components/Login/Captcha";
 import { Path } from "types/path";
 import { NormalizedTextField } from "utilities/fontComponents";
 
-export enum PasswordRequestIds {
-  ButtonLogin = "password-request-login",
-  ButtonSubmit = "password-request-submit",
-  FieldEmailOrUsername = "password-request-text",
+export enum ResetRequestTextId {
+  ButtonSubmit = "passwordReset.submit",
+  ButtonLogin = "login.backToLogin",
+  Done = "passwordReset.resetDone",
+  FieldEmailOrUsername = "passwordReset.emailOrUsername",
+  FieldEmailOrUsernameError = "passwordReset.resetFail",
+  Instructions = "passwordReset.resetRequestInstructions",
+  Title = "passwordReset.resetRequestTitle",
 }
 
 export default function ResetRequest(): ReactElement {
@@ -40,71 +52,64 @@ export default function ResetRequest(): ReactElement {
   };
 
   return (
-    <Grid container justifyContent="center">
-      <Card style={{ padding: 10, width: 450 }}>
-        <Typography align="center" variant="h5">
-          {t("passwordReset.resetRequestTitle")}
-        </Typography>
-        {isDone ? (
-          <>
-            <Typography>{t("passwordReset.resetDone")}</Typography>
-            <Grid item>
-              <Button
-                data-testid={PasswordRequestIds.ButtonLogin}
-                id={PasswordRequestIds.ButtonLogin}
-                onClick={() => navigate(Path.Login)}
-                type="button"
-                variant="outlined"
-              >
-                {t("login.backToLogin")}
-              </Button>
-            </Grid>
-          </>
-        ) : (
-          <>
-            <Typography align="center" variant="subtitle1">
-              {t("passwordReset.resetRequestInstructions")}
+    <Grid2 container justifyContent="center">
+      <Card sx={{ width: 450 }}>
+        <CardHeader
+          title={
+            <Typography align="center" variant="h5">
+              {t(ResetRequestTextId.Title)}
             </Typography>
+          }
+        />
+
+        <CardContent>
+          {isDone ? (
+            <Stack alignItems="flex-end" spacing={2}>
+              <Typography>{t(ResetRequestTextId.Done)}</Typography>
+
+              <Button onClick={() => navigate(Path.Login)} variant="contained">
+                {t(ResetRequestTextId.ButtonLogin)}
+              </Button>
+            </Stack>
+          ) : (
             <form onSubmit={onSubmit}>
-              <Grid item>
+              <Stack spacing={1}>
+                <Typography>{t(ResetRequestTextId.Instructions)}</Typography>
+
                 <NormalizedTextField
-                  helperText={isError && t("passwordReset.resetFail")}
-                  id={PasswordRequestIds.FieldEmailOrUsername}
-                  inputProps={{
-                    "data-testid": PasswordRequestIds.FieldEmailOrUsername,
-                  }}
-                  label={t("passwordReset.emailOrUsername")}
-                  margin="normal"
+                  fullWidth
+                  helperText={
+                    isError && t(ResetRequestTextId.FieldEmailOrUsernameError)
+                  }
+                  label={t(ResetRequestTextId.FieldEmailOrUsername)}
                   onChange={(e) => setEmailOrUsername(e.target.value)}
                   required
-                  type="text"
-                  style={{ width: "100%" }}
                   value={emailOrUsername}
-                  variant="outlined"
                 />
-              </Grid>
-              <Grid item>
+
                 <Captcha setSuccess={setIsVerified} />
-              </Grid>
-              <Grid item>
-                <LoadingDoneButton
-                  buttonProps={{
-                    color: "primary",
-                    "data-testid": PasswordRequestIds.ButtonSubmit,
-                    id: PasswordRequestIds.ButtonSubmit,
-                    onClick: () => onSubmit,
-                    variant: "contained",
-                  }}
-                  disabled={!emailOrUsername || !isVerified}
-                  loading={isLoading}
-                >
-                  {t("passwordReset.submit")}
-                </LoadingDoneButton>
-              </Grid>
+
+                {/* Back-to-login and Submit buttons */}
+                <Stack direction="row" justifyContent="flex-end" spacing={2}>
+                  <Button
+                    onClick={() => navigate(Path.Login)}
+                    variant="outlined"
+                  >
+                    {t(ResetRequestTextId.ButtonLogin)}
+                  </Button>
+
+                  <LoadingDoneButton
+                    disabled={!emailOrUsername || !isVerified}
+                    loading={isLoading}
+                  >
+                    {t(ResetRequestTextId.ButtonSubmit)}
+                  </LoadingDoneButton>
+                </Stack>
+              </Stack>
             </form>
-          </>
-        )}
+          )}
+        </CardContent>
       </Card>
-    </Grid>
+    </Grid2>
   );
 }

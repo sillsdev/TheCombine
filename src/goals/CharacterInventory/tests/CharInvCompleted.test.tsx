@@ -1,17 +1,10 @@
+import { act, render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
-import {
-  type ReactTestInstance,
-  type ReactTestRenderer,
-  act,
-  create,
-} from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import WordCard from "components/WordCard";
 import CharInvCompleted, {
-  CharChange,
   CharInvChangesGoalList,
-  CharInvCompletedId,
+  CharInvCompletedTextId,
 } from "goals/CharacterInventory/CharInvCompleted";
 import {
   type CharInvChanges,
@@ -27,10 +20,9 @@ import { newWord as mockWord } from "types/word";
 jest.mock("backend", () => ({
   areInFrontier: (ids: string[]) => Promise.resolve(ids),
   getWord: () => Promise.resolve(mockWord()),
-  updateWord: () => jest.fn(),
+  updateWord: jest.fn(),
 }));
-// Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`
-jest.mock("i18n", () => ({}));
+jest.mock("i18n", () => ({})); // else `thrown: "Error: AggregateError`
 
 const mockCharChanges: CharacterChange[] = [
   ["a", CharacterStatus.Accepted, CharacterStatus.Rejected],
@@ -40,15 +32,11 @@ const mockCharChanges: CharacterChange[] = [
   ["e", CharacterStatus.Undecided, CharacterStatus.Accepted],
   ["f", CharacterStatus.Undecided, CharacterStatus.Rejected],
 ];
-const mockWordKeys = ["oldA", "oldB", "oldC"];
+const mockWordKeys = ["oldA", "oldB"];
 const mockWordChanges: FindAndReplaceChange = {
   find: "Q",
   replace: "q",
-  words: {
-    [mockWordKeys[0]]: "newA",
-    [mockWordKeys[1]]: "newB",
-    [mockWordKeys[2]]: "newC",
-  },
+  words: { [mockWordKeys[0]]: "newA", [mockWordKeys[1]]: "newB" },
 };
 const mockState = (changes?: CharInvChanges): Partial<StoreState> => ({
   goalsState: {
@@ -57,115 +45,111 @@ const mockState = (changes?: CharInvChanges): Partial<StoreState> => ({
   },
 });
 
-let renderer: ReactTestRenderer;
-let root: ReactTestInstance;
-
 beforeEach(() => {
   jest.resetAllMocks();
 });
 
 describe("CharInvCompleted", () => {
   const renderCharInvCompleted = async (
-    changes?: CharInvChanges
+    changes?: Partial<CharInvChanges>
   ): Promise<void> => {
+    const charInvChanges = { ...defaultCharInvChanges, ...changes };
     await act(async () => {
-      renderer = create(
-        <Provider store={configureMockStore()(mockState(changes))}>
+      render(
+        <Provider store={configureMockStore()(mockState(charInvChanges))}>
           <CharInvCompleted />
         </Provider>
       );
     });
-    root = renderer.root;
   };
 
-  it("renders all char inv changes", async () => {
-    await renderCharInvCompleted({
-      ...defaultCharInvChanges,
-      charChanges: mockCharChanges,
-    });
-    expect(root.findAllByType(CharChange)).toHaveLength(mockCharChanges.length);
-    expect(root.findAllByType(WordCard)).toHaveLength(0);
+  it("renders char changes", async () => {
+    await renderCharInvCompleted({ charChanges: mockCharChanges });
 
-    expect(() =>
-      root.findByProps({ id: CharInvCompletedId.TypographyNoCharChanges })
-    ).toThrow();
-    root.findByProps({ id: CharInvCompletedId.TypographyNoWordChanges });
-    expect(() =>
-      root.findByProps({ id: CharInvCompletedId.TypographyWordChanges })
-    ).toThrow();
+    // One listitem per char-change.
+    expect(screen.getAllByRole("listitem")).toHaveLength(
+      mockCharChanges.length
+    );
+    expect(
+      screen.queryByText(CharInvCompletedTextId.CharChangesNone)
+    ).toBeNull();
+
+    // No word-changes.
+    expect(
+      screen.queryAllByText(CharInvCompletedTextId.WordChangesWithString)
+    ).toHaveLength(0);
+    expect(
+      screen.queryByText(CharInvCompletedTextId.WordChangesNone)
+    ).toBeTruthy();
   });
 
-  it("renders all words changed", async () => {
-    await renderCharInvCompleted({
-      ...defaultCharInvChanges,
-      wordChanges: [mockWordChanges],
-    });
-    expect(root.findAllByType(CharChange)).toHaveLength(0);
-    expect(renderer.root.findAllByType(WordCard)).toHaveLength(
-      mockWordKeys.length
-    );
+  it("renders word changes", async () => {
+    await renderCharInvCompleted({ wordChanges: [mockWordChanges] });
 
-    root.findByProps({ id: CharInvCompletedId.TypographyNoCharChanges });
-    expect(() =>
-      root.findByProps({ id: CharInvCompletedId.TypographyNoWordChanges })
-    ).toThrow();
-    root.findByProps({ id: CharInvCompletedId.TypographyWordChanges });
+    // One listitem for the no-char-change text.
+    expect(screen.getAllByRole("listitem")).toHaveLength(1);
+    expect(
+      screen.queryByText(CharInvCompletedTextId.CharChangesNone)
+    ).toBeTruthy();
+
+    // One word-changes.
+    expect(
+      screen.queryAllByText(CharInvCompletedTextId.WordChangesWithString)
+    ).toHaveLength(1);
+    expect(
+      screen.queryByText(CharInvCompletedTextId.WordChangesNone)
+    ).toBeNull();
   });
 });
 
 describe("CharInvChangesGoalList", () => {
+  const changeLimit = 3;
+
   const renderCharInvChangesGoalList = async (
-    changes?: CharInvChanges
+    changes?: Partial<CharInvChanges>
   ): Promise<void> => {
     await act(async () => {
-      renderer = create(
-        CharInvChangesGoalList(changes ?? defaultCharInvChanges)
-      );
+      render(CharInvChangesGoalList({ ...defaultCharInvChanges, ...changes }));
     });
-    root = renderer.root;
   };
 
-  it("renders up to 3 char changes", async () => {
-    const changes = (count: number): CharInvChanges => ({
-      ...defaultCharInvChanges,
-      charChanges: mockCharChanges.slice(0, count),
-    });
-    await renderCharInvChangesGoalList(changes(0));
-    expect(root.findAllByType(CharChange)).toHaveLength(0);
-    await renderCharInvChangesGoalList(changes(1));
-    expect(root.findAllByType(CharChange)).toHaveLength(1);
-    await renderCharInvChangesGoalList(changes(3));
-    expect(root.findAllByType(CharChange)).toHaveLength(3);
+  describe(`shows up to ${changeLimit} char changes`, () => {
+    for (let i = 0; i <= changeLimit; i++) {
+      test(`shows ${i} char changes`, async () => {
+        const charChanges = mockCharChanges.slice(0, i);
+        await renderCharInvChangesGoalList({ charChanges });
+        expect(screen.queryAllByRole("listitem")).toHaveLength(i);
+        const noChanges = screen.queryByText(
+          CharInvCompletedTextId.CharChangesNone
+        );
+        if (i) {
+          expect(noChanges).toBeNull();
+        } else {
+          expect(noChanges).toBeTruthy();
+        }
+      });
+    }
   });
 
-  it("doesn't render more than 3 char changes", async () => {
-    expect(mockCharChanges.length).toBeGreaterThan(3);
-    await renderCharInvChangesGoalList({
-      ...defaultCharInvChanges,
-      charChanges: mockCharChanges,
-    });
-    // When more than 3 changes, show 2 changes and a "+_ more" line.
-    expect(root.findAllByType(CharChange)).toHaveLength(2);
+  it(`shows only ${changeLimit} items when there are more char changes than that`, async () => {
+    expect(mockCharChanges.length).toBeGreaterThan(changeLimit);
+    await renderCharInvChangesGoalList({ charChanges: mockCharChanges });
+    expect(screen.queryAllByRole("listitem")).toHaveLength(changeLimit);
   });
 
-  it("doesn't show word changes when there are none", async () => {
-    await renderCharInvChangesGoalList(defaultCharInvChanges);
-    expect(() =>
-      root.findByProps({ id: CharInvCompletedId.TypographyNoWordChanges })
-    ).toThrow();
-    expect(() =>
-      root.findByProps({ id: CharInvCompletedId.TypographyWordChanges })
-    ).toThrow();
+  it("doesn't show word changes summary item when there are none", async () => {
+    await renderCharInvChangesGoalList();
+    expect(screen.queryAllByRole("listitem")).toHaveLength(0);
+    expect(
+      screen.queryByText(CharInvCompletedTextId.CharChangesNone)
+    ).toBeTruthy();
   });
 
-  it("shows word changes when there are some", async () => {
-    await renderCharInvChangesGoalList({
-      ...defaultCharInvChanges,
-      wordChanges: [mockWordChanges],
-    });
-    expect(() =>
-      root.findByProps({ id: CharInvCompletedId.TypographyNoWordChanges })
-    ).toThrow();
-    root.findByProps({ id: CharInvCompletedId.TypographyWordChanges });
+  it("shows word changes summary item when there are some", async () => {
+    await renderCharInvChangesGoalList({ wordChanges: [mockWordChanges] });
+    expect(screen.queryAllByRole("listitem")).toHaveLength(1);
+    expect(
+      screen.queryByText(CharInvCompletedTextId.CharChangesNone)
+    ).toBeNull();
   });
 });

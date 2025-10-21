@@ -1,31 +1,28 @@
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
-using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    sealed internal class PasswordResetServiceMock : IPasswordResetService
+    internal sealed class PasswordResetServiceMock : IPasswordResetService
     {
-        public Task<PasswordReset> CreatePasswordReset(string email)
+        private bool _boolResponse;
+        internal void SetNextBoolResponse(bool response)
         {
-            return Task.FromResult(new PasswordReset(15, email));
+            _boolResponse = response;
+        }
+        public Task<bool> ResetPassword(string token, string password)
+        {
+            return Task.FromResult(_boolResponse);
         }
 
-        public Task ExpirePasswordReset(string email)
+        public Task<bool> ResetPasswordRequest(string emailOrUsername)
         {
-            return Task.CompletedTask;
+            return Task.FromResult(_boolResponse);
         }
 
         public Task<bool> ValidateToken(string token)
         {
-            // TODO: More sophisticated mock
-            return Task.FromResult(true);
-        }
-
-        public Task<bool> ResetPassword(string token, string password)
-        {
-            // TODO: More sophisticated mock
-            return Task.FromResult(true);
+            return Task.FromResult(_boolResponse);
         }
     }
 }

@@ -81,6 +81,13 @@ server {
         add_header Cache-Control "public, no-transform";
     }
 
+    # Dictionary static files.
+    location /dictionaries {
+        alias      /usr/share/nginx/dictionaries;
+        expires    12h;
+        add_header Cache-Control "public, no-transform";
+    }
+
     # Font static files.
     location /fonts {
         alias      /usr/share/nginx/fonts;
