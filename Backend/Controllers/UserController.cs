@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,8 @@ namespace BackendFramework.Controllers
         private readonly ICaptchaService _captchaService = captchaService;
         private readonly IPermissionService _permissionService = permissionService;
 
+        private const string otelTagName = "otel.UserController";
+
         /// <summary> Verifies a CAPTCHA token </summary>
         [AllowAnonymous]
         [HttpGet("captcha/{token}", Name = "VerifyCaptchaToken")]
@@ -28,6 +31,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> VerifyCaptchaToken(string token)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "verifying CAPTCHA token");
+
             return await _captchaService.VerifyToken(token) ? Ok() : BadRequest();
         }
 
@@ -37,6 +42,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAllUsers()
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all users");
+
             if (!await _permissionService.IsSiteAdmin(HttpContext))
             {
                 return Forbid();
@@ -52,6 +59,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetUsersByFilter(string filter)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting users by filter");
+
             filter = filter.Trim();
             if (!await _permissionService.IsSiteAdmin(HttpContext) && filter.Length < 3)
             {
@@ -68,6 +77,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))]
         public async Task<IActionResult> Authenticate([FromBody, BindRequired] Credentials cred)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "authenticating user");
+
             try
             {
                 var user = await _permissionService.Authenticate(cred.EmailOrUsername, cred.Password);
@@ -85,6 +96,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetCurrentUser()
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting current user");
+
             var user = await _userRepo.GetUser(_permissionService.GetUserId(HttpContext));
             return user is null ? Forbid() : Ok(user);
         }
@@ -96,6 +109,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUser(string userId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting a user");
+
             if (!await _permissionService.CanModifyUser(HttpContext, userId))
             {
                 return Forbid();
@@ -112,6 +127,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserIdByEmailOrUsername([FromBody, BindRequired] string emailOrUsername)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting user by email or username");
+
             if (!_permissionService.IsCurrentUserAuthenticated(HttpContext))
             {
                 return Forbid();
@@ -129,6 +146,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public async Task<IActionResult> CreateUser([FromBody, BindRequired] User user)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "creating a user");
+
             if (string.IsNullOrWhiteSpace(user.Username)
                 || await _userRepo.GetUserByEmailOrUsername(user.Username) is not null)
             {
@@ -158,6 +177,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> IsEmailOrUsernameAvailable([FromBody, BindRequired] string emailOrUsername)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if email or username is available");
+
             var isAvailable = !string.IsNullOrWhiteSpace(emailOrUsername) &&
                 await _userRepo.GetUserByEmailOrUsername(emailOrUsername) is null;
             return Ok(isAvailable);
@@ -171,6 +192,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateUser(string userId, [FromBody, BindRequired] User user)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a user");
+
             if (!await _permissionService.CanModifyUser(HttpContext, userId))
             {
                 return Forbid();
@@ -192,6 +215,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser(string userId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a user");
+
             if (!await _permissionService.IsSiteAdmin(HttpContext))
             {
                 return Forbid();
