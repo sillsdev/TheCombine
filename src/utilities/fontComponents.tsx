@@ -58,20 +58,15 @@ export function TextFieldWithFont(props: TextFieldWithFontProps): ReactElement {
   const fontContext = useContext(FontContext);
   // Use spread to remove the custom props from what is passed into TextField.
   const { analysis, lang, vernacular, ...textFieldProps } = props;
-  const input = textFieldProps.slotProps?.input;
-  const inputProps = typeof input === "function" ? input({}) : input;
   return (
     <NormalizedTextField
       {...textFieldProps}
-      slotProps={{
-        ...textFieldProps.slotProps,
-        input: {
-          ...inputProps,
-          style: fontContext.addFontToStyle(
-            { analysis, lang, vernacular },
-            inputProps?.style
-          ),
-        },
+      InputProps={{
+        ...textFieldProps.InputProps,
+        style: fontContext.addFontToStyle(
+          { analysis, lang, vernacular },
+          textFieldProps.InputProps?.style
+        ),
       }}
     />
   );
