@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
+using BackendFramework.Otel;
 
 namespace BackendFramework.Services
 {
@@ -12,6 +13,8 @@ namespace BackendFramework.Services
     {
         private readonly ICaptchaContext _captchaContext;
 
+        private const string otelTagName = "otel.CaptchaService";
+
         public CaptchaService(ICaptchaContext captchaContext)
         {
             _captchaContext = captchaContext;
@@ -19,6 +22,8 @@ namespace BackendFramework.Services
 
         public async Task<bool> VerifyToken(string token)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "verifying CAPTCHA token");
+
             if (!_captchaContext.CaptchaEnabled)
             {
                 throw new CaptchaNotEnabledException();

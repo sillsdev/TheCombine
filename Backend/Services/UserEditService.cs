@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 
 namespace BackendFramework.Services
 {
@@ -9,6 +10,8 @@ namespace BackendFramework.Services
     public class UserEditService : IUserEditService
     {
         private readonly IUserEditRepository _userEditRepo;
+
+        private const string otelTagName = "otel.UserEditService";
 
         public UserEditService(IUserEditRepository userEditRepo)
         {
@@ -26,6 +29,8 @@ namespace BackendFramework.Services
         /// </returns>
         public async Task<Tuple<bool, Guid?>> AddGoalToUserEdit(string projectId, string userEditId, Edit edit)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "adding goal to user edit");
+
             // Get userEdit to change
             var userEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
             if (userEdit is null)
@@ -56,6 +61,8 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> AddStepToGoal(string projectId, string userEditId, Guid editGuid, string stepString)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "adding step to goal");
+
             var userEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
             if (userEdit is null)
             {
@@ -76,6 +83,8 @@ namespace BackendFramework.Services
         public async Task<bool> UpdateStepInGoal(
             string projectId, string userEditId, Guid editGuid, string stepString, int stepIndex)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating step in goal");
+
             if (stepIndex < 0)
             {
                 return false;
