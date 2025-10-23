@@ -115,6 +115,7 @@ namespace BackendFramework.Services
         /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
         /// </summary>
         private readonly ConcurrentDictionary<string, string> _liftImports;
+
         private const string FlagTextEmpty = "***";
         private const string InProgress = "IN_PROGRESS";
         private const string otelTagName = "otel.LiftService";
@@ -261,7 +262,7 @@ namespace BackendFramework.Services
         public async Task<string> LiftExport(
             string projectId, IWordRepository wordRepo, IProjectRepository projRepo)
         {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "exporting LIFT");
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "exporting to LIFT");
 
             // Validate project exists.
             var proj = await projRepo.GetProject(projectId);
