@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
@@ -16,9 +17,13 @@ namespace BackendFramework.Repositories
     {
         private readonly IMongoCollection<User> _users = dbContext.Db.GetCollection<User>("UsersCollection");
 
+        private const string otelTagName = "otel.UserRepository";
+
         /// <summary> Finds all <see cref="User"/>s </summary>
         public async Task<List<User>> GetAllUsers()
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all users");
+
             var users = await _users.Find(_ => true).ToListAsync();
             users.ForEach(u => u.Sanitize());
             return users;
@@ -27,6 +32,8 @@ namespace BackendFramework.Repositories
         /// <summary> Finds all <see cref="User"/>s matching a given filter </summary>
         public async Task<List<User>> GetAllUsersByFilter(string filter)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all users by filter");
+
             return (await GetAllUsers()).Where(u =>
                 u.Email.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
                 u.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
@@ -37,6 +44,8 @@ namespace BackendFramework.Repositories
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllUsers()
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting all users");
+
             var deleted = await _users.DeleteManyAsync(_ => true);
             return deleted.DeletedCount != 0;
         }
@@ -46,6 +55,8 @@ namespace BackendFramework.Repositories
         /// <param name="sanitize"> Whether to sanitize (remove) sensitive information from the User instance. </param>
         public async Task<User?> GetUser(string userId, bool sanitize = true)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting a user");
+
             var filterDef = new FilterDefinitionBuilder<User>();
             var filter = filterDef.Eq(x => x.Id, userId);
 
@@ -69,6 +80,8 @@ namespace BackendFramework.Repositories
         /// <summary> Finds <see cref="User"/> with specified Email and sets IsEmailVerified to true. </summary>
         public async Task<ResultOfUpdate> VerifyEmail(string email)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "verifying user email");
+
             var filter = Builders<User>.Filter.Eq(x => x.Email, email);
             var updateDef = Builders<User>.Update.Set(x => x.IsEmailVerified, true);
 
@@ -89,6 +102,8 @@ namespace BackendFramework.Repositories
         /// <summary> Finds <see cref="User"/> with specified userId and changes it's password </summary>
         public async Task<ResultOfUpdate> ChangePassword(string userId, string password)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "changing user password");
+
             var hash = PasswordHash.HashPassword(password);
 
             var filter = Builders<User>.Filter.Eq(x => x.Id, userId);
@@ -113,6 +128,8 @@ namespace BackendFramework.Repositories
         /// <returns> The <see cref="User"/> created, or null if the user could not be created. </returns>
         public async Task<User?> Create(User user)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "creating a user");
+
             // Confirm that email and username aren't empty and aren't taken
             if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Username) ||
                 await GetUserByEmailOrUsername(user.Email) is not null ||
@@ -134,6 +151,8 @@ namespace BackendFramework.Repositories
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string userId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a user");
+
             var deleted = await _users.DeleteOneAsync(x => x.Id == userId);
             return deleted.DeletedCount > 0;
         }
@@ -142,6 +161,8 @@ namespace BackendFramework.Repositories
         /// <returns> A string with the userid, or null if not found </returns>
         public async Task<User?> GetUserByEmail(string email, bool sanitize = true)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting user by email");
+
             var user = (await _users.FindAsync(
                 x => x.Email.Equals(email, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
             if (sanitize && user is not null)
@@ -155,6 +176,8 @@ namespace BackendFramework.Repositories
         /// <returns> A string with the userid, or null if not found </returns>
         public async Task<User?> GetUserByEmailOrUsername(string emailOrUsername, bool sanitize = true)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting user by email or username");
+
             var user = (await _users.FindAsync(u =>
                 u.Username.Equals(emailOrUsername, StringComparison.OrdinalIgnoreCase) ||
                 u.Email.Equals(emailOrUsername, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
@@ -169,6 +192,8 @@ namespace BackendFramework.Repositories
         /// <returns> A string with the userid, or null if not found </returns>
         public async Task<User?> GetUserByUsername(string username, bool sanitize = true)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting user by username");
+
             var user = (await _users.FindAsync(
                 x => x.Username.Equals(username, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
             if (sanitize && user is not null)
@@ -182,6 +207,8 @@ namespace BackendFramework.Repositories
         /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation </returns>
         public async Task<ResultOfUpdate> Update(string userId, User user, bool updateIsAdmin = false)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a user");
+
             // Confirm user exists.
             var oldUser = await GetUser(userId, false);
             if (oldUser is null)
