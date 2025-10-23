@@ -85,6 +85,42 @@ describe("MergeDupsReducer", () => {
     );
   });
 
+  test("resetTreeToInitial restores initial state", () => {
+    const store = setupStore();
+    const words = testWordList();
+    
+    // Set initial data
+    store.dispatch(setData(words));
+    const initialStateStr = JSON.stringify(store.getState().mergeDuplicateGoal);
+    
+    // Make a simple change - flag a word
+    const wordWithSenses = words.find(w => w.senses.length > 0);
+    if (!wordWithSenses) {
+      throw new Error("Test requires a word with senses");
+    }
+    store.dispatch(flagWord({ wordId: wordWithSenses.id, flag: newFlag("test") }));
+    
+    // Verify state has changed
+    const changedState = store.getState().mergeDuplicateGoal;
+    expect(JSON.stringify(changedState)).not.toEqual(initialStateStr);
+    
+    // Reset to initial
+    const resetAction = { type: "mergeDupStepReducer/resetTreeToInitialAction" };
+    store.dispatch(resetAction as any);
+    
+    // Verify state is restored (compare key properties)
+    const restoredState = store.getState().mergeDuplicateGoal;
+    expect(JSON.stringify(restoredState.data)).toEqual(
+      JSON.parse(initialStateStr).data && JSON.stringify(JSON.parse(initialStateStr).data)
+    );
+    expect(JSON.stringify(restoredState.tree)).toEqual(
+      JSON.parse(initialStateStr).tree && JSON.stringify(JSON.parse(initialStateStr).tree)
+    );
+    expect(JSON.stringify(restoredState.audio)).toEqual(
+      JSON.parse(initialStateStr).audio && JSON.stringify(JSON.parse(initialStateStr).audio)
+    );
+  });
+
   function testTreeWords(): Hash<MergeTreeWord> {
     return {
       word1: newMergeTreeWord("senses:A0", {

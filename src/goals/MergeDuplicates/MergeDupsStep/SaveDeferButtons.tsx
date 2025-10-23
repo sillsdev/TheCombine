@@ -2,11 +2,14 @@ import { Checkbox, FormControlLabel, Grid2 } from "@mui/material";
 import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import RevertConfirmDialog from "./RevertConfirmDialog";
 import { OffOnSetting } from "api/models";
 import LoadingButton from "components/Buttons/LoadingButton";
 import {
   deferMerge,
+  hasStateChanged,
   mergeAll,
+  resetTreeToInitial,
   setSidebar,
   toggleOverrideProtection,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
@@ -26,9 +29,13 @@ export default function SaveDeferButtons(): ReactElement {
   const overrideProtection = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal.overrideProtection
   );
+  const stateHasChanged = useAppSelector((state: StoreState) =>
+    hasStateChanged(state.mergeDuplicateGoal)
+  );
 
   const [isDeferring, setIsDeferring] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [showRevertDialog, setShowRevertDialog] = useState(false);
 
   const { t } = useTranslation();
 
@@ -44,6 +51,20 @@ export default function SaveDeferButtons(): ReactElement {
     await dispatch(deferMerge()).then(next);
   };
 
+  const revert = (): void => {
+    setShowRevertDialog(true);
+  };
+
+  const confirmRevert = (): void => {
+    setShowRevertDialog(false);
+    dispatch(setSidebar());
+    dispatch(resetTreeToInitial());
+  };
+
+  const cancelRevert = (): void => {
+    setShowRevertDialog(false);
+  };
+
   const saveContinue = async (): Promise<void> => {
     setIsSaving(true);
     dispatch(setSidebar());
@@ -51,41 +72,62 @@ export default function SaveDeferButtons(): ReactElement {
   };
 
   return (
-    <Grid2 container spacing={3}>
-      <LoadingButton
-        loading={isSaving}
-        buttonProps={{
-          onClick: saveContinue,
-          title: t("mergeDups.helpText.saveAndContinue"),
-          id: "merge-save",
-        }}
-      >
-        {t("buttons.saveAndContinue")}
-      </LoadingButton>
+    <>
+      <Grid2 container spacing={3}>
+        <LoadingButton
+          loading={isSaving}
+          buttonProps={{
+            onClick: saveContinue,
+            title: t("mergeDups.helpText.saveAndContinue"),
+            id: "merge-save",
+          }}
+        >
+          {t("buttons.saveAndContinue")}
+        </LoadingButton>
 
-      <LoadingButton
-        loading={isDeferring}
-        buttonProps={{
-          color: "secondary",
-          onClick: defer,
-          title: t("mergeDups.helpText.defer"),
-          id: "merge-defer",
-        }}
-      >
-        {t("buttons.defer")}
-      </LoadingButton>
+        <LoadingButton
+          loading={isDeferring}
+          buttonProps={{
+            color: "secondary",
+            onClick: defer,
+            title: t("mergeDups.helpText.defer"),
+            id: "merge-defer",
+          }}
+        >
+          {t("buttons.defer")}
+        </LoadingButton>
 
-      {hasProtected && (
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={overrideProtection}
-              onChange={() => dispatch(toggleOverrideProtection())}
-            />
-          }
-          label={t("mergeDups.helpText.protectedOverride")}
+        <LoadingButton
+          buttonProps={{
+            color: "secondary",
+            onClick: revert,
+            title: t("mergeDups.helpText.revertSet"),
+            id: "merge-revert",
+            disabled: !stateHasChanged,
+          }}
+        >
+          {t("buttons.revertSet")}
+        </LoadingButton>
+
+        {hasProtected && (
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={overrideProtection}
+                onChange={() => dispatch(toggleOverrideProtection())}
+              />
+            }
+            label={t("mergeDups.helpText.protectedOverride")}
+          />
+        )}
+      </Grid2>
+
+      {showRevertDialog && (
+        <RevertConfirmDialog
+          onConfirm={confirmRevert}
+          onCancel={cancelRevert}
         />
       )}
-    </Grid2>
+    </>
   );
 }

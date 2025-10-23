@@ -42,6 +42,16 @@ const mergeDuplicatesSlice = createSlice({
       return defaultState;
     },
 
+    resetTreeToInitialAction: (state) => {
+      if (state.initialState) {
+        state.data = JSON.parse(JSON.stringify(state.initialState.data));
+        state.tree = JSON.parse(JSON.stringify(state.initialState.tree));
+        state.audio = JSON.parse(JSON.stringify(state.initialState.audio));
+        state.mergeWords = [];
+        state.overrideProtection = false;
+      }
+    },
+
     combineSenseAction: (state, action) => {
       const srcRef: MergeTreeReference = action.payload.src;
       const destRef: MergeTreeReference = action.payload.dest;
@@ -316,11 +326,20 @@ const mergeDuplicatesSlice = createSlice({
           wordsTree[word.id] = convertWordToMergeTreeWord(word);
           counts[word.id] = word.audio.length;
         });
-        state.data = { ...defaultData, senses, words };
-        state.tree = { ...defaultTree, words: wordsTree };
-        state.audio = { ...defaultAudio, counts };
+        const data = { ...defaultData, senses, words };
+        const tree = { ...defaultTree, words: wordsTree };
+        const audio = { ...defaultAudio, counts };
+        state.data = data;
+        state.tree = tree;
+        state.audio = audio;
         state.mergeWords = [];
         state.overrideProtection = false;
+        // Store the initial state for reset functionality
+        state.initialState = {
+          data: JSON.parse(JSON.stringify(data)),
+          tree: JSON.parse(JSON.stringify(tree)),
+          audio: JSON.parse(JSON.stringify(audio)),
+        };
       }
     },
 
@@ -347,6 +366,7 @@ export const {
   moveSenseAction,
   orderDuplicateAction,
   orderSenseAction,
+  resetTreeToInitialAction,
   setDataAction,
   setSidebarAction,
   setVernacularAction,

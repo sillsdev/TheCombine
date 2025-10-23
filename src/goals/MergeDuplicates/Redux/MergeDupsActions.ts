@@ -23,6 +23,7 @@ import {
   moveSenseAction,
   orderDuplicateAction,
   orderSenseAction,
+  resetTreeToInitialAction,
   setDataAction,
   setSidebarAction,
   setVernacularAction,
@@ -31,6 +32,7 @@ import {
 import {
   CombineSenseMergePayload,
   FlagWordPayload,
+  MergeTreeState,
   MoveSensePayload,
   OrderSensePayload,
   SetVernacularPayload,
@@ -49,6 +51,10 @@ export function clearMergeWords(): Action {
 
 export function clearTree(): Action {
   return clearTreeAction();
+}
+
+export function resetTreeToInitial(): Action {
+  return resetTreeToInitialAction();
 }
 
 export function combineSense(payload: CombineSenseMergePayload): PayloadAction {
@@ -151,6 +157,23 @@ export function mergeAll() {
       await backend.blacklistAdd(blacklistIds);
     }
   };
+}
+
+// Helper function to check if the current state has changed from initial
+export function hasStateChanged(state: MergeTreeState): boolean {
+  if (!state.initialState) {
+    return false;
+  }
+
+  // Compare the current state with the initial state
+  const currentStateJson = JSON.stringify({
+    data: state.data,
+    tree: state.tree,
+    audio: state.audio,
+  });
+  const initialStateJson = JSON.stringify(state.initialState);
+
+  return currentStateJson !== initialStateJson;
 }
 
 // Used in MergeDups cases of GoalActions functions
