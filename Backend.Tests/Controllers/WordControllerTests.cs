@@ -376,5 +376,39 @@ namespace Backend.Tests.Controllers
             var wordResult = await _wordController.UpdateWord(ProjId, MissingId, Util.RandomWord(ProjId));
             Assert.That(wordResult, Is.InstanceOf<NotFoundResult>());
         }
+
+        [Test]
+        public async Task TestRestoreWord()
+        {
+            var word = await _wordRepo.Create(Util.RandomWord(ProjId));
+            await _wordRepo.DeleteFrontier(ProjId, word.Id);
+
+            Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
+            Assert.That(await _wordRepo.GetFrontier(ProjId), Is.Empty);
+
+            var result = await _wordController.RestoreWord(ProjId, word.Id);
+
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)result).Value, Is.True);
+            Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
+            Assert.That(await _wordRepo.GetFrontier(ProjId), Does.Contain(word).UsingPropertiesComparer());
+        }
+
+        [Test]
+        public async Task TestRestoreWordNoPermission()
+        {
+            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            var wordId = (await _wordRepo.Create(Util.RandomWord(ProjId))).Id;
+            var result = await _wordController.RestoreWord(ProjId, wordId);
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public async Task TestRestoreWordMissingWord()
+        {
+            var wordResult = await _wordController.RestoreWord(ProjId, MissingId);
+            Assert.That(wordResult, Is.InstanceOf<NotFoundResult>());
+        }
     }
 }
