@@ -458,7 +458,7 @@
       "dragCard": "Drag a card here to merge",
       "saveAndContinue": "Save changes and load a new set of words",
       "defer": "Discard changes and load a new set of words",
-      "revertSet": "Discard all changes made to this set of words",
+      "revertSet": "Revert all changes made to this set of words",
       "revertSetDialog": "Are you sure you want to discard all changes and start over with this set of words?",
       "noDups": "Nothing to merge.",
       "delete": "Delete sense",

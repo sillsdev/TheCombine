@@ -42,16 +42,6 @@ const mergeDuplicatesSlice = createSlice({
       return defaultState;
     },
 
-    resetTreeToInitialAction: (state) => {
-      if (state.initialState) {
-        state.data = JSON.parse(JSON.stringify(state.initialState.data));
-        state.tree = JSON.parse(JSON.stringify(state.initialState.tree));
-        state.audio = JSON.parse(JSON.stringify(state.initialState.audio));
-        state.mergeWords = [];
-        state.overrideProtection = false;
-      }
-    },
-
     combineSenseAction: (state, action) => {
       const srcRef: MergeTreeReference = action.payload.src;
       const destRef: MergeTreeReference = action.payload.dest;
@@ -300,6 +290,15 @@ const mergeDuplicatesSlice = createSlice({
       }
     },
 
+    resetTreeToInitialAction: (state) => {
+      if (state.initialState) {
+        state.tree = JSON.parse(JSON.stringify(state.initialState.tree));
+        state.audio.moves = {};
+        state.mergeWords = [];
+        state.overrideProtection = false;
+      }
+    },
+
     setSidebarAction: (state, action) => {
       const sidebar: Sidebar = action.payload;
       // Only open sidebar with multiple senses.
@@ -334,11 +333,9 @@ const mergeDuplicatesSlice = createSlice({
         state.audio = audio;
         state.mergeWords = [];
         state.overrideProtection = false;
-        // Store the initial state for reset functionality
+        // Store the initial tree state for reset functionality
         state.initialState = {
-          data: JSON.parse(JSON.stringify(data)),
           tree: JSON.parse(JSON.stringify(tree)),
-          audio: JSON.parse(JSON.stringify(audio)),
         };
       }
     },

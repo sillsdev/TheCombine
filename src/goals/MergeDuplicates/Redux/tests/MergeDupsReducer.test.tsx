@@ -91,7 +91,7 @@ describe("MergeDupsReducer", () => {
     
     // Set initial data
     store.dispatch(setData(words));
-    const initialStateStr = JSON.stringify(store.getState().mergeDuplicateGoal);
+    const initialTree = JSON.stringify(store.getState().mergeDuplicateGoal.tree);
     
     // Make a simple change - flag a word
     const wordWithSenses = words.find(w => w.senses.length > 0);
@@ -101,24 +101,19 @@ describe("MergeDupsReducer", () => {
     store.dispatch(flagWord({ wordId: wordWithSenses.id, flag: newFlag("test") }));
     
     // Verify state has changed
-    const changedState = store.getState().mergeDuplicateGoal;
-    expect(JSON.stringify(changedState)).not.toEqual(initialStateStr);
+    const changedTree = JSON.stringify(store.getState().mergeDuplicateGoal.tree);
+    expect(changedTree).not.toEqual(initialTree);
     
     // Reset to initial
     const resetAction = { type: "mergeDupStepReducer/resetTreeToInitialAction" };
     store.dispatch(resetAction as any);
     
-    // Verify state is restored (compare key properties)
+    // Verify tree is restored
     const restoredState = store.getState().mergeDuplicateGoal;
-    expect(JSON.stringify(restoredState.data)).toEqual(
-      JSON.parse(initialStateStr).data && JSON.stringify(JSON.parse(initialStateStr).data)
-    );
-    expect(JSON.stringify(restoredState.tree)).toEqual(
-      JSON.parse(initialStateStr).tree && JSON.stringify(JSON.parse(initialStateStr).tree)
-    );
-    expect(JSON.stringify(restoredState.audio)).toEqual(
-      JSON.parse(initialStateStr).audio && JSON.stringify(JSON.parse(initialStateStr).audio)
-    );
+    expect(JSON.stringify(restoredState.tree)).toEqual(initialTree);
+    expect(restoredState.audio.moves).toEqual({});
+    expect(restoredState.mergeWords).toEqual([]);
+    expect(restoredState.overrideProtection).toBe(false);
   });
 
   function testTreeWords(): Hash<MergeTreeWord> {

@@ -53,10 +53,6 @@ export function clearTree(): Action {
   return clearTreeAction();
 }
 
-export function resetTreeToInitial(): Action {
-  return resetTreeToInitialAction();
-}
-
 export function combineSense(payload: CombineSenseMergePayload): PayloadAction {
   return combineSenseAction(payload);
 }
@@ -87,6 +83,10 @@ export function orderSense(payload: OrderSensePayload): PayloadAction {
   } else {
     return orderDuplicateAction(payload);
   }
+}
+
+export function resetTreeToInitial(): Action {
+  return resetTreeToInitialAction();
 }
 
 export function setSidebar(sidebar?: Sidebar): PayloadAction {
@@ -165,13 +165,15 @@ export function hasStateChanged(state: MergeTreeState): boolean {
     return false;
   }
 
-  // Compare the current state with the initial state
+  // Compare current tree and audio.moves with initial state
   const currentStateJson = JSON.stringify({
-    data: state.data,
     tree: state.tree,
-    audio: state.audio,
+    audioMoves: state.audio.moves,
   });
-  const initialStateJson = JSON.stringify(state.initialState);
+  const initialStateJson = JSON.stringify({
+    tree: state.initialState.tree,
+    audioMoves: {},
+  });
 
   return currentStateJson !== initialStateJson;
 }

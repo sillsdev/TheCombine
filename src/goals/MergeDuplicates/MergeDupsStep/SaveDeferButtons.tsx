@@ -2,9 +2,9 @@ import { Checkbox, FormControlLabel, Grid2 } from "@mui/material";
 import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import RevertConfirmDialog from "./RevertConfirmDialog";
 import { OffOnSetting } from "api/models";
 import LoadingButton from "components/Buttons/LoadingButton";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import {
   deferMerge,
   hasStateChanged,
@@ -56,9 +56,9 @@ export default function SaveDeferButtons(): ReactElement {
   };
 
   const confirmRevert = (): void => {
-    setShowRevertDialog(false);
     dispatch(setSidebar());
     dispatch(resetTreeToInitial());
+    setShowRevertDialog(false);
   };
 
   const cancelRevert = (): void => {
@@ -122,12 +122,14 @@ export default function SaveDeferButtons(): ReactElement {
         )}
       </Grid2>
 
-      {showRevertDialog && (
-        <RevertConfirmDialog
-          onConfirm={confirmRevert}
-          onCancel={cancelRevert}
-        />
-      )}
+      <CancelConfirmDialog
+        open={showRevertDialog}
+        text="mergeDups.helpText.revertSetDialog"
+        handleCancel={cancelRevert}
+        handleConfirm={confirmRevert}
+        buttonIdCancel="revert-cancel"
+        buttonIdConfirm="revert-confirm"
+      />
     </>
   );
 }

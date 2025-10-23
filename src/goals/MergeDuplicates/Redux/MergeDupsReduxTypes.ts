@@ -37,9 +37,7 @@ export interface MergeTreeState {
   mergeWords: MergeWords[];
   overrideProtection: boolean;
   initialState?: {
-    data: MergeData;
     tree: MergeTree;
-    audio: MergeAudio;
   };
 }
 
