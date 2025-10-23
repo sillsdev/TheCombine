@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { Word } from "api/models";
-import { getWord, isInFrontier, updateWord } from "backend";
+import { getWord, isInFrontier, restoreWord, updateWord } from "backend";
 import UndoButton from "components/Buttons/UndoButton";
 import WordCard from "components/WordCard";
 import {
@@ -47,8 +47,12 @@ export function EditsCount(changes: EntriesEdited): ReactElement {
 }
 
 async function undoEdit(edit: EntryEdit): Promise<void> {
-  const oldWord = await getWord(edit.oldId);
-  await updateWord({ ...oldWord, id: edit.newId });
+  const { oldId, newId } = edit;
+  if (newId) {
+    await updateWord({ ...(await getWord(oldId)), id: newId });
+  } else {
+    await restoreWord(oldId);
+  }
 }
 
 function EditedEntry(props: { edit: EntryEdit }): ReactElement {
@@ -57,25 +61,33 @@ function EditedEntry(props: { edit: EntryEdit }): ReactElement {
   const [oldWord, setOldWord] = useState<Word | undefined>();
   const [newWord, setNewWord] = useState<Word | undefined>();
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     getWord(oldId).then(setOldWord);
   }, [oldId]);
   useEffect(() => {
-    getWord(newId).then(setNewWord);
+    if (newId) {
+      getWord(newId).then(setNewWord);
+    }
   }, [newId]);
 
   return (
     <ListItem>
       <Stack direction="row" spacing={1}>
+        {!newId && <Typography>{t("mergeDups.undo.deleted")}</Typography>}
+
         {!!oldWord && (
           <Box>
             <WordCard word={oldWord} />
           </Box>
         )}
 
-        <Box alignContent="center">
-          <ArrowRightAlt fontSize="large" />
-        </Box>
+        {!!newId && (
+          <Box alignContent="center">
+            <ArrowRightAlt fontSize="large" />
+          </Box>
+        )}
 
         {!!newWord && (
           <Box>
@@ -88,10 +100,20 @@ function EditedEntry(props: { edit: EntryEdit }): ReactElement {
             buttonIdEnabled={`edit-undo-${props.edit.newId}`}
             buttonIdCancel="edit-undo-cancel"
             buttonIdConfirm="edit-undo-confirm"
-            textIdDialog="reviewEntries.undo.undoDialog"
+            textIdDialog={
+              newId
+                ? "reviewEntries.undo.undoDialog"
+                : "mergeDups.undo.undoDeleteDialog"
+            }
             textIdDisabled="reviewEntries.undo.undoDisabled"
-            textIdEnabled="reviewEntries.undo.undo"
-            isUndoAllowed={() => isInFrontier(newId)}
+            textIdEnabled={
+              newId ? "reviewEntries.undo.undo" : "mergeDups.undo.undoDelete"
+            }
+            isUndoAllowed={async () => {
+              return newId
+                ? await isInFrontier(newId)
+                : !(await isInFrontier(oldId));
+            }}
             undo={() => undoEdit(props.edit)}
           />
         </Box>
