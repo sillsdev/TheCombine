@@ -30,11 +30,32 @@ export class RuntimeConfig {
   private static _instance: RuntimeConfig;
 
   private constructor() {
+    // Load runtime scripts dynamically
+    this.loadRuntimeScript("/scripts/config.js", "runtimeConfig");
+    this.loadRuntimeScript("/scripts/release.js", "release");
+
     if (
       !window.hasOwnProperty("runtimeConfig") ||
       typeof window.runtimeConfig === "undefined"
     ) {
       window.runtimeConfig = defaultConfig;
+    }
+  }
+
+  /**
+   * Dynamically loads a runtime script if the corresponding window property doesn't exist.
+   * This is used to load configuration and other runtime scripts that are generated
+   * at container startup time, bypassing Parcel's bundling process.
+   *
+   * @param src - The source URL of the script to load (e.g., "/scripts/config.js")
+   * @param windowProperty - The window property name to check for existence (e.g., "runtimeConfig")
+   */
+  private loadRuntimeScript(src: string, windowProperty: string): void {
+    if (!window.hasOwnProperty(windowProperty)) {
+      const script = document.createElement("script");
+      script.src = src;
+      script.async = false;
+      document.head.appendChild(script);
     }
   }
 
