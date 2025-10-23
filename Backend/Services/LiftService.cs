@@ -11,6 +11,7 @@ using System.Xml;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using SIL.DictionaryServices.Lift;
@@ -116,6 +117,7 @@ namespace BackendFramework.Services
         private readonly ConcurrentDictionary<string, string> _liftImports;
         private const string FlagTextEmpty = "***";
         private const string InProgress = "IN_PROGRESS";
+        private const string otelTagName = "otel.LiftService";
 
         public LiftService(ISemanticDomainRepository semDomRepo, ISpeakerRepository speakerRepo)
         {
@@ -229,6 +231,8 @@ namespace BackendFramework.Services
         /// <returns> A bool indicating whether a character set was added to the project. </returns>
         public async Task<bool> LdmlImport(string dirPath, IProjectRepository projRepo, Project project)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "importing LDML");
+
             if (Directory.GetFiles(dirPath, "*.ldml").Length == 0)
             {
                 dirPath = FileStorage.GenerateWritingsSystemsSubdirPath(dirPath);
@@ -257,6 +261,8 @@ namespace BackendFramework.Services
         public async Task<string> LiftExport(
             string projectId, IWordRepository wordRepo, IProjectRepository projRepo)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "exporting LIFT");
+
             // Validate project exists.
             var proj = await projRepo.GetProject(projectId);
             if (proj is null)
@@ -446,6 +452,8 @@ namespace BackendFramework.Services
         /// <summary> Export English semantic domains (along with any custom domains) to lift-ranges. </summary>
         public async Task CreateLiftRanges(List<SemanticDomainFull> projDoms, string rangesDest)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "creating LIFT ranges");
+
             await using var liftRangesWriter = XmlWriter.Create(rangesDest, new XmlWriterSettings
             {
                 Indent = true,
