@@ -207,8 +207,8 @@ export function dispatchStepData(goal: Goal) {
   };
 }
 
-/** Add entry update to the current goal. */
-export function asyncUpdateEntry(oldId: string, newId: string) {
+/** Add entry update to the current goal. Use falsy newId for entry deletion. */
+export function asyncUpdateEntry(oldId: string, newId?: string) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(addEntryEditToGoal({ newId, oldId }));
     await dispatch(asyncUpdateGoal());

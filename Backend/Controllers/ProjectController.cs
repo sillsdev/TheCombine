@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,8 @@ namespace BackendFramework.Controllers
         private readonly IUserRoleRepository _userRoleRepo;
         private readonly IPermissionService _permissionService;
 
+        private const string otelTagName = "otel.ProjectController";
+
         public ProjectController(IProjectRepository projRepo, IUserRoleRepository userRoleRepo,
             IUserRepository userRepo, IPermissionService permissionService)
         {
@@ -36,6 +39,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAllProjects()
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all projects");
+
             if (!await _permissionService.IsSiteAdmin(HttpContext))
             {
                 return Forbid();
@@ -50,6 +55,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAllProjectUsers(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all project users");
+
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
@@ -70,6 +77,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetProject(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting a project");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
@@ -95,6 +104,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateProject([FromBody, BindRequired] Project project)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "creating a project");
+
             // Get current user.
             var currentUserId = _permissionService.GetUserId(HttpContext);
             var currentUser = await _userRepo.GetUser(currentUserId, false);
@@ -137,6 +148,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateProject(string projectId, [FromBody, BindRequired] Project project)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a project");
+
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
@@ -159,6 +172,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> PutChars(string projectId, [FromBody, BindRequired] Project project)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating project characters");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.CharacterInventory, projectId))
             {
                 return Forbid();
@@ -185,6 +200,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> DeleteProject(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a project");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Archive, projectId))
             {
                 return Forbid();
@@ -208,6 +225,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> ProjectDuplicateCheck(string projectName)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking for duplicate project");
+
             if (!_permissionService.IsCurrentUserAuthenticated(HttpContext))
             {
                 return Forbid();

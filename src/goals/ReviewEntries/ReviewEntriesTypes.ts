@@ -7,7 +7,9 @@ export class ReviewEntries extends Goal {
 }
 
 export type EntryEdit = {
-  newId: string;
+  /** Id of the entry resulting from the edit, or undefined if deleted. */
+  newId?: string;
+  /** Id of the entry that was edited. */
   oldId: string;
 };
 

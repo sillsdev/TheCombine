@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,8 @@ namespace BackendFramework.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IProjectRepository _projRepo;
 
+        private const string otelTagName = "otel.StatisticsController";
+
         public StatisticsController(
             IStatisticsService statService, IPermissionService permissionService, IProjectRepository projRepo)
         {
@@ -33,6 +36,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetSemanticDomainCounts(string projectId, string lang)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting semantic domain counts");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Statistics, projectId))
             {
                 return Forbid();
@@ -48,6 +53,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetWordsPerDayPerUserCounts(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting words per day per user counts");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Statistics, projectId))
             {
                 return Forbid();
@@ -63,6 +70,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetProgressEstimationLineChartRoot(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting progress estimation line chart root");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Statistics, projectId))
             {
                 return Forbid();
@@ -83,6 +92,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetLineChartRootData(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting line chart root data");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Statistics, projectId))
             {
                 return Forbid();
@@ -98,6 +109,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetSemanticDomainUserCounts(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting semantic domain user counts");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Statistics, projectId))
             {
                 return Forbid();

@@ -1,5 +1,6 @@
 using BackendFramework.Models;
 using BackendFramework.Interfaces;
+using BackendFramework.Otel;
 using System.Threading.Tasks;
 using System;
 using Microsoft.Extensions.Options;
@@ -16,8 +17,12 @@ namespace BackendFramework.Services
         private readonly IUserRepository _userRepo = userRepo;
         private readonly IEmailService _emailService = emailService;
 
+        private const string otelTagName = "otel.EmailVerifyService";
+
         public async Task<bool> ValidateToken(string token)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "validating email verification token");
+
             var emailToken = await GetValidEmailVerify(token);
             if (emailToken is null)
             {
@@ -42,6 +47,8 @@ namespace BackendFramework.Services
 
         public async Task<bool> RequestEmailVerify(User user)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "requesting email verification");
+
             var emailToken = new EmailToken(user.Email);
             await _emailVerifyRepo.Insert(emailToken);
             return await _emailService.SendEmail(CreateEmail(user, CreateLink(emailToken.Token)));
@@ -60,10 +67,10 @@ namespace BackendFramework.Services
             message.Subject = "The Combine email verification";
             message.Body = new TextPart("plain")
             {
-                Text = $"Email verification has been requested for the user {user.Username}. " +
-                    $"Follow the link to verify {user.Username}'s email address: {url}\n\n" +
-                    "Email verification is required to add users to your projects in The Combine." +
-                    $"(This link will expire in {_expireTime.TotalMinutes} minutes.)\n\n" +
+                Text = $"Email verification has been requested for {user.Name} (username: {user.Username}).\n\n" +
+                    "Email verification is required to add users to your projects in The Combine.\n\n" +
+                    $"Follow this link to verify your email address: {url}\n\n" +
+                    $"(Link will expire in {_expireTime.TotalMinutes} minutes.)\n\n" +
                     "If you do not wish to verify your email address, you may ignore this email."
             };
             return message;

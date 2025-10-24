@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using static BackendFramework.Helper.Domain;
@@ -16,6 +17,8 @@ namespace BackendFramework.Services
         private readonly IPasswordResetRepository _passwordResetRepo = passwordResetRepo;
         private readonly IUserRepository _userRepo = userRepo;
         private readonly IEmailService _emailService = emailService;
+
+        private const string otelTagName = "otel.PasswordResetService";
 
         private static string CreateLink(string token)
         {
@@ -45,6 +48,8 @@ namespace BackendFramework.Services
         /// <returns> Returns false if the request is invalid or expired. </returns>
         public async Task<bool> ResetPassword(string token, string password)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "resetting password");
+
             var request = await GetValidPasswordReset(token);
             if (request is null)
             {
@@ -60,6 +65,8 @@ namespace BackendFramework.Services
 
         public async Task<bool> ResetPasswordRequest(string emailOrUsername)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "requesting password reset");
+
             // Find user attached to email or username.
             var user = await _userRepo.GetUserByEmailOrUsername(emailOrUsername, false);
 
@@ -82,9 +89,9 @@ namespace BackendFramework.Services
             message.Subject = "The Combine password reset";
             message.Body = new TextPart("plain")
             {
-                Text = $"A password reset has been requested for the user {user.Username}. " +
-                    $"Follow this link to reset {user.Username}'s password: {url}\n\n" +
-                    $"(This link will expire in {_expireTime.TotalMinutes} minutes.)\n\n" +
+                Text = $"A password reset has been requested for {user.Name} (username: {user.Username}).\n\n" +
+                    $"Follow this link to reset your password: {url}\n\n" +
+                    $"(Link will expire in {_expireTime.TotalMinutes} minutes.)\n\n" +
                     "If you did not request a password reset, please ignore this email."
             };
             return message;
@@ -92,6 +99,8 @@ namespace BackendFramework.Services
 
         public async Task<bool> ValidateToken(string token)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "validating password reset token");
+
             return await GetValidPasswordReset(token) is not null;
         }
     }

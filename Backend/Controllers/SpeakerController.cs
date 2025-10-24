@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,8 @@ namespace BackendFramework.Controllers
         private readonly ISpeakerRepository _speakerRepo;
         private readonly IPermissionService _permissionService;
 
+        private const string otelTagName = "otel.SpeakerController";
+
         public SpeakerController(ISpeakerRepository speakerRepo, IPermissionService permissionService)
         {
             _speakerRepo = speakerRepo;
@@ -32,6 +35,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetProjectSpeakers(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting project speakers");
+
             // Check permissions
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
@@ -49,6 +54,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteProjectSpeakers(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting project speakers");
+
             // Check permissions
             if (!await _permissionService.IsSiteAdmin(HttpContext))
             {
@@ -67,6 +74,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetSpeaker(string projectId, string speakerId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting a speaker");
+
             // Check permissions
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
@@ -107,6 +116,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateSpeaker(string projectId, [FromBody, BindRequired] string name)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "creating a speaker");
+
             // Check permissions
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
@@ -135,6 +146,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteSpeaker(string projectId, string speakerId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a speaker");
+
             // Check permissions
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
@@ -167,6 +180,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RemoveConsent(string projectId, string speakerId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "removing speaker consent");
+
             // Check permissions
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
@@ -212,6 +227,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UpdateSpeakerName(
             string projectId, string speakerId, [FromBody, BindRequired] string name)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating speaker name");
+
             // Check permissions
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
@@ -254,6 +271,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> UploadConsent(string projectId, string speakerId, IFormFile? file)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "uploading speaker consent");
+
             // Sanitize user input
             try
             {
@@ -334,6 +353,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public IActionResult DownloadConsent(string speakerId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "downloading speaker consent");
+
             try
             {
                 speakerId = Sanitization.SanitizeId(speakerId);

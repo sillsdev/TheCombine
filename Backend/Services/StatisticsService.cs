@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using static SIL.Extensions.DateTimeExtensions;
 
 namespace BackendFramework.Services
@@ -13,6 +14,8 @@ namespace BackendFramework.Services
         private readonly IWordRepository _wordRepo;
         private readonly ISemanticDomainRepository _domainRepo;
         private readonly IUserRepository _userRepo;
+
+        private const string otelTagName = "otel.StatisticsService";
 
         public StatisticsService(
             IWordRepository wordRepo, ISemanticDomainRepository domainRepo, IUserRepository userRepo)
@@ -34,6 +37,8 @@ namespace BackendFramework.Services
         /// </summary>
         public async Task<List<SemanticDomainCount>> GetSemanticDomainCounts(string projectId, string lang)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting semantic domain counts");
+
             var hashMap = new Dictionary<string, int>();
             var domainTreeNodeList = await _domainRepo.GetAllSemanticDomainTreeNodes(lang);
             var wordList = await _wordRepo.GetFrontier(projectId);
@@ -67,6 +72,8 @@ namespace BackendFramework.Services
         /// </summary>
         public async Task<List<WordsPerDayPerUserCount>> GetWordsPerDayPerUserCounts(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting words per day per user counts");
+
             var wordList = await _wordRepo.GetFrontier(projectId);
             var shortTimeDictionary = new Dictionary<string, WordsPerDayPerUserCount>();
             var userNameIdDictionary = new Dictionary<string, string>();
@@ -130,6 +137,8 @@ namespace BackendFramework.Services
         /// </summary>
         public async Task<ChartRootData> GetProgressEstimationLineChartRoot(string projectId, List<DateTime> schedule)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting progress estimation line chart root");
+
             var LineChartData = new ChartRootData();
             var wordList = await _wordRepo.GetFrontier(projectId);
             var workshopSchedule = new List<string>();
@@ -252,6 +261,8 @@ namespace BackendFramework.Services
         /// </summary>
         public async Task<ChartRootData> GetLineChartRootData(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting line chart root data");
+
             var LineChartData = new ChartRootData();
             var list = await GetWordsPerDayPerUserCounts(projectId);
             // if the list is null or empty return new ChartRootData to generate a empty Chart
@@ -295,6 +306,8 @@ namespace BackendFramework.Services
         /// <returns> A List of SemanticDomainUserCount <see cref="SemanticDomainUserCount"/> </returns>
         public async Task<List<SemanticDomainUserCount>> GetSemanticDomainUserCounts(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting semantic domain user counts");
+
             var wordList = await _wordRepo.GetFrontier(projectId);
             var resUserMap = new Dictionary<string, SemanticDomainUserCount>();
 
