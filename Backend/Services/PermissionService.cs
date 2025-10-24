@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
@@ -18,6 +19,7 @@ namespace BackendFramework.Services
 
         internal const string JwtSecretKeyEnv = "COMBINE_JWT_SECRET_KEY";
         internal const string UserIdClaimType = "USER_ID";
+        private const string otelTagName = "otel.PermissionService";
 
         public PermissionService(IUserRepository userRepo, IUserRoleRepository userRoleRepo)
         {
@@ -40,6 +42,8 @@ namespace BackendFramework.Services
         /// <summary> Checks whether the current user is a site admin. </summary>
         public async Task<bool> IsSiteAdmin(HttpContext request)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if user is site admin");
+
             var user = await _userRepo.GetUser(GetUserId(request));
             return user?.IsAdmin ?? false;
         }
@@ -47,12 +51,16 @@ namespace BackendFramework.Services
         /// <summary> Checks whether the current user either has given userId or is a site admin. </summary>
         public async Task<bool> CanModifyUser(HttpContext request, string userId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if user can modify another user");
+
             return IsUserAuthenticated(request, userId) || await IsSiteAdmin(request);
         }
 
         /// <summary> Checks whether the current user has the given project permission. </summary>
         public async Task<bool> HasProjectPermission(HttpContext request, Permission permission, string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking project permission");
+
             var user = await _userRepo.GetUser(GetUserId(request));
             if (user is null)
             {
@@ -83,6 +91,8 @@ namespace BackendFramework.Services
         /// <summary> Checks whether the current user has all permissions of the given project role. </summary>
         public async Task<bool> ContainsProjectRole(HttpContext request, Role role, string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if user has project role");
+
             var user = await _userRepo.GetUser(GetUserId(request));
             if (user is null)
             {
@@ -114,6 +124,8 @@ namespace BackendFramework.Services
         /// <returns> bool: true if a the userEditIds don't match. </returns>
         public async Task<bool> IsViolationEdit(HttpContext request, string userEditId, string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking for user edit violation");
+
             var userId = GetUserId(request);
             var user = await _userRepo.GetUser(userId);
             if (user is null)
@@ -145,6 +157,8 @@ namespace BackendFramework.Services
         /// <returns> User when credentials are correct, null otherwise. </returns>
         public async Task<User?> Authenticate(string emailOrUsername, string password)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "authenticating user");
+
             // Fetch the stored user.
             var user = await _userRepo.GetUserByEmailOrUsername(emailOrUsername, false);
 
@@ -164,6 +178,8 @@ namespace BackendFramework.Services
         /// <summary> Creates a JWT token for the given user. </summary>
         public async Task<User?> MakeJwt(User user)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "creating JWT token");
+
             const int hoursUntilExpires = 12;
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable(JwtSecretKeyEnv)!);
