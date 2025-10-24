@@ -40,7 +40,7 @@ import { type Hash } from "types/hash";
 import { newFlag, testWordList } from "types/word";
 
 jest.mock("uuid");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const mockUuid = require("uuid") as { v4: jest.Mock };
 
 let uuidIndex = 0;

@@ -3,8 +3,7 @@ import { ReactElement } from "react";
 import { useNavigate } from "react-router";
 
 import { buttonMinHeight } from "components/AppBar/AppBarTypes";
-import logo from "resources/CombineLogoV1White.png";
-import smallLogo from "resources/CombineSmallLogoV1.png";
+import { small, white } from "resources/logo";
 import { Path } from "types/path";
 import { themeColors } from "types/theme";
 
@@ -32,7 +31,7 @@ export default function Logo(): ReactElement {
       <img
         alt="Logo"
         height={isSmDown ? "20" : isMdDown ? "30" : "45"}
-        src={isMdDown ? smallLogo : logo}
+        src={isMdDown ? small : white}
       />
     </Button>
   );

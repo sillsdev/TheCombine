@@ -1,12 +1,12 @@
-import intersect from "resources/tree/intersect.svg";
-import endcapLeft from "resources/tree/leftEndcap.svg";
-import parent from "resources/tree/parent.svg";
-import pillar from "resources/tree/pillar.svg";
-import endcapRight from "resources/tree/rightEndcap.svg";
-import span from "resources/tree/span.svg";
-import teeDown from "resources/tree/teeDown.svg";
-import teeUpLeft from "resources/tree/teeUpLeft.svg";
-import teeUpRight from "resources/tree/teeUpRight.svg";
+const intersect = new URL("intersect.svg", import.meta.url).href;
+const endcapLeft = new URL("leftEndcap.svg", import.meta.url).href;
+const parent = new URL("parent.svg", import.meta.url).href;
+const pillar = new URL("pillar.svg", import.meta.url).href;
+const endcapRight = new URL("rightEndcap.svg", import.meta.url).href;
+const span = new URL("span.svg", import.meta.url).href;
+const teeDown = new URL("teeDown.svg", import.meta.url).href;
+const teeUpLeft = new URL("teeUpLeft.svg", import.meta.url).href;
+const teeUpRight = new URL("teeUpRight.svg", import.meta.url).href;
 
 export {
   endcapLeft,
