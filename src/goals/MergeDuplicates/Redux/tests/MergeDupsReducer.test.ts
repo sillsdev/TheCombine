@@ -39,9 +39,11 @@ import { setupStore } from "rootRedux/store";
 import { type Hash } from "types/hash";
 import { newFlag, testWordList } from "types/word";
 
-jest.mock("uuid");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const mockUuid = require("uuid") as { v4: jest.Mock };
+jest.mock("uuid", () => ({
+  v4: () => mockV4(),
+}));
+
+const mockV4 = jest.fn();
 
 let uuidIndex = 0;
 /** When `increment` (default `true`) is set to `false`,
@@ -55,7 +57,7 @@ function getMockUuid(increment = true): string {
 }
 
 beforeEach(() => {
-  mockUuid.v4.mockImplementation(getMockUuid);
+  mockV4.mockImplementation(getMockUuid);
 });
 
 describe("MergeDupsReducer", () => {
