@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using BackendFramework.Interfaces;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,8 @@ namespace BackendFramework.Controllers
         private readonly IEmailVerifyService _emailVerifyService = emailVerifyService;
         private readonly IPermissionService _permissionService = permissionService;
 
+        private const string otelTagName = "otel.EmailVerifyController";
+
         /// <summary> Sends an email verify request </summary>
         [HttpPost("", Name = "RequestEmailVerify")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -24,6 +27,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> RequestEmailVerify([FromBody, BindRequired] string emailOrUsername)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "requesting email verification");
+
             var user = await _userRepo.GetUserByEmailOrUsername(emailOrUsername);
             if (user is null || !await _permissionService.CanModifyUser(HttpContext, user.Id))
             {
@@ -40,6 +45,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> ValidateEmailToken(string token)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "validating email token");
+
             return Ok(await _emailVerifyService.ValidateToken(token));
         }
     }

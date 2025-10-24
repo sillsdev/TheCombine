@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,8 @@ namespace BackendFramework.Controllers
         private readonly IWordRepository _wordRepo;
         private readonly IPermissionService _permissionService;
         private readonly IWordService _wordService;
+
+        private const string otelTagName = "otel.AudioController";
 
         public AudioController(IWordRepository repo, IWordService wordService, IPermissionService permissionService)
         {
@@ -34,6 +37,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public IActionResult DownloadAudioFile(string projectId, string fileName)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "downloading an audio file");
+
             // Sanitize user input
             try
             {
@@ -68,6 +73,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> UploadAudioFile(string projectId, string wordId, IFormFile? file)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "uploading an audio file");
+
             return await UploadAudioFile(projectId, wordId, "", file);
         }
 
@@ -86,6 +93,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UploadAudioFile(
             string projectId, string wordId, string speakerId, IFormFile? file)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "uploading an audio file with speaker");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
@@ -148,6 +157,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> DeleteAudioFile(string projectId, string wordId, string fileName)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting an audio file");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();

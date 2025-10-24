@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router";
 
 import EmailVerify, { EmailVerifyTextId } from "components/EmailVerify";
+import { reset } from "rootRedux/actions";
 import { Path } from "types/path";
 
 jest.mock("react-router", () => ({
@@ -19,9 +20,10 @@ jest.mock("backend", () => ({
 }));
 jest.mock("rootRedux/hooks", () => ({
   ...jest.requireActual("rootRedux/hooks"),
-  useAppDispatch: () => jest.fn(),
+  useAppDispatch: () => mockDispatch,
 }));
 
+const mockDispatch = jest.fn();
 const mockNavigate = jest.fn();
 const mockVerifyEmail = jest.fn();
 
@@ -58,6 +60,7 @@ describe("EmailVerify", () => {
     mockVerifyEmail.mockResolvedValue(true);
     await renderEmailVerify();
     expect(mockVerifyEmail).toHaveBeenCalledTimes(1);
+    expect(mockDispatch).toHaveBeenCalledWith(reset());
     expect(screen.getByText(EmailVerifyTextId.TitleSuccess)).toBeTruthy();
     expect(screen.queryByText(EmailVerifyTextId.InvalidLinkBody)).toBeNull();
     expect(screen.queryByText(EmailVerifyTextId.InvalidLinkTitle)).toBeNull();
@@ -65,13 +68,14 @@ describe("EmailVerify", () => {
 
     expect(mockNavigate).not.toHaveBeenCalled();
     await userEvent.click(screen.getByText(EmailVerifyTextId.ButtonReturn));
-    expect(mockNavigate).toHaveBeenCalledWith(Path.ProjScreen);
+    expect(mockNavigate).toHaveBeenCalledWith(Path.Login);
   });
 
   it("renders InvalidLink on verification failure", async () => {
     mockVerifyEmail.mockResolvedValue(false);
     await renderEmailVerify();
     expect(mockVerifyEmail).toHaveBeenCalledTimes(1);
+    expect(mockDispatch).not.toHaveBeenCalled();
     expect(screen.getByText(EmailVerifyTextId.InvalidLinkBody)).toBeTruthy();
     expect(screen.getByText(EmailVerifyTextId.InvalidLinkTitle)).toBeTruthy();
     expect(screen.queryByText(EmailVerifyTextId.ButtonReturn)).toBeNull();

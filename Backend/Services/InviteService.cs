@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using static BackendFramework.Helper.Domain;
@@ -19,6 +20,9 @@ namespace BackendFramework.Services
         private readonly IEmailService _emailService = emailService;
         private readonly IPermissionService _permissionService = permissionService;
 
+        private const int MaxInviteMessageLength = 1000;
+        private const string otelTagName = "otel.InviteService";
+
         internal static string CreateLink(ProjectInvite invite)
         {
             // Matches the Path.ProjInvite route in src\router\appRoutes.tsx
@@ -32,27 +36,40 @@ namespace BackendFramework.Services
             return invite;
         }
 
-        private MimeMessage CreateEmail(string emailAddress, string emailMessage, string link, string projectName)
+        private MimeMessage CreateEmail(
+            string emailAddress, string emailMessage, string inviter, string link, string projectName)
         {
+            // Trim user-provided emailMessage
+            var trimmedMessage = emailMessage.Trim();
+            if (trimmedMessage.Length > MaxInviteMessageLength)
+            {
+                trimmedMessage = trimmedMessage.Substring(0, MaxInviteMessageLength);
+            }
+
             var message = new MimeMessage();
             message.To.Add(new MailboxAddress("FutureCombineUser", emailAddress));
-            message.Subject = "The Combine Project Invite";
-            message.Body = new TextPart("plain")
+            message.Subject = "The Combine project invitation";
+            message.Body = new TextPart("plain") // With "plain", we don't need to sanitize emailMessage.
             {
-                Text = $"You have been invited project '{projectName}' on The Combine.\n" +
-                       $"To become a member of this project, go to {link}.\n" +
-                       $"Use this email address during registration: {emailAddress}.\n\n" +
-                       $"Message from Project Admin: {emailMessage}\n\n" +
-                       $"(This link will expire in {_expireTime.TotalDays} days.)\n\n" +
-                       "If you did not expect an invite please ignore this email."
+                Text = $"You have been invited to project '{projectName}' on The Combine.\n\n" +
+                       $"Follow this link to become a member of the project: {link}\n\n" +
+                       $"(Link will expire in {_expireTime.TotalDays} days.)\n\n" +
+                       $"Use this email address during registration: {emailAddress}\n\n" +
+                       "If you did not expect an invite, please ignore this email.\n\n" +
+                       $"Message from project administrator ({inviter}):\n\n" +
+                       trimmedMessage
             };
             return message;
         }
 
-        public async Task<string> EmailLink(Project project, Role role, string emailAddress, string message)
+        public async Task<string> EmailLink(
+            Project project, Role role, string emailAddress, string inviterId, string message)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "emailing project invite link");
+
             var link = CreateLink(await CreateProjectInvite(project.Id, role, emailAddress));
-            await _emailService.SendEmail(CreateEmail(emailAddress, message, link, project.Name));
+            var inviter = await _userRepo.GetUser(inviterId) ?? throw new InviteException("Inviting user not found.");
+            await _emailService.SendEmail(CreateEmail(emailAddress, message, inviter.Name, link, project.Name));
             return link;
         }
 
@@ -93,6 +110,8 @@ namespace BackendFramework.Services
 
         public async Task<EmailInviteStatus> ValidateProjectToken(string projectId, string token)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "validating project invite token");
+
             var status = new EmailInviteStatus(false, false);
 
             var invite = await _inviteRepo.FindByToken(token);

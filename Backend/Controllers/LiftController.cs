@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,8 @@ namespace BackendFramework.Controllers
         private readonly IHubContext<ExportHub> _notifyService;
         private readonly IPermissionService _permissionService;
         private readonly ILogger<LiftController> _logger;
+
+        private const string otelTagName = "otel.LiftController";
 
         public LiftController(
             IWordRepository wordRepo, IProjectRepository projRepo, IPermissionService permissionService,
@@ -56,6 +59,8 @@ namespace BackendFramework.Controllers
         [RequestSizeLimit(250_000_000)]  // 250MB.
         public async Task<IActionResult> UploadLiftFileAndGetWritingSystems(IFormFile? file)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "uploading LIFT file and getting writing systems");
+
             var userId = _permissionService.GetUserId(HttpContext);
             if (file is null)
             {
@@ -92,6 +97,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> DeleteFrontierAndFinishUploadLiftFile(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting Frontier and finishing LIFT upload");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import, projectId))
             {
                 return Forbid();
@@ -123,6 +130,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> FinishUploadLiftFile(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "finishing LIFT upload");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import, projectId))
             {
                 return Forbid();
@@ -192,6 +201,8 @@ namespace BackendFramework.Controllers
         [RequestSizeLimit(250_000_000)]  // 250MB.
         public async Task<IActionResult> UploadLiftFile(string projectId, IFormFile? file)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "uploading LIFT file");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import, projectId))
             {
                 return Forbid();
@@ -341,6 +352,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "exporting LIFT file");
+
             var userId = _permissionService.GetUserId(HttpContext);
             var exportId = _permissionService.GetExportId(HttpContext);
             return await ExportLiftFile(projectId, userId, exportId);
@@ -428,6 +441,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public IActionResult CancelLiftExport()
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "cancelling LIFT export");
+
             var userId = _permissionService.GetUserId(HttpContext);
             return Ok(_liftService.CancelRecentExport(userId));
         }
@@ -440,6 +455,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> DownloadLiftFile(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "downloading LIFT file");
+
             var userId = _permissionService.GetUserId(HttpContext);
             return await DownloadLiftFile(projectId, userId);
         }
@@ -471,6 +488,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public IActionResult DeleteLiftFile()
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting LIFT file");
+
             var userId = _permissionService.GetUserId(HttpContext);
             return DeleteLiftFile(userId);
         }

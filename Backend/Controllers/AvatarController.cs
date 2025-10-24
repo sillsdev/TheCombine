@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,8 @@ namespace BackendFramework.Controllers
     {
         private readonly IUserRepository _userRepo;
         private readonly IPermissionService _permissionService;
+
+        private const string otelTagName = "otel.AvatarController";
 
         public AvatarController(IUserRepository userRepo, IPermissionService permissionService)
         {
@@ -31,6 +34,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DownloadAvatar(string userId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "downloading an avatar");
+
             var avatar = (await _userRepo.GetUser(userId, false))?.Avatar;
             if (string.IsNullOrEmpty(avatar))
             {
@@ -52,6 +57,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UploadAvatar(IFormFile? file)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "uploading an avatar");
+
             if (!_permissionService.IsCurrentUserAuthenticated(HttpContext))
             {
                 return Forbid();

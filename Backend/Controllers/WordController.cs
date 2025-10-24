@@ -235,7 +235,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UpdateWord(
             string projectId, string wordId, [FromBody, BindRequired] Word word)
         {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating words");
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a word");
 
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
@@ -252,6 +252,28 @@ namespace BackendFramework.Controllers
             var userId = _permissionService.GetUserId(HttpContext);
             await _wordService.Update(projectId, userId, wordId, word);
             return Ok(word.Id);
+        }
+
+        /// <summary> Restore a deleted <see cref="Word"/>. </summary>
+        /// <returns> bool: true if restored; false if already in frontier. </returns>
+        [HttpGet("restore/{wordId}", Name = "RestoreWord")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> RestoreWord(string projectId, string wordId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring a word");
+
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
+            {
+                return Forbid();
+            }
+            if (await _wordRepo.GetWord(projectId, wordId) is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(await _wordService.RestoreFrontierWords(projectId, [wordId]));
         }
 
         /// <summary> Revert words from an dictionary of word ids (key: to revert to; value: from frontier). </summary>

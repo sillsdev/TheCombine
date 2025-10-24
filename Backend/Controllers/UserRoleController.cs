@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,8 @@ namespace BackendFramework.Controllers
         private readonly IUserRoleRepository _userRoleRepo;
         private readonly IPermissionService _permissionService;
 
+        private const string otelTagName = "otel.UserRoleController";
+
         public UserRoleController(
             IUserRepository userRepo, IUserRoleRepository userRoleRepo, IPermissionService permissionService)
         {
@@ -34,6 +37,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetProjectUserRoles(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting project user roles");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
@@ -50,6 +55,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteProjectUserRoles(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting project user roles");
+
             if (!await _permissionService.IsSiteAdmin(HttpContext))
             {
                 return Forbid();
@@ -63,6 +70,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> HasPermission(string projectId, [FromBody, BindRequired] Permission perm)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if user has permission");
+
             return Ok(await _permissionService.HasProjectPermission(HttpContext, perm, projectId));
         }
 
@@ -73,6 +82,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> GetCurrentPermissions(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting current user permissions");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
@@ -107,6 +118,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateUserRole(string projectId, [FromBody, BindRequired] UserRole userRole)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "creating a user role");
+
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
@@ -139,6 +152,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> DeleteUserRole(string projectId, string userId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a user role");
+
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
@@ -190,6 +205,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UpdateUserRole(
             string userId, [FromBody, BindRequired] ProjectRole projectRole)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a user role");
+
             var projectId = projectRole.ProjectId;
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
@@ -265,6 +282,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> ChangeOwner(string projectId, string oldUserId, string newUserId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "changing project owner");
+
             // Ensure the actor has sufficient permission to change project owner
             if (!await _permissionService.ContainsProjectRole(HttpContext, Role.Owner, projectId))
             {

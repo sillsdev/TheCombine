@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
@@ -16,9 +17,13 @@ namespace BackendFramework.Repositories
         private readonly IMongoCollection<Project> _projects =
             dbContext.Db.GetCollection<Project>("ProjectsCollection");
 
+        private const string otelTagName = "otel.ProjectRepository";
+
         /// <summary> Finds all <see cref="Project"/>s </summary>
         public async Task<List<Project>> GetAllProjects()
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all projects");
+
             return await _projects.Find(_ => true).ToListAsync();
         }
 
@@ -26,6 +31,8 @@ namespace BackendFramework.Repositories
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllProjects()
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting all projects");
+
             var deleted = await _projects.DeleteManyAsync(_ => true);
             return deleted.DeletedCount != 0;
         }
@@ -34,6 +41,8 @@ namespace BackendFramework.Repositories
         /// <returns> Project or null if the Project does not exist. </returns>
         public async Task<Project?> GetProject(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting a project");
+
             var filterDef = new FilterDefinitionBuilder<Project>();
             var filter = filterDef.Eq(x => x.Id, projectId);
 
@@ -52,6 +61,8 @@ namespace BackendFramework.Repositories
         /// <returns> The project created </returns>
         public async Task<Project?> Create(Project project)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "creating a project");
+
             // Confirm that project name isn't empty or taken
             if (string.IsNullOrEmpty(project.Name) || await GetProjectIdByName(project.Name) is not null)
             {
@@ -66,6 +77,8 @@ namespace BackendFramework.Repositories
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a project");
+
             var deleted = await _projects.DeleteOneAsync(x => x.Id == projectId);
             return deleted.DeletedCount > 0;
         }
@@ -74,6 +87,8 @@ namespace BackendFramework.Repositories
         /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation </returns>
         public async Task<ResultOfUpdate> Update(string projectId, Project project)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a project");
+
             // Confirm that project name isn't empty or taken
             if (string.IsNullOrEmpty(project.Name))
             {
@@ -125,6 +140,8 @@ namespace BackendFramework.Repositories
 
         public async Task<string?> GetProjectIdByName(string projectName)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting project ID by name");
+
             var project = (await GetAllProjects()).Find(x =>
                 x.Name == projectName);
             return project?.Id;
@@ -132,6 +149,8 @@ namespace BackendFramework.Repositories
 
         public async Task<bool> CanImportLift(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if project can import LIFT");
+
             var project = await GetProject(projectId);
             if (project is null)
             {
