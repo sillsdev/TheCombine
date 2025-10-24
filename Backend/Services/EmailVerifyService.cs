@@ -1,5 +1,6 @@
 using BackendFramework.Models;
 using BackendFramework.Interfaces;
+using BackendFramework.Otel;
 using System.Threading.Tasks;
 using System;
 using Microsoft.Extensions.Options;
@@ -16,8 +17,12 @@ namespace BackendFramework.Services
         private readonly IUserRepository _userRepo = userRepo;
         private readonly IEmailService _emailService = emailService;
 
+        private const string otelTagName = "otel.EmailVerifyService";
+
         public async Task<bool> ValidateToken(string token)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "validating email verification token");
+
             var emailToken = await GetValidEmailVerify(token);
             if (emailToken is null)
             {
@@ -42,6 +47,8 @@ namespace BackendFramework.Services
 
         public async Task<bool> RequestEmailVerify(User user)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "requesting email verification");
+
             var emailToken = new EmailToken(user.Email);
             await _emailVerifyRepo.Insert(emailToken);
             return await _emailService.SendEmail(CreateEmail(user, CreateLink(emailToken.Token)));

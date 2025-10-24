@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
@@ -16,9 +17,13 @@ namespace BackendFramework.Repositories
         private readonly IMongoCollection<UserRole> _userRoles =
             dbContext.Db.GetCollection<UserRole>("UserRolesCollection");
 
+        private const string otelTagName = "otel.UserRoleRepository";
+
         /// <summary> Finds all <see cref="UserRole"/>s with specified projectId </summary>
         public async Task<List<UserRole>> GetAllUserRoles(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all user roles");
+
             return await _userRoles.Find(u => u.ProjectId == projectId).ToListAsync();
         }
 
@@ -26,6 +31,8 @@ namespace BackendFramework.Repositories
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllUserRoles(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting all user roles");
+
             var deleted = await _userRoles.DeleteManyAsync(u => u.ProjectId == projectId);
             return deleted.DeletedCount != 0;
         }
@@ -33,6 +40,8 @@ namespace BackendFramework.Repositories
         /// <summary> Finds <see cref="UserRole"/> with specified userRoleId and projectId </summary>
         public async Task<UserRole?> GetUserRole(string projectId, string userRoleId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting a user role");
+
             var filterDef = new FilterDefinitionBuilder<UserRole>();
             var filter = filterDef.And(filterDef.Eq(
                 x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userRoleId));
@@ -52,6 +61,8 @@ namespace BackendFramework.Repositories
         /// <returns> The UserRole created </returns>
         public async Task<UserRole> Create(UserRole userRole)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "creating a user role");
+
             await _userRoles.InsertOneAsync(userRole);
             return userRole;
         }
@@ -60,6 +71,8 @@ namespace BackendFramework.Repositories
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string projectId, string userRoleId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a user role");
+
             var filterDef = new FilterDefinitionBuilder<UserRole>();
             var filter = filterDef.And(filterDef.Eq(
                 x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userRoleId));
@@ -72,6 +85,8 @@ namespace BackendFramework.Repositories
         /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation </returns>
         public async Task<ResultOfUpdate> Update(string userRoleId, UserRole userRole)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a user role");
+
             var filter = Builders<UserRole>.Filter.Eq(x => x.Id, userRoleId);
             var updateDef = Builders<UserRole>.Update.Set(x => x.Role, userRole.Role);
             var updateResult = await _userRoles.UpdateOneAsync(filter, updateDef);

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
@@ -14,6 +15,8 @@ namespace BackendFramework.Repositories
     {
         private readonly IMongoCollection<Banner> _banners = dbContext.Db.GetCollection<Banner>("BannerCollection");
 
+        private const string otelTagName = "otel.BannerRepository";
+
         private async Task<Banner> CreateEmptyBanner(BannerType type)
         {
             var emptyBanner = new Banner { Type = type };
@@ -23,6 +26,8 @@ namespace BackendFramework.Repositories
 
         public async Task<Banner> GetBanner(BannerType type)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting banner");
+
             var bannerList = await _banners.FindAsync(x => x.Type == type);
             try
             {
@@ -36,6 +41,8 @@ namespace BackendFramework.Repositories
 
         public async Task<ResultOfUpdate> Update(SiteBanner banner)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating banner");
+
             var existingBanner = await GetBanner(banner.Type);
             var filter = Builders<Banner>.Filter.Eq(x => x.Id, existingBanner.Id);
             var updateDef = Builders<Banner>.Update

@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,8 @@ namespace BackendFramework.Controllers
         private readonly IInviteService _inviteService = inviteService;
         private readonly IPermissionService _permissionService = permissionService;
 
+        private const string otelTagName = "otel.InviteController";
+
         /// <summary> Generates invite link and sends email containing link </summary>
         [HttpPut(Name = "EmailInviteToProject")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
@@ -26,6 +29,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> EmailInviteToProject([FromBody, BindRequired] EmailInviteData data)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "sending email invite to project");
+
             var projectId = data.ProjectId;
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
@@ -54,6 +59,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmailInviteStatus))]
         public async Task<IActionResult> ValidateInviteToken(string projectId, string token)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "validating invite token");
+
             return Ok(await _inviteService.ValidateProjectToken(projectId, token));
         }
     }

@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using System.Collections.Generic;
@@ -20,8 +21,12 @@ namespace BackendFramework.Repositories
         private readonly IMongoCollection<SemanticDomainTreeNode> _semanticDomains =
             dbContext.Db.GetCollection<SemanticDomainTreeNode>("SemanticDomainTree");
 
+        private const string otelTagName = "otel.SemanticDomainRepository";
+
         public async Task<SemanticDomainTreeNode?> GetSemanticDomainTreeNode(string id, string lang)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting semantic domain tree node");
+
             var filterDef = new FilterDefinitionBuilder<SemanticDomainTreeNode>();
             var filter = filterDef.And(
                 filterDef.Eq(x => x.Id, id),
@@ -40,6 +45,8 @@ namespace BackendFramework.Repositories
 
         public async Task<SemanticDomainTreeNode?> GetSemanticDomainTreeNodeByName(string name, string lang)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting semantic domain tree node by name");
+
             var filterDef = new FilterDefinitionBuilder<SemanticDomainTreeNode>();
             var filter = filterDef.And(
                 filterDef.Regex(x => x.Name, new BsonRegularExpression("/^" + name + "$/i")),
@@ -57,6 +64,8 @@ namespace BackendFramework.Repositories
 
         public async Task<SemanticDomainFull?> GetSemanticDomainFull(string id, string lang)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting full semantic domain");
+
             var filterDef = new FilterDefinitionBuilder<SemanticDomainFull>();
             var filter = filterDef.And(
                 filterDef.Eq(x => x.Id, id),
@@ -76,6 +85,8 @@ namespace BackendFramework.Repositories
         // Get a list of all SemanticDomainTreeNodes in specified language except the root node
         public async Task<List<SemanticDomainTreeNode>?> GetAllSemanticDomainTreeNodes(string lang)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all semantic domain tree nodes");
+
             var filterDef = new FilterDefinitionBuilder<SemanticDomainTreeNode>();
             var filter = filterDef.And(
                 filterDef.Where(x => x.Id != "Sem"),

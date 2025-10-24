@@ -2,6 +2,7 @@
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,8 @@ namespace BackendFramework.Controllers
         private readonly IBannerRepository _bannerRepo;
         private readonly IPermissionService _permissionService;
 
+        private const string otelTagName = "otel.BannerController";
+
         public BannerController(IBannerRepository bannerRepo, IPermissionService permissionService)
         {
             _bannerRepo = bannerRepo;
@@ -30,6 +33,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SiteBanner))]
         public async Task<IActionResult> GetBanner(BannerType type)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting a banner");
+
             var banner = await _bannerRepo.GetBanner(type);
             return Ok(new SiteBanner { Type = type, Text = banner.Text });
         }
@@ -42,6 +47,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> UpdateBanner([FromBody, BindRequired] SiteBanner banner)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a banner");
+
             if (!await _permissionService.IsSiteAdmin(HttpContext))
             {
                 return Forbid();

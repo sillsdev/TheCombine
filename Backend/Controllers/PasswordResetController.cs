@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,8 @@ namespace BackendFramework.Controllers
     {
         private readonly IPasswordResetService _passwordResetService = passwordResetService;
 
+        private const string otelTagName = "otel.PasswordResetController";
+
         /// <summary> Resets a password using a token </summary>
         [AllowAnonymous]
         [HttpPost("reset", Name = "ResetPassword")]
@@ -22,6 +25,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> ResetPassword([FromBody, BindRequired] PasswordResetData data)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "resetting password");
+
             var result = await _passwordResetService.ResetPassword(data.Token, data.NewPassword);
             return result ? Ok() : Forbid();
         }
@@ -33,6 +38,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] string emailOrUsername)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "requesting password reset");
+
             var result = await _passwordResetService.ResetPasswordRequest(emailOrUsername);
             return result ? Ok() : StatusCode(StatusCodes.Status500InternalServerError);
         }
@@ -43,6 +50,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> ValidateResetToken(string token)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "validating password reset token");
+
             return Ok(await _passwordResetService.ValidateToken(token));
         }
     }
