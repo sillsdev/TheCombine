@@ -19,7 +19,7 @@
     "fmt-frontend": "      prettier --write \"./{.github,.vscode,deploy,docs,maintenance,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
     "fmt-frontend-check": "prettier --check \"./{.github,.vscode,deploy,docs,maintenance,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
     "prefrontend": "node scripts/touchPublicScripts.js && npm run set-release",
-    "frontend": "parcel --lazy src/resources/dictionaries/**/* --open",
+    "frontend": "parcel --open",
     "gen-backend-coverage-report": "tsc scripts/genBackendCoverageReport.ts && node scripts/genBackendCoverageReport.js",
     "license-report-backend": " nuget-license --include-transitive --input ./Backend/BackendFramework.csproj --output JsonPretty > docs/user_guide/assets/licenses/backend_licenses.json | exit 0 && node scripts/createBackendLicenses.js",
     "license-summary-backend": "nuget-license --include-transitive --input ./Backend/BackendFramework.csproj",
@@ -168,6 +168,10 @@
     ]
   },
   "staticFiles": [
+    {
+      "staticOutPath": "dictionaries",
+      "staticPath": "public/dictionaries"
+    },
     {
       "staticOutPath": "locales",
       "staticPath": "public/locales"
