@@ -207,6 +207,13 @@ def parse_args() -> Namespace:
         formatter_class=RawFormatter,
     )
     parser.add_argument(
+        "--arch",
+        choices=["amd64", "arm64"],
+        default=[],
+        help="Target cpu architecture(s).",
+        nargs="*",
+    )
+    parser.add_argument(
         "--build-args", nargs="*", help="Build arguments to pass to the docker build."
     )
     parser.add_argument(
@@ -270,10 +277,12 @@ def main() -> None:
             if args.debug:
                 container_cmd.extend(["-D", "-l", "debug"])
             build_cmd = container_cmd + ["buildx", "build"]
-            push_cmd = container_cmd + ["push"]
+            build_cmd.append("--load" if args.repo is None else "--push")
         case _:
             logging.critical(f"Container CLI '{container_cmd[0]}' is not supported.")
             sys.exit(1)
+    if len(args.arch):
+        build_cmd.extend(["--platform", ",".join([f"linux/{arch}" for arch in args.arch])])
 
     # Setup build options
     if args.quiet:
@@ -306,7 +315,7 @@ def main() -> None:
         job_set[component] = JobQueue(component, debug=args.debug)
         logging.debug(f"Adding job {build_cmd + job_opts}")
         job_set[component].add_job(Job(build_cmd + job_opts, spec.dir))
-        if args.repo is not None:
+        if args.repo is not None and container_cmd[0] == "nerdctl":
             logging.debug(f"Adding job {push_cmd + [image_name]}")
             job_set[component].add_job(Job(push_cmd + [image_name], None))
         logging.info(f"Building component {component}")
