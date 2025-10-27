@@ -120,8 +120,6 @@ describe("MergeDupsReducer", () => {
     const restoredState = store.getState().mergeDuplicateGoal;
     expect(JSON.stringify(restoredState.tree)).toEqual(initialTree);
     expect(restoredState.audio.moves).toEqual({});
-    expect(restoredState.mergeWords).toEqual([]);
-    expect(restoredState.overrideProtection).toBe(false);
   });
 
   function testTreeWords(): Hash<MergeTreeWord> {

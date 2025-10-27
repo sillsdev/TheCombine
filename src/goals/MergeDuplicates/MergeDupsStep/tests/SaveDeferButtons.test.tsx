@@ -14,6 +14,8 @@ jest.mock("backend");
 
 const mockStore = configureMockStore();
 
+let store: any;
+
 function setMockStore(hasChanges = false): any {
   const words = testWordList();
   const data = { words: { [words[0].id]: words[0] }, senses: {} };
@@ -44,10 +46,11 @@ function setMockStore(hasChanges = false): any {
     initialTree,
   };
 
-  return mockStore({
+  store = mockStore({
     ...defaultState,
     mergeDuplicateGoal,
   });
+  return store;
 }
 
 const renderSaveDeferButtons = async (hasChanges: boolean): Promise<void> => {
@@ -111,12 +114,7 @@ describe("SaveDeferButtons", () => {
   });
 
   it("dispatches reset action when confirm is clicked", async () => {
-    const store = setMockStore(true);
-    render(
-      <Provider store={store}>
-        <SaveDeferButtons />
-      </Provider>
-    );
+    await renderSaveDeferButtons(true);
 
     const revertButton = screen.getByTitle("mergeDups.helpText.revertSet");
     await userEvent.click(revertButton);

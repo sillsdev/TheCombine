@@ -294,8 +294,6 @@ const mergeDuplicatesSlice = createSlice({
       if (state.initialTree) {
         state.tree = JSON.parse(state.initialTree);
         state.audio.moves = {};
-        state.mergeWords = [];
-        state.overrideProtection = false;
       }
     },
 
