@@ -1,7 +1,7 @@
 import { Dialog, IconButton, Typography } from "@mui/material";
 import { type ReactElement, useState } from "react";
 
-import ccIcon from "resources/cc-by-sa.png";
+import { copyright } from "resources/htw";
 
 export interface ImageMetadata {
   name: string;
@@ -31,7 +31,7 @@ export default function ImageAttributionsButton(
       >
         <img
           alt="CreativeCommons-Attribution-ShareAlike"
-          src={ccIcon}
+          src={copyright}
           style={{ width: props.width || 60 }}
         />
       </IconButton>

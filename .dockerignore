@@ -5,6 +5,7 @@
 !docs/user_guide
 !nginx
 !public
+!scripts/touchPublicScripts.js
 !src
 !.env
 !.eslintrc.cjs
