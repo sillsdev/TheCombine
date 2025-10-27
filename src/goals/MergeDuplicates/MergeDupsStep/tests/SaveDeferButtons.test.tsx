@@ -4,7 +4,6 @@ import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
-import { OffOnSetting } from "api/models";
 import SaveDeferButtons from "goals/MergeDuplicates/MergeDupsStep/SaveDeferButtons";
 import { defaultState as defaultMergeDupState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { defaultState } from "rootRedux/types";
@@ -27,7 +26,11 @@ function setMockStore(hasChanges = false): any {
         deletedSenseGuids: [],
       }
     : { words: {}, sidebar: {}, deletedSenseGuids: [] };
-  const initialTree = { words: {}, sidebar: {}, deletedSenseGuids: [] };
+  const initialTree = JSON.stringify({
+    words: {},
+    sidebar: {},
+    deletedSenseGuids: [],
+  });
   const audio = {
     counts: {},
     moves: hasChanges ? { [words[0].id]: [] } : {},
@@ -44,11 +47,6 @@ function setMockStore(hasChanges = false): any {
   return mockStore({
     ...defaultState,
     mergeDuplicateGoal,
-    currentProjectState: {
-      project: {
-        protectedDataOverrideEnabled: OffOnSetting.Off,
-      },
-    },
   });
 }
 
@@ -130,7 +128,9 @@ describe("SaveDeferButtons", () => {
     await waitFor(() => {
       const actions = store.getActions();
       expect(actions).toContainEqual(
-        expect.objectContaining({ type: "mergeDupStepReducer/resetTreeToInitialAction" })
+        expect.objectContaining({
+          type: "mergeDupStepReducer/resetTreeToInitialAction",
+        })
       );
     });
   });

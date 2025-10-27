@@ -292,7 +292,7 @@ const mergeDuplicatesSlice = createSlice({
 
     resetTreeToInitialAction: (state) => {
       if (state.initialTree) {
-        state.tree = JSON.parse(JSON.stringify(state.initialTree));
+        state.tree = JSON.parse(state.initialTree);
         state.audio.moves = {};
         state.mergeWords = [];
         state.overrideProtection = false;
@@ -331,7 +331,7 @@ const mergeDuplicatesSlice = createSlice({
         state.mergeWords = [];
         state.overrideProtection = false;
         // Store the initial tree state for reset functionality
-        state.initialTree = JSON.parse(JSON.stringify(state.tree));
+        state.initialTree = JSON.stringify(state.tree);
       }
     },
 

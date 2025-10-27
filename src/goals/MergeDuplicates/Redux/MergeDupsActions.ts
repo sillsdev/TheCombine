@@ -165,17 +165,13 @@ export function hasStateChanged(state: MergeTreeState): boolean {
     return false;
   }
 
-  // Compare current tree and audio.moves with initial state
-  const currentStateJson = JSON.stringify({
-    tree: state.tree,
-    audioMoves: state.audio.moves,
-  });
-  const initialStateJson = JSON.stringify({
-    tree: state.initialTree,
-    audioMoves: {},
-  });
+  // Check if audio.moves has any entries
+  if (Object.keys(state.audio.moves).length > 0) {
+    return true;
+  }
 
-  return currentStateJson !== initialStateJson;
+  // Compare current tree with initial state
+  return JSON.stringify(state.tree) !== state.initialTree;
 }
 
 // Used in MergeDups cases of GoalActions functions
