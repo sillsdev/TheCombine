@@ -1467,7 +1467,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-axios 1.8.4
+axios 1.13.0
 MIT
 # Copyright (c) 2014-present Matt Zabriskie & Collaborators
 

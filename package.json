@@ -49,7 +49,7 @@
     "@mui/x-date-pickers": "~7.27.1",
     "@redux-devtools/extension": "~3.3.0",
     "@reduxjs/toolkit": "~2.6.0",
-    "axios": "~1.8.1",
+    "axios": "~1.13.0",
     "chart.js": "~4.4.8",
     "crypto-js": "~4.2.0",
     "dayjs": "~1.11.13",
