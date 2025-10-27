@@ -3,6 +3,7 @@ import {
   type PayloadAction,
   type UnknownAction,
 } from "@reduxjs/toolkit";
+import * as uuid from "uuid";
 
 import { Status } from "api/models";
 import {
@@ -40,8 +41,8 @@ import { type Hash } from "types/hash";
 import { newFlag, testWordList } from "types/word";
 
 jest.mock("uuid");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const mockUuid = require("uuid") as { v4: jest.Mock };
+
+const mockUuidV4 = uuid.v4 as jest.MockedFunction<() => string>;
 
 let uuidIndex = 0;
 /** When `increment` (default `true`) is set to `false`,
@@ -55,7 +56,7 @@ function getMockUuid(increment = true): string {
 }
 
 beforeEach(() => {
-  mockUuid.v4.mockImplementation(getMockUuid);
+  mockUuidV4.mockImplementation(getMockUuid);
 });
 
 describe("MergeDupsReducer", () => {
