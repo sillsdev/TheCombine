@@ -99,10 +99,11 @@ export default function SaveDeferButtons(): ReactElement {
 
         <Button
           color="secondary"
+          disabled={!stateHasChanged}
+          id="merge-revert"
           onClick={revert}
           title={t("mergeDups.helpText.revertSet")}
-          id="merge-revert"
-          disabled={!stateHasChanged}
+          variant="contained"
         >
           {t("buttons.revertSet")}
         </Button>
