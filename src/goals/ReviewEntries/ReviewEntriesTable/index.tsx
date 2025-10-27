@@ -180,7 +180,8 @@ export default function ReviewEntriesTable(props: {
   }, [i18n.resolvedLanguage]);
 
   /** Removes word with given `id` from the state. */
-  const deleteWord = (id: string): void => {
+  const deleteWord = async (id: string): Promise<void> => {
+    await dispatch(asyncUpdateEntry(id));
     setData((prev) => {
       // Prevent table from jumping back to first page
       autoResetPageIndexRef.current = false;

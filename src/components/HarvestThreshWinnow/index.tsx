@@ -4,10 +4,8 @@ import { type CSSProperties, type ReactElement, useEffect } from "react";
 import ImageAttributions, {
   ImageMetadata,
 } from "components/HarvestThreshWinnow/ImageAttributions";
-import imageLicenses from "resources/HTW-licenses.json";
-import harvest from "resources/HTW1-harvest-Ethiopia.jpg";
-import thresh from "resources/HTW2-thresh-Bangladesh.jpg";
-import winnow from "resources/HTW3-winnow-India.jpg";
+import { harvest, thresh, winnow } from "resources/htw";
+import imageLicenses from "resources/htw/imageLicenses.json";
 
 enum ImageAlt {
   License = "CC BY-SA 4.0 license",

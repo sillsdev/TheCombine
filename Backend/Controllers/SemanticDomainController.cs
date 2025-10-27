@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,8 @@ namespace BackendFramework.Controllers
     {
         private readonly ISemanticDomainRepository _semDomRepo;
 
+        private const string otelTagName = "otel.SemanticDomainController";
+
         public SemanticDomainController(ISemanticDomainRepository semDomRepo)
         {
             _semDomRepo = semDomRepo;
@@ -28,6 +31,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Dictionary<string, string>))]
         public async Task<IActionResult> GetAllSemanticDomainNames(string lang)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all semantic domain names");
+
             var semDoms = await _semDomRepo.GetAllSemanticDomainTreeNodes(lang)
                 ?? await _semDomRepo.GetAllSemanticDomainTreeNodes("en")
                 ?? new();
@@ -39,6 +44,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SemanticDomainFull))]
         public async Task<IActionResult> GetSemanticDomainFull(string id, string lang)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting full semantic domain");
+
             return Ok(await _semDomRepo.GetSemanticDomainFull(id, lang));
         }
 
@@ -47,6 +54,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SemanticDomainTreeNode))]
         public async Task<IActionResult> GetSemanticDomainTreeNode(string id, string lang)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting semantic domain tree node");
+
             return Ok(await _semDomRepo.GetSemanticDomainTreeNode(id, lang));
         }
 
@@ -55,6 +64,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SemanticDomainTreeNode))]
         public async Task<IActionResult> GetSemanticDomainTreeNodeByName(string name, string lang)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting semantic domain tree node by name");
+
             return Ok(await _semDomRepo.GetSemanticDomainTreeNodeByName(name, lang));
         }
 
@@ -63,6 +74,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SemanticDomainTreeNode>))]
         public async Task<IActionResult> GetAllSemanticDomainTreeNodes(string lang)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all semantic domain tree nodes");
+
             return Ok(await _semDomRepo.GetAllSemanticDomainTreeNodes(lang));
         }
     }

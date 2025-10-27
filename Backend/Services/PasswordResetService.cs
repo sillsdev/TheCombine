@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using static BackendFramework.Helper.Domain;
@@ -16,6 +17,8 @@ namespace BackendFramework.Services
         private readonly IPasswordResetRepository _passwordResetRepo = passwordResetRepo;
         private readonly IUserRepository _userRepo = userRepo;
         private readonly IEmailService _emailService = emailService;
+
+        private const string otelTagName = "otel.PasswordResetService";
 
         private static string CreateLink(string token)
         {
@@ -45,6 +48,8 @@ namespace BackendFramework.Services
         /// <returns> Returns false if the request is invalid or expired. </returns>
         public async Task<bool> ResetPassword(string token, string password)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "resetting password");
+
             var request = await GetValidPasswordReset(token);
             if (request is null)
             {
@@ -60,6 +65,8 @@ namespace BackendFramework.Services
 
         public async Task<bool> ResetPasswordRequest(string emailOrUsername)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "requesting password reset");
+
             // Find user attached to email or username.
             var user = await _userRepo.GetUserByEmailOrUsername(emailOrUsername, false);
 
@@ -92,6 +99,8 @@ namespace BackendFramework.Services
 
         public async Task<bool> ValidateToken(string token)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "validating password reset token");
+
             return await GetValidPasswordReset(token) is not null;
         }
     }

@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using static BackendFramework.Helper.Domain;
@@ -20,6 +21,7 @@ namespace BackendFramework.Services
         private readonly IPermissionService _permissionService = permissionService;
 
         private const int MaxInviteMessageLength = 1000;
+        private const string otelTagName = "otel.InviteService";
 
         internal static string CreateLink(ProjectInvite invite)
         {
@@ -63,6 +65,8 @@ namespace BackendFramework.Services
         public async Task<string> EmailLink(
             Project project, Role role, string emailAddress, string inviterId, string message)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "emailing project invite link");
+
             var link = CreateLink(await CreateProjectInvite(project.Id, role, emailAddress));
             var inviter = await _userRepo.GetUser(inviterId) ?? throw new InviteException("Inviting user not found.");
             await _emailService.SendEmail(CreateEmail(emailAddress, message, inviter.Name, link, project.Name));
@@ -106,6 +110,8 @@ namespace BackendFramework.Services
 
         public async Task<EmailInviteStatus> ValidateProjectToken(string projectId, string token)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "validating project invite token");
+
             var status = new EmailInviteStatus(false, false);
 
             var invite = await _inviteRepo.FindByToken(token);
