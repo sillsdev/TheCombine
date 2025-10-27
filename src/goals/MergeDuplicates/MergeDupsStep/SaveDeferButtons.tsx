@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabel, Grid2 } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, Grid2 } from "@mui/material";
 import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -97,17 +97,15 @@ export default function SaveDeferButtons(): ReactElement {
           {t("buttons.defer")}
         </LoadingButton>
 
-        <LoadingButton
-          buttonProps={{
-            color: "secondary",
-            onClick: revert,
-            title: t("mergeDups.helpText.revertSet"),
-            id: "merge-revert",
-            disabled: !stateHasChanged,
-          }}
+        <Button
+          color="secondary"
+          onClick={revert}
+          title={t("mergeDups.helpText.revertSet")}
+          id="merge-revert"
+          disabled={!stateHasChanged}
         >
           {t("buttons.revertSet")}
-        </LoadingButton>
+        </Button>
 
         {hasProtected && (
           <FormControlLabel

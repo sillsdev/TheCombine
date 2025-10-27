@@ -36,9 +36,7 @@ export interface MergeTreeState {
   hasProtected: boolean;
   mergeWords: MergeWords[];
   overrideProtection: boolean;
-  initialState?: {
-    tree: MergeTree;
-  };
+  initialTree?: MergeTree;
 }
 
 export const defaultState: MergeTreeState = {

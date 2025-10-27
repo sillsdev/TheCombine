@@ -161,7 +161,7 @@ export function mergeAll() {
 
 // Helper function to check if the current state has changed from initial
 export function hasStateChanged(state: MergeTreeState): boolean {
-  if (!state.initialState) {
+  if (!state.initialTree) {
     return false;
   }
 
@@ -171,7 +171,7 @@ export function hasStateChanged(state: MergeTreeState): boolean {
     audioMoves: state.audio.moves,
   });
   const initialStateJson = JSON.stringify({
-    tree: state.initialState.tree,
+    tree: state.initialTree,
     audioMoves: {},
   });
 

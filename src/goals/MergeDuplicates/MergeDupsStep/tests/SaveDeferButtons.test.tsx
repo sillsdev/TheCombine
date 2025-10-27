@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
@@ -7,99 +7,95 @@ import configureMockStore from "redux-mock-store";
 import { OffOnSetting } from "api/models";
 import SaveDeferButtons from "goals/MergeDuplicates/MergeDupsStep/SaveDeferButtons";
 import { defaultState as defaultMergeDupState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
-import { StoreState } from "rootRedux/types";
+import { defaultState } from "rootRedux/types";
 import { testWordList } from "types/word";
 
 jest.mock("goals/Redux/GoalActions");
 jest.mock("backend");
 
-const mockStore = configureMockStore<StoreState>();
+const mockStore = configureMockStore();
 
 function setMockStore(hasChanges = false): any {
   const words = testWordList();
   const data = { words: { [words[0].id]: words[0] }, senses: {} };
   const tree = hasChanges
-    ? { words: { [words[0].id]: { sensesGuids: {}, vern: "test", flag: {} } }, sidebar: {}, deletedSenseGuids: [] }
+    ? {
+        words: {
+          [words[0].id]: { sensesGuids: {}, vern: "test", flag: {} },
+        },
+        sidebar: {},
+        deletedSenseGuids: [],
+      }
     : { words: {}, sidebar: {}, deletedSenseGuids: [] };
   const initialTree = { words: {}, sidebar: {}, deletedSenseGuids: [] };
-  const audio = { counts: {}, moves: hasChanges ? { [words[0].id]: [] } : {} };
+  const audio = {
+    counts: {},
+    moves: hasChanges ? { [words[0].id]: [] } : {},
+  };
 
   const mergeDuplicateGoal = {
     ...defaultMergeDupState,
     data,
     tree,
     audio,
-    initialState: {
-      tree: initialTree,
-    },
+    initialTree,
   };
 
   return mockStore({
+    ...defaultState,
     mergeDuplicateGoal,
     currentProjectState: {
       project: {
         protectedDataOverrideEnabled: OffOnSetting.Off,
       },
     },
-  } as any);
+  });
 }
 
+const renderSaveDeferButtons = async (hasChanges: boolean): Promise<void> => {
+  render(
+    <Provider store={setMockStore(hasChanges)}>
+      <SaveDeferButtons />
+    </Provider>
+  );
+};
+
 describe("SaveDeferButtons", () => {
-  it("renders all buttons", () => {
-    render(
-      <Provider store={setMockStore()}>
-        <SaveDeferButtons />
-      </Provider>
-    );
+  it("renders all buttons", async () => {
+    await renderSaveDeferButtons(false);
 
     expect(screen.getByText("buttons.saveAndContinue")).toBeInTheDocument();
     expect(screen.getByText("buttons.defer")).toBeInTheDocument();
     expect(screen.getByText("buttons.revertSet")).toBeInTheDocument();
   });
 
-  it("disables revert button when no changes", () => {
-    render(
-      <Provider store={setMockStore(false)}>
-        <SaveDeferButtons />
-      </Provider>
-    );
+  it("disables revert button when no changes", async () => {
+    await renderSaveDeferButtons(false);
 
     const revertButton = screen.getByTitle("mergeDups.helpText.revertSet");
     expect(revertButton).toBeDisabled();
   });
 
-  it("enables revert button when changes exist", () => {
-    render(
-      <Provider store={setMockStore(true)}>
-        <SaveDeferButtons />
-      </Provider>
-    );
+  it("enables revert button when changes exist", async () => {
+    await renderSaveDeferButtons(true);
 
     const revertButton = screen.getByTitle("mergeDups.helpText.revertSet");
     expect(revertButton).not.toBeDisabled();
   });
 
   it("shows confirmation dialog when revert is clicked", async () => {
-    render(
-      <Provider store={setMockStore(true)}>
-        <SaveDeferButtons />
-      </Provider>
-    );
+    await renderSaveDeferButtons(true);
 
     const revertButton = screen.getByTitle("mergeDups.helpText.revertSet");
-    await act(async () => {
-      await userEvent.click(revertButton);
-    });
+    await userEvent.click(revertButton);
 
-    expect(screen.getByText("mergeDups.helpText.revertSetDialog")).toBeInTheDocument();
+    expect(
+      screen.getByText("mergeDups.helpText.revertSetDialog")
+    ).toBeInTheDocument();
   });
 
   it("cancels revert when cancel button is clicked", async () => {
-    render(
-      <Provider store={setMockStore(true)}>
-        <SaveDeferButtons />
-      </Provider>
-    );
+    await renderSaveDeferButtons(true);
 
     const revertButton = screen.getByTitle("mergeDups.helpText.revertSet");
     await userEvent.click(revertButton);
