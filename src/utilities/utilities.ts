@@ -8,31 +8,6 @@ export function randomIntString(): string {
   return Math.floor(Math.random() * 9999999).toString();
 }
 
-/** Quicksort implementation O(n log n). */
-export function quicksort<T>(arr: T[], score: (item: T) => number): T[] {
-  if (arr.length <= 1) {
-    return arr;
-  }
-
-  const pivotIndex = 0;
-  const pivot = arr[0];
-
-  const less: T[] = [];
-  const greater: T[] = [];
-
-  for (let i = 0; i < arr.length; i++) {
-    if (i !== pivotIndex) {
-      if (score(arr[i]) > score(pivot)) {
-        greater.push(arr[i]);
-      } else {
-        less.push(arr[i]);
-      }
-    }
-  }
-
-  return [...quicksort(less, score), pivot, ...quicksort(greater, score)];
-}
-
 interface DateTimeSeparators {
   date?: string;
   dateTime?: string;
