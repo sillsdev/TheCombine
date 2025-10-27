@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
 import SaveDeferButtons from "goals/MergeDuplicates/MergeDupsStep/SaveDeferButtons";
+import { resetTreeToInitial } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { defaultState as defaultMergeDupState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { defaultState } from "rootRedux/types";
 import { testWordList } from "types/word";
@@ -12,11 +13,15 @@ import { testWordList } from "types/word";
 jest.mock("goals/Redux/GoalActions");
 jest.mock("backend");
 
+const mockDispatch = jest.fn();
+jest.mock("rootRedux/hooks", () => ({
+  ...jest.requireActual("rootRedux/hooks"),
+  useAppDispatch: () => mockDispatch,
+}));
+
 const mockStore = configureMockStore();
 
-let store: any;
-
-function setMockStore(hasChanges = false): any {
+function createMockStore(hasChanges = false): any {
   const words = testWordList();
   const data = { words: { [words[0].id]: words[0] }, senses: {} };
   const tree = hasChanges
@@ -46,16 +51,15 @@ function setMockStore(hasChanges = false): any {
     initialTree,
   };
 
-  store = mockStore({
+  return mockStore({
     ...defaultState,
     mergeDuplicateGoal,
   });
-  return store;
 }
 
 const renderSaveDeferButtons = async (hasChanges: boolean): Promise<void> => {
   render(
-    <Provider store={setMockStore(hasChanges)}>
+    <Provider store={createMockStore(hasChanges)}>
       <SaveDeferButtons />
     </Provider>
   );
@@ -124,12 +128,7 @@ describe("SaveDeferButtons", () => {
 
     // Wait for the action to be dispatched
     await waitFor(() => {
-      const actions = store.getActions();
-      expect(actions).toContainEqual(
-        expect.objectContaining({
-          type: "mergeDupStepReducer/resetTreeToInitialAction",
-        })
-      );
+      expect(mockDispatch).toHaveBeenCalledWith(resetTreeToInitial());
     });
   });
 });
