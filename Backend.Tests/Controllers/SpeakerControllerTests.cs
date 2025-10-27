@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class SpeakerControllerTests : IDisposable
+    internal sealed class SpeakerControllerTests : IDisposable
     {
         private ISpeakerRepository _speakerRepo = null!;
         private PermissionServiceMock _permissionService = null!;
@@ -19,16 +19,8 @@ namespace Backend.Tests.Controllers
 
         public void Dispose()
         {
-            Dispose(true);
+            _speakerController?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _speakerController?.Dispose();
-            }
         }
 
         private const string ProjId = "proj-id";

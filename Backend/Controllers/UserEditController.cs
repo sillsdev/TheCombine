@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,8 @@ namespace BackendFramework.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IUserEditService _userEditService;
 
+        private const string otelTagName = "otel.UserEditController";
+
         public UserEditController(IUserEditRepository userEditRepo, IUserEditService userEditService,
             IPermissionService permissionService, IUserRepository userRepo)
         {
@@ -36,6 +39,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetProjectUserEdits(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting project user edits");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
@@ -52,6 +57,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserEdit(string projectId, string userEditId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting a user edit");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
@@ -69,6 +76,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateUserEdit(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "creating a user edit");
+
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
@@ -110,6 +119,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UpdateUserEditGoal(
             string projectId, string userEditId, [FromBody, BindRequired] Edit newEdit)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating user edit goal");
+
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
@@ -142,6 +153,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UpdateUserEditStep(string projectId, string userEditId,
             [FromBody, BindRequired] UserEditStepWrapper stepWrapper)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating user edit step");
+
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
@@ -196,6 +209,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> DeleteUserEdit(string projectId, string userEditId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a user edit");
+
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {

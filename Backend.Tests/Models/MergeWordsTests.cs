@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Models
 {
-    public class MergeUndoIdsTests
+    internal sealed class MergeUndoIdsTests
     {
         [Test]
         public void TestClone()

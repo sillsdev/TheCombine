@@ -4,7 +4,7 @@ import { ReactElement, useState } from "react";
 
 import { uploadAvatar } from "backend";
 import { getAvatar } from "backend/localStorage";
-import { UploadImageDialog } from "components/Dialogs";
+import UploadImageDialog from "components/Dialogs/UploadImageDialog";
 
 const avatarStyle = { height: 60, width: 60 };
 const avatarOverlayStyle = {

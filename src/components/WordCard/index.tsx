@@ -5,6 +5,7 @@ import {
   CardContent,
   CardHeader,
   IconButton,
+  Stack,
   Typography,
 } from "@mui/material";
 import { Fragment, ReactElement, useEffect, useState } from "react";
@@ -12,16 +13,14 @@ import { useTranslation } from "react-i18next";
 
 import { Word } from "api/models";
 import { getUser } from "backend";
-import {
-  FlagButton,
-  IconButtonWithTooltip,
-  NoteButton,
-} from "components/Buttons";
+import FlagButton from "components/Buttons/FlagButton";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import NoteButton from "components/Buttons/NoteButton";
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
 import SenseCard from "components/WordCard/SenseCard";
 import SummarySenseCard from "components/WordCard/SummarySenseCard";
 import { TypographyWithFont } from "utilities/fontComponents";
-import { friendlySep, getDateTimeString } from "utilities/utilities";
+import { getLocalizedDateTimeString } from "utilities/utilities";
 
 interface WordCardProps {
   languages?: string[];
@@ -45,7 +44,7 @@ export default function WordCard(props: WordCardProps): ReactElement {
   const { audio, editedBy, flag, id, note, senses } = word;
   const [full, setFull] = useState(false);
   const [username, setUsername] = useState("");
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   useEffect(() => {
     if (provenance && editedBy?.length) {
@@ -89,13 +88,7 @@ export default function WordCard(props: WordCardProps): ReactElement {
         buttonLabel={
           full ? WordCardLabel.ButtonCondense : WordCardLabel.ButtonExpand
         }
-        icon={
-          full ? (
-            <CloseFullscreen sx={{ color: (t) => t.palette.grey[900] }} />
-          ) : (
-            <OpenInFull sx={{ color: (t) => t.palette.grey[600] }} />
-          )
-        }
+        icon={full ? <CloseFullscreen /> : <OpenInFull />}
         onClick={() => setFull(!full)}
       />
     </>
@@ -130,14 +123,16 @@ export default function WordCard(props: WordCardProps): ReactElement {
 
         {/* Senses */}
         {full ? (
-          senses.map((s) => (
-            <SenseCard
-              key={s.guid}
-              languages={languages}
-              provenance={provenance}
-              sense={s}
-            />
-          ))
+          <Stack spacing={1}>
+            {senses.map((s) => (
+              <SenseCard
+                key={s.guid}
+                languages={languages}
+                provenance={provenance}
+                sense={s}
+              />
+            ))}
+          </Stack>
         ) : (
           <SummarySenseCard senses={senses} />
         )}
@@ -148,7 +143,10 @@ export default function WordCard(props: WordCardProps): ReactElement {
             {t("wordCard.wordId", { val: id })}
             <br />
             {t("wordCard.wordModified", {
-              val: getDateTimeString(word.modified, friendlySep),
+              val: getLocalizedDateTimeString(
+                word.modified,
+                i18n.resolvedLanguage
+              ),
             })}
             {!!username && (
               <>

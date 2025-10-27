@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 
 import { BannerType } from "api/models";
 import { getBannerText } from "backend";
-import { LoadingButton } from "components/Buttons";
+import LoadingButton from "components/Buttons/LoadingButton";
 import Captcha from "components/Login/Captcha";
 import { asyncLogIn } from "components/Login/Redux/LoginActions";
 import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
@@ -33,7 +33,7 @@ import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
 import { NormalizedTextField } from "utilities/fontComponents";
 import { openUserGuide } from "utilities/pathUtilities";
-import { meetsPasswordRequirements } from "utilities/utilities";
+import { meetsPasswordRequirements } from "utilities/userUtilities";
 
 export enum LoginId {
   ButtonLogIn = "login-log-in-button",
@@ -104,9 +104,9 @@ export default function Login(): ReactElement {
 
   const defaultTextFieldProps = (id?: string): TextFieldProps => ({
     id,
-    inputProps: { "data-testid": id, maxLength: 100 },
     margin: "normal",
     required: true,
+    slotProps: { htmlInput: { maxLength: 100 } },
     style: { width: "100%" },
     variant: "outlined",
   });

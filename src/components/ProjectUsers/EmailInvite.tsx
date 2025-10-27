@@ -7,8 +7,16 @@ import validator from "validator";
 import { Role } from "api/models";
 import * as backend from "backend";
 import { getProjectId } from "backend/localStorage";
-import { LoadingDoneButton } from "components/Buttons";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import { NormalizedTextField } from "utilities/fontComponents";
+
+export enum EmailInviteTextId {
+  ButtonSubmit = "buttons.invite",
+  TextFieldEmail = "projectSettings.invite.emailLabel",
+  TextFieldMessage = "projectSettings.invite.emailMessage",
+  ToastUserExists = "projectSettings.invite.userExists",
+  TypographyTitle = "projectSettings.invite.inviteByEmailLabel",
+}
 
 interface InviteProps {
   addToProject: (userId: string) => void;
@@ -35,7 +43,7 @@ export default function EmailInvite(props: InviteProps): ReactElement {
       );
     } else {
       props.addToProject(await backend.getUserIdByEmailOrUsername(email));
-      toast.info(t("projectSettings.invite.userExists"));
+      toast.info(t(EmailInviteTextId.ToastUserExists));
     }
     setIsDone(true);
     setIsLoading(false);
@@ -51,7 +59,7 @@ export default function EmailInvite(props: InviteProps): ReactElement {
       <Stack alignContent="center" spacing={2}>
         {/* Title */}
         <Typography variant="h5" align="center">
-          {t("projectSettings.invite.inviteByEmailLabel")}
+          {t(EmailInviteTextId.TypographyTitle)}
         </Typography>
 
         {/* Email address input */}
@@ -59,7 +67,7 @@ export default function EmailInvite(props: InviteProps): ReactElement {
           autoFocus
           fullWidth
           id="project-user-invite-email"
-          label={t("projectSettings.invite.emailLabel")}
+          label={t(EmailInviteTextId.TextFieldEmail)}
           onChange={(e) => setEmail(e.target.value)}
           required
           slotProps={{ htmlInput: { maxLength: 320 } }}
@@ -69,7 +77,7 @@ export default function EmailInvite(props: InviteProps): ReactElement {
         <NormalizedTextField
           fullWidth
           id="project-user-invite-message"
-          label={t("projectSettings.invite.emailMessage")}
+          label={t(EmailInviteTextId.TextFieldMessage)}
           onChange={(e) => setMessage(e.target.value)}
           slotProps={{ htmlInput: { maxLength: 10000 } }}
         />
@@ -77,16 +85,12 @@ export default function EmailInvite(props: InviteProps): ReactElement {
         {/* Submit button */}
         <Grid2 container justifyContent="flex-end">
           <LoadingDoneButton
+            buttonProps={{ onClick: onSubmit }}
             disabled={!isValid}
-            loading={isLoading}
             done={isDone}
-            buttonProps={{
-              id: "project-user-invite-submit",
-              onClick: () => onSubmit(),
-              variant: "contained",
-            }}
+            loading={isLoading}
           >
-            {t("buttons.invite")}
+            {t(EmailInviteTextId.ButtonSubmit)}
           </LoadingDoneButton>
         </Grid2>
       </Stack>

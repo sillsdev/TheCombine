@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
-using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
@@ -11,23 +10,17 @@ namespace Backend.Tests.Mocks
         {
             _boolResponse = response;
         }
-
-        public Task<PasswordReset> CreatePasswordReset(string email)
-        {
-            return Task.FromResult(new PasswordReset(15, email));
-        }
-
-        public Task ExpirePasswordReset(string email)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task<bool> ValidateToken(string token)
+        public Task<bool> ResetPassword(string token, string password)
         {
             return Task.FromResult(_boolResponse);
         }
 
-        public Task<bool> ResetPassword(string token, string password)
+        public Task<bool> ResetPasswordRequest(string emailOrUsername)
+        {
+            return Task.FromResult(_boolResponse);
+        }
+
+        public Task<bool> ValidateToken(string token)
         {
             return Task.FromResult(_boolResponse);
         }

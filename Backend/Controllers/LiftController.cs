@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,8 @@ namespace BackendFramework.Controllers
         private readonly IHubContext<ExportHub> _notifyService;
         private readonly IPermissionService _permissionService;
         private readonly ILogger<LiftController> _logger;
+
+        private const string otelTagName = "otel.LiftController";
 
         public LiftController(
             IWordRepository wordRepo, IProjectRepository projRepo, IPermissionService permissionService,
@@ -56,6 +59,8 @@ namespace BackendFramework.Controllers
         [RequestSizeLimit(250_000_000)]  // 250MB.
         public async Task<IActionResult> UploadLiftFileAndGetWritingSystems(IFormFile? file)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "uploading LIFT file and getting writing systems");
+
             var userId = _permissionService.GetUserId(HttpContext);
             if (file is null)
             {
@@ -82,6 +87,39 @@ namespace BackendFramework.Controllers
             return Ok(Language.GetWritingSystems(extractedLiftRootPath));
         }
 
+        /// <summary> Replace all words with data from a directory containing a .lift file </summary>
+        /// <returns> Number of words added </returns>
+        [HttpPost("deletefrontierandfinishupload", Name = "DeleteFrontierAndFinishUploadLiftFile")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
+        public async Task<IActionResult> DeleteFrontierAndFinishUploadLiftFile(string projectId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting Frontier and finishing LIFT upload");
+
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import, projectId))
+            {
+                return Forbid();
+            }
+            var userId = _permissionService.GetUserId(HttpContext);
+
+            // Sanitize projectId
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+
+            // Delete all frontier words and load the LIFT data
+            await _wordRepo.DeleteAllFrontierWords(projectId);
+            return await FinishUploadLiftFile(projectId, userId, true);
+        }
+
         /// <summary> Adds data from a directory containing a .lift file </summary>
         /// <returns> Number of words added </returns>
         [HttpPost("finishupload", Name = "FinishUploadLiftFile")]
@@ -92,6 +130,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> FinishUploadLiftFile(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "finishing LIFT upload");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import, projectId))
             {
                 return Forbid();
@@ -100,7 +140,7 @@ namespace BackendFramework.Controllers
             return await FinishUploadLiftFile(projectId, userId);
         }
 
-        internal async Task<IActionResult> FinishUploadLiftFile(string projectId, string userId)
+        internal async Task<IActionResult> FinishUploadLiftFile(string projectId, string userId, bool allowReupload = false)
         {
             // Sanitize projectId
             try
@@ -113,7 +153,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure LIFT file has not already been imported.
-            if (!await _projRepo.CanImportLift(projectId))
+            if (!allowReupload && !await _projRepo.CanImportLift(projectId))
             {
                 return BadRequest("A LIFT file has already been uploaded into this project.");
             }
@@ -161,6 +201,8 @@ namespace BackendFramework.Controllers
         [RequestSizeLimit(250_000_000)]  // 250MB.
         public async Task<IActionResult> UploadLiftFile(string projectId, IFormFile? file)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "uploading LIFT file");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import, projectId))
             {
                 return Forbid();
@@ -254,6 +296,12 @@ namespace BackendFramework.Controllers
                 return BadRequest("Error processing the LIFT data. Contact support for help.");
             }
 
+            // Don't update project if no words were imported in the project's vernacular language.
+            if (countWordsImported == 0)
+            {
+                return Ok(0);
+            }
+
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
@@ -304,6 +352,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "exporting LIFT file");
+
             var userId = _permissionService.GetUserId(HttpContext);
             var exportId = _permissionService.GetExportId(HttpContext);
             return await ExportLiftFile(projectId, userId, exportId);
@@ -391,6 +441,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public IActionResult CancelLiftExport()
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "cancelling LIFT export");
+
             var userId = _permissionService.GetUserId(HttpContext);
             return Ok(_liftService.CancelRecentExport(userId));
         }
@@ -403,6 +455,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> DownloadLiftFile(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "downloading LIFT file");
+
             var userId = _permissionService.GetUserId(HttpContext);
             return await DownloadLiftFile(projectId, userId);
         }
@@ -434,6 +488,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public IActionResult DeleteLiftFile()
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting LIFT file");
+
             var userId = _permissionService.GetUserId(HttpContext);
             return DeleteLiftFile(userId);
         }
@@ -445,32 +501,6 @@ namespace BackendFramework.Controllers
 
             _liftService.DeleteExport(userId);
             return Ok(userId);
-        }
-
-        /// <summary> Check if LIFT import has already happened for this project </summary>
-        /// <returns> A bool </returns>
-        [HttpGet("check", Name = "CanUploadLift")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
-        public async Task<IActionResult> CanUploadLift(string projectId)
-        {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import, projectId))
-            {
-                return Forbid();
-            }
-
-            // Sanitize user input
-            try
-            {
-                projectId = Sanitization.SanitizeId(projectId);
-            }
-            catch
-            {
-                return new UnsupportedMediaTypeResult();
-            }
-
-            return Ok(await _projRepo.CanImportLift(projectId));
         }
     }
 }

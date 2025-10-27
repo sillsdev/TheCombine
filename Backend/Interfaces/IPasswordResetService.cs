@@ -1,13 +1,11 @@
-using BackendFramework.Models;
 using System.Threading.Tasks;
 
 namespace BackendFramework.Interfaces
 {
     public interface IPasswordResetService
     {
-        Task<PasswordReset> CreatePasswordReset(string email);
-        Task<bool> ValidateToken(string token);
         Task<bool> ResetPassword(string token, string password);
-        Task ExpirePasswordReset(string email);
+        Task<bool> ResetPasswordRequest(string emailOrUsername);
+        Task<bool> ValidateToken(string token);
     }
 }

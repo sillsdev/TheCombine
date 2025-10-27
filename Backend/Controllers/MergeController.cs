@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,8 @@ namespace BackendFramework.Controllers
         private readonly IMergeService _mergeService;
         private readonly IHubContext<MergeHub> _notifyService;
         private readonly IPermissionService _permissionService;
+
+        private const string otelTagName = "otel.MergeController";
 
         public MergeController(
             IMergeService mergeService, IHubContext<MergeHub> notifyService, IPermissionService permissionService)
@@ -38,6 +41,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> MergeWords(
             string projectId, [FromBody, BindRequired] List<MergeWords> mergeWordsList)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "merging words");
+
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
@@ -63,6 +68,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> UndoMerge(string projectId, [FromBody, BindRequired] MergeUndoIds merge)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "undoing merge");
+
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
@@ -81,6 +88,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> BlacklistAdd(string projectId, [FromBody, BindRequired] List<string> wordIds)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "adding to merge blacklist");
+
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
@@ -99,6 +108,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GraylistAdd(string projectId, [FromBody, BindRequired] List<string> wordIds)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "adding to merge graylist");
+
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
@@ -114,11 +125,15 @@ namespace BackendFramework.Controllers
         /// <param name="projectId"> Id of project in which to search the frontier for potential duplicates. </param>
         /// <param name="maxInList"> Max number of words allowed within a list of potential duplicates. </param>
         /// <param name="maxLists"> Max number of lists of potential duplicates. </param>
-        [HttpGet("finddups/{maxInList:int}/{maxLists:int}", Name = "FindPotentialDuplicates")]
+        /// <param name="ignoreProtected"> Whether to require each set to have at least one unprotected word. </param>
+        [HttpGet("finddups/{maxInList:int}/{maxLists:int}/{ignoreProtected:bool}", Name = "FindPotentialDuplicates")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> FindPotentialDuplicates(string projectId, int maxInList, int maxLists)
+        public async Task<IActionResult> FindPotentialDuplicates(
+            string projectId, int maxInList, int maxLists, bool ignoreProtected)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "finding potential duplicates");
+
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
@@ -132,14 +147,16 @@ namespace BackendFramework.Controllers
             // Run the task without waiting for completion.
             // This Task will be scheduled within the existing Async executor thread pool efficiently.
             // See: https://stackoverflow.com/a/64614779/1398841
-            _ = Task.Run(() => GetDuplicatesThenSignal(projectId, maxInList, maxLists, userId));
+            _ = Task.Run(() => GetDuplicatesThenSignal(projectId, maxInList, maxLists, userId, ignoreProtected));
 
             return Ok();
         }
 
-        internal async Task<bool> GetDuplicatesThenSignal(string projectId, int maxInList, int maxLists, string userId)
+        internal async Task<bool> GetDuplicatesThenSignal(
+            string projectId, int maxInList, int maxLists, string userId, bool ignoreProtected = false)
         {
-            var success = await _mergeService.GetAndStorePotentialDuplicates(projectId, maxInList, maxLists, userId);
+            var success = await _mergeService.GetAndStorePotentialDuplicates(
+                projectId, maxInList, maxLists, userId, ignoreProtected);
             if (success)
             {
                 await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId);
@@ -154,6 +171,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult RetrievePotentialDuplicates()
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "retrieving potential duplicates");
+
             var userId = _permissionService.GetUserId(HttpContext);
             var dups = _mergeService.RetrieveDups(userId);
             return dups is null ? BadRequest() : Ok(dups);
@@ -167,6 +186,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> HasGraylistEntries(string projectId, string userId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking for graylist entries");
+
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
@@ -186,6 +207,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> GetGraylistEntries(
             string projectId, int maxLists, string userId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting graylist entries");
+
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.MergeAndReviewEntries, projectId))
             {

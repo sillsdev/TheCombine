@@ -2,7 +2,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests
 {
-    public class UtilTests
+    internal sealed class UtilTests
     {
         [Test]
         public void TestRandString()

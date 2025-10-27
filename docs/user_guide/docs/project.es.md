@@ -64,11 +64,19 @@ más detalles.
 (Esto no afecta a las sugerencias ortográficas para la glosa, ya que dichas sugerencias se basan en un diccionario
 independiente de los datos existentes del proyecto)
 
-#### Anulación de datos protegidos
+#### Administración de datos protegidos
 
-El ajuste por defecto es Desactivado. Change this to On to allow project users in Merge Duplicates to override the
-[protection](goals.md#protected-entries-and-senses) of words and senses that were imported with data not handled by The
-Combine.
+Esta sección tiene dos conmutadores de ajuste de Apagado/Encendido acerca de la
+[protección](goals.md#protected-entries-and-senses) de las palabras y las acepciones que se importaron con datos no
+manejados por The Combine. Ambos ajustes están desactivados por defecto.
+
+Active la opción "Evitar conjuntos protegidos en Combinar duplicados" para que la herramienta Combinar duplicados sólo
+muestre conjuntos de posibles duplicados de con al menos una palabra que no esté protegida. Esto evitará conjuntos de
+entradas maduras importadas de FieldWorks y promoverá la fusión de entradas recopiladas en The Combine.
+
+Active "Permitir la anulación de la protección de datos en Combinar duplicados" para permitir a los usuarios del
+proyecto en Combinar duplicados anular manualmente la protección de palabras y acepciones. Si alguien intenta fusionar o
+eliminar una entrada o acepción protegida, The Combine le advierte de los campos que se perderán.
 
 #### Archivar el proyecto
 
@@ -136,21 +144,24 @@ automáticamente al proyecto cuando se hagan una cuenta a través de la invitaci
 
 #### Administrar locutores
 
-Speakers are distinct from users. A speaker can be associate with audio recording of words. Use the + icon at the bottom
-of this section to add a speaker. Beside each added speaker are buttons to delete them, edit their name, and add a
-consent for use of their recorded voice. The supported methods for adding consent are to (1) record an audio file or (2)
-upload an image file.
+Los altavoces son distintos de los usuarios. Se puede asociar un altavoz con la grabación de audio de las palabras.
+Utilice el icono + en la parte inferior de esta sección para añadir un altavoz. Junto a cada locutor añadido hay botones
+para eliminarlo, editar su nombre y añadir un consentimiento para el uso de su voz grabada. Los métodos admitidos para
+añadir el consentimiento son (1) grabar un archivo de audio o (2) cargar un archivo de imagen.
 
-When project users are in Data Entry or Review Entries, a speaker icon will be available in the top bar. Users can click
-that button to see a list of all available speakers and select the current speaker, this speaker will be automatically
-associated with every audio recording made by the user until they log out or select a different speaker.
+Cuando los usuarios del proyecto estén en Entrada de datos o Revisar entradas, aparecerá un icono de altavoz en la barra
+superior. Los usuarios pueden pulsar ese botón para ver una lista de todos los altavoces disponibles y seleccionar el
+altavoz actual, este altavoz será automáticamente este altavoz se asociará automáticamente a todas las grabaciones de
+audio realizadas por el usuario hasta que cierre la sesión o seleccione un altavoz diferente.
 
-The speaker associated with a recording can be seen by hovering over its play icon. To change a recording's speaker,
-right click the play icon (or press and hold on a touch screen to bring up a menu).
+El altavoz asociado a una grabación puede verse pasando el ratón por encima de su icono de reproducción. Para cambiar el
+altavoz de una grabación haz clic con el botón derecho del ratón en el icono de reproducción (o mantén pulsado en una
+pantalla táctil para abrir un menú).
 
-When the project is exported from The Combine, speaker names (and ids) will be added as a pronunciation labels in the
-LIFT file. All consent files for project speakers will be added to a "consent" subfolder of the export (with speaker ids
-used for the file names).
+Cuando se exporta el proyecto desde The Combine, los nombres (e ids) de los locutores se añadirán como etiquetas de
+pronunciación en el archivo Archivo LIFT. Todos los archivos de consentimiento de los ponentes del proyecto se añadirán
+a una subcarpeta "consentimiento" de la exportación (con los identificadores de ponente para los nombres de los
+archivos).
 
 ### Importar/Exportar
 
@@ -162,14 +173,22 @@ used for the file names).
 
     Actualmente, el tamaño máximo de los archivos LIFT admitidos para la importación es de 100 MB.
 
-!!! note "Nota"
+Al importar un archivo LIFT en The Combine, se importarán todas las entradas con forma de lexema o forma de cita que
+coincida con el idioma vernáculo del proyecto.
 
-    Actualmente, sólo se puede importar un archivo LIFT por proyecto.
+La primera vez que se importa en un proyecto, las palabras importadas se añadirán junto con las palabras recopiladas en
+The Combine. No se realizará ninguna deduplicación, combinación o sincronización automática.
+
+Si realiza una segunda importación, todas las palabras de The Combine se borrarán automáticamente antes de que se
+importen las nuevas palabras. No haga una segunda importación a menos que ya haya exportado su proyecto y lo haya
+importado a FieldWorks. Luego, si desea hacer más recopilación de palabras en The Combine, puede exportar desde
+FieldWorks e importar a The Combine. Las palabras anteriores se borrarán para poder empezar de cero con los datos
+actualizados de FieldWorks.
 
 #### Exportar {#export}
 
 Tras hacer clic en el botón Exportar, puede navegar por otras partes del sitio web mientras se preparan los datos para
-la descargar. When the data is gathered, the download will begin automatically. El nombre del archivo es el id del
+la descargar. Una vez recopilados los datos, la descarga comenzará automáticamente. El nombre del archivo es el id del
 proyecto.
 
 !!! warning "Importante"
@@ -178,13 +197,13 @@ proyecto.
 
 !!! note "Nota"
 
-    Project settings, project users, word flags, and custom semantic domain questions are not exported.
+    No se exportan la configuración del proyecto, los usuarios del proyecto, los indicadores de palabras ni las preguntas de dominio semántico personalizadas.
 
 #### Exportar locutores de las pronunciaciones
 
-When a project is exported from TheCombine and imported into FieldWorks, if a pronunciation has an associated speaker,
-the speaker name will be added as a pronunciation label. The consent files can be found in the zipped export, but will
-not be imported into FieldWorks.
+Cuando se exporta un proyecto desde The Combine y se importa a FieldWorks, si una pronunciación tiene un locutor
+asociado, el nombre del orador se añadirá como etiqueta de pronunciación. Los archivos de consentimiento se pueden
+encontrar en la exportación comprimida, pero no se importarán en FieldWorks no se importarán en FieldWorks.
 
 ### Calendario {#schedule}
 
@@ -201,36 +220,39 @@ programación.
 
 ![Dominios semánticos](../images/projectSettings6Doms.es.png)
 
-In this settings tab, you can change the semantic domain language and manage custom semantic domains.
+En esta pestaña de configuración, puede cambiar el idioma del dominio semántico y gestionar dominios semánticos
+personalizados.
 
 El _idioma de los dominios semánticos_ controla el idioma en el que se muestran los títulos y descripciones de los
 dominios semánticos en [Entrada de datos](./dataEntry.md).
 
-At this time, The Combine only supports _custom semantic domains_ that extend the
-[established domains](https://semdom.org/). For each established domain, one custom subdomain can be created, which will
-have `.0` added to the end of the domain id. For example, domain _6.2.1.1: Growing Grain_ has three standard subdomains,
-for Rice, Wheat, and Maize. If another grain, such as Barley, is dominant among the people group gathering words, it can
-be added as domain _6.2.1.1.0_.
+Por el momento, The Combine sólo admite _dominios semánticos personalizados_ que amplíen los
+[dominios establecidos](https://semdom.org/). Para cada dominio establecido, se puede crear un subdominio personalizado,
+que tendrá `.0` al final del identificador del dominio. Por ejemplo, el dominio _6.2.1.1: Cultivo de Cereales_ tiene
+tres subdominios estándar, para el arroz, el trigo y el maíz. Si otro grano, como la Cebada, es dominante entre el grupo
+de personas que recogen palabras, puede añadirse como dominio _6.2.1.1.0_.
 
-![Add Custom Domain](../images/projectSettingsDomsCustomAdd.png){.center}
+![Añadir dominio personalizado](../images/projectSettingsDomsCustomAdd.png){.center}
 
-For each custom domain, you can add a description and questions to help with word collection in that domain.
+Para cada dominio personalizado, puede añadir una descripción y preguntas que le ayuden con la recopilación de palabras
+en ese dominio.
 
-![Edit Custom Domain](../images/projectSettingsDomsCustomEdit.png){.center}
-
-!!! note "Nota"
-
-    Custom semantic domains are included in the project export and can be imported into FieldWorks. However, the
-    questions are not included.
-
-Custom semantic domains will be available to all project users doing Data Entry.
-
-![See Custom Domain](../images/projectSettingsDomsCustomSee.png){.center}
+![Editar dominio personalizado](../images/projectSettingsDomsCustomEdit.png){.center}
 
 !!! note "Nota"
 
-    Custom semantic domains are language-specific. If you add a custom domain in one language then change the semantic
-    domains language, that domain will not be visible unless you change back to its language.
+    Los dominios semánticos personalizados se incluyen en la exportación del proyecto y pueden importarse a FieldWorks. Sin embargo, las
+    preguntas no están incluidas.
+
+Los dominios semánticos personalizados estarán disponibles para todos los usuarios del proyecto que realicen
+Introducción de datos.
+
+![Ver dominio personalizado](../images/projectSettingsDomsCustomSee.png){.center}
+
+!!! note "Nota"
+
+    Los dominios semánticos personalizados son específicos de cada idioma. Si añades un dominio personalizado en un idioma y luego cambias el idioma de los dominios semánticos
+    ese dominio no será visible a menos que cambies de nuevo a su idioma.
 
 ## Estadísticas del proyecto
 

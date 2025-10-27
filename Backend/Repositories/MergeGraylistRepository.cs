@@ -5,27 +5,28 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
 {
-    /// <summary> Atomic database functions for <see cref="MergeWordSet"/>s. </summary>
+    /// <summary> Atomic database functions for Graylist <see cref="MergeWordSet"/>s. </summary>
     [ExcludeFromCodeCoverage]
-    public class MergeGraylistRepository : IMergeGraylistRepository
+    public class MergeGraylistRepository(IMongoDbContext dbContext) : IMergeGraylistRepository
     {
-        private readonly IMergeGraylistContext _mergeGraylistDatabase;
+        private readonly IMongoCollection<MergeWordSet> _mergeGraylist =
+            dbContext.Db.GetCollection<MergeWordSet>("MergeGraylistCollection");
 
-        public MergeGraylistRepository(IMergeGraylistContext collectionSettings)
-        {
-            _mergeGraylistDatabase = collectionSettings;
-        }
+        private const string otelTagName = "otel.MergeGraylistRepository";
 
         /// <summary> Finds all <see cref="MergeWordSet"/>s for specified <see cref="Project"/>. </summary>
         public async Task<List<MergeWordSet>> GetAllSets(string projectId, string? userId = null)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all graylist sets");
+
             var listFind = userId is null ?
-                _mergeGraylistDatabase.MergeGraylist.Find(e => e.ProjectId == projectId) :
-                _mergeGraylistDatabase.MergeGraylist.Find(e => e.ProjectId == projectId && e.UserId == userId);
+                _mergeGraylist.Find(e => e.ProjectId == projectId) :
+                _mergeGraylist.Find(e => e.ProjectId == projectId && e.UserId == userId);
             return await listFind.ToListAsync();
         }
 
@@ -33,19 +34,23 @@ namespace BackendFramework.Repositories
         /// <returns> A bool: success of operation. </returns>
         public async Task<bool> DeleteAllSets(string projectId)
         {
-            var deleted = await _mergeGraylistDatabase.MergeGraylist.DeleteManyAsync(u => u.ProjectId == projectId);
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting all graylist sets");
+
+            var deleted = await _mergeGraylist.DeleteManyAsync(u => u.ProjectId == projectId);
             return deleted.DeletedCount != 0;
         }
 
         /// <summary> Finds specified <see cref="MergeWordSet"/> for specified <see cref="Project"/>. </summary>
         public async Task<MergeWordSet?> GetSet(string projectId, string entryId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting graylist set");
+
             var filterDef = new FilterDefinitionBuilder<MergeWordSet>();
             var filter = filterDef.And(
                 filterDef.Eq(x => x.ProjectId, projectId),
                 filterDef.Eq(x => x.Id, entryId));
 
-            var graylistEntryList = await _mergeGraylistDatabase.MergeGraylist.FindAsync(filter);
+            var graylistEntryList = await _mergeGraylist.FindAsync(filter);
             try
             {
                 return await graylistEntryList.FirstAsync();
@@ -60,7 +65,9 @@ namespace BackendFramework.Repositories
         /// <returns> The MergeWordSet created. </returns>
         public async Task<MergeWordSet> Create(MergeWordSet wordSetEntry)
         {
-            await _mergeGraylistDatabase.MergeGraylist.InsertOneAsync(wordSetEntry);
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "creating graylist set");
+
+            await _mergeGraylist.InsertOneAsync(wordSetEntry);
             return wordSetEntry;
         }
 
@@ -68,11 +75,13 @@ namespace BackendFramework.Repositories
         /// <returns> A bool: success of operation. </returns>
         public async Task<bool> Delete(string projectId, string entryId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting graylist set");
+
             var filterDef = new FilterDefinitionBuilder<MergeWordSet>();
             var filter = filterDef.And(
                 filterDef.Eq(x => x.ProjectId, projectId),
                 filterDef.Eq(x => x.Id, entryId));
-            var deleted = await _mergeGraylistDatabase.MergeGraylist.DeleteOneAsync(filter);
+            var deleted = await _mergeGraylist.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;
         }
 
@@ -80,13 +89,15 @@ namespace BackendFramework.Repositories
         /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation. </returns>
         public async Task<ResultOfUpdate> Update(MergeWordSet wordSetEntry)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating graylist set");
+
             var filter = Builders<MergeWordSet>.Filter.Eq(x => x.Id, wordSetEntry.Id);
             var updateDef = Builders<MergeWordSet>.Update
                 .Set(x => x.ProjectId, wordSetEntry.ProjectId)
                 .Set(x => x.UserId, wordSetEntry.UserId)
                 .Set(x => x.WordIds, wordSetEntry.WordIds);
 
-            var updateResult = await _mergeGraylistDatabase.MergeGraylist.UpdateOneAsync(filter, updateDef);
+            var updateResult = await _mergeGraylist.UpdateOneAsync(filter, updateDef);
             if (!updateResult.IsAcknowledged)
             {
                 return ResultOfUpdate.NotFound;

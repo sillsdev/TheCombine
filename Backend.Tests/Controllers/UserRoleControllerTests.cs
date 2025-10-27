@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class UserRoleControllerTests : IDisposable
+    internal sealed class UserRoleControllerTests : IDisposable
     {
         private IUserRepository _userRepo = null!;
         private IUserRoleRepository _userRoleRepo = null!;
@@ -19,16 +19,8 @@ namespace Backend.Tests.Controllers
 
         public void Dispose()
         {
-            Dispose(true);
+            _userRoleController?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _userRoleController?.Dispose();
-            }
         }
 
         private const string ProjId = "PROJECT_ID";

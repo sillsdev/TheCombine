@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 
 namespace BackendFramework.Services
 {
@@ -22,6 +23,8 @@ namespace BackendFramework.Services
         private ulong _mergeCounter;
         /// <summary> A dictionary shared by all Projects for storing and retrieving potential duplicates. </summary>
         private readonly ConcurrentDictionary<string, (ulong, List<List<Word>>?)> _potentialDups;
+
+        private const string otelTagName = "otel.MergeService";
 
         public MergeService(IMergeBlacklistRepository mergeBlacklistRepo, IMergeGraylistRepository mergeGraylistRepo,
             IWordRepository wordRepo, IWordService wordService)
@@ -110,6 +113,8 @@ namespace BackendFramework.Services
         /// <returns> List of new words added. </returns>
         public async Task<List<Word>> Merge(string projectId, string userId, List<MergeWords> mergeWordsList)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "merging words");
+
             var keptWords = mergeWordsList.Where(m => !m.DeleteOnly);
             var newWords = keptWords.Select(m => MergePrepParent(projectId, m).Result).ToList();
             await Task.WhenAll(mergeWordsList.Select(m => MergeDeleteChildren(projectId, m)));
@@ -120,6 +125,8 @@ namespace BackendFramework.Services
         /// <returns> True if merge was successfully undone </returns>
         public async Task<bool> UndoMerge(string projectId, string userId, MergeUndoIds ids)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "undoing merge");
+
             foreach (var parentId in ids.ParentIds)
             {
                 var parentWord = (await _wordRepo.GetWord(projectId, parentId))?.Clone();
@@ -147,6 +154,8 @@ namespace BackendFramework.Services
         public async Task<MergeWordSet> AddToMergeBlacklist(
             string projectId, string userId, List<string> wordIds)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "adding to merge blacklist");
+
             if (wordIds.Count < 2)
             {
                 throw new InvalidMergeWordSetException("Cannot blacklist a list of fewer than 2 wordIds.");
@@ -173,6 +182,8 @@ namespace BackendFramework.Services
         public async Task<MergeWordSet> AddToMergeGraylist(
             string projectId, string userId, List<string> wordIds)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "adding to merge graylist");
+
             wordIds = wordIds.Distinct().ToList();
             if (wordIds.Count < 2)
             {
@@ -199,6 +210,8 @@ namespace BackendFramework.Services
         public async Task<bool> RemoveFromMergeGraylist(
             string projectId, string userId, List<string> wordIds)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "removing from merge graylist");
+
             wordIds = wordIds.Distinct().ToList();
             if (wordIds.Count < 2)
             {
@@ -223,6 +236,8 @@ namespace BackendFramework.Services
         /// <returns> A bool, true if in the blacklist. </returns>
         public async Task<bool> IsInMergeBlacklist(string projectId, List<string> wordIds, string? userId = null)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if in merge blacklist");
+
             if (wordIds.Count < 2)
             {
                 throw new InvalidMergeWordSetException("Cannot blacklist a list of fewer than 2 wordIds.");
@@ -243,6 +258,8 @@ namespace BackendFramework.Services
         /// <returns> A bool, true if in the graylist. </returns>
         public async Task<bool> IsInMergeGraylist(string projectId, List<string> wordIds, string? userId = null)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if in merge graylist");
+
             if (wordIds.Count < 2)
             {
                 throw new InvalidMergeWordSetException("Cannot graylist a list of fewer than 2 wordIds.");
@@ -266,6 +283,8 @@ namespace BackendFramework.Services
         /// <returns> Number of <see cref="MergeWordSet"/>s updated. </returns>
         public async Task<int> UpdateMergeBlacklist(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating merge blacklist");
+
             var oldBlacklist = await _mergeBlacklistRepo.GetAllSets(projectId);
             if (oldBlacklist.Count == 0)
             {
@@ -303,6 +322,8 @@ namespace BackendFramework.Services
         /// <returns> Number of <see cref="MergeWordSet"/>s updated. </returns>
         public async Task<int> UpdateMergeGraylist(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating merge graylist");
+
             var oldGraylist = await _mergeGraylistRepo.GetAllSets(projectId);
             if (oldGraylist.Count == 0)
             {
@@ -336,6 +357,8 @@ namespace BackendFramework.Services
         /// <remarks> Removes from the graylist any checked entry without at least 2 words in the Frontier. </remarks>
         public async Task<bool> HasGraylistEntries(string projectId, string? userId = null)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking for graylist entries");
+
             var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
             foreach (var entry in graylist)
             {
@@ -355,6 +378,8 @@ namespace BackendFramework.Services
         public async Task<List<List<Word>>> GetGraylistEntries(
             string projectId, int maxLists, string? userId = null)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting graylist entries");
+
             var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
             if (graylist.Count == 0)
             {
@@ -379,14 +404,16 @@ namespace BackendFramework.Services
         /// </summary>
         /// <returns> bool: true if successful or false if a newer request has begun. </returns>
         public async Task<bool> GetAndStorePotentialDuplicates(
-            string projectId, int maxInList, int maxLists, string userId)
+            string projectId, int maxInList, int maxLists, string userId, bool ignoreProtected = false)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting and storing potential duplicates");
+
             var counter = Interlocked.Increment(ref _mergeCounter);
             if (StoreDups(userId, counter, null) != counter)
             {
                 return false;
             }
-            var dups = await GetPotentialDuplicates(projectId, maxInList, maxLists, userId);
+            var dups = await GetPotentialDuplicates(projectId, maxInList, maxLists, userId, ignoreProtected);
             // Store the potential duplicates for user to retrieve later.
             return StoreDups(userId, counter, dups) == counter;
         }
@@ -395,7 +422,7 @@ namespace BackendFramework.Services
         /// Get Lists of potential duplicate <see cref="Word"/>s in specified <see cref="Project"/>'s frontier.
         /// </summary>
         private async Task<List<List<Word>>> GetPotentialDuplicates(
-            string projectId, int maxInList, int maxLists, string? userId = null)
+            string projectId, int maxInList, int maxLists, string? userId = null, bool ignoreProtected = false)
         {
             var dupFinder = new DuplicateFinder(maxInList, maxLists, 2);
 
@@ -405,13 +432,13 @@ namespace BackendFramework.Services
                 (await IsInMergeGraylist(projectId, wordIds, userId));
 
             // First pass, only look for words with identical vernacular.
-            var wordLists = await dupFinder.GetIdenticalVernWords(collection, isUnavailableSet);
+            var wordLists = await dupFinder.GetIdenticalVernWords(collection, isUnavailableSet, ignoreProtected);
 
             // If no such sets found, look for similar words.
             if (wordLists.Count == 0)
             {
                 collection = await _wordRepo.GetFrontier(projectId);
-                wordLists = await dupFinder.GetSimilarWords(collection, isUnavailableSet);
+                wordLists = await dupFinder.GetSimilarWords(collection, isUnavailableSet, ignoreProtected);
             }
 
             return wordLists;

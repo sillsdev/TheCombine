@@ -2,7 +2,8 @@ import { Grid2, Typography } from "@mui/material";
 import { FormEvent, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { FileInputButton, LoadingDoneButton } from "components/Buttons";
+import FileInputButton from "components/Buttons/FileInputButton";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 
 interface ImageUploadProps {
   doneCallback?: () => void;
@@ -62,11 +63,7 @@ export default function ImageUpload(props: ImageUploadProps): ReactElement {
           {t("buttons.browse")}
         </FileInputButton>
 
-        <LoadingDoneButton
-          loading={loading}
-          done={done}
-          buttonProps={{ type: "submit", id: "image-upload-save" }}
-        >
+        <LoadingDoneButton done={done} loading={loading}>
           {t("buttons.save")}
         </LoadingDoneButton>
       </Grid2>

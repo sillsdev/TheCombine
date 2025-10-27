@@ -12,24 +12,24 @@ import {
 import { ReactElement, ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { LoadingButton } from "components/Buttons";
+import LoadingButton from "components/Buttons/LoadingButton";
 import {
   exit,
   setRejectedCharacters,
   setValidCharacters,
-  uploadInventory,
+  uploadAndExit,
 } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import theme from "types/theme";
 import { TextFieldWithFont } from "utilities/fontComponents";
 
-export enum CharInvCancelSaveIds {
-  ButtonCancel = "char-inv-cancel-button",
-  ButtonSave = "char-inv-save-button",
-  DialogCancel = "char-inv-cancel-dialog",
-  DialogCancelButtonNo = "char-inv-cancel-dialog-no-button",
-  DialogCancelButtonYes = "char-inv-cancel-dialog-yes-button",
+export enum CharacterEntryTextId {
+  ButtonCancel = "buttons.cancel",
+  ButtonSave = "buttons.save",
+  FieldAccepted = "charInventory.characterSet.acceptedCharacters",
+  FieldRejected = "charInventory.characterSet.rejectedCharacters",
+  ToggleAdvanced = "charInventory.characterSet.advanced",
 }
 
 /**
@@ -51,7 +51,7 @@ export default function CharacterEntry(): ReactElement {
 
   const save = async (): Promise<void> => {
     setSaveInProgress(true);
-    await dispatch(uploadInventory());
+    await dispatch(uploadAndExit());
   };
 
   return (
@@ -66,25 +66,19 @@ export default function CharacterEntry(): ReactElement {
         <Grid2 container spacing={2}>
           {/* Save button */}
           <LoadingButton
-            buttonProps={{
-              "data-testid": CharInvCancelSaveIds.ButtonSave,
-              id: CharInvCancelSaveIds.ButtonSave,
-              onClick: () => save(),
-            }}
+            buttonProps={{ onClick: () => save() }}
             loading={saveInProgress}
           >
-            {t("buttons.save")}
+            {t(CharacterEntryTextId.ButtonSave)}
           </LoadingButton>
 
           {/* Cancel button */}
           <Button
             color="secondary"
-            data-testid={CharInvCancelSaveIds.ButtonCancel}
-            id={CharInvCancelSaveIds.ButtonCancel}
             onClick={() => setCancelDialogOpen(true)}
             variant="contained"
           >
-            {t("buttons.cancel")}
+            {t(CharacterEntryTextId.ButtonCancel)}
           </Button>
 
           {/* Cancel yes/no dialog */}
@@ -106,7 +100,7 @@ export default function CharacterEntry(): ReactElement {
           }
           onClick={() => setAdvancedOpen((prev) => !prev)}
         >
-          {t("charInventory.characterSet.advanced")}
+          {t(CharacterEntryTextId.ToggleAdvanced)}
         </Button>
       </Grid2>
 
@@ -114,16 +108,14 @@ export default function CharacterEntry(): ReactElement {
         {/* Input for accepted characters */}
         <CharactersInput
           characters={validCharacters}
-          id="valid-characters-input"
-          label={t("charInventory.characterSet.acceptedCharacters")}
+          label={t(CharacterEntryTextId.FieldAccepted)}
           setCharacters={(chars) => dispatch(setValidCharacters(chars))}
         />
 
         {/* Input for rejected characters */}
         <CharactersInput
           characters={rejectedCharacters}
-          id="rejected-characters-input"
-          label={t("charInventory.characterSet.rejectedCharacters")}
+          label={t(CharacterEntryTextId.FieldRejected)}
           setCharacters={(chars) => dispatch(setRejectedCharacters(chars))}
         />
       </Collapse>
@@ -144,22 +136,26 @@ function CharactersInput(props: CharactersInputProps): ReactElement {
       autoComplete="off"
       fullWidth
       id={props.id}
-      inputProps={{
-        "data-testid": props.id,
-        spellCheck: false,
-        style: { letterSpacing: 5 },
-      }}
       label={props.label}
       name="characters"
       onChange={(e) =>
         props.setCharacters(e.target.value.replace(/\s/g, "").split(""))
       }
+      slotProps={{
+        htmlInput: { spellCheck: false, style: { letterSpacing: 5 } },
+      }}
       style={{ marginTop: theme.spacing(2) }}
       value={props.characters.join("")}
-      variant="outlined"
       vernacular
     />
   );
+}
+
+export enum CancelDialogTextId {
+  ButtonNo = "charInventory.dialog.no",
+  ButtonYes = "charInventory.dialog.yes",
+  Content = "charInventory.dialog.content",
+  Title = "charInventory.dialog.title",
 }
 
 interface CancelDialogProps {
@@ -172,38 +168,25 @@ function CancelDialog(props: CancelDialogProps): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <Dialog
-      data-testid={CharInvCancelSaveIds.DialogCancel}
-      id={CharInvCancelSaveIds.DialogCancel}
-      onClose={() => props.onClose()}
-      open={props.open}
-    >
-      <DialogTitle>{t("charInventory.dialog.title")}</DialogTitle>
+    <Dialog onClose={() => props.onClose()} open={props.open}>
+      <DialogTitle>{t(CancelDialogTextId.Title)}</DialogTitle>
 
       <DialogContent>
-        <DialogContentText>
-          {t("charInventory.dialog.content")}
-        </DialogContentText>
+        <DialogContentText>{t(CancelDialogTextId.Content)}</DialogContentText>
       </DialogContent>
 
       <DialogActions>
         <Button
           autoFocus
           color="secondary"
-          data-testid={CharInvCancelSaveIds.DialogCancelButtonYes}
-          id={CharInvCancelSaveIds.DialogCancelButtonYes}
           onClick={() => exit()}
           variant="contained"
         >
-          {t("charInventory.dialog.yes")}
+          {t(CancelDialogTextId.ButtonYes)}
         </Button>
 
-        <Button
-          data-testid={CharInvCancelSaveIds.DialogCancelButtonNo}
-          id={CharInvCancelSaveIds.DialogCancelButtonNo}
-          onClick={() => props.onClose()}
-        >
-          {t("charInventory.dialog.no")}
+        <Button onClick={() => props.onClose()}>
+          {t(CancelDialogTextId.ButtonNo)}
         </Button>
       </DialogActions>
     </Dialog>

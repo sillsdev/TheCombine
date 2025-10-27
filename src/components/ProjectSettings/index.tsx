@@ -38,7 +38,7 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
 import { Permission, type Project } from "api/models";
-import { canUploadLift, getCurrentPermissions } from "backend";
+import { getCurrentPermissions } from "backend";
 import {
   asyncRefreshProjectUsers,
   asyncSetNewCurrentProject,
@@ -54,7 +54,7 @@ import ProjectLanguages, {
   SemanticDomainLanguage,
 } from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
-import ProjectProtectedOverride from "components/ProjectSettings/ProjectProtectedOverride";
+import ProjectProtectedData from "components/ProjectSettings/ProjectProtectedData";
 import ProjectSchedule from "components/ProjectSettings/ProjectSchedule";
 import ProjectSelect from "components/ProjectSettings/ProjectSelect";
 import ActiveProjectUsers from "components/ProjectUsers/ActiveProjectUsers";
@@ -98,7 +98,6 @@ export default function ProjectSettingsComponent(): ReactElement {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const [imports, setImports] = useState<boolean>(false);
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [tab, setTab] = useState(ProjectSettingsTab.Languages);
 
@@ -109,9 +108,6 @@ export default function ProjectSettingsComponent(): ReactElement {
   }, [project.id]);
 
   useEffect(() => {
-    if (permissions.includes(Permission.Import)) {
-      canUploadLift().then(setImports);
-    }
     if (permissions.includes(Permission.DeleteEditSettingsAndUsers)) {
       dispatch(asyncRefreshProjectUsers(project.id));
     }
@@ -179,13 +175,13 @@ export default function ProjectSettingsComponent(): ReactElement {
             />
           )}
 
-          {/* Protected data override toggle */}
+          {/* Protected data management */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <BaseSettings
               icon={<RemoveModerator data-testid={Setting.ProtectOverride} />}
-              title={t("projectSettings.protectedDataOverride.label")}
+              title={t("projectSettings.protectedData.label")}
               body={
-                <ProjectProtectedOverride
+                <ProjectProtectedData
                   project={project}
                   setProject={updateProject}
                 />
@@ -269,13 +265,7 @@ export default function ProjectSettingsComponent(): ReactElement {
               icon={<CloudUpload data-testid={Setting.Import} />}
               title={t("projectSettings.import.header")}
               body={
-                imports ? (
-                  <ProjectImport project={project} setProject={setNewProject} />
-                ) : (
-                  <Typography variant="body2">
-                    {t("projectSettings.import.notAllowed")}
-                  </Typography>
-                )
+                <ProjectImport project={project} setProject={setNewProject} />
               }
             />
           )}

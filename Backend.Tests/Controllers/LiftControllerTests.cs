@@ -18,7 +18,7 @@ using static System.Linq.Enumerable;
 
 namespace Backend.Tests.Controllers
 {
-    public class LiftControllerTests : IDisposable
+    internal sealed class LiftControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
         private ISpeakerRepository _speakerRepo = null!;
@@ -33,16 +33,8 @@ namespace Backend.Tests.Controllers
 
         public void Dispose()
         {
-            Dispose(true);
+            _liftController?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _liftController?.Dispose();
-            }
         }
 
         private string _projId = null!;
@@ -169,31 +161,17 @@ namespace Backend.Tests.Controllers
             return fileName;
         }
 
-        public class RoundTripObj
+        internal sealed class RoundTripObj(string filename, string language, List<string> audio, int numOfWords,
+            string entryGuid = "", string senseGuid = "", bool hasGramInfo = false, bool hasDefs = false)
         {
-            public string Filename { get; }
-            public string Language { get; }
-            public List<string> AudioFiles { get; }
-            public int NumOfWords { get; }
-            public string EntryGuid { get; }
-            public string SenseGuid { get; }
-            public bool HasGramInfo { get; }
-            public bool HasDefs { get; }
-
-            public RoundTripObj(
-                string filename, string language, List<string> audio,
-                int numOfWords, string entryGuid = "", string senseGuid = "",
-                bool hasGramInfo = false, bool hasDefs = false)
-            {
-                Filename = filename;
-                Language = language;
-                AudioFiles = audio;
-                NumOfWords = numOfWords;
-                EntryGuid = entryGuid;
-                SenseGuid = senseGuid;
-                HasGramInfo = hasGramInfo;
-                HasDefs = hasDefs;
-            }
+            public string Filename { get; } = filename;
+            public string Language { get; } = language;
+            public List<string> AudioFiles { get; } = audio;
+            public int NumOfWords { get; } = numOfWords;
+            public string EntryGuid { get; } = entryGuid;
+            public string SenseGuid { get; } = senseGuid;
+            public bool HasGramInfo { get; } = hasGramInfo;
+            public bool HasDefs { get; } = hasDefs;
         }
 
         /// <summary>  Read all of the bytes from a Stream into byte array. </summary>
@@ -280,6 +258,21 @@ namespace Backend.Tests.Controllers
 
             Assert.That(_liftService.RetrieveImport(UserId), Is.Not.Null);
             _liftService.DeleteImport(UserId);
+        }
+
+        [Test]
+        public void TestDeleteFrontierAndFinishUploadLiftFileNoPermission()
+        {
+            _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _liftController.DeleteFrontierAndFinishUploadLiftFile(_projId).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestDeleteFrontierAndFinishUploadLiftFileInvalidProjectId()
+        {
+            var result = _liftController.DeleteFrontierAndFinishUploadLiftFile("../hack").Result;
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
         }
 
         [Test]
@@ -397,39 +390,6 @@ namespace Backend.Tests.Controllers
             _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = _liftController.DownloadLiftFile(_projId).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
-        }
-
-        [Test]
-        public void TestCanUploadLiftNoPermission()
-        {
-            _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var result = _liftController.CanUploadLift(_projId).Result;
-            Assert.That(result, Is.InstanceOf<ForbidResult>());
-        }
-
-        [Test]
-        public void TestCanUploadLiftInvalidProjectId()
-        {
-            var result = _liftController.CanUploadLift("../hack").Result;
-            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
-        }
-
-        [Test]
-        public void TestCanUploadLiftFalse()
-        {
-            var projId = _projRepo.Create(new Project { Name = "has import", LiftImported = true }).Result!.Id;
-            var result = _liftController.CanUploadLift(projId).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            Assert.That(((OkObjectResult)result).Value, Is.False);
-        }
-
-        [Test]
-        public void TestCanUploadLiftTrue()
-        {
-            var projId = _projRepo.Create(new Project { Name = "has no import", LiftImported = false }).Result!.Id;
-            var result = _liftController.CanUploadLift(projId).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            Assert.That(((OkObjectResult)result).Value, Is.True);
         }
 
         /// <summary>

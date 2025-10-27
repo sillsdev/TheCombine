@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Helper
 {
-    public class LanguageTests
+    internal sealed class LanguageTests
     {
         [Test]
         public void TestGetSenseAnalysisLangTagsEmpty()

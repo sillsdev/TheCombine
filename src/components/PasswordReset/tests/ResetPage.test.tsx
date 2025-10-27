@@ -2,7 +2,6 @@ import "@testing-library/jest-dom";
 import {
   type RenderOptions,
   act,
-  cleanup,
   render,
   screen,
 } from "@testing-library/react";
@@ -13,7 +12,7 @@ import { MemoryRouter, Route, Routes } from "react-router";
 import configureMockStore from "redux-mock-store";
 
 import PasswordReset, {
-  PasswordResetIds,
+  PasswordResetTextId,
 } from "components/PasswordReset/ResetPage";
 import { Path } from "types/path";
 
@@ -36,8 +35,6 @@ beforeEach(() => {
   jest.clearAllMocks();
   setupMocks();
 });
-
-afterEach(cleanup);
 
 const ResetPageProviders = ({
   children,
@@ -70,14 +67,13 @@ describe("PasswordReset", () => {
     await customRender(<PasswordReset />);
 
     const shortPassword = "foo";
-    const passwdField = screen.getByTestId(PasswordResetIds.Password);
-    const passwdConfirm = screen.getByTestId(PasswordResetIds.ConfirmPassword);
+    const pw1Field = screen.getByLabelText(PasswordResetTextId.FieldPassword1);
+    const pw2Field = screen.getByLabelText(PasswordResetTextId.FieldPassword2);
 
-    await user.type(passwdField, shortPassword);
-    await user.type(passwdConfirm, shortPassword);
+    await user.type(pw1Field, shortPassword);
+    await user.type(pw2Field, shortPassword);
 
-    const submitButton = screen.getByTestId(PasswordResetIds.SubmitButton);
-    expect(submitButton.closest("button")).toBeDisabled();
+    expect(screen.getByRole("button")).toBeDisabled();
   });
 
   it("disables button when passwords don't match", async () => {
@@ -86,14 +82,19 @@ describe("PasswordReset", () => {
 
     const passwordEntry = "password";
     const confirmEntry = "passward";
-    const passwdField = screen.getByTestId(PasswordResetIds.Password);
-    const passwdConfirm = screen.getByTestId(PasswordResetIds.ConfirmPassword);
+    const pw1Field = screen.getByLabelText(PasswordResetTextId.FieldPassword1);
+    const pw2Field = screen.getByLabelText(PasswordResetTextId.FieldPassword2);
+    expect(
+      screen.queryByText(PasswordResetTextId.FieldPassword2Error)
+    ).toBeNull();
 
-    await user.type(passwdField, passwordEntry);
-    await user.type(passwdConfirm, confirmEntry);
+    await user.type(pw1Field, passwordEntry);
+    await user.type(pw2Field, confirmEntry);
 
-    const submitButton = screen.getByTestId(PasswordResetIds.SubmitButton);
-    expect(submitButton.closest("button")).toBeDisabled();
+    expect(screen.getByRole("button")).toBeDisabled();
+    expect(
+      screen.queryByText(PasswordResetTextId.FieldPassword2Error)
+    ).toBeTruthy();
   });
 
   it("enables button when passwords are long enough and match", async () => {
@@ -101,23 +102,20 @@ describe("PasswordReset", () => {
     await customRender(<PasswordReset />);
 
     const passwordEntry = "password";
-    const passwdField = screen.getByTestId(PasswordResetIds.Password);
-    const passwdConfirm = screen.getByTestId(PasswordResetIds.ConfirmPassword);
+    const pw1Field = screen.getByLabelText(PasswordResetTextId.FieldPassword1);
+    const pw2Field = screen.getByLabelText(PasswordResetTextId.FieldPassword2);
 
-    await user.type(passwdField, passwordEntry);
-    await user.type(passwdConfirm, passwordEntry);
+    await user.type(pw1Field, passwordEntry);
+    await user.type(pw2Field, passwordEntry);
 
-    const submitButton = screen.getByTestId(PasswordResetIds.SubmitButton);
-    expect(submitButton.closest("button")).toBeEnabled();
+    expect(screen.getByRole("button")).toBeEnabled();
   });
 
   it("renders the InvalidLink component if token not valid", async () => {
     mockValidateResetToken.mockResolvedValueOnce(false);
     await customRender(<PasswordReset />);
-    for (const id of Object.values(PasswordResetIds)) {
-      expect(screen.queryAllByTestId(id)).toHaveLength(0);
-    }
-    // The textId will show up as text because t() is mocked to return its input.
-    expect(screen.queryAllByText("passwordReset.invalidURL")).toBeTruthy();
+
+    expect(screen.queryByRole("textbox")).toBeNull();
+    expect(screen.getByText(PasswordResetTextId.Invalid)).toBeTruthy();
   });
 });

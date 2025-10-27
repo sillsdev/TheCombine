@@ -22,7 +22,8 @@ import { Trans, useTranslation } from "react-i18next";
 
 import { type WritingSystem } from "api/models";
 import { projectDuplicateCheck, uploadLiftAndGetWritingSystems } from "backend";
-import { FileInputButton, LoadingDoneButton } from "components/Buttons";
+import FileInputButton from "components/Buttons/FileInputButton";
+import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import {
   asyncCreateProject,
   asyncFinishProject,
@@ -31,14 +32,6 @@ import { useAppDispatch } from "rootRedux/hooks";
 import theme from "types/theme";
 import { newWritingSystem } from "types/writingSystem";
 import { NormalizedTextField } from "utilities/fontComponents";
-
-export enum CreateProjectId {
-  ButtonSelectFile = "create-project-select-file",
-  ButtonSubmit = "create-project-submit",
-  FieldName = "create-project-name",
-  Form = "create-project-form",
-  SelectVern = "create-proj-select-vern",
-}
 
 export enum CreateProjectTextId {
   Create = "createProject.create",
@@ -180,12 +173,7 @@ export default function CreateProject(): ReactElement {
     };
 
     return (
-      <Select
-        data-testid={CreateProjectId.SelectVern}
-        defaultValue={vernIdNone}
-        id={CreateProjectId.SelectVern}
-        onChange={onChange}
-      >
+      <Select defaultValue={vernIdNone} onChange={onChange}>
         {menuItems}
       </Select>
     );
@@ -223,11 +211,7 @@ export default function CreateProject(): ReactElement {
 
   return (
     <Card style={{ width: "100%", maxWidth: 450 }}>
-      <form
-        data-testid={CreateProjectId.Form}
-        id={CreateProjectId.Form}
-        onSubmit={(e) => createProject(e)}
-      >
+      <form onSubmit={(e) => createProject(e)}>
         <CardContent>
           {/* Title */}
           <Typography variant="h5" align="center" gutterBottom>
@@ -236,7 +220,6 @@ export default function CreateProject(): ReactElement {
 
           {/* Project name */}
           <NormalizedTextField
-            id={CreateProjectId.FieldName}
             label={t(CreateProjectTextId.Name)}
             value={name}
             onChange={updateName}
@@ -267,11 +250,7 @@ export default function CreateProject(): ReactElement {
             <FileInputButton
               updateFile={(file: File) => updateLanguageData(file)}
               accept=".zip"
-              buttonProps={{
-                "data-testid": CreateProjectId.ButtonSelectFile,
-                id: CreateProjectId.ButtonSelectFile,
-                sx: { m: 1 },
-              }}
+              buttonProps={{ sx: { m: 1 } }}
             >
               {t(CreateProjectTextId.UploadBrowse)}
             </FileInputButton>
@@ -341,11 +320,6 @@ export default function CreateProject(): ReactElement {
             style={{ marginTop: theme.spacing(1) }}
           >
             <LoadingDoneButton
-              buttonProps={{
-                "data-testid": CreateProjectId.ButtonSubmit,
-                id: CreateProjectId.ButtonSubmit,
-                type: "submit",
-              }}
               disabled={
                 !name.trim() || !vernLang.bcp47 || vernLang.bcp47 === undBcp47
               }

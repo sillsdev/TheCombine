@@ -10,23 +10,15 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class AvatarControllerTests : IDisposable
+    internal sealed class AvatarControllerTests : IDisposable
     {
         private IUserRepository _userRepo = null!;
         private AvatarController _avatarController = null!;
 
         public void Dispose()
         {
-            Dispose(true);
+            _avatarController?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _avatarController?.Dispose();
-            }
         }
 
         private string _userId = string.Empty;

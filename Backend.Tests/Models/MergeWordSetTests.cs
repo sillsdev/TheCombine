@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Models
 {
-    public class MergeWordSetTests
+    internal sealed class MergeWordSetTests
     {
         private const string EntryId = "MergeWordSetTestId";
         private const string ProjId = "MergeWordSetTestProjectId";

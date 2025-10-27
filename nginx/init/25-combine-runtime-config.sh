@@ -2,7 +2,7 @@
 
 ###############################################
 # This script creates the runtime configuration
-# file for TheCombine frontend, config.js, from
+# file for The Combine frontend, config.js, from
 # environment variables that are defined for the
 # process.
 #

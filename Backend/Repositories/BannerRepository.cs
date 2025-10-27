@@ -4,31 +4,31 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
 {
-    /// <summary> Atomic database functions for <see cref="Banner"/> singleton. </summary>
+    /// <summary> Atomic database functions for <see cref="Banner"/>s. </summary>
     [ExcludeFromCodeCoverage]
-    public class BannerRepository : IBannerRepository
+    public class BannerRepository(IMongoDbContext dbContext) : IBannerRepository
     {
-        private readonly IBannerContext _bannerDatabase;
+        private readonly IMongoCollection<Banner> _banners = dbContext.Db.GetCollection<Banner>("BannerCollection");
 
-        public BannerRepository(IBannerContext collectionSettings)
-        {
-            _bannerDatabase = collectionSettings;
-        }
+        private const string otelTagName = "otel.BannerRepository";
 
         private async Task<Banner> CreateEmptyBanner(BannerType type)
         {
             var emptyBanner = new Banner { Type = type };
-            await _bannerDatabase.Banners.InsertOneAsync(emptyBanner);
+            await _banners.InsertOneAsync(emptyBanner);
             return emptyBanner;
         }
 
         public async Task<Banner> GetBanner(BannerType type)
         {
-            var bannerList = await _bannerDatabase.Banners.FindAsync(x => x.Type == type);
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting banner");
+
+            var bannerList = await _banners.FindAsync(x => x.Type == type);
             try
             {
                 return await bannerList.FirstAsync();
@@ -41,12 +41,14 @@ namespace BackendFramework.Repositories
 
         public async Task<ResultOfUpdate> Update(SiteBanner banner)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating banner");
+
             var existingBanner = await GetBanner(banner.Type);
             var filter = Builders<Banner>.Filter.Eq(x => x.Id, existingBanner.Id);
             var updateDef = Builders<Banner>.Update
                 .Set(x => x.Type, banner.Type)
                 .Set(x => x.Text, banner.Text);
-            var updateResult = await _bannerDatabase.Banners.UpdateOneAsync(filter, updateDef);
+            var updateResult = await _banners.UpdateOneAsync(filter, updateDef);
 
             // The singleton for each banner type should always exist, so this case should never happen.
             if (!updateResult.IsAcknowledged)

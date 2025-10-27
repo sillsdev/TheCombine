@@ -20,7 +20,7 @@ import { newWord as mockWord } from "types/word";
 jest.mock("backend", () => ({
   areInFrontier: (ids: string[]) => Promise.resolve(ids),
   getWord: () => Promise.resolve(mockWord()),
-  updateWord: () => jest.fn(),
+  updateWord: jest.fn(),
 }));
 jest.mock("i18n", () => ({})); // else `thrown: "Error: AggregateError`
 

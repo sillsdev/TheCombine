@@ -50,11 +50,18 @@ Combine 顶部应用框的中间位置看到一个齿轮图标或该项目名。
 
 (这不影响对注释的拼写建议，因为这些建议是基于独立于现有项目数据的字典的)。
 
-#### Protected Data Override
+#### Protected Data Management
 
-The default setting is Off. Change this to On to allow project users in Merge Duplicates to override the
-[protection](goals.md#protected-entries-and-senses) of words and senses that were imported with data not handled by The
-Combine.
+This section has two Off/On setting toggles related to the [protection](goals.md#protected-entries-and-senses) of words
+and senses that were imported with data not handled by The Combine. Both settings are off by default.
+
+Turn on "Avoid protected sets in Merge Duplicates" to make the Merge Duplicates tool only show sets of potential
+duplicates with at least one word that isn't protected. This will avoid sets of mature entries imported from FieldWorks
+and promote merging entries collected in The Combine.
+
+Turn on "Allow data protection override in Merge Duplicates" to allow project users in Merge Duplicates to manually
+override protection of words and senses. If anybody tries to merge or delete a protected entry or sense, The Combine
+warns them of the fields that will be lost.
 
 #### 存档项目
 
@@ -156,7 +163,7 @@ automatically. The filename is the project id.
 
 #### Export pronunciation speakers
 
-When a project is exported from TheCombine and imported into FieldWorks, if a pronunciation has an associated speaker,
+When a project is exported from The Combine and imported into FieldWorks, if a pronunciation has an associated speaker,
 the speaker name will be added as a pronunciation label. The consent files can be found in the zipped export, but will
 not be imported into FieldWorks.
 

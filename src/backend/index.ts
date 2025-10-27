@@ -47,7 +47,9 @@ const config = new Api.Configuration(config_parameters);
 const authenticationUrls = [
   "/users/authenticate",
   "/users/create",
+  "/users/email",
   "/users/forgot",
+  "/users/password",
 ];
 
 /** A list of URL patterns for which the frontend explicitly handles errors
@@ -112,9 +114,15 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
 const audioApi = new Api.AudioApi(config, BASE_PATH, axiosInstance);
 const avatarApi = new Api.AvatarApi(config, BASE_PATH, axiosInstance);
 const bannerApi = new Api.BannerApi(config, BASE_PATH, axiosInstance);
+const emailVerifyApi = new Api.EmailVerifyApi(config, BASE_PATH, axiosInstance);
 const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
 const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
 const mergeApi = new Api.MergeApi(config, BASE_PATH, axiosInstance);
+const passwordResetApi = new Api.PasswordResetApi(
+  config,
+  BASE_PATH,
+  axiosInstance
+);
 const projectApi = new Api.ProjectApi(config, BASE_PATH, axiosInstance);
 const semanticDomainApi = new Api.SemanticDomainApi(
   config,
@@ -220,6 +228,16 @@ export async function updateBanner(siteBanner: SiteBanner): Promise<boolean> {
   return (await bannerApi.updateBanner({ siteBanner }, defaultOptions())).data;
 }
 
+/* EmailVerifyController.cs */
+
+export async function requestEmailVerify(email: string): Promise<void> {
+  await emailVerifyApi.requestEmailVerify({ body: email }, defaultOptions());
+}
+
+export async function verifyEmail(token: string): Promise<boolean> {
+  return (await emailVerifyApi.validateEmailToken({ token })).data;
+}
+
 /* InviteController.cs */
 
 export async function emailInviteToProject(
@@ -228,20 +246,20 @@ export async function emailInviteToProject(
   emailAddress: string,
   message: string
 ): Promise<string> {
-  const domain = window.location.origin;
   const resp = await inviteApi.emailInviteToProject(
-    { emailInviteData: { emailAddress, message, projectId, role, domain } },
+    { emailInviteData: { emailAddress, message, projectId, role } },
     defaultOptions()
   );
   return resp.data;
 }
 
-export async function validateLink(
+export async function validateInviteToken(
   projectId: string,
   token: string
 ): Promise<EmailInviteStatus> {
-  return (await inviteApi.validateToken({ projectId, token }, defaultOptions()))
-    .data;
+  return (
+    await inviteApi.validateInviteToken({ projectId, token }, defaultOptions())
+  ).data;
 }
 
 /* LiftController.cs */
@@ -259,22 +277,21 @@ export async function uploadLiftAndGetWritingSystems(
   return resp.data;
 }
 
-/** Add data from a LIFT file that was uploaded earlier in the project's creation. */
+/** Add data from a LIFT file that was uploaded earlier (to check writing systems). */
 export async function finishUploadLift(projectId: string): Promise<number> {
   const options = { headers: authHeader() };
   return (await liftApi.finishUploadLiftFile({ projectId }, options)).data;
 }
 
-/** Upload a LIFT file and add its data to the specified project. */
-export async function uploadLift(
-  projectId: string,
-  file: File
+/** Delete all words in the project frontier and add data from a LIFT file that was
+ * uploaded earlier (to check writing systems). */
+export async function deleteFrontierAndFinishUploadLift(
+  projectId: string
 ): Promise<number> {
-  const resp = await liftApi.uploadLiftFile(
-    { projectId, file },
-    fileUploadOptions()
-  );
-  return resp.data;
+  const options = { headers: authHeader() };
+  return (
+    await liftApi.deleteFrontierAndFinishUploadLiftFile({ projectId }, options)
+  ).data;
 }
 
 /** Tell the backend to create a LIFT file for the project. */
@@ -310,12 +327,6 @@ export async function deleteLift(): Promise<void> {
   /* The backend deletes by user, not by project,
    * but a nonempty projectId in the url is still required. */
   await liftApi.deleteLiftFile({ projectId: "nonempty" }, defaultOptions());
-}
-
-/** Check if the current project doesn't already have uploaded data. */
-export async function canUploadLift(): Promise<boolean> {
-  const projectId = LocalStorage.getProjectId();
-  return (await liftApi.canUploadLift({ projectId }, defaultOptions())).data;
 }
 
 /* MergeController.cs */
@@ -354,10 +365,12 @@ export async function graylistAdd(wordIds: string[]): Promise<void> {
 /** Start finding list of potential duplicates for merging. */
 export async function findDuplicates(
   maxInList: number,
-  maxLists: number
+  maxLists: number,
+  ignoreProtected = false
 ): Promise<void> {
+  const projectId = LocalStorage.getProjectId();
   await mergeApi.findPotentialDuplicates(
-    { projectId: LocalStorage.getProjectId(), maxInList, maxLists },
+    { ignoreProtected, maxInList, maxLists, projectId },
     defaultOptions()
   );
 }
@@ -391,6 +404,31 @@ export async function getGraylistEntries(maxLists: number): Promise<Word[][]> {
     defaultOptions()
   );
   return resp.data;
+}
+
+/* PasswordResetController.cs */
+
+export async function resetPasswordRequest(
+  emailOrUsername: string
+): Promise<boolean> {
+  return await passwordResetApi
+    .resetPasswordRequest({ body: emailOrUsername })
+    .then(() => true)
+    .catch(() => false);
+}
+
+export async function validateResetToken(token: string): Promise<boolean> {
+  return (await passwordResetApi.validateResetToken({ token })).data;
+}
+
+export async function resetPassword(
+  token: string,
+  newPassword: string
+): Promise<boolean> {
+  return await passwordResetApi
+    .resetPassword({ passwordResetData: { token, newPassword } })
+    .then(() => true)
+    .catch(() => false);
 }
 
 /* ProjectController.cs */
@@ -660,29 +698,6 @@ export async function verifyCaptchaToken(token: string): Promise<boolean> {
     .catch(() => false);
 }
 
-export async function resetPasswordRequest(
-  emailOrUsername: string
-): Promise<boolean> {
-  return await userApi
-    .resetPasswordRequest({ body: emailOrUsername })
-    .then(() => true)
-    .catch(() => false);
-}
-
-export async function validateResetToken(token: string): Promise<boolean> {
-  return (await userApi.validateResetToken({ token })).data;
-}
-
-export async function resetPassword(
-  token: string,
-  newPassword: string
-): Promise<boolean> {
-  return await userApi
-    .resetPassword({ passwordResetData: { token, newPassword } })
-    .then(() => true)
-    .catch(() => false);
-}
-
 /** Returns the created user with id assigned on creation. */
 export async function addUser(user: User): Promise<User> {
   const resp = await userApi.createUser({ user }, defaultOptions());
@@ -750,6 +765,16 @@ export async function updateUser(user: User): Promise<void> {
 /** Note: Only usable by site admins. */
 export async function deleteUser(userId: string): Promise<void> {
   await userApi.deleteUser({ userId }, defaultOptions());
+}
+
+/** Checks whether email address is okay: unchanged or not taken by a different user. */
+export async function isEmailOkay(email: string): Promise<boolean> {
+  const user = await getCurrentUser();
+  return (
+    email === user.email ||
+    (await isEmailOrUsernameAvailable(email)) ||
+    (await getUserIdByEmailOrUsername(email)) === user.id
+  );
 }
 
 /* UserEditController.cs */
@@ -897,6 +922,16 @@ export async function isInFrontier(
   projectId ||= LocalStorage.getProjectId();
   const params = { projectId, wordId };
   return (await wordApi.isInFrontier(params, defaultOptions())).data;
+}
+
+/** Restore a word that was deleted from the frontier. */
+export async function restoreWord(
+  wordId: string,
+  projectId?: string
+): Promise<boolean> {
+  projectId ||= LocalStorage.getProjectId();
+  const params = { projectId, wordId };
+  return (await wordApi.restoreWord(params, defaultOptions())).data;
 }
 
 /** Revert word updates given in dictionary of word ids:

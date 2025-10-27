@@ -1,12 +1,12 @@
-import { Button as MockFIB, ButtonProps, Input as MockLP } from "@mui/material";
+import { Button as MockFIB, Input as MockLP } from "@mui/material";
 import "@testing-library/jest-dom";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { ReactNode } from "react";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
 import CreateProject, {
-  CreateProjectId,
   CreateProjectTextId,
 } from "components/ProjectScreen/CreateProject";
 import { defaultState } from "rootRedux/types";
@@ -27,18 +27,17 @@ jest.mock("backend", () => ({
   projectDuplicateCheck: () => mockProjectDuplicateCheck(),
   uploadLiftAndGetWritingSystems: () => mockUploadLiftAndGetWritingSystems(),
 }));
-jest.mock("components/Buttons", () => ({
-  ...jest.requireActual("components/Buttons"),
-  /** Mocked with Button that triggers the `updateFile` prop when clicked. */
-  FileInputButton: (props: {
-    /** Includes ids and styling. */
-    buttonProps?: ButtonProps & { "data-testid"?: string };
+jest.mock("components/Buttons/FileInputButton", () => ({
+  __esModule: true,
+  default: (props: {
+    children?: ReactNode;
     /** Clicking will call this with a mock file with nonempty file name. */
     updateFile: (file: File) => void;
-  }) => {
-    const { buttonProps, updateFile } = props;
-    return <MockFIB {...buttonProps} onClick={() => updateFile(mockFile)} />;
-  },
+  }) => (
+    <MockFIB onClick={() => props.updateFile(mockFile)}>
+      {props.children}
+    </MockFIB>
+  ),
 }));
 jest.mock("i18n", () => ({ language: "" })); // else `thrown: "Error: AggregateError`
 
@@ -69,12 +68,16 @@ describe("CreateProject", () => {
     // Error appears when duplicate name submitted.
     expect(screen.queryByText(CreateProjectTextId.NameTaken)).toBeNull();
     mockProjectDuplicateCheck.mockResolvedValueOnce(true);
-    await userEvent.click(screen.getByTestId(CreateProjectId.ButtonSubmit));
+    await userEvent.click(
+      screen.getByRole("button", { name: CreateProjectTextId.Create })
+    );
     expect(screen.queryByText(CreateProjectTextId.NameTaken)).toBeTruthy();
   });
 
   it("disables submit button when empty name or empty vern lang bcp code", async () => {
-    const button = screen.getByTestId(CreateProjectId.ButtonSubmit);
+    const button = screen.getByRole("button", {
+      name: CreateProjectTextId.Create,
+    });
     const [nameInput, vernInput] = screen.getAllByRole("textbox");
 
     // Start with empty name and vern language: button disabled.
@@ -100,26 +103,24 @@ describe("CreateProject", () => {
 
     // File with no writing systems only disables analysis lang picker.
     mockUploadLiftAndGetWritingSystems.mockResolvedValueOnce([]);
-    await userEvent.click(screen.getByTestId(CreateProjectId.ButtonSelectFile));
+    await userEvent.click(screen.getByText(CreateProjectTextId.UploadBrowse));
     expect(screen.queryAllByTestId(mockLangPickerId)).toHaveLength(1);
 
     // File with writing systems disables both lang pickers.
     mockUploadLiftAndGetWritingSystems.mockResolvedValueOnce(mockLangs);
-    await userEvent.click(screen.getByTestId(CreateProjectId.ButtonSelectFile));
+    await userEvent.click(screen.getByText(CreateProjectTextId.UploadBrowse));
     expect(screen.queryAllByTestId(mockLangPickerId)).toHaveLength(0);
   });
 
   it("offers vern langs when file has some", async () => {
-    // No vern selector by default.
-    expect(screen.queryByTestId(CreateProjectId.SelectVern)).toBeNull();
+    // No vern combobox selector by default.
     expect(screen.queryByRole("combobox")).toBeNull();
 
     // Mock-select a file with multiple languages.
     mockUploadLiftAndGetWritingSystems.mockResolvedValueOnce(mockLangs);
-    await userEvent.click(screen.getByTestId(CreateProjectId.ButtonSelectFile));
+    await userEvent.click(screen.getByText(CreateProjectTextId.UploadBrowse));
 
     // Open the select, whose button is a combobox.
-    expect(screen.queryByTestId(CreateProjectId.SelectVern)).toBeTruthy();
     await userEvent.click(screen.getByRole("combobox"));
 
     // Number of options is +2 for the menu title item and an "other" item.

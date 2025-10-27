@@ -19,8 +19,8 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import { type SemanticDomain, type SemanticDomainFull } from "api";
-import { IconButtonWithTooltip } from "components/Buttons";
-import { CancelConfirmDialog } from "components/Dialogs";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 import TreeView from "components/TreeView";
 import i18n from "i18n";
@@ -34,6 +34,9 @@ export enum ProjectDomainsId {
   ButtonDomainAddDialogParentAdd = "custom-domain-add-parent-add",
   FieldDomainAddDialogName = "custom-domain-add-name",
 }
+
+export const getDomainLabel = (domain: SemanticDomainFull): string =>
+  `${domain.id} : ${domain.name}`;
 
 export const trimDomain = (domain: SemanticDomainFull): SemanticDomainFull => ({
   ...domain,
@@ -194,15 +197,15 @@ function CustomDomain(props: CustomDomainProps): ReactElement {
     <Accordion>
       <AccordionSummary>
         <Typography sx={{ width: "calc(100% - 40px)" }}>
-          {props.domain.id}
-          {" : "}
-          {props.domain.name}
+          {getDomainLabel(props.domain)}
         </Typography>
-        <IconButtonWithTooltip
-          icon={<Delete />}
+        <IconButton
+          component="div" // Avoids nesting a button in the AccordionSummary button
           onClick={() => setDeleteDialogOpen(true)}
           size="small"
-        />
+        >
+          <Delete />
+        </IconButton>
         <CancelConfirmDialog
           handleCancel={() => setDeleteDialogOpen(false)}
           handleConfirm={() => deleteDomain()}
@@ -318,6 +321,7 @@ export function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
 
           <div>
             <IconButton
+              data-testid={ProjectDomainsId.ButtonDomainAddDialogConfirm}
               id={ProjectDomainsId.ButtonDomainAddDialogConfirm}
               onClick={() => submit()}
               size="small"
@@ -326,6 +330,7 @@ export function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
             </IconButton>
 
             <IconButton
+              data-testid={ProjectDomainsId.ButtonDomainAddDialogCancel}
               id={ProjectDomainsId.ButtonDomainAddDialogCancel}
               onClick={() => cancel()}
               size="small"
@@ -350,6 +355,7 @@ export function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
               />
             ) : (
               <IconButton
+                data-testid={ProjectDomainsId.ButtonDomainAddDialogParentAdd}
                 id={ProjectDomainsId.ButtonDomainAddDialogParentAdd}
                 onClick={() => setAddingDom(true)}
               >

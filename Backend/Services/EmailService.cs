@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
+using BackendFramework.Otel;
 using MimeKit;
 
 namespace BackendFramework.Services
@@ -11,6 +12,8 @@ namespace BackendFramework.Services
     {
         private readonly IEmailContext _emailContext;
 
+        private const string otelTagName = "otel.EmailService";
+
         public EmailService(IEmailContext emailContext)
         {
             _emailContext = emailContext;
@@ -18,6 +21,8 @@ namespace BackendFramework.Services
 
         public async Task<bool> SendEmail(MimeMessage message)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "sending email");
+
             if (!_emailContext.EmailEnabled)
             {
                 throw new EmailNotEnabledException();

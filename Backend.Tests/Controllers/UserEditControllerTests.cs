@@ -12,7 +12,7 @@ using static System.Linq.Enumerable;
 
 namespace Backend.Tests.Controllers
 {
-    public class UserEditControllerTests : IDisposable
+    internal sealed class UserEditControllerTests : IDisposable
     {
         private IUserRepository _userRepo = null!;
         private IUserEditRepository _userEditRepo = null!;
@@ -20,16 +20,8 @@ namespace Backend.Tests.Controllers
 
         public void Dispose()
         {
-            Dispose(true);
+            _userEditController?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _userEditController?.Dispose();
-            }
         }
 
         private const string ProjId = "PROJECT_ID";

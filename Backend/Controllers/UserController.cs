@@ -1,44 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using MimeKit;
 
 namespace BackendFramework.Controllers
 {
     [Authorize]
     [Produces("application/json")]
     [Route("v1/users")]
-    public class UserController : Controller
+    public class UserController(
+        IUserRepository userRepo, ICaptchaService captchaService, IPermissionService permissionService) : Controller
     {
-        private readonly IUserRepository _userRepo;
-        private readonly ICaptchaService _captchaService;
-        private readonly IEmailService _emailService;
-        private readonly IPasswordResetService _passwordResetService;
-        private readonly IPermissionService _permissionService;
+        private readonly IUserRepository _userRepo = userRepo;
+        private readonly ICaptchaService _captchaService = captchaService;
+        private readonly IPermissionService _permissionService = permissionService;
 
-        private static readonly string? frontendServer =
-            Environment.GetEnvironmentVariable("COMBINE_FRONTEND_SERVER_NAME");
-
-        private static readonly string frontendDomain =
-            frontendServer is null ? "http://localhost:3000" : $"https://{frontendServer}";
-
-        public UserController(IUserRepository userRepo, IPermissionService permissionService,
-            ICaptchaService captchaService, IEmailService emailService, IPasswordResetService passwordResetService)
-        {
-            _userRepo = userRepo;
-            _captchaService = captchaService;
-            _emailService = emailService;
-            _passwordResetService = passwordResetService;
-            _permissionService = permissionService;
-        }
+        private const string otelTagName = "otel.UserController";
 
         /// <summary> Verifies a CAPTCHA token </summary>
         [AllowAnonymous]
@@ -47,71 +31,9 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> VerifyCaptchaToken(string token)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "verifying CAPTCHA token");
+
             return await _captchaService.VerifyToken(token) ? Ok() : BadRequest();
-        }
-
-        /// <summary> Sends a password reset request </summary>
-        [AllowAnonymous]
-        [HttpPost("forgot", Name = "ResetPasswordRequest")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ResetPasswordRequest([FromBody, BindRequired] string EmailOrUsername)
-        {
-            // Find user attached to email or username.
-            var user = await _userRepo.GetUserByEmailOrUsername(EmailOrUsername, false);
-
-            if (user is null)
-            {
-                // Return Ok to avoid revealing to the frontend whether the user exists.
-                return Ok();
-            }
-
-            // Create password reset.
-            var resetRequest = await _passwordResetService.CreatePasswordReset(user.Email);
-
-            // The url needs to match Path.PwReset in src/types/path.ts.
-            var url = $"{frontendDomain}/pw/reset/{resetRequest.Token}";
-
-            // Create email.
-            var message = new MimeMessage();
-            message.To.Add(new MailboxAddress(user.Name, user.Email));
-            message.Subject = "Combine password reset";
-            message.Body = new TextPart("plain")
-            {
-                Text = $"A password reset has been requested for the user {user.Username}. " +
-                    $"Follow this link to reset {user.Username}'s password: {url}\n\n" +
-                    "If you did not request a password reset, please ignore this email."
-            };
-            if (await _emailService.SendEmail(message))
-            {
-                return Ok();
-            }
-
-            return StatusCode(StatusCodes.Status500InternalServerError);
-        }
-
-        /// <summary> Validates password reset token in url </summary>
-        [AllowAnonymous]
-        [HttpGet("forgot/reset/validate/{token}", Name = "ValidateResetToken")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> ValidateResetToken(string token)
-        {
-            return Ok(await _passwordResetService.ValidateToken(token));
-        }
-
-        /// <summary> Resets a password using a token </summary>
-        [AllowAnonymous]
-        [HttpPost("forgot/reset", Name = "ResetPassword")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> ResetPassword([FromBody, BindRequired] PasswordResetData data)
-        {
-            var result = await _passwordResetService.ResetPassword(data.Token, data.NewPassword);
-            if (result)
-            {
-                return Ok();
-            }
-            return Forbid();
         }
 
         /// <summary> Returns all <see cref="User"/>s </summary>
@@ -120,6 +42,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAllUsers()
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all users");
+
             if (!await _permissionService.IsSiteAdmin(HttpContext))
             {
                 return Forbid();
@@ -135,6 +59,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetUsersByFilter(string filter)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting users by filter");
+
             filter = filter.Trim();
             if (!await _permissionService.IsSiteAdmin(HttpContext) && filter.Length < 3)
             {
@@ -151,6 +77,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))]
         public async Task<IActionResult> Authenticate([FromBody, BindRequired] Credentials cred)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "authenticating user");
+
             try
             {
                 var user = await _permissionService.Authenticate(cred.EmailOrUsername, cred.Password);
@@ -168,6 +96,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetCurrentUser()
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting current user");
+
             var user = await _userRepo.GetUser(_permissionService.GetUserId(HttpContext));
             return user is null ? Forbid() : Ok(user);
         }
@@ -179,6 +109,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUser(string userId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting a user");
+
             if (!await _permissionService.CanModifyUser(HttpContext, userId))
             {
                 return Forbid();
@@ -195,6 +127,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserIdByEmailOrUsername([FromBody, BindRequired] string emailOrUsername)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting user by email or username");
+
             if (!_permissionService.IsCurrentUserAuthenticated(HttpContext))
             {
                 return Forbid();
@@ -212,6 +146,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         public async Task<IActionResult> CreateUser([FromBody, BindRequired] User user)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "creating a user");
+
             if (string.IsNullOrWhiteSpace(user.Username)
                 || await _userRepo.GetUserByEmailOrUsername(user.Username) is not null)
             {
@@ -241,6 +177,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> IsEmailOrUsernameAvailable([FromBody, BindRequired] string emailOrUsername)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if email or username is available");
+
             var isAvailable = !string.IsNullOrWhiteSpace(emailOrUsername) &&
                 await _userRepo.GetUserByEmailOrUsername(emailOrUsername) is null;
             return Ok(isAvailable);
@@ -254,6 +192,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateUser(string userId, [FromBody, BindRequired] User user)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a user");
+
             if (!await _permissionService.CanModifyUser(HttpContext, userId))
             {
                 return Forbid();
@@ -275,6 +215,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser(string userId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a user");
+
             if (!await _permissionService.IsSiteAdmin(HttpContext))
             {
                 return Forbid();
