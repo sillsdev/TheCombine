@@ -38,6 +38,12 @@ import { FileWithSpeakerId } from "types/word";
 import { Bcp47Code } from "types/writingSystem";
 import { convertGoalToEdit } from "utilities/goalUtilities";
 
+export interface UserProjectInfo {
+  projectId: string;
+  projectName: string;
+  role: Role;
+}
+
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;
 const config_parameters: Api.ConfigurationParameters = { basePath: baseURL };
@@ -765,6 +771,17 @@ export async function updateUser(user: User): Promise<void> {
 /** Note: Only usable by site admins. */
 export async function deleteUser(userId: string): Promise<void> {
   await userApi.deleteUser({ userId }, defaultOptions());
+}
+
+/** Note: Only usable by site admins. */
+export async function getUserProjects(
+  userId: string
+): Promise<UserProjectInfo[]> {
+  const response = await axiosInstance.get<UserProjectInfo[]>(
+    `/users/${userId}/projects`,
+    defaultOptions()
+  );
+  return response.data;
 }
 
 /** Checks whether email address is okay: unchanged or not taken by a different user. */

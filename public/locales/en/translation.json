@@ -133,6 +133,9 @@
     "userList": "Users",
     "deleteUser": {
       "confirm": "Confirm deleting user from The Combine database.",
+      "loadingProjects": "Loading user projects...",
+      "projectsTitle": "This user has roles in the following projects:",
+      "noProjects": "This user has no project roles.",
       "toastSuccess": "User successfully deleted from The Combine.",
       "toastFailure": "Failed to delete user from The Combine."
     },
