@@ -132,6 +132,47 @@ describe("ExistingEntry", () => {
       await agent.click(glossField);
       expect(mockUpdateVern).toHaveBeenCalledWith(0, mockText);
     });
+
+    it("disables vernacular if word is protected", async () => {
+      const protectedWord: Word = {
+        ...mockWord,
+        accessibility: Status.Protected,
+      };
+      await renderWithWord(protectedWord);
+      const { vernField } = getVernAndGlossFields();
+      expect(vernField).toBeDisabled();
+    });
+
+    it("disables vernacular if sense is protected", async () => {
+      const protectedSenseWord: Word = {
+        ...mockWord,
+        senses: [
+          {
+            ...mockWord.senses[0],
+            accessibility: Status.Protected,
+          },
+        ],
+      };
+      await renderWithWord(protectedSenseWord);
+      const { vernField } = getVernAndGlossFields();
+      expect(vernField).toBeDisabled();
+    });
+
+    it("enables vernacular if neither word nor sense is protected", async () => {
+      const unprotectedWord: Word = {
+        ...mockWord,
+        accessibility: Status.Active,
+        senses: [
+          {
+            ...mockWord.senses[0],
+            accessibility: Status.Active,
+          },
+        ],
+      };
+      await renderWithWord(unprotectedWord);
+      const { vernField } = getVernAndGlossFields();
+      expect(vernField).toBeEnabled();
+    });
   });
 
   describe("gloss", () => {
@@ -184,49 +225,6 @@ describe("ExistingEntry", () => {
       await agent.type(noteField, mockText);
       await agent.click(screen.getByText(noteConfirmButtonText));
       expect(mockUpdateNote).toHaveBeenCalledWith(0, mockText);
-    });
-  });
-
-  describe("protection", () => {
-    it("disables vernacular if word is protected", async () => {
-      const protectedWord: Word = {
-        ...mockWord,
-        accessibility: Status.Protected,
-      };
-      await renderWithWord(protectedWord);
-      const { vernField } = getVernAndGlossFields();
-      expect(vernField).toBeDisabled();
-    });
-
-    it("disables vernacular if sense is protected", async () => {
-      const protectedSenseWord: Word = {
-        ...mockWord,
-        senses: [
-          {
-            ...mockWord.senses[0],
-            accessibility: Status.Protected,
-          },
-        ],
-      };
-      await renderWithWord(protectedSenseWord);
-      const { vernField } = getVernAndGlossFields();
-      expect(vernField).toBeDisabled();
-    });
-
-    it("enables vernacular if neither word nor sense is protected", async () => {
-      const unprotectedWord: Word = {
-        ...mockWord,
-        accessibility: Status.Active,
-        senses: [
-          {
-            ...mockWord.senses[0],
-            accessibility: Status.Active,
-          },
-        ],
-      };
-      await renderWithWord(unprotectedWord);
-      const { vernField } = getVernAndGlossFields();
-      expect(vernField).toBeEnabled();
     });
   });
 });
