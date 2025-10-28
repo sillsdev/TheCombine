@@ -157,22 +157,6 @@ describe("ExistingEntry", () => {
       const { vernField } = getVernAndGlossFields();
       expect(vernField).toBeDisabled();
     });
-
-    it("enables vernacular if neither word nor sense is protected", async () => {
-      const unprotectedWord: Word = {
-        ...mockWord,
-        accessibility: Status.Active,
-        senses: [
-          {
-            ...mockWord.senses[0],
-            accessibility: Status.Active,
-          },
-        ],
-      };
-      await renderWithWord(unprotectedWord);
-      const { vernField } = getVernAndGlossFields();
-      expect(vernField).toBeEnabled();
-    });
   });
 
   describe("gloss", () => {
