@@ -5,7 +5,7 @@ import userEvent, { UserEvent } from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
-import { ReasonType, Word } from "api/models";
+import { Status, Word } from "api/models";
 import RecentEntry, {
   RecentEntryIdPrefix,
 } from "components/DataEntry/DataEntryTable/RecentEntry";
@@ -191,7 +191,7 @@ describe("ExistingEntry", () => {
     it("disables vernacular if word is protected", async () => {
       const protectedWord: Word = {
         ...mockWord,
-        protectReasons: [{ type: ReasonType.Etymologies }],
+        accessibility: Status.Protected,
       };
       await renderWithWord(protectedWord);
       const { vernField } = getVernAndGlossFields();
@@ -204,7 +204,7 @@ describe("ExistingEntry", () => {
         senses: [
           {
             ...mockWord.senses[0],
-            protectReasons: [{ type: ReasonType.Examples }],
+            accessibility: Status.Protected,
           },
         ],
       };
@@ -216,11 +216,11 @@ describe("ExistingEntry", () => {
     it("enables vernacular if neither word nor sense is protected", async () => {
       const unprotectedWord: Word = {
         ...mockWord,
-        protectReasons: [],
+        accessibility: Status.Active,
         senses: [
           {
             ...mockWord.senses[0],
-            protectReasons: [],
+            accessibility: Status.Active,
           },
         ],
       };
