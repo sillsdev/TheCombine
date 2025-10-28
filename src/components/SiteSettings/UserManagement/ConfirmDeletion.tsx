@@ -17,16 +17,19 @@ export default function ConfirmDeletion(
   const { t } = useTranslation();
   const [userProjects, setUserProjects] = useState<UserProjectInfo[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (props.user) {
       setLoading(true);
+      setError(null);
       getUserProjects(props.user.id)
         .then((projects) => {
           setUserProjects(projects);
         })
         .catch((err) => {
           console.error("Failed to fetch user projects:", err);
+          setError(t("siteSettings.deleteUser.projectsLoadError"));
           setUserProjects([]);
         })
         .finally(() => {
@@ -34,8 +37,9 @@ export default function ConfirmDeletion(
         });
     } else {
       setUserProjects([]);
+      setError(null);
     }
-  }, [props.user]);
+  }, [props.user, t]);
 
   if (!props.user) {
     return <Fragment />;
@@ -55,6 +59,10 @@ export default function ConfirmDeletion(
         {loading ? (
           <Typography align="center">
             {t("siteSettings.deleteUser.loadingProjects")}
+          </Typography>
+        ) : error ? (
+          <Typography align="center" sx={{ color: "warning.main" }}>
+            {error}
           </Typography>
         ) : userProjects.length > 0 ? (
           <>
