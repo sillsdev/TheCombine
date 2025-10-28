@@ -16,11 +16,19 @@ namespace BackendFramework.Controllers
     [Produces("application/json")]
     [Route("v1/users")]
     public class UserController(
-        IUserRepository userRepo, ICaptchaService captchaService, IPermissionService permissionService) : Controller
+        IUserRepository userRepo,
+        ICaptchaService captchaService,
+        IPermissionService permissionService,
+        IUserRoleRepository userRoleRepo,
+        IUserEditRepository userEditRepo,
+        IProjectRepository projectRepo) : Controller
     {
         private readonly IUserRepository _userRepo = userRepo;
         private readonly ICaptchaService _captchaService = captchaService;
         private readonly IPermissionService _permissionService = permissionService;
+        private readonly IUserRoleRepository _userRoleRepo = userRoleRepo;
+        private readonly IUserEditRepository _userEditRepo = userEditRepo;
+        private readonly IProjectRepository _projectRepo = projectRepo;
 
         private const string otelTagName = "otel.UserController";
 
@@ -208,6 +216,47 @@ namespace BackendFramework.Controllers
             };
         }
 
+        /// <summary> Gets project information for a user's roles. </summary>
+        [HttpGet("{userId}/projects", Name = "GetUserProjects")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserProjectInfo>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetUserProjects(string userId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting user projects");
+
+            if (!await _permissionService.IsSiteAdmin(HttpContext))
+            {
+                return Forbid();
+            }
+
+            var user = await _userRepo.GetUser(userId, sanitize: false);
+            if (user is null)
+            {
+                return NotFound();
+            }
+
+            var userProjects = new List<UserProjectInfo>();
+
+            foreach (var (projectId, userRoleId) in user.ProjectRoles)
+            {
+                var project = await _projectRepo.GetProject(projectId);
+                var userRole = await _userRoleRepo.GetUserRole(projectId, userRoleId);
+
+                if (project is not null && userRole is not null)
+                {
+                    userProjects.Add(new UserProjectInfo
+                    {
+                        ProjectId = projectId,
+                        ProjectName = project.Name,
+                        Role = userRole.Role
+                    });
+                }
+            }
+
+            return Ok(userProjects);
+        }
+
         /// <summary> Deletes <see cref="User"/> with specified id. </summary>
         [HttpDelete("{userId}", Name = "DeleteUser")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -222,6 +271,32 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
+            // Get the user to check if they exist and if they're an admin
+            var user = await _userRepo.GetUser(userId, sanitize: false);
+            if (user is null)
+            {
+                return NotFound();
+            }
+
+            // Prevent deletion of admin users
+            if (user.IsAdmin)
+            {
+                return Forbid();
+            }
+
+            // Delete all UserRoles for this user
+            foreach (var (projectId, userRoleId) in user.ProjectRoles)
+            {
+                await _userRoleRepo.Delete(projectId, userRoleId);
+            }
+
+            // Delete all UserEdits for this user
+            foreach (var (projectId, userEditId) in user.WorkedProjects)
+            {
+                await _userEditRepo.Delete(projectId, userEditId);
+            }
+
+            // Finally, delete the user
             return await _userRepo.Delete(userId) ? Ok() : NotFound();
         }
     }
