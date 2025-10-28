@@ -80,6 +80,11 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
   const handleUpdateNote = (noteText: string): Promise<void> =>
     props.updateNote(props.rowIndex, noteText);
 
+  // Check if word or sense is protected
+  const isProtected =
+    (props.entry.protectReasons && props.entry.protectReasons.length > 0) ||
+    (sense.protectReasons && sense.protectReasons.length > 0);
+
   return (
     <Grid2
       alignItems="center"
@@ -90,7 +95,9 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
       <Grid2 size={4} sx={{ px: 1 }}>
         <VernWithSuggestions
           vernacular={vernacular}
-          isDisabled={props.disabled || props.entry.senses.length > 1}
+          isDisabled={
+            props.disabled || props.entry.senses.length > 1 || isProtected
+          }
           updateVernField={updateVernField}
           onBlur={() => conditionallyUpdateVern()}
           handleEnter={() => {

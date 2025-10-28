@@ -5,7 +5,7 @@ import userEvent, { UserEvent } from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
-import { Word } from "api/models";
+import { ReasonType, Word } from "api/models";
 import RecentEntry, {
   RecentEntryIdPrefix,
 } from "components/DataEntry/DataEntryTable/RecentEntry";
@@ -184,6 +184,49 @@ describe("ExistingEntry", () => {
       await agent.type(noteField, mockText);
       await agent.click(screen.getByText(noteConfirmButtonText));
       expect(mockUpdateNote).toHaveBeenCalledWith(0, mockText);
+    });
+  });
+
+  describe("protection", () => {
+    it("disables vernacular if word is protected", async () => {
+      const protectedWord: Word = {
+        ...mockWord,
+        protectReasons: [{ type: ReasonType.Etymologies }],
+      };
+      await renderWithWord(protectedWord);
+      const { vernField } = getVernAndGlossFields();
+      expect(vernField).toBeDisabled();
+    });
+
+    it("disables vernacular if sense is protected", async () => {
+      const protectedSenseWord: Word = {
+        ...mockWord,
+        senses: [
+          {
+            ...mockWord.senses[0],
+            protectReasons: [{ type: ReasonType.Examples }],
+          },
+        ],
+      };
+      await renderWithWord(protectedSenseWord);
+      const { vernField } = getVernAndGlossFields();
+      expect(vernField).toBeDisabled();
+    });
+
+    it("enables vernacular if neither word nor sense is protected", async () => {
+      const unprotectedWord: Word = {
+        ...mockWord,
+        protectReasons: [],
+        senses: [
+          {
+            ...mockWord.senses[0],
+            protectReasons: [],
+          },
+        ],
+      };
+      await renderWithWord(unprotectedWord);
+      const { vernField } = getVernAndGlossFields();
+      expect(vernField).toBeEnabled();
     });
   });
 });
