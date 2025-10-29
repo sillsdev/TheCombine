@@ -1,7 +1,7 @@
 import { Grid2 } from "@mui/material";
 import { ReactElement, memo, useState } from "react";
 
-import { Pronunciation, Word, WritingSystem } from "api/models";
+import { Pronunciation, Status, Word, WritingSystem } from "api/models";
 import NoteButton from "components/Buttons/NoteButton";
 import {
   DeleteEntry,
@@ -90,7 +90,12 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
       <Grid2 size={4} sx={{ px: 1 }}>
         <VernWithSuggestions
           vernacular={vernacular}
-          isDisabled={props.disabled || props.entry.senses.length > 1}
+          isDisabled={
+            props.disabled ||
+            props.entry.senses.length > 1 ||
+            props.entry.accessibility === Status.Protected ||
+            sense.accessibility === Status.Protected
+          }
           updateVernField={updateVernField}
           onBlur={() => conditionallyUpdateVern()}
           handleEnter={() => {
