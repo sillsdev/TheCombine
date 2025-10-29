@@ -146,12 +146,7 @@ describe("ExistingEntry", () => {
     it("disables vernacular if sense is protected", async () => {
       const protectedSenseWord: Word = {
         ...mockWord,
-        senses: [
-          {
-            ...mockWord.senses[0],
-            accessibility: Status.Protected,
-          },
-        ],
+        senses: [{ ...mockWord.senses[0], accessibility: Status.Protected }],
       };
       await renderWithWord(protectedSenseWord);
       const { vernField } = getVernAndGlossFields();
