@@ -6,10 +6,11 @@
 # environment variables that are defined for the
 # process.
 #
-# Assumes that the FRONTEND_HOST_DIR is defined
-# as the path to the nginx html pages and that
-# the configuration is to be written to:
-#  ${FRONTEND_HOST_DIR}/scripts/config.js
+# Can be run in two contexts:
+# 1. Build time: FRONTEND_HOST_DIR is unset,
+#    writes to ./public/scripts/config.js
+# 2. Runtime: FRONTEND_HOST_DIR is set,
+#    writes to ${FRONTEND_HOST_DIR}/scripts/config.js
 ###############################################
 
 ###############################################
@@ -41,7 +42,17 @@ quote_value() {
   return 0
 }
 
-OUTFILE=${FRONTEND_HOST_DIR}/scripts/config.js
+# Determine output file location based on execution context
+if [ -z "${FRONTEND_HOST_DIR}" ]; then
+  # Build time: FRONTEND_HOST_DIR is not set
+  OUTFILE=./public/scripts/config.js
+else
+  # Runtime: FRONTEND_HOST_DIR is set (nginx context)
+  OUTFILE=${FRONTEND_HOST_DIR}/scripts/config.js
+fi
+
+# Ensure the output directory exists
+mkdir -p "$(dirname "${OUTFILE}")"
 
 # env_map defines a mapping between environment
 # variable names and field names in the configuration
