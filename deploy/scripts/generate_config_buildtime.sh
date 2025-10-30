@@ -1,23 +1,75 @@
 #!/bin/bash
 
 ###############################################
-# This script creates a placeholder config.js
-# file for The Combine frontend during the
-# Docker build process.
+# This script creates the runtime configuration
+# file for The Combine frontend, config.js, from
+# environment variables during the Docker build.
 #
 # This ensures config.js exists before the build
-# for compatibility with Parcel. The actual
-# configuration values will be populated at
-# runtime by the nginx init script.
+# for compatibility with Parcel.
 #
 # Writes to: ./public/scripts/config.js
 ###############################################
+
+###############################################
+# quote_value() checks to see if the value should
+# be quoted in javascript.  It returns 1 if the
+# first argument is:
+#  - a base-10 integer or decimal number.  Does
+#    not support floating point notation nor
+#    underscores as numeric separators
+#  - already quoted
+#  - a boolean
+# It returns 0 otherwise
+###############################################
+
+quote_value() {
+  if [[ $1 =~ ^[+-]?[0-9]+([.][0-9]+)?$ ]] ; then
+    # it is a number
+    return 1
+  elif [[ $1 =~ ^".*"$ ]] ; then
+    # it is already quoted
+    return 1
+  else
+    # it is a boolean
+    if [[ $1 =~ ^(true|false)?$ ]] ; then
+      return 1
+    fi
+  fi
+  # must be a string
+  return 0
+}
 
 OUTFILE=./public/scripts/config.js
 
 # Ensure the output directory exists
 mkdir -p "$(dirname "${OUTFILE}")"
 
-# Create an empty runtime config object
-# This will be overwritten at runtime with actual values
-echo "window['runtimeConfig'] = {};" > $OUTFILE
+# env_map defines a mapping between environment
+# variable names and field names in the configuration
+# JavaScript object that is generated.
+declare -A env_map
+env_map=(
+  ["CONFIG_USE_CONNECTION_URL"]="useConnectionBaseUrlForApi"
+  ["CONFIG_CAPTCHA_REQUIRED"]="captchaRequired"
+  ["CONFIG_CAPTCHA_SITE_KEY"]="captchaSiteKey"
+  ["CONFIG_OFFLINE"]="offline"
+  ["CONFIG_EMAIL_ENABLED"]="emailServicesEnabled"
+  ["CONFIG_SHOW_CERT_EXPIRATION"]="showCertExpiration"
+)
+echo "window['runtimeConfig'] = {" > $OUTFILE
+
+# iterate of the keys in the environment variable map
+for env_var in "${!env_map[@]}"; do
+  if [ -n  "${!env_var}" ]; then
+    jsField=${env_map[${env_var}]}
+    jsValue=${!env_var}
+    # check to see if $jsValue needs to be quoted
+    if quote_value "${jsValue}" ; then
+      printf '   %s: "%s",\n' ${jsField} "${jsValue}" >> $OUTFILE
+    else
+      printf '   %s: %s,\n' ${jsField} "${jsValue}" >> $OUTFILE
+    fi
+  fi
+done
+echo "};" >> $OUTFILE

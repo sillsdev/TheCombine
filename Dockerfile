@@ -62,5 +62,5 @@ COPY public/scripts/release.js ${FRONTEND_HOST_DIR}/scripts/release.js
 # Setup nginx configuration templates
 COPY nginx/templates/* /etc/nginx/templates/
 
-# Copy additional configuration scripts
-COPY nginx/init/* /docker-entrypoint.d/
+# Copy additional configuration scripts (excluding 25-combine-runtime-config.sh)
+COPY nginx/init/20-addl-site-pages.sh /docker-entrypoint.d/
