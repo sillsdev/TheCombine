@@ -33,7 +33,7 @@ RUN npm ci
 
 # Build application.
 COPY . ./
-RUN bash nginx/init/25-combine-runtime-config.sh
+RUN bash deploy/scripts/generate_config_buildtime.sh
 RUN npm run build
 
 # Production environment.
