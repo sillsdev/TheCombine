@@ -51,24 +51,24 @@ export default function SaveDeferButtons(): ReactElement {
     await dispatch(deferMerge()).then(next);
   };
 
-  const revert = (): void => {
-    setShowRevertDialog(true);
+  const saveContinue = async (): Promise<void> => {
+    setIsSaving(true);
+    dispatch(setSidebar());
+    await dispatch(mergeAll()).then(next);
   };
 
-  const confirmRevert = (): void => {
-    dispatch(setSidebar());
-    dispatch(resetTreeToInitial());
-    setShowRevertDialog(false);
+  const revert = (): void => {
+    setShowRevertDialog(true);
   };
 
   const cancelRevert = (): void => {
     setShowRevertDialog(false);
   };
 
-  const saveContinue = async (): Promise<void> => {
-    setIsSaving(true);
+  const confirmRevert = (): void => {
     dispatch(setSidebar());
-    await dispatch(mergeAll()).then(next);
+    dispatch(resetTreeToInitial());
+    setShowRevertDialog(false);
   };
 
   return (
@@ -122,12 +122,10 @@ export default function SaveDeferButtons(): ReactElement {
       </Grid2>
 
       <CancelConfirmDialog
-        open={showRevertDialog}
-        text="mergeDups.helpText.revertSetDialog"
         handleCancel={cancelRevert}
         handleConfirm={confirmRevert}
-        buttonIdCancel="revert-cancel"
-        buttonIdConfirm="revert-confirm"
+        open={showRevertDialog}
+        text="mergeDups.helpText.revertSetDialog"
       />
     </>
   );
