@@ -114,7 +114,7 @@ jobs:
           name: Frontend
 
   docker_build:
-    if: ${{ github.event.type }} == "PullRequest"
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on

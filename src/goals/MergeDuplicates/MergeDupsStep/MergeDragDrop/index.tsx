@@ -69,18 +69,33 @@ export default function MergeDragDrop(): ReactElement {
     const srcWordId = res.source.droppableId;
     const srcWord = words[srcWordId];
 
-    // Generate text for protected data that will be lost if user overrides.
+    // Check if the sense itself is protected.
+    const isProtectedSense = !!(src.isSenseProtected && !src.order);
+    // Check if this is the only sense in a protected word.
     const isOnlySenseInProtectedWord =
       srcWord?.protected && Object.keys(srcWord.sensesGuids).length === 1;
-    let protectReason = "";
-    if (overrideProtection) {
-      const wordReasons = isOnlySenseInProtectedWord
-        ? (srcWord.protectReasons ?? [])
-        : undefined;
-      protectReason = t("mergeDups.helpText.protectedOverrideWarning", {
+
+    /**
+     * Generate protection override warning text.
+     * @param includeSense Whether to include sense protection reasons in the warning.
+     * @param includeWord Whether to include word protection reasons in the warning.
+     */
+    function getProtectReason(
+      includeSense: boolean,
+      includeWord: boolean
+    ): string {
+      if (!overrideProtection) {
+        return "";
+      }
+      const senseReasons = includeSense ? src.protectReasons : undefined;
+      const wordReasons =
+        includeWord && isOnlySenseInProtectedWord
+          ? (srcWord.protectReasons ?? [])
+          : undefined;
+      return t("mergeDups.helpText.protectedOverrideWarning", {
         val: protectReasonsText(
           t,
-          { sense: src.protectReasons, word: wordReasons },
+          { sense: senseReasons, word: wordReasons },
           false
         ),
       });
@@ -92,11 +107,15 @@ export default function MergeDragDrop(): ReactElement {
     } else if (res.destination?.droppableId === trashId) {
       /* Case 1: The sense was dropped on the trash icon. */
 
-      if ((src.isSenseProtected && !src.order) || isOnlySenseInProtectedWord) {
+      if (isProtectedSense || isOnlySenseInProtectedWord) {
         /* Case 1a: Cannot delete a protected sense. */
 
         if (overrideProtection) {
           // ... unless protection override is active and user confirms.
+          const protectReason = getProtectReason(
+            isProtectedSense,
+            isOnlySenseInProtectedWord
+          );
           setOverride({ deletePayload: src, protectReason });
         } else {
           toast.warning(t("mergeDups.helpText.deleteProtectedSenseWarning"));
@@ -119,11 +138,15 @@ export default function MergeDragDrop(): ReactElement {
       // Prepare to merge one sense into another.
       const combinePayload: CombineSenseMergePayload = { dest, src };
 
-      if ((src.isSenseProtected && !src.order) || isOnlySenseInProtectedWord) {
+      if (isProtectedSense || isOnlySenseInProtectedWord) {
         /* Case 2b: Cannot merge a protected sense into another sense. */
 
         if (overrideProtection) {
           // ... unless protection override is active and user confirms.
+          const protectReason = getProtectReason(
+            isProtectedSense,
+            isOnlySenseInProtectedWord
+          );
           setOverride({ combinePayload, protectReason });
         } else {
           toast.warning(t("mergeDups.helpText.dropProtectedSenseWarning"));
@@ -157,6 +180,7 @@ export default function MergeDragDrop(): ReactElement {
         const movePayload: MoveSensePayload = { destOrder, destWordId, src };
 
         if (isOnlySenseInProtectedWord) {
+          const protectReason = getProtectReason(false, true);
           setOverride({ movePayload, protectReason });
           return;
         }
@@ -180,6 +204,7 @@ export default function MergeDragDrop(): ReactElement {
 
           if (overrideProtection) {
             // ... unless protection override is active and user confirms.
+            const protectReason = getProtectReason(true, false);
             setOverride({ orderPayload, protectReason });
           } else {
             toast.warning(t("mergeDups.helpText.orderProtectedSidebarWarning"));

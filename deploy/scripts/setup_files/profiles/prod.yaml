@@ -14,7 +14,6 @@ charts:
     # Frontend configuration items:
     frontend:
       configCaptchaSiteKey: "0x4AAAAAAAiMciPlBW1aA1iL" # Turnstile site key
-      configShowCertExpiration: false
     # Maintenance configuration items
     maintenance:
       #######################################
