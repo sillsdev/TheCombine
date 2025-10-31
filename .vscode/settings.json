@@ -94,14 +94,5 @@
     "wordlist",
     "wordlists"
   ],
-  "git.branchProtection": ["main", "master"],
-  "search.exclude": {
-    ".parcel-cache": true,
-    ".tox": true,
-    "dist": true,
-    "mongo_database": true,
-    "node_modules": true,
-    "parcel-bundle-reports": true,
-    "venv": true
-  }
+  "git.branchProtection": ["master", "main"]
 }

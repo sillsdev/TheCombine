@@ -2,13 +2,13 @@
 
 const folder = "./dist/scripts/";
 
-// config.js possibly empty
+// config.js: empty in dev
 
 const ensureFile = require("fs-extra").ensureFile;
 
 ensureFile(folder + "config.js");
 
-// release.js with current version of The Combine
+// release.js: holds current version of The Combine
 
 const spawnSync = require("child_process").spawnSync;
 
