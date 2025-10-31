@@ -22,7 +22,8 @@
 [localization-ui-badge]: https://img.shields.io/badge/User%20Interface-Ar%20En%20Es%20Fr%20Pt%20Zh-blue
 [github-actions-frontend]: https://github.com/sillsdev/TheCombine/actions/workflows/frontend.yml
 [github-actions-backend]: https://github.com/sillsdev/TheCombine/actions/workflows/backend.yml
-[localization-sd-badge]: https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Id%20Ml%20My%20Pt%20Ru%20Sw%20Zh-blue
+[localization-sd-badge]:
+  https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Id%20Ml%20My%20Pt%20Ru%20Sw%20Zh-blue
 [localization-ug-badge]: https://img.shields.io/badge/User%20Guide-En%20Es%20Zh-blue
 [localization-crowdin-combine]: https://crowdin.com/project/the-combine
 [localization-crowdin-flex]: https://crowdin.com/project/fieldworks
@@ -220,9 +221,11 @@ environment. This will be denoted with the `(venv)` prefix on the prompt.
 With an active virtual environment, install Python development requirements for this project:
 
 ```bash
-python -m pip -q install --upgrade pip pip-tools
+python -m pip -q install pip==24.2 pip-tools==7.5.1
 python -m piptools sync -q dev-requirements.txt
 ```
+
+(We used to use `... install --upgrade pip pip-tools`, but pip 25.3 and piptools 7.5.1 are incompatible.)
 
 The following Python scripts can now be run from the virtual environment.
 

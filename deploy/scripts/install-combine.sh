@@ -58,7 +58,7 @@ create-python-venv () {
   python3 -m venv venv
   source venv/bin/activate
   echo "Install pip and pip-tools"
-  python -m pip $((( DEBUG == 0)) && echo "-q") install --upgrade pip pip-tools
+  python -m pip $((( DEBUG == 0)) && echo "-q") install pip==24.2 pip-tools==7.5.1
   echo "Install dependencies"
   python -m piptools sync $((( DEBUG == 0)) && echo "-q") requirements.txt
 }
