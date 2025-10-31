@@ -6,7 +6,6 @@
   "source": "public/index.html",
   "scripts": {
     "backend": "dotnet watch --project Backend/BackendFramework.csproj",
-    "prebuild": "node scripts/touchPublicScripts.js",
     "build": "parcel build",
     "build:analyze": "npm run build -- --reporter @parcel/reporter-bundle-analyzer",
     "predatabase": "tsc scripts/setupMongo.ts && node scripts/setupMongo.js",
@@ -17,7 +16,7 @@
     "fmt-backend-check": "dotnet format --verify-no-changes && dotnet format --verify-no-changes Backend.Tests",
     "fmt-frontend": "      prettier --write \"./{.github,.vscode,deploy,docs,maintenance,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
     "fmt-frontend-check": "prettier --check \"./{.github,.vscode,deploy,docs,maintenance,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
-    "prefrontend": "node scripts/touchPublicScripts.js && npm run set-release",
+    "prefrontend": "node scripts/setRelease.js",
     "frontend": "parcel --open",
     "gen-backend-coverage-report": "tsc scripts/genBackendCoverageReport.ts && node scripts/genBackendCoverageReport.js",
     "license-report-backend": " nuget-license --include-transitive --input ./Backend/BackendFramework.csproj --output JsonPretty > docs/user_guide/assets/licenses/backend_licenses.json | exit 0 && node scripts/createBackendLicenses.js",
@@ -27,7 +26,6 @@
     "lint": "           eslint --max-warnings=0 --ext js,ts,tsx,jsx src",
     "lint:fix-layout": "eslint --max-warnings=0 --ext js,ts,tsx,jsx src --fix --fix-type layout,suggestion",
     "set-admin-user": "tsc scripts/setAdminUser.ts && node scripts/setAdminUser.js",
-    "set-release": "node scripts/setRelease.js",
     "start": "npm i && run-p backend database frontend",
     "test": "run-s test-backend test-frontend",
     "test-backend": "         dotnet test Backend.Tests/Backend.Tests.csproj",
@@ -120,7 +118,6 @@
     "eslint-plugin-react": "~7.37.4",
     "eslint-plugin-react-hooks": "~5.2.0",
     "eslint-plugin-unused-imports": "~4.3.0",
-    "fs-extra": "~11.3.2",
     "globals": "~16.4.0",
     "identity-obj-proxy": "~3.0.0",
     "jest": "~30.2.0",
@@ -173,10 +170,6 @@
     {
       "staticOutPath": "locales",
       "staticPath": "public/locales"
-    },
-    {
-      "staticOutPath": "scripts/config.js",
-      "staticPath": "public/scripts/config.js"
     }
   ],
   "volta": {

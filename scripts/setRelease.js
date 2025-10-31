@@ -1,4 +1,4 @@
-// Create the release.js file in ./public/scripts/
+// Create the scripts/release.js file
 // to hold the current version of The Combine.
 
 const spawnSync = require("child_process").spawnSync;
@@ -20,5 +20,5 @@ runPy(
   "deploy/scripts/app_release.py",
   "--set-current",
   "--path",
-  "./public/scripts/release.js"
+  "./dist/scripts/release.js"
 );

@@ -1,13 +1,11 @@
 import { Resolver } from "@parcel/plugin";
 
-const toExclude = ["scripts/config.js"];
+const toExclude = [/\/scripts\/.*/];
 
 export default new Resolver({
   async resolve({ specifier }) {
-    if (toExclude.includes(specifier)) {
-      return { isExcluded: true };
-    }
-
-    return null;
+    return toExclude.some((pattern) => pattern.test(specifier))
+      ? { isExcluded: true }
+      : null;
   },
 });

@@ -2,15 +2,16 @@
 **
 
 # Except the following.
-!docs/user_guide
-!nginx
-!public
-!scripts/touchPublicScripts.js
-!src
 !.env
-!.eslintrc.cjs
+!.parcelrc
 !dev-requirements.txt
+!docs/user_guide
+!eslint.config.mjs
+!nginx
 !package*.json
+!public
+!scripts/parcelResolver.js
+!src
 !tox.ini
 !tsconfig.json
 
