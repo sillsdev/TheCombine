@@ -5,11 +5,9 @@ import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
 import SaveDeferButtons from "goals/MergeDuplicates/MergeDupsStep/SaveDeferButtons";
-import { newMergeTreeWord } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { resetTreeToInitial } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { defaultState } from "rootRedux/types";
-import { testWordList } from "types/word";
 
 jest.mock("backend");
 jest.mock("goals/Redux/GoalActions");
@@ -22,18 +20,12 @@ const mockDispatch = jest.fn();
 const mockStore = configureMockStore();
 
 function createMockStore(hasChanges = false): any {
-  const words = testWordList();
-
-  const { audio, data, tree } = defaultState.mergeDuplicateGoal;
+  const { audio, tree } = defaultState.mergeDuplicateGoal;
 
   const mergeDuplicateGoal: MergeTreeState = {
     ...defaultState.mergeDuplicateGoal,
-    audio: hasChanges ? { ...audio, moves: { [words[0].id]: [] } } : audio,
-    data: { ...data, words: { [words[0].id]: words[0] } },
+    audio: hasChanges ? { ...audio, moves: { a: ["b"] } } : audio,
     initialTree: JSON.stringify(tree),
-    tree: hasChanges
-      ? { ...tree, words: { [words[0].id]: newMergeTreeWord("test") } }
-      : tree,
   };
 
   return mockStore({ ...defaultState, mergeDuplicateGoal });

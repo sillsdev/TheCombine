@@ -20,8 +20,10 @@ import {
   deleteSense,
   flagWord,
   getMergeWords,
+  hasStateChanged,
   moveSense,
   orderSense,
+  resetTreeToInitial,
   setData,
   toggleOverrideProtection,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
@@ -106,16 +108,12 @@ describe("MergeDupsReducer", () => {
     );
 
     // Verify state has changed
-    const changedTree = JSON.stringify(
-      store.getState().mergeDuplicateGoal.tree
-    );
-    expect(changedTree).not.toEqual(initialTree);
+    const changedState = store.getState().mergeDuplicateGoal;
+    expect(JSON.stringify(changedState.tree)).not.toEqual(initialTree);
+    expect(hasStateChanged(changedState)).toBe(true);
 
     // Reset to initial
-    const resetAction = {
-      type: "mergeDupStepReducer/resetTreeToInitialAction",
-    };
-    store.dispatch(resetAction as any);
+    store.dispatch(resetTreeToInitial());
 
     // Verify tree is restored
     const restoredState = store.getState().mergeDuplicateGoal;
