@@ -18,5 +18,5 @@
     "strict": true,
     "target": "es6"
   },
-  "include": [".eslintrc.cjs", "public", "src", "scripts"]
+  "include": ["eslint.config.mjs", "public", "src", "scripts"]
 }

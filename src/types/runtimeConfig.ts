@@ -4,7 +4,6 @@ interface RuntimeConfigItems {
   captchaSiteKey: string;
   offline: boolean;
   emailServicesEnabled: boolean;
-  showCertExpiration: boolean;
 }
 
 declare global {
@@ -23,7 +22,6 @@ const defaultConfig: RuntimeConfigItems = {
   captchaSiteKey: "1x00000000000000000000AA", // visible pass
   offline: false,
   emailServicesEnabled: true,
-  showCertExpiration: true,
 };
 
 export class RuntimeConfig {
@@ -88,12 +86,5 @@ export class RuntimeConfig {
       return window.runtimeConfig.offline;
     }
     return defaultConfig.offline;
-  }
-
-  public showCertExpiration(): boolean {
-    if (window.runtimeConfig.hasOwnProperty("showCertExpiration")) {
-      return window.runtimeConfig.showCertExpiration;
-    }
-    return defaultConfig.showCertExpiration;
   }
 }
