@@ -16,9 +16,6 @@
 #   - ARM 64-bit
 ############################################################
 
-# Multi-arch base image pinned to version 0.4.0
-# amd64 digest: sha256:75c13b324e3e139d17294749b6aabf1e52116c98ca6ba03f7401dbabaa2007da
-# arm64 digest: sha256:6f318bee146c0444272a0920903f886e26513bb9d4f1e11327ad9cb368b7f1ae
 FROM public.ecr.aws/thecombine/aws-kubectl:0.4.0-$TARGETARCH
 
 USER root
