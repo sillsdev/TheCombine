@@ -159,7 +159,7 @@ export function mergeAll() {
   };
 }
 
-// Helper function to check if the current state has changed from initial
+/** Helper function to check if the current state has changed from initial */
 export function hasStateChanged(state: MergeTreeState): boolean {
   if (!state.initialTree) {
     return false;
