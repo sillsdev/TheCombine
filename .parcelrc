@@ -5,5 +5,9 @@
   "reporters": [
     "...",
     "parcel-reporter-static-files-copy"
+  ],
+  "resolvers": [
+    "./scripts/parcelResolver.js",
+    "..."
   ]
 }
