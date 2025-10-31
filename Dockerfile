@@ -51,8 +51,9 @@ RUN mkdir ${FRONTEND_HOST_DIR}/url_moved
 
 # Setup web content
 COPY --from=user_guide_builder /app/docs/user_guide/site ${HOST_DIR}/user_guide
-COPY --from=frontend_builder /app/build ${FRONTEND_HOST_DIR}
+COPY --from=frontend_builder /app/dist ${FRONTEND_HOST_DIR}
 COPY public/dictionaries ${HOST_DIR}/dictionaries
+COPY public/locales ${FRONTEND_HOST_DIR}/locales
 COPY nginx/pages/url_moved_home.html /etc/nginx/page_templates/url_moved_home.html
 COPY public/favicon.ico ${FRONTEND_HOST_DIR}/url_moved/favicon.ico
 COPY src/resources/tractor.png ${FRONTEND_HOST_DIR}/url_moved/tractor.png

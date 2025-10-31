@@ -1,5 +1,14 @@
-// Create the release.js file in ./public/scripts/
-// to hold the current version of The Combine.
+// Create scripts files for frontend use
+
+const folder = "./dist/scripts/";
+
+// config.js: empty in dev
+
+const ensureFile = require("fs-extra").ensureFile;
+
+ensureFile(folder + "config.js");
+
+// release.js: holds current version of The Combine
 
 const spawnSync = require("child_process").spawnSync;
 
@@ -20,5 +29,5 @@ runPy(
   "deploy/scripts/app_release.py",
   "--set-current",
   "--path",
-  "./public/scripts/release.js"
+  folder + "release.js"
 );

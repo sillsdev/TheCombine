@@ -3,22 +3,21 @@
   "version": "2.0.0",
   "license": "MIT",
   "private": true,
+  "source": "public/index.html",
   "scripts": {
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "backend": "dotnet watch --project Backend/BackendFramework.csproj",
-    "prebuild": "node scripts/touchPublicScripts.js",
-    "build": "react-scripts build",
+    "build": "parcel build",
+    "build:analyze": "npm run build -- --reporter @parcel/reporter-bundle-analyzer",
     "predatabase": "tsc scripts/setupMongo.ts && node scripts/setupMongo.js",
     "database": "mongod --dbpath=./mongo_database",
     "drop-database": "tsc scripts/dropDB.ts && node scripts/dropDB.js",
-    "eject": "react-scripts eject",
     "find-circular-deps": "npx -y madge -c src/index.tsx --ts-config tsconfig.json",
     "fmt-backend": "      dotnet format                     && dotnet format                     Backend.Tests",
     "fmt-backend-check": "dotnet format --verify-no-changes && dotnet format --verify-no-changes Backend.Tests",
     "fmt-frontend": "      prettier --write \"./{.github,.vscode,deploy,docs,maintenance,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
     "fmt-frontend-check": "prettier --check \"./{.github,.vscode,deploy,docs,maintenance,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
-    "prefrontend": "node scripts/touchPublicScripts.js && npm run set-release",
-    "frontend": "react-scripts start",
+    "prefrontend": "node scripts/frontendScripts.js",
+    "frontend": "parcel --open",
     "gen-backend-coverage-report": "tsc scripts/genBackendCoverageReport.ts && node scripts/genBackendCoverageReport.js",
     "license-report-backend": " nuget-license --include-transitive --input ./Backend/BackendFramework.csproj --output JsonPretty > docs/user_guide/assets/licenses/backend_licenses.json | exit 0 && node scripts/createBackendLicenses.js",
     "license-summary-backend": "nuget-license --include-transitive --input ./Backend/BackendFramework.csproj",
@@ -27,14 +26,13 @@
     "lint": "           eslint --max-warnings=0 --ext js,ts,tsx,jsx src",
     "lint:fix-layout": "eslint --max-warnings=0 --ext js,ts,tsx,jsx src --fix --fix-type layout,suggestion",
     "set-admin-user": "tsc scripts/setAdminUser.ts && node scripts/setAdminUser.js",
-    "set-release": "node scripts/setRelease.js",
     "start": "npm i && run-p backend database frontend",
     "test": "run-s test-backend test-frontend",
     "test-backend": "         dotnet test Backend.Tests/Backend.Tests.csproj",
     "test-backend:coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:Threshold=77",
-    "test-frontend": "         react-scripts               test",
-    "test-frontend:coverage": "react-scripts               test --coverage --watchAll=false",
-    "test-frontend:debug": "   react-scripts --inspect-brk test --runInBand --no-cache",
+    "test-frontend": "         node               scripts/jestTest.js",
+    "test-frontend:coverage": "node               scripts/jestTest.js --coverage --watchAll=false",
+    "test-frontend:debug": "   node --inspect-brk scripts/jestTest.js --runInBand --no-cache",
     "wordlist": "npx -y hunspell-reader words"
   },
   "dependencies": {
@@ -84,15 +82,22 @@
     "validator": "~13.15.20"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "~7.21.11",
-    "@testing-library/jest-dom": "~6.6.3",
-    "@testing-library/react": "~16.2.0",
+    "@babel/core": "~7.28.5",
+    "@babel/plugin-transform-private-property-in-object": "~7.27.1",
+    "@babel/preset-env": "~7.28.5",
+    "@babel/preset-react": "~7.28.5",
+    "@babel/preset-typescript": "~7.28.5",
+    "@parcel/packager-raw-url": "~2.16.0",
+    "@parcel/reporter-bundle-analyzer": "~2.16.0",
+    "@parcel/transformer-webmanifest": "~2.16.0",
+    "@testing-library/jest-dom": "~6.9.1",
+    "@testing-library/react": "~16.3.0",
     "@testing-library/user-event": "~14.6.1",
     "@types/crypto-js": "~4.2.2",
     "@types/css-mediaquery": "~0.1.4",
-    "@types/jest": "~29.5.14",
+    "@types/jest": "~30.0.0",
     "@types/loadable__component": "~5.13.9",
-    "@types/node": "~22.16.3",
+    "@types/node": "~22.18.12",
     "@types/nspell": "~2.1.6",
     "@types/react": "~18.3.18",
     "@types/react-beautiful-dnd": "~13.1.8",
@@ -100,36 +105,39 @@
     "@types/react-modal": "~3.16.3",
     "@types/recordrtc": "~5.6.14",
     "@types/redux-mock-store": "~1.5.0",
-    "@types/validator": "~13.12.2",
-    "@typescript-eslint/eslint-plugin": "~7.18.0",
-    "@typescript-eslint/parser": "~7.18.0",
+    "@types/validator": "~13.15.3",
+    "babel-jest": "~30.2.0",
+    "babel-plugin-transform-import-meta": "~2.3.3",
+    "buffer": "~6.0.3",
     "css-mediaquery": "~0.1.2",
-    "eslint": "~8.57.1",
-    "eslint-import-resolver-typescript": "~3.8.3",
-    "eslint-plugin-import": "~2.31.0",
+    "dotenv": "~16.6.1",
+    "dotenv-expand": "~12.0.3",
+    "eslint": "~9.38.0",
+    "eslint-import-resolver-typescript": "~4.4.4",
+    "eslint-plugin-import": "~2.32.0",
     "eslint-plugin-react": "~7.37.4",
     "eslint-plugin-react-hooks": "~5.2.0",
-    "eslint-plugin-unused-imports": "~3.2.0",
+    "eslint-plugin-unused-imports": "~4.3.0",
     "fs-extra": "~11.3.2",
+    "globals": "~16.4.0",
+    "identity-obj-proxy": "~3.0.0",
+    "jest": "~30.2.0",
     "jest-canvas-mock": "~2.5.2",
+    "jest-environment-jsdom": "~30.2.0",
+    "jest-resolve": "~30.2.0",
+    "jest-watch-typeahead": "~3.0.1",
     "license-checker-rseidelsohn": "~4.4.2",
     "npm-run-all": "~4.1.5",
+    "parcel": "~2.16.0",
+    "parcel-reporter-static-files-copy": "~1.5.3",
+    "path-browserify": "~1.0.1",
     "prettier": "~3.6.2",
-    "react-scripts": "~5.0.1",
+    "process": "~0.11.10",
+    "react-app-polyfill": "~3.0.0",
     "redux-mock-store": "~1.5.5",
-    "source-map-explorer": "~2.5.3",
-    "typescript": "~4.9.5"
-  },
-  "jest": {
-    "coverageReporters": [
-      "cobertura",
-      "lcov",
-      "text",
-      "text-summary"
-    ],
-    "transformIgnorePatterns": [
-      "/node_modules/(!${axios})"
-    ]
+    "svgo": "~3.3.2",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "~8.46.2"
   },
   "prettier": {
     "overrides": [
@@ -155,6 +163,16 @@
       "last 1 safari version"
     ]
   },
+  "staticFiles": [
+    {
+      "staticOutPath": "dictionaries",
+      "staticPath": "public/dictionaries"
+    },
+    {
+      "staticOutPath": "locales",
+      "staticPath": "public/locales"
+    }
+  ],
   "volta": {
     "node": "22.17.0"
   }
