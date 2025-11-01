@@ -41,7 +41,7 @@
     "@hello-pangea/dnd": "~18.0.1",
     "@loadable/component": "~5.16.4",
     "@marsidev/react-turnstile": "~1.1.0",
-    "@microsoft/signalr": "~8.0.7",
+    "@microsoft/signalr": "~9.0.6",
     "@mui/icons-material": "~6.4.6",
     "@mui/material": "~6.4.6",
     "@mui/x-date-pickers": "~7.27.1",
