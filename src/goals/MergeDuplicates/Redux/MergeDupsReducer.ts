@@ -290,6 +290,13 @@ const mergeDuplicatesSlice = createSlice({
       }
     },
 
+    resetTreeToInitialAction: (state) => {
+      if (state.initialTree) {
+        state.tree = JSON.parse(state.initialTree);
+        state.audio.moves = {};
+      }
+    },
+
     setSidebarAction: (state, action) => {
       const sidebar: Sidebar = action.payload;
       // Only open sidebar with multiple senses.
@@ -321,6 +328,8 @@ const mergeDuplicatesSlice = createSlice({
         state.audio = { ...defaultAudio, counts };
         state.mergeWords = [];
         state.overrideProtection = false;
+        // Store the initial tree state for reset functionality
+        state.initialTree = JSON.stringify(state.tree);
       }
     },
 
@@ -347,6 +356,7 @@ export const {
   moveSenseAction,
   orderDuplicateAction,
   orderSenseAction,
+  resetTreeToInitialAction,
   setDataAction,
   setSidebarAction,
   setVernacularAction,

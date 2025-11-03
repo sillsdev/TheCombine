@@ -154,9 +154,9 @@ export default function Signup(props: SignupProps): ReactElement {
     if (Object.values(err).some((e) => e)) {
       setFieldError(err);
     } else {
-      const onLogin = RuntimeConfig.getInstance().isOffline()
-        ? undefined
-        : async () => await requestEmailVerify(email);
+      const onLogin = RuntimeConfig.getInstance().emailServicesEnabled()
+        ? async () => await requestEmailVerify(email)
+        : undefined;
       await dispatch(
         asyncSignUp(name, username, email, password1, props.onSignup, onLogin)
       );
