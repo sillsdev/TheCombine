@@ -12,8 +12,7 @@ import CreateProject, {
 import { defaultState } from "rootRedux/types";
 import { newWritingSystem } from "types/writingSystem";
 
-jest.mock("mui-language-picker", () => ({
-  ...jest.requireActual("mui-language-picker"),
+jest.mock("components/LanguagePicker", () => ({
   /** Mocked with Input that triggers the `setCode` prop when typed in. */
   LanguagePicker: (props: { setCode: (code: string) => void }) => (
     <MockLP
@@ -61,8 +60,9 @@ beforeEach(async () => {
 describe("CreateProject", () => {
   it("errors on taken name", async () => {
     // Input project name and vernacular language.
-    const [nameInput, vernInput] = screen.getAllByRole("textbox");
+    const nameInput = screen.getByRole("textbox");
     await userEvent.type(nameInput, "non-empty-name");
+    const vernInput = screen.getAllByRole("textbox")[1];
     await userEvent.type(vernInput, "non-empty-code");
 
     // Error appears when duplicate name submitted.
@@ -78,16 +78,17 @@ describe("CreateProject", () => {
     const button = screen.getByRole("button", {
       name: CreateProjectTextId.Create,
     });
-    const [nameInput, vernInput] = screen.getAllByRole("textbox");
 
     // Start with empty name and vern language: button disabled.
     expect(button).toBeDisabled();
 
     // Add name but still no vern language: button still disabled.
+    const nameInput = screen.getByRole("textbox");
     await userEvent.type(nameInput, "non-empty-name");
     expect(button).toBeDisabled();
 
     // Also add a vern language: button enabled.
+    const vernInput = screen.getAllByRole("textbox")[1];
     await userEvent.type(vernInput, "non-empty-code");
     expect(button).toBeEnabled();
 
@@ -98,7 +99,9 @@ describe("CreateProject", () => {
   });
 
   it("disables language picker(s) when file selected", async () => {
-    // Both vernacular and analysis lang pickers available by default.
+    // Hides language pickers until project name is typed.
+    expect(screen.queryByTestId(mockLangPickerId)).toBeNull();
+    await userEvent.type(screen.getByRole("textbox"), "non-empty-name");
     expect(screen.queryAllByTestId(mockLangPickerId)).toHaveLength(2);
 
     // File with no writing systems only disables analysis lang picker.
