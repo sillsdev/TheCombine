@@ -32,6 +32,8 @@ public/scripts/
 .eslintcache
 Session.vim
 scripts/*.js
+!scripts/frontendScripts.js
+!scripts/setupMongo.js
 *.log
 *-debug.log*
 *-error.log*
