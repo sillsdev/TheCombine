@@ -9,7 +9,6 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import {
   type ChangeEvent,
   type FormEvent,
@@ -24,6 +23,7 @@ import { type WritingSystem } from "api/models";
 import { projectDuplicateCheck, uploadLiftAndGetWritingSystems } from "backend";
 import FileInputButton from "components/Buttons/FileInputButton";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
+import { LanguagePicker } from "components/LanguagePicker";
 import {
   asyncCreateProject,
   asyncFinishProject,
@@ -276,41 +276,46 @@ export default function CreateProject(): ReactElement {
             )}
           </div>
 
-          {/* Vernacular language picker */}
-          <Typography style={{ marginTop: theme.spacing(1) }}>
-            {t(CreateProjectTextId.LangVernacular)}
-          </Typography>
-          {vernLangSelect()}
-          {(vernLangIsOther || !vernLangOptions.length) && (
-            <LanguagePicker
-              value={vernLang.bcp47}
-              setCode={setVernBcp47}
-              name={vernLang.name}
-              setName={setVernName}
-              font={vernLang.font}
-              setFont={setVernFont}
-              setDir={setVernRtl}
-              t={languagePickerStrings_en}
-            />
-          )}
+          {/* Don't render language pickers until project creation begins. */}
+          {!!(name || languageData || vernLang.name || analysisLang.name) && (
+            <>
+              {/* Vernacular language picker */}
+              <Typography sx={{ marginTop: 1 }} variant="h6">
+                {t(CreateProjectTextId.LangVernacular)}
+              </Typography>
+              {vernLangSelect()}
+              {(vernLangIsOther || !vernLangOptions.length) && (
+                <LanguagePicker
+                  value={vernLang.bcp47}
+                  setCode={setVernBcp47}
+                  name={vernLang.name}
+                  setName={setVernName}
+                  font={vernLang.font}
+                  setFont={setVernFont}
+                  setDir={setVernRtl}
+                />
+              )}
 
-          {/* Analysis language picker */}
-          <Typography style={{ marginTop: theme.spacing(1) }}>
-            {t(CreateProjectTextId.LangAnalysis)}
-          </Typography>
-          {languageData ? (
-            t(CreateProjectTextId.LangAnalysisInfo)
-          ) : (
-            <LanguagePicker
-              value={analysisLang.bcp47}
-              setCode={setAnalysisBcp47}
-              name={analysisLang.name}
-              setName={setAnalysisName}
-              font={analysisLang.font}
-              setFont={setAnalysisFont}
-              setDir={setAnalysisRtl}
-              t={languagePickerStrings_en}
-            />
+              {/* Analysis language picker */}
+              <Typography sx={{ marginTop: 1 }} variant="h6">
+                {t(CreateProjectTextId.LangAnalysis)}
+              </Typography>
+              {languageData ? (
+                <Typography>
+                  {t(CreateProjectTextId.LangAnalysisInfo)}
+                </Typography>
+              ) : (
+                <LanguagePicker
+                  value={analysisLang.bcp47}
+                  setCode={setAnalysisBcp47}
+                  name={analysisLang.name}
+                  setName={setAnalysisName}
+                  font={analysisLang.font}
+                  setFont={setAnalysisFont}
+                  setDir={setAnalysisRtl}
+                />
+              )}
+            </>
           )}
 
           {/* Form submission button */}
