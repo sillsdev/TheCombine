@@ -23,7 +23,7 @@ import { type WritingSystem } from "api/models";
 import { projectDuplicateCheck, uploadLiftAndGetWritingSystems } from "backend";
 import FileInputButton from "components/Buttons/FileInputButton";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
-import { LanguagePicker } from "components/LanguagePicker";
+import LanguagePicker from "components/LanguagePicker";
 import {
   asyncCreateProject,
   asyncFinishProject,

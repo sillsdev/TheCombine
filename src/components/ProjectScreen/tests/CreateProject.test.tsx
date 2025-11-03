@@ -13,11 +13,18 @@ import { defaultState } from "rootRedux/types";
 import { newWritingSystem } from "types/writingSystem";
 
 jest.mock("components/LanguagePicker", () => ({
-  /** Mocked with Input that triggers the `setCode` prop when typed in. */
-  LanguagePicker: (props: { setCode: (code: string) => void }) => (
+  __esModule: true,
+  /** Mocked with Input that triggers the `setCode`, `setName` props when typed in. */
+  default: (props: {
+    setCode: (code: string) => void;
+    setName: (name: string) => void;
+  }) => (
     <MockLP
       data-testid={mockLangPickerId}
-      onChange={(e) => props.setCode(e.target.value)}
+      onChange={(e) => {
+        props.setCode(e.target.value);
+        props.setName(e.target.value);
+      }}
     />
   ),
 }));
@@ -58,12 +65,48 @@ beforeEach(async () => {
 });
 
 describe("CreateProject", () => {
-  it("errors on taken name", async () => {
-    // Input project name and vernacular language.
+  it("enables language pickers when name nonempty", async () => {
+    // No language pickers by default.
+    expect(screen.queryByTestId(mockLangPickerId)).toBeNull();
+    const nameInput = screen.getByRole("textbox");
+
+    // Typing in name shows both language pickers.
+    await userEvent.type(nameInput, "non-empty-name");
+    expect(screen.getAllByTestId(mockLangPickerId)).toHaveLength(2);
+
+    // Clearing name hides both language pickers.
+    await userEvent.clear(nameInput);
+    expect(screen.queryByTestId(mockLangPickerId)).toBeNull();
+  });
+
+  it("keeps language pickers when vernacular language nonempty", async () => {
+    // No language pickers by default.
+    expect(screen.queryByTestId(mockLangPickerId)).toBeNull();
+
+    // Language pickers don't hide if vernacular language is filled.
     const nameInput = screen.getByRole("textbox");
     await userEvent.type(nameInput, "non-empty-name");
-    const vernInput = screen.getAllByRole("textbox")[1];
-    await userEvent.type(vernInput, "non-empty-code");
+    await userEvent.type(screen.getAllByTestId(mockLangPickerId)[0], "lang");
+    await userEvent.clear(nameInput);
+    expect(screen.getAllByTestId(mockLangPickerId)).toHaveLength(2);
+  });
+
+  it("keeps language pickers when analysis language nonempty", async () => {
+    // No language pickers by default.
+    expect(screen.queryByTestId(mockLangPickerId)).toBeNull();
+
+    // Language pickers don't hide if analysis language is filled.
+    const nameInput = screen.getByRole("textbox");
+    await userEvent.type(nameInput, "non-empty-name");
+    await userEvent.type(screen.getAllByTestId(mockLangPickerId)[1], "lang");
+    await userEvent.clear(nameInput);
+    expect(screen.getAllByTestId(mockLangPickerId)).toHaveLength(2);
+  });
+
+  it("errors on taken name", async () => {
+    // Input project name and vernacular language.
+    await userEvent.type(screen.getByRole("textbox"), "non-empty-name");
+    await userEvent.type(screen.getAllByTestId(mockLangPickerId)[0], "lang");
 
     // Error appears when duplicate name submitted.
     expect(screen.queryByText(CreateProjectTextId.NameTaken)).toBeNull();
@@ -74,7 +117,7 @@ describe("CreateProject", () => {
     expect(screen.queryByText(CreateProjectTextId.NameTaken)).toBeTruthy();
   });
 
-  it("disables submit button when empty name or empty vern lang bcp code", async () => {
+  it("disables submit button when name or vernacular language is empty", async () => {
     const button = screen.getByRole("button", {
       name: CreateProjectTextId.Create,
     });
@@ -88,8 +131,7 @@ describe("CreateProject", () => {
     expect(button).toBeDisabled();
 
     // Also add a vern language: button enabled.
-    const vernInput = screen.getAllByRole("textbox")[1];
-    await userEvent.type(vernInput, "non-empty-code");
+    await userEvent.type(screen.getAllByTestId(mockLangPickerId)[0], "lang");
     expect(button).toBeEnabled();
 
     // Change name to whitespace: button disabled again.
@@ -98,24 +140,27 @@ describe("CreateProject", () => {
     expect(button).toBeDisabled();
   });
 
-  it("disables language picker(s) when file selected", async () => {
-    // Hides language pickers until project name is typed.
+  it("enables 1 language picker when file selected without writing systems", async () => {
+    // No language pickers by default.
     expect(screen.queryByTestId(mockLangPickerId)).toBeNull();
-    await userEvent.type(screen.getByRole("textbox"), "non-empty-name");
-    expect(screen.queryAllByTestId(mockLangPickerId)).toHaveLength(2);
 
-    // File with no writing systems only disables analysis lang picker.
+    // File with no writing systems only enables vernacular lang picker.
     mockUploadLiftAndGetWritingSystems.mockResolvedValueOnce([]);
     await userEvent.click(screen.getByText(CreateProjectTextId.UploadBrowse));
-    expect(screen.queryAllByTestId(mockLangPickerId)).toHaveLength(1);
-
-    // File with writing systems disables both lang pickers.
-    mockUploadLiftAndGetWritingSystems.mockResolvedValueOnce(mockLangs);
-    await userEvent.click(screen.getByText(CreateProjectTextId.UploadBrowse));
-    expect(screen.queryAllByTestId(mockLangPickerId)).toHaveLength(0);
+    expect(screen.getByTestId(mockLangPickerId)).toBeTruthy();
   });
 
-  it("offers vern langs when file has some", async () => {
+  it("enables 0 language pickers when file selected with writing systems", async () => {
+    // No language pickers by default.
+    expect(screen.queryByTestId(mockLangPickerId)).toBeNull();
+
+    // File with writing systems enables no lang pickers.
+    mockUploadLiftAndGetWritingSystems.mockResolvedValueOnce(mockLangs);
+    await userEvent.click(screen.getByText(CreateProjectTextId.UploadBrowse));
+    expect(screen.queryByTestId(mockLangPickerId)).toBeNull();
+  });
+
+  it("offers vernacular languages when file has some", async () => {
     // No vern combobox selector by default.
     expect(screen.queryByRole("combobox")).toBeNull();
 
