@@ -1,12 +1,15 @@
-import { Checkbox, FormControlLabel, Grid2 } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, Grid2 } from "@mui/material";
 import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { OffOnSetting } from "api/models";
 import LoadingButton from "components/Buttons/LoadingButton";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import {
   deferMerge,
+  hasStateChanged,
   mergeAll,
+  resetTreeToInitial,
   setSidebar,
   toggleOverrideProtection,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
@@ -26,9 +29,13 @@ export default function SaveDeferButtons(): ReactElement {
   const overrideProtection = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal.overrideProtection
   );
+  const stateHasChanged = useAppSelector((state: StoreState) =>
+    hasStateChanged(state.mergeDuplicateGoal)
+  );
 
   const [isDeferring, setIsDeferring] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [showRevertDialog, setShowRevertDialog] = useState(false);
 
   const { t } = useTranslation();
 
@@ -50,42 +57,76 @@ export default function SaveDeferButtons(): ReactElement {
     await dispatch(mergeAll()).then(next);
   };
 
+  const revert = (): void => {
+    setShowRevertDialog(true);
+  };
+
+  const cancelRevert = (): void => {
+    setShowRevertDialog(false);
+  };
+
+  const confirmRevert = (): void => {
+    dispatch(setSidebar());
+    dispatch(resetTreeToInitial());
+    setShowRevertDialog(false);
+  };
+
   return (
-    <Grid2 container spacing={3}>
-      <LoadingButton
-        loading={isSaving}
-        buttonProps={{
-          onClick: saveContinue,
-          title: t("mergeDups.helpText.saveAndContinue"),
-          id: "merge-save",
-        }}
-      >
-        {t("buttons.saveAndContinue")}
-      </LoadingButton>
+    <>
+      <Grid2 container spacing={3}>
+        <LoadingButton
+          loading={isSaving}
+          buttonProps={{
+            onClick: saveContinue,
+            title: t("mergeDups.helpText.saveAndContinue"),
+            id: "merge-save",
+          }}
+        >
+          {t("buttons.saveAndContinue")}
+        </LoadingButton>
 
-      <LoadingButton
-        loading={isDeferring}
-        buttonProps={{
-          color: "secondary",
-          onClick: defer,
-          title: t("mergeDups.helpText.defer"),
-          id: "merge-defer",
-        }}
-      >
-        {t("buttons.defer")}
-      </LoadingButton>
+        <LoadingButton
+          loading={isDeferring}
+          buttonProps={{
+            color: "secondary",
+            onClick: defer,
+            title: t("mergeDups.helpText.defer"),
+            id: "merge-defer",
+          }}
+        >
+          {t("buttons.defer")}
+        </LoadingButton>
 
-      {hasProtected && (
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={overrideProtection}
-              onChange={() => dispatch(toggleOverrideProtection())}
-            />
-          }
-          label={t("mergeDups.helpText.protectedOverride")}
-        />
-      )}
-    </Grid2>
+        <Button
+          color="secondary"
+          disabled={!stateHasChanged}
+          id="merge-revert"
+          onClick={revert}
+          title={t("mergeDups.helpText.revertSet")}
+          variant="contained"
+        >
+          {t("buttons.revertSet")}
+        </Button>
+
+        {hasProtected && (
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={overrideProtection}
+                onChange={() => dispatch(toggleOverrideProtection())}
+              />
+            }
+            label={t("mergeDups.helpText.protectedOverride")}
+          />
+        )}
+      </Grid2>
+
+      <CancelConfirmDialog
+        handleCancel={cancelRevert}
+        handleConfirm={confirmRevert}
+        open={showRevertDialog}
+        text="mergeDups.helpText.revertSetDialog"
+      />
+    </>
   );
 }

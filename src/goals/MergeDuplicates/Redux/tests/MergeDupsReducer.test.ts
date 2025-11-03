@@ -20,8 +20,10 @@ import {
   deleteSense,
   flagWord,
   getMergeWords,
+  hasStateChanged,
   moveSense,
   orderSense,
+  resetTreeToInitial,
   setData,
   toggleOverrideProtection,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
@@ -84,6 +86,39 @@ describe("MergeDupsReducer", () => {
     expect(JSON.stringify(store.getState().mergeDuplicateGoal)).toEqual(
       JSON.stringify(defaultState)
     );
+  });
+
+  test("resetTreeToInitial restores initial state", () => {
+    const store = setupStore();
+    const words = testWordList();
+
+    // Set initial data
+    store.dispatch(setData(words));
+    const initialTree = JSON.stringify(
+      store.getState().mergeDuplicateGoal.tree
+    );
+
+    // Make a simple change - flag a word
+    const wordWithSenses = words.find((w) => w.senses.length > 0);
+    if (!wordWithSenses) {
+      throw new Error("Test requires a word with senses");
+    }
+    store.dispatch(
+      flagWord({ wordId: wordWithSenses.id, flag: newFlag("test") })
+    );
+
+    // Verify state has changed
+    const changedState = store.getState().mergeDuplicateGoal;
+    expect(JSON.stringify(changedState.tree)).not.toEqual(initialTree);
+    expect(hasStateChanged(changedState)).toBe(true);
+
+    // Reset to initial
+    store.dispatch(resetTreeToInitial());
+
+    // Verify tree is restored
+    const restoredState = store.getState().mergeDuplicateGoal;
+    expect(JSON.stringify(restoredState.tree)).toEqual(initialTree);
+    expect(restoredState.audio.moves).toEqual({});
   });
 
   function testTreeWords(): Hash<MergeTreeWord> {
