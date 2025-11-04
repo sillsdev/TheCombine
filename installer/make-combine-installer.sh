@@ -16,12 +16,16 @@ error () {
 # cd to the directory where the script is installed
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
+ARM=0
 DEBUG=0
 NET_INSTALL=0
 # Parse arguments to customize installation
 while (( "$#" )) ; do
   OPT=$1
   case $OPT in
+    --arm)
+      ARM=1
+      ;;
     --debug)
       DEBUG=1
       ;;
@@ -64,7 +68,7 @@ if [[ $NET_INSTALL == 0 ]] ; then
   info "Packaging low-bandwidth installer for $COMBINE_VERSION."
   TEMP_DIR=/tmp/images-$$
   pushd scripts
-  ./package_images.py ${COMBINE_VERSION} ${TEMP_DIR} $((( DEBUG == 1 )) && echo "--debug")
+  ./package_images.py ${COMBINE_VERSION} ${TEMP_DIR} $((( ARM == 1 )) && echo "--arch arm64") $((( DEBUG == 1 )) && echo "--debug")
   INSTALLER_NAME="combine-installer.run"
   popd
 else
@@ -82,7 +86,7 @@ for DIR in venv scripts/__pycache__ ; do
 done
 
 cd ${SCRIPT_DIR}
-makeself $((( DEBUG == 0)) && echo "--tar-quietly" ) ../deploy ${INSTALLER_NAME} "Combine Installer" scripts/install-combine.sh ${COMBINE_VERSION}
+makeself $((( DEBUG == 0)) && echo "--tar-quietly" ) ../deploy ${INSTALLER_NAME} "Combine Installer" scripts/install-combine.sh ${COMBINE_VERSION} $((( ARM == 1 )) && echo "arm")
 if  [[ $NET_INSTALL == 0 ]] ; then
   makeself $((( DEBUG == 0)) && echo "--tar-quietly" ) --append ${TEMP_DIR} ${INSTALLER_NAME}
   rm -rf ${TEMP_DIR}

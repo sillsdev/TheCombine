@@ -116,6 +116,9 @@ jobs:
   docker_build:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: ["amd64", "arm64"]
     steps:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
@@ -128,6 +131,7 @@ jobs:
             auth.docker.io:443
             files.pythonhosted.org:443
             github.com:443
+            ports.ubuntu.com:80
             production.cloudflare.docker.com:443
             pypi.org:443
             registry-1.docker.io:443
@@ -136,11 +140,9 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           fetch-depth: 0
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
       - name: Build frontend
         run: |
-          deploy/scripts/build.py --components frontend
-        shell: bash
-      - name: Image digest
-        run: |
-          docker image inspect combine_frontend:latest -f '{{json .Id}}'
+          deploy/scripts/build.py --components frontend --arch ${{ matrix.arch }}
         shell: bash
