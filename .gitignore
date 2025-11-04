@@ -33,6 +33,7 @@ public/scripts/
 Session.vim
 scripts/*.js
 !scripts/frontendScripts.js
+!scripts/jestTest.js
 !scripts/setupMongo.js
 *.log
 *-debug.log*

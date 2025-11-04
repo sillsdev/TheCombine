@@ -1,3 +1,5 @@
+"use strict";
+
 // Create scripts files for frontend use
 
 const folder = "./dist/scripts/";
