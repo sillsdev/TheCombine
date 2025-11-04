@@ -3050,7 +3050,7 @@ SOFTWARE.
 
 
 
-i18next-http-backend 2.7.3
+i18next-http-backend 3.0.2
 MIT
 Copyright (c) 2024 i18next
 
