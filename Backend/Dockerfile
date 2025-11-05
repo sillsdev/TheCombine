@@ -7,7 +7,7 @@
 ############################################################
 
 # Docker multi-stage build
-FROM mcr.microsoft.com/dotnet/sdk:8.0.409-jammy@sha256:31331d856fd10255a3f0882da8449030e4d7121c555b25fd7f2396fd25c8d84f AS builder
+FROM mcr.microsoft.com/dotnet/sdk:8.0.415-jammy@sha256:fa5a4536945b205ee4607b7fe76057d81ef7ac9f6db3681501a6fde50d47e8af AS builder
 WORKDIR /app
 
 # Copy csproj and restore (fetch dependencies) as distinct layers.
@@ -19,15 +19,7 @@ COPY . ./
 RUN dotnet publish -c Release -o build
 
 # Build runtime image.
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.16-jammy@sha256:2530333efae1b4c682da1b6eb69c23bfb3d9e80d357b1b30bb4a9c15bf054f25
-
-ENV ASPNETCORE_URLS=http://+:5000
-ENV COMBINE_IS_IN_CONTAINER=1
-ENV ASPNETCORE_ENVIRONMENT=Production
-ENV DOTNET_PRINT_TELEMETRY_MESSAGE=false
-
-# Set the home directory to the app user's home.
-ENV HOME=/home/app
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.21-jammy@sha256:f771a2d3a545a24e01685c4bda33d5f671ea3f31c4691bde036838c0efee025c
 ENV APP_HOME=${HOME}/backend
 ENV APP_FILES=${HOME}/.CombineFiles
 

@@ -7,7 +7,7 @@
 ############################################################
 
 # User guide build environment
-FROM python:3.12.10-slim-bookworm@sha256:97983fa8cc88343512862c62307159a82261c3528dc025f79e5a3f7af43e50b4 AS user_guide_builder
+FROM python:3.12.12-slim-bookworm@sha256:235ad56fa1e1407d8883bfcfc3b00fb6f24b43f46153a8163be60d6bb6099e39 AS user_guide_builder
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -24,7 +24,7 @@ COPY docs/user_guide docs/user_guide
 RUN tox -e user-guide
 
 # Frontend build environment.
-FROM node:22.17.0-bookworm-slim@sha256:358a55f9683d8444a810bf36ff1ea4f60522f55a82cada25f7eabdf79e445226 AS frontend_builder
+FROM node:22.21.1-bookworm-slim@sha256:4de72fb3998934a953f1bee37f0e0254b27c535200b7fe31040bdd8569f9d6da AS frontend_builder
 WORKDIR /app
 
 # Install app dependencies.
@@ -36,18 +36,7 @@ COPY . ./
 RUN npm run build
 
 # Production environment.
-FROM nginx:1.28.0@sha256:06246bcae987ceb27a9b7274dff88cb3ba44f92cfc0a2f80a15f6c4bf6d5b5a1
-
-WORKDIR /app
-
-ENV HOST_DIR=/usr/share/nginx
-ENV FRONTEND_HOST_DIR=${HOST_DIR}/html
-
-RUN mkdir /etc/nginx/templates
-RUN mkdir /etc/nginx/page_templates
-RUN mkdir ${HOST_DIR}/fonts
-RUN mkdir ${FRONTEND_HOST_DIR}/scripts
-RUN mkdir ${FRONTEND_HOST_DIR}/url_moved
+FROM nginx:1.29.3@sha256:bd1578eec775d0b28fd7f664b182b7e1fb75f1dd09f92d865dababe8525dfe8b
 
 # Setup web content
 COPY --from=user_guide_builder /app/docs/user_guide/site ${HOST_DIR}/user_guide
