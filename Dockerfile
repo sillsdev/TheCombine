@@ -7,7 +7,7 @@
 ############################################################
 
 # User guide build environment
-FROM python:3.12.10-slim-bookworm AS user_guide_builder
+FROM python:3.12.12-slim-bookworm AS user_guide_builder
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -24,7 +24,7 @@ COPY docs/user_guide docs/user_guide
 RUN tox -e user-guide
 
 # Frontend build environment.
-FROM node:22.17.0-bookworm-slim AS frontend_builder
+FROM node:22.21.1-bookworm-slim AS frontend_builder
 WORKDIR /app
 
 # Install app dependencies.
@@ -36,7 +36,7 @@ COPY . ./
 RUN npm run build
 
 # Production environment.
-FROM nginx:1.28.0
+FROM nginx:1.29.3
 
 WORKDIR /app
 
