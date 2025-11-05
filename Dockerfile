@@ -38,6 +38,17 @@ RUN npm run build
 # Production environment.
 FROM nginx:1.29.3@sha256:bd1578eec775d0b28fd7f664b182b7e1fb75f1dd09f92d865dababe8525dfe8b
 
+WORKDIR /app
+
+ENV HOST_DIR=/usr/share/nginx
+ENV FRONTEND_HOST_DIR=${HOST_DIR}/html
+
+RUN mkdir /etc/nginx/templates
+RUN mkdir /etc/nginx/page_templates
+RUN mkdir ${HOST_DIR}/fonts
+RUN mkdir ${FRONTEND_HOST_DIR}/scripts
+RUN mkdir ${FRONTEND_HOST_DIR}/url_moved
+
 # Setup web content
 COPY --from=user_guide_builder /app/docs/user_guide/site ${HOST_DIR}/user_guide
 COPY --from=frontend_builder /app/dist ${FRONTEND_HOST_DIR}

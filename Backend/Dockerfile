@@ -20,6 +20,14 @@ RUN dotnet publish -c Release -o build
 
 # Build runtime image.
 FROM mcr.microsoft.com/dotnet/aspnet:8.0.21-jammy@sha256:f771a2d3a545a24e01685c4bda33d5f671ea3f31c4691bde036838c0efee025c
+
+ENV ASPNETCORE_URLS=http://+:5000
+ENV COMBINE_IS_IN_CONTAINER=1
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV DOTNET_PRINT_TELEMETRY_MESSAGE=false
+
+# Set the home directory to the app user's home.
+ENV HOME=/home/app
 ENV APP_HOME=${HOME}/backend
 ENV APP_FILES=${HOME}/.CombineFiles
 
