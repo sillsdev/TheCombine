@@ -7,7 +7,7 @@
     "parcel-reporter-static-files-copy"
   ],
   "resolvers": [
-    "./scripts/parcelResolver.js",
+    "./scripts/parcelResolver.ts",
     "..."
   ]
 }
