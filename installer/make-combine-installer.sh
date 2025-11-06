@@ -57,7 +57,7 @@ if [[ $NET_INSTALL == 0 ]] ; then
   fi
   source venv/bin/activate
   # Update the environment if necessary
-  python -m pip $((( DEBUG == 0)) && echo "-q") install --upgrade pip pip-tools
+  python -m pip $((( DEBUG == 0)) && echo "-q") install pip==24.2 pip-tools==7.5.1
   python -m piptools sync $((( DEBUG == 0)) && echo "-q") requirements.txt
 
   # Package The Combine for "offline" installation
