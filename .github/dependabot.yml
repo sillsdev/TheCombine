@@ -38,7 +38,9 @@ updates:
           - "*"
     ignore:
       - dependency-name: "node"
-        versions: ["23.x", "24.x", "25.x"]
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "python"
+        update-types: ["version-update:semver-minor"]
 
   - package-ecosystem: "pip"
     directories:
@@ -70,5 +72,19 @@ updates:
           - "minor"
           - "patch"
     ignore:
+      - dependency-name: "@mui/icons-material"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@mui/material"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@mui/x-date-pickers"
+        update-types: ["version-update:semver-major"]
       - dependency-name: "@types/node"
-        versions: ["23.x", "24.x", "25.x"]
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
