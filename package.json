@@ -110,7 +110,7 @@
     "babel-plugin-transform-import-meta": "~2.3.3",
     "buffer": "~6.0.3",
     "css-mediaquery": "~0.1.2",
-    "dotenv": "~16.6.1",
+    "dotenv": "~17.2.3",
     "dotenv-expand": "~12.0.3",
     "eslint": "~9.38.0",
     "eslint-import-resolver-typescript": "~4.4.4",
