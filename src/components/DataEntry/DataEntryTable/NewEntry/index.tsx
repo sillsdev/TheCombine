@@ -121,8 +121,9 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     resetNewEntry();
     setSubmitting(false);
     setVernOpen(false);
-    focus(FocusTarget.Vernacular);
-  }, [focus, resetNewEntry]);
+    // Do not use focus(FocusTarget.Vernacular) here.
+    // That allows typing atop the previous vernacular.
+  }, [resetNewEntry]);
 
   /** Reset when tree opens, except for the first time it is open. */
   useEffect(() => {
@@ -136,14 +137,15 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     }
   }, [isTreeOpen, resetState, wasTreeClosed]);
 
-  /** When the vern dialog is closed, focus needs to return to text fields.
-   * The following sets a flag (shouldFocus) to be triggered by conditionalFocus(),
+  /** When the vern dialog is closed or submission completed,
+   * focus needs to return to text fields.
+   * This sets a flag (shouldFocus) to be triggered by conditionalFocus(),
    * which is passed to each input component to call on update. */
   useEffect(() => {
-    if (!vernOpen) {
+    if (!submitting && !vernOpen) {
       setShouldFocus(selectedDup ? FocusTarget.Gloss : FocusTarget.Vernacular);
     }
-  }, [selectedDup, vernOpen]);
+  }, [selectedDup, submitting, vernOpen]);
 
   /** This function is for a child input component to call on update
    * to move focus to itself, if shouldFocus says it should. */
@@ -159,42 +161,38 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     setVernOpen(!!openVernDialog);
   };
 
-  const addNewEntryAndReset = async (): Promise<void> => {
-    // Prevent double-submission
-    if (submitting) {
-      return;
-    }
-    setSubmitting(true);
-    await addNewEntry();
-    resetState();
-  };
-
   const addOrUpdateWord = async (): Promise<void> => {
     if (suggestedDups.length) {
       // Case 1: Duplicate vern is typed
       if (!selectedDup) {
         // Case 1a: User hasn't made a selection
         setVernOpen(true);
+        setSubmitting(false);
+        return;
       } else if (selectedDup.id) {
         // Case 1b: User has selected an entry to modify
         await updateWordWithNewGloss();
-        resetState();
       } else {
         // Case 1c: User has selected new entry
-        await addNewEntryAndReset();
+        await addNewEntry();
       }
     } else {
       // Case 2: New vern is typed
-      await addNewEntryAndReset();
+      await addNewEntry();
     }
+    resetState();
   };
 
   const handleGlossEnter = async (): Promise<void> => {
     // The user can never submit a new entry without a vernacular
     if (newVern) {
+      // Blur to prevent double-submission or extending submitted gloss.
+      glossInput.current?.blur();
+      setSubmitting(true);
       await addOrUpdateWord();
+    } else {
+      focus(FocusTarget.Vernacular);
     }
-    focus(FocusTarget.Vernacular);
   };
 
   /** Clear the duplicate selection if user returns to the vernacular field. */
@@ -295,7 +293,10 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
       <Grid2 size={1}>
         <DeleteEntry
           buttonId={NewEntryId.ButtonDelete}
-          removeEntry={() => resetState()}
+          removeEntry={() => {
+            resetState();
+            focus(FocusTarget.Vernacular);
+          }}
         />
       </Grid2>
 
