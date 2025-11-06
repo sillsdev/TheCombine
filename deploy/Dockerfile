@@ -5,7 +5,7 @@
 #   - Intel/AMD 64-bit
 ############################################################
 
-FROM python:3.12.12-slim-bookworm@sha256:235ad56fa1e1407d8883bfcfc3b00fb6f24b43f46153a8163be60d6bb6099e39
+FROM python:3.12.12-slim-bookworm@sha256:874450e1da63e36bf5c1ca8b0a13cb9eb0bbb1c4015151e376978f9aa6ae3bc2
 
 USER root
 
