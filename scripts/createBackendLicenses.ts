@@ -1,13 +1,13 @@
 // To be run after generating a JSON license file with nuget-license
 
-const fs = require("fs");
+import { readFileSync, writeFileSync } from "fs";
 
 const fileNameNoExt = "docs/user_guide/assets/licenses/backend_licenses";
 const fileNameIn = `${fileNameNoExt}.json`;
 const fileNameOut = `${fileNameNoExt}.txt`;
 
 console.log(`Reading JSON data from ${fileNameIn}`);
-const licenseData = JSON.parse(fs.readFileSync(fileNameIn));
+const licenseData = JSON.parse(readFileSync(fileNameIn, "utf-8"));
 
 // Ignore "LicenseInformationOrigin", "ValidationErrors"
 const infoKeys = [
@@ -33,4 +33,4 @@ for (const data of licenseData) {
 }
 
 console.log(`Writing license data to ${fileNameOut}`);
-fs.writeFileSync(fileNameOut, licensesString);
+writeFileSync(fileNameOut, licensesString);

@@ -10,7 +10,7 @@
 !nginx
 !package*.json
 !public
-!scripts/parcelResolver.js
+!scripts/parcelResolver.ts
 !src
 !tox.ini
 !tsconfig.json
