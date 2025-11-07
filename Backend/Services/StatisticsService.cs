@@ -353,7 +353,7 @@ namespace BackendFramework.Services
                         // update RecentDomain if this domain has a more recent timestamp
                         if (!string.IsNullOrEmpty(sd.Created))
                         {
-                            if (domainUserValue.RecentDomain is null || 
+                            if (domainUserValue.RecentDomain is null ||
                                 string.IsNullOrEmpty(domainUserValue.RecentDomain.Created) ||
                                 sd.Created.ParseModernPastDateTimePermissivelyWithException()
                                     .CompareTo(domainUserValue.RecentDomain.Created.ParseModernPastDateTimePermissivelyWithException()) > 0)

@@ -189,5 +189,43 @@ namespace Backend.Tests.Services
             var result = _statsService.GetSemanticDomainUserCounts(ProjId).Result;
             Assert.That(result.Find(uc => uc.Id == user.Id)!.WordCount, Is.EqualTo(wordCount));
         }
+
+        [Test]
+        public void GetSemanticDomainUserCountsTestRecentDomain()
+        {
+            var user = _userRepo.Create(GetUserWithProjId()).Result!;
+            var olderDomain = new SemanticDomain
+            {
+                Id = "1.1.1",
+                Name = "Older Domain",
+                Created = "2023-01-01T10:00:00Z",
+                UserId = user.Id
+            };
+            var newerDomain = new SemanticDomain
+            {
+                Id = "2.2.2",
+                Name = "Newer Domain",
+                Created = "2023-12-31T10:00:00Z",
+                UserId = user.Id
+            };
+
+            // Add words with domains in different order
+            var word1 = GetWordWithDomain();
+            word1.Senses[0].SemanticDomains[0] = newerDomain;
+            _wordRepo.AddFrontier(word1);
+
+            var word2 = GetWordWithDomain();
+            word2.Senses[0].SemanticDomains[0] = olderDomain;
+            _wordRepo.AddFrontier(word2);
+
+            var result = _statsService.GetSemanticDomainUserCounts(ProjId).Result;
+            var userCount = result.Find(uc => uc.Id == user.Id);
+            Assert.That(userCount, Is.Not.Null);
+            Assert.That(userCount!.RecentDomain, Is.Not.Null);
+            Assert.That(userCount.RecentDomain!.Id, Is.EqualTo("2.2.2"));
+            Assert.That(userCount.RecentDomain.Name, Is.EqualTo("Newer Domain"));
+            // Verify userId is removed from the recent domain
+            Assert.That(userCount.RecentDomain.UserId, Is.EqualTo(""));
+        }
     }
 }
