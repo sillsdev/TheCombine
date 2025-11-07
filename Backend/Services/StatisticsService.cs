@@ -349,6 +349,21 @@ namespace BackendFramework.Services
                         }
                         // update WordCount
                         domainUserValue.WordCount++;
+
+                        // update RecentDomain if this domain has a more recent timestamp
+                        if (!string.IsNullOrEmpty(sd.Created))
+                        {
+                            if (domainUserValue.RecentDomain is null || 
+                                string.IsNullOrEmpty(domainUserValue.RecentDomain.Created) ||
+                                sd.Created.ParseModernPastDateTimePermissivelyWithException()
+                                    .CompareTo(domainUserValue.RecentDomain.Created.ParseModernPastDateTimePermissivelyWithException()) > 0)
+                            {
+                                // Create a clone without the userId as per requirements
+                                var recentDomain = sd.Clone();
+                                recentDomain.UserId = "";
+                                domainUserValue.RecentDomain = recentDomain;
+                            }
+                        }
                     }
                 }
             }

@@ -12,6 +12,9 @@
  * Do not edit the class manually.
  */
 
+// May have been edited manually, see https://github.com/OpenAPITools/openapi-generator/blob/master/docs/customization.md#ignore-file-format
+import { SemanticDomain } from "./semantic-domain";
+
 /**
  *
  * @export
@@ -48,4 +51,10 @@ export interface SemanticDomainUserCount {
    * @memberof SemanticDomainUserCount
    */
   wordCount?: number;
+  /**
+   *
+   * @type {SemanticDomain}
+   * @memberof SemanticDomainUserCount
+   */
+  recentDomain?: SemanticDomain | null;
 }
