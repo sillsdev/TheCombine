@@ -58,7 +58,7 @@ export function newSemanticDomainTreeNode(
 export function newSemanticDomainUserCount(
   domainSet = new Set<string>()
 ): SemanticDomainUserCount {
-  return { id: "", domainSet: domainSet, recentDomain: null };
+  return { id: "", domainSet: domainSet };
 }
 
 export function newSemanticDomainCount(

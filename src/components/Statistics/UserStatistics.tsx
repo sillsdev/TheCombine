@@ -2,7 +2,6 @@ import {
   Paper,
   Table,
   TableBody,
-  TableCell,
   TableContainer,
   TableHead,
   TableRow,
@@ -42,8 +41,8 @@ export default function UserStatistics(): ReactElement {
         <TableHead>
           <TableRow>
             <HeadCell titleId={"statistics.column.username"} />
-            <HeadCell titleId={"statistics.column.domainCount"} />
             <HeadCell titleId={"statistics.column.recentDomain"} />
+            <HeadCell titleId={"statistics.column.domainCount"} />
             <HeadCell titleId={"statistics.column.senseCount"} />
           </TableRow>
         </TableHead>
@@ -51,14 +50,17 @@ export default function UserStatistics(): ReactElement {
           {domainUserCountList.map((t) => (
             <TableRow key={t.id}>
               <Cell text={t.username} />
+              <Cell
+                body={
+                  t.recentDomain ? (
+                    <DomainChip
+                      domain={{ ...t.recentDomain, userId: undefined }}
+                      provenance
+                    />
+                  ) : null
+                }
+              />
               <Cell text={t.domainCount} />
-              <TableCell
-                sx={{ borderBottomStyle: "dotted", borderBottomWidth: 1 }}
-              >
-                {t.recentDomain && (
-                  <DomainChip domain={t.recentDomain} provenance />
-                )}
-              </TableCell>
               <Cell text={t.wordCount} />
             </TableRow>
           ))}

@@ -31,7 +31,6 @@ namespace BackendFramework.Models
             DomainSet = [];
             DomainCount = 0;
             WordCount = 0;
-            RecentDomain = null;
         }
 
         public SemanticDomainUserCount(string id, string username) : this()

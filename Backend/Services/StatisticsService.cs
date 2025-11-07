@@ -354,14 +354,11 @@ namespace BackendFramework.Services
                         if (!string.IsNullOrEmpty(sd.Created))
                         {
                             if (domainUserValue.RecentDomain is null ||
-                                string.IsNullOrEmpty(domainUserValue.RecentDomain.Created) ||
-                                sd.Created.ParseModernPastDateTimePermissivelyWithException()
-                                    .CompareTo(domainUserValue.RecentDomain.Created.ParseModernPastDateTimePermissivelyWithException()) > 0)
+                                sd.Created.ParseModernPastDateTimePermissivelyWithException().CompareTo(
+                                    domainUserValue.RecentDomain.Created
+                                        .ParseModernPastDateTimePermissivelyWithException()) > 0)
                             {
-                                // Create a clone without the userId as per requirements
-                                var recentDomain = sd.Clone();
-                                recentDomain.UserId = "";
-                                domainUserValue.RecentDomain = recentDomain;
+                                domainUserValue.RecentDomain = sd.Clone();
                             }
                         }
                     }

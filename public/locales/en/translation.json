@@ -587,7 +587,7 @@
       "domainName": "Domain Name:",
       "username": "Username:",
       "domainCount": "Domains:",
-      "recentDomain": "Recent Domain:",
+      "recentDomain": "Most Recent Domain:",
       "senseCount": "Words:"
     },
     "axisLabel": {
