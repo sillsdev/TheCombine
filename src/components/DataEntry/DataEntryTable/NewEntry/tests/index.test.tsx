@@ -66,9 +66,10 @@ const renderNewEntry = async (
   });
 };
 
-/** Fire all Enter key events on the given element.
+/** Fire all Enter key events on document's active element, or body if none.
  * (For use with fake timers, since they don't play well with `userEvent`.) */
-const fireEnterOnElement = async (elem: Element): Promise<void> => {
+const fireEnterOnActiveElement = async (): Promise<void> => {
+  const elem = document.activeElement ?? document.body;
   const enterOptions = { charCode: 13, code: "Enter", key: "Enter" };
   await act(async () => {
     fireEvent.keyDown(elem, enterOptions);
@@ -132,7 +133,8 @@ describe("NewEntry", () => {
     );
 
     // Submit a new entry
-    await fireEnterOnElement(getVernAndGlossFields().glossField);
+    fireEvent.click(getVernAndGlossFields().glossField);
+    await fireEnterOnActiveElement();
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
     expect(mockResetNewEntry).not.toHaveBeenCalled();
 
@@ -154,13 +156,13 @@ describe("NewEntry", () => {
     );
 
     // Submit a new entry
-    const { glossField } = getVernAndGlossFields();
-    await fireEnterOnElement(glossField);
+    fireEvent.click(getVernAndGlossFields().glossField);
+    await fireEnterOnActiveElement();
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
     expect(mockResetNewEntry).not.toHaveBeenCalled();
 
     // Attempt a second submission before the first one completes
-    await fireEnterOnElement(glossField);
+    await fireEnterOnActiveElement();
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
     expect(mockResetNewEntry).not.toHaveBeenCalled();
 
