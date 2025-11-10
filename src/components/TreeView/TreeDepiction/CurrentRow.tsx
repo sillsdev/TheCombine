@@ -42,7 +42,12 @@ function CurrentTile(props: TreeRowProps): ReactElement {
 
   useEffect(() => {
     if (projectId && currentDomain.id) {
-      getDomainSenseCount(projectId, currentDomain.id).then(setSenseCount);
+      getDomainSenseCount(projectId, currentDomain.id)
+        .then(setSenseCount)
+        .catch(() => {
+          // Silently fail - the badge simply won't be displayed
+          setSenseCount(undefined);
+        });
     }
   }, [projectId, currentDomain.id]);
 

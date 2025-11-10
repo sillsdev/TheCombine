@@ -404,7 +404,9 @@ namespace BackendFramework.Services
             var descendantIds = new List<string>();
             foreach (var node in domainTreeNodeList)
             {
-                if (node.Id.StartsWith(domainId, StringComparison.Ordinal) && node.Id != domainId)
+                if (node.Id.StartsWith(domainId, StringComparison.Ordinal) &&
+                    node.Id.Length > domainId.Length &&
+                    node.Id != domainId)
                 {
                     // Check if it's a direct or indirect child (not just a string prefix match)
                     var relativePart = node.Id.Substring(domainId.Length);

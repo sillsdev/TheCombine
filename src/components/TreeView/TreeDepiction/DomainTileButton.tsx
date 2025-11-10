@@ -104,9 +104,12 @@ export default function DomainTileButton(
 
   useEffect(() => {
     if (shouldShowProgress && projectId && props.domain.id && lang) {
-      getDomainProgressProportion(projectId, props.domain.id, lang).then(
-        setProgressProportion
-      );
+      getDomainProgressProportion(projectId, props.domain.id, lang)
+        .then(setProgressProportion)
+        .catch(() => {
+          // Silently fail - the progress bar simply won't be displayed
+          setProgressProportion(undefined);
+        });
     }
   }, [shouldShowProgress, projectId, props.domain.id, lang]);
 
@@ -115,7 +118,7 @@ export default function DomainTileButton(
       id={props.domain.id}
       fullWidth
       onClick={() => onClick(props.domain)}
-      sx={{ height: "100%", position: "relative", overflow: "visible" }}
+      sx={{ height: "100%", position: "relative", overflow: "hidden" }}
       tabIndex={-1}
       variant="outlined"
     >
