@@ -39,7 +39,10 @@ jobs:
             github.com:443
             kubernetes.github.io:443
             packages.microsoft.com:443
-            prod-registry-k8s-io-*.s3.dualstack.*.amazonaws.com:443
+            prod-registry-k8s-io-us-east-1.s3.dualstack.us-east-1.amazonaws.com:443
+            prod-registry-k8s-io-us-east-2.s3.dualstack.us-east-2.amazonaws.com:443
+            prod-registry-k8s-io-us-west-1.s3.dualstack.us-west-1.amazonaws.com:443
+            prod-registry-k8s-io-us-west-2.s3.dualstack.us-west-2.amazonaws.com:443
             public.ecr.aws:443
             pypi.org:443
             registry.k8s.io:443
