@@ -10,7 +10,7 @@ import {
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { getDomainSenseCount } from "backend";
+import { getDomainWordCount } from "backend";
 import DomainTileButton, {
   DomainText,
 } from "components/TreeView/TreeDepiction/DomainTileButton";
@@ -32,17 +32,15 @@ export default function CurrentRow(props: TreeRowProps): ReactElement {
 
 function CurrentTile(props: TreeRowProps): ReactElement {
   const { animate, currentDomain } = props;
+  const [senseCount, setSenseCount] = useState<number | undefined>();
   const { t } = useTranslation();
-  const [senseCount, setSenseCount] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     if (currentDomain.id) {
-      getDomainSenseCount(currentDomain.id)
+      getDomainWordCount(currentDomain.id)
         .then(setSenseCount)
-        .catch(() => {
-          // Silently fail - the badge simply won't be displayed
-          setSenseCount(undefined);
-        });
+        // Silently fail - the badge won't be displayed
+        .catch(() => setSenseCount(undefined));
     }
   }, [currentDomain.id]);
 
@@ -57,7 +55,7 @@ function CurrentTile(props: TreeRowProps): ReactElement {
       variant="contained"
     >
       <DomainText domain={currentDomain} />
-      {senseCount !== undefined && senseCount > 0 && (
+      {senseCount !== undefined && (
         <Tooltip title={t("treeView.senseCountTooltip")}>
           <Badge
             badgeContent={senseCount}

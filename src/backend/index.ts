@@ -689,20 +689,17 @@ export async function getProgressEstimationLineChartRoot(
   return response.data ?? undefined;
 }
 
-export async function getDomainSenseCount(domainId: string): Promise<number> {
-  const response = await statisticsApi.getDomainSenseCount(
-    { projectId: LocalStorage.getProjectId(), domainId: domainId },
+export async function getDomainWordCount(domainId: string): Promise<number> {
+  const response = await statisticsApi.getDomainWordCount(
+    { projectId: LocalStorage.getProjectId(), domainId },
     defaultOptions()
   );
   return response.data;
 }
 
-export async function getDomainProgressProportion(
-  domainId: string,
-  lang: string
-): Promise<number> {
+export async function getDomainProgress(domainId: string): Promise<number> {
   const response = await statisticsApi.getDomainProgressProportion(
-    { projectId: LocalStorage.getProjectId(), domainId: domainId, lang: lang },
+    { projectId: LocalStorage.getProjectId(), domainId },
     defaultOptions()
   );
   return response.data;

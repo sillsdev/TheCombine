@@ -28,11 +28,11 @@ namespace Backend.Tests.Mocks
         {
             return Task.FromResult(new List<SemanticDomainUserCount>());
         }
-        public Task<int> GetDomainSenseCount(string projectId, string domainId)
+        public Task<int> GetDomainWordCount(string projectId, string domainId)
         {
             return Task.FromResult(0);
         }
-        public Task<double> GetDomainProgressProportion(string projectId, string domainId, string lang)
+        public Task<double> GetDomainProgressProportion(string projectId, string domainId)
         {
             return Task.FromResult(0.0);
         }

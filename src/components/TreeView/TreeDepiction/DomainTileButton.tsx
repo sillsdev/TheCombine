@@ -9,7 +9,7 @@ import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { SemanticDomain } from "api/models";
-import { getDomainProgressProportion } from "backend";
+import { getDomainProgress } from "backend";
 import { Direction } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
 import { rootId } from "types/semanticDomain";
 
@@ -84,26 +84,19 @@ export default function DomainTileButton(
   props: DomainTileButtonProps
 ): ReactElement {
   const { onClick, direction, ...domainTileProps } = props;
+  const [progress, setProgress] = useState<number | undefined>();
   const theme = useTheme();
-  const [progressProportion, setProgressProportion] = useState<
-    number | undefined
-  >(undefined);
 
-  const shouldShowProgress =
-    direction === Direction.Down ||
-    direction === Direction.Prev ||
-    direction === Direction.Next;
+  const shouldShowProgress = direction !== Direction.Up;
 
   useEffect(() => {
-    if (shouldShowProgress && props.domain.id && props.domain.lang) {
-      getDomainProgressProportion(props.domain.id, props.domain.lang)
-        .then(setProgressProportion)
-        .catch(() => {
-          // Silently fail - the progress bar simply won't be displayed
-          setProgressProportion(undefined);
-        });
+    if (shouldShowProgress && props.domain.id) {
+      getDomainProgress(props.domain.id)
+        .then(setProgress)
+        // Silently fail - the progress bar won't be displayed
+        .catch(() => setProgress(undefined));
     }
-  }, [shouldShowProgress, props.domain.id, props.domain.lang]);
+  }, [shouldShowProgress, props.domain.id]);
 
   return (
     <Button
@@ -115,7 +108,7 @@ export default function DomainTileButton(
       variant="outlined"
     >
       <DomainTile direction={direction} {...domainTileProps} />
-      {shouldShowProgress && progressProportion !== undefined && (
+      {shouldShowProgress && progress !== undefined && (
         <Box
           sx={{
             position: "absolute",
@@ -131,11 +124,11 @@ export default function DomainTileButton(
           <Box
             sx={{
               height: "100%",
-              width: `${progressProportion * 100}%`,
+              width: `${progress * 100}%`,
               backgroundColor: theme.palette.primary.main,
               borderBottomLeftRadius: theme.shape.borderRadius,
               borderBottomRightRadius:
-                progressProportion === 1 ? theme.shape.borderRadius : 0,
+                progress === 1 ? theme.shape.borderRadius : 0,
             }}
           />
         </Box>

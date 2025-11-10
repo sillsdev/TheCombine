@@ -132,7 +132,7 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(word);
         }
 
-        public Task<int> CountSensesWithDomain(string projectId, string domainId, int? maxCount = null)
+        public Task<int> CountFrontierWordsWithDomain(string projectId, string domainId, int? maxCount = null)
         {
             var count = 0;
             foreach (var word in _frontier.Where(w => w.ProjectId == projectId))

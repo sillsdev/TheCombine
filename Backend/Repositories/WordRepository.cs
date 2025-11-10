@@ -271,43 +271,22 @@ namespace BackendFramework.Repositories
         }
 
         /// <summary>
-        /// Counts the number of senses in Frontier words that have the specified semantic domain.
+        /// Counts the number of Frontier words that have the specified semantic domain.
         /// </summary>
         /// <param name="projectId"> The project id </param>
         /// <param name="domainId"> The semantic domain id </param>
-        /// <param name="maxCount"> Optional maximum count to return (for optimization) </param>
+        /// <param name="maxCount"> Optional maximum count to return </param>
         /// <returns> The count of senses with the specified domain, capped at maxCount if provided </returns>
-        public async Task<int> CountSensesWithDomain(string projectId, string domainId, int? maxCount = null)
+        public async Task<int> CountFrontierWordsWithDomain(string projectId, string domainId, int? maxCount = null)
         {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "counting senses with domain");
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "counting frontier words with domain");
 
             var filterDef = new FilterDefinitionBuilder<Word>();
             var filter = filterDef.And(
                 filterDef.Eq(w => w.ProjectId, projectId),
-                filterDef.ElemMatch(w => w.Senses, s => s.SemanticDomains.Any(sd => sd.Id == domainId))
-            );
+                filterDef.ElemMatch(w => w.Senses, s => s.SemanticDomains.Any(sd => sd.Id == domainId)));
 
-            // Get words that have at least one sense with the specified domain
-            var words = await _frontier.Find(filter).ToListAsync();
-
-            // Count the total number of senses with this domain across all words
-            var count = 0;
-            foreach (var word in words)
-            {
-                foreach (var sense in word.Senses)
-                {
-                    if (sense.SemanticDomains.Any(sd => sd.Id == domainId))
-                    {
-                        count++;
-                        if (maxCount.HasValue && count >= maxCount.Value)
-                        {
-                            return maxCount.Value;
-                        }
-                    }
-                }
-            }
-
-            return count;
+            return (await _frontier.Find(filter).Limit(maxCount).ToListAsync()).Count;
         }
     }
 }

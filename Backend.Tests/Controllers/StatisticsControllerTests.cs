@@ -134,18 +134,18 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestGetDomainSenseCountNoPermission()
+        public async Task TestGetDomainWordCountNoPermission()
         {
             _statsController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
-            var result = await _statsController.GetDomainSenseCount(_projId, "1");
+            var result = await _statsController.GetDomainWordCount(_projId, "1");
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
         [Test]
-        public async Task TestGetDomainSenseCount()
+        public async Task TestGetDomainWordCount()
         {
-            var result = await _statsController.GetDomainSenseCount(_projId, "1");
+            var result = await _statsController.GetDomainWordCount(_projId, "1");
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
         }
 
@@ -154,14 +154,14 @@ namespace Backend.Tests.Controllers
         {
             _statsController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
-            var result = await _statsController.GetDomainProgressProportion(_projId, "1", "en");
+            var result = await _statsController.GetDomainProgressProportion(_projId, "1");
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
         [Test]
         public async Task TestGetDomainProgressProportion()
         {
-            var result = await _statsController.GetDomainProgressProportion(_projId, "1", "en");
+            var result = await _statsController.GetDomainProgressProportion(_projId, "1");
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
         }
     }

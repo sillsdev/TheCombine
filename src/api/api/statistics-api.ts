@@ -56,14 +56,12 @@ export const StatisticsApiAxiosParamCreator = function (
      *
      * @param {string} projectId
      * @param {string} [domainId]
-     * @param {string} [lang]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getDomainProgressProportion: async (
       projectId: string,
       domainId?: string,
-      lang?: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
@@ -92,10 +90,6 @@ export const StatisticsApiAxiosParamCreator = function (
         localVarQueryParameter["domainId"] = domainId;
       }
 
-      if (lang !== undefined) {
-        localVarQueryParameter["lang"] = lang;
-      }
-
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
         baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -117,15 +111,15 @@ export const StatisticsApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getDomainSenseCount: async (
+    getDomainWordCount: async (
       projectId: string,
       domainId?: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("getDomainSenseCount", "projectId", projectId);
+      assertParamExists("getDomainWordCount", "projectId", projectId);
       const localVarPath =
-        `/v1/projects/{projectId}/statistics/GetDomainSenseCount`.replace(
+        `/v1/projects/{projectId}/statistics/GetDomainWordCount`.replace(
           `{${"projectId"}}`,
           encodeURIComponent(String(projectId))
         );
@@ -417,14 +411,12 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
      *
      * @param {string} projectId
      * @param {string} [domainId]
-     * @param {string} [lang]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getDomainProgressProportion(
       projectId: string,
       domainId?: string,
-      lang?: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
@@ -433,7 +425,6 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
         await localVarAxiosParamCreator.getDomainProgressProportion(
           projectId,
           domainId,
-          lang,
           options
         );
       return createRequestFunction(
@@ -450,7 +441,7 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async getDomainSenseCount(
+    async getDomainWordCount(
       projectId: string,
       domainId?: string,
       options?: any
@@ -458,7 +449,7 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.getDomainSenseCount(
+        await localVarAxiosParamCreator.getDomainWordCount(
           projectId,
           domainId,
           options
@@ -620,18 +611,16 @@ export const StatisticsApiFactory = function (
      *
      * @param {string} projectId
      * @param {string} [domainId]
-     * @param {string} [lang]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getDomainProgressProportion(
       projectId: string,
       domainId?: string,
-      lang?: string,
       options?: any
     ): AxiosPromise<number> {
       return localVarFp
-        .getDomainProgressProportion(projectId, domainId, lang, options)
+        .getDomainProgressProportion(projectId, domainId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -641,13 +630,13 @@ export const StatisticsApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getDomainSenseCount(
+    getDomainWordCount(
       projectId: string,
       domainId?: string,
       options?: any
     ): AxiosPromise<number> {
       return localVarFp
-        .getDomainSenseCount(projectId, domainId, options)
+        .getDomainWordCount(projectId, domainId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -744,32 +733,25 @@ export interface StatisticsApiGetDomainProgressProportionRequest {
    * @memberof StatisticsApiGetDomainProgressProportion
    */
   readonly domainId?: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof StatisticsApiGetDomainProgressProportion
-   */
-  readonly lang?: string;
 }
 
 /**
- * Request parameters for getDomainSenseCount operation in StatisticsApi.
+ * Request parameters for getDomainWordCount operation in StatisticsApi.
  * @export
- * @interface StatisticsApiGetDomainSenseCountRequest
+ * @interface StatisticsApiGetDomainWordCountRequest
  */
-export interface StatisticsApiGetDomainSenseCountRequest {
+export interface StatisticsApiGetDomainWordCountRequest {
   /**
    *
    * @type {string}
-   * @memberof StatisticsApiGetDomainSenseCount
+   * @memberof StatisticsApiGetDomainWordCount
    */
   readonly projectId: string;
 
   /**
    *
    * @type {string}
-   * @memberof StatisticsApiGetDomainSenseCount
+   * @memberof StatisticsApiGetDomainWordCount
    */
   readonly domainId?: string;
 }
@@ -873,7 +855,6 @@ export class StatisticsApi extends BaseAPI {
       .getDomainProgressProportion(
         requestParameters.projectId,
         requestParameters.domainId,
-        requestParameters.lang,
         options
       )
       .then((request) => request(this.axios, this.basePath));
@@ -881,17 +862,17 @@ export class StatisticsApi extends BaseAPI {
 
   /**
    *
-   * @param {StatisticsApiGetDomainSenseCountRequest} requestParameters Request parameters.
+   * @param {StatisticsApiGetDomainWordCountRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof StatisticsApi
    */
-  public getDomainSenseCount(
-    requestParameters: StatisticsApiGetDomainSenseCountRequest,
+  public getDomainWordCount(
+    requestParameters: StatisticsApiGetDomainWordCountRequest,
     options?: any
   ) {
     return StatisticsApiFp(this.configuration)
-      .getDomainSenseCount(
+      .getDomainWordCount(
         requestParameters.projectId,
         requestParameters.domainId,
         options

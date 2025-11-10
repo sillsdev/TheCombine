@@ -119,21 +119,21 @@ namespace BackendFramework.Controllers
             return Ok(await _statService.GetSemanticDomainUserCounts(projectId));
         }
 
-        /// <summary> Get the count of senses in a specific semantic domain </summary>
+        /// <summary> Get the count of entries in a specific semantic domain </summary>
         /// <returns> An integer count </returns>
-        [HttpGet("GetDomainSenseCount", Name = "GetDomainSenseCount")]
+        [HttpGet("GetDomainWordCount", Name = "GetDomainWordCount")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> GetDomainSenseCount(string projectId, string domainId)
+        public async Task<IActionResult> GetDomainWordCount(string projectId, string domainId)
         {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain sense count");
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain word count");
 
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Statistics, projectId))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
             }
 
-            return Ok(await _statService.GetDomainSenseCount(projectId, domainId));
+            return Ok(await _statService.GetDomainWordCount(projectId, domainId));
         }
 
         /// <summary> Get the proportion of descendant domains that have at least one entry </summary>
@@ -141,16 +141,16 @@ namespace BackendFramework.Controllers
         [HttpGet("GetDomainProgressProportion", Name = "GetDomainProgressProportion")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(double))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> GetDomainProgressProportion(string projectId, string domainId, string lang)
+        public async Task<IActionResult> GetDomainProgressProportion(string projectId, string domainId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain progress proportion");
 
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Statistics, projectId))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
             }
 
-            return Ok(await _statService.GetDomainProgressProportion(projectId, domainId, lang));
+            return Ok(await _statService.GetDomainProgressProportion(projectId, domainId));
         }
     }
 }

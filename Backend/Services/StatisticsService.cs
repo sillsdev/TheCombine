@@ -362,11 +362,11 @@ namespace BackendFramework.Services
         /// <param name="projectId"> The project id </param>
         /// <param name="domainId"> The semantic domain id </param>
         /// <returns> The count of senses with the specified domain </returns>
-        public async Task<int> GetDomainSenseCount(string projectId, string domainId)
+        public async Task<int> GetDomainWordCount(string projectId, string domainId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain sense count");
 
-            return await _wordRepo.CountSensesWithDomain(projectId, domainId);
+            return await _wordRepo.CountFrontierWordsWithDomain(projectId, domainId);
         }
 
         /// <summary>
@@ -374,54 +374,36 @@ namespace BackendFramework.Services
         /// </summary>
         /// <param name="projectId"> The project id </param>
         /// <param name="domainId"> The semantic domain id </param>
-        /// <param name="lang"> The language code </param>
         /// <returns> A proportion value between 0 and 1 </returns>
-        public async Task<double> GetDomainProgressProportion(string projectId, string domainId, string lang)
+        public async Task<double> GetDomainProgressProportion(string projectId, string domainId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain progress proportion");
 
-            var domainTreeNodeList = await _domainRepo.GetAllSemanticDomainTreeNodes(lang);
-            if (domainTreeNodeList is null || domainTreeNodeList.Count == 0)
+            if (string.IsNullOrEmpty(projectId) || string.IsNullOrEmpty(domainId) || !char.IsDigit(domainId[0]))
             {
                 return 0.0;
             }
 
-            // Get all descendant domain IDs
-            var descendantIds = new List<string>();
-            foreach (var node in domainTreeNodeList)
-            {
-                if (node.Id.StartsWith(domainId, StringComparison.Ordinal) &&
-                    node.Id.Length > domainId.Length &&
-                    node.Id != domainId)
-                {
-                    // Check if it's a direct or indirect child (not just a string prefix match)
-                    var relativePart = node.Id.Substring(domainId.Length);
-                    if (relativePart.StartsWith('.'))
-                    {
-                        descendantIds.Add(node.Id);
-                    }
-                }
-            }
-
-            if (descendantIds.Count == 0)
+            var domains = await _domainRepo.GetAllSemanticDomainTreeNodes("en");
+            if (domains is null || domains.Count == 0)
             {
                 return 0.0;
             }
 
-            // Count which descendants have at least one entry using the efficient repo method
-            var domainsWithEntries = new HashSet<string>();
+            var domainAndDescendants = domains
+                .Where(dom => dom.Id.StartsWith(domainId, StringComparison.Ordinal)).ToList();
 
-            foreach (var descendantId in descendantIds)
+            if (domainAndDescendants.Count == 0)
             {
-                // Use maxCount=1 to check if at least one entry exists
-                var count = await _wordRepo.CountSensesWithDomain(projectId, descendantId, maxCount: 1);
-                if (count > 0)
-                {
-                    domainsWithEntries.Add(descendantId);
-                }
+                return 0.0;
             }
 
-            return (double)domainsWithEntries.Count / descendantIds.Count;
+            var countTasks = domainAndDescendants
+                .Select(async dom => await _wordRepo.CountFrontierWordsWithDomain(projectId, dom.Id) > 0).ToList();
+
+            var domainsWithEntriesCount = (await Task.WhenAll(countTasks)).Count(hasEntries => hasEntries);
+
+            return (double)domainsWithEntriesCount / domainAndDescendants.Count;
         }
     }
 }
