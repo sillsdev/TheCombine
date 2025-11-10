@@ -165,7 +165,9 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     if (suggestedDups.length) {
       // Case 1: Duplicate vern is typed
       if (!selectedDup) {
-        // Case 1a: User hasn't made a selection
+        // Case 1a: User hasn't made a selection (should never happen,
+        // since submission is only triggered from the gloss field,
+        // but left here in case that changes)
         setVernOpen(true);
         setSubmitting(false);
         return;
@@ -224,7 +226,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
       <Grid2 size={4}>
         <VernWithSuggestions
           isNew
-          vernacular={newVern}
+          vernacular={submitting ? "" : newVern}
           vernInput={vernInput}
           updateVernField={(newValue: string, openDialog?: boolean) =>
             updateVernField(newValue, openDialog)
@@ -259,7 +261,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
       <Grid2 size={4}>
         <GlossWithSuggestions
           isNew
-          gloss={newGloss}
+          gloss={submitting ? "" : newGloss}
           glossInput={glossInput}
           updateGlossField={setNewGloss}
           handleEnter={() => handleGlossEnter()}
@@ -274,7 +276,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           // note is not available if user selected to modify an existing entry
           <NoteButton
             buttonId={NewEntryId.ButtonNote}
-            noteText={newNote}
+            noteText={submitting ? "" : newNote}
             updateNote={setNewNote}
           />
         )}
@@ -282,7 +284,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
 
       <Grid2 size={2}>
         <PronunciationsFrontend
-          audio={newAudio}
+          audio={submitting ? [] : newAudio}
           deleteAudio={delNewAudio}
           replaceAudio={repNewAudio}
           uploadAudio={addNewAudio}

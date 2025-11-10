@@ -152,7 +152,6 @@ export async function uploadAudio(
   wordId: string,
   file: FileWithSpeakerId
 ): Promise<string> {
-  console.info(file);
   const projectId = LocalStorage.getProjectId();
   const speakerId = file.speakerId ?? "";
   const params = { projectId, wordId, file };
