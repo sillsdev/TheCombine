@@ -1,27 +1,29 @@
 import "@testing-library/jest-dom";
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { SemanticDomainTreeNode } from "api/models";
+import * as backend from "backend";
+import * as LocalStorage from "backend/localStorage";
 import CurrentRow from "components/TreeView/TreeDepiction/CurrentRow";
 import testDomainMap, {
   mapIds,
 } from "components/TreeView/tests/SemanticDomainMock";
 
 // Mock the backend API
-jest.mock("backend", () => ({
-  getDomainSenseCount: jest.fn(() => Promise.resolve(0)),
-}));
-
-// Mock the Redux hooks
-jest.mock("rootRedux/hooks", () => ({
-  useAppSelector: jest.fn(() => "test-project-id"),
-}));
+jest.mock("backend");
+const mockGetDomainSenseCount = backend.getDomainSenseCount as jest.Mock;
 
 const mockAnimate = jest.fn();
 
+beforeAll(() => {
+  LocalStorage.setProjectId("test-project-id");
+  mockGetDomainSenseCount.mockResolvedValue(0);
+});
+
 beforeEach(() => {
   jest.clearAllMocks();
+  mockGetDomainSenseCount.mockResolvedValue(0);
 });
 
 describe("CurrentRow", () => {
@@ -85,5 +87,7 @@ async function createTree(
         small={small}
       />
     );
+    // Wait for promises to resolve
+    await new Promise((resolve) => setTimeout(resolve, 0));
   });
 }

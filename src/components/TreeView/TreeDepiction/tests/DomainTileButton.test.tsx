@@ -1,20 +1,21 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 
+import * as backend from "backend";
+import * as LocalStorage from "backend/localStorage";
 import DomainTileButton from "components/TreeView/TreeDepiction/DomainTileButton";
 import { Direction } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
 import domMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 
 // Mock the backend API
-jest.mock("backend", () => ({
-  getDomainProgressProportion: jest.fn(() => Promise.resolve(0.5)),
-}));
-
-// Mock the Redux hooks
-jest.mock("rootRedux/hooks", () => ({
-  useAppSelector: jest.fn(() => "test-project-id"),
-}));
+jest.mock("backend");
+const mockGetDomainProgressProportion = backend.getDomainProgressProportion as jest.Mock;
 
 const MOCK_ANIMATE = jest.fn();
+
+beforeAll(() => {
+  LocalStorage.setProjectId("test-project-id");
+  mockGetDomainProgressProportion.mockResolvedValue(0.5);
+});
 
 describe("DomainTileButton", () => {
   it("calls function on click", async () => {
@@ -35,5 +36,7 @@ async function createTile(direction = Direction.Next): Promise<void> {
         onClick={MOCK_ANIMATE}
       />
     );
+    // Wait for promises to resolve
+    await new Promise((resolve) => setTimeout(resolve, 0));
   });
 }

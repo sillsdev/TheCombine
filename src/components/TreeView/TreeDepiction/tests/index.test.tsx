@@ -1,20 +1,22 @@
-import { act, render } from "@testing-library/react";
+import { act, render, waitFor } from "@testing-library/react";
 
+import * as backend from "backend";
+import * as LocalStorage from "backend/localStorage";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import testDomainMap, {
   mapIds,
 } from "components/TreeView/tests/SemanticDomainMock";
 
 // Mock the backend API
-jest.mock("backend", () => ({
-  getDomainSenseCount: jest.fn(() => Promise.resolve(0)),
-  getDomainProgressProportion: jest.fn(() => Promise.resolve(0.5)),
-}));
+jest.mock("backend");
+const mockGetDomainSenseCount = backend.getDomainSenseCount as jest.Mock;
+const mockGetDomainProgressProportion = backend.getDomainProgressProportion as jest.Mock;
 
-// Mock the Redux hooks
-jest.mock("rootRedux/hooks", () => ({
-  useAppSelector: jest.fn(() => "test-project-id"),
-}));
+beforeAll(() => {
+  LocalStorage.setProjectId("test-project-id");
+  mockGetDomainSenseCount.mockResolvedValue(0);
+  mockGetDomainProgressProportion.mockResolvedValue(0.5);
+});
 
 describe("TreeDepiction", () => {
   for (const small of [false, true]) {
@@ -29,6 +31,8 @@ describe("TreeDepiction", () => {
                 small={small}
               />
             );
+            // Wait for promises to resolve
+            await new Promise((resolve) => setTimeout(resolve, 0));
           });
         });
       }
