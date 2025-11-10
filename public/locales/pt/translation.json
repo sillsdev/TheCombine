@@ -15,8 +15,7 @@
   },
   "treeView": {
     "findDomain": "Encontrar um domínio",
-    "domainNotFound": "Domínio não encontrado",
-    "senseCountTooltip": "Número de palavras coletadas neste domínio"
+    "domainNotFound": "Domínio não encontrado"
   },
   "addWords": {
     "selectEntry": "Selecione uma entrada",

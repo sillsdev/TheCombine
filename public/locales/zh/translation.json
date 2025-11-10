@@ -16,8 +16,7 @@
   "treeView": {
     "findDomain": "查找语义域",
     "domainNotFound": "未找到语义域",
-    "returnToTop": "返回语义域树顶部",
-    "senseCountTooltip": "该语义域中收集的词数"
+    "returnToTop": "返回语义域树顶部"
   },
   "addWords": {
     "selectEntry": "选择一个词条",

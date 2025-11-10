@@ -16,8 +16,7 @@
   "treeView": {
     "findDomain": "البحث عن نطاق",
     "domainNotFound": "لم يتم العثور على المجال",
-    "returnToTop": "الرجوع إلى الجزء العلوي من شجرة النطاق.",
-    "senseCountTooltip": "عدد الكلمات المجمعة في هذا المجال"
+    "returnToTop": "الرجوع إلى الجزء العلوي من شجرة النطاق."
   },
   "addWords": {
     "selectEntry": "حدد إدخالاً",
