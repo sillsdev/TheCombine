@@ -4,6 +4,16 @@ import DomainTileButton from "components/TreeView/TreeDepiction/DomainTileButton
 import { Direction } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
 import domMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 
+// Mock the backend API
+jest.mock("backend", () => ({
+  getDomainProgressProportion: jest.fn(() => Promise.resolve(0.5)),
+}));
+
+// Mock the Redux hooks
+jest.mock("rootRedux/hooks", () => ({
+  useAppSelector: jest.fn(() => "test-project-id"),
+}));
+
 const MOCK_ANIMATE = jest.fn();
 
 describe("DomainTileButton", () => {

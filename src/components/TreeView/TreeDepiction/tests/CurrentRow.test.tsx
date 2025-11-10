@@ -8,6 +8,16 @@ import testDomainMap, {
   mapIds,
 } from "components/TreeView/tests/SemanticDomainMock";
 
+// Mock the backend API
+jest.mock("backend", () => ({
+  getDomainSenseCount: jest.fn(() => Promise.resolve(0)),
+}));
+
+// Mock the Redux hooks
+jest.mock("rootRedux/hooks", () => ({
+  useAppSelector: jest.fn(() => "test-project-id"),
+}));
+
 const mockAnimate = jest.fn();
 
 beforeEach(() => {

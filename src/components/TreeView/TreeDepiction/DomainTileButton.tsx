@@ -4,12 +4,15 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
 } from "@mui/icons-material";
-import { Button, Stack, Typography } from "@mui/material";
-import { ReactElement } from "react";
+import { Box, Button, Stack, Typography, useTheme } from "@mui/material";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { SemanticDomain } from "api/models";
+import { getDomainProgressProportion } from "backend";
 import { Direction } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
+import { useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 import { rootId } from "types/semanticDomain";
 
 interface DomainTextProps {
@@ -82,17 +85,66 @@ interface DomainTileButtonProps extends DomainTileProps {
 export default function DomainTileButton(
   props: DomainTileButtonProps
 ): ReactElement {
-  const { onClick, ...domainTileProps } = props;
+  const { onClick, direction, ...domainTileProps } = props;
+  const theme = useTheme();
+  const projectId = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project.id
+  );
+  const lang = useAppSelector(
+    (state: StoreState) => state.treeViewState.currentDomain.lang
+  );
+  const [progressProportion, setProgressProportion] = useState<
+    number | undefined
+  >(undefined);
+
+  const shouldShowProgress =
+    direction === Direction.Down ||
+    direction === Direction.Prev ||
+    direction === Direction.Next;
+
+  useEffect(() => {
+    if (shouldShowProgress && projectId && props.domain.id && lang) {
+      getDomainProgressProportion(projectId, props.domain.id, lang).then(
+        setProgressProportion
+      );
+    }
+  }, [shouldShowProgress, projectId, props.domain.id, lang]);
+
   return (
     <Button
       id={props.domain.id}
       fullWidth
       onClick={() => onClick(props.domain)}
-      sx={{ height: "100%" }}
+      sx={{ height: "100%", position: "relative", overflow: "visible" }}
       tabIndex={-1}
       variant="outlined"
     >
-      <DomainTile {...domainTileProps} />
+      <DomainTile direction={direction} {...domainTileProps} />
+      {shouldShowProgress && progressProportion !== undefined && (
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 3,
+            backgroundColor: theme.palette.action.disabledBackground,
+            borderBottomLeftRadius: theme.shape.borderRadius,
+            borderBottomRightRadius: theme.shape.borderRadius,
+          }}
+        >
+          <Box
+            sx={{
+              height: "100%",
+              width: `${progressProportion * 100}%`,
+              backgroundColor: theme.palette.primary.main,
+              borderBottomLeftRadius: theme.shape.borderRadius,
+              borderBottomRightRadius:
+                progressProportion === 1 ? theme.shape.borderRadius : 0,
+            }}
+          />
+        </Box>
+      )}
     </Button>
   );
 }

@@ -1,6 +1,16 @@
-import { Box, Button, Grid2, ImageList, ImageListItem } from "@mui/material";
-import { ReactElement } from "react";
+import {
+  Badge,
+  Box,
+  Button,
+  Grid2,
+  ImageList,
+  ImageListItem,
+  Tooltip,
+} from "@mui/material";
+import { ReactElement, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
+import { getDomainSenseCount } from "backend";
 import DomainTileButton, {
   DomainText,
 } from "components/TreeView/TreeDepiction/DomainTileButton";
@@ -9,6 +19,8 @@ import {
   TreeRowProps,
 } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
 import { parent as parentSvg } from "resources/tree";
+import { useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 
 const currentDomainButtonId = "current-domain";
 
@@ -22,6 +34,17 @@ export default function CurrentRow(props: TreeRowProps): ReactElement {
 
 function CurrentTile(props: TreeRowProps): ReactElement {
   const { animate, currentDomain } = props;
+  const { t } = useTranslation();
+  const projectId = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project.id
+  );
+  const [senseCount, setSenseCount] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    if (projectId && currentDomain.id) {
+      getDomainSenseCount(projectId, currentDomain.id).then(setSenseCount);
+    }
+  }, [projectId, currentDomain.id]);
 
   return (
     <Button
@@ -30,10 +53,28 @@ function CurrentTile(props: TreeRowProps): ReactElement {
       fullWidth
       id={currentDomainButtonId}
       onClick={() => animate(currentDomain)}
-      sx={{ height: "100%", p: 1 }}
+      sx={{ height: "100%", p: 1, position: "relative" }}
       variant="contained"
     >
       <DomainText domain={currentDomain} />
+      {senseCount !== undefined && senseCount > 0 && (
+        <Tooltip title={t("treeView.senseCountTooltip")}>
+          <Badge
+            badgeContent={senseCount}
+            color="secondary"
+            sx={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              "& .MuiBadge-badge": {
+                fontSize: "0.75rem",
+                height: 20,
+                minWidth: 20,
+              },
+            }}
+          />
+        </Tooltip>
+      )}
     </Button>
   );
 }

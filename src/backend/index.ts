@@ -689,6 +689,29 @@ export async function getProgressEstimationLineChartRoot(
   return response.data ?? undefined;
 }
 
+export async function getDomainSenseCount(
+  projectId: string,
+  domainId: string
+): Promise<number> {
+  const response = await statisticsApi.getDomainSenseCount(
+    { projectId: projectId, domainId: domainId },
+    defaultOptions()
+  );
+  return response.data;
+}
+
+export async function getDomainProgressProportion(
+  projectId: string,
+  domainId: string,
+  lang: string
+): Promise<number> {
+  const response = await statisticsApi.getDomainProgressProportion(
+    { projectId: projectId, domainId: domainId, lang: lang },
+    defaultOptions()
+  );
+  return response.data;
+}
+
 /* UserController.cs */
 
 export async function verifyCaptchaToken(token: string): Promise<boolean> {

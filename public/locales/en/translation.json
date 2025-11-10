@@ -16,7 +16,8 @@
   "treeView": {
     "findDomain": "Find a domain",
     "domainNotFound": "Domain not found",
-    "returnToTop": "Return to the top of the domain tree."
+    "returnToTop": "Return to the top of the domain tree.",
+    "senseCountTooltip": "Number of words gathered in this domain"
   },
   "addWords": {
     "selectEntry": "Select an entry",
