@@ -5,6 +5,8 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+    paths:
+      - "installer/**"
 
 concurrency:
   cancel-in-progress: true
@@ -22,7 +24,25 @@ jobs:
       - name: Harden Runner
         uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
         with:
-          egress-policy: audit
+          egress-policy: block
+          allowed-endpoints: >
+            *-docker.pkg.dev:443
+            *.cloudfront.net:443
+            azure.archive.ubuntu.com:80
+            cdn.dl.k8s.io:443
+            dl.k8s.io:443
+            esm.ubuntu.com:443
+            files.pythonhosted.org:443
+            get.helm.sh:443
+            get.k3s.io:443
+            github.com:443
+            kubernetes.github.io:443
+            packages.microsoft.com:443
+            prod-registry-k8s-io-*.s3.dualstack.*.amazonaws.com:443
+            public.ecr.aws:443
+            pypi.org:443
+            registry.k8s.io:443
+            release-assets.githubusercontent.com:443
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Install dependencies
@@ -40,6 +60,11 @@ jobs:
           cd installer
           ./make-combine-installer.sh v2.7.1 --debug
         shell: bash
+      - name: Show size of installer files
+        run: |
+          cd installer
+          du -sh *
+        shell: bash
 
   make_readme:
     runs-on: ubuntu-latest
@@ -49,7 +74,12 @@ jobs:
       - name: Harden Runner
         uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
         with:
-          egress-policy: audit
+          egress-policy: block
+          allowed-endpoints: >
+            azure.archive.ubuntu.com:80
+            esm.ubuntu.com:443
+            github.com:443
+            packages.microsoft.com:443
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Install dependencies
