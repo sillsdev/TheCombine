@@ -1,5 +1,5 @@
 import { TableCell, Typography } from "@mui/material";
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
 export function HeadCell(props: { titleId: string }): ReactElement {
@@ -12,10 +12,16 @@ export function HeadCell(props: { titleId: string }): ReactElement {
   );
 }
 
-export function Cell(props: { text?: string | number | null }): ReactElement {
+interface CellProps {
+  body?: ReactNode;
+  text?: string | number | null;
+}
+
+export function Cell(props: CellProps): ReactElement {
+  const { body, text } = props;
   return (
     <TableCell sx={{ borderBottomStyle: "dotted", borderBottomWidth: 1 }}>
-      <Typography variant="body1">{props.text}</Typography>
+      {body ? body : <Typography variant="body1">{text}</Typography>}
     </TableCell>
   );
 }

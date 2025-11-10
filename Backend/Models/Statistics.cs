@@ -22,6 +22,7 @@ namespace BackendFramework.Models
         public HashSet<string> DomainSet { get; set; }
         public int DomainCount { get; set; }
         public int WordCount { get; set; }
+        public SemanticDomain? RecentDomain { get; set; }
 
         public SemanticDomainUserCount()
         {
