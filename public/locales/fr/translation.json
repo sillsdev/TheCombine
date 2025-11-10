@@ -15,7 +15,8 @@
   },
   "treeView": {
     "findDomain": "Chercher un domaine",
-    "domainNotFound": "Champ sémantique introuvable"
+    "domainNotFound": "Champ sémantique introuvable",
+    "senseCountTooltip": "Nombre de mots recueillis dans ce domaine"
   },
   "addWords": {
     "selectEntry": "Choisissez une entrée",
