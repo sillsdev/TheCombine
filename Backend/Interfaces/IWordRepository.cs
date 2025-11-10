@@ -23,5 +23,6 @@ namespace BackendFramework.Interfaces
         Task<List<Word>> AddFrontier(List<Word> words);
         Task<bool> DeleteFrontier(string projectId, string wordId);
         Task<long> DeleteFrontier(string projectId, List<string> wordIds);
+        Task<int> CountSensesWithDomain(string projectId, string domainId, int? maxCount = null);
     }
 }

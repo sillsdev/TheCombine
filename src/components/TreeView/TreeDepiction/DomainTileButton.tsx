@@ -11,8 +11,6 @@ import { useTranslation } from "react-i18next";
 import { SemanticDomain } from "api/models";
 import { getDomainProgressProportion } from "backend";
 import { Direction } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
-import { useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/types";
 import { rootId } from "types/semanticDomain";
 
 interface DomainTextProps {
@@ -87,12 +85,6 @@ export default function DomainTileButton(
 ): ReactElement {
   const { onClick, direction, ...domainTileProps } = props;
   const theme = useTheme();
-  const projectId = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project.id
-  );
-  const lang = useAppSelector(
-    (state: StoreState) => state.treeViewState.currentDomain.lang
-  );
   const [progressProportion, setProgressProportion] = useState<
     number | undefined
   >(undefined);
@@ -103,15 +95,15 @@ export default function DomainTileButton(
     direction === Direction.Next;
 
   useEffect(() => {
-    if (shouldShowProgress && projectId && props.domain.id && lang) {
-      getDomainProgressProportion(projectId, props.domain.id, lang)
+    if (shouldShowProgress && props.domain.id && props.domain.lang) {
+      getDomainProgressProportion(props.domain.id, props.domain.lang)
         .then(setProgressProportion)
         .catch(() => {
           // Silently fail - the progress bar simply won't be displayed
           setProgressProportion(undefined);
         });
     }
-  }, [shouldShowProgress, projectId, props.domain.id, lang]);
+  }, [shouldShowProgress, props.domain.id, props.domain.lang]);
 
   return (
     <Button

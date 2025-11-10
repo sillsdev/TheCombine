@@ -131,5 +131,25 @@ namespace Backend.Tests.Mocks
             _words.Add(word.Clone());
             return Task.FromResult(word);
         }
+
+        public Task<int> CountSensesWithDomain(string projectId, string domainId, int? maxCount = null)
+        {
+            var count = 0;
+            foreach (var word in _frontier.Where(w => w.ProjectId == projectId))
+            {
+                foreach (var sense in word.Senses)
+                {
+                    if (sense.SemanticDomains.Any(sd => sd.Id == domainId))
+                    {
+                        count++;
+                        if (maxCount.HasValue && count >= maxCount.Value)
+                        {
+                            return Task.FromResult(maxCount.Value);
+                        }
+                    }
+                }
+            }
+            return Task.FromResult(count);
+        }
     }
 }

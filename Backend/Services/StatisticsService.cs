@@ -366,21 +366,7 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain sense count");
 
-            var wordList = await _wordRepo.GetFrontier(projectId);
-            var count = 0;
-
-            foreach (var word in wordList)
-            {
-                foreach (var sense in word.Senses)
-                {
-                    if (sense.SemanticDomains.Any(sd => sd.Id == domainId))
-                    {
-                        count++;
-                    }
-                }
-            }
-
-            return count;
+            return await _wordRepo.CountSensesWithDomain(projectId, domainId);
         }
 
         /// <summary>
@@ -422,21 +408,16 @@ namespace BackendFramework.Services
                 return 0.0;
             }
 
-            // Get word list and count which descendants have at least one entry
-            var wordList = await _wordRepo.GetFrontier(projectId);
+            // Count which descendants have at least one entry using the efficient repo method
             var domainsWithEntries = new HashSet<string>();
 
-            foreach (var word in wordList)
+            foreach (var descendantId in descendantIds)
             {
-                foreach (var sense in word.Senses)
+                // Use maxCount=1 to check if at least one entry exists
+                var count = await _wordRepo.CountSensesWithDomain(projectId, descendantId, maxCount: 1);
+                if (count > 0)
                 {
-                    foreach (var sd in sense.SemanticDomains)
-                    {
-                        if (descendantIds.Contains(sd.Id))
-                        {
-                            domainsWithEntries.Add(sd.Id);
-                        }
-                    }
+                    domainsWithEntries.Add(descendantId);
                 }
             }
 

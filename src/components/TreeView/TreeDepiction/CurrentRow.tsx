@@ -19,8 +19,6 @@ import {
   TreeRowProps,
 } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
 import { parent as parentSvg } from "resources/tree";
-import { useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/types";
 
 const currentDomainButtonId = "current-domain";
 
@@ -35,21 +33,18 @@ export default function CurrentRow(props: TreeRowProps): ReactElement {
 function CurrentTile(props: TreeRowProps): ReactElement {
   const { animate, currentDomain } = props;
   const { t } = useTranslation();
-  const projectId = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project.id
-  );
   const [senseCount, setSenseCount] = useState<number | undefined>(undefined);
 
   useEffect(() => {
-    if (projectId && currentDomain.id) {
-      getDomainSenseCount(projectId, currentDomain.id)
+    if (currentDomain.id) {
+      getDomainSenseCount(currentDomain.id)
         .then(setSenseCount)
         .catch(() => {
           // Silently fail - the badge simply won't be displayed
           setSenseCount(undefined);
         });
     }
-  }, [projectId, currentDomain.id]);
+  }, [currentDomain.id]);
 
   return (
     <Button
