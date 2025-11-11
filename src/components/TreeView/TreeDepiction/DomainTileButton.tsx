@@ -90,11 +90,11 @@ export default function DomainTileButton(
   const shouldShowProgress = direction !== Direction.Up;
 
   useEffect(() => {
-    if (shouldShowProgress && props.domain.id) {
+    if (shouldShowProgress) {
+      setProgress(undefined);
       getDomainProgress(props.domain.id)
         .then(setProgress)
-        // Silently fail - the progress bar won't be displayed
-        .catch(() => setProgress(undefined));
+        .catch(() => {}); // Silently fail
     }
   }, [shouldShowProgress, props.domain.id]);
 
@@ -108,27 +108,26 @@ export default function DomainTileButton(
       variant="outlined"
     >
       <DomainTile direction={direction} {...domainTileProps} />
-      {shouldShowProgress && progress !== undefined && (
+      {shouldShowProgress && (
         <Box
           sx={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: 3,
             backgroundColor: theme.palette.action.disabledBackground,
             borderBottomLeftRadius: theme.shape.borderRadius,
             borderBottomRightRadius: theme.shape.borderRadius,
+            height: 3,
+            inset: "auto 0 0 0",
+            position: "absolute",
           }}
         >
           <Box
             sx={{
-              height: "100%",
-              width: `${progress * 100}%`,
               backgroundColor: theme.palette.primary.main,
               borderBottomLeftRadius: theme.shape.borderRadius,
               borderBottomRightRadius:
                 progress === 1 ? theme.shape.borderRadius : 0,
+              height: "100%",
+              transition: "width 1s ease-in-out",
+              width: `${(progress ?? 0) * 100}%`,
             }}
           />
         </Box>

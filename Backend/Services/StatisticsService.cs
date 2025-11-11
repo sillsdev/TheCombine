@@ -364,7 +364,7 @@ namespace BackendFramework.Services
         /// <returns> The count of senses with the specified domain </returns>
         public async Task<int> GetDomainWordCount(string projectId, string domainId)
         {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain sense count");
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain word count");
 
             return await _wordRepo.CountFrontierWordsWithDomain(projectId, domainId);
         }
@@ -398,12 +398,16 @@ namespace BackendFramework.Services
                 return 0.0;
             }
 
-            var countTasks = domainAndDescendants
-                .Select(async dom => await _wordRepo.CountFrontierWordsWithDomain(projectId, dom.Id) > 0).ToList();
+            double count = 0.0;
+            foreach (var dom in domainAndDescendants)
+            {
+                if (await _wordRepo.CountFrontierWordsWithDomain(projectId, dom.Id, 1) > 0)
+                {
+                    count++;
+                }
+            }
 
-            var domainsWithEntriesCount = (await Task.WhenAll(countTasks)).Count(hasEntries => hasEntries);
-
-            return (double)domainsWithEntriesCount / domainAndDescendants.Count;
+            return count / domainAndDescendants.Count;
         }
     }
 }

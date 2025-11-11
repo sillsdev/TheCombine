@@ -36,11 +36,11 @@ function CurrentTile(props: TreeRowProps): ReactElement {
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (currentDomain.id) {
+    setSenseCount(undefined);
+    if (currentDomain.parent) {
       getDomainWordCount(currentDomain.id)
         .then(setSenseCount)
-        // Silently fail - the badge won't be displayed
-        .catch(() => setSenseCount(undefined));
+        .catch(() => {}); // Silently fail
     }
   }, [currentDomain.id]);
 
@@ -58,7 +58,7 @@ function CurrentTile(props: TreeRowProps): ReactElement {
       {senseCount !== undefined && (
         <Tooltip title={t("treeView.senseCountTooltip")}>
           <Badge
-            badgeContent={senseCount}
+            badgeContent={`${senseCount}`}
             color="secondary"
             sx={{
               position: "absolute",
