@@ -32,6 +32,7 @@ export default function CurrentRow(props: TreeRowProps): ReactElement {
 
 function CurrentTile(props: TreeRowProps): ReactElement {
   const { animate, currentDomain } = props;
+
   const [senseCount, setSenseCount] = useState<number | undefined>();
   const { t } = useTranslation();
 

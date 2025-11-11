@@ -398,7 +398,7 @@ namespace BackendFramework.Services
                 return 0.0;
             }
 
-            double count = 0.0;
+            var count = 0.0;
             foreach (var dom in domainAndDescendants)
             {
                 if (await _wordRepo.CountFrontierWordsWithDomain(projectId, dom.Id, 1) > 0)

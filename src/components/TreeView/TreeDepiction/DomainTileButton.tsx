@@ -84,14 +84,15 @@ export default function DomainTileButton(
   props: DomainTileButtonProps
 ): ReactElement {
   const { onClick, direction, ...domainTileProps } = props;
-  const [progress, setProgress] = useState<number | undefined>();
+
+  const [progress, setProgress] = useState<number>(0);
   const theme = useTheme();
 
   const shouldShowProgress = direction !== Direction.Up;
 
   useEffect(() => {
     if (shouldShowProgress) {
-      setProgress(undefined);
+      setProgress(0);
       getDomainProgress(props.domain.id)
         .then(setProgress)
         .catch(() => {}); // Silently fail
@@ -123,11 +124,10 @@ export default function DomainTileButton(
             sx={{
               backgroundColor: theme.palette.primary.main,
               borderBottomLeftRadius: theme.shape.borderRadius,
-              borderBottomRightRadius:
-                progress === 1 ? theme.shape.borderRadius : 0,
+              borderBottomRightRadius: progress * theme.shape.borderRadius,
               height: "100%",
-              transition: "width 1s ease-in-out",
-              width: `${(progress ?? 0) * 100}%`,
+              transition: "width .75s ease-in-out",
+              width: `${progress * 100}%`,
             }}
           />
         </Box>

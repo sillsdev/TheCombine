@@ -137,15 +137,12 @@ namespace Backend.Tests.Mocks
             var count = 0;
             foreach (var word in _frontier.Where(w => w.ProjectId == projectId))
             {
-                foreach (var sense in word.Senses)
+                if (word.Senses.Any(s => s.SemanticDomains.Any(sd => sd.Id == domainId)))
                 {
-                    if (sense.SemanticDomains.Any(sd => sd.Id == domainId))
+                    count++;
+                    if (maxCount is not null && count >= maxCount)
                     {
-                        count++;
-                        if (maxCount.HasValue && count >= maxCount.Value)
-                        {
-                            return Task.FromResult(maxCount.Value);
-                        }
+                        return Task.FromResult(maxCount.Value);
                     }
                 }
             }
