@@ -86,8 +86,17 @@ jobs:
             esm.ubuntu.com:443
             github.com:443
             packages.microsoft.com:443
+            software.thecombine.app.s3.amazonaws.com:443
+            sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 0
+      - name: Detect changes to installer README
+        id: changed-files
+        uses: tj-actions/changed-files@48d8f15b2aaa3d255ca5af3eba4870f807ce6b3c # v45.0.4
+        with:
+          files: installer/README.md
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -97,4 +106,16 @@ jobs:
         run: |
           cd installer
           pandoc --pdf-engine=weasyprint --metadata title="The Combine Installation Instructions" README.md -o README.pdf
+        shell: bash
+      - name: Configure AWS credentials
+        if: steps.changed-files.outputs.any_changed == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: Upload README to S3
+        if: steps.changed-files.outputs.any_changed == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: |
+          aws s3 cp installer/README.md s3://software.thecombine.app/README.md
         shell: bash
