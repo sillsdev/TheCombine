@@ -117,5 +117,5 @@ jobs:
       - name: Upload README to S3
         if: steps.changed-files.outputs.any_changed == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
-          aws s3 cp installer/README.md s3://software.thecombine.app/README.md
+          aws s3 cp installer/README.md s3://software.thecombine.app/README.md --content-type text/markdown
         shell: bash
