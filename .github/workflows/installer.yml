@@ -95,7 +95,18 @@ jobs:
       - name: Detect changes to installer README
         id: changed-files
         run: |
-          if git diff --name-only HEAD~1.. | grep -q "^installer/README.md$"; then
+          # For pushes, use the before commit from the event; fallback to HEAD~1
+          # For PRs, compare against the base branch
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            COMPARE_REF="origin/${{ github.base_ref }}"
+          else
+            COMPARE_REF="${{ github.event.before }}"
+            # Fallback to HEAD~1 if before is not available (shouldn't happen for push events)
+            if [ -z "$COMPARE_REF" ] || [ "$COMPARE_REF" = "0000000000000000000000000000000000000000" ]; then
+              COMPARE_REF="HEAD~1"
+            fi
+          fi
+          if git diff --name-only "$COMPARE_REF" HEAD 2>/dev/null | grep -q "^installer/README.md$"; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
             echo "changed=false" >> $GITHUB_OUTPUT
