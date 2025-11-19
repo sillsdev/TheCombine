@@ -93,7 +93,7 @@ jobs:
         with:
           fetch-depth: 2
       - name: Detect changes to installer README
-        id: changed-files
+        id: changed-readme
         run: |
           if git diff --name-only HEAD~1.. | grep -q "^installer/README.md$"; then
             echo "changed=true" >> $GITHUB_OUTPUT
@@ -112,14 +112,14 @@ jobs:
           pandoc --pdf-engine=weasyprint --metadata title="The Combine Installation Instructions" README.md -o README.pdf
         shell: bash
       - name: Configure AWS credentials
-        if: steps.changed-files.outputs.changed == 'true' && github.event_name == 'push'
+        if: steps.changed-readme.outputs.changed == 'true' && github.event_name == 'push'
         uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: Upload README to S3
-        if: steps.changed-files.outputs.changed == 'true' && github.event_name == 'push'
+        if: steps.changed-readme.outputs.changed == 'true' && github.event_name == 'push'
         run: |
           aws s3 cp installer/README.pdf s3://software.thecombine.app/README.pdf --content-type application/pdf
         shell: bash
