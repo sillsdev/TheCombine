@@ -11,14 +11,17 @@
 
 # Production
 build
+/dist
 
 # Generated files for development use
 docker-compose.yml
 .env.*
 !.env.development
 .env*.local
+.parcel-cache
 nginx/scripts
 /backups
+/parcel-bundle-reports
 /restore
 script_conf.json
 backup_conf.json
@@ -29,9 +32,9 @@ public/scripts/
 .eslintcache
 Session.vim
 scripts/*.js
-!scripts/createBackendLicenses.js
-!scripts/printVersion.js
-!scripts/setRelease.js
+!scripts/frontendScripts.js
+!scripts/jestTest.js
+!scripts/setupMongo.js
 *.log
 *-debug.log*
 *-error.log*

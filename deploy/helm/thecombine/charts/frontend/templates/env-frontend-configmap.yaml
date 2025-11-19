@@ -12,4 +12,3 @@ data:
   CONFIG_CAPTCHA_SITE_KEY: {{ .Values.configCaptchaSiteKey | quote }}
   CONFIG_OFFLINE: {{ .Values.configOffline | quote | lower }}
   CONFIG_EMAIL_ENABLED: {{ .Values.global.emailEnabled | quote | lower }}
-  CONFIG_SHOW_CERT_EXPIRATION: {{ .Values.configShowCertExpiration | quote | lower }}

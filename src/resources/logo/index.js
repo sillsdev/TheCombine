@@ -1,5 +1,5 @@
-import black from "resources/logo/blackText.png";
-import small from "resources/logo/smallNoText.png";
-import white from "resources/logo/whiteText.png";
+const black = new URL("blackText.png", import.meta.url).href;
+const small = new URL("smallNoText.png", import.meta.url).href;
+const white = new URL("whiteText.png", import.meta.url).href;
 
 export { black, small, white };

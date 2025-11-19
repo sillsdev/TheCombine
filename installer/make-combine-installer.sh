@@ -57,7 +57,7 @@ if [[ $NET_INSTALL == 0 ]] ; then
   fi
   source venv/bin/activate
   # Update the environment if necessary
-  python -m pip $((( DEBUG == 0)) && echo "-q") install --upgrade pip pip-tools
+  python -m pip $((( DEBUG == 0)) && echo "-q") install pip==24.2 pip-tools==7.5.1
   python -m piptools sync $((( DEBUG == 0)) && echo "-q") requirements.txt
 
   # Package The Combine for "offline" installation
@@ -82,7 +82,7 @@ for DIR in venv scripts/__pycache__ ; do
 done
 
 cd ${SCRIPT_DIR}
-makeself $((( DEBUG == 0)) && echo "--tar-quietly" ) ../deploy ${INSTALLER_NAME} "Combine Installer" scripts/install-combine.sh ${COMBINE_VERSION}
+makeself $((( DEBUG == 0)) && echo "--tar-quietly" ) ../deploy ${INSTALLER_NAME} "The Combine Installer" scripts/install-combine.sh ${COMBINE_VERSION}
 if  [[ $NET_INSTALL == 0 ]] ; then
   makeself $((( DEBUG == 0)) && echo "--tar-quietly" ) --append ${TEMP_DIR} ${INSTALLER_NAME}
   rm -rf ${TEMP_DIR}

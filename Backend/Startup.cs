@@ -114,7 +114,7 @@ namespace BackendFramework
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             // Add URL for React CLI using during development.
-                            .WithOrigins("http://localhost:3000")
+                            .WithOrigins("http://localhost:1234")
                             .AllowCredentials());
                 });
             }
