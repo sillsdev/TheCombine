@@ -35,9 +35,9 @@ The installation script has been tested on _Ubuntu 22.04_, _Ubuntu 24.04_, and _
 
    _Note for Wasta Linux users_
 
-   _Wasta Linux_ includes Skype in its list of available software. Skype no longer supports installation
-   via `apt`. (It's available as a Snap package.) As a result, when the installation script, or a user, updates the list of available
-   software, the process fails. To address this issue, run:
+   _Wasta Linux_ includes Skype in its list of available software. Skype no longer supports installation via `apt`.
+   (It's available as a Snap package.) As a result, when the installation script, or a user, updates the list of
+   available software, the process fails. To address this issue, run:
 
    ```console
    sudo rm /etc/apt/sources.list.d/skype-stable.list
@@ -107,7 +107,7 @@ combinectl start
 
 ### Connecting to _The Combine_
 
-Once _The Combine_ has been started it will create a WiFi hotspot for users to access _The Combine_ using any WiFi
+Once _The Combine_ has been started, it will create a WiFi hotspot for users to access _The Combine_ using any WiFi
 enabled device with a browser. It can also be accessed using the browser directly on the machine where _The Combine_ is
 running.
 
