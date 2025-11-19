@@ -61,6 +61,12 @@ jobs:
           cd installer
           ./make-combine-installer.sh --net-install --debug
         shell: bash
+      - name: Upload net-installer artifact
+        uses: actions/upload-artifact@ef09cdac3e2d3e60d8ccadda691f4f1cec5035cb # v4.5.0
+        with:
+          name: combine-net-installer
+          path: installer/combine-net-installer.run
+          retention-days: 1
       - name: Make installer with release version
         run: |
           cd installer
@@ -122,4 +128,53 @@ jobs:
         if: steps.changed-readme.outputs.changed == 'true' && github.event_name == 'push'
         run: |
           aws s3 cp installer/README.pdf s3://software.thecombine.app/README.pdf --content-type application/pdf
+        shell: bash
+
+  upload_net_installer:
+    needs: make_installer
+    runs-on: ubuntu-latest
+    steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
+      - name: Harden Runner
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            azure.archive.ubuntu.com:80
+            esm.ubuntu.com:443
+            github.com:443
+            packages.microsoft.com:443
+            s3.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
+            sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 2
+      - name: Detect changes to make-combine-installer.sh
+        id: changed-installer
+        run: |
+          if git diff --name-only HEAD~1.. | grep -q "^installer/make-combine-installer.sh$"; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+      - name: Download net-installer artifact
+        if: steps.changed-installer.outputs.changed == 'true' && github.event_name == 'push'
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        with:
+          name: combine-net-installer
+          path: installer/
+      - name: Configure AWS credentials
+        if: steps.changed-installer.outputs.changed == 'true' && github.event_name == 'push'
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: Upload net-installer to S3
+        if: steps.changed-installer.outputs.changed == 'true' && github.event_name == 'push'
+        run: |
+          aws s3 cp installer/combine-net-installer.run s3://software.thecombine.app/combine-net-installer.run --content-type application/octet-stream
         shell: bash
