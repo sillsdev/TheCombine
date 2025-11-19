@@ -327,16 +327,14 @@ namespace Backend.Tests.Controllers
         {
             // Create a user and two projects
             var user = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
-            var project1 = new Project { Id = "proj1", Name = "Test Project 1" };
-            var project2 = new Project { Id = "proj2", Name = "Test Project 2" };
-            _ = _projectRepo.Create(project1).Result;
-            _ = _projectRepo.Create(project2).Result;
+            var project1 = _projectRepo.Create(new() { Name = "Test Project 1" }).Result!;
+            var project2 = _projectRepo.Create(new() { Name = "Test Project 2" }).Result!;
 
             // Create user roles for both projects
-            var userRole1 = new UserRole { Id = "role1", ProjectId = project1.Id, Role = Role.Editor };
-            var userRole2 = new UserRole { Id = "role2", ProjectId = project2.Id, Role = Role.Administrator };
-            _ = _userRoleRepo.Create(userRole1).Result;
-            _ = _userRoleRepo.Create(userRole2).Result;
+            var userRole1 = _userRoleRepo.Create(new() { ProjectId = project1.Id, Role = Role.Editor }).Result
+                ?? throw new UserRoleCreationException();
+            var userRole2 = _userRoleRepo.Create(new() { ProjectId = project2.Id, Role = Role.Administrator }).Result
+                ?? throw new UserRoleCreationException();
 
             // Add roles to user
             user.ProjectRoles[project1.Id] = userRole1.Id;
@@ -348,10 +346,11 @@ namespace Backend.Tests.Controllers
             var projects = result.Value as List<UserProjectInfo>;
 
             // Verify both projects are returned with correct roles
-            Assert.That(projects, Is.Not.Null);
             Assert.That(projects, Has.Count.EqualTo(2));
-            Assert.That(projects!.Exists(p => p.ProjectId == project1.Id && p.ProjectName == "Test Project 1" && p.Role == Role.Editor));
-            Assert.That(projects.Exists(p => p.ProjectId == project2.Id && p.ProjectName == "Test Project 2" && p.Role == Role.Administrator));
+            Assert.That(projects!.Exists(
+                p => p.ProjectId == project1.Id && p.ProjectName == project1.Name && p.Role == userRole1.Role));
+            Assert.That(projects.Exists(
+                p => p.ProjectId == project2.Id && p.ProjectName == project2.Name && p.Role == userRole2.Role));
         }
 
         [Test]

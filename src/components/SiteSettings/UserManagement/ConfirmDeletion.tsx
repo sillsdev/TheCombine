@@ -1,6 +1,7 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { Fragment, ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 import { User } from "api/models";
 import { getUserProjects, UserProjectInfo } from "backend";
@@ -15,31 +16,24 @@ export default function ConfirmDeletion(
   props: ConfirmDeletionProps
 ): ReactElement {
   const { t } = useTranslation();
-  const [userProjects, setUserProjects] = useState<UserProjectInfo[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [userProjects, setUserProjects] = useState<UserProjectInfo[]>([]);
 
   useEffect(() => {
-    if (props.user) {
+    setUserProjects([]);
+    if (props.user?.id) {
       setLoading(true);
-      setError(null);
       getUserProjects(props.user.id)
         .then((projects) => {
           setUserProjects(projects);
+          setLoading(false);
         })
         .catch((err) => {
           console.error("Failed to fetch user projects:", err);
-          setError(t("siteSettings.deleteUser.projectsLoadError"));
-          setUserProjects([]);
-        })
-        .finally(() => {
-          setLoading(false);
+          toast.warning(t("siteSettings.deleteUser.projectsLoadError"));
         });
-    } else {
-      setUserProjects([]);
-      setError(null);
     }
-  }, [props.user, t]);
+  }, [props.user?.id, t]);
 
   if (!props.user) {
     return <Fragment />;
@@ -48,7 +42,7 @@ export default function ConfirmDeletion(
   return (
     <Box sx={{ maxWidth: 500 }}>
       <Stack spacing={2}>
-        <Typography align="center" sx={{ color: "red" }} variant="h4">
+        <Typography align="center" sx={{ color: "warning.main" }} variant="h4">
           {props.user.username}
         </Typography>
 
@@ -59,10 +53,6 @@ export default function ConfirmDeletion(
         {loading ? (
           <Typography align="center">
             {t("siteSettings.deleteUser.loadingProjects")}
-          </Typography>
-        ) : error ? (
-          <Typography align="center" sx={{ color: "warning.main" }}>
-            {error}
           </Typography>
         ) : userProjects.length > 0 ? (
           <>
@@ -96,7 +86,11 @@ export default function ConfirmDeletion(
             }}
             variant="contained"
           >
-            <Typography align="center" sx={{ color: "red" }} variant="h6">
+            <Typography
+              align="center"
+              sx={{ color: "warning.main" }}
+              variant="h6"
+            >
               {t("buttons.delete")}
             </Typography>
           </Button>
