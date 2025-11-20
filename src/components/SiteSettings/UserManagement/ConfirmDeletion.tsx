@@ -1,4 +1,4 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, List, ListItem, Stack, Typography } from "@mui/material";
 import { Fragment, ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -15,19 +15,15 @@ interface ConfirmDeletionProps {
 export default function ConfirmDeletion(
   props: ConfirmDeletionProps
 ): ReactElement {
+  const [projInfo, setProjInfo] = useState<UserProjectInfo[] | undefined>();
+
   const { t } = useTranslation();
-  const [loading, setLoading] = useState(false);
-  const [userProjects, setUserProjects] = useState<UserProjectInfo[]>([]);
 
   useEffect(() => {
-    setUserProjects([]);
+    setProjInfo(undefined);
     if (props.user?.id) {
-      setLoading(true);
       getUserProjects(props.user.id)
-        .then((projects) => {
-          setUserProjects(projects);
-          setLoading(false);
-        })
+        .then(setProjInfo)
         .catch((err) => {
           console.error("Failed to fetch user projects:", err);
           toast.warning(t("siteSettings.deleteUser.projectsLoadError"));
@@ -42,7 +38,7 @@ export default function ConfirmDeletion(
   return (
     <Box sx={{ maxWidth: 500 }}>
       <Stack spacing={2}>
-        <Typography align="center" sx={{ color: "warning.main" }} variant="h4">
+        <Typography align="center" sx={{ color: "error.main" }} variant="h4">
           {props.user.username}
         </Typography>
 
@@ -50,27 +46,33 @@ export default function ConfirmDeletion(
           {t("siteSettings.deleteUser.confirm")}
         </Typography>
 
-        {loading ? (
+        {projInfo === undefined ? (
           <Typography align="center">
             {t("siteSettings.deleteUser.loadingProjects")}
           </Typography>
-        ) : userProjects.length > 0 ? (
+        ) : projInfo.length ? (
           <>
-            <Typography align="center" variant="subtitle1">
+            <Typography>
               {t("siteSettings.deleteUser.projectsTitle")}
             </Typography>
-            <Box sx={{ maxHeight: 200, overflowY: "auto" }}>
-              <Stack spacing={1}>
-                {userProjects.map((project) => (
-                  <Typography key={project.projectId} variant="body2">
-                    • {project.projectName} ({project.role})
+            <List
+              dense
+              disablePadding
+              sx={{ maxHeight: 300, overflowY: "auto" }}
+            >
+              {projInfo.map((info) => (
+                <ListItem key={info.projectId}>
+                  <Typography>
+                    • {info.projectName} (
+                    {t(`projectSettings.roles.${`${info.role}`.toLowerCase()}`)}
+                    )
                   </Typography>
-                ))}
-              </Stack>
-            </Box>
+                </ListItem>
+              ))}
+            </List>
           </>
         ) : (
-          <Typography align="center" variant="body2">
+          <Typography align="center">
             {t("siteSettings.deleteUser.noProjects")}
           </Typography>
         )}
@@ -78,19 +80,12 @@ export default function ConfirmDeletion(
         <Stack direction="row" justifyContent="space-evenly">
           <Button
             color="secondary"
+            disabled={!props.user?.id}
             id="user-delete-confirm"
-            onClick={() => {
-              if (props.user) {
-                props.deleteUser(props.user.id);
-              }
-            }}
+            onClick={() => props.deleteUser(props.user!.id)}
             variant="contained"
           >
-            <Typography
-              align="center"
-              sx={{ color: "warning.main" }}
-              variant="h6"
-            >
+            <Typography sx={{ color: "error.main" }}>
               {t("buttons.delete")}
             </Typography>
           </Button>
@@ -101,9 +96,7 @@ export default function ConfirmDeletion(
             onClick={() => props.handleCloseModal()}
             variant="contained"
           >
-            <Typography align="center" variant="h6">
-              {t("buttons.cancel")}
-            </Typography>
+            <Typography>{t("buttons.cancel")}</Typography>
           </Button>
         </Stack>
       </Stack>
