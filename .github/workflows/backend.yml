@@ -55,7 +55,7 @@ jobs:
           if-no-files-found: error
           name: coverage
           path: Backend.Tests/coverage.cobertura.xml
-          retention-days: 7
+          retention-days: 5
       - name: Development build
         run: dotnet build BackendFramework.sln
       - name: Release build
