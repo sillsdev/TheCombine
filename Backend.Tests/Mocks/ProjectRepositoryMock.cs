@@ -97,4 +97,6 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(project?.LiftImported != true);
         }
     }
+
+    internal sealed class ProjectCreationException : Exception;
 }

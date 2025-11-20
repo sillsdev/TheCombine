@@ -15,20 +15,16 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/users")]
-    public class UserController(
-        IUserRepository userRepo,
-        ICaptchaService captchaService,
-        IPermissionService permissionService,
-        IUserRoleRepository userRoleRepo,
-        IUserEditRepository userEditRepo,
-        IProjectRepository projectRepo) : Controller
+    public class UserController(IProjectRepository projectRepo, IUserRepository userRepo,
+        IUserEditRepository userEditRepo, IUserRoleRepository userRoleRepo, ICaptchaService captchaService,
+        IPermissionService permissionService) : Controller
     {
+        private readonly IProjectRepository _projectRepo = projectRepo;
         private readonly IUserRepository _userRepo = userRepo;
+        private readonly IUserEditRepository _userEditRepo = userEditRepo;
+        private readonly IUserRoleRepository _userRoleRepo = userRoleRepo;
         private readonly ICaptchaService _captchaService = captchaService;
         private readonly IPermissionService _permissionService = permissionService;
-        private readonly IUserRoleRepository _userRoleRepo = userRoleRepo;
-        private readonly IUserEditRepository _userEditRepo = userEditRepo;
-        private readonly IProjectRepository _projectRepo = projectRepo;
 
         private const string otelTagName = "otel.UserController";
 
@@ -45,6 +41,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns all <see cref="User"/>s </summary>
+        /// <remarks> Can only be used by a site admin. </remarks>
         [HttpGet(Name = "GetAllUsers")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<User>))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -217,6 +214,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Gets project information for a user's roles. </summary>
+        /// <remarks> Can only be used by a site admin. </remarks>
         [HttpGet("{userId}/projects", Name = "GetUserProjects")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserProjectInfo>))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -258,6 +256,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Deletes <see cref="User"/> with specified id. </summary>
+        /// <remarks> Can only be used by a site admin. </remarks>
         [HttpDelete("{userId}", Name = "DeleteUser")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]

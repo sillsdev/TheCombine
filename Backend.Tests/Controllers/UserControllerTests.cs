@@ -11,10 +11,10 @@ namespace Backend.Tests.Controllers
 {
     internal sealed class UserControllerTests : IDisposable
     {
-        private IUserRepository _userRepo = null!;
-        private IUserRoleRepository _userRoleRepo = null!;
-        private IUserEditRepository _userEditRepo = null!;
         private IProjectRepository _projectRepo = null!;
+        private IUserRepository _userRepo = null!;
+        private IUserEditRepository _userEditRepo = null!;
+        private IUserRoleRepository _userRoleRepo = null!;
         private UserController _userController = null!;
 
         public void Dispose()
@@ -26,17 +26,12 @@ namespace Backend.Tests.Controllers
         [SetUp]
         public void Setup()
         {
-            _userRepo = new UserRepositoryMock();
-            _userRoleRepo = new UserRoleRepositoryMock();
-            _userEditRepo = new UserEditRepositoryMock();
             _projectRepo = new ProjectRepositoryMock();
-            _userController = new UserController(
-                _userRepo,
-                new CaptchaServiceMock(),
-                new PermissionServiceMock(_userRepo),
-                _userRoleRepo,
-                _userEditRepo,
-                _projectRepo);
+            _userRepo = new UserRepositoryMock();
+            _userEditRepo = new UserEditRepositoryMock();
+            _userRoleRepo = new UserRoleRepositoryMock();
+            _userController = new UserController(_projectRepo, _userRepo, _userEditRepo, _userRoleRepo,
+                new CaptchaServiceMock(), new PermissionServiceMock(_userRepo));
         }
 
         private static User RandomUser()
@@ -182,8 +177,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestCreateUserBadUsername()
         {
-            var user = RandomUser();
-            _userRepo.Create(user);
+            var user = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
 
             var user2 = RandomUser();
             user2.Username = " ";
@@ -197,8 +191,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestCreateUserBadEmail()
         {
-            var user = RandomUser();
-            _userRepo.Create(user);
+            var user = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
 
             var user2 = RandomUser();
             user2.Email = " ";
@@ -275,14 +268,12 @@ namespace Backend.Tests.Controllers
         {
             // Create a user, project, user role, and user edit
             var user = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
-            var project = new Project { Id = "proj1", Name = "Test Project" };
-            _ = _projectRepo.Create(project).Result;
-
-            var userRole = new UserRole { Id = "role1", ProjectId = project.Id, Role = Role.Editor };
-            _ = _userRoleRepo.Create(userRole).Result;
-
-            var userEdit = new UserEdit { Id = "edit1", ProjectId = project.Id };
-            _ = _userEditRepo.Create(userEdit).Result;
+            var project = _projectRepo.Create(new() { Name = "Test Project" }).Result
+                ?? throw new ProjectCreationException();
+            var userRole = _userRoleRepo.Create(new() { ProjectId = project.Id, Role = Role.Editor }).Result
+                ?? throw new UserRoleCreationException();
+            var userEdit = _userEditRepo.Create(new() { ProjectId = project.Id }).Result
+                ?? throw new UserEditCreationException();
 
             // Add role and edit to user
             user.ProjectRoles[project.Id] = userRole.Id;
@@ -327,8 +318,10 @@ namespace Backend.Tests.Controllers
         {
             // Create a user and two projects
             var user = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
-            var project1 = _projectRepo.Create(new() { Name = "Test Project 1" }).Result!;
-            var project2 = _projectRepo.Create(new() { Name = "Test Project 2" }).Result!;
+            var project1 = _projectRepo.Create(new() { Name = "Test Project 1" }).Result
+                ?? throw new ProjectCreationException();
+            var project2 = _projectRepo.Create(new() { Name = "Test Project 2" }).Result
+                ?? throw new ProjectCreationException();
 
             // Create user roles for both projects
             var userRole1 = _userRoleRepo.Create(new() { ProjectId = project1.Id, Role = Role.Editor }).Result
@@ -371,12 +364,8 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestIsEmailOrUsernameAvailable()
         {
-            var user1 = RandomUser();
-            var user2 = RandomUser();
-            var email1 = user1.Email;
-            var email2 = user2.Email;
-            _userRepo.Create(user1);
-            _userRepo.Create(user2);
+            var email1 = _userRepo.Create(RandomUser()).Result?.Email ?? throw new UserCreationException();
+            var email2 = _userRepo.Create(RandomUser()).Result?.Email ?? throw new UserCreationException();
 
             var result1 = (ObjectResult)_userController.IsEmailOrUsernameAvailable(email1.ToLowerInvariant()).Result;
             Assert.That(result1.Value, Is.False);
