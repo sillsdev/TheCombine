@@ -2,7 +2,7 @@ name: installer_release
 
 on:
   pull_request: # Just for testing, remove before approving or merging pr
-    branches: [copilot/upload-installer-on-release]
+    branches: [master]
   release:
     types: [published]
 
