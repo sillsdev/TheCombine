@@ -90,7 +90,7 @@ export default function ConfirmDeletion(
         <Stack direction="row" justifyContent="space-evenly">
           <Button
             color="secondary"
-            disabled={!props.user?.id}
+            disabled={!props.user?.id || projInfo === undefined}
             id="user-delete-confirm"
             onClick={() => props.deleteUser(props.user!.id)}
             variant="contained"

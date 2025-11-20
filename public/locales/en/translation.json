@@ -136,7 +136,7 @@
       "loadingProjects": "Loading user projects...",
       "projectsTitle": "This user has roles in the following projects:",
       "noProjects": "This user has no project roles.",
-      "projectsLoadError": "Failed to load user projects. User may still be deleted.",
+      "projectsLoadError": "Failed to load user projects.",
       "toastSuccess": "User successfully deleted from The Combine.",
       "toastFailure": "Failed to delete user from The Combine."
     },
