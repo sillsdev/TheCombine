@@ -1,5 +1,12 @@
-import { ArrowRightAlt } from "@mui/icons-material";
-import { Box, Card, Grid2, Paper, Stack, Typography } from "@mui/material";
+import { ArrowRightAlt, WarningOutlined } from "@mui/icons-material";
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid2,
+  Typography,
+} from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -7,10 +14,16 @@ import { useSelector } from "react-redux";
 import { Flag, MergeUndoIds, Sense, Word } from "api/models";
 import { getFrontierWords, getWord, undoMerge } from "backend";
 import FlagButton from "components/Buttons/FlagButton";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import NoteButton from "components/Buttons/NoteButton";
 import UndoButton from "components/Buttons/UndoButton";
+import MultilineTooltipTitle from "components/MultilineTooltipTitle";
+import { AudioSummary } from "components/WordCard";
 import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
+import { protectReasonsText } from "goals/MergeDuplicates/MergeDupsStep/protectReasonUtils";
 import { MergesCompleted } from "goals/MergeDuplicates/MergeDupsTypes";
 import { type StoreState } from "rootRedux/types";
+import theme from "types/theme";
 import { newFlag } from "types/word";
 import { TypographyWithFont } from "utilities/fontComponents";
 
@@ -107,6 +120,7 @@ export function doWordsIncludeMerges(
 function WordBox(props: { wordId: string }): ReactElement {
   const [word, setWord] = useState<Word | undefined>();
   const [flag, setFlag] = useState<Flag>(newFlag());
+  const { t } = useTranslation();
 
   useEffect(() => {
     getWord(props.wordId).then(setWord);
@@ -115,21 +129,59 @@ function WordBox(props: { wordId: string }): ReactElement {
     setFlag(word?.flag ?? newFlag());
   }, [word]);
 
+  const isProtected = !!word?.protectReasons?.length;
+  const audioCount = word?.audio?.length ?? 0;
+  const noteText = word?.note?.text ?? "";
+
+  // Build tooltip lines for protected entry
+  const tooltipTexts = [t("mergeDups.helpText.protectedWord")];
+  if (isProtected) {
+    tooltipTexts.push(protectReasonsText(t, { word: word?.protectReasons }));
+  }
+  tooltipTexts.push(t("mergeDups.helpText.protectedWordInfo"));
+
+  const headerTitle = (
+    <TypographyWithFont variant="h5" vernacular>
+      {word?.vernacular}
+    </TypographyWithFont>
+  );
+
+  const headerAction = (
+    <>
+      {isProtected && (
+        <IconButtonWithTooltip
+          buttonId={`word-${props.wordId}-protected`}
+          icon={<WarningOutlined />}
+          side="top"
+          size="small"
+          text={<MultilineTooltipTitle lines={tooltipTexts} />}
+        />
+      )}
+      <AudioSummary count={audioCount} />
+      {noteText ? <NoteButton noteText={noteText} /> : null}
+      <FlagButton buttonId={`word-${props.wordId}-flag`} flag={flag} />
+    </>
+  );
+
   return (
     <Box sx={{ m: 1 }}>
-      <Paper sx={{ bgcolor: "lightgrey", pb: 1 }}>
-        <Paper square sx={{ height: 44, minWidth: 100, p: 1 }}>
-          <Stack direction="row" justifyContent="space-between">
-            <TypographyWithFont variant="h5" vernacular>
-              {word?.vernacular}
-            </TypographyWithFont>
-            <FlagButton flag={flag} buttonId={`word-${props.wordId}-flag`} />
-          </Stack>
-        </Paper>
-        <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
-          {word?.senses?.map(SenseCard)}
-        </div>
-      </Paper>
+      <Card sx={{ bgcolor: "lightgrey", pb: 1 }}>
+        <CardHeader
+          action={headerAction}
+          style={{
+            backgroundColor: isProtected ? "lightyellow" : "white",
+            minHeight: 44,
+            minWidth: 150,
+            padding: theme.spacing(1),
+          }}
+          title={headerTitle}
+        />
+        <CardContent>
+          <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
+            {word?.senses?.map(SenseCard)}
+          </div>
+        </CardContent>
+      </Card>
     </Box>
   );
 }
