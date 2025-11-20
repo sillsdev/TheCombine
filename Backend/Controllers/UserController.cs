@@ -270,29 +270,25 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
-            // Get the user to check if they exist and if they're an admin
-            var user = await _userRepo.GetUser(userId, sanitize: false);
+            // Ensure user exists and is not an admin
+            var user = await _userRepo.GetUser(userId);
             if (user is null)
             {
                 return NotFound();
             }
-
-            // Prevent deletion of admin users
             if (user.IsAdmin)
             {
                 return Forbid();
             }
 
-            // Delete all UserRoles for this user
-            foreach (var (projectId, userRoleId) in user.ProjectRoles)
-            {
-                await _userRoleRepo.Delete(projectId, userRoleId);
-            }
-
-            // Delete all UserEdits for this user
+            // Delete all UserEdits and UserRoles for this user
             foreach (var (projectId, userEditId) in user.WorkedProjects)
             {
                 await _userEditRepo.Delete(projectId, userEditId);
+            }
+            foreach (var (projectId, userRoleId) in user.ProjectRoles)
+            {
+                await _userRoleRepo.Delete(projectId, userRoleId);
             }
 
             // Finally, delete the user
