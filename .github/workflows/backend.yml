@@ -5,6 +5,10 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+    paths-ignore:
+      - "docs/user_guide/**"
+      - "public/**"
+      - "src/**"
 
 concurrency:
   cancel-in-progress: true
