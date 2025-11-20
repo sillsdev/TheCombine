@@ -23,7 +23,6 @@ import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardConte
 import { protectReasonsText } from "goals/MergeDuplicates/MergeDupsStep/protectReasonUtils";
 import { MergesCompleted } from "goals/MergeDuplicates/MergeDupsTypes";
 import { type StoreState } from "rootRedux/types";
-import theme from "types/theme";
 import { newFlag } from "types/word";
 import { TypographyWithFont } from "utilities/fontComponents";
 
@@ -133,13 +132,6 @@ function WordBox(props: { wordId: string }): ReactElement {
   const audioCount = word?.audio?.length ?? 0;
   const noteText = word?.note?.text ?? "";
 
-  // Build tooltip lines for protected entry
-  const tooltipTexts = [t("mergeDups.helpText.protectedWord")];
-  if (isProtected) {
-    tooltipTexts.push(protectReasonsText(t, { word: word?.protectReasons }));
-  }
-  tooltipTexts.push(t("mergeDups.helpText.protectedWordInfo"));
-
   const headerTitle = (
     <TypographyWithFont variant="h5" vernacular>
       {word?.vernacular}
@@ -154,7 +146,15 @@ function WordBox(props: { wordId: string }): ReactElement {
           icon={<WarningOutlined />}
           side="top"
           size="small"
-          text={<MultilineTooltipTitle lines={tooltipTexts} />}
+          text={
+            <MultilineTooltipTitle
+              lines={[
+                t("mergeDups.helpText.protectedWord"),
+                protectReasonsText(t, { word: word?.protectReasons }),
+                t("mergeDups.helpText.protectedWordInfo"),
+              ]}
+            />
+          }
         />
       )}
       <AudioSummary count={audioCount} />
@@ -168,11 +168,11 @@ function WordBox(props: { wordId: string }): ReactElement {
       <Card sx={{ bgcolor: "lightgrey", pb: 1 }}>
         <CardHeader
           action={headerAction}
-          style={{
-            backgroundColor: isProtected ? "lightyellow" : "white",
+          sx={{
+            bgcolor: isProtected ? "lightyellow" : "white",
             minHeight: 44,
             minWidth: 150,
-            padding: theme.spacing(1),
+            p: 1,
           }}
           title={headerTitle}
         />
