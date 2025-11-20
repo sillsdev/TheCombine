@@ -1,8 +1,6 @@
 name: installer_release
 
 on:
-  pull_request: # Just for testing, remove before approving or merging pr
-    branches: [master]
   release:
     types: [published]
 
@@ -49,10 +47,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y makeself
         shell: bash
-      - name: Make installer with release version # FIX: change v2.7.1 to use github.event.release.tag_name
+      - name: Make installer with release version
         run: |
           cd installer
-          ./make-combine-installer.sh v2.7.1 --debug
+          ./make-combine-installer.sh ${{ github.event.release.tag_name }} --debug
         shell: bash
       - name: Upload installer artifact
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
@@ -85,8 +83,8 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - name: Upload installer to S3 # FIX: change v2.7.1 to use github.event.release.tag_name
+      - name: Upload installer to S3
         run: |
-          TARGET=s3://software.thecombine.app/combine-installer-v2.7.1.run
+          TARGET=s3://software.thecombine.app/combine-installer-${{ github.event.release.tag_name }}.run
           aws s3 cp installer/combine-installer.run $TARGET --content-type application/octet-stream
         shell: bash
