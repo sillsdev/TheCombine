@@ -776,11 +776,7 @@ export async function deleteUser(userId: string): Promise<void> {
 export async function getUserProjects(
   userId: string
 ): Promise<UserProjectInfo[]> {
-  const response = await axiosInstance.get<UserProjectInfo[]>(
-    `/users/${userId}/projects`,
-    defaultOptions()
-  );
-  return response.data;
+  return (await userApi.getUserProjects({ userId }, defaultOptions())).data;
 }
 
 /** Checks whether email address is okay: unchanged or not taken by a different user. */
