@@ -24,20 +24,17 @@ export default function ConfirmDeletion(
   props: ConfirmDeletionProps
 ): ReactElement {
   const [projInfo, setProjInfo] = useState<UserProjectInfo[] | undefined>();
-  const [loadFailed, setLoadFailed] = useState(false);
 
   const { t } = useTranslation();
 
   useEffect(() => {
     setProjInfo(undefined);
-    setLoadFailed(false);
     if (props.user?.id) {
       getUserProjects(props.user.id)
         .then((pi) => setProjInfo(pi.sort(compareProjectInfo)))
         .catch((err) => {
           console.error("Failed to fetch user projects:", err);
-          toast.error(t("siteSettings.deleteUser.projectsLoadError"));
-          setLoadFailed(true);
+          toast.warning(t("siteSettings.deleteUser.projectsLoadError"));
         });
     }
   }, [props.user?.id, t]);
@@ -57,11 +54,7 @@ export default function ConfirmDeletion(
           {t("siteSettings.deleteUser.confirm")}
         </Typography>
 
-        {loadFailed ? (
-          <Typography align="center" sx={{ color: "error.main" }}>
-            {t("siteSettings.deleteUser.projectsLoadError")}
-          </Typography>
-        ) : projInfo === undefined ? (
+        {projInfo === undefined ? (
           <Typography align="center">
             {t("siteSettings.deleteUser.loadingProjects")}
           </Typography>
@@ -97,7 +90,7 @@ export default function ConfirmDeletion(
         <Stack direction="row" justifyContent="space-evenly">
           <Button
             color="secondary"
-            disabled={!props.user?.id || loadFailed || projInfo === undefined}
+            disabled={!props.user?.id || projInfo === undefined}
             id="user-delete-confirm"
             onClick={() => props.deleteUser(props.user!.id)}
             variant="contained"
