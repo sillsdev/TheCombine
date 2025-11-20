@@ -28,6 +28,12 @@ export interface UserProjectInfo {
   projectId: string;
   /**
    *
+   * @type {boolean}
+   * @memberof UserProjectInfo
+   */
+  projectIsActive: boolean;
+  /**
+   *
    * @type {string}
    * @memberof UserProjectInfo
    */

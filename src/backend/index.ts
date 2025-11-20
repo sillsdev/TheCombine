@@ -22,6 +22,7 @@ import {
   Speaker,
   User,
   UserEdit,
+  UserProjectInfo,
   UserRole,
   UserStub,
   Word,
@@ -37,12 +38,6 @@ import { RuntimeConfig } from "types/runtimeConfig";
 import { FileWithSpeakerId } from "types/word";
 import { Bcp47Code } from "types/writingSystem";
 import { convertGoalToEdit } from "utilities/goalUtilities";
-
-export interface UserProjectInfo {
-  projectId: string;
-  projectName: string;
-  role: Role;
-}
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;

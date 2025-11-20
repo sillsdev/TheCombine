@@ -318,9 +318,9 @@ namespace Backend.Tests.Controllers
         {
             // Create a user and two projects
             var user = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
-            var project1 = _projectRepo.Create(new() { Name = "Test Project 1" }).Result
+            var project1 = _projectRepo.Create(new() { IsActive = false, Name = "Test Project 1" }).Result
                 ?? throw new ProjectCreationException();
-            var project2 = _projectRepo.Create(new() { Name = "Test Project 2" }).Result
+            var project2 = _projectRepo.Create(new() { IsActive = true, Name = "Test Project 2" }).Result
                 ?? throw new ProjectCreationException();
 
             // Create user roles for both projects
@@ -340,10 +340,10 @@ namespace Backend.Tests.Controllers
 
             // Verify both projects are returned with correct roles
             Assert.That(projects, Has.Count.EqualTo(2));
-            Assert.That(projects!.Exists(
-                p => p.ProjectId == project1.Id && p.ProjectName == project1.Name && p.Role == userRole1.Role));
-            Assert.That(projects.Exists(
-                p => p.ProjectId == project2.Id && p.ProjectName == project2.Name && p.Role == userRole2.Role));
+            Assert.That(projects!.Exists(p => p.ProjectId == project1.Id && p.ProjectIsActive == project1.IsActive
+                && p.ProjectName == project1.Name && p.Role == userRole1.Role));
+            Assert.That(projects.Exists(p => p.ProjectId == project2.Id && p.ProjectIsActive == project2.IsActive
+                && p.ProjectName == project2.Name && p.Role == userRole2.Role));
         }
 
         [Test]

@@ -145,6 +145,9 @@ namespace BackendFramework.Models
         public string ProjectId { get; set; } = "";
 
         [Required]
+        public bool ProjectIsActive { get; set; } = true;
+
+        [Required]
         public string ProjectName { get; set; } = "";
 
         [Required]

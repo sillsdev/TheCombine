@@ -246,6 +246,7 @@ namespace BackendFramework.Controllers
                     userProjects.Add(new UserProjectInfo
                     {
                         ProjectId = projectId,
+                        ProjectIsActive = project.IsActive,
                         ProjectName = project.Name,
                         Role = userRole.Role
                     });

@@ -3,8 +3,16 @@ import { Fragment, ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { User } from "api/models";
-import { getUserProjects, UserProjectInfo } from "backend";
+import { User, UserProjectInfo } from "api/models";
+import { getUserProjects } from "backend";
+
+function compareProjectInfo(a: UserProjectInfo, b: UserProjectInfo): number {
+  return a.projectIsActive && !b.projectIsActive
+    ? -1
+    : !a.projectIsActive && b.projectIsActive
+      ? 1
+      : a.projectName.localeCompare(b.projectName);
+}
 
 interface ConfirmDeletionProps {
   user?: User;
@@ -23,7 +31,7 @@ export default function ConfirmDeletion(
     setProjInfo(undefined);
     if (props.user?.id) {
       getUserProjects(props.user.id)
-        .then(setProjInfo)
+        .then((pi) => setProjInfo(pi.sort(compareProjectInfo)))
         .catch((err) => {
           console.error("Failed to fetch user projects:", err);
           toast.warning(t("siteSettings.deleteUser.projectsLoadError"));
@@ -62,7 +70,9 @@ export default function ConfirmDeletion(
             >
               {projInfo.map((info) => (
                 <ListItem key={info.projectId}>
-                  <Typography>
+                  <Typography
+                    sx={info.projectIsActive ? {} : { color: "text.secondary" }}
+                  >
                     • {info.projectName} (
                     {t(`projectSettings.roles.${`${info.role}`.toLowerCase()}`)}
                     )
