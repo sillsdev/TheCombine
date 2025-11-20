@@ -52,17 +52,11 @@ jobs:
           cd installer
           ./make-combine-installer.sh ${{ github.event.release.tag_name }} --debug
         shell: bash
-      - name: Rename installer with version
-        run: |
-          VERSION=${{ github.event.release.tag_name }}
-          cd installer
-          mv combine-installer.run combine-installer-${VERSION}.run
-        shell: bash
       - name: Upload installer artifact
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: combine-installer
-          path: installer/combine-installer-${{ github.event.release.tag_name }}.run
+          path: installer/combine-installer.run
           retention-days: 1
 
   upload_installer:
@@ -76,10 +70,6 @@ jobs:
         with:
           egress-policy: block
           allowed-endpoints: >
-            azure.archive.ubuntu.com:80
-            esm.ubuntu.com:443
-            github.com:443
-            packages.microsoft.com:443
             s3.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
             sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
       - name: Download installer artifact
@@ -96,5 +86,5 @@ jobs:
       - name: Upload installer to S3
         run: |
           VERSION=${{ github.event.release.tag_name }}
-          aws s3 cp installer/combine-installer-${VERSION}.run s3://software.thecombine.app/combine-installer-${VERSION}.run --content-type application/octet-stream
+          aws s3 cp installer/combine-installer.run s3://software.thecombine.app/combine-installer-${VERSION}.run --content-type application/octet-stream
         shell: bash
