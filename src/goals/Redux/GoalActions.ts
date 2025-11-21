@@ -73,7 +73,7 @@ export function updateStepFromData(): Action {
 // Dispatch Functions
 
 export function asyncAddGoal(goal: Goal) {
-  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+  return async (dispatch: StoreStateDispatch) => {
     const userEditId = getUserEditId();
     if (userEditId) {
       dispatch(setCurrentGoal(goal));
@@ -167,8 +167,30 @@ export function asyncLoadNewGoalData() {
       dispatch(dispatchStepData(updatedGoal));
       await Backend.addGoalToUserEdit(getUserEditId()!, updatedGoal);
       await saveCurrentStep(updatedGoal);
+      dispatch(setGoalStatus(GoalStatus.InProgress));
+    } else if (currentGoal.goalType === GoalType.MergeDups) {
+      // No identical duplicates found, show dialog before finding similar ones
+      dispatch(setDataLoadStatus(DataLoadStatus.IdenticalCompleted));
+    } else {
+      dispatch(setGoalStatus(GoalStatus.InProgress));
     }
-    dispatch(setGoalStatus(GoalStatus.InProgress));
+  };
+}
+
+export function asyncLoadSimilarDuplicates() {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    const currentProj = getState().currentProjectState.project;
+    const ignoreProtected =
+      currentProj.protectedDataMergeAvoidEnabled === OffOnSetting.On;
+
+    // Initialize data loading in the backend.
+    dispatch(setDataLoadStatus(DataLoadStatus.Loading));
+    await Backend.findDuplicates(
+      5, // More than 5 entries doesn't fit well.
+      maxNumSteps(GoalType.MergeDups),
+      ignoreProtected
+    );
+    // Don't load goal data, since it'll be triggered by a signal from the backend when data is ready.
   };
 }
 
