@@ -5,6 +5,11 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+    paths-ignore:
+      - "docs/user_guide/**"
+      - "package-lock.json"
+      - "public/**"
+      - "src/**"
 
 concurrency:
   cancel-in-progress: true
