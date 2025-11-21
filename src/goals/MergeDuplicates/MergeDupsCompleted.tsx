@@ -1,26 +1,26 @@
-import { ArrowRightAlt, WarningOutlined } from "@mui/icons-material";
+import { ArrowRightAlt } from "@mui/icons-material";
 import {
   Box,
   Card,
   CardContent,
   CardHeader,
-  Grid2,
+  List,
+  ListItem,
+  Stack,
   Typography,
 } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import { Flag, MergeUndoIds, Sense, Word } from "api/models";
+import { Flag, MergeUndoIds, Sense, Status, Word } from "api/models";
 import { getFrontierWords, getWord, undoMerge } from "backend";
 import FlagButton from "components/Buttons/FlagButton";
-import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import NoteButton from "components/Buttons/NoteButton";
 import UndoButton from "components/Buttons/UndoButton";
-import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import { AudioSummary } from "components/WordCard";
+import ProtectedWarningIcon from "goals/MergeDuplicates/MergeDupsStep/ProtectedWarningIcon";
 import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
-import { protectReasonsText } from "goals/MergeDuplicates/MergeDupsStep/protectReasonUtils";
 import { MergesCompleted } from "goals/MergeDuplicates/MergeDupsTypes";
 import { type StoreState } from "rootRedux/types";
 import { newFlag } from "types/word";
@@ -39,9 +39,11 @@ export default function MergeDupsCompleted(): ReactElement {
         {t("mergeDups.title")}
       </Typography>
       {MergesCount(changes)}
-      {changes.merges?.map((m, i) => (
-        <MergeChange change={m} key={m.parentIds[0] ?? i} />
-      ))}
+      <List>
+        {changes.merges?.map((m, i) => (
+          <MergeChange change={m} key={m.parentIds[0] ?? i} />
+        ))}
+      </List>
     </>
   );
 }
@@ -65,42 +67,47 @@ export function MergeChange(props: { change: MergeUndoIds }): ReactElement {
   const isDeletion = !change.parentIds.length;
 
   return (
-    <Grid2 container sx={{ flexWrap: "nowrap", overflow: "auto" }}>
-      {isDeletion && <Typography>{t("mergeDups.undo.deleted")}</Typography>}
-      {change.childIds.map((id) => (
-        <WordBox key={id} wordId={id} />
-      ))}
-      {!isDeletion && (
-        <>
-          <Box alignContent="center" sx={{ m: 1 }}>
-            <ArrowRightAlt fontSize="large" />
-          </Box>
-          {change.parentIds.map((id) => (
-            <WordBox key={id} wordId={id} />
-          ))}
-        </>
-      )}
-      <Box alignContent="center">
-        <UndoButton
-          buttonIdEnabled={`merge-undo-${change.parentIds.join("-")}`}
-          buttonIdCancel="merge-undo-cancel"
-          buttonIdConfirm="merge-undo-confirm"
-          textIdDialog={
-            isDeletion
-              ? "mergeDups.undo.undoDeleteDialog"
-              : "mergeDups.undo.undoDialog"
-          }
-          textIdDisabled="mergeDups.undo.undoDisabled"
-          textIdEnabled={
-            isDeletion ? "mergeDups.undo.undoDelete" : "mergeDups.undo.undo"
-          }
-          isUndoAllowed={handleIsUndoAllowed}
-          undo={async () => {
-            await undoMerge(change);
-          }}
-        />
-      </Box>
-    </Grid2>
+    <ListItem>
+      <Stack direction="row">
+        {isDeletion && <Typography>{t("mergeDups.undo.deleted")}</Typography>}
+
+        {change.childIds.map((id) => (
+          <WordCard key={id} wordId={id} />
+        ))}
+
+        {!isDeletion && (
+          <>
+            <Box alignContent="center" sx={{ m: 1 }}>
+              <ArrowRightAlt fontSize="large" />
+            </Box>
+            {change.parentIds.map((id) => (
+              <WordCard key={id} wordId={id} />
+            ))}
+          </>
+        )}
+
+        <Box alignContent="center">
+          <UndoButton
+            buttonIdEnabled={`merge-undo-${change.parentIds.join("-")}`}
+            buttonIdCancel="merge-undo-cancel"
+            buttonIdConfirm="merge-undo-confirm"
+            textIdDialog={
+              isDeletion
+                ? "mergeDups.undo.undoDeleteDialog"
+                : "mergeDups.undo.undoDialog"
+            }
+            textIdDisabled="mergeDups.undo.undoDisabled"
+            textIdEnabled={
+              isDeletion ? "mergeDups.undo.undoDelete" : "mergeDups.undo.undo"
+            }
+            isUndoAllowed={handleIsUndoAllowed}
+            undo={async () => {
+              await undoMerge(change);
+            }}
+          />
+        </Box>
+      </Stack>
+    </ListItem>
   );
 }
 
@@ -116,10 +123,9 @@ export function doWordsIncludeMerges(
   );
 }
 
-function WordBox(props: { wordId: string }): ReactElement {
+function WordCard(props: { wordId: string }): ReactElement {
   const [word, setWord] = useState<Word | undefined>();
   const [flag, setFlag] = useState<Flag>(newFlag());
-  const { t } = useTranslation();
 
   useEffect(() => {
     getWord(props.wordId).then(setWord);
@@ -127,10 +133,6 @@ function WordBox(props: { wordId: string }): ReactElement {
   useEffect(() => {
     setFlag(word?.flag ?? newFlag());
   }, [word]);
-
-  const isProtected = !!word?.protectReasons?.length;
-  const audioCount = word?.audio?.length ?? 0;
-  const noteText = word?.note?.text ?? "";
 
   const headerTitle = (
     <TypographyWithFont variant="h5" vernacular>
@@ -140,49 +142,39 @@ function WordBox(props: { wordId: string }): ReactElement {
 
   const headerAction = (
     <>
-      {isProtected && (
-        <IconButtonWithTooltip
-          buttonId={`word-${props.wordId}-protected`}
-          icon={<WarningOutlined />}
-          side="top"
-          size="small"
-          text={
-            <MultilineTooltipTitle
-              lines={[
-                t("mergeDups.helpText.protectedWord"),
-                protectReasonsText(t, { word: word?.protectReasons }),
-                t("mergeDups.helpText.protectedWordInfo"),
-              ]}
-            />
-          }
+      {word?.accessibility === Status.Protected && (
+        <ProtectedWarningIcon
+          id={word.id}
+          isCompleted
+          protectReasons={word.protectReasons}
+          senseOrWord="word"
         />
       )}
-      <AudioSummary count={audioCount} />
-      {noteText ? <NoteButton noteText={noteText} /> : null}
+      <AudioSummary count={word?.audio?.length ?? 0} />
+      {word?.note?.text ? (
+        <NoteButton
+          buttonId={`word-${props.wordId}-note`}
+          noteText={word.note.text}
+        />
+      ) : null}
       <FlagButton buttonId={`word-${props.wordId}-flag`} flag={flag} />
     </>
   );
 
   return (
-    <Box sx={{ m: 1 }}>
-      <Card sx={{ bgcolor: "lightgrey", pb: 1 }}>
-        <CardHeader
-          action={headerAction}
-          sx={{
-            bgcolor: isProtected ? "lightyellow" : "white",
-            minHeight: 44,
-            minWidth: 150,
-            p: 1,
-          }}
-          title={headerTitle}
-        />
-        <CardContent>
-          <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
-            {word?.senses?.map(SenseCard)}
-          </div>
-        </CardContent>
-      </Card>
-    </Box>
+    <Card sx={{ bgcolor: "lightgrey", m: 1 }}>
+      <CardHeader
+        action={headerAction}
+        sx={{ minHeight: 44, minWidth: 100, p: 1 }}
+        title={headerTitle}
+      />
+
+      <CardContent>
+        <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
+          {word?.senses?.map(SenseCard)}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -198,7 +190,7 @@ function SenseCard(sense: Sense): ReactElement {
         userSelect: "none",
       }}
     >
-      <SenseCardContent senses={[sense]} />
+      <SenseCardContent isCompleted senses={[sense]} />
     </Card>
   );
 }
