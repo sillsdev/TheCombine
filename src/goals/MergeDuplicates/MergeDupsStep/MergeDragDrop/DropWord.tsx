@@ -162,8 +162,8 @@ export function DropWordCardHeader(
       {treeWord?.protected && (
         <ProtectedWarningIcon
           id={props.wordId}
-          senseOrWord="word"
           protectReasons={words[props.wordId]?.protectReasons}
+          senseOrWord="word"
         />
       )}
       <AudioSummary count={audioCount} />

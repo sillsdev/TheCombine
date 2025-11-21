@@ -40,7 +40,7 @@ export default function ProtectedWarningIcon(
         tooltipTexts.push(protectReasonsText(t, { word: protectReasons }));
       }
       if (!isCompleted) {
-        tooltipTexts.push(t("mergeDups.helpText.protectedSenseInfo"));
+        tooltipTexts.push(t("mergeDups.helpText.protectedWordInfo"));
       }
       break;
   }
