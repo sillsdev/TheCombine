@@ -5,7 +5,9 @@ import { useTranslation } from "react-i18next";
 import IdenticalDuplicatesDialog from "goals/MergeDuplicates/IdenticalDuplicatesDialog";
 import MergeDragDrop from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop";
 import SaveDeferButtons from "goals/MergeDuplicates/MergeDupsStep/SaveDeferButtons";
+import { ReviewDeferredDups } from "goals/MergeDuplicates/MergeDupsTypes";
 import {
+  asyncAddGoal,
   asyncLoadSimilarDuplicates,
   setDataLoadStatus,
 } from "goals/Redux/GoalActions";
@@ -38,8 +40,7 @@ export default function MergeDupsStep(): ReactElement {
 
   const handleReviewDeferred = (): void => {
     dispatch(setDataLoadStatus(DataLoadStatus.Default));
-    router.navigate(Path.Goals);
-    // TODO: Navigate to review deferred duplicates goal
+    dispatch(asyncAddGoal(new ReviewDeferredDups()));
   };
 
   if (dataLoadStatus === DataLoadStatus.IdenticalCompleted) {

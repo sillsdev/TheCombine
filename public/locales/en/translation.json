@@ -519,7 +519,7 @@
     "identicalCompleted": {
       "title": "All Identical Duplicates Processed",
       "congratulations": "Congratulations! You have processed all sets of words with identical vernacular forms.",
-      "deferredCount": "You have {{count}} deferred duplicate set(s) that can be reviewed later.",
+      "hasDeferred": "You have deferred duplicate sets that can be reviewed later.",
       "findingSimilar": "The Combine will now search for potential duplicates with similar (non-identical) vernacular forms.",
       "warning": "This project has more than 1,000 entries. Finding similar duplicates may take several minutes.",
       "reviewDeferred": "Review Deferred",

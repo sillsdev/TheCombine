@@ -21,20 +21,14 @@ export default function IdenticalDuplicatesDialog(
   props: IdenticalDuplicatesDialogProps
 ): ReactElement {
   const [open, setOpen] = useState<boolean>(true);
-  const [deferredCount, setDeferredCount] = useState<number>(0);
+  const [hasDeferred, setHasDeferred] = useState<boolean>(false);
   const [frontierCount, setFrontierCount] = useState<number>(0);
   const { t } = useTranslation();
 
   const { onCancel, onContinue, onReviewDeferred } = props;
 
   useEffect(() => {
-    hasGraylistEntries().then((hasDeferred) => {
-      if (hasDeferred) {
-        // Count deferred entries - this is a rough estimate
-        // In a real implementation, we'd need a backend endpoint to get the exact count
-        setDeferredCount(1); // Placeholder
-      }
-    });
+    hasGraylistEntries().then(setHasDeferred);
     getFrontierWords().then((words) => {
       setFrontierCount(words.length);
     });
@@ -62,11 +56,9 @@ export default function IdenticalDuplicatesDialog(
         <Typography paragraph>
           {t("mergeDups.identicalCompleted.congratulations")}
         </Typography>
-        {deferredCount > 0 && (
+        {hasDeferred && (
           <Typography paragraph>
-            {t("mergeDups.identicalCompleted.deferredCount", {
-              count: deferredCount,
-            })}
+            {t("mergeDups.identicalCompleted.hasDeferred")}
           </Typography>
         )}
         <Typography paragraph>
@@ -82,7 +74,7 @@ export default function IdenticalDuplicatesDialog(
         <Button color="secondary" variant="outlined" onClick={handleCancel}>
           {t("buttons.cancel")}
         </Button>
-        {deferredCount > 0 && (
+        {hasDeferred && (
           <Button
             color="primary"
             variant="outlined"
