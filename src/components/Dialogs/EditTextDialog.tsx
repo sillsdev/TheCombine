@@ -89,7 +89,7 @@ export default function EditTextDialog(
 
   return (
     <Dialog
-      disableRestoreFocus={!!props.onExited} // Allow custom focus handling
+      disableRestoreFocus // Prevent focus flash on triggering element when using onExited for custom focus handling
       open={props.open}
       onClose={escapeClose}
       slotProps={{ transition: { onExited: props.onExited } }}
