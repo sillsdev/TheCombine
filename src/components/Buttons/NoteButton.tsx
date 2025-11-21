@@ -19,13 +19,6 @@ interface NoteButtonProps {
 export default function NoteButton(props: NoteButtonProps): ReactElement {
   const [noteOpen, setNoteOpen] = useState<boolean>(false);
 
-  const handleClose = (): void => {
-    setNoteOpen(false);
-    if (props.onClick) {
-      props.onClick();
-    }
-  };
-
   return (
     <>
       <IconButtonWithTooltip
@@ -53,7 +46,8 @@ export default function NoteButton(props: NoteButtonProps): ReactElement {
         open={noteOpen}
         text={props.noteText}
         titleId={"addWords.addNote"}
-        close={handleClose}
+        close={() => setNoteOpen(false)}
+        onExited={props.onClick}
         updateText={props.updateNote ?? (() => {})}
         buttonIdCancel="note-edit-cancel"
         buttonIdClear="note-edit-clear"
