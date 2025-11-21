@@ -126,7 +126,7 @@ export default function DomainTileButton(
               borderBottomLeftRadius: theme.shape.borderRadius,
               borderBottomRightRadius: progress * theme.shape.borderRadius,
               height: "100%",
-              transition: "width .75s ease-in-out",
+              transition: progress ? "width .5s ease" : undefined,
               width: `${progress * 100}%`,
             }}
           />
