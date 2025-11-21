@@ -41,6 +41,8 @@ import { Credentials } from "../models";
 // @ts-ignore
 import { User } from "../models";
 // @ts-ignore
+import { UserProjectInfo } from "../models";
+// @ts-ignore
 import { UserStub } from "../models";
 /**
  * UserApi - axios parameter creator
@@ -350,6 +352,51 @@ export const UserApiAxiosParamCreator = function (
         localVarRequestOptions,
         configuration
       );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUserProjects: async (
+      userId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'userId' is not null or undefined
+      assertParamExists("getUserProjects", "userId", userId);
+      const localVarPath = `/v1/users/{userId}/projects`.replace(
+        `{${"userId"}}`,
+        encodeURIComponent(String(userId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
 
       return {
         url: toPathString(localVarUrlObj),
@@ -717,6 +764,32 @@ export const UserApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {string} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getUserProjects(
+      userId: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<UserProjectInfo>>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getUserProjects(
+        userId,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {string} filter
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -904,6 +977,20 @@ export const UserApiFactory = function (
     },
     /**
      *
+     * @param {string} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUserProjects(
+      userId: string,
+      options?: any
+    ): AxiosPromise<Array<UserProjectInfo>> {
+      return localVarFp
+        .getUserProjects(userId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {string} filter
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1024,6 +1111,20 @@ export interface UserApiGetUserIdByEmailOrUsernameRequest {
    * @memberof UserApiGetUserIdByEmailOrUsername
    */
   readonly body: string;
+}
+
+/**
+ * Request parameters for getUserProjects operation in UserApi.
+ * @export
+ * @interface UserApiGetUserProjectsRequest
+ */
+export interface UserApiGetUserProjectsRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof UserApiGetUserProjects
+   */
+  readonly userId: string;
 }
 
 /**
@@ -1194,6 +1295,22 @@ export class UserApi extends BaseAPI {
   ) {
     return UserApiFp(this.configuration)
       .getUserIdByEmailOrUsername(requestParameters.body, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {UserApiGetUserProjectsRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public getUserProjects(
+    requestParameters: UserApiGetUserProjectsRequest,
+    options?: any
+  ) {
+    return UserApiFp(this.configuration)
+      .getUserProjects(requestParameters.userId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
