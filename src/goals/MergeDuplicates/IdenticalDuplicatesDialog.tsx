@@ -17,6 +17,9 @@ export interface IdenticalDuplicatesDialogProps {
   onReviewDeferred: () => void;
 }
 
+// Threshold for warning about long processing time
+const LARGE_PROJECT_THRESHOLD = 1000;
+
 export default function IdenticalDuplicatesDialog(
   props: IdenticalDuplicatesDialogProps
 ): ReactElement {
@@ -64,7 +67,7 @@ export default function IdenticalDuplicatesDialog(
         <Typography paragraph>
           {t("mergeDups.identicalCompleted.findingSimilar")}
         </Typography>
-        {frontierCount > 1000 && (
+        {frontierCount > LARGE_PROJECT_THRESHOLD && (
           <Typography paragraph color="warning.main">
             {t("mergeDups.identicalCompleted.warning")}
           </Typography>

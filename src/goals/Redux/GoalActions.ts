@@ -169,7 +169,7 @@ export function asyncLoadNewGoalData() {
       await saveCurrentStep(updatedGoal);
       dispatch(setGoalStatus(GoalStatus.InProgress));
     } else if (currentGoal.goalType === GoalType.MergeDups) {
-      // No identical duplicates found, show dialog before finding similar ones
+      // All identical duplicates have been processed, show dialog before finding similar ones
       dispatch(setDataLoadStatus(DataLoadStatus.IdenticalCompleted));
     } else {
       dispatch(setGoalStatus(GoalStatus.InProgress));
