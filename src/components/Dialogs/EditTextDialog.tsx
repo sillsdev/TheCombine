@@ -89,6 +89,7 @@ export default function EditTextDialog(
 
   return (
     <Dialog
+      disableRestoreFocus
       open={props.open}
       onClose={escapeClose}
       TransitionProps={{ onExited: props.onExited }}
