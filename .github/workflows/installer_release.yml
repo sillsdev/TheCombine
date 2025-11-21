@@ -1,0 +1,90 @@
+name: installer_release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  make_installer:
+    runs-on: ubuntu-latest
+    steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
+      - name: Harden Runner
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            *-docker.pkg.dev:443
+            *.cloudfront.net:443
+            azure.archive.ubuntu.com:80
+            cdn.dl.k8s.io:443
+            dl.k8s.io:443
+            esm.ubuntu.com:443
+            files.pythonhosted.org:443
+            get.helm.sh:443
+            get.k3s.io:443
+            github.com:443
+            kubernetes.github.io:443
+            packages.microsoft.com:443
+            prod-registry-k8s-io-us-east-1.s3.dualstack.us-east-1.amazonaws.com:443
+            prod-registry-k8s-io-us-east-2.s3.dualstack.us-east-2.amazonaws.com:443
+            prod-registry-k8s-io-us-west-1.s3.dualstack.us-west-1.amazonaws.com:443
+            prod-registry-k8s-io-us-west-2.s3.dualstack.us-west-2.amazonaws.com:443
+            public.ecr.aws:443
+            pypi.org:443
+            registry.k8s.io:443
+            release-assets.githubusercontent.com:443
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 0
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y makeself
+        shell: bash
+      - name: Make installer with release version
+        run: |
+          cd installer
+          ./make-combine-installer.sh ${{ github.event.release.tag_name }} --debug
+        shell: bash
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: combine-installer
+          path: installer/combine-installer.run
+          retention-days: 5
+
+  upload_installer:
+    needs: make_installer
+    runs-on: ubuntu-latest
+    steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
+      - name: Harden Runner
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            s3.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
+            sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
+      - name: Download installer artifact
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          name: combine-installer
+          path: installer/
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@00943011d9042930efac3dcd3a170e4273319bc8 # v5.1.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: Upload installer to S3
+        run: |
+          TARGET=s3://software.thecombine.app/combine-installer-${{ github.event.release.tag_name }}.run
+          aws s3 cp installer/combine-installer.run $TARGET --content-type application/octet-stream
+        shell: bash

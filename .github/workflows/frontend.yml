@@ -78,7 +78,7 @@ jobs:
           if-no-files-found: error
           name: coverage
           path: coverage/cobertura-coverage.xml
-          retention-days: 7
+          retention-days: 5
 
   upload_coverage:
     needs: test_coverage

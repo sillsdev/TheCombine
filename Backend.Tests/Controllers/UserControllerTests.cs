@@ -11,7 +11,10 @@ namespace Backend.Tests.Controllers
 {
     internal sealed class UserControllerTests : IDisposable
     {
+        private IProjectRepository _projectRepo = null!;
         private IUserRepository _userRepo = null!;
+        private IUserEditRepository _userEditRepo = null!;
+        private IUserRoleRepository _userRoleRepo = null!;
         private UserController _userController = null!;
 
         public void Dispose()
@@ -23,9 +26,12 @@ namespace Backend.Tests.Controllers
         [SetUp]
         public void Setup()
         {
+            _projectRepo = new ProjectRepositoryMock();
             _userRepo = new UserRepositoryMock();
-            _userController = new UserController(
-                _userRepo, new CaptchaServiceMock(), new PermissionServiceMock(_userRepo));
+            _userEditRepo = new UserEditRepositoryMock();
+            _userRoleRepo = new UserRoleRepositoryMock();
+            _userController = new UserController(_projectRepo, _userRepo, _userEditRepo, _userRoleRepo,
+                new CaptchaServiceMock(), new PermissionServiceMock(_userRepo));
         }
 
         private static User RandomUser()
@@ -171,8 +177,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestCreateUserBadUsername()
         {
-            var user = RandomUser();
-            _userRepo.Create(user);
+            var user = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
 
             var user2 = RandomUser();
             user2.Username = " ";
@@ -186,8 +191,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestCreateUserBadEmail()
         {
-            var user = RandomUser();
-            _userRepo.Create(user);
+            var user = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
 
             var user2 = RandomUser();
             user2.Email = " ";
@@ -260,14 +264,108 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestDeleteUserWithRolesAndEdits()
+        {
+            // Create a user, project, user role, and user edit
+            var user = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
+            var project = _projectRepo.Create(new() { Name = "Test Project" }).Result
+                ?? throw new ProjectCreationException();
+            var userRole = _userRoleRepo.Create(new() { ProjectId = project.Id, Role = Role.Editor }).Result
+                ?? throw new UserRoleCreationException();
+            var userEdit = _userEditRepo.Create(new() { ProjectId = project.Id }).Result
+                ?? throw new UserEditCreationException();
+
+            // Add role and edit to user
+            user.ProjectRoles[project.Id] = userRole.Id;
+            user.WorkedProjects[project.Id] = userEdit.Id;
+            _ = _userRepo.Update(user.Id, user).Result;
+
+            // Verify they exist
+            Assert.That(_userRoleRepo.GetUserRole(project.Id, userRole.Id).Result, Is.Not.Null);
+            Assert.That(_userEditRepo.GetUserEdit(project.Id, userEdit.Id).Result, Is.Not.Null);
+
+            // Delete the user
+            _ = _userController.DeleteUser(user.Id).Result;
+
+            // Verify user is deleted
+            Assert.That(_userRepo.GetAllUsers().Result, Is.Empty);
+
+            // Verify user role and edit are deleted
+            Assert.That(_userRoleRepo.GetUserRole(project.Id, userRole.Id).Result, Is.Null);
+            Assert.That(_userEditRepo.GetUserEdit(project.Id, userEdit.Id).Result, Is.Null);
+        }
+
+        [Test]
+        public void TestDeleteAdminUser()
+        {
+            // Create an admin user
+            var user = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
+            user.IsAdmin = true;
+            _ = _userRepo.Update(user.Id, user, updateIsAdmin: true).Result;
+
+            // Try to delete admin user
+            var result = _userController.DeleteUser(user.Id).Result;
+
+            // Should be forbidden
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+
+            // Verify user is not deleted
+            Assert.That(_userRepo.GetAllUsers().Result, Has.Count.EqualTo(1));
+        }
+
+        [Test]
+        public void TestGetUserProjects()
+        {
+            // Create a user and two projects
+            var user = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
+            var project1 = _projectRepo.Create(new() { IsActive = false, Name = "Test Project 1" }).Result
+                ?? throw new ProjectCreationException();
+            var project2 = _projectRepo.Create(new() { IsActive = true, Name = "Test Project 2" }).Result
+                ?? throw new ProjectCreationException();
+
+            // Create user roles for both projects
+            var userRole1 = _userRoleRepo.Create(new() { ProjectId = project1.Id, Role = Role.Editor }).Result
+                ?? throw new UserRoleCreationException();
+            var userRole2 = _userRoleRepo.Create(new() { ProjectId = project2.Id, Role = Role.Administrator }).Result
+                ?? throw new UserRoleCreationException();
+
+            // Add roles to user
+            user.ProjectRoles[project1.Id] = userRole1.Id;
+            user.ProjectRoles[project2.Id] = userRole2.Id;
+            _ = _userRepo.Update(user.Id, user).Result;
+
+            // Get user projects
+            var result = (ObjectResult)_userController.GetUserProjects(user.Id).Result;
+            var projects = result.Value as List<UserProjectInfo>;
+
+            // Verify both projects are returned with correct roles
+            Assert.That(projects, Has.Count.EqualTo(2));
+            Assert.That(projects!.Exists(p => p.ProjectId == project1.Id && p.ProjectIsActive == project1.IsActive
+                && p.ProjectName == project1.Name && p.Role == userRole1.Role));
+            Assert.That(projects.Exists(p => p.ProjectId == project2.Id && p.ProjectIsActive == project2.IsActive
+                && p.ProjectName == project2.Name && p.Role == userRole2.Role));
+        }
+
+        [Test]
+        public void TestGetUserProjectsNoPermission()
+        {
+            _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _userController.GetUserProjects("anything").Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestGetUserProjectsNoUser()
+        {
+            var result = _userController.GetUserProjects("not-a-user").Result;
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
+        }
+
+        [Test]
         public void TestIsEmailOrUsernameAvailable()
         {
-            var user1 = RandomUser();
-            var user2 = RandomUser();
-            var email1 = user1.Email;
-            var email2 = user2.Email;
-            _userRepo.Create(user1);
-            _userRepo.Create(user2);
+            var email1 = _userRepo.Create(RandomUser()).Result?.Email ?? throw new UserCreationException();
+            var email2 = _userRepo.Create(RandomUser()).Result?.Email ?? throw new UserCreationException();
 
             var result1 = (ObjectResult)_userController.IsEmailOrUsernameAvailable(email1.ToLowerInvariant()).Result;
             Assert.That(result1.Value, Is.False);
