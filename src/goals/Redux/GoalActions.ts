@@ -83,21 +83,8 @@ export function asyncAddGoal(goal: Goal) {
         await Backend.addGoalToUserEdit(userEditId, goal);
         dispatch(setCurrentGoal(goal));
 
-        // Start loading goal data.
-        if (goal.goalType === GoalType.MergeDups) {
-          // Initialize data loading in the backend.
-          dispatch(setDataLoadStatus(DataLoadStatus.Loading));
-          const currentProj = getState().currentProjectState.project;
-          await Backend.findDuplicates(
-            5, // More than 5 entries doesn't fit well.
-            maxNumSteps(goal.goalType),
-            currentProj.protectedDataMergeAvoidEnabled === OffOnSetting.On
-          );
-          // Don't load goal data, since it'll be triggered by a signal from the backend when data is ready.
-        } else {
-          // Load the goal data, but don't await, to allow a loading screen.
-          dispatch(asyncLoadNewGoalData());
-        }
+        // Load the goal data, but don't await, to allow a loading screen.
+        dispatch(asyncLoadNewGoalData());
       }
 
       // Serve goal.
@@ -160,11 +147,16 @@ export function asyncLoadExistingUserEdits(
 export function asyncLoadNewGoalData() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const currentGoal = getState().goalsState.currentGoal;
-    const goalData = await loadGoalData(currentGoal.goalType).catch(() => {
-      dispatch(setDataLoadStatus(DataLoadStatus.Failure));
-      alert("Failed to load data.");
-      router.navigate(Path.Goals);
-    });
+    const currentProj = getState().currentProjectState.project;
+    const ignoreProtected =
+      currentProj.protectedDataMergeAvoidEnabled === OffOnSetting.On;
+    const goalData = await loadGoalData(currentGoal.goalType, ignoreProtected).catch(
+      () => {
+        dispatch(setDataLoadStatus(DataLoadStatus.Failure));
+        alert("Failed to load data.");
+        router.navigate(Path.Goals);
+      }
+    );
     if (!goalData) {
       return;
     }
@@ -242,12 +234,19 @@ function goalCleanup(goal: Goal): void {
 }
 
 /** Returns goal data for some goal types. */
-async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
+async function loadGoalData(
+  goalType: GoalType,
+  ignoreProtected = false
+): Promise<Word[][]> {
   switch (goalType) {
     case GoalType.MergeDups:
-      // Catch failure and pass to caller to allow for error dispatch.
-      const dups = await Backend.retrieveDuplicates().catch(() => {});
-      return dups ? checkMergeData(dups) : Promise.reject();
+      // Find identical duplicates first (fast).
+      const dups = await Backend.findIdenticalDuplicates(
+        5, // More than 5 entries doesn't fit well.
+        maxNumSteps(goalType),
+        ignoreProtected
+      );
+      return checkMergeData(dups);
     case GoalType.ReviewDeferredDups:
       return checkMergeData(
         await Backend.getGraylistEntries(maxNumSteps(goalType))
