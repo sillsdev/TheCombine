@@ -277,7 +277,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           <NoteButton
             buttonId={NewEntryId.ButtonNote}
             noteText={submitting ? "" : newNote}
-            onClick={() => focus(FocusTarget.Gloss)}
+            onExited={() => focus(FocusTarget.Gloss)}
             updateNote={setNewNote}
           />
         )}
