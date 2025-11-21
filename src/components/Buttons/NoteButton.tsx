@@ -11,6 +11,7 @@ interface NoteButtonProps {
   /** If `noteText` is empty and `updateNote` defined,
    * the button will have default add-note hover text. */
   noteText: string;
+  onExited?: () => void;
   updateNote?: (newText: string) => void | Promise<void>;
 }
 
@@ -46,6 +47,7 @@ export default function NoteButton(props: NoteButtonProps): ReactElement {
         text={props.noteText}
         titleId={"addWords.addNote"}
         close={() => setNoteOpen(false)}
+        onExited={props.onExited}
         updateText={props.updateNote ?? (() => {})}
         buttonIdCancel="note-edit-cancel"
         buttonIdClear="note-edit-clear"
