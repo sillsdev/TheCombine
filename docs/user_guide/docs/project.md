@@ -175,7 +175,7 @@ No automatic deduplication, merging, or syncing will be performed.
 
 If you do a second import, all words in The Combine will be automatically deleted before the new words are imported. Do
 not do a second import unless you have already exported your project and imported it into FieldWorks. Then, if you want
-to do more word collection in The Combine, you can export from FieldWorks and import into the Combine. The previous
+to do more word collection in The Combine, you can export from FieldWorks and import into The Combine. The previous
 words will be deleted to allow for a clean start with the up-to-date data from FieldWorks.
 
 #### Export {#export}

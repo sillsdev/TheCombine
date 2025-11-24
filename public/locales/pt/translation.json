@@ -15,14 +15,15 @@
   },
   "treeView": {
     "findDomain": "Encontrar um domínio",
-    "domainNotFound": "Domínio não encontrado"
+    "domainNotFound": "Domínio não encontrado",
+    "returnToTop": "Volte ao topo da árvore de domínio."
   },
   "addWords": {
     "selectEntry": "Selecione uma entrada",
-    "selectSense": "Selecione um sentido",
+    "selectSense": "Selecione um significado",
     "newEntryFor": "Nova entrada para: ",
-    "newSense": "Novo sentido",
-    "senseInWord": "A palavra já tem este sentido neste domínio semântico: {{ val1 }}, {{ val2 }}",
+    "newSense": "Novo significado",
+    "senseInWord": "A palavra já tem este significado neste domínio semântico: {{ val1 }}, {{ val2 }}",
     "deleteRow": "Excluir esta linha",
     "deleteRowWarning": "Esta linha será permanentemente apagada!",
     "addNote": "Adicionar uma nota",
@@ -32,14 +33,30 @@
     "pressEnter": "Pressione Enter para salvar a palavra",
     "vernacular": "Vernáculo"
   },
-  "analyticsConsent": { "consentModal": {} },
+  "analyticsConsent": {
+    "consentModal": {
+      "acceptAllBtn": "Sim, permitir análises",
+      "acceptNecessaryBtn": "Não, somente as estatísticas necessárias",
+      "description": "The Combine armazena informações básicas sobre sua sessão e uso para fins de manutenção. Esta informação é necessária e não é compartilhada com ninguém. The Combine também usa análises adicionais para compilar estatísticas anônimas. Você concorda com nosso uso de análises adicionais?",
+      "title": "Análises em The Combine"
+    }
+  },
   "appBar": {
     "dataEntry": "Entrada de dados",
     "dataCleanup": "Limpeza de dados",
     "statistics": "Estatísticas de dados",
     "projectSettings": "Configurações do projeto"
   },
-  "invite": {},
+  "emailVerify": {
+    "invalidText": "O link pode ter expirado ou já foi usado.",
+    "invalidTitle": "Verificação de e-mail falhou",
+    "returnButton": "Retorne a The Combine",
+    "success": "Endereço de e-mail verificado!",
+    "verifying": "Verificando endereço de e-mail..."
+  },
+  "invite": {
+    "invalidInvitationURL": "O link de convite ao projeto é inválido."
+  },
   "login": {
     "title": "Entrar",
     "name": "Seu Nome",
@@ -50,6 +67,7 @@
     "forgotPassword": "Esqueceu a senha?",
     "login": "Login",
     "failed": "Falha ao fazer o login. Por favor, verifique seu nome de usuário e a senha.",
+    "failedUnknownReason": "Falha ao logar. Algo deu errado com The Combine.",
     "backToLogin": "Voltar para o login",
     "signUp": "Cadastrar-se",
     "signUpNew": "Cadastrar Novo Usuário",
@@ -64,16 +82,24 @@
     "email": "E-mail"
   },
   "passwordReset": {
+    "invalidURL": "Link de redefinição de senha é inválido.",
     "emailOrUsername": "E-mail OU Nome de usuário",
     "resetRequestTitle": "Reinicializar pedido de senha",
     "resetTitle": "Redefinir Senha",
     "resetRequestInstructions": "Nós enviaremos um link de reinicialização da sua conta para o seu e-mail.",
     "submit": "Confirmar",
     "resetFail": "Erro de redefinição de senha",
+    "resetSuccess": "Senha redefinida com sucesso",
+    "resetDone": "Se você digitou corretamente seu e-mail ou usuário, um link de redefinição de senha foi enviado para o seu endereço de e-mail.",
     "backToLogin": "Voltar para Login"
   },
-  "captcha": {},
-  "speakerMenu": {},
+  "captcha": {
+    "error": "A verificação da página falhou ou expirou. Por favor, atualize a página."
+  },
+  "speakerMenu": {
+    "none": "Nenhum falante no projeto. Para anexar um falante às gravações de áudio, por favor, fale com um administrador do projeto.",
+    "other": "[Nenhuma das anteriores]"
+  },
   "userMenu": {
     "siteSettings": "Configurações do site",
     "userSettings": "Configurações de Usuário",
@@ -87,16 +113,28 @@
     "uploadFormat": "O arquivo deve ser uma pasta zipada que contenha um <1>Lexicon Interchange FormaT (LIFT)</1> projeto.",
     "create": "Criar Projeto",
     "fileSelected": "Arquivo selecionado: {{ val }}",
+    "language": "Informações sobre o idioma do projeto serão extraídas automaticamente dos dados enviados.",
+    "languageOptionOther": "Outro",
+    "languageSelect": "Selecione de idiomas no arquivo:",
     "success": "Projeto Criado!"
   },
   "selectProject": { "title": "Selecionar Projeto" },
   "siteSettings": {
     "projectList": "Projetos",
+    "activeProjects": "Projetos ativos: {{ val }}",
+    "archivedProjects": "Projetos arquivados: {{ val }}",
+    "manageProject": "Gerenciar este projeto",
+    "projectRoles": "Papéis de projeto",
+    "addProjectUsers": "Adicionar usuários do projeto",
     "archiveProjectText": "Este projeto não será acessível a nenhum utilizador.",
     "restoreProjectText": "Alguém provavelmente tinha uma boa razão para arquivar este projeto. Tens a certeza que o queres restaurar?",
     "userList": "Usuários",
     "deleteUser": {
       "confirm": "Confirmar exclusão de usuário do banco de dados de The Combine.",
+      "loadingProjects": "Carregando projetos de usuário...",
+      "projectsTitle": "Este usuário tem funções nos seguintes projetos:",
+      "noProjects": "Este usuário não tem funções de projeto.",
+      "projectsLoadError": "Falha ao carregar os projetos do usuário.",
       "toastSuccess": "Usuário excluído com sucesso de The Combine.",
       "toastFailure": "Falha em excluir usuário de The Combine."
     },
@@ -106,79 +144,149 @@
     "banners": {
       "title": "Banners",
       "loginBanner": "Banner de Login",
-      "announcementBanner": "Banner de Anúncio"
+      "announcementBanner": "Banner de Anúncio",
+      "bannerCloseButton": "Fechar banner"
     }
   },
   "userSettings": {
-    "analyticsConsent": {},
+    "analyticsConsent": {
+      "button": "Alterar consentimento",
+      "consentNo": "Você não consentiu nosso uso de cookies de análise.",
+      "consentYes": "Você concordou com nosso uso de cookies de análise.",
+      "title": "Cookies de análise"
+    },
+    "verifyEmail": {
+      "button": "Verificar e-mail",
+      "description": "Para adicionar usuários ao seu projeto, você deve verificar seu endereço de e-mail.",
+      "emailUnverified": "Verifique o e-mail para adicionar usuários aos projetos",
+      "emailVerified": "Verificação de e-mail concluída",
+      "emailVerifying": "Verifique seu e-mail",
+      "title": "Verificar endereço de e-mail",
+      "verificationSent": "E-mail de verificação enviado. Por favor, verifique seu e-mail."
+    },
+    "contact": "Informação de contato",
+    "glossSuggestion": "Sugestões de ortografia de glosa",
+    "glossSuggestionHint": "No Registro de Dados, dê sugestões de ortografia para o Glosa ser digitado.",
+    "phone": "Número de telefone",
     "uiLanguage": "Idioma da interface",
     "uiLanguageDefault": "(Definir o idioma do navegador como padrão)",
-    "updateSuccess": "Configurações atualizadas com sucesso."
+    "updateSuccess": "Configurações atualizadas com sucesso.",
+    "uploadAvatarTitle": "Definir avatar do usuário"
   },
   "projectExport": {
     "cancelExport": "Cancelar exportação",
     "cannotExportEmpty": "O projeto está vazio. Não é possível exportar um projeto sem palavras.",
     "downloadInProgress": "Baixando projeto: {{ val }}",
+    "exportFailed": "Falha ao exportar o projeto {{ val }}. Clique para limpar esta mensagem.",
     "exportInProgress": "Exportando projeto: {{ val }}"
   },
   "projectSettings": {
     "project": "Projeto:",
     "tab": {
+      "basic": "Configurações Básicas",
       "domains": "Domínios Semânticos",
       "export": "Exportar",
       "importExport": "Importar/Exportar",
       "languages": "Idiomas",
+      "schedule": "Agendamento",
       "users": "Usuários"
     },
     "language": {
       "vernacular": "Vernáculo",
       "vernacularLanguage": "Língua Vernacular",
       "analysis": "Análise",
-      "analysisLanguage": "Linguagem de Análise",
+      "analysisLanguage": "Língua de Análise",
       "semanticDomains": "Domínios Semânticos",
       "semanticDomainsDefault": "(Definir o idioma da interface)",
       "languages": "Idiomas do projeto",
       "bcp47": "Código BCP 47",
       "name": "Nome",
       "font": "Fonte",
-      "addAnalysisLanguage": "Adicione uma linguagem de análise alternativa",
-      "makeDefaultAnalysisLanguage": "Faça desta a linguagem de análise padrão",
-      "deleteAnalysisLanguage": "Elimine esta linguagem de análise",
+      "changeName": "Alterar o Nome",
+      "addAnalysisLanguage": "Adicione uma língua de análise alternativa",
+      "makeDefaultAnalysisLanguage": "Faça desta a língua de análise padrão",
+      "deleteAnalysisLanguage": "Elimine esta língua de análise",
       "getGlossLanguages": "Encontre todos os códigos de idioma usados nos dados atuais",
-      "addAnalysisLanguageFailed": "Falha ao adicionar o idioma da análise",
-      "makeDefaultAnalysisLanguageFailed": "Falha ao tornar idioma de análise padrão",
-      "deleteAnalysisLanguageFailed": "Falha ao excluir o idioma da análise",
+      "updateVernacularLanguageNameFailed": "Falha ao atualizar o nome da língua vernácula",
+      "updateVernacularLanguageNameSuccess": "Língua vernácula atualizado!",
+      "addAnalysisLanguageFailed": "Falha ao adicionar a língua da análise",
+      "makeDefaultAnalysisLanguageFailed": "Falha ao tornar língua de análise padrão",
+      "deleteAnalysisLanguageFailed": "Falha ao excluir a língua da análise",
       "updateSemDomWritingSystemFailed": "Falha na atualização do idioma dos domínios semânticos"
     },
     "name": "Nome do Projeto",
+    "nameUpdateFailed": "Nome do projeto já está em uso.",
     "user": {
       "currentUsers": "Usuários atuais",
       "addUser": "Adicionar usuário"
     },
-    "roles": { "editor": "Editor", "administrator": "Administrador" },
+    "roles": {
+      "harvester": "Colheitadeira",
+      "editor": "Editor",
+      "administrator": "Administrador",
+      "owner": "Proprietário"
+    },
     "userManagement": {
+      "removeFromProject": "Remover do projeto",
+      "changeProjectRole": "Alterar cargo do projeto:",
+      "makeOwner": "Tornar proprietário do projeto",
       "removeUserWarning": "Remover esse usuário do projeto?",
+      "makeHarvesterWarning": "Tornar esse usuário um Colheita do projeto?",
+      "makeEditorWarning": "Tornar este usuário um editor de projeto?",
       "makeAdminWarning": "Definir este usuário como administrador de projeto?",
       "makeOwnerWarning": "Transferir a propriedade do projeto para este usuário?",
       "userRemovedToastSuccess": "Usuário removido do projeto.",
       "userRemovedToastFailure": "Falha ao Remover Usuário.",
+      "userRoleUpdateToastSuccess": "Cargo do usuário atualizado com sucesso.",
+      "userRoleUpdateToastFailure": "Não foi possível atualizar o papel do usuário.",
       "makeOwnerToastSuccess": "Propriedade do projeto transferida.",
       "makeOwnerToastFailure": "Falha ao transferir propriedade do projeto.",
       "manageUser": "Gerenciar Usuário",
       "reverseOrder": "Ordem Reversa"
     },
-    "speaker": { "consent": {} },
+    "speaker": {
+      "label": "Gerenciar falantes",
+      "add": "Adicionar um falante",
+      "enterName": "Digite o nome de um novo falante",
+      "nameEmpty": "Nome do falante está vazio",
+      "nameTaken": "Nome do falante já está ocupado neste projeto",
+      "delete": "Excluir este falante",
+      "edit": "Editar nome do falante",
+      "consent": {
+        "add": "Adicionar consentimento para este falante",
+        "record": "Gravar consentimento de áudio",
+        "view": "Exibir o consentimento de imagem deste falante",
+        "viewTitle": "Consentimento para o falante: {{ val }}",
+        "upload": "Carregar consentimento da imagem",
+        "remove": "Remover o consentimento deste falante",
+        "warning": "Aviso: o consentimento atual do falante será excluído--isso não pode ser desfeito."
+      }
+    },
     "import": {
       "header": "Importar Dados",
       "body": "Os dados importados serão adicionados a este projeto. The Combine não tentará deduplicar, sobrescrever ou sincronizar.",
       "chooseFile": "Escolha Arquivo",
-      "notAllowed": "Você já importou um arquivo LIFT para este projeto."
+      "notAllowed": "Você já importou um arquivo LIFT para este projeto.",
+      "reuploadWarning": "Você pode fazer upload de um novo arquivo LIFT, mas ele irá sobrescrever todas as palavras deste projeto.",
+      "reuploadConfirm": "Todas as palavras deste projeto serão excluídas e substituídas com as palavras do novo arquivo LIFT. Tem certeza de que deseja continuar?",
+      "wordsUploaded": "Palavras enviadas: {{ val }}",
+      "noWordsUploaded": "O arquivo LIFT não tem palavras na língua vernácula deste projeto.",
+      "liftLanguageMismatch": "As línguas deste arquivo LIFT ({{ val1 }}) não incluem a língua vernácula do projeto ({{ val2 }}). Provavelmente nenhuma palavra será importada. Tem certeza de que deseja continuar?"
     },
     "archive": {
       "archive": "Arquivar Projeto",
       "archiveToastSuccess": "Projeto Arquivado!"
     },
-    "schedule": {},
+    "schedule": {
+      "workshopSchedule": "Horário da Oficina",
+      "startDate": "Data Inicial",
+      "endDate": "Data de Término",
+      "selectedDateAlert": "A data de início deve ser anterior à data de término.",
+      "setDays": "Defina o intervalo de dias para o workshop.",
+      "editDays": "Ajuste o horário do workshop.",
+      "removeDays": "Remover todos os dias da oficina.",
+      "removeAll": "Tem certeza de que deseja remover todas as datas?"
+    },
     "exportProject": { "label": "Exportar Projeto" },
     "autocomplete": {
       "label": "Autocomplemento",
@@ -186,7 +294,17 @@
       "on": "Ativado",
       "hint": "Na Entrada de Dados, o programa irá sugerir verbetes existentes que são similares ao verbete no vernáculo que está sendo digitado."
     },
-    "protectedDataOverride": {},
+    "protectedData": {
+      "label": "Gerenciamento de Dados Protegido",
+      "avoidInMerge": {
+        "hint": "Em Mesclar Duplicações, pule conjuntos que possuem apenas palavras protegidas. Isso evitará conjuntos de entradas adultas importadas a partir de FieldWorks e promoverá entradas de mesclagem coletadas em The Combine.",
+        "label": "Evitar conjuntos protegidos em Mesclar Duplicações"
+      },
+      "override": {
+        "hint": "Em Mesclar Duplicações, permite a proteção universal de palavras e significados protegidos.",
+        "label": "Permitir a substituição da proteção de dados em Mesclar Duplicações"
+      }
+    },
     "invite": {
       "inviteByEmailLabel": "Convidar por e-mail",
       "userExists": "Esse usuário já está registrado.",
@@ -194,15 +312,25 @@
       "searchPlaceholder": "Procurar...",
       "searchTitle": "Encontrar usuários",
       "emailLabel": "E-mail",
+      "emailMessage": "Mensagem (opcional)",
       "toastSuccess": "Adicionado usuário do projeto.",
       "toastFail": "Falha ao adicionar usuário ao projeto."
     },
     "domains": {
+      "semDomLanguage": "Idioma de Domínios Semânticos",
+      "label": "Domínios Semânticos Personalizados",
+      "add": "Adicionar um subdomínio personalizado",
+      "parent": "Domínio pai: ",
       "subdomainName": "Nome de subdomínio: ",
       "name": "Nome: ",
       "description": "Descrição: ",
       "questions": "Perguntas: ",
-      "addError": {}
+      "deleteConfirm": "Tem certeza de que deseja excluir este domínio personalizado?",
+      "addError": {
+        "name": "Por favor, insira um nome para o domínio personalizado.",
+        "customParent": "O domínio pai não pode ser um subdomínio personalizado. Por favor, escolha um domínio pai diferente.",
+        "takenParent": "O domínio pai selecionado já tem um subdomínio personalizado."
+      }
     }
   },
   "goal": {
@@ -213,39 +341,74 @@
       "noHistory": "Nada ainda",
       "done": "Tudo pronto"
     },
-    "progress": "Passo {{ val1 }} de {{ val2 }}"
+    "progress": "Passo {{ val1 }} de {{ val2 }}",
+    "progressMerge": "Mesclar Conjunto {{ val1 }} de {{ val2 }}"
   },
-  "createStrWordInv": { "title": "Criar Inventário de Palavra Estrutural" },
-  "handleFlags": { "title": "Manjar Sinalizações" },
-  "reviewDeferredDups": { "title": "Revisar Duplicações Atrasadas" },
-  "spellCheckGloss": { "title": "Verificar Ortografia da Glosa" },
-  "validateChars": { "title": "Validar Caracteres" },
-  "validateStrWords": { "title": "Validar os Caracteres Estruturais" },
+  "createStrWordInv": {
+    "title": "Criar Inventário de Palavra Estrutural",
+    "description": "NÃO IMPLEMENTADO"
+  },
+  "handleFlags": {
+    "title": "Manjar Sinalizações",
+    "description": "NÃO IMPLEMENTADO"
+  },
+  "reviewDeferredDups": {
+    "title": "Revisar Duplicações Atrasadas",
+    "description": "Revisitar duplicatas em potencial que foram adiadas durante a mesclagem de duplicações."
+  },
+  "spellCheckGloss": {
+    "title": "Verificar Ortografia da Glosa",
+    "description": "NÃO IMPLEMENTADO"
+  },
+  "validateChars": {
+    "title": "Validar Caracteres",
+    "description": "NÃO IMPLEMENTADO"
+  },
+  "validateStrWords": {
+    "title": "Validar os Caracteres Estruturais",
+    "description": "NÃO IMPLEMENTADO"
+  },
   "reviewEntries": {
     "title": "Revisar Verbetes",
+    "description": "Visualize, filtre e edite postagens no projeto.",
+    "allEntriesPerPageOption": "TODOS",
+    "editSense": "Editar significado",
+    "discardChanges": "Descartar alterações?",
     "noDomain": "Nenhum domínio selecionado",
+    "duplicateDomain": "Este significado já tem o domínio {{ val }}.",
     "deleteWordWarning": "Esta palavra será apagada permanentemente!",
+    "deleteDisabled": "Isto foi importado com dados que o Combine não lida, então pode não ser excluído.",
     "error": {
       "gloss": "As glosas não podem ser deixadas em branco",
-      "senses": "Não é possível salvar uma entrada sem sentidos",
+      "glossAndDefinition": "Glosas e definições não podem ser deixadas em branco",
+      "sense": "Não pode salvar um significado vazio",
+      "senses": "Não é possível salvar uma entrada sem significados",
       "vernacular": "O vernáculo não pode ser deixado em branco"
     },
     "columns": {
       "definitions": "Definições",
       "delete": "Excluir",
       "domains": "Domínios",
+      "edit": "Alterar",
+      "flag": "Bandeira",
       "glosses": "Glosas",
       "note": "Nota",
       "partOfSpeech": "Classe gramatical",
       "pronunciations": "Pronúncias",
-      "senses": "Sentidos",
+      "senses": "Significados",
+      "sensesCount": "Número de significados",
       "vernacular": "Vernáculo"
     },
-    "completed": {},
-    "undo": { "undoDisabled": "Desfazer indisponível" }
+    "completed": { "number": "Número de postagens editadas: " },
+    "undo": {
+      "undo": "Desfazer a edição",
+      "undoDialog": "Desfazer esta edição?",
+      "undoDisabled": "Desfazer indisponível"
+    }
   },
   "charInventory": {
     "title": "Verificar ortografia",
+    "description": "Revise os caracteres usados na ortografia de palavras vernaculares e verifique os tipos.",
     "characters": "caracteres",
     "examples": "Exemplos",
     "occurrences": "ocorrências",
@@ -263,6 +426,7 @@
       "replaceAll": "Substituir todas as ocorrências de: {{ val }}",
       "replaceAllWith": "Substituir por: {{ val }}",
       "findAndReplace": "Localizar & Substituir",
+      "findAndReplaceError": "Processamento de erro: encontrar ( {{ val1 }} ), substituir ( {{  val2 }})",
       "apply": "Aplicar"
     },
     "dialog": {
@@ -271,20 +435,74 @@
       "yes": "Sim",
       "no": "Não"
     },
-    "changes": { "more": "mais" },
-    "undo": { "undoDisabled": "Desfazer indisponível" }
+    "changes": {
+      "noCharChanges": "Nenhuma mudança feita no inventário de personagens.",
+      "more": "mais",
+      "noWordChangesFindReplace": "Nenhuma palavra foi alterada para encontra-e-substituir.",
+      "wordChanges": "Mudaram de palavras:",
+      "wordChangesWithStrings": "As palavras alteradas ({{ val1 }} → {{ val2 }}):"
+    },
+    "undo": {
+      "undo": "Desfazer encontrar-e-substituir",
+      "undoDialog": "Desfazer alterações de palavras ao encontrar-e-substituir?",
+      "undoDisabled": "Desfazer indisponível",
+      "undoWords": "Desfazer disponível para {{ val1 }} da Alteração de Palavras do {{ val2 }}."
+    }
   },
   "mergeDups": {
     "title": "Mesclar Duplicações",
+    "description": "Revise as duplicações potenciais identificadas por The Combine e mesclar ou eliminar duplicações verdadeiras.",
     "helpText": {
       "dragCard": "Arraste um cartão aqui para mesclar",
       "saveAndContinue": "Salvar alterações e carregar um novo conjunto de palavras",
+      "defer": "Descartar alterações e carregar um novo conjunto de palavras",
+      "revertSet": "Reverter todas as alterações feitas neste conjunto de palavras",
+      "revertSetDialog": "Tem certeza que deseja descartar todas as alterações e começar de novo com esse conjunto de palavras?",
       "noDups": "Nada para mesclar.",
       "delete": "Excluir o significado",
-      "deleteDialog": "Excluir este o significado?"
+      "deleteDialog": "Excluir este significado?",
+      "protectedSense": "Este significado foi importado com dados que The Combine não lida.",
+      "protectedSenseInfo": "Este significado não pode ser excluído com segurança ou deixado cair num outro significado. Você ainda pode movê-lo para outra palavra ou soltar outros significados neste para mesclá-los.",
+      "protectedWord": "Esta palavra foi importada com dados que The Combine não lida.",
+      "protectedWordInfo": "Para evitar a exclusão, o significado final desta palavra não pode ser removido com segurança.",
+      "protectedData": "Dados protegidos: {{ val }}",
+      "protectedOverride": "Permitir a exclusão de palavras ou significados protegidos?",
+      "protectedOverrideWarning": "Os seguintes dados serão perdidos: {{ val }}",
+      "deleteProtectedSenseWarning": "Você não pode apagar um significado protegido.",
+      "dropIntoSidebarWarning": "Você não pode soltar significados na barra lateral.",
+      "dropProtectedSenseWarning": "Você não pode mesclar um significado protegido em outro significado.",
+      "orderProtectedSidebarWarning": "Um significado protegido na barra lateral não pode ser afastado da posição de topo."
     },
-    "protectReason": {},
-    "completed": { "number": "Número de fusões concluídas: " },
+    "protectReason": {
+      "annotations": "anotações",
+      "etymologies": "etymologies",
+      "examples": "Exemplos",
+      "field": "\" Campo{{ val }}\"",
+      "gramInfoTrait": "Informação gramatical \"{{ val }}\"",
+      "illustrations": "ilustrações",
+      "noteWithType": "nota com tipo \"{{ val }}\"",
+      "notesSense": "Notas",
+      "notesWord": "mais de 1 nota",
+      "pronunciationWithoutUrl": "pronúncia sem um arquivo de mídia",
+      "relations": "relações",
+      "reversal": "\"{{ val }}\" inversão",
+      "subsenses": "subsignificados",
+      "traitAnthroCode": "código anthro \"{{ val }}\"",
+      "traitDialectLabels": "rótulos de dialeto \"{{ val }}\"",
+      "traitDomainType": "tipo de domínio \"{{ val }}\"",
+      "traitDoNotPublishIn": "não publicar em \"{{ val }}\"",
+      "traitDoNotUseForParsing": "não use para analisar \"{{ val }}\"",
+      "traitEntryType": "tipo de referência \"{{ val }}\"",
+      "traitExcludeAsHeadword": "excluir como palavra-chave",
+      "traitMinorEntryCondition": "condição de entrada menor \"{{ val }}\"",
+      "traitMorphType": "tipo de transformação \"{{ val }}\" (em vez do padrão \"stem\")",
+      "traitPublishIn": "publicar em \"{{ val }}\"",
+      "traitSenseType": "tipo de significado \"{{ val }}\"",
+      "traitStatus": "status \"{{ val }}\"",
+      "traitUsageType": "tipo de uso \"{{ val }}\"",
+      "variants": "variantes"
+    },
+    "completed": { "number": "Número de mesclagens concluídas: " },
     "continueDialog": {
       "title": "Continuar a mesclagem?",
       "yes": "Sim",
@@ -293,6 +511,9 @@
     "undo": {
       "undo": "Desfazer Mesclar",
       "undoDialog": "Desfazer esta mesclagem?",
+      "deleted": "Excluído:",
+      "undoDelete": "Desfazer exclusão",
+      "undoDeleteDialog": "Desfazer esta exclusão?",
       "undoDisabled": "Desfazer indisponível"
     }
   },
@@ -320,6 +541,7 @@
     "invite": "Convite",
     "proceedWithCaution": "Proceda com cautela!",
     "reject": "Rejeição",
+    "revertSet": "Reverter conjunto",
     "rejected": "Rejeitado",
     "reset": "Redefinir",
     "restore": "Restaurar",
@@ -329,28 +551,42 @@
     "upload": "Carregar"
   },
   "pronunciations": {
+    "enableMicTooltip": "Habilitar acesso ao microfone para gravar.",
     "recordTooltip": "Pressione e segure para gravar.",
     "playTooltip": "Pressione para reproduzir.",
     "deleteTooltip": "Clique em shift para excluir.",
+    "protectedTooltip": "O áudio importado não pode ser excluído ou modificado.",
+    "speaker": "Falante: {{ val }}.",
+    "speakerAdd": "Clique com o botão direito para adicionar um falante.",
+    "speakerChange": "Clique direito para mudar o falante.",
+    "speakerSelect": "Selecionar falante desta gravação de áudio",
     "recordingError": "Erro de gravação.",
-    "deleteRecording": "Eliminar Gravação"
+    "recordingPermission": "Por favor, verifique se a permissão do microfone está ativada no seu navegador.",
+    "deleteRecording": "Eliminar Gravação",
+    "audioStreamError": "Erro ao obter transmissão de áudio!",
+    "noMicAccess": "Sem acesso de microfone. Gravação de áudio desativada."
   },
   "statistics": {
     "title": "Estatísticas de dados: {{ val }}",
+    "domainProgress": "Progresso do Domínio",
+    "domainsCollected": "Domínios coletados: {{ val }}",
+    "wordsCollected": "Palavras coletadas: {{ val }}",
     "percent": "{{ val }}%",
     "view": {
       "user": "Palavras por usuário",
       "domain": "Palavras por domínio",
-      "day": "Palavras por dia"
+      "day": "Palavras por dia",
+      "workshop": "Progresso da Oficina"
     },
     "column": {
       "domainNumber": "Número de domínio:",
       "domainName": "Nome de domínio:",
       "username": "Usuário:",
       "domainCount": "Domínios:",
+      "recentDomain": "Domínio mais recente:",
       "senseCount": "Palavras:"
     },
-    "axisLabel": {}
+    "axisLabel": { "date": "Encontro", "words": "Palavras coletadas" }
   },
   "grammaticalCategory": {
     "group": {
@@ -369,8 +605,16 @@
       "Prenoun": "Prenome",
       "Preverb": "Prevérbio",
       "ProForm": "Proforma",
-      "Verb": "Verbo"
+      "Verb": "Verbo",
+      "Other": "Outros",
+      "Unspecified": "Não-especificado"
     }
   },
-  "wordCard": { "senseCount": "Sentidos: {{ val }}", "wordId": "Id: {{ val }}" }
+  "wordCard": {
+    "senseCount": "Significados: {{ val }}",
+    "wordId": "Id: {{ val }}",
+    "wordModified": "Modificado: {{ val }}",
+    "domainAdded": "Adicionado: {{ val }}",
+    "user": "Por usuário: {{ val }}"
+  }
 }
