@@ -413,8 +413,7 @@ namespace BackendFramework.Services
             {
                 return false;
             }
-            var dups = await GetPotentialDuplicates(
-                projectId, maxInList, maxLists, identicalVernacular: false, userId, ignoreProtected);
+            var dups = await GetPotentialDuplicates(projectId, maxInList, maxLists, false, userId, ignoreProtected);
             // Store the potential duplicates for user to retrieve later.
             return StoreDups(userId, counter, dups) == counter;
         }
@@ -422,9 +421,8 @@ namespace BackendFramework.Services
         /// <summary>
         /// Get Lists of potential duplicate <see cref="Word"/>s in specified <see cref="Project"/>'s frontier.
         /// </summary>
-        public async Task<List<List<Word>>> GetPotentialDuplicates(
-            string projectId, int maxInList, int maxLists, bool identicalVernacular,
-            string? userId = null, bool ignoreProtected = false)
+        public async Task<List<List<Word>>> GetPotentialDuplicates(string projectId, int maxInList, int maxLists,
+            bool identicalVernacular, string? userId = null, bool ignoreProtected = false)
         {
             var dupFinder = new DuplicateFinder(maxInList, maxLists, 2);
 
@@ -433,12 +431,9 @@ namespace BackendFramework.Services
                 (await IsInMergeBlacklist(projectId, wordIds, userId)) ||
                 (await IsInMergeGraylist(projectId, wordIds, userId));
 
-            if (identicalVernacular)
-            {
-                return await dupFinder.GetIdenticalVernWords(collection, isUnavailableSet, ignoreProtected);
-            }
-
-            return await dupFinder.GetSimilarWords(collection, isUnavailableSet, ignoreProtected);
+            return identicalVernacular
+                ? await dupFinder.GetIdenticalVernWords(collection, isUnavailableSet, ignoreProtected)
+                : await dupFinder.GetSimilarWords(collection, isUnavailableSet, ignoreProtected);
         }
 
         public sealed class InvalidMergeWordSetException : Exception

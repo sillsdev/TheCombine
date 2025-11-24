@@ -5,7 +5,6 @@ export enum DataLoadStatus {
   Failure = "FAILURE",
   Loading = "LOADING",
   Success = "SUCCESS",
-  IdenticalCompleted = "IDENTICAL_COMPLETED",
 }
 
 // The representation of goals in the redux store

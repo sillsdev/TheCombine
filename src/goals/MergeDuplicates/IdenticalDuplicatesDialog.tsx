@@ -10,25 +10,36 @@ import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { getFrontierWords, hasGraylistEntries } from "backend";
-
-export interface IdenticalDuplicatesDialogProps {
-  onCancel: () => void;
-  onContinue: () => void;
-  onReviewDeferred: () => void;
-}
+import { ReviewDeferredDups } from "goals/MergeDuplicates/MergeDupsTypes";
+import { asyncAddGoal, setDataLoadStatus } from "goals/Redux/GoalActions";
+import { DataLoadStatus } from "goals/Redux/GoalReduxTypes";
+import { useAppDispatch } from "rootRedux/hooks";
+import router from "router/browserRouter";
+import { Path } from "types/path";
 
 // Threshold for warning about long processing time
 const LARGE_PROJECT_THRESHOLD = 1000;
 
-export default function IdenticalDuplicatesDialog(
-  props: IdenticalDuplicatesDialogProps
-): ReactElement {
-  const [open, setOpen] = useState<boolean>(true);
-  const [hasDeferred, setHasDeferred] = useState<boolean>(false);
-  const [frontierCount, setFrontierCount] = useState<number>(0);
+export default function IdenticalDuplicatesDialog(): ReactElement {
+  const dispatch = useAppDispatch();
+
+  const [open, setOpen] = useState(true);
+  const [hasDeferred, setHasDeferred] = useState(false);
+  const [frontierCount, setFrontierCount] = useState(0);
+
   const { t } = useTranslation();
 
-  const { onCancel, onContinue, onReviewDeferred } = props;
+  const handleCancel = (): void => {
+    dispatch(setDataLoadStatus(DataLoadStatus.Default));
+    setOpen(false);
+    router.navigate(Path.Goals);
+  };
+
+  const handleReviewDeferred = (): void => {
+    dispatch(setDataLoadStatus(DataLoadStatus.Default));
+    dispatch(asyncAddGoal(new ReviewDeferredDups()));
+    setOpen(false);
+  };
 
   useEffect(() => {
     hasGraylistEntries().then(setHasDeferred);
@@ -37,61 +48,37 @@ export default function IdenticalDuplicatesDialog(
     });
   }, []);
 
-  const handleCancel = (): void => {
-    setOpen(false);
-    onCancel();
-  };
-
-  const handleContinue = (): void => {
-    setOpen(false);
-    onContinue();
-  };
-
-  const handleReviewDeferred = (): void => {
-    setOpen(false);
-    onReviewDeferred();
-  };
-
   return (
     <Dialog open={open} maxWidth="sm" fullWidth>
       <DialogTitle>{t("mergeDups.identicalCompleted.title")}</DialogTitle>
       <DialogContent>
-        <Typography paragraph>
+        <Typography>
           {t("mergeDups.identicalCompleted.congratulations")}
         </Typography>
         {hasDeferred && (
-          <Typography paragraph>
+          <Typography>
             {t("mergeDups.identicalCompleted.hasDeferred")}
           </Typography>
         )}
-        <Typography paragraph>
+        <Typography>
           {t("mergeDups.identicalCompleted.findingSimilar")}
         </Typography>
         {frontierCount > LARGE_PROJECT_THRESHOLD && (
-          <Typography paragraph color="warning.main">
+          <Typography color="warning.main">
             {t("mergeDups.identicalCompleted.warning")}
           </Typography>
         )}
       </DialogContent>
       <DialogActions>
-        <Button color="secondary" variant="outlined" onClick={handleCancel}>
+        <Button color="secondary" onClick={handleCancel} variant="outlined">
           {t("buttons.cancel")}
         </Button>
         {hasDeferred && (
-          <Button
-            color="primary"
-            variant="outlined"
-            onClick={handleReviewDeferred}
-          >
+          <Button onClick={handleReviewDeferred} variant="outlined">
             {t("mergeDups.identicalCompleted.reviewDeferred")}
           </Button>
         )}
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={handleContinue}
-          autoFocus
-        >
+        <Button onClick={() => setOpen(false)} variant="contained">
           {t("mergeDups.identicalCompleted.continue")}
         </Button>
       </DialogActions>
