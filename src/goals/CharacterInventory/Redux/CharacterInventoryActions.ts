@@ -118,8 +118,12 @@ export function uploadInventory() {
         validCharacters: charInvState.validCharacters,
       })
     );
-    const changes = getState().goalsState.currentGoal.changes as CharInvChanges;
-    dispatch(addCharInvChangesToGoal({ ...changes, charChanges }));
+    const changes: CharInvChanges = {
+      ...defaultCharInvChanges,
+      ...getState().goalsState.currentGoal.changes,
+    };
+    changes.charChanges = [...changes.charChanges, ...charChanges];
+    dispatch(addCharInvChangesToGoal(changes));
     await dispatch(asyncUpdateGoal());
   };
 }
