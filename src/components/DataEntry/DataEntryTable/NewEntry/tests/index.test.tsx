@@ -1,5 +1,11 @@
 import "@testing-library/jest-dom";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createRef } from "react";
 import { Provider } from "react-redux";
@@ -184,9 +190,9 @@ describe("NewEntry", () => {
     await userEvent.click(screen.getByTestId(NewEntryId.ButtonNote));
     expect(mockFocusInput).not.toHaveBeenCalled();
 
-    // Cancel and verify that focusInput was called
-    await userEvent.click(screen.getByText(new RegExp("cancel")));
-    expect(mockFocusInput).toHaveBeenCalled();
+    // Cancel and verify that focusInput was called after transition completes
+    await userEvent.click(screen.getByText(new RegExp("cancel", "i")));
+    await waitFor(() => expect(mockFocusInput).toHaveBeenCalled());
   });
 
   it("returns focus to gloss after confirming note", async () => {
@@ -198,8 +204,8 @@ describe("NewEntry", () => {
     await userEvent.type(document.activeElement!, "note text");
     expect(mockFocusInput).not.toHaveBeenCalled();
 
-    // Confirm and verify that focusInput was called
-    await userEvent.click(screen.getByText(new RegExp("confirm")));
-    expect(mockFocusInput).toHaveBeenCalled();
+    // Confirm and verify that focusInput was called after transition completes
+    await userEvent.click(screen.getByText(new RegExp("confirm", "i")));
+    await waitFor(() => expect(mockFocusInput).toHaveBeenCalled());
   });
 });
