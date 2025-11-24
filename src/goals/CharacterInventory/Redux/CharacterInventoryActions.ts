@@ -118,13 +118,7 @@ export function uploadInventory() {
         validCharacters: charInvState.validCharacters,
       })
     );
-    const changes: CharInvChanges = {
-      ...defaultCharInvChanges,
-      ...getState().goalsState.currentGoal.changes,
-    };
-    changes.charChanges = [...changes.charChanges, ...charChanges];
-    dispatch(addCharInvChangesToGoal(changes));
-    await dispatch(asyncUpdateGoal());
+    await dispatch(addCharChanges(charChanges));
   };
 }
 
@@ -173,6 +167,20 @@ export function loadCharInvData() {
     dispatch(setRejectedCharacters(project.rejectedCharacters));
     await dispatch(getAllCharacters());
     dispatch(setSelectedCharacter(""));
+  };
+}
+
+/** Returns a dispatch function to: in both frontend and backend, add to the current
+ * goal's changes new character inventory status changes. */
+function addCharChanges(charChanges: CharacterChange[]) {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    const changes: CharInvChanges = {
+      ...defaultCharInvChanges,
+      ...getState().goalsState.currentGoal.changes,
+    };
+    changes.charChanges = [...changes.charChanges, ...charChanges];
+    dispatch(addCharInvChangesToGoal(changes));
+    await dispatch(asyncUpdateGoal());
   };
 }
 
