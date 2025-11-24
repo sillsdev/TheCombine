@@ -19,6 +19,14 @@ interface NoteButtonProps {
 export default function NoteButton(props: NoteButtonProps): ReactElement {
   const [noteOpen, setNoteOpen] = useState<boolean>(false);
 
+  const handleOpen = (): void => {
+    setNoteOpen(true);
+    // Blur the button to prevent it from receiving focus when dialog closes
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+  };
+
   return (
     <>
       <IconButtonWithTooltip
@@ -36,7 +44,7 @@ export default function NoteButton(props: NoteButtonProps): ReactElement {
             />
           )
         }
-        onClick={props.updateNote ? () => setNoteOpen(true) : undefined}
+        onClick={props.updateNote ? handleOpen : undefined}
         side="top"
         size="small"
         text={props.noteText || undefined}

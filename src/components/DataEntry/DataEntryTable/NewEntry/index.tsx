@@ -36,9 +36,6 @@ export enum FocusTarget {
   Vernacular,
 }
 
-/** Delay in ms to ensure focus change happens after browser focus management completes */
-const FOCUS_DELAY_MS = 10;
-
 interface NewEntryProps {
   analysisLang: WritingSystem;
   vernacularLang: WritingSystem;
@@ -280,9 +277,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           <NoteButton
             buttonId={NewEntryId.ButtonNote}
             noteText={submitting ? "" : newNote}
-            onExited={() =>
-              setTimeout(() => focus(FocusTarget.Gloss), FOCUS_DELAY_MS)
-            }
+            onExited={() => focus(FocusTarget.Gloss)}
             updateNote={setNewNote}
           />
         )}
