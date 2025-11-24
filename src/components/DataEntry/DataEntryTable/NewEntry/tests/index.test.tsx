@@ -191,7 +191,7 @@ describe("NewEntry", () => {
     expect(mockFocusInput).not.toHaveBeenCalled();
 
     // Cancel and verify that focusInput was called after transition completes
-    await userEvent.click(screen.getByText(new RegExp("cancel", "i")));
+    await userEvent.click(screen.getByText(new RegExp("cancel")));
     await waitFor(() => expect(mockFocusInput).toHaveBeenCalled());
   });
 
@@ -205,7 +205,7 @@ describe("NewEntry", () => {
     expect(mockFocusInput).not.toHaveBeenCalled();
 
     // Confirm and verify that focusInput was called after transition completes
-    await userEvent.click(screen.getByText(new RegExp("confirm", "i")));
+    await userEvent.click(screen.getByText(new RegExp("confirm")));
     await waitFor(() => expect(mockFocusInput).toHaveBeenCalled());
   });
 });
