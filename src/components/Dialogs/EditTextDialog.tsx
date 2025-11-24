@@ -89,7 +89,6 @@ export default function EditTextDialog(
 
   return (
     <Dialog
-      disableRestoreFocus // Disable automatic focus restoration to allow custom focus handling
       open={props.open}
       onClose={escapeClose}
       slotProps={{ transition: { onExited: props.onExited } }}

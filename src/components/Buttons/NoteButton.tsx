@@ -21,9 +21,13 @@ export default function NoteButton(props: NoteButtonProps): ReactElement {
 
   const handleOpen = (): void => {
     setNoteOpen(true);
-    // Blur the button to prevent it from receiving focus when dialog closes
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
+
+    if (props.onExited) {
+      // Allow custom focus handling after dialog closes
+      if (document.activeElement instanceof HTMLElement) {
+        // Blur the button to prevent it from receiving focus when dialog closes
+        document.activeElement.blur();
+      }
     }
   };
 

@@ -8,18 +8,18 @@ import configureMockStore from "redux-mock-store";
 import NewEntry, {
   NewEntryId,
 } from "components/DataEntry/DataEntryTable/NewEntry";
-import { focusInput } from "components/DataEntry/utilities";
 import { newWritingSystem } from "types/writingSystem";
 
 jest.mock("components/DataEntry/utilities.ts", () => ({
   ...jest.requireActual("components/DataEntry/utilities.ts"),
-  focusInput: jest.fn(),
+  focusInput: () => mockFocusInput(),
 }));
 jest.mock("components/Pronunciations/PronunciationsFrontend", () => jest.fn());
 
 const mockAddNewAudio = jest.fn();
 const mockAddNewEntry = jest.fn();
 const mockDelNewAudio = jest.fn();
+const mockFocusInput = jest.fn();
 const mockSetNewGloss = jest.fn();
 const mockSetNewNote = jest.fn();
 const mockSetNewVern = jest.fn();
@@ -81,7 +81,7 @@ const fireEnterOnActiveElement = async (): Promise<void> => {
 };
 
 beforeEach(() => {
-  jest.resetAllMocks();
+  jest.clearAllMocks();
 });
 
 afterEach(() => {
@@ -177,34 +177,29 @@ describe("NewEntry", () => {
   });
 
   it("returns focus to gloss after closing note dialog", async () => {
-    (focusInput as jest.Mock).mockClear();
-    await renderNewEntry("", "", "");
+    await renderNewEntry();
+    mockFocusInput.mockClear();
 
     // Click the note button to open the dialog
-    const noteButton = screen.getByTestId(NewEntryId.ButtonNote);
-    await userEvent.click(noteButton);
+    await userEvent.click(screen.getByTestId(NewEntryId.ButtonNote));
+    expect(mockFocusInput).not.toHaveBeenCalled();
 
-    // Click cancel to close the dialog
-    const cancelButton = screen.getByTestId("note-edit-cancel");
-    await userEvent.click(cancelButton);
-
-    // Verify that focusInput was called (which should focus the gloss field)
-    expect(focusInput).toHaveBeenCalled();
+    // Cancel and verify that focusInput was called
+    await userEvent.click(screen.getByText(new RegExp("cancel")));
+    expect(mockFocusInput).toHaveBeenCalled();
   });
 
   it("returns focus to gloss after confirming note", async () => {
-    (focusInput as jest.Mock).mockClear();
-    await renderNewEntry("", "", "");
+    await renderNewEntry();
+    mockFocusInput.mockClear();
 
-    // Click the note button to open the dialog
-    const noteButton = screen.getByTestId(NewEntryId.ButtonNote);
-    await userEvent.click(noteButton);
+    // Click the note button to open the dialog and type a note
+    await userEvent.click(screen.getByTestId(NewEntryId.ButtonNote));
+    await userEvent.type(document.activeElement!, "note text");
+    expect(mockFocusInput).not.toHaveBeenCalled();
 
-    // Click confirm to close the dialog
-    const confirmButton = screen.getByTestId("note-edit-confirm");
-    await userEvent.click(confirmButton);
-
-    // Verify that focusInput was called (which should focus the gloss field)
-    expect(focusInput).toHaveBeenCalled();
+    // Confirm and verify that focusInput was called
+    await userEvent.click(screen.getByText(new RegExp("confirm")));
+    expect(mockFocusInput).toHaveBeenCalled();
   });
 });
