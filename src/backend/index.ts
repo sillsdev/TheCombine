@@ -362,6 +362,20 @@ export async function graylistAdd(wordIds: string[]): Promise<void> {
   );
 }
 
+/** Find and return lists of potential duplicates with identical vernacular. */
+export async function findIdenticalDuplicates(
+  maxInList: number,
+  maxLists: number,
+  ignoreProtected = false
+): Promise<Word[][]> {
+  const projectId = LocalStorage.getProjectId();
+  const resp = await mergeApi.findIdenticalPotentialDuplicates(
+    { ignoreProtected, maxInList, maxLists, projectId },
+    defaultOptions()
+  );
+  return resp.data;
+}
+
 /** Start finding list of potential duplicates for merging. */
 export async function findDuplicates(
   maxInList: number,
