@@ -11,12 +11,25 @@ interface NoteButtonProps {
   /** If `noteText` is empty and `updateNote` defined,
    * the button will have default add-note hover text. */
   noteText: string;
+  onExited?: () => void;
   updateNote?: (newText: string) => void | Promise<void>;
 }
 
 /** A note adding/editing/viewing button */
 export default function NoteButton(props: NoteButtonProps): ReactElement {
   const [noteOpen, setNoteOpen] = useState<boolean>(false);
+
+  const handleOpen = (): void => {
+    setNoteOpen(true);
+
+    if (props.onExited) {
+      // Allow custom focus handling after dialog closes
+      if (document.activeElement instanceof HTMLElement) {
+        // Blur the button to prevent it from receiving focus when dialog closes
+        document.activeElement.blur();
+      }
+    }
+  };
 
   return (
     <>
@@ -35,7 +48,7 @@ export default function NoteButton(props: NoteButtonProps): ReactElement {
             />
           )
         }
-        onClick={props.updateNote ? () => setNoteOpen(true) : undefined}
+        onClick={props.updateNote ? handleOpen : undefined}
         side="top"
         size="small"
         text={props.noteText || undefined}
@@ -46,6 +59,7 @@ export default function NoteButton(props: NoteButtonProps): ReactElement {
         text={props.noteText}
         titleId={"addWords.addNote"}
         close={() => setNoteOpen(false)}
+        onExited={props.onExited}
         updateText={props.updateNote ?? (() => {})}
         buttonIdCancel="note-edit-cancel"
         buttonIdClear="note-edit-clear"
