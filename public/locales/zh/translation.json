@@ -10,7 +10,7 @@
     "privacyPolicy": "隐私政策",
     "descriptionP1": "单词是语言的基本组成单位，对交流信息和分享文化都至关重要。充满单词及其含义的字典是一种基本的语言资源，有助于为某社会的后代记录和保存语言，并为与其他社会沟通提供桥梁。但世界上许多少数民族语言的社会没有这种资源，使他们处于不利地位。",
     "descriptionP2": "The Combine 是快速收集单词（RWC）过程中的一个易于使用的工具。RWC是一种收集词汇的方法，将作为双语词典的骨干。RWC处理的核心是来自某个语言社会的母语者。由4-6名母语者组成的小组，在他们的语言中尽可能多地想出与某个指定语义域有关的词。The Combine 协助将这些词输入数据库，并附上翻译、录音和注释，以更全面地记录其形式和意义。",
-    "descriptionP3": "先前几乎没有语言学知识和只有有限的电脑经验的人可以很快地接受培训，以使用 The Combine 的主要收集单词功能。然后，可以在 The Combine 中组织和编辑收集到的词而且将数据导出到其他工具（如FLEx）。",
+    "descriptionP3": "先前几乎没有语言学知识和只有有限的电脑经验的人可以很快地接受培训，以使用 The Combine 的主要收集单词功能。然后，可以在 The Combine 中组织和编辑收集到的词而且将数据导出到其他工具（如FieldWorks）。",
     "descriptionP4": "注册后就可以开始您的单词收集了！"
   },
   "treeView": {
@@ -40,6 +40,7 @@
     "statistics": "数据统计",
     "projectSettings": "项目设置"
   },
+  "emailVerify": {},
   "invite": { "invalidInvitationURL": "项目邀请链接已失效" },
   "login": {
     "title": "登录",
@@ -116,6 +117,7 @@
   },
   "userSettings": {
     "analyticsConsent": {},
+    "verifyEmail": {},
     "contact": "联系信息",
     "phone": "电话号码",
     "uiLanguage": "用户界面语言",
@@ -208,7 +210,7 @@
       "on": "开启",
       "hint": "在数据输入中，程序将建议与正在输入的土语词条相似的现有词条。"
     },
-    "protectedDataOverride": {},
+    "protectedData": { "avoidInMerge": {}, "override": {} },
     "invite": {
       "inviteByEmailLabel": "通过电子邮件邀请",
       "userExists": "此用户已注册！",

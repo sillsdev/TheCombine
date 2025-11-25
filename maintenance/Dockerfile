@@ -1,4 +1,4 @@
-# Dockerfile to build a Kubernetes Worker container for the Combine.  The
+# Dockerfile to build a Kubernetes Worker container for The Combine.  The
 # image shall contain a collection of scripts to perform the following functions:
 #  - backup The Combine database and backend data files
 #  - restore The Combine database and backend data files from a previous backup
