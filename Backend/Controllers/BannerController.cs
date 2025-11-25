@@ -42,6 +42,7 @@ namespace BackendFramework.Controllers
         /// <summary>
         /// Update the <see cref="Banner"/> with same <see cref="BannerType"/> as the given <see cref="SiteBanner"/>.
         /// </summary>
+        /// <remarks> Can only be used by a site admin. </remarks>
         [HttpPut("", Name = "UpdateBanner")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]

@@ -10,7 +10,7 @@ namespace BackendFramework.Helper
     /// <summary>
     /// Classifying the grammatical category of a sense.
     ///
-    /// Although FLEx provides a list of options, custom strings are allowed.
+    /// Although FieldWorks provides a list of options, custom strings are allowed.
     /// </summary>
     public static class GrammaticalCategory
     {

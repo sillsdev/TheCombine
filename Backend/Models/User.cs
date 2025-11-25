@@ -138,6 +138,22 @@ namespace BackendFramework.Models
         public string? RoleId { get; set; }
     }
 
+    /// <summary> Contains information about a user's role in a project. </summary>
+    public class UserProjectInfo
+    {
+        [Required]
+        public string ProjectId { get; set; } = "";
+
+        [Required]
+        public bool ProjectIsActive { get; set; } = true;
+
+        [Required]
+        public string ProjectName { get; set; } = "";
+
+        [Required]
+        public Role Role { get; set; } = Role.None;
+    }
+
     /// <summary> Contains email/username and password for authentication. </summary>
     /// <remarks>
     /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.

@@ -61,4 +61,6 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(rmCount > 0);
         }
     }
+
+    internal sealed class UserEditCreationException : Exception;
 }

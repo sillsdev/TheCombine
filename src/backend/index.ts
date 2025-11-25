@@ -22,6 +22,7 @@ import {
   Speaker,
   User,
   UserEdit,
+  UserProjectInfo,
   UserRole,
   UserStub,
   Word,
@@ -764,6 +765,13 @@ export async function updateUser(user: User): Promise<void> {
 /** Note: Only usable by site admins. */
 export async function deleteUser(userId: string): Promise<void> {
   await userApi.deleteUser({ userId }, defaultOptions());
+}
+
+/** Note: Only usable by site admins. */
+export async function getUserProjects(
+  userId: string
+): Promise<UserProjectInfo[]> {
+  return (await userApi.getUserProjects({ userId }, defaultOptions())).data;
 }
 
 /** Checks whether email address is okay: unchanged or not taken by a different user. */

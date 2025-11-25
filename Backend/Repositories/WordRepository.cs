@@ -21,7 +21,7 @@ namespace BackendFramework.Repositories
 
         /// <summary>
         /// Creates a mongo filter for all words in a specified project (and optionally with specified vernacular).
-        /// Since a variant in FLEx can export as an entry without any senses, filters out 0-sense words.
+        /// Since a variant in FieldWorks can export as an entry without any senses, filters out 0-sense words.
         /// </summary>
         private static FilterDefinition<Word> GetAllProjectWordsFilter(string projectId, string? vernacular = null)
         {

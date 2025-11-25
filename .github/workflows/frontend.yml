@@ -5,6 +5,9 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+    paths-ignore:
+      - "Backend/**"
+      - "Backend.Tests/**"
 
 concurrency:
   cancel-in-progress: true
