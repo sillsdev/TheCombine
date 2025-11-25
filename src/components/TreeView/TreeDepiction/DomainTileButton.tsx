@@ -4,11 +4,12 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
 } from "@mui/icons-material";
-import { Button, Stack, Typography } from "@mui/material";
-import { ReactElement } from "react";
+import { Box, Button, Stack, Typography, useTheme } from "@mui/material";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { SemanticDomain } from "api/models";
+import { getDomainProgress } from "backend";
 import { Direction } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
 import { rootId } from "types/semanticDomain";
 
@@ -82,17 +83,55 @@ interface DomainTileButtonProps extends DomainTileProps {
 export default function DomainTileButton(
   props: DomainTileButtonProps
 ): ReactElement {
-  const { onClick, ...domainTileProps } = props;
+  const { onClick, direction, ...domainTileProps } = props;
+
+  const [progress, setProgress] = useState<number>(0);
+  const theme = useTheme();
+
+  const shouldShowProgress = direction !== Direction.Up;
+
+  useEffect(() => {
+    if (shouldShowProgress) {
+      setProgress(0);
+      getDomainProgress(props.domain.id)
+        .then(setProgress)
+        .catch(() => {}); // Silently fail
+    }
+  }, [shouldShowProgress, props.domain.id]);
+
   return (
     <Button
       id={props.domain.id}
       fullWidth
       onClick={() => onClick(props.domain)}
-      sx={{ height: "100%" }}
+      sx={{ height: "100%", position: "relative", overflow: "hidden" }}
       tabIndex={-1}
       variant="outlined"
     >
-      <DomainTile {...domainTileProps} />
+      <DomainTile direction={direction} {...domainTileProps} />
+      {shouldShowProgress && (
+        <Box
+          sx={{
+            backgroundColor: theme.palette.action.disabledBackground,
+            borderBottomLeftRadius: theme.shape.borderRadius,
+            borderBottomRightRadius: theme.shape.borderRadius,
+            height: 3,
+            inset: "auto 0 0 0",
+            position: "absolute",
+          }}
+        >
+          <Box
+            sx={{
+              backgroundColor: theme.palette.primary.main,
+              borderBottomLeftRadius: theme.shape.borderRadius,
+              borderBottomRightRadius: progress * theme.shape.borderRadius,
+              height: "100%",
+              transition: progress ? "width .5s ease" : undefined,
+              width: `${progress * 100}%`,
+            }}
+          />
+        </Box>
+      )}
     </Button>
   );
 }
