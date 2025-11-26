@@ -28,8 +28,9 @@ FROM node:22.21.1-bookworm-slim@sha256:4de72fb3998934a953f1bee37f0e0254b27c53520
 WORKDIR /app
 
 # Install app dependencies.
+COPY .npmrc ./
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --ignore-scripts
 
 # Build application.
 COPY . ./
