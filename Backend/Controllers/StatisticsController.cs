@@ -135,22 +135,5 @@ namespace BackendFramework.Controllers
 
             return Ok(await _statService.GetDomainWordCount(projectId, domainId));
         }
-
-        /// <summary> Get the proportion of descendant domains that have at least one entry </summary>
-        /// <returns> A double value between 0 and 1 </returns>
-        [HttpGet("GetDomainProgressProportion", Name = "GetDomainProgressProportion")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(double))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> GetDomainProgressProportion(string projectId, string domainId)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain progress proportion");
-
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
-            {
-                return Forbid();
-            }
-
-            return Ok(await _statService.GetDomainProgressProportion(projectId, domainId));
-        }
     }
 }

@@ -148,21 +148,5 @@ namespace Backend.Tests.Controllers
             var result = await _statsController.GetDomainWordCount(_projId, "1");
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
         }
-
-        [Test]
-        public async Task TestGetDomainProgressProportionNoPermission()
-        {
-            _statsController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-
-            var result = await _statsController.GetDomainProgressProportion(_projId, "1");
-            Assert.That(result, Is.InstanceOf<ForbidResult>());
-        }
-
-        [Test]
-        public async Task TestGetDomainProgressProportion()
-        {
-            var result = await _statsController.GetDomainProgressProportion(_projId, "1");
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-        }
     }
 }
