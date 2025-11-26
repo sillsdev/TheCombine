@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -267,6 +268,25 @@ namespace BackendFramework.Repositories
 
             var deleted = await _frontier.DeleteManyAsync(GetProjectWordsFilter(projectId, wordIds));
             return deleted.DeletedCount;
+        }
+
+        /// <summary>
+        /// Counts the number of Frontier words that have the specified semantic domain.
+        /// </summary>
+        /// <param name="projectId"> The project id </param>
+        /// <param name="domainId"> The semantic domain id </param>
+        /// <param name="maxCount"> Optional maximum count to return </param>
+        /// <returns> The count of senses with the specified domain, capped at maxCount if provided </returns>
+        public async Task<int> CountFrontierWordsWithDomain(string projectId, string domainId, int? maxCount = null)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "counting frontier words with domain");
+
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.And(
+                filterDef.Eq(w => w.ProjectId, projectId),
+                filterDef.ElemMatch(w => w.Senses, s => s.SemanticDomains.Any(sd => sd.Id == domainId)));
+
+            return (await _frontier.Find(filter).Limit(maxCount).ToListAsync()).Count;
         }
     }
 }
