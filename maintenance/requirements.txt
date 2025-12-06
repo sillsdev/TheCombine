@@ -44,8 +44,6 @@ pymongo==4.13.0
     # via -r requirements.in
 pyopenssl==25.1.0
     # via -r requirements.in
-pyreadline3==3.5.4
-    # via humanfriendly
 python-dateutil==2.9.0.post0
     # via kubernetes
 pyyaml==6.0.2
@@ -64,7 +62,7 @@ six==1.17.0
     #   python-dateutil
 typing-extensions==4.14.0
     # via pyopenssl
-urllib3==2.4.0
+urllib3==2.6.0
     # via
     #   kubernetes
     #   requests
