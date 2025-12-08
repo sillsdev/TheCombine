@@ -13,7 +13,6 @@ namespace BackendFramework.Interfaces
         Task<ChartRootData> GetLineChartRootData(string projectId);
         Task<List<SemanticDomainUserCount>> GetSemanticDomainUserCounts(string projectId);
         Task<int> GetDomainWordCount(string projectId, string domainId);
-        Task<double> GetDomainProgressProportion(string projectId, string domainId);
     }
 
 }
