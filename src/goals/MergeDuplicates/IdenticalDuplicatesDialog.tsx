@@ -4,6 +4,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Stack,
   Typography,
 } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
@@ -20,7 +21,9 @@ import { Path } from "types/path";
 // Threshold for warning about long processing time
 const LARGE_PROJECT_THRESHOLD = 1000;
 
-export default function IdenticalDuplicatesDialog(): ReactElement {
+export default function IdenticalDuplicatesDialog(props: {
+  loading?: boolean;
+}): ReactElement {
   const dispatch = useAppDispatch();
 
   const [open, setOpen] = useState(true);
@@ -52,27 +55,35 @@ export default function IdenticalDuplicatesDialog(): ReactElement {
     <Dialog open={open} maxWidth="sm" fullWidth>
       <DialogTitle>{t("mergeDups.identicalCompleted.title")}</DialogTitle>
       <DialogContent>
-        <Typography>
-          {t("mergeDups.identicalCompleted.congratulations")}
-        </Typography>
-        {hasDeferred && (
+        <Stack spacing={2}>
           <Typography>
-            {t("mergeDups.identicalCompleted.hasDeferred")}
+            {t("mergeDups.identicalCompleted.congratulations")}
           </Typography>
-        )}
-        <Typography>
-          {t("mergeDups.identicalCompleted.findingSimilar")}
-        </Typography>
-        {frontierCount > LARGE_PROJECT_THRESHOLD && (
-          <Typography color="warning.main">
-            {t("mergeDups.identicalCompleted.warning")}
-          </Typography>
-        )}
+
+          {hasDeferred && (
+            <Typography>
+              {t("mergeDups.identicalCompleted.hasDeferred")}
+            </Typography>
+          )}
+
+          <div>
+            <Typography>
+              {t("mergeDups.identicalCompleted.findingSimilar")}
+            </Typography>
+            {frontierCount > LARGE_PROJECT_THRESHOLD && props.loading && (
+              <Typography color="warning.main">
+                {t("mergeDups.identicalCompleted.warning")}
+              </Typography>
+            )}
+          </div>
+        </Stack>
       </DialogContent>
       <DialogActions>
-        <Button color="secondary" onClick={handleCancel} variant="outlined">
-          {t("buttons.cancel")}
-        </Button>
+        {props.loading && (
+          <Button onClick={handleCancel} variant="outlined">
+            {t("buttons.cancel")}
+          </Button>
+        )}
         {hasDeferred && (
           <Button onClick={handleReviewDeferred} variant="outlined">
             {t("mergeDups.identicalCompleted.reviewDeferred")}

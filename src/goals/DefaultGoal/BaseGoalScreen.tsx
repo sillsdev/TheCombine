@@ -1,5 +1,5 @@
 import loadable from "@loadable/component";
-import { type ReactElement, useEffect } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import PageNotFound from "components/PageNotFound/component";
@@ -46,6 +46,8 @@ export default function LoadingGoalScreen(): ReactElement {
   );
   const navigate = useNavigate();
 
+  const [openDupsDialog, setOpenDupsDialog] = useState(false);
+
   useEffect(() => {
     // Prevent getting stuck on loading screen when user clicks the back button.
     if (goalType === GoalType.Default) {
@@ -53,14 +55,24 @@ export default function LoadingGoalScreen(): ReactElement {
     }
   }, [goalType, navigate]);
 
+  useEffect(() => {
+    if (goalType === GoalType.MergeDups && status !== GoalStatus.Completed) {
+      setOpenDupsDialog(
+        (prev) => prev || dataLoadStatus === DataLoadStatus.Loading
+      );
+    } else {
+      setOpenDupsDialog(false);
+    }
+  }, [dataLoadStatus, goalType, status]);
+
   return (
     <>
       {status === GoalStatus.Loading ? <Loading /> : <BaseGoalScreen />}
-      {goalType === GoalType.MergeDups &&
-        status !== GoalStatus.Completed &&
-        dataLoadStatus === DataLoadStatus.Loading && (
-          <IdenticalDuplicatesDialog />
-        )}
+      {openDupsDialog && (
+        <IdenticalDuplicatesDialog
+          loading={dataLoadStatus === DataLoadStatus.Loading}
+        />
+      )}
     </>
   );
 }
