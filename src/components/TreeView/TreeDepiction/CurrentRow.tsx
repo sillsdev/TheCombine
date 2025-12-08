@@ -33,14 +33,14 @@ export default function CurrentRow(props: TreeRowProps): ReactElement {
 function CurrentTile(props: TreeRowProps): ReactElement {
   const { animate, currentDomain } = props;
 
-  const [senseCount, setSenseCount] = useState<number | undefined>();
+  const [wordCount, setWordCount] = useState<number | undefined>();
   const { t } = useTranslation();
 
   useEffect(() => {
-    setSenseCount(undefined);
+    setWordCount(undefined);
     if (currentDomain.parent) {
       getDomainWordCount(currentDomain.id)
-        .then(setSenseCount)
+        .then(setWordCount)
         .catch(() => {}); // Silently fail
     }
   }, [currentDomain.id]);
@@ -52,14 +52,14 @@ function CurrentTile(props: TreeRowProps): ReactElement {
       fullWidth
       id={currentDomainButtonId}
       onClick={() => animate(currentDomain)}
-      sx={{ height: "100%", p: 1, position: "relative" }}
+      sx={{ height: "100%", p: 1 }}
       variant="contained"
     >
       <DomainText domain={currentDomain} />
-      {senseCount !== undefined && (
-        <Tooltip title={t("treeView.senseCountTooltip")}>
+      {wordCount !== undefined && (
+        <Tooltip title={t("treeView.wordCountTooltip")}>
           <Badge
-            badgeContent={`${senseCount}`}
+            badgeContent={`${wordCount}`}
             color="secondary"
             sx={{
               position: "absolute",
