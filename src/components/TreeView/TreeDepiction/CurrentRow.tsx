@@ -41,7 +41,7 @@ function CurrentTile(props: TreeRowProps): ReactElement {
     if (currentDomain.parent) {
       getDomainWordCount(currentDomain.id)
         .then(setWordCount)
-        .catch(() => {}); // Silently fail
+        .catch(() => console.warn("Failed to get domain word count."));
     }
   }, [currentDomain.id]);
 
@@ -61,16 +61,7 @@ function CurrentTile(props: TreeRowProps): ReactElement {
           <Badge
             badgeContent={`${wordCount}`}
             color="secondary"
-            sx={{
-              position: "absolute",
-              top: 8,
-              right: 8,
-              "& .MuiBadge-badge": {
-                fontSize: "0.75rem",
-                height: 20,
-                minWidth: 20,
-              },
-            }}
+            sx={{ insetInlineEnd: 6, position: "absolute", top: 6 }}
           />
         </Tooltip>
       )}

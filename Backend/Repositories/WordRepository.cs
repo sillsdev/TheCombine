@@ -275,11 +275,8 @@ namespace BackendFramework.Repositories
         /// </summary>
         /// <param name="projectId"> The project id </param>
         /// <param name="domainId"> The semantic domain id </param>
-        /// <param name="maxCount"> Optional maximum count to return </param>
-        /// <returns>
-        /// The count of words containing at least one sense with the specified domain, capped at maxCount if provided
-        /// </returns>
-        public async Task<int> CountFrontierWordsWithDomain(string projectId, string domainId, int? maxCount = null)
+        /// <returns> The count of words containing at least one sense with the specified domain. </returns>
+        public async Task<int> CountFrontierWordsWithDomain(string projectId, string domainId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "counting frontier words with domain");
 
@@ -288,7 +285,7 @@ namespace BackendFramework.Repositories
                 filterDef.Eq(w => w.ProjectId, projectId),
                 filterDef.ElemMatch(w => w.Senses, s => s.SemanticDomains.Any(sd => sd.Id == domainId)));
 
-            return (int)await _frontier.CountDocumentsAsync(filter, new() { Limit = maxCount });
+            return (int)await _frontier.CountDocumentsAsync(filter);
         }
     }
 }

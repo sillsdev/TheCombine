@@ -132,20 +132,10 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(word);
         }
 
-        public Task<int> CountFrontierWordsWithDomain(string projectId, string domainId, int? maxCount = null)
+        public Task<int> CountFrontierWordsWithDomain(string projectId, string domainId)
         {
-            var count = 0;
-            foreach (var word in _frontier.Where(w => w.ProjectId == projectId))
-            {
-                if (word.Senses.Any(s => s.SemanticDomains.Any(sd => sd.Id == domainId)))
-                {
-                    count++;
-                    if (maxCount is not null && count >= maxCount)
-                    {
-                        return Task.FromResult(maxCount.Value);
-                    }
-                }
-            }
+            var count = _frontier.Count(
+                w => w.ProjectId == projectId && w.Senses.Any(s => s.SemanticDomains.Any(sd => sd.Id == domainId)));
             return Task.FromResult(count);
         }
     }
