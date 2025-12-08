@@ -57,7 +57,7 @@ function CurrentTile(props: TreeRowProps): ReactElement {
     >
       <DomainText domain={currentDomain} />
       {wordCount !== undefined && (
-        <Tooltip title={t("treeView.wordCountTooltip")}>
+        <Tooltip placement="top" title={t("treeView.wordCountTooltip")}>
           <Badge
             badgeContent={`${wordCount}`}
             color="secondary"
