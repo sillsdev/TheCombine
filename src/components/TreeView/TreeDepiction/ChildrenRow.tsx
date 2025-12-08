@@ -133,7 +133,7 @@ export default function ChildrenRow(props: TreeRowProps): ReactElement {
     <ImageList
       cols={numCols}
       gap={0}
-      sx={{ m: 0, width: numCols * props.colWidth }}
+      sx={{ m: 0, overflow: "visible", width: numCols * props.colWidth }}
     >
       {joistRow()}
       {domainRow()}
