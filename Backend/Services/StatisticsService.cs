@@ -369,11 +369,11 @@ namespace BackendFramework.Services
         }
 
         /// <summary>
-        /// Get the count of senses in a specific semantic domain
+        /// Get the count of words containing at least one sense in a specific semantic domain
         /// </summary>
         /// <param name="projectId"> The project id </param>
         /// <param name="domainId"> The semantic domain id </param>
-        /// <returns> The count of senses with the specified domain </returns>
+        /// <returns> The count of words containing at least one sense in the specified domain </returns>
         public async Task<int> GetDomainWordCount(string projectId, string domainId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain word count");
