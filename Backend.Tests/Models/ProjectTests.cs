@@ -29,6 +29,7 @@ namespace Backend.Tests.Models
                 WordFields = new() { "some field string" },
                 PartsOfSpeech = new() { "noun", "verb" },
                 WorkshopSchedule = new() { new(2222, 2, 22), },
+                Created = "2023-01-01T00:00:00.0000000Z",
             };
             Assert.That(project.Clone(), Is.EqualTo(project).UsingPropertiesComparer());
         }
