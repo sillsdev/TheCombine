@@ -1,16 +1,7 @@
-import {
-  Badge,
-  Box,
-  Button,
-  Grid2,
-  ImageList,
-  ImageListItem,
-  Tooltip,
-} from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Box, Button, Grid2, ImageList, ImageListItem } from "@mui/material";
+import { ReactElement } from "react";
 
-import { getDomainWordCount } from "backend";
+import DomainCountBadge from "components/TreeView/TreeDepiction/DomainCountBadge";
 import DomainTileButton, {
   DomainText,
 } from "components/TreeView/TreeDepiction/DomainTileButton";
@@ -19,6 +10,7 @@ import {
   TreeRowProps,
 } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
 import { parent as parentSvg } from "resources/tree";
+import { rootId } from "types/semanticDomain";
 
 const currentDomainButtonId = "current-domain";
 
@@ -33,18 +25,6 @@ export default function CurrentRow(props: TreeRowProps): ReactElement {
 function CurrentTile(props: TreeRowProps): ReactElement {
   const { animate, currentDomain } = props;
 
-  const [wordCount, setWordCount] = useState<number | undefined>();
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    setWordCount(undefined);
-    if (currentDomain.parent) {
-      getDomainWordCount(currentDomain.id)
-        .then(setWordCount)
-        .catch(() => console.warn("Failed to get domain word count."));
-    }
-  }, [currentDomain.id]);
-
   return (
     <Button
       data-testid={currentDomainButtonId}
@@ -56,14 +36,9 @@ function CurrentTile(props: TreeRowProps): ReactElement {
       variant="contained"
     >
       <DomainText domain={currentDomain} />
-      {wordCount !== undefined && (
-        <Tooltip placement="top" title={t("treeView.wordCountTooltip")}>
-          <Badge
-            badgeContent={`${wordCount}`}
-            color="secondary"
-            sx={{ insetInlineEnd: 6, position: "absolute", top: 6 }}
-          />
-        </Tooltip>
+
+      {currentDomain.id !== rootId && (
+        <DomainCountBadge domainId={currentDomain.id} showTooltip />
       )}
     </Button>
   );
