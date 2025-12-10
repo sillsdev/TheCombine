@@ -19,6 +19,9 @@ namespace BackendFramework.Models
         [BsonElement("name")]
         public string Name { get; set; }
 
+        [BsonElement("created")]
+        public DateTime? Created { get; set; }
+
         [Required]
         [BsonElement("isActive")]
         public bool IsActive { get; set; }
@@ -90,9 +93,6 @@ namespace BackendFramework.Models
         [BsonElement("workshopSchedule")]
         public List<DateTime> WorkshopSchedule { get; set; }
 
-        [BsonElement("created")]
-        public string? Created { get; set; }
-
         public Project()
         {
             Id = "";
@@ -123,6 +123,7 @@ namespace BackendFramework.Models
             {
                 Id = Id,
                 Name = Name,
+                Created = Created,
                 IsActive = IsActive,
                 LiftImported = LiftImported,
                 DefinitionsEnabled = DefinitionsEnabled,
@@ -140,7 +141,6 @@ namespace BackendFramework.Models
                 WordFields = WordFields.Select(wf => wf).ToList(),
                 PartsOfSpeech = PartsOfSpeech.Select(ps => ps).ToList(),
                 WorkshopSchedule = WorkshopSchedule.Select(dt => dt).ToList(),
-                Created = Created,
             };
         }
     }

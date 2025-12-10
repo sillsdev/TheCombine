@@ -69,10 +69,7 @@ namespace BackendFramework.Repositories
                 return null;
             }
 
-            if (string.IsNullOrEmpty(project.Created))
-            {
-                project.Created = Time.UtcNowIso8601();
-            }
+            project.Created = DateTime.UtcNow;
 
             await _projects.InsertOneAsync(project);
             return project;

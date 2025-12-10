@@ -37,6 +37,12 @@ export interface Project {
   name: string;
   /**
    *
+   * @type {string}
+   * @memberof Project
+   */
+  created?: string | null;
+  /**
+   *
    * @type {boolean}
    * @memberof Project
    */
