@@ -76,10 +76,12 @@ function DomainTile(props: DomainTileProps): ReactElement {
 }
 
 const badgeClass = "count-badge";
-const badgeHoverSx: SxProps = {
-  [`& .${badgeClass}`]: { opacity: 0, transition: "opacity .25s ease" },
-  [`&:hover .${badgeClass}`]: { opacity: 1 },
-};
+
+/** Style to show the child with given className only on hover of the parent */
+const hoverSx = (className: string): SxProps => ({
+  [`& .${className}`]: { opacity: 0, transition: "opacity .25s ease" },
+  [`&:hover .${className}`]: { opacity: 1 },
+});
 
 interface DomainTileButtonProps extends DomainTileProps {
   onClick: (domain: SemanticDomain) => void;
@@ -95,17 +97,13 @@ export default function DomainTileButton(
       id={props.domain.id}
       fullWidth
       onClick={() => onClick(props.domain)}
-      sx={{ height: "100%", position: "relative", ...badgeHoverSx }}
+      sx={{ height: "100%", ...hoverSx(badgeClass) }}
       tabIndex={-1}
       variant="outlined"
     >
       <DomainTile {...domainTileProps} />
 
-      {props.domain.id !== rootId && (
-        <div className={badgeClass}>
-          <DomainCountBadge domainId={props.domain.id} />
-        </div>
-      )}
+      <DomainCountBadge className={badgeClass} domainId={props.domain.id} />
     </Button>
   );
 }

@@ -10,7 +10,6 @@ import {
   TreeRowProps,
 } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
 import { parent as parentSvg } from "resources/tree";
-import { rootId } from "types/semanticDomain";
 
 const currentDomainButtonId = "current-domain";
 
@@ -37,9 +36,7 @@ function CurrentTile(props: TreeRowProps): ReactElement {
     >
       <DomainText domain={currentDomain} />
 
-      {currentDomain.id !== rootId && (
-        <DomainCountBadge domainId={currentDomain.id} showTooltip />
-      )}
+      <DomainCountBadge domainId={currentDomain.id} showTooltip />
     </Button>
   );
 }
