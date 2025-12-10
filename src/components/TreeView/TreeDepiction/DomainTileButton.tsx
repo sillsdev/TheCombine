@@ -77,7 +77,7 @@ function DomainTile(props: DomainTileProps): ReactElement {
 
 const badgeClass = "count-badge";
 const badgeHoverSx: SxProps = {
-  [`& .${badgeClass}`]: { opacity: 0, transition: "opacity .2s ease" },
+  [`& .${badgeClass}`]: { opacity: 0, transition: "opacity .25s ease" },
   [`&:hover .${badgeClass}`]: { opacity: 1 },
 };
 
