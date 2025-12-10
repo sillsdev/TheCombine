@@ -14,7 +14,7 @@ interface DomainCountBadgeProps {
 export default function DomainCountBadge(
   props: DomainCountBadgeProps
 ): ReactNode {
-  const { domainId, showTooltip } = props;
+  const { className, domainId, showTooltip } = props;
   const [wordCount, setWordCount] = useState<number | undefined>();
   const { t } = useTranslation();
 
@@ -29,12 +29,12 @@ export default function DomainCountBadge(
     }
   }, [domainId]);
 
-  if (wordCount === undefined || props.domainId === rootId) {
+  if (wordCount === undefined || domainId === rootId) {
     return null;
   }
 
   return (
-    <div className={props.className}>
+    <div className={className}>
       <Tooltip
         placement="top"
         title={showTooltip ? t("treeView.wordCountTooltip") : ""}
