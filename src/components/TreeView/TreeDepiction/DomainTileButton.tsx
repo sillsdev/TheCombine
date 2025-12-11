@@ -75,7 +75,7 @@ function DomainTile(props: DomainTileProps): ReactElement {
   }
 }
 
-const badgeClass = "count-badge";
+const badgeClass = "DomainCountBadge";
 
 /** Style to show the child with given className only on hover of the parent */
 const hoverSx = (className: string): SxProps => ({

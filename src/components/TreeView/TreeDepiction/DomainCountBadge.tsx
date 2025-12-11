@@ -29,7 +29,7 @@ export default function DomainCountBadge(
     }
   }, [domainId]);
 
-  if (wordCount === undefined || domainId === rootId) {
+  if (wordCount === undefined) {
     return null;
   }
 
@@ -40,7 +40,7 @@ export default function DomainCountBadge(
         title={showTooltip ? t("treeView.wordCountTooltip") : ""}
       >
         <Badge
-          badgeContent={`${wordCount}`}
+          badgeContent={`${wordCount}`} // Convert to string to show even if 0
           color="secondary"
           sx={{ insetInlineEnd: 6, position: "absolute", top: 6 }}
         />
