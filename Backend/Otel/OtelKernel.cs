@@ -82,10 +82,7 @@ namespace BackendFramework.Otel
                 GetContentLengthAspNet(activity, request.Headers, "inbound.http.request.body.size");
                 TrackConsent(activity, request);
                 TrackSession(activity, request);
-                if (request.Headers.TryGetValue("Accept-Language", out var langs))
-                {
-                    activity.SetTag("http.request.header.accept_language", langs.ToString());
-                }
+                activity.SetTag("http.request.header.accept_language", request.Headers.AcceptLanguage.ToString());
             };
             options.EnrichWithHttpResponse = (activity, response) =>
             {
