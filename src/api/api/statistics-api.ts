@@ -55,22 +55,23 @@ export const StatisticsApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {string} [domainId]
+     * @param {string} domainId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getDomainWordCount: async (
       projectId: string,
-      domainId?: string,
+      domainId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getDomainWordCount", "projectId", projectId);
+      // verify required parameter 'domainId' is not null or undefined
+      assertParamExists("getDomainWordCount", "domainId", domainId);
       const localVarPath =
-        `/v1/projects/{projectId}/statistics/GetDomainWordCount`.replace(
-          `{${"projectId"}}`,
-          encodeURIComponent(String(projectId))
-        );
+        `/v1/projects/{projectId}/statistics/GetDomainWordCount/{domainId}`
+          .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+          .replace(`{${"domainId"}}`, encodeURIComponent(String(domainId)));
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -85,10 +86,6 @@ export const StatisticsApiAxiosParamCreator = function (
       };
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
-
-      if (domainId !== undefined) {
-        localVarQueryParameter["domainId"] = domainId;
-      }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
@@ -358,13 +355,13 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {string} [domainId]
+     * @param {string} domainId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getDomainWordCount(
       projectId: string,
-      domainId?: string,
+      domainId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
@@ -531,13 +528,13 @@ export const StatisticsApiFactory = function (
     /**
      *
      * @param {string} projectId
-     * @param {string} [domainId]
+     * @param {string} domainId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getDomainWordCount(
       projectId: string,
-      domainId?: string,
+      domainId: string,
       options?: any
     ): AxiosPromise<number> {
       return localVarFp
@@ -637,7 +634,7 @@ export interface StatisticsApiGetDomainWordCountRequest {
    * @type {string}
    * @memberof StatisticsApiGetDomainWordCount
    */
-  readonly domainId?: string;
+  readonly domainId: string;
 }
 
 /**

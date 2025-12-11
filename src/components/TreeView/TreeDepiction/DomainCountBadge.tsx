@@ -20,7 +20,7 @@ export default function DomainCountBadge(
 
   useEffect(() => {
     setWordCount(undefined);
-    if (domainId) {
+    if (domainId && domainId !== rootId) {
       getDomainWordCount(domainId)
         .then(setWordCount)
         .catch(() =>
