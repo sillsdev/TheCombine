@@ -305,5 +305,22 @@ namespace BackendFramework.Controllers
             }
             return Ok(updates);
         }
+
+        /// <summary> Get the count of frontier words with senses in a specific semantic domain </summary>
+        /// <returns> An integer count </returns>
+        [HttpGet("domainwordcount/{domainId}", Name = "GetDomainWordCount")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetDomainWordCount(string projectId, string domainId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain word count");
+
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
+            {
+                return Forbid();
+            }
+
+            return Ok(await _wordRepo.CountFrontierWordsWithDomain(projectId, domainId));
+        }
     }
 }

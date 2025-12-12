@@ -131,5 +131,12 @@ namespace Backend.Tests.Mocks
             _words.Add(word.Clone());
             return Task.FromResult(word);
         }
+
+        public Task<int> CountFrontierWordsWithDomain(string projectId, string domainId)
+        {
+            var count = _frontier.Count(
+                w => w.ProjectId == projectId && w.Senses.Any(s => s.SemanticDomains.Any(sd => sd.Id == domainId)));
+            return Task.FromResult(count);
+        }
     }
 }
