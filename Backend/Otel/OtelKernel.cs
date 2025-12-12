@@ -82,6 +82,7 @@ namespace BackendFramework.Otel
                 GetContentLengthAspNet(activity, request.Headers, "inbound.http.request.body.size");
                 TrackConsent(activity, request);
                 TrackSession(activity, request);
+                activity.SetTag("http.request.header.accept_language", request.Headers.AcceptLanguage.ToString());
             };
             options.EnrichWithHttpResponse = (activity, response) =>
             {
@@ -94,12 +95,9 @@ namespace BackendFramework.Otel
             options.EnrichWithHttpRequestMessage = (activity, request) =>
             {
                 GetContentLengthHttp(activity, request.Content, "outbound.http.request.body.size");
-                if (request.RequestUri is not null)
+                if (!string.IsNullOrEmpty(request.RequestUri?.Query))
                 {
-                    if (!string.IsNullOrEmpty(request.RequestUri.Query))
-                    {
-                        activity.SetTag("url.query", request.RequestUri.Query);
-                    }
+                    activity.SetTag("url.query", request.RequestUri.Query);
                 }
             };
             options.EnrichWithHttpResponseMessage = (activity, response) =>
