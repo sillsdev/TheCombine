@@ -87,7 +87,24 @@ namespace BackendFramework.Controllers
             try
             {
                 var user = await _permissionService.Authenticate(cred.EmailOrUsername, cred.Password);
-                return user is null ? Unauthorized(cred.EmailOrUsername) : Ok(user);
+                if (user is null)
+                {
+                    return Unauthorized(cred.EmailOrUsername);
+                }
+
+                // Log UI language for analytics
+                var uiLang = user.UILang;
+                if (string.IsNullOrEmpty(uiLang))
+                {
+                    uiLang = Request.Headers.AcceptLanguage.ToString()
+                        .Split([',', '-', ';', '_']).FirstOrDefault()?.Trim()?.ToLowerInvariant();
+                }
+                if (!string.IsNullOrEmpty(uiLang))
+                {
+                    activity?.SetTag("ui_language", uiLang);
+                }
+
+                return Ok(user);
             }
             catch (KeyNotFoundException)
             {
