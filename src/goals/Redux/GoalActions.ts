@@ -1,6 +1,6 @@
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 
-import { MergeUndoIds, OffOnSetting, Word } from "api/models";
+import { MergeUndoIds, OffOnSetting, Project, Word } from "api/models";
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
@@ -73,7 +73,7 @@ export function updateStepFromData(): Action {
 // Dispatch Functions
 
 export function asyncAddGoal(goal: Goal) {
-  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+  return async (dispatch: StoreStateDispatch) => {
     const userEditId = getUserEditId();
     if (userEditId) {
       dispatch(setCurrentGoal(goal));
@@ -83,21 +83,8 @@ export function asyncAddGoal(goal: Goal) {
         await Backend.addGoalToUserEdit(userEditId, goal);
         dispatch(setCurrentGoal(goal));
 
-        // Start loading goal data.
-        if (goal.goalType === GoalType.MergeDups) {
-          // Initialize data loading in the backend.
-          dispatch(setDataLoadStatus(DataLoadStatus.Loading));
-          const currentProj = getState().currentProjectState.project;
-          await Backend.findDuplicates(
-            5, // More than 5 entries doesn't fit well.
-            maxNumSteps(goal.goalType),
-            currentProj.protectedDataMergeAvoidEnabled === OffOnSetting.On
-          );
-          // Don't load goal data, since it'll be triggered by a signal from the backend when data is ready.
-        } else {
-          // Load the goal data, but don't await, to allow a loading screen.
-          dispatch(asyncLoadNewGoalData());
-        }
+        // Load the goal data, but don't await, to allow a loading screen.
+        dispatch(asyncLoadNewGoalData());
       }
 
       // Serve goal.
@@ -159,8 +146,13 @@ export function asyncLoadExistingUserEdits(
 
 export function asyncLoadNewGoalData() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    const currentGoal = getState().goalsState.currentGoal;
-    const goalData = await loadGoalData(currentGoal.goalType).catch(() => {
+    const { goalsState, currentProjectState } = getState();
+    const { currentGoal, dataLoadStatus } = goalsState;
+    const goalData = await loadGoalData(
+      currentGoal.goalType,
+      dataLoadStatus,
+      currentProjectState.project
+    ).catch(() => {
       dispatch(setDataLoadStatus(DataLoadStatus.Failure));
       alert("Failed to load data.");
       router.navigate(Path.Goals);
@@ -175,6 +167,20 @@ export function asyncLoadNewGoalData() {
       dispatch(dispatchStepData(updatedGoal));
       await Backend.addGoalToUserEdit(getUserEditId()!, updatedGoal);
       await saveCurrentStep(updatedGoal);
+    } else if (
+      currentGoal.goalType === GoalType.MergeDups &&
+      dataLoadStatus !== DataLoadStatus.Success
+    ) {
+      // All identical-vernacular duplicates have been processed.
+      // Initialize similar-vernacular duplicate finding in the backend.
+      dispatch(setDataLoadStatus(DataLoadStatus.Loading));
+      const currentProj = getState().currentProjectState.project;
+      await Backend.findDuplicates(
+        5, // More than 5 entries doesn't fit well.
+        maxNumSteps(currentGoal.goalType),
+        currentProj.protectedDataMergeAvoidEnabled === OffOnSetting.On
+      );
+      return;
     }
     dispatch(setGoalStatus(GoalStatus.InProgress));
   };
@@ -242,11 +248,22 @@ function goalCleanup(goal: Goal): void {
 }
 
 /** Returns goal data for some goal types. */
-async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
+async function loadGoalData(
+  goalType: GoalType,
+  dataLoadStatus: DataLoadStatus,
+  project: Project
+): Promise<Word[][]> {
   switch (goalType) {
     case GoalType.MergeDups:
       // Catch failure and pass to caller to allow for error dispatch.
-      const dups = await Backend.retrieveDuplicates().catch(() => {});
+      const dups =
+        dataLoadStatus === DataLoadStatus.Success
+          ? await Backend.retrieveDuplicates().catch(() => {})
+          : await Backend.findIdenticalDuplicates(
+              5, // More than 5 entries doesn't fit well.
+              maxNumSteps(goalType),
+              project.protectedDataMergeAvoidEnabled === OffOnSetting.On
+            ).catch(() => {});
       return dups ? checkMergeData(dups) : Promise.reject();
     case GoalType.ReviewDeferredDups:
       return checkMergeData(
