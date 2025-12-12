@@ -55,6 +55,110 @@ export const StatisticsApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
+     * @param {string} [domainId]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getDomainProgressProportion: async (
+      projectId: string,
+      domainId?: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("getDomainProgressProportion", "projectId", projectId);
+      const localVarPath =
+        `/v1/projects/{projectId}/statistics/GetDomainProgressProportion`.replace(
+          `{${"projectId"}}`,
+          encodeURIComponent(String(projectId))
+        );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      if (domainId !== undefined) {
+        localVarQueryParameter["domainId"] = domainId;
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} [domainId]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getDomainWordCount: async (
+      projectId: string,
+      domainId?: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("getDomainWordCount", "projectId", projectId);
+      const localVarPath =
+        `/v1/projects/{projectId}/statistics/GetDomainWordCount`.replace(
+          `{${"projectId"}}`,
+          encodeURIComponent(String(projectId))
+        );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      if (domainId !== undefined) {
+        localVarQueryParameter["domainId"] = domainId;
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -306,6 +410,60 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
+     * @param {string} [domainId]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getDomainProgressProportion(
+      projectId: string,
+      domainId?: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getDomainProgressProportion(
+          projectId,
+          domainId,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} [domainId]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getDomainWordCount(
+      projectId: string,
+      domainId?: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getDomainWordCount(
+          projectId,
+          domainId,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -452,6 +610,38 @@ export const StatisticsApiFactory = function (
     /**
      *
      * @param {string} projectId
+     * @param {string} [domainId]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getDomainProgressProportion(
+      projectId: string,
+      domainId?: string,
+      options?: any
+    ): AxiosPromise<number> {
+      return localVarFp
+        .getDomainProgressProportion(projectId, domainId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} [domainId]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getDomainWordCount(
+      projectId: string,
+      domainId?: string,
+      options?: any
+    ): AxiosPromise<number> {
+      return localVarFp
+        .getDomainWordCount(projectId, domainId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -523,6 +713,48 @@ export const StatisticsApiFactory = function (
     },
   };
 };
+
+/**
+ * Request parameters for getDomainProgressProportion operation in StatisticsApi.
+ * @export
+ * @interface StatisticsApiGetDomainProgressProportionRequest
+ */
+export interface StatisticsApiGetDomainProgressProportionRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof StatisticsApiGetDomainProgressProportion
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof StatisticsApiGetDomainProgressProportion
+   */
+  readonly domainId?: string;
+}
+
+/**
+ * Request parameters for getDomainWordCount operation in StatisticsApi.
+ * @export
+ * @interface StatisticsApiGetDomainWordCountRequest
+ */
+export interface StatisticsApiGetDomainWordCountRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof StatisticsApiGetDomainWordCount
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof StatisticsApiGetDomainWordCount
+   */
+  readonly domainId?: string;
+}
 
 /**
  * Request parameters for getLineChartRootData operation in StatisticsApi.
@@ -608,6 +840,46 @@ export interface StatisticsApiGetWordsPerDayPerUserCountsRequest {
  * @extends {BaseAPI}
  */
 export class StatisticsApi extends BaseAPI {
+  /**
+   *
+   * @param {StatisticsApiGetDomainProgressProportionRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof StatisticsApi
+   */
+  public getDomainProgressProportion(
+    requestParameters: StatisticsApiGetDomainProgressProportionRequest,
+    options?: any
+  ) {
+    return StatisticsApiFp(this.configuration)
+      .getDomainProgressProportion(
+        requestParameters.projectId,
+        requestParameters.domainId,
+        options
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {StatisticsApiGetDomainWordCountRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof StatisticsApi
+   */
+  public getDomainWordCount(
+    requestParameters: StatisticsApiGetDomainWordCountRequest,
+    options?: any
+  ) {
+    return StatisticsApiFp(this.configuration)
+      .getDomainWordCount(
+        requestParameters.projectId,
+        requestParameters.domainId,
+        options
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
   /**
    *
    * @param {StatisticsApiGetLineChartRootDataRequest} requestParameters Request parameters.
