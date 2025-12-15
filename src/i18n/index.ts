@@ -54,7 +54,9 @@ export async function updateLangFromUser(): Promise<boolean> {
   // Log the user's current UI language
   const { resolvedLanguage } = i18n;
   if (resolvedLanguage) {
-    uiLanguage(resolvedLanguage);
+    uiLanguage(resolvedLanguage).catch((err) => {
+      console.warn("Failed to log UI language:", err);
+    });
   }
 
   return updated;

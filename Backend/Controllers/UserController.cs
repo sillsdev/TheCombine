@@ -96,9 +96,9 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Log the user's current UI language </summary>
-        [HttpGet("uilanguage/{uilang}", Name = "UiLanguage")]
+        [HttpPost("uilanguage", Name = "UiLanguage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult UiLanguage(string uilang)
+        public IActionResult UiLanguage([FromBody, BindRequired] string uilang)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "logging current UI language");
             activity?.SetTag("ui_language", uilang);

@@ -499,20 +499,17 @@ export const UserApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {string} uilang
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     uiLanguage: async (
-      uilang: string,
+      body: string,
       options: any = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'uilang' is not null or undefined
-      assertParamExists("uiLanguage", "uilang", uilang);
-      const localVarPath = `/v1/users/uilanguage/{uilang}`.replace(
-        `{${"uilang"}}`,
-        encodeURIComponent(String(uilang))
-      );
+      // verify required parameter 'body' is not null or undefined
+      assertParamExists("uiLanguage", "body", body);
+      const localVarPath = `/v1/users/uilanguage`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -521,12 +518,14 @@ export const UserApiAxiosParamCreator = function (
       }
 
       const localVarRequestOptions = {
-        method: "GET",
+        method: "POST",
         ...baseOptions,
         ...options,
       };
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
@@ -536,6 +535,11 @@ export const UserApiAxiosParamCreator = function (
         ...headersFromBaseOptions,
         ...options.headers,
       };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        body,
+        localVarRequestOptions,
+        configuration
+      );
 
       return {
         url: toPathString(localVarUrlObj),
@@ -883,18 +887,18 @@ export const UserApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {string} uilang
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async uiLanguage(
-      uilang: string,
+      body: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.uiLanguage(
-        uilang,
+        body,
         options
       );
       return createRequestFunction(
@@ -1087,13 +1091,13 @@ export const UserApiFactory = function (
     },
     /**
      *
-     * @param {string} uilang
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    uiLanguage(uilang: string, options?: any): AxiosPromise<void> {
+    uiLanguage(body: string, options?: any): AxiosPromise<void> {
       return localVarFp
-        .uiLanguage(uilang, options)
+        .uiLanguage(body, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1245,7 +1249,7 @@ export interface UserApiUiLanguageRequest {
    * @type {string}
    * @memberof UserApiUiLanguage
    */
-  readonly uilang: string;
+  readonly body: string;
 }
 
 /**
@@ -1451,7 +1455,7 @@ export class UserApi extends BaseAPI {
     options?: any
   ) {
     return UserApiFp(this.configuration)
-      .uiLanguage(requestParameters.uilang, options)
+      .uiLanguage(requestParameters.body, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
