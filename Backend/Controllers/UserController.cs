@@ -95,6 +95,16 @@ namespace BackendFramework.Controllers
             }
         }
 
+        /// <summary> Log the user's current UI language </summary>
+        [HttpGet("uilanguage/{uilang}", Name = "UiLanguage")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult UiLanguage(string uilang)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "logging current UI language");
+            activity?.SetTag("ui_language", uilang);
+            return Ok();
+        }
+
         /// <summary> Gets the current user. </summary>
         [HttpGet("currentuser", Name = "GetCurrentUser")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]

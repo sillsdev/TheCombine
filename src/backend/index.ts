@@ -728,6 +728,10 @@ export async function authenticateUser(
   return user;
 }
 
+export async function uiLanguage(uilang: string): Promise<void> {
+  await userApi.uiLanguage({ uilang }, defaultOptions());
+}
+
 /** Note: Only usable by site admins. */
 export async function getAllUsers(): Promise<User[]> {
   return (await userApi.getAllUsers(defaultOptions())).data;

@@ -499,6 +499,51 @@ export const UserApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {string} uilang
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    uiLanguage: async (
+      uilang: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'uilang' is not null or undefined
+      assertParamExists("uiLanguage", "uilang", uilang);
+      const localVarPath = `/v1/users/uilanguage/{uilang}`.replace(
+        `{${"uilang"}}`,
+        encodeURIComponent(String(uilang))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {string} userId
      * @param {User} user
      * @param {*} [options] Override http request option.
@@ -838,6 +883,29 @@ export const UserApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {string} uilang
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async uiLanguage(
+      uilang: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.uiLanguage(
+        uilang,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {string} userId
      * @param {User} user
      * @param {*} [options] Override http request option.
@@ -1019,6 +1087,17 @@ export const UserApiFactory = function (
     },
     /**
      *
+     * @param {string} uilang
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    uiLanguage(uilang: string, options?: any): AxiosPromise<void> {
+      return localVarFp
+        .uiLanguage(uilang, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {string} userId
      * @param {User} user
      * @param {*} [options] Override http request option.
@@ -1153,6 +1232,20 @@ export interface UserApiIsEmailOrUsernameAvailableRequest {
    * @memberof UserApiIsEmailOrUsernameAvailable
    */
   readonly body: string;
+}
+
+/**
+ * Request parameters for uiLanguage operation in UserApi.
+ * @export
+ * @interface UserApiUiLanguageRequest
+ */
+export interface UserApiUiLanguageRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof UserApiUiLanguage
+   */
+  readonly uilang: string;
 }
 
 /**
@@ -1343,6 +1436,22 @@ export class UserApi extends BaseAPI {
   ) {
     return UserApiFp(this.configuration)
       .isEmailOrUsernameAvailable(requestParameters.body, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {UserApiUiLanguageRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public uiLanguage(
+    requestParameters: UserApiUiLanguageRequest,
+    options?: any
+  ) {
+    return UserApiFp(this.configuration)
+      .uiLanguage(requestParameters.uilang, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

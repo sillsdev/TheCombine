@@ -4,6 +4,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import Backend, { type HttpBackendOptions } from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
 
+import { uiLanguage } from "backend";
 import { getCurrentUser } from "backend/localStorage";
 import { i18nFallbacks, i18nLangs } from "types/writingSystem";
 
@@ -44,11 +45,19 @@ function setDir(): void {
  * Returns `boolean` of whether the resolved language was updated. */
 export async function updateLangFromUser(): Promise<boolean> {
   const uiLang = getCurrentUser()?.uiLang;
+  let updated = false;
   if (uiLang && uiLang !== i18n.resolvedLanguage) {
     await i18n.changeLanguage(uiLang, setDir);
-    return true;
+    updated = true;
   }
-  return false;
+
+  // Log the user's current UI language
+  const { resolvedLanguage } = i18n;
+  if (resolvedLanguage) {
+    uiLanguage(resolvedLanguage);
+  }
+
+  return updated;
 }
 
 export default i18n;
