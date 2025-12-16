@@ -28,10 +28,6 @@ namespace Backend.Tests.Mocks
         {
             return Task.FromResult(new List<SemanticDomainUserCount>());
         }
-        public Task<int> GetDomainWordCount(string projectId, string domainId)
-        {
-            return Task.FromResult(0);
-        }
         public Task<double> GetDomainProgressProportion(string projectId, string domainId)
         {
             return Task.FromResult(0.0);

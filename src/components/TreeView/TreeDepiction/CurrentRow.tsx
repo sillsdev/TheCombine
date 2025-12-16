@@ -31,7 +31,7 @@ function CurrentTile(props: TreeRowProps): ReactElement {
       fullWidth
       id={currentDomainButtonId}
       onClick={() => animate(currentDomain)}
-      sx={{ height: "100%", p: 1, position: "relative" }}
+      sx={{ height: "100%", p: 1 }}
       variant="contained"
     >
       <DomainText domain={currentDomain} />

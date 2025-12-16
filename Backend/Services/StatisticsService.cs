@@ -369,19 +369,6 @@ namespace BackendFramework.Services
         }
 
         /// <summary>
-        /// Get the count of senses in a specific semantic domain
-        /// </summary>
-        /// <param name="projectId"> The project id </param>
-        /// <param name="domainId"> The semantic domain id </param>
-        /// <returns> The count of senses with the specified domain </returns>
-        public async Task<int> GetDomainWordCount(string projectId, string domainId)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain word count");
-
-            return await _wordRepo.CountFrontierWordsWithDomain(projectId, domainId);
-        }
-
-        /// <summary>
         /// Get the proportion of descendant domains that have at least one entry
         /// </summary>
         /// <param name="projectId"> The project id </param>
