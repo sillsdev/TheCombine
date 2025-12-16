@@ -95,7 +95,8 @@ namespace BackendFramework.Controllers
             }
         }
 
-        /// <summary> Log the user's current UI language </summary>
+        /// <summary> Logs the current UI language. </summary>
+        [AllowAnonymous]
         [HttpPost("uilanguage", Name = "UiLanguage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult UiLanguage([FromBody, BindRequired] string uilang)

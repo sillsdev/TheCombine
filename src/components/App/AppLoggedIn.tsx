@@ -69,7 +69,7 @@ export default function AppWithBar(): ReactElement {
   }
 
   useEffect(() => {
-    updateLangFromUser();
+    updateLangFromUser(true);
   }, []);
 
   useEffect(() => {
