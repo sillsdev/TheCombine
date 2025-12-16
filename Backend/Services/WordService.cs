@@ -11,12 +11,14 @@ namespace BackendFramework.Services
     public class WordService : IWordService
     {
         private readonly IWordRepository _wordRepo;
+        private readonly ISemanticDomainCountService _domainCountService;
 
         private const string otelTagName = "otel.WordService";
 
-        public WordService(IWordRepository wordRepo)
+        public WordService(IWordRepository wordRepo, ISemanticDomainCountService domainCountService)
         {
             _wordRepo = wordRepo;
+            _domainCountService = domainCountService;
         }
 
         /// <summary>
@@ -40,7 +42,9 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "creating a word");
 
-            return await _wordRepo.Create(PrepEditedData(userId, word));
+            var createdWord = await _wordRepo.Create(PrepEditedData(userId, word));
+            await _domainCountService.UpdateCountsForWord(createdWord);
+            return createdWord;
         }
 
         /// <summary> Creates new words with updated edited data. </summary>
@@ -49,7 +53,9 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "creating words");
 
-            return await _wordRepo.Create(words.Select(w => PrepEditedData(userId, w)).ToList());
+            var createdWords = await _wordRepo.Create(words.Select(w => PrepEditedData(userId, w)).ToList());
+            await _domainCountService.UpdateCountsForWords(createdWords);
+            return createdWords;
         }
 
         /// <summary> Adds a new word with updated edited data. </summary>
@@ -65,6 +71,12 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word");
 
+            var wordToDelete = await _wordRepo.GetWord(projectId, wordId);
+            if (wordToDelete is null)
+            {
+                return false;
+            }
+
             var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);
 
             // We only want to add the deleted word if the word started in the frontier.
@@ -73,11 +85,10 @@ namespace BackendFramework.Services
                 return wordIsInFrontier;
             }
 
-            var wordToDelete = await _wordRepo.GetWord(projectId, wordId);
-            if (wordToDelete is null)
-            {
-                return false;
-            }
+            // Decrement counts for the deleted word's semantic domains
+            await _domainCountService.UpdateCountsAfterWordUpdate(
+                wordToDelete,
+                new Word { ProjectId = projectId, Senses = new List<Sense>() });
 
             wordToDelete.EditedBy = new List<string>();
             wordToDelete.History = new List<string> { wordId };
@@ -88,7 +99,7 @@ namespace BackendFramework.Services
                 senseAcc.Accessibility = Status.Deleted;
             }
 
-            await Create(userId, wordToDelete);
+            await Add(userId, wordToDelete);
 
             return wordIsInFrontier;
         }
@@ -129,17 +140,22 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
 
+            var word = await _wordRepo.GetWord(projectId, wordId);
+            if (word is null)
+            {
+                return null;
+            }
+
             var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);
             if (!wordIsInFrontier)
             {
                 return null;
             }
 
-            var word = await _wordRepo.GetWord(projectId, wordId);
-            if (word is null)
-            {
-                return null;
-            }
+            // Decrement counts for the deleted word's semantic domains
+            await _domainCountService.UpdateCountsAfterWordUpdate(
+                word,
+                new Word { ProjectId = projectId, Senses = new List<Sense>() });
 
             word.ProjectId = projectId;
             word.Accessibility = Status.Deleted;
@@ -165,6 +181,7 @@ namespace BackendFramework.Services
                 words.Add(word);
             }
             await _wordRepo.AddFrontier(words);
+            await _domainCountService.UpdateCountsForWords(words);
             return true;
         }
 
@@ -173,6 +190,12 @@ namespace BackendFramework.Services
         public async Task<bool> Update(string projectId, string userId, string wordId, Word word)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a word in Frontier");
+
+            var oldWord = await _wordRepo.GetWord(projectId, wordId);
+            if (oldWord is null)
+            {
+                return false;
+            }
 
             var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);
 
@@ -185,12 +208,13 @@ namespace BackendFramework.Services
             // If an imported word was using the citation form for its Vernacular,
             // only keep UsingCitationForm true if the Vernacular hasn't changed.
             word.UsingCitationForm &=
-                word.Vernacular == (await _wordRepo.GetWord(projectId, wordId))!.Vernacular;
+                word.Vernacular == oldWord.Vernacular;
 
             word.ProjectId = projectId;
             word.History.Add(wordId);
 
-            await Create(userId, word);
+            var createdWord = await _wordRepo.Create(PrepEditedData(userId, word));
+            await _domainCountService.UpdateCountsAfterWordUpdate(oldWord, createdWord);
 
             return wordIsInFrontier;
         }

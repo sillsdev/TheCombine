@@ -34,7 +34,9 @@ namespace Backend.Tests.Controllers
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _mergeGraylistRepo = new MergeGraylistRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _wordService = new WordService(_wordRepo);
+            var countRepo = new SemanticDomainCountRepositoryMock();
+            var countService = new SemanticDomainCountService(countRepo, _wordRepo);
+            _wordService = new WordService(_wordRepo, countService);
             _mergeService = new MergeService(_mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
             _mergeController = new MergeController(
                 _mergeService, new HubContextMock<MergeHub>(), new PermissionServiceMock());
