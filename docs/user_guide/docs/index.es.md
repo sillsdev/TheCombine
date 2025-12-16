@@ -17,8 +17,9 @@ Consulte nuestra página de [introducción de](dataEntry.md) datos para saber c�
 Consulte nuestra página de [limpieza de datos](goals.md) para conocer las herramientas para editar y organizar los datos
 recopilados.
 
-## Need Help?
+## ¿Necesita ayuda?
 
-- [Product page:](https://software.sil.org/thecombine/) Learn more and get support.
-- [Community forum:](https://community.software.sil.org/c/combine/46) Ask questions and see what's new.
-- [RWC videos:](https://vimeo.com/showcase/10203338) Look for "The Combine - " titles for 5-minute tutorials.
+- [Página de producto:](https://software.sil.org/thecombine/) Aprende más y consigue soporte.
+- [Foro de la comunidad:](https://community.software.sil.org/c/combine/46) Haga preguntas y vea las novedades.
+- [Vídeos de RWC:](https://vimeo.com/showcase/10203338) Busca los títulos "The Combine - " para ver tutoriales de 5
+  minutos.

@@ -1,16 +1,7 @@
-import {
-  Badge,
-  Box,
-  Button,
-  Grid2,
-  ImageList,
-  ImageListItem,
-  Tooltip,
-} from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Box, Button, Grid2, ImageList, ImageListItem } from "@mui/material";
+import { ReactElement } from "react";
 
-import { getDomainWordCount } from "backend";
+import DomainCountBadge from "components/TreeView/TreeDepiction/DomainCountBadge";
 import DomainTileButton, {
   DomainText,
 } from "components/TreeView/TreeDepiction/DomainTileButton";
@@ -33,18 +24,6 @@ export default function CurrentRow(props: TreeRowProps): ReactElement {
 function CurrentTile(props: TreeRowProps): ReactElement {
   const { animate, currentDomain } = props;
 
-  const [senseCount, setSenseCount] = useState<number | undefined>();
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    setSenseCount(undefined);
-    if (currentDomain.parent) {
-      getDomainWordCount(currentDomain.id)
-        .then(setSenseCount)
-        .catch(() => {}); // Silently fail
-    }
-  }, [currentDomain.id]);
-
   return (
     <Button
       data-testid={currentDomainButtonId}
@@ -56,24 +35,8 @@ function CurrentTile(props: TreeRowProps): ReactElement {
       variant="contained"
     >
       <DomainText domain={currentDomain} />
-      {senseCount !== undefined && (
-        <Tooltip title={t("treeView.senseCountTooltip")}>
-          <Badge
-            badgeContent={`${senseCount}`}
-            color="secondary"
-            sx={{
-              position: "absolute",
-              top: 8,
-              right: 8,
-              "& .MuiBadge-badge": {
-                fontSize: "0.75rem",
-                height: 20,
-                minWidth: 20,
-              },
-            }}
-          />
-        </Tooltip>
-      )}
+
+      <DomainCountBadge domainId={currentDomain.id} showTooltip />
     </Button>
   );
 }

@@ -24,6 +24,7 @@ interface EditTextDialogProps {
   text: string;
   titleId: string;
   close: () => void;
+  onExited?: () => void;
   updateText: (newText: string) => void | Promise<void>;
   buttonIdCancel?: string;
   buttonIdClear?: string;
@@ -90,6 +91,7 @@ export default function EditTextDialog(
     <Dialog
       open={props.open}
       onClose={escapeClose}
+      slotProps={{ transition: { onExited: props.onExited } }}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >

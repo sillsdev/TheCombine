@@ -22,7 +22,7 @@ namespace BackendFramework.Repositories
 
         /// <summary>
         /// Creates a mongo filter for all words in a specified project (and optionally with specified vernacular).
-        /// Since a variant in FLEx can export as an entry without any senses, filters out 0-sense words.
+        /// Since a variant in FieldWorks can export as an entry without any senses, filters out 0-sense words.
         /// </summary>
         private static FilterDefinition<Word> GetAllProjectWordsFilter(string projectId, string? vernacular = null)
         {
@@ -271,13 +271,30 @@ namespace BackendFramework.Repositories
         }
 
         /// <summary>
+        /// Checks if the Frontier has any words that have the specified semantic domain.
+        /// </summary>
+        /// <param name="projectId"> The project id </param>
+        /// <param name="domainId"> The semantic domain id </param>
+        /// <returns> True if there is at least one word containing at least one sense with the specified domain. </returns>
+        public Task<bool> FrontierHasWordsWithDomain(string projectId, string domainId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking frontier for words with domain");
+
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.And(
+                filterDef.Eq(w => w.ProjectId, projectId),
+                filterDef.ElemMatch(w => w.Senses, s => s.SemanticDomains.Any(sd => sd.Id == domainId)));
+
+            return _frontier.Find(filter).Limit(1).AnyAsync();
+        }
+
+        /// <summary>
         /// Counts the number of Frontier words that have the specified semantic domain.
         /// </summary>
         /// <param name="projectId"> The project id </param>
         /// <param name="domainId"> The semantic domain id </param>
-        /// <param name="maxCount"> Optional maximum count to return </param>
-        /// <returns> The count of senses with the specified domain, capped at maxCount if provided </returns>
-        public async Task<int> CountFrontierWordsWithDomain(string projectId, string domainId, int? maxCount = null)
+        /// <returns> The count of words containing at least one sense with the specified domain. </returns>
+        public async Task<int> CountFrontierWordsWithDomain(string projectId, string domainId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "counting frontier words with domain");
 
@@ -286,7 +303,7 @@ namespace BackendFramework.Repositories
                 filterDef.Eq(w => w.ProjectId, projectId),
                 filterDef.ElemMatch(w => w.Senses, s => s.SemanticDomains.Any(sd => sd.Id == domainId)));
 
-            return (await _frontier.Find(filter).Limit(maxCount).ToListAsync()).Count;
+            return (int)await _frontier.CountDocumentsAsync(filter);
         }
     }
 }

@@ -3,7 +3,7 @@ set -eo pipefail
 
 #########################################################################################
 #
-# install-combine.sh is intended to install the Combine on an Ubuntu-based Linux machine.
+# install-combine.sh is intended to install The Combine on an Ubuntu-based Linux machine.
 # It should only be executed directly by developers. For general users, it is packaged in
 # a stand-alone installer (see ./installer/README.md or ./installer/README.pdf).
 #

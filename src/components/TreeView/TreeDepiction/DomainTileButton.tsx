@@ -4,12 +4,20 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
 } from "@mui/icons-material";
-import { Box, Button, Stack, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  Stack,
+  SxProps,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { SemanticDomain } from "api/models";
 import { getDomainProgress } from "backend";
+import DomainCountBadge from "components/TreeView/TreeDepiction/DomainCountBadge";
 import { Direction } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
 import { rootId } from "types/semanticDomain";
 
@@ -75,6 +83,14 @@ function DomainTile(props: DomainTileProps): ReactElement {
   }
 }
 
+const badgeClass = "DomainCountBadge";
+
+/** Style to show the child with given className only on hover of the parent */
+const hoverSx = (className: string): SxProps => ({
+  [`& .${className}`]: { opacity: 0, transition: "opacity .25s ease" },
+  [`&:hover .${className}`]: { opacity: 1 },
+});
+
 interface DomainTileButtonProps extends DomainTileProps {
   onClick: (domain: SemanticDomain) => void;
 }
@@ -83,12 +99,12 @@ interface DomainTileButtonProps extends DomainTileProps {
 export default function DomainTileButton(
   props: DomainTileButtonProps
 ): ReactElement {
-  const { onClick, direction, ...domainTileProps } = props;
+  const { onClick, ...domainTileProps } = props;
 
   const [progress, setProgress] = useState<number>(0);
   const theme = useTheme();
 
-  const shouldShowProgress = direction !== Direction.Up;
+  const shouldShowProgress = domainTileProps.direction !== Direction.Up;
 
   useEffect(() => {
     if (shouldShowProgress) {
@@ -104,11 +120,14 @@ export default function DomainTileButton(
       id={props.domain.id}
       fullWidth
       onClick={() => onClick(props.domain)}
-      sx={{ height: "100%", position: "relative", overflow: "hidden" }}
+      sx={{ height: "100%", ...hoverSx(badgeClass) }}
       tabIndex={-1}
       variant="outlined"
     >
-      <DomainTile direction={direction} {...domainTileProps} />
+      <DomainTile {...domainTileProps} />
+
+      <DomainCountBadge className={badgeClass} domainId={props.domain.id} />
+
       {shouldShowProgress && (
         <Box
           sx={{

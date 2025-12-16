@@ -10,7 +10,7 @@
     "privacyPolicy": "Política de privacidad",
     "descriptionP1": "Las palabras son los bloques de construcción de la lengua, vitales tanto para comunicar información como para compartir la cultura. Un diccionario, lleno de palabras y sus significados, es un recurso lingüístico fundamental, que ayuda a documentar y preservar la lengua para las generaciones futuras dentro de la comunidad y proporciona un puente para la comunicación con otras comunidades. Sin embargo, muchas comunidades lingüísticas minoritarias de todo el mundo carecen de este recurso en su lengua, lo que las coloca en una situación de desventaja.",
     "descriptionP2": "The Combine es una herramienta fácil de usar en el proceso de Recopilación Rápida de Palabras (RWC), un método para recopilar las palabras que servirán de base para un diccionario bilingüe. En el centro del proceso de RWC se encuentran los hablantes nativos de una determinada comunidad lingüística. Un grupo de 4 a 6 hablantes nativos, a los que se les presenta un dominio semántico a la vez, proponen todas las palabras de su lengua que se les ocurran relacionadas con ese dominio. The Combine facilita la introducción de estas palabras en una base de datos, junto con traducciones, grabaciones de audio y notas, para captar mejor su forma y significado.",
-    "descriptionP3": "Las personas con poco conocimiento lingüístico previo y una experiencia informática limitada pueden aprender rápidamente a utilizar las principales funciones de recopilación de palabras de The Combine. A continuación, las palabras resultantes pueden organizarse y editarse dentro de The Combine antes de exportar los datos para utilizarlos en otras herramientas como FLEx.",
+    "descriptionP3": "Las personas con poco conocimiento lingüístico previo y una experiencia informática limitada pueden aprender rápidamente a utilizar las principales funciones de recopilación de palabras de The Combine. A continuación, las palabras resultantes pueden organizarse y editarse dentro de The Combine antes de exportar los datos para utilizarlos en otras herramientas como FieldWorks.",
     "descriptionP4": "¡Inscríbase para comenzar con su recopilación de palabras!"
   },
   "treeView": {
@@ -131,11 +131,15 @@
     "userList": "Usuarios",
     "deleteUser": {
       "confirm": "Confirmar la eliminación del usuario de la base de datos de The Combine.",
+      "loadingProjects": "Cargando proyectos de usuario...",
+      "projectsTitle": "Este usuario tiene roles en los siguientes proyectos:",
+      "noProjects": "Este usuario no tiene roles de proyecto.",
+      "projectsLoadError": "Error al cargar los proyectos de usuario.",
       "toastSuccess": "Usuario eliminado con éxito de The Combine.",
       "toastFailure": "Error al eliminar el usuario de The Combine."
     },
     "populateUsers": {
-      "toastFailure": "Fallo al rellenar la lista de todos los usuarios."
+      "toastFailure": "Error al rellenar la lista de todos los usuarios."
     },
     "banners": {
       "title": "Banners",
@@ -452,6 +456,8 @@
       "dragCard": "Arrastre una tarjeta aquí para combinarla",
       "saveAndContinue": "Guardar los cambios y cargar un nuevo conjunto de palabras",
       "defer": "Descartar los cambios y cargar un nuevo conjunto de palabras",
+      "revertSet": "Revertir todos los cambios realizados a este conjunto de palabras",
+      "revertSetDialog": "¿Está seguro que desea descartar todos los cambios y empezar de nuevo con este conjunto de palabras?",
       "noDups": "No hay nada que combinar.",
       "delete": "Borrar la acepción",
       "deleteDialog": "¿Borrar esta acepción?",
@@ -460,7 +466,7 @@
       "protectedWord": "Esta palabra se importó con datos que The Combine no maneja.",
       "protectedWordInfo": "Para evitar que se borre, no se puede eliminar de forma segura la acepción final de esa palabra.",
       "protectedData": "Datos protegidos: {{ val }}",
-      "protectedOverride": "¿Permitir la eliminación de palabras o acepciones protegidos?",
+      "protectedOverride": "¿Permitir la eliminación de palabras o acepciones protegidas?",
       "protectedOverrideWarning": "Se perderán los siguientes datos: {{ val }}",
       "deleteProtectedSenseWarning": "No puede eliminar una acepción protegida.",
       "dropIntoSidebarWarning": "No se puede colocar acepciones en la barra lateral.",
@@ -535,6 +541,7 @@
     "invite": "Invitar",
     "proceedWithCaution": "¡Procede con precaución!",
     "reject": "Rechazar",
+    "revertSet": "Revertir conjunto",
     "rejected": "Rechazado",
     "reset": "Restablecer",
     "restore": "Restaurar",
@@ -576,6 +583,7 @@
       "domainName": "Nombre de dominio:",
       "username": "Usuario:",
       "domainCount": "Dominios:",
+      "recentDomain": "Dominio más reciente:",
       "senseCount": "Palabras:"
     },
     "axisLabel": { "date": "Fecha", "words": "Palabras recogidas" }
