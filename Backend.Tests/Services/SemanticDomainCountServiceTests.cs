@@ -153,69 +153,6 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public async Task TestMigrateCounts()
-        {
-            // Create some frontier words
-            var word1 = new Word
-            {
-                ProjectId = ProjId,
-                Senses = new List<Sense>
-                {
-                    new()
-                    {
-                        SemanticDomains = new List<SemanticDomain>
-                        {
-                            new() { Id = DomainId1 }
-                        }
-                    }
-                }
-            };
-
-            var word2 = new Word
-            {
-                ProjectId = ProjId,
-                Senses = new List<Sense>
-                {
-                    new()
-                    {
-                        SemanticDomains = new List<SemanticDomain>
-                        {
-                            new() { Id = DomainId1 },
-                            new() { Id = DomainId2 }
-                        }
-                    }
-                }
-            };
-
-            await _wordRepo.Create(word1);
-            await _wordRepo.Create(word2);
-
-            // Migrate counts
-            await _countService.MigrateCounts(ProjId);
-
-            var count1 = await _countRepo.GetCount(ProjId, DomainId1);
-            var count2 = await _countRepo.GetCount(ProjId, DomainId2);
-
-            Assert.That(count1, Is.Not.Null);
-            Assert.That(count1!.Count, Is.EqualTo(2));
-            Assert.That(count2, Is.Not.Null);
-            Assert.That(count2!.Count, Is.EqualTo(1));
-        }
-
-        [Test]
-        public async Task TestMigrateClearsOldCounts()
-        {
-            // Add an old count
-            await _countRepo.Create(new ProjectSemanticDomainCount(ProjId, DomainId1, 99));
-
-            // Migrate with no words
-            await _countService.MigrateCounts(ProjId);
-
-            var counts = await _countRepo.GetAllCounts(ProjId);
-            Assert.That(counts, Is.Empty);
-        }
-
-        [Test]
         public async Task TestUpdateCountsForWordDeletion()
         {
             var word = new Word

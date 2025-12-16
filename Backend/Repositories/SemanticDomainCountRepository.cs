@@ -17,17 +17,24 @@ namespace BackendFramework.Repositories
 
         private const string otelTagName = "otel.SemanticDomainCountRepository";
 
+        private static FilterDefinition<ProjectSemanticDomainCount>? ProjectFilter(string projectId)
+        {
+            var filterDef = new FilterDefinitionBuilder<ProjectSemanticDomainCount>();
+            return filterDef.Eq(c => c.ProjectId, projectId);
+        }
+
+        private static FilterDefinition<ProjectSemanticDomainCount>? ProjectDomainFilter(string projectId, string domainId)
+        {
+            var filterDef = new FilterDefinitionBuilder<ProjectSemanticDomainCount>();
+            return filterDef.And(filterDef.Eq(c => c.ProjectId, projectId), filterDef.Eq(c => c.DomainId, domainId));
+        }
+
         /// <summary> Gets the count for a specific semantic domain in a project </summary>
         public async Task<ProjectSemanticDomainCount?> GetCount(string projectId, string domainId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting semantic domain count");
 
-            var filterDef = new FilterDefinitionBuilder<ProjectSemanticDomainCount>();
-            var filter = filterDef.And(
-                filterDef.Eq(c => c.ProjectId, projectId),
-                filterDef.Eq(c => c.DomainId, domainId));
-
-            var result = await _counts.FindAsync(filter);
+            var result = await _counts.FindAsync(ProjectDomainFilter(projectId, domainId));
             return await result.FirstOrDefaultAsync();
         }
 
@@ -36,10 +43,7 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all semantic domain counts");
 
-            var filterDef = new FilterDefinitionBuilder<ProjectSemanticDomainCount>();
-            var filter = filterDef.Eq(c => c.ProjectId, projectId);
-
-            return await _counts.Find(filter).ToListAsync();
+            return await _counts.Find(ProjectFilter(projectId)).ToListAsync();
         }
 
         /// <summary> Creates a new semantic domain count entry </summary>
@@ -57,10 +61,7 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "incrementing semantic domain count");
 
-            var filterDef = new FilterDefinitionBuilder<ProjectSemanticDomainCount>();
-            var filter = filterDef.And(
-                filterDef.Eq(c => c.ProjectId, projectId),
-                filterDef.Eq(c => c.DomainId, domainId));
+            var filter = ProjectDomainFilter(projectId, domainId);
 
             var updateDef = new UpdateDefinitionBuilder<ProjectSemanticDomainCount>();
             var update = updateDef.Inc(c => c.Count, amount);
@@ -80,10 +81,7 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting all semantic domain counts");
 
-            var filterDef = new FilterDefinitionBuilder<ProjectSemanticDomainCount>();
-            var filter = filterDef.Eq(c => c.ProjectId, projectId);
-
-            var result = await _counts.DeleteManyAsync(filter);
+            var result = await _counts.DeleteManyAsync(ProjectFilter(projectId));
             return result.DeletedCount > 0;
         }
     }

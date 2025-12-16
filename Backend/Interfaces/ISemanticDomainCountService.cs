@@ -10,6 +10,5 @@ namespace BackendFramework.Interfaces
         Task UpdateCountsForWords(List<Word> words);
         Task UpdateCountsAfterWordUpdate(Word oldWord, Word newWord);
         Task UpdateCountsForWordDeletion(Word word);
-        Task MigrateCounts(string projectId);
     }
 }

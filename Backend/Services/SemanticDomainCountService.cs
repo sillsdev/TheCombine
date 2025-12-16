@@ -8,25 +8,18 @@ using BackendFramework.Otel;
 namespace BackendFramework.Services
 {
     /// <summary> Service for managing semantic domain sense counts </summary>
-    public class SemanticDomainCountService : ISemanticDomainCountService
+    public class SemanticDomainCountService(ISemanticDomainCountRepository countRepo, IWordRepository wordRepo)
+        : ISemanticDomainCountService
     {
-        private readonly ISemanticDomainCountRepository _countRepo;
-        private readonly IWordRepository _wordRepo;
+        private readonly ISemanticDomainCountRepository _countRepo = countRepo;
+        private readonly IWordRepository _wordRepo = wordRepo;
 
         private const string otelTagName = "otel.SemanticDomainCountService";
 
-        public SemanticDomainCountService(
-            ISemanticDomainCountRepository countRepo,
-            IWordRepository wordRepo)
-        {
-            _countRepo = countRepo;
-            _wordRepo = wordRepo;
-        }
-
         /// <summary> Extracts domain counts from a word </summary>
-        private static Dictionary<string, int> GetDomainCounts(Word word)
+        private static Dictionary<string, int> GetDomainCounts(Word word, Dictionary<string, int>? domainCounts = null)
         {
-            var domainCounts = new Dictionary<string, int>();
+            domainCounts ??= [];
             foreach (var sense in word.Senses)
             {
                 foreach (var domain in sense.SemanticDomains)
@@ -50,36 +43,27 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Updates counts when multiple new words are added </summary>
+        /// <remarks> Assumes all words belong to the same project </remarks>
         public async Task UpdateCountsForWords(List<Word> words)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating counts for words");
 
-            // Group by project and domain for efficient bulk updates
-            var domainCounts = new Dictionary<string, Dictionary<string, int>>();
-
-            foreach (var word in words)
+            if (words.Count == 0)
             {
-                if (!domainCounts.TryGetValue(word.ProjectId, out var projectDict))
-                {
-                    projectDict = new Dictionary<string, int>();
-                    domainCounts[word.ProjectId] = projectDict;
-                }
-
-                var wordDomainCounts = GetDomainCounts(word);
-                foreach (var entry in wordDomainCounts)
-                {
-                    projectDict[entry.Key] = projectDict.GetValueOrDefault(entry.Key, 0) + entry.Value;
-                }
+                return;
             }
 
-            // Apply all increments
-            foreach (var projectEntry in domainCounts)
+            var projectId = words.First().ProjectId;
+
+            var domainCounts = new Dictionary<string, int>();
+            foreach (var word in words)
             {
-                var projectId = projectEntry.Key;
-                foreach (var domainEntry in projectEntry.Value)
-                {
-                    await _countRepo.Increment(projectId, domainEntry.Key, domainEntry.Value);
-                }
+                GetDomainCounts(word, domainCounts);
+            }
+
+            foreach (var entry in domainCounts)
+            {
+                await _countRepo.Increment(projectId, entry.Key, entry.Value);
             }
         }
 
@@ -115,35 +99,6 @@ namespace BackendFramework.Services
             foreach (var entry in domainCounts)
             {
                 await _countRepo.Increment(word.ProjectId, entry.Key, -entry.Value);
-            }
-        }
-
-        /// <summary> Migrates counts for an existing project by scanning all Frontier words </summary>
-        public async Task MigrateCounts(string projectId)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "migrating counts for project");
-
-            // Clear existing counts for the project
-            await _countRepo.DeleteAllCounts(projectId);
-
-            // Get all words in the frontier
-            var words = await _wordRepo.GetFrontier(projectId);
-
-            // Build count map
-            var domainCounts = new Dictionary<string, int>();
-            foreach (var word in words)
-            {
-                var wordDomainCounts = GetDomainCounts(word);
-                foreach (var entry in wordDomainCounts)
-                {
-                    domainCounts[entry.Key] = domainCounts.GetValueOrDefault(entry.Key, 0) + entry.Value;
-                }
-            }
-
-            // Create count entries
-            foreach (var entry in domainCounts)
-            {
-                await _countRepo.Create(new ProjectSemanticDomainCount(projectId, entry.Key, entry.Value));
             }
         }
     }
