@@ -119,23 +119,6 @@ namespace BackendFramework.Controllers
             return Ok(await _statService.GetSemanticDomainUserCounts(projectId));
         }
 
-        /// <summary> Get the count of entries in a specific semantic domain </summary>
-        /// <returns> An integer count </returns>
-        [HttpGet("GetDomainWordCount", Name = "GetDomainWordCount")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> GetDomainWordCount(string projectId, string domainId)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain word count");
-
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
-            {
-                return Forbid();
-            }
-
-            return Ok(await _statService.GetDomainWordCount(projectId, domainId));
-        }
-
         /// <summary> Get the proportion of descendant domains that have at least one entry </summary>
         /// <returns> A double value between 0 and 1 </returns>
         [HttpGet("GetDomainProgressProportion", Name = "GetDomainProgressProportion")]

@@ -413,7 +413,7 @@ namespace BackendFramework.Services
             var count = 0.0;
             foreach (var dom in domainAndDescendants)
             {
-                if (await _wordRepo.CountFrontierWordsWithDomain(projectId, dom.Id, 1) > 0)
+                if (await _wordRepo.FrontierHasWordsWithDomain(projectId, dom.Id))
                 {
                     count++;
                 }

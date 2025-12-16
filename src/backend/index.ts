@@ -697,14 +697,6 @@ export async function getDomainProgress(domainId: string): Promise<number> {
   return response.data;
 }
 
-export async function getDomainWordCount(domainId: string): Promise<number> {
-  const response = await statisticsApi.getDomainWordCount(
-    { projectId: LocalStorage.getProjectId(), domainId },
-    defaultOptions()
-  );
-  return response.data;
-}
-
 /* UserController.cs */
 
 export async function verifyCaptchaToken(token: string): Promise<boolean> {
