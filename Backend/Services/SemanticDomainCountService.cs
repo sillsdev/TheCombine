@@ -23,17 +23,29 @@ namespace BackendFramework.Services
             _wordRepo = wordRepo;
         }
 
+        /// <summary> Extracts domain counts from a word </summary>
+        private static Dictionary<string, int> GetDomainCounts(Word word)
+        {
+            var domainCounts = new Dictionary<string, int>();
+            foreach (var sense in word.Senses)
+            {
+                foreach (var domain in sense.SemanticDomains)
+                {
+                    domainCounts[domain.Id] = domainCounts.GetValueOrDefault(domain.Id, 0) + 1;
+                }
+            }
+            return domainCounts;
+        }
+
         /// <summary> Updates counts when a new word is added </summary>
         public async Task UpdateCountsForWord(Word word)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating counts for word");
 
-            foreach (var sense in word.Senses)
+            var domainCounts = GetDomainCounts(word);
+            foreach (var entry in domainCounts)
             {
-                foreach (var domain in sense.SemanticDomains)
-                {
-                    await _countRepo.Increment(word.ProjectId, domain.Id, 1);
-                }
+                await _countRepo.Increment(word.ProjectId, entry.Key, entry.Value);
             }
         }
 
@@ -53,16 +65,10 @@ namespace BackendFramework.Services
                     domainCounts[word.ProjectId] = projectDict;
                 }
 
-                foreach (var sense in word.Senses)
+                var wordDomainCounts = GetDomainCounts(word);
+                foreach (var entry in wordDomainCounts)
                 {
-                    foreach (var domain in sense.SemanticDomains)
-                    {
-                        if (!projectDict.TryGetValue(domain.Id, out _))
-                        {
-                            projectDict[domain.Id] = 0;
-                        }
-                        projectDict[domain.Id]++;
-                    }
+                    projectDict[entry.Key] = projectDict.GetValueOrDefault(entry.Key, 0) + entry.Value;
                 }
             }
 
@@ -82,25 +88,8 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating counts after word update");
 
-            // Get old domains
-            var oldDomains = new Dictionary<string, int>();
-            foreach (var sense in oldWord.Senses)
-            {
-                foreach (var domain in sense.SemanticDomains)
-                {
-                    oldDomains[domain.Id] = oldDomains.GetValueOrDefault(domain.Id, 0) + 1;
-                }
-            }
-
-            // Get new domains
-            var newDomains = new Dictionary<string, int>();
-            foreach (var sense in newWord.Senses)
-            {
-                foreach (var domain in sense.SemanticDomains)
-                {
-                    newDomains[domain.Id] = newDomains.GetValueOrDefault(domain.Id, 0) + 1;
-                }
-            }
+            var oldDomains = GetDomainCounts(oldWord);
+            var newDomains = GetDomainCounts(newWord);
 
             // Calculate differences
             var allDomainIds = oldDomains.Keys.Union(newDomains.Keys).ToHashSet();
@@ -114,6 +103,18 @@ namespace BackendFramework.Services
                 {
                     await _countRepo.Increment(newWord.ProjectId, domainId, diff);
                 }
+            }
+        }
+
+        /// <summary> Updates counts when a word is deleted </summary>
+        public async Task UpdateCountsForWordDeletion(Word word)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating counts for word deletion");
+
+            var domainCounts = GetDomainCounts(word);
+            foreach (var entry in domainCounts)
+            {
+                await _countRepo.Increment(word.ProjectId, entry.Key, -entry.Value);
             }
         }
 
@@ -132,12 +133,10 @@ namespace BackendFramework.Services
             var domainCounts = new Dictionary<string, int>();
             foreach (var word in words)
             {
-                foreach (var sense in word.Senses)
+                var wordDomainCounts = GetDomainCounts(word);
+                foreach (var entry in wordDomainCounts)
                 {
-                    foreach (var domain in sense.SemanticDomains)
-                    {
-                        domainCounts[domain.Id] = domainCounts.GetValueOrDefault(domain.Id, 0) + 1;
-                    }
+                    domainCounts[entry.Key] = domainCounts.GetValueOrDefault(entry.Key, 0) + entry.Value;
                 }
             }
 

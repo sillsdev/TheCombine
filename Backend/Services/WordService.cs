@@ -86,9 +86,7 @@ namespace BackendFramework.Services
             }
 
             // Decrement counts for the deleted word's semantic domains
-            await _domainCountService.UpdateCountsAfterWordUpdate(
-                wordToDelete,
-                new Word { ProjectId = projectId, Senses = new List<Sense>() });
+            await _domainCountService.UpdateCountsForWordDeletion(wordToDelete);
 
             wordToDelete.EditedBy = new List<string>();
             wordToDelete.History = new List<string> { wordId };
@@ -99,7 +97,7 @@ namespace BackendFramework.Services
                 senseAcc.Accessibility = Status.Deleted;
             }
 
-            await Add(userId, wordToDelete);
+            await Create(userId, wordToDelete);
 
             return wordIsInFrontier;
         }
@@ -153,9 +151,7 @@ namespace BackendFramework.Services
             }
 
             // Decrement counts for the deleted word's semantic domains
-            await _domainCountService.UpdateCountsAfterWordUpdate(
-                word,
-                new Word { ProjectId = projectId, Senses = new List<Sense>() });
+            await _domainCountService.UpdateCountsForWordDeletion(word);
 
             word.ProjectId = projectId;
             word.Accessibility = Status.Deleted;

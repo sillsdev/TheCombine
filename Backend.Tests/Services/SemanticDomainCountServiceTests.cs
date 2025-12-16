@@ -214,5 +214,42 @@ namespace Backend.Tests.Services
             var counts = await _countRepo.GetAllCounts(ProjId);
             Assert.That(counts, Is.Empty);
         }
+
+        [Test]
+        public async Task TestUpdateCountsForWordDeletion()
+        {
+            var word = new Word
+            {
+                ProjectId = ProjId,
+                Senses = new List<Sense>
+                {
+                    new()
+                    {
+                        SemanticDomains = new List<SemanticDomain>
+                        {
+                            new() { Id = DomainId1 },
+                            new() { Id = DomainId2 }
+                        }
+                    }
+                }
+            };
+
+            // First add the word to get initial counts
+            await _countService.UpdateCountsForWord(word);
+
+            var count1Before = await _countRepo.GetCount(ProjId, DomainId1);
+            var count2Before = await _countRepo.GetCount(ProjId, DomainId2);
+            Assert.That(count1Before!.Count, Is.EqualTo(1));
+            Assert.That(count2Before!.Count, Is.EqualTo(1));
+
+            // Now delete it
+            await _countService.UpdateCountsForWordDeletion(word);
+
+            var count1After = await _countRepo.GetCount(ProjId, DomainId1);
+            var count2After = await _countRepo.GetCount(ProjId, DomainId2);
+
+            Assert.That(count1After!.Count, Is.EqualTo(0));
+            Assert.That(count2After!.Count, Is.EqualTo(0));
+        }
     }
 }
