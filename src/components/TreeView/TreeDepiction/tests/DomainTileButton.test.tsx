@@ -5,15 +5,14 @@ import { Direction } from "components/TreeView/TreeDepiction/TreeDepictionTypes"
 import domMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 
 jest.mock("backend", () => ({
-  getDomainProgress: () => mockGetDomainProgress(),
+  getDomainProgress: () => Promise.resolve(0.5),
+  getDomainWordCount: () => Promise.resolve(0),
 }));
 
 const MOCK_ANIMATE = jest.fn();
-const mockGetDomainProgress = jest.fn();
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockGetDomainProgress.mockResolvedValue(0.5);
 });
 
 describe("DomainTileButton", () => {
