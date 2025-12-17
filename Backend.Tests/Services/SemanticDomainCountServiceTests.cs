@@ -32,17 +32,7 @@ namespace Backend.Tests.Services
             var word = new Word
             {
                 ProjectId = ProjId,
-                Senses = new List<Sense>
-                {
-                    new()
-                    {
-                        SemanticDomains = new List<SemanticDomain>
-                        {
-                            new() { Id = DomainId1 },
-                            new() { Id = DomainId2 }
-                        }
-                    }
-                }
+                Senses = [new() { SemanticDomains = [new() { Id = DomainId1 }, new() { Id = DomainId2 }] }],
             };
 
             await _countService.UpdateCountsForWord(word);
@@ -64,31 +54,12 @@ namespace Backend.Tests.Services
                 new()
                 {
                     ProjectId = ProjId,
-                    Senses = new List<Sense>
-                    {
-                        new()
-                        {
-                            SemanticDomains = new List<SemanticDomain>
-                            {
-                                new() { Id = DomainId1 }
-                            }
-                        }
-                    }
+                Senses = [new() { SemanticDomains = [new() { Id = DomainId1 }] }]
                 },
                 new()
                 {
                     ProjectId = ProjId,
-                    Senses = new List<Sense>
-                    {
-                        new()
-                        {
-                            SemanticDomains = new List<SemanticDomain>
-                            {
-                                new() { Id = DomainId1 },
-                                new() { Id = DomainId2 }
-                            }
-                        }
-                    }
+                Senses = [new() { SemanticDomains = [new() { Id = DomainId1 }, new() { Id = DomainId2 }] }],
                 }
             };
 
@@ -109,32 +80,13 @@ namespace Backend.Tests.Services
             var oldWord = new Word
             {
                 ProjectId = ProjId,
-                Senses = new List<Sense>
-                {
-                    new()
-                    {
-                        SemanticDomains = new List<SemanticDomain>
-                        {
-                            new() { Id = DomainId1 },
-                            new() { Id = DomainId2 }
-                        }
-                    }
-                }
+                Senses = [new() { SemanticDomains = [new() { Id = DomainId1 }, new() { Id = DomainId2 }] }],
             };
 
             var newWord = new Word
             {
                 ProjectId = ProjId,
-                Senses = new List<Sense>
-                {
-                    new()
-                    {
-                        SemanticDomains = new List<SemanticDomain>
-                        {
-                            new() { Id = DomainId1 }
-                        }
-                    }
-                }
+                Senses = [new() { SemanticDomains = [new() { Id = DomainId1 }] }]
             };
 
             // Start with counts from old word
@@ -158,17 +110,7 @@ namespace Backend.Tests.Services
             var word = new Word
             {
                 ProjectId = ProjId,
-                Senses = new List<Sense>
-                {
-                    new()
-                    {
-                        SemanticDomains = new List<SemanticDomain>
-                        {
-                            new() { Id = DomainId1 },
-                            new() { Id = DomainId2 }
-                        }
-                    }
-                }
+                Senses = [new() { SemanticDomains = [new() { Id = DomainId1 }, new() { Id = DomainId2 }] }],
             };
 
             // First add the word to get initial counts
