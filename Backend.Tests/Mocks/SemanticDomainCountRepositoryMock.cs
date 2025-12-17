@@ -15,10 +15,10 @@ namespace Backend.Tests.Mocks
             _counts = new List<ProjectSemanticDomainCount>();
         }
 
-        public Task<ProjectSemanticDomainCount?> GetCount(string projectId, string domainId)
+        public Task<int> GetCount(string projectId, string domainId)
         {
             var count = _counts.FirstOrDefault(c => c.ProjectId == projectId && c.DomainId == domainId);
-            return Task.FromResult(count);
+            return Task.FromResult(count?.Count ?? 0);
         }
 
         public Task<List<ProjectSemanticDomainCount>> GetAllCounts(string projectId)

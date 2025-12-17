@@ -644,6 +644,14 @@ export async function getConsentImageSrc(speaker: Speaker): Promise<string> {
 
 /* StatisticsController.cs */
 
+export async function getDomainCount(domainId: string): Promise<number> {
+  const response = await statisticsApi.getDomainCount(
+    { projectId: LocalStorage.getProjectId(), domainId },
+    defaultOptions()
+  );
+  return response.data;
+}
+
 export async function getSemanticDomainCounts(
   projectId: string,
   lang?: string
@@ -965,12 +973,4 @@ export async function updateWord(word: Word): Promise<Word> {
     defaultOptions()
   );
   return { ...word, id: resp.data };
-}
-
-export async function getDomainWordCount(domainId: string): Promise<number> {
-  const response = await wordApi.getDomainWordCount(
-    { projectId: LocalStorage.getProjectId(), domainId },
-    defaultOptions()
-  );
-  return response.data;
 }

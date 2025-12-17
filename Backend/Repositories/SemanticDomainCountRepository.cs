@@ -30,12 +30,12 @@ namespace BackendFramework.Repositories
         }
 
         /// <summary> Gets the count for a specific semantic domain in a project </summary>
-        public async Task<ProjectSemanticDomainCount?> GetCount(string projectId, string domainId)
+        public async Task<int> GetCount(string projectId, string domainId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting semantic domain count");
 
             var result = await _counts.FindAsync(ProjectDomainFilter(projectId, domainId));
-            return await result.FirstOrDefaultAsync();
+            return (await result.FirstOrDefaultAsync())?.Count ?? 0;
         }
 
         /// <summary> Gets all counts for a project </summary>

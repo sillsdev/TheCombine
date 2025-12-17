@@ -40,10 +40,8 @@ namespace Backend.Tests.Services
             var count1 = await _countRepo.GetCount(ProjId, DomainId1);
             var count2 = await _countRepo.GetCount(ProjId, DomainId2);
 
-            Assert.That(count1, Is.Not.Null);
-            Assert.That(count1!.Count, Is.EqualTo(1));
-            Assert.That(count2, Is.Not.Null);
-            Assert.That(count2!.Count, Is.EqualTo(1));
+            Assert.That(count1, Is.EqualTo(1));
+            Assert.That(count2, Is.EqualTo(1));
         }
 
         [Test]
@@ -68,10 +66,8 @@ namespace Backend.Tests.Services
             var count1 = await _countRepo.GetCount(ProjId, DomainId1);
             var count2 = await _countRepo.GetCount(ProjId, DomainId2);
 
-            Assert.That(count1, Is.Not.Null);
-            Assert.That(count1!.Count, Is.EqualTo(2));
-            Assert.That(count2, Is.Not.Null);
-            Assert.That(count2!.Count, Is.EqualTo(1));
+            Assert.That(count1, Is.EqualTo(2));
+            Assert.That(count2, Is.EqualTo(1));
         }
 
         [Test]
@@ -98,10 +94,8 @@ namespace Backend.Tests.Services
             var count1 = await _countRepo.GetCount(ProjId, DomainId1);
             var count2 = await _countRepo.GetCount(ProjId, DomainId2);
 
-            Assert.That(count1, Is.Not.Null);
-            Assert.That(count1!.Count, Is.EqualTo(1)); // Unchanged
-            Assert.That(count2, Is.Not.Null);
-            Assert.That(count2!.Count, Is.EqualTo(0)); // Decremented by 1
+            Assert.That(count1, Is.EqualTo(1)); // Unchanged
+            Assert.That(count2, Is.EqualTo(0)); // Decremented by 1
         }
 
         [Test]
@@ -118,17 +112,16 @@ namespace Backend.Tests.Services
 
             var count1Before = await _countRepo.GetCount(ProjId, DomainId1);
             var count2Before = await _countRepo.GetCount(ProjId, DomainId2);
-            Assert.That(count1Before!.Count, Is.EqualTo(1));
-            Assert.That(count2Before!.Count, Is.EqualTo(1));
+            Assert.That(count1Before, Is.EqualTo(1));
+            Assert.That(count2Before, Is.EqualTo(1));
 
             // Now delete it
             await _countService.UpdateCountsForWordDeletion(word);
 
             var count1After = await _countRepo.GetCount(ProjId, DomainId1);
             var count2After = await _countRepo.GetCount(ProjId, DomainId2);
-
-            Assert.That(count1After!.Count, Is.EqualTo(0));
-            Assert.That(count2After!.Count, Is.EqualTo(0));
+            Assert.That(count1After, Is.EqualTo(0));
+            Assert.That(count2After, Is.EqualTo(0));
         }
     }
 }

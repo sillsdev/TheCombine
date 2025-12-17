@@ -412,21 +412,5 @@ namespace Backend.Tests.Controllers
             var wordResult = await _wordController.RestoreWord(ProjId, MissingId);
             Assert.That(wordResult, Is.InstanceOf<NotFoundResult>());
         }
-
-        [Test]
-        public async Task TestGetDomainWordCountNoPermission()
-        {
-            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-
-            var result = await _wordController.GetDomainWordCount(ProjId, "1");
-            Assert.That(result, Is.InstanceOf<ForbidResult>());
-        }
-
-        [Test]
-        public async Task TestGetDomainWordCount()
-        {
-            var result = await _wordController.GetDomainWordCount(ProjId, "1");
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-        }
     }
 }

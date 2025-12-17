@@ -9,21 +9,16 @@ using static SIL.Extensions.DateTimeExtensions;
 
 namespace BackendFramework.Services
 {
-    public class StatisticsService : IStatisticsService
+    public class StatisticsService(ISemanticDomainRepository domainRepo,
+        ISemanticDomainCountRepository domainCountRepo, IUserRepository userRepo, IWordRepository wordRepo)
+        : IStatisticsService
     {
-        private readonly IWordRepository _wordRepo;
-        private readonly ISemanticDomainRepository _domainRepo;
-        private readonly IUserRepository _userRepo;
+        private readonly ISemanticDomainRepository _domainRepo = domainRepo;
+        private readonly ISemanticDomainCountRepository _domainCountRepo = domainCountRepo;
+        private readonly IUserRepository _userRepo = userRepo;
+        private readonly IWordRepository _wordRepo = wordRepo;
 
         private const string otelTagName = "otel.StatisticsService";
-
-        public StatisticsService(
-            IWordRepository wordRepo, ISemanticDomainRepository domainRepo, IUserRepository userRepo)
-        {
-            _wordRepo = wordRepo;
-            _domainRepo = domainRepo;
-            _userRepo = userRepo;
-        }
 
         // Statistic names (TODO: localize)
         const string StatAverage = "Average";
@@ -33,38 +28,38 @@ namespace BackendFramework.Services
         const string StatRunningTotal = "Running Total";
 
         /// <summary>
+        /// Get a count of the number of senses associated with a semantic domain
+        /// </summary>
+        public Task<int> GetDomainCount(string projectId, string domainId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain count");
+
+            return _domainCountRepo.GetCount(projectId, domainId);
+        }
+
+        /// <summary>
         /// Get a <see cref="SemanticDomainCount"/> to generate a SemanticDomain statistics
         /// </summary>
         public async Task<List<SemanticDomainCount>> GetSemanticDomainCounts(string projectId, string lang)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting semantic domain counts");
 
-            var hashMap = new Dictionary<string, int>();
             var domainTreeNodeList = await _domainRepo.GetAllSemanticDomainTreeNodes(lang);
-            var wordList = await _wordRepo.GetFrontier(projectId);
-
-            if (domainTreeNodeList is null || domainTreeNodeList.Count == 0 || wordList.Count == 0)
+            if (domainTreeNodeList is null || domainTreeNodeList.Count == 0)
             {
                 return [];
             }
 
-            foreach (var word in wordList)
+            var domainCounts = await _domainCountRepo.GetAllCounts(projectId);
+            if (domainCounts.Count == 0)
             {
-                foreach (var sense in word.Senses)
-                {
-                    foreach (var sd in sense.SemanticDomains)
-                    {
-                        hashMap[sd.Id] = hashMap.GetValueOrDefault(sd.Id, 0) + 1;
-                    }
-                }
+                return [];
             }
+            var domainCountDict = domainCounts.ToDictionary(dc => dc.DomainId, dc => dc.Count);
 
-            var resList = new List<SemanticDomainCount>();
-            foreach (var domainTreeNode in domainTreeNodeList)
-            {
-                resList.Add(new(domainTreeNode, hashMap.GetValueOrDefault(domainTreeNode.Id, 0)));
-            }
-            return resList;
+            return domainTreeNodeList.Select(domainTreeNode =>
+                new SemanticDomainCount(domainTreeNode, domainCountDict.GetValueOrDefault(domainTreeNode.Id, 0))
+                ).ToList();
         }
 
         /// <summary>

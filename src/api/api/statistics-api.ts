@@ -55,6 +55,55 @@ export const StatisticsApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
+     * @param {string} domainId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getDomainCount: async (
+      projectId: string,
+      domainId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("getDomainCount", "projectId", projectId);
+      // verify required parameter 'domainId' is not null or undefined
+      assertParamExists("getDomainCount", "domainId", domainId);
+      const localVarPath =
+        `/v1/projects/{projectId}/statistics/domaincount/{domainId}`
+          .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+          .replace(`{${"domainId"}}`, encodeURIComponent(String(domainId)));
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -306,6 +355,32 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
+     * @param {string} domainId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getDomainCount(
+      projectId: string,
+      domainId: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getDomainCount(
+        projectId,
+        domainId,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -452,6 +527,22 @@ export const StatisticsApiFactory = function (
     /**
      *
      * @param {string} projectId
+     * @param {string} domainId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getDomainCount(
+      projectId: string,
+      domainId: string,
+      options?: any
+    ): AxiosPromise<number> {
+      return localVarFp
+        .getDomainCount(projectId, domainId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -523,6 +614,27 @@ export const StatisticsApiFactory = function (
     },
   };
 };
+
+/**
+ * Request parameters for getDomainCount operation in StatisticsApi.
+ * @export
+ * @interface StatisticsApiGetDomainCountRequest
+ */
+export interface StatisticsApiGetDomainCountRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof StatisticsApiGetDomainCount
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof StatisticsApiGetDomainCount
+   */
+  readonly domainId: string;
+}
 
 /**
  * Request parameters for getLineChartRootData operation in StatisticsApi.
@@ -608,6 +720,26 @@ export interface StatisticsApiGetWordsPerDayPerUserCountsRequest {
  * @extends {BaseAPI}
  */
 export class StatisticsApi extends BaseAPI {
+  /**
+   *
+   * @param {StatisticsApiGetDomainCountRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof StatisticsApi
+   */
+  public getDomainCount(
+    requestParameters: StatisticsApiGetDomainCountRequest,
+    options?: any
+  ) {
+    return StatisticsApiFp(this.configuration)
+      .getDomainCount(
+        requestParameters.projectId,
+        requestParameters.domainId,
+        options
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
   /**
    *
    * @param {StatisticsApiGetLineChartRootDataRequest} requestParameters Request parameters.

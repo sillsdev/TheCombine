@@ -6,7 +6,7 @@ namespace BackendFramework.Interfaces
 {
     public interface ISemanticDomainCountRepository
     {
-        Task<ProjectSemanticDomainCount?> GetCount(string projectId, string domainId);
+        Task<int> GetCount(string projectId, string domainId);
         Task<List<ProjectSemanticDomainCount>> GetAllCounts(string projectId);
         Task<ProjectSemanticDomainCount> Create(ProjectSemanticDomainCount count);
         Task<bool> Increment(string projectId, string domainId, int amount = 1);
