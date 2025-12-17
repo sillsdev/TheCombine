@@ -11,6 +11,11 @@ import theme from "types/theme";
 import { newWritingSystem } from "types/writingSystem";
 import { setMatchMedia } from "utilities/testingLibraryUtilities";
 
+jest.mock("components/TreeView/TreeDepiction", () => ({
+  __esModule: true,
+  default: () => <div id="current-domain" />, // id to satisfy motion's animate
+}));
+
 jest.mock("rootRedux/hooks", () => {
   return {
     ...jest.requireActual("rootRedux/hooks"),

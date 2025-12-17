@@ -4,11 +4,12 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
 } from "@mui/icons-material";
-import { Button, Stack, Typography } from "@mui/material";
+import { Button, Stack, SxProps, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { SemanticDomain } from "api/models";
+import DomainCountBadge from "components/TreeView/TreeDepiction/DomainCountBadge";
 import { Direction } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
 import { rootId } from "types/semanticDomain";
 
@@ -74,6 +75,14 @@ function DomainTile(props: DomainTileProps): ReactElement {
   }
 }
 
+const badgeClass = "DomainCountBadge";
+
+/** Style to show the child with given className only on hover of the parent */
+const hoverSx = (className: string): SxProps => ({
+  [`& .${className}`]: { opacity: 0, transition: "opacity .25s ease" },
+  [`&:hover .${className}`]: { opacity: 1 },
+});
+
 interface DomainTileButtonProps extends DomainTileProps {
   onClick: (domain: SemanticDomain) => void;
 }
@@ -88,11 +97,13 @@ export default function DomainTileButton(
       id={props.domain.id}
       fullWidth
       onClick={() => onClick(props.domain)}
-      sx={{ height: "100%" }}
+      sx={{ height: "100%", ...hoverSx(badgeClass) }}
       tabIndex={-1}
       variant="outlined"
     >
       <DomainTile {...domainTileProps} />
+
+      <DomainCountBadge className={badgeClass} domainId={props.domain.id} />
     </Button>
   );
 }

@@ -966,3 +966,11 @@ export async function updateWord(word: Word): Promise<Word> {
   );
   return { ...word, id: resp.data };
 }
+
+export async function getDomainWordCount(domainId: string): Promise<number> {
+  const response = await wordApi.getDomainWordCount(
+    { projectId: LocalStorage.getProjectId(), domainId },
+    defaultOptions()
+  );
+  return response.data;
+}
