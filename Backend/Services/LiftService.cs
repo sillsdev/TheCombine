@@ -721,26 +721,16 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteEndElement(); // end element
         }
 
-        private sealed class LiftMerger : ILiftMerger
+        private sealed class LiftMerger(string projectId, string vernLang, IWordRepository wordRepo,
+            ISemanticDomainCountService domainCountService) : ILiftMerger
         {
-            private readonly string _projectId;
-            private readonly List<SemanticDomainFull> _customSemDoms = new();
-            private readonly string _vernLang;
-            private readonly IWordRepository _wordRepo;
-            private readonly ISemanticDomainCountService _domainCountService;
-            private readonly List<Word> _importEntries = new();
+            private readonly string _projectId = projectId;
+            private readonly string _vernLang = vernLang;
+            private readonly IWordRepository _wordRepo = wordRepo;
+            private readonly ISemanticDomainCountService _domainCountService = domainCountService;
 
-            public LiftMerger(
-                string projectId,
-                string vernLang,
-                IWordRepository wordRepo,
-                ISemanticDomainCountService domainCountService)
-            {
-                _projectId = projectId;
-                _vernLang = vernLang;
-                _wordRepo = wordRepo;
-                _domainCountService = domainCountService;
-            }
+            private readonly List<SemanticDomainFull> _customSemDoms = [];
+            private readonly List<Word> _importEntries = [];
 
             /// <summary>
             /// Check for any Definitions in the private field <see cref="_importEntries"/>

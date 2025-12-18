@@ -37,8 +37,7 @@ namespace Backend.Tests.Controllers
             _projRepo = new ProjectRepositoryMock();
             _wordRepo = new WordRepositoryMock();
             _permissionService = new PermissionServiceMock();
-            var countRepo = new SemanticDomainCountRepositoryMock();
-            var countService = new SemanticDomainCountService(countRepo, _wordRepo);
+            var countService = new SemanticDomainCountService(new SemanticDomainCountRepositoryMock(), _wordRepo);
             _wordService = new WordService(_wordRepo, countService);
             _audioController = new AudioController(_wordRepo, _wordService, _permissionService);
 
