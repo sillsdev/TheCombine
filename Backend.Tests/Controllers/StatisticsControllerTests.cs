@@ -33,7 +33,7 @@ namespace Backend.Tests.Controllers
             _projRepo = new ProjectRepositoryMock();
             _userRepo = new UserRepositoryMock();
             _permService = new PermissionServiceMock(_userRepo);
-            _statsController = new StatisticsController(new StatisticsServiceMock(), _permService, _projRepo)
+            _statsController = new StatisticsController(_projRepo, _permService, new StatisticsServiceMock())
             {
                 // Mock the Http Context because this isn't an actual call controller
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
@@ -44,6 +44,22 @@ namespace Backend.Tests.Controllers
             _jwtAuthenticatedUser = await _permService.Authenticate(_jwtAuthenticatedUser.Username,
                 _jwtAuthenticatedUser.Password) ?? throw new UserAuthenticationException();
             _projId = (await _projRepo.Create(new Project { Name = "StatisticsControllerTests" }))!.Id;
+        }
+
+        [Test]
+        public async Task TestGetDomainCountNoPermission()
+        {
+            _statsController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            var result = await _statsController.GetDomainCount(_projId, "1");
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public async Task TestGetDomainCount()
+        {
+            var result = await _statsController.GetDomainCount(_projId, "1");
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
         }
 
         [Test]

@@ -32,7 +32,8 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _wordRepo = new WordRepositoryMock();
-            _wordService = new WordService(_wordRepo);
+            var countService = new SemanticDomainCountService(new SemanticDomainCountRepositoryMock(), _wordRepo);
+            _wordService = new WordService(_wordRepo, countService);
             _permissionService = new PermissionServiceMock();
             _wordController = new WordController(_wordRepo, _wordService, _permissionService);
         }
@@ -409,22 +410,6 @@ namespace Backend.Tests.Controllers
         {
             var wordResult = await _wordController.RestoreWord(ProjId, MissingId);
             Assert.That(wordResult, Is.InstanceOf<NotFoundResult>());
-        }
-
-        [Test]
-        public async Task TestGetDomainWordCountNoPermission()
-        {
-            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-
-            var result = await _wordController.GetDomainWordCount(ProjId, "1");
-            Assert.That(result, Is.InstanceOf<ForbidResult>());
-        }
-
-        [Test]
-        public async Task TestGetDomainWordCount()
-        {
-            var result = await _wordController.GetDomainWordCount(ProjId, "1");
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
         }
     }
 }
