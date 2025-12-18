@@ -367,5 +367,46 @@ namespace BackendFramework.Services
             // return descending order by senseCount
             return resUserMap.Values.ToList().OrderByDescending(t => t.WordCount).ToList();
         }
+
+        /// <summary>
+        /// Get the proportion of descendant domains that have at least one entry
+        /// </summary>
+        /// <param name="projectId"> The project id </param>
+        /// <param name="domainId"> The semantic domain id </param>
+        /// <returns> A proportion value between 0 and 1 </returns>
+        public async Task<double> GetDomainProgressProportion(string projectId, string domainId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain progress proportion");
+
+            if (string.IsNullOrEmpty(projectId) || string.IsNullOrEmpty(domainId) || !char.IsDigit(domainId[0]))
+            {
+                return 0.0;
+            }
+
+            var domains = await _domainRepo.GetAllSemanticDomainTreeNodes("en");
+            if (domains is null || domains.Count == 0)
+            {
+                return 0.0;
+            }
+
+            var domainAndDescendants = domains
+                .Where(dom => dom.Id.StartsWith(domainId, StringComparison.Ordinal)).ToList();
+
+            if (domainAndDescendants.Count == 0)
+            {
+                return 0.0;
+            }
+
+            var count = 0.0;
+            foreach (var dom in domainAndDescendants)
+            {
+                if (await _wordRepo.FrontierHasWordsWithDomain(projectId, dom.Id))
+                {
+                    count++;
+                }
+            }
+
+            return count / domainAndDescendants.Count;
+        }
     }
 }

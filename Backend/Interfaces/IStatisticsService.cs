@@ -12,6 +12,7 @@ namespace BackendFramework.Interfaces
         Task<ChartRootData> GetProgressEstimationLineChartRoot(string projectId, List<DateTime> schedule);
         Task<ChartRootData> GetLineChartRootData(string projectId);
         Task<List<SemanticDomainUserCount>> GetSemanticDomainUserCounts(string projectId);
+        Task<double> GetDomainProgressProportion(string projectId, string domainId);
     }
 
 }
