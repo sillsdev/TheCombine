@@ -36,44 +36,31 @@ i18n
     setDir // Callback after i18n has initialized
   );
 
-/** Sets the text direction ("ltr" or "rtl") based on the current language */
+/** Sets the text direction ("ltr" or "rtl") based on the current language. */
 function setDir(): void {
   document.body.dir = i18n.dir();
 }
 
-/** Logs the current UI language */
-function logUiLang(): void {
-  uiLanguage(i18n.resolvedLanguage ?? "").catch((err) => {
-    console.warn("Failed to log UI language:", err);
-  });
-}
-
-/** Things to do after language has been updated:
- * - Sets document direction
- * - Logs the current UI language */
-function langUpdateCallback(): void {
-  setDir();
-
-  // By logging here, instead of in the `i18n` init callback, we don't log
-  // before the user-specified UI language is applied.
-  logUiLang();
-}
-
 /** Updates `i18n`'s resolved language to the user-specified UI language (if
- * different). Logs the UI language if the resolved language changes or if
- * `alwaysLog` is `true`.
+ * different) and logs the UI language.
  *
  * Returns `boolean` of whether the resolved language was updated. */
-export async function updateLangFromUser(alwaysLog = false): Promise<boolean> {
+export async function updateLangFromUser(): Promise<boolean> {
   const uiLang = getCurrentUser()?.uiLang;
+  let updated = false;
   if (uiLang && uiLang !== i18n.resolvedLanguage) {
-    await i18n.changeLanguage(uiLang, langUpdateCallback);
-    return true;
+    await i18n.changeLanguage(uiLang, setDir);
+    updated = true;
   }
-  if (alwaysLog) {
-    logUiLang();
-  }
-  return false;
+
+  // Log the UI language even if not changed, because we don't log it on i18n
+  // init or before login (to avoid having languages different from a user's
+  // preference cluttering the analytics).
+  uiLanguage(i18n.resolvedLanguage ?? "").catch((err) =>
+    console.warn("Failed to log UI language:", err)
+  );
+
+  return updated;
 }
 
 export default i18n;
