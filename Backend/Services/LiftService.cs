@@ -103,7 +103,6 @@ namespace BackendFramework.Services
     public class LiftService : ILiftService
     {
         private readonly ISemanticDomainRepository _semDomRepo;
-        private readonly ISpeakerRepository _speakerRepo;
 
         /// <summary>
         /// A dictionary shared by all Projects for tracking exported projects.
@@ -120,10 +119,9 @@ namespace BackendFramework.Services
         private const string InProgress = "IN_PROGRESS";
         private const string otelTagName = "otel.LiftService";
 
-        public LiftService(ISemanticDomainRepository semDomRepo, ISpeakerRepository speakerRepo)
+        public LiftService(ISemanticDomainRepository semDomRepo)
         {
             _semDomRepo = semDomRepo;
-            _speakerRepo = speakerRepo;
 
             if (!Sldr.IsInitialized)
             {
@@ -260,7 +258,7 @@ namespace BackendFramework.Services
         /// <exception cref="MissingProjectException"> If Project does not exist. </exception>
         /// <returns> Path to compressed zip file containing export. </returns>
         public async Task<string> LiftExport(
-            string projectId, IWordRepository wordRepo, IProjectRepository projRepo)
+            string projectId, IProjectRepository projRepo, ISpeakerRepository speakerRepo, IWordRepository wordRepo)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "exporting to LIFT");
 
@@ -315,7 +313,7 @@ namespace BackendFramework.Services
             liftWriter.WriteHeader(headerContents);
 
             // Get all project speakers for exporting audio and consents.
-            var projSpeakers = await _speakerRepo.GetAllSpeakers(projectId);
+            var projSpeakers = await speakerRepo.GetAllSpeakers(projectId);
 
             // All words in the frontier with any senses are considered current.
             // The Combine does not import senseless entries and the interface is supposed to prevent creating them.
