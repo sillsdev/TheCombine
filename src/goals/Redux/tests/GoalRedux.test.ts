@@ -32,11 +32,14 @@ import { Path } from "types/path";
 import { newUser } from "types/user";
 import * as goalUtilities from "utilities/goalUtilities";
 
+global.alert = jest.fn();
+
 jest.mock("backend", () => ({
   addGoalToUserEdit: (...args: any[]) => mockAddGoalToUserEdit(...args),
   addStepToGoal: jest.fn(),
   createUserEdit: () => mockCreateUserEdit(),
   findDuplicates: jest.fn(),
+  findIdenticalDuplicates: () => mockFindIdenticalDuplicates(),
   getGraylistEntries: () => Promise.resolve([]),
   getUserEditById: (...args: any[]) => mockGetUserEditById(...args),
   hasGraylistEntries: jest.fn(),
@@ -48,12 +51,15 @@ jest.mock("router/browserRouter", () => ({
 
 const mockAddGoalToUserEdit = jest.fn();
 const mockCreateUserEdit = jest.fn();
+const mockFindIdenticalDuplicates = jest.fn();
 const mockGetUserEditById = jest.fn();
 const mockNavigate = jest.fn();
 const mockRetrieveDuplicates = jest.fn();
+
 function setMockFunctions(): void {
   mockAddGoalToUserEdit.mockResolvedValue(0);
   mockCreateUserEdit.mockResolvedValue(mockUser());
+  mockFindIdenticalDuplicates.mockResolvedValue([]);
   mockGetUserEditById.mockResolvedValue(mockUserEdit(true));
   mockRetrieveDuplicates.mockResolvedValue(goalDataMock.plannedWords);
 }
@@ -150,12 +156,29 @@ describe("asyncGetUserEdits", () => {
 });
 
 describe("asyncAddGoal", () => {
-  it("adds new MergeDups goal", async () => {
+  it("adds new MergeDups goal with identical-vernacular duplicates", async () => {
+    mockFindIdenticalDuplicates.mockResolvedValue(goalDataMock.plannedWords);
     const store = setupStore();
     await act(async () => {
       await store.dispatch(asyncAddGoal(new MergeDups()));
     });
-    // verify the new goal was loaded but its data was not loaded
+    // verify the new goal was loaded with data
+    const currentGoal = store.getState().goalsState.currentGoal as MergeDups;
+    expect(currentGoal.goalType).toEqual(GoalType.MergeDups);
+    expect(currentGoal.status).toEqual(GoalStatus.InProgress);
+    expect((currentGoal.data as MergeDupsData).plannedWords).toEqual(
+      goalDataMock.plannedWords
+    );
+    expect(mockNavigate).toHaveBeenCalledWith(Path.GoalCurrent);
+  });
+
+  it("adds new MergeDups goal without identical-vernacular duplicates", async () => {
+    mockFindIdenticalDuplicates.mockResolvedValue([]);
+    const store = setupStore();
+    await act(async () => {
+      await store.dispatch(asyncAddGoal(new MergeDups()));
+    });
+    // verify the new goal was loaded without data
     const currentGoal = store.getState().goalsState.currentGoal as MergeDups;
     expect(currentGoal.goalType).toEqual(GoalType.MergeDups);
     expect(currentGoal.status).toEqual(GoalStatus.Loading);
@@ -184,6 +207,7 @@ describe("asyncAddGoal", () => {
 
 describe("asyncLoadNewGoalData", () => {
   it("loads data for MergeDups goal", async () => {
+    mockFindIdenticalDuplicates.mockResolvedValue(goalDataMock.plannedWords);
     const store = setupStore();
     await act(async () => {
       await store.dispatch(asyncAddGoal(new MergeDups()));
@@ -193,7 +217,7 @@ describe("asyncLoadNewGoalData", () => {
     const currentGoal = store.getState().goalsState.currentGoal as MergeDups;
     expect(currentGoal.goalType).toEqual(GoalType.MergeDups);
     expect(currentGoal.status).toEqual(GoalStatus.InProgress);
-    expect(currentGoal.numSteps).toEqual(8);
+    expect(currentGoal.numSteps).toEqual(goalDataMock.plannedWords.length);
     expect(currentGoal.currentStep).toEqual(0);
     expect(currentGoal.data as MergeDupsData).toEqual(goalDataMock);
   });
@@ -202,6 +226,7 @@ describe("asyncLoadNewGoalData", () => {
 describe("asyncAdvanceStep", () => {
   it("advance MergeDups goal", async () => {
     // setup the test scenario
+    mockFindIdenticalDuplicates.mockResolvedValue(goalDataMock.plannedWords);
     const store = setupStore();
     // create mergeDups goal
     await act(async () => {
@@ -210,7 +235,7 @@ describe("asyncAdvanceStep", () => {
     });
     let currentGoal = store.getState().goalsState.currentGoal as MergeDups;
     expect(currentGoal.currentStep).toBe(0);
-    expect(currentGoal.numSteps).toEqual(8);
+    expect(currentGoal.numSteps).toEqual(goalDataMock.plannedWords.length);
     // iterate over all but the last step
     const numSteps = currentGoal.numSteps;
     for (let i = 0; i < numSteps - 1; i++) {
