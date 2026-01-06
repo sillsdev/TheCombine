@@ -45,8 +45,12 @@ export default defineConfig([
       "import/resolver": { typescript: { alwaysTryTypes: true } },
     },
   },
-  ...typescriptEslint.configs.strict,
+  ...typescriptEslint.configs.strict.map((config) => ({
+    ...config,
+    files: ["**/*.ts", "**/*.tsx"],
+  })),
   {
+    files: ["**/*.ts", "**/*.tsx"],
     rules: {
       "@typescript-eslint/explicit-function-return-type": [
         "warn",
