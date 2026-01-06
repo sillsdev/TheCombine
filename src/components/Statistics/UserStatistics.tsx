@@ -41,15 +41,17 @@ export default function UserStatistics(): ReactElement {
         <TableHead>
           <TableRow>
             <HeadCell titleId={"statistics.column.username"} />
-            <HeadCell titleId={"statistics.column.recentDomain"} />
-            <HeadCell titleId={"statistics.column.domainCount"} />
             <HeadCell titleId={"statistics.column.senseCount"} />
+            <HeadCell titleId={"statistics.column.domainCount"} />
+            <HeadCell titleId={"statistics.column.recentDomain"} />
           </TableRow>
         </TableHead>
         <TableBody>
           {domainUserCountList.map((t) => (
             <TableRow key={t.id}>
               <Cell text={t.username} />
+              <Cell text={t.wordCount} />
+              <Cell text={t.domainCount} />
               <Cell
                 body={
                   t.recentDomain ? (
@@ -60,8 +62,6 @@ export default function UserStatistics(): ReactElement {
                   ) : null
                 }
               />
-              <Cell text={t.domainCount} />
-              <Cell text={t.wordCount} />
             </TableRow>
           ))}
         </TableBody>
