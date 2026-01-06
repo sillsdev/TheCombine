@@ -25,7 +25,7 @@
     "license-frontend": "npx --ignore-scripts -y license-checker-rseidelsohn --production --excludePrivatePackages",
     "license-report-frontend": " npm run license-frontend -- --plainVertical --out docs/user_guide/assets/licenses/frontend_licenses.txt",
     "license-summary-frontend": "npm run license-frontend -- --summary",
-    "lint": "eslint --max-warnings=0 --ext js,ts,tsx,jsx public src",
+    "lint": "eslint --max-warnings=0 --ext js,jsx,ts,tsx src",
     "lint:fix-layout": "npm run lint -- --fix --fix-type layout,suggestion",
     "set-admin-user": "tsc scripts/setAdminUser.ts && node scripts/setAdminUser.js",
     "start": "npm i --ignore-scripts && run-p backend database frontend",
