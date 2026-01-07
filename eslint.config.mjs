@@ -1,12 +1,13 @@
+import { defineConfig } from "eslint/config";
 import pluginImport from "eslint-plugin-import";
 import pluginReact from "eslint-plugin-react";
 import pluginUnusedImports from "eslint-plugin-unused-imports";
 import globals from "globals";
 import typescriptEslint from "typescript-eslint";
 
-export default [
+export default defineConfig([
   {
-    ignores: ["**/*.dic.js", "**/api/**/*", "**/react-app-env.d.ts"],
+    ignores: ["**/api/**/*", "**/react-app-env.d.ts"],
   },
   {
     languageOptions: {
@@ -44,8 +45,11 @@ export default [
       "import/resolver": { typescript: { alwaysTryTypes: true } },
     },
   },
-  ...typescriptEslint.config({
-    extends: [typescriptEslint.configs.strict],
+  ...typescriptEslint.configs.strict.map((config) => ({
+    ...config,
+    files: ["**/*.ts", "**/*.tsx"],
+  })),
+  {
     files: ["**/*.ts", "**/*.tsx"],
     rules: {
       "@typescript-eslint/explicit-function-return-type": [
@@ -57,5 +61,5 @@ export default [
       "@typescript-eslint/no-inferrable-types": "warn",
       "@typescript-eslint/no-non-null-assertion": "off",
     },
-  }),
-];
+  },
+]);
