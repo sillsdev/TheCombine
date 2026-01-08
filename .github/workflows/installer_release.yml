@@ -1,6 +1,7 @@
 name: installer_release
 
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: ["Deploy Update to Live Server"]
     types:
@@ -12,7 +13,9 @@ permissions:
 jobs:
   make_installer:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    outputs:
+      release_tag: ${{ steps.release.outputs.tag }}
     steps:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
@@ -46,21 +49,21 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
-      - name: Get release tag from workflow
-        id: get_tag
-        run: |
-          # The head_branch from the workflow_run event is the release tag
-          echo "tag=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_OUTPUT
-        shell: bash
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y makeself
         shell: bash
+      - name: Get latest release tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        id: release
+        run: |
+          echo "tag=$(gh release view --json tagName -q .tagName)" >> $GITHUB_OUTPUT
       - name: Make installer with release version
         run: |
           cd installer
-          ./make-combine-installer.sh ${{ steps.get_tag.outputs.tag }} --debug
+          ./make-combine-installer.sh ${{ steps.release.outputs.tag }} --debug
         shell: bash
       - name: Upload installer artifact
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
@@ -72,7 +75,6 @@ jobs:
   upload_installer:
     needs: make_installer
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
@@ -81,14 +83,9 @@ jobs:
         with:
           egress-policy: block
           allowed-endpoints: >
+            github.com:443
             s3.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
             sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
-      - name: Get release tag from workflow
-        id: get_tag
-        run: |
-          # The head_branch from the workflow_run event is the release tag
-          echo "tag=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_OUTPUT
-        shell: bash
       - name: Download installer artifact
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
@@ -102,6 +99,6 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: Upload installer to S3
         run: |
-          TARGET=s3://software.thecombine.app/combine-installer-${{ steps.get_tag.outputs.tag }}.run
+          TARGET=s3://software.thecombine.app/combine-installer-${{ needs.make_installer.outputs.release_tag }}.run
           aws s3 cp installer/combine-installer.run $TARGET --content-type application/octet-stream
         shell: bash
