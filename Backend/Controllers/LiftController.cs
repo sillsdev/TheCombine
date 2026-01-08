@@ -22,28 +22,20 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/lift")]
-    public class LiftController : Controller
+    public class LiftController(IProjectRepository projRepo,
+        ISemanticDomainCountRepository semanticDomainCountRepository, IWordRepository wordRepo,
+        ILiftService liftService, IHubContext<ExportHub> notifyService, IPermissionService permissionService,
+        ILogger<LiftController> logger) : Controller
     {
-        private readonly IProjectRepository _projRepo;
-        private readonly IWordRepository _wordRepo;
-        private readonly ILiftService _liftService;
-        private readonly IHubContext<ExportHub> _notifyService;
-        private readonly IPermissionService _permissionService;
-        private readonly ILogger<LiftController> _logger;
+        private readonly IProjectRepository _projRepo = projRepo;
+        private readonly ISemanticDomainCountRepository _semanticDomainCountRepository = semanticDomainCountRepository;
+        private readonly IWordRepository _wordRepo = wordRepo;
+        private readonly ILiftService _liftService = liftService;
+        private readonly IHubContext<ExportHub> _notifyService = notifyService;
+        private readonly IPermissionService _permissionService = permissionService;
+        private readonly ILogger<LiftController> _logger = logger;
 
         private const string otelTagName = "otel.LiftController";
-
-        public LiftController(
-            IWordRepository wordRepo, IProjectRepository projRepo, IPermissionService permissionService,
-            ILiftService liftService, IHubContext<ExportHub> notifyService, ILogger<LiftController> logger)
-        {
-            _projRepo = projRepo;
-            _wordRepo = wordRepo;
-            _liftService = liftService;
-            _notifyService = notifyService;
-            _permissionService = permissionService;
-            _logger = logger;
-        }
 
         /// <summary>
         /// Extract a LIFT file to a temporary folder.
@@ -117,6 +109,7 @@ namespace BackendFramework.Controllers
 
             // Delete all frontier words and load the LIFT data
             await _wordRepo.DeleteAllFrontierWords(projectId);
+            await _semanticDomainCountRepository.DeleteAllCounts(projectId);
             return await FinishUploadLiftFile(projectId, userId, true);
         }
 

@@ -46,13 +46,14 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _projRepo = new ProjectRepositoryMock();
+            var semanticDomainCountRepo = new SemanticDomainCountRepositoryMock();
             _speakerRepo = new SpeakerRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            var countService = new SemanticDomainCountService(new SemanticDomainCountRepositoryMock());
+            var countService = new SemanticDomainCountService(semanticDomainCountRepo);
             _liftService = new LiftService(new SemanticDomainRepositoryMock(), _speakerRepo, countService);
             _wordService = new WordService(_wordRepo, countService);
-            _liftController = new LiftController(_wordRepo, _projRepo, new PermissionServiceMock(), _liftService,
-                new HubContextMock<ExportHub>(), new MockLogger());
+            _liftController = new LiftController(_projRepo, semanticDomainCountRepo, _wordRepo, _liftService,
+                new HubContextMock<ExportHub>(), new PermissionServiceMock(), new MockLogger());
 
             _projId = _projRepo.Create(new Project { Name = ProjName }).Result!.Id;
             _file = new FormFile(_stream, 0, _stream.Length, "Name", FileName);
