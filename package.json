@@ -137,7 +137,7 @@
     "redux-mock-store": "~1.5.5",
     "svgo": "~3.3.2",
     "typescript": "~5.9.3",
-    "typescript-eslint": "~8.51.0"
+    "typescript-eslint": "~8.52.0"
   },
   "prettier": {
     "overrides": [
