@@ -74,21 +74,3 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
-
-  - package-ecosystem: "npm" # major updates
-    directory: "/"
-    schedule:
-      interval: "cron"
-      cronjob: "0 0 1 1-7/6 *" # semiannually
-    ignore:
-      - dependency-name: "*"
-        update-types:
-          ["version-update:semver-minor", "version-update:semver-patch"]
-      - dependency-name: "@mui/icons-material"
-      - dependency-name: "@mui/material"
-      - dependency-name: "@mui/x-date-pickers"
-      - dependency-name: "@types/node"
-      - dependency-name: "@types/react"
-      - dependency-name: "@types/react-dom"
-      - dependency-name: "react"
-      - dependency-name: "react-dom"
