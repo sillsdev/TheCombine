@@ -102,9 +102,6 @@ namespace BackendFramework.Services
 
     public class LiftService : ILiftService
     {
-        private readonly ISemanticDomainRepository _semDomRepo;
-        private readonly ISpeakerRepository _speakerRepo;
-
         /// <summary>
         /// A dictionary shared by all Projects for tracking exported projects.
         /// The value is either ("IN_PROGRESS", exportId) or (filePath, exportId), where 
@@ -120,11 +117,8 @@ namespace BackendFramework.Services
         private const string InProgress = "IN_PROGRESS";
         private const string otelTagName = "otel.LiftService";
 
-        public LiftService(ISemanticDomainRepository semDomRepo, ISpeakerRepository speakerRepo)
+        public LiftService()
         {
-            _semDomRepo = semDomRepo;
-            _speakerRepo = speakerRepo;
-
             if (!Sldr.IsInitialized)
             {
                 Sldr.Initialize(true);
@@ -260,7 +254,8 @@ namespace BackendFramework.Services
         /// <exception cref="MissingProjectException"> If Project does not exist. </exception>
         /// <returns> Path to compressed zip file containing export. </returns>
         public async Task<string> LiftExport(
-            string projectId, IWordRepository wordRepo, IProjectRepository projRepo)
+            string projectId, IWordRepository wordRepo, IProjectRepository projRepo,
+            ISpeakerRepository speakerRepo, ISemanticDomainRepository semDomRepo)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "exporting to LIFT");
 
@@ -315,14 +310,14 @@ namespace BackendFramework.Services
             liftWriter.WriteHeader(headerContents);
 
             // Get all project speakers for exporting audio and consents.
-            var projSpeakers = await _speakerRepo.GetAllSpeakers(projectId);
+            var projSpeakers = await speakerRepo.GetAllSpeakers(projectId);
 
             // All words in the frontier with any senses are considered current.
             // The Combine does not import senseless entries and the interface is supposed to prevent creating them.
             // So the words found in allWords with no matching guid in activeWords are exported as 'deleted'.
             var deletedWords = allWords.Where(
                 x => activeWords.All(w => w.Guid != x.Guid)).DistinctBy(w => w.Guid).ToList();
-            var semDomNames = (await _semDomRepo.GetAllSemanticDomainTreeNodes("en") ?? new())
+            var semDomNames = (await semDomRepo.GetAllSemanticDomainTreeNodes("en") ?? new())
                 .ToDictionary(x => x.Id, x => x.Name);
             foreach (var wordEntry in activeWords)
             {
@@ -409,7 +404,7 @@ namespace BackendFramework.Services
             // Export custom semantic domains to lift-ranges
             if (proj.SemanticDomains.Count != 0 || CopyLiftRanges(proj.Id, rangesDest) is null)
             {
-                await CreateLiftRanges(proj.SemanticDomains, rangesDest);
+                await CreateLiftRanges(proj.SemanticDomains, rangesDest, semDomRepo);
             }
 
             // Export character set to ldml.
@@ -451,7 +446,8 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Export English semantic domains (along with any custom domains) to lift-ranges. </summary>
-        public async Task CreateLiftRanges(List<SemanticDomainFull> projDoms, string rangesDest)
+        public async Task CreateLiftRanges(List<SemanticDomainFull> projDoms, string rangesDest,
+            ISemanticDomainRepository semDomRepo)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "creating LIFT ranges");
 
@@ -466,7 +462,7 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteStartElement("range");
             liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
 
-            var englishDomains = await _semDomRepo.GetAllSemanticDomainTreeNodes("en") ?? new();
+            var englishDomains = await semDomRepo.GetAllSemanticDomainTreeNodes("en") ?? new();
 
             englishDomains.ForEach(sd => { WriteRangeElement(liftRangesWriter, sd.Id, sd.Guid, sd.Name, sd.Lang); });
 

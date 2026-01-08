@@ -30,12 +30,15 @@ namespace BackendFramework.Controllers
         private readonly IHubContext<ExportHub> _notifyService;
         private readonly IPermissionService _permissionService;
         private readonly ILogger<LiftController> _logger;
+        private readonly ISpeakerRepository _speakerRepo;
+        private readonly ISemanticDomainRepository _semDomRepo;
 
         private const string otelTagName = "otel.LiftController";
 
         public LiftController(
             IWordRepository wordRepo, IProjectRepository projRepo, IPermissionService permissionService,
-            ILiftService liftService, IHubContext<ExportHub> notifyService, ILogger<LiftController> logger)
+            ILiftService liftService, IHubContext<ExportHub> notifyService, ILogger<LiftController> logger,
+            ISpeakerRepository speakerRepo, ISemanticDomainRepository semDomRepo)
         {
             _projRepo = projRepo;
             _wordRepo = wordRepo;
@@ -43,6 +46,8 @@ namespace BackendFramework.Controllers
             _notifyService = notifyService;
             _permissionService = permissionService;
             _logger = logger;
+            _speakerRepo = speakerRepo;
+            _semDomRepo = semDomRepo;
         }
 
         /// <summary>
@@ -432,7 +437,7 @@ namespace BackendFramework.Controllers
 
         internal async Task<string> CreateLiftExport(string projectId)
         {
-            return await _liftService.LiftExport(projectId, _wordRepo, _projRepo);
+            return await _liftService.LiftExport(projectId, _wordRepo, _projRepo, _speakerRepo, _semDomRepo);
         }
 
         /// <summary> Cancel project export </summary>
