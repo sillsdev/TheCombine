@@ -22,33 +22,21 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/lift")]
-    public class LiftController : Controller
+    public class LiftController(IProjectRepository projRepo, ISemanticDomainRepository semDomRepo,
+        ISpeakerRepository speakerRepo, IWordRepository wordRepo, ILiftService liftService,
+        IHubContext<ExportHub> notifyService, IPermissionService permissionService, ILogger<LiftController> logger)
+        : Controller
     {
-        private readonly IProjectRepository _projRepo;
-        private readonly IWordRepository _wordRepo;
-        private readonly ILiftService _liftService;
-        private readonly IHubContext<ExportHub> _notifyService;
-        private readonly IPermissionService _permissionService;
-        private readonly ILogger<LiftController> _logger;
-        private readonly ISpeakerRepository _speakerRepo;
-        private readonly ISemanticDomainRepository _semDomRepo;
+        private readonly IProjectRepository _projRepo = projRepo;
+        private readonly ISemanticDomainRepository _semDomRepo = semDomRepo;
+        private readonly ISpeakerRepository _speakerRepo = speakerRepo;
+        private readonly IWordRepository _wordRepo = wordRepo;
+        private readonly ILiftService _liftService = liftService;
+        private readonly IHubContext<ExportHub> _notifyService = notifyService;
+        private readonly IPermissionService _permissionService = permissionService;
+        private readonly ILogger<LiftController> _logger = logger;
 
         private const string otelTagName = "otel.LiftController";
-
-        public LiftController(
-            IWordRepository wordRepo, IProjectRepository projRepo, IPermissionService permissionService,
-            ILiftService liftService, IHubContext<ExportHub> notifyService, ILogger<LiftController> logger,
-            ISpeakerRepository speakerRepo, ISemanticDomainRepository semDomRepo)
-        {
-            _projRepo = projRepo;
-            _wordRepo = wordRepo;
-            _liftService = liftService;
-            _notifyService = notifyService;
-            _permissionService = permissionService;
-            _logger = logger;
-            _speakerRepo = speakerRepo;
-            _semDomRepo = semDomRepo;
-        }
 
         /// <summary>
         /// Extract a LIFT file to a temporary folder.
@@ -437,7 +425,7 @@ namespace BackendFramework.Controllers
 
         internal async Task<string> CreateLiftExport(string projectId)
         {
-            return await _liftService.LiftExport(projectId, _wordRepo, _projRepo, _speakerRepo, _semDomRepo);
+            return await _liftService.LiftExport(projectId, _projRepo, _semDomRepo, _speakerRepo, _wordRepo);
         }
 
         /// <summary> Cancel project export </summary>

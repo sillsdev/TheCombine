@@ -253,18 +253,14 @@ namespace BackendFramework.Services
         /// <summary> Exports information from a project to a lift package zip </summary>
         /// <exception cref="MissingProjectException"> If Project does not exist. </exception>
         /// <returns> Path to compressed zip file containing export. </returns>
-        public async Task<string> LiftExport(
-            string projectId, IWordRepository wordRepo, IProjectRepository projRepo,
-            ISpeakerRepository speakerRepo, ISemanticDomainRepository semDomRepo)
+        public async Task<string> LiftExport(string projectId, IProjectRepository projRepo,
+            ISemanticDomainRepository semDomRepo, ISpeakerRepository speakerRepo, IWordRepository wordRepo)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "exporting to LIFT");
 
             // Validate project exists.
-            var proj = await projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                throw new MissingProjectException($"Project does not exist: {projectId}");
-            }
+            var proj = await projRepo.GetProject(projectId)
+                ?? throw new MissingProjectException($"Project does not exist: {projectId}");
 
             // Generate the zip dir.
             var tempExportDir = FileOperations.GetRandomTempDir();
@@ -317,8 +313,8 @@ namespace BackendFramework.Services
             // So the words found in allWords with no matching guid in activeWords are exported as 'deleted'.
             var deletedWords = allWords.Where(
                 x => activeWords.All(w => w.Guid != x.Guid)).DistinctBy(w => w.Guid).ToList();
-            var semDomNames = (await semDomRepo.GetAllSemanticDomainTreeNodes("en") ?? new())
-                .ToDictionary(x => x.Id, x => x.Name);
+            var englishSemDoms = await semDomRepo.GetAllSemanticDomainTreeNodes("en") ?? [];
+            var semDomNames = englishSemDoms.ToDictionary(x => x.Id, x => x.Name);
             foreach (var wordEntry in activeWords)
             {
                 var id = MakeSafeXmlAttribute(wordEntry.Vernacular) + "_" + wordEntry.Guid;
@@ -404,7 +400,7 @@ namespace BackendFramework.Services
             // Export custom semantic domains to lift-ranges
             if (proj.SemanticDomains.Count != 0 || CopyLiftRanges(proj.Id, rangesDest) is null)
             {
-                await CreateLiftRanges(proj.SemanticDomains, rangesDest, semDomRepo);
+                await CreateLiftRanges(englishSemDoms, proj.SemanticDomains, rangesDest);
             }
 
             // Export character set to ldml.
@@ -446,8 +442,8 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Export English semantic domains (along with any custom domains) to lift-ranges. </summary>
-        public async Task CreateLiftRanges(List<SemanticDomainFull> projDoms, string rangesDest,
-            ISemanticDomainRepository semDomRepo)
+        public async Task CreateLiftRanges(
+            List<SemanticDomainTreeNode> allDoms, List<SemanticDomainFull> projDoms, string rangesDest)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "creating LIFT ranges");
 
@@ -462,9 +458,7 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteStartElement("range");
             liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
 
-            var englishDomains = await semDomRepo.GetAllSemanticDomainTreeNodes("en") ?? new();
-
-            englishDomains.ForEach(sd => { WriteRangeElement(liftRangesWriter, sd.Id, sd.Guid, sd.Name, sd.Lang); });
+            allDoms.ForEach(sd => { WriteRangeElement(liftRangesWriter, sd.Id, sd.Guid, sd.Name, sd.Lang); });
 
             // Pull from new semantic domains in project
             foreach (var sd in projDoms)
@@ -473,7 +467,7 @@ namespace BackendFramework.Services
                        ? Guid.NewGuid().ToString()
                        : sd.Guid;
 
-                var parent = $"{sd.ParentId} {englishDomains.Find(d => d.Id == sd.ParentId)?.Name}".Trim();
+                var parent = $"{sd.ParentId} {allDoms.Find(d => d.Id == sd.ParentId)?.Name}".Trim();
                 WriteRangeElement(liftRangesWriter, sd.Id, guid, sd.Name, sd.Lang, sd.Description, parent);
             }
 
