@@ -46,18 +46,9 @@ namespace BackendFramework.Repositories
             return await _counts.Find(ProjectFilter(projectId)).ToListAsync();
         }
 
-        /// <summary> Creates a new semantic domain count entry </summary>
-        public async Task<ProjectSemanticDomainCount> Create(ProjectSemanticDomainCount count)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "creating semantic domain count");
-
-            await _counts.InsertOneAsync(count);
-            return count;
-        }
-
         /// <summary> Increments (or decrements if negative) the count for a semantic domain </summary>
-        /// <returns> true if the count was updated, false if it doesn't exist </returns>
-        public async Task<bool> Increment(string projectId, string domainId, int amount = 1)
+        /// <returns> the new count after incrementing </returns>
+        public async Task<int> Increment(string projectId, string domainId, int amount = 1)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "incrementing semantic domain count");
 
@@ -73,7 +64,7 @@ namespace BackendFramework.Repositories
             };
 
             var result = await _counts.FindOneAndUpdateAsync(filter, update, options);
-            return result is not null;
+            return result?.Count ?? 0;
         }
 
         /// <summary> Deletes all counts for a project </summary>

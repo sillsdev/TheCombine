@@ -8,8 +8,7 @@ namespace BackendFramework.Interfaces
     {
         Task<int> GetCount(string projectId, string domainId);
         Task<List<ProjectSemanticDomainCount>> GetAllCounts(string projectId);
-        Task<ProjectSemanticDomainCount> Create(ProjectSemanticDomainCount count);
-        Task<bool> Increment(string projectId, string domainId, int amount = 1);
+        Task<int> Increment(string projectId, string domainId, int amount = 1);
         Task<bool> DeleteAllCounts(string projectId);
     }
 }

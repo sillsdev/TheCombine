@@ -8,12 +8,7 @@ namespace Backend.Tests.Mocks
 {
     public sealed class SemanticDomainCountRepositoryMock : ISemanticDomainCountRepository
     {
-        private readonly List<ProjectSemanticDomainCount> _counts;
-
-        public SemanticDomainCountRepositoryMock()
-        {
-            _counts = new List<ProjectSemanticDomainCount>();
-        }
+        private readonly List<ProjectSemanticDomainCount> _counts = [];
 
         public Task<int> GetCount(string projectId, string domainId)
         {
@@ -27,14 +22,7 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(counts);
         }
 
-        public Task<ProjectSemanticDomainCount> Create(ProjectSemanticDomainCount count)
-        {
-            count.Id = Util.RandString();
-            _counts.Add(count);
-            return Task.FromResult(count);
-        }
-
-        public Task<bool> Increment(string projectId, string domainId, int amount = 1)
+        public Task<int> Increment(string projectId, string domainId, int amount = 1)
         {
             var count = _counts.FirstOrDefault(c => c.ProjectId == projectId && c.DomainId == domainId);
             if (count is null)
@@ -49,7 +37,7 @@ namespace Backend.Tests.Mocks
             {
                 count.Count += amount;
             }
-            return Task.FromResult(true);
+            return Task.FromResult(count.Count);
         }
 
         public Task<bool> DeleteAllCounts(string projectId)

@@ -11,7 +11,6 @@ namespace Backend.Tests.Services
     internal sealed class WordServiceTests
     {
         private IWordRepository _wordRepo = null!;
-        private ISemanticDomainCountService _countService = null!;
         private IWordService _wordService = null!;
 
         private const string ProjId = "WordServiceTestProjId";
@@ -22,9 +21,8 @@ namespace Backend.Tests.Services
         public void Setup()
         {
             _wordRepo = new WordRepositoryMock();
-            var countRepo = new SemanticDomainCountRepositoryMock();
-            _countService = new SemanticDomainCountService(countRepo, _wordRepo);
-            _wordService = new WordService(_wordRepo, _countService);
+            _wordService =
+                new WordService(_wordRepo, new SemanticDomainCountService(new SemanticDomainCountRepositoryMock()));
         }
 
         [Test]

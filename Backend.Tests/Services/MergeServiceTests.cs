@@ -25,8 +25,8 @@ namespace Backend.Tests.Services
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _mergeGraylistRepo = new MergeGraylistRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            var countService = new SemanticDomainCountService(new SemanticDomainCountRepositoryMock(), _wordRepo);
-            _wordService = new WordService(_wordRepo, countService);
+            _wordService =
+                new WordService(_wordRepo, new SemanticDomainCountService(new SemanticDomainCountRepositoryMock()));
             _mergeService = new MergeService(_mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
         }
 

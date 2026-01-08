@@ -48,7 +48,7 @@ namespace Backend.Tests.Controllers
             _projRepo = new ProjectRepositoryMock();
             _speakerRepo = new SpeakerRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            var countService = new SemanticDomainCountService(new SemanticDomainCountRepositoryMock(), _wordRepo);
+            var countService = new SemanticDomainCountService(new SemanticDomainCountRepositoryMock());
             _liftService = new LiftService(new SemanticDomainRepositoryMock(), _speakerRepo, countService);
             _wordService = new WordService(_wordRepo, countService);
             _liftController = new LiftController(_wordRepo, _projRepo, new PermissionServiceMock(), _liftService,

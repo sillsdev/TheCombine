@@ -34,9 +34,8 @@ namespace BackendFramework.Models
             Count = 0;
         }
 
-        public ProjectSemanticDomainCount(string projectId, string domainId, int count = 0)
+        public ProjectSemanticDomainCount(string projectId, string domainId, int count = 0) : this()
         {
-            Id = "";
             ProjectId = projectId;
             DomainId = domainId;
             Count = count;

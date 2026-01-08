@@ -57,7 +57,7 @@ namespace Backend.Tests.Services
         public void GetSemanticDomainCountsTestNullDomainList()
         {
             // Add a domain count to the database and leave the semantic domain list null
-            _domainCountRepo.Create(new ProjectSemanticDomainCount(ProjId, SemDomId, 1));
+            _domainCountRepo.Increment(ProjId, SemDomId).Wait();
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Is.Empty);
@@ -68,7 +68,7 @@ namespace Backend.Tests.Services
         {
             // Add to the database an empty list of semantic domains and a domain count
             ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(new List<SemanticDomainTreeNode>());
-            _domainCountRepo.Create(new ProjectSemanticDomainCount(ProjId, SemDomId, 1));
+            _domainCountRepo.Increment(ProjId, SemDomId).Wait();
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Is.Empty);
@@ -89,7 +89,7 @@ namespace Backend.Tests.Services
         {
             // Add to the database a semantic domain and count with a different domain id
             ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodes);
-            _domainCountRepo.Create(new ProjectSemanticDomainCount(ProjId, "DifferentId", 1));
+            _domainCountRepo.Increment(ProjId, "DifferentId").Wait();
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Has.Count.EqualTo(1));
@@ -101,7 +101,7 @@ namespace Backend.Tests.Services
         {
             // Add to the database a semantic domain and a corresponding count
             ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodes);
-            _domainCountRepo.Create(new ProjectSemanticDomainCount(ProjId, SemDomId, 1));
+            _domainCountRepo.Increment(ProjId, SemDomId).Wait();
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Has.Count.EqualTo(1));

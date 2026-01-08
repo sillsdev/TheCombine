@@ -8,11 +8,9 @@ using BackendFramework.Otel;
 namespace BackendFramework.Services
 {
     /// <summary> Service for managing semantic domain sense counts </summary>
-    public class SemanticDomainCountService(ISemanticDomainCountRepository countRepo, IWordRepository wordRepo)
-        : ISemanticDomainCountService
+    public class SemanticDomainCountService(ISemanticDomainCountRepository countRepo) : ISemanticDomainCountService
     {
         private readonly ISemanticDomainCountRepository _countRepo = countRepo;
-        private readonly IWordRepository _wordRepo = wordRepo;
 
         private const string otelTagName = "otel.SemanticDomainCountService";
 
