@@ -54,13 +54,14 @@ const authenticationUrls = [
 ];
 
 /** A list of URL patterns for which the frontend explicitly handles errors
- * and the blanket error pop ups should be suppressed.*/
+ * and the blanket error pop-ups should be suppressed.*/
 const whiteListedErrorUrls = [
   "/merge/retrievedups",
   "/speakers/create/",
   "/speakers/update/",
   "/users/authenticate",
   "/users/captcha/",
+  "/users/uilanguage",
 ];
 
 // Create an axios instance to allow for attaching interceptors to it.
@@ -734,6 +735,10 @@ export async function authenticateUser(
     LocalStorage.setAvatar(await avatarSrc(user.id));
   }
   return user;
+}
+
+export async function uiLanguage(uilang: string): Promise<void> {
+  await userApi.uiLanguage({ body: uilang }, defaultOptions());
 }
 
 /** Note: Only usable by site admins. */

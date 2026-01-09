@@ -27,8 +27,7 @@ namespace Backend.Tests.Services
         {
             _semDomRepo = new SemanticDomainRepositoryMock();
             _speakerRepo = new SpeakerRepositoryMock();
-            _liftService = new LiftService(
-                _semDomRepo, _speakerRepo, new SemanticDomainCountService(new SemanticDomainCountRepositoryMock()));
+            _liftService = new LiftService();
         }
 
         [Test]

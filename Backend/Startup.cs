@@ -276,7 +276,7 @@ namespace BackendFramework
             services.AddTransient<ISpeakerRepository, SpeakerRepository>();
 
             // Statistics types
-            services.AddSingleton<IStatisticsService, StatisticsService>();
+            services.AddTransient<IStatisticsService, StatisticsService>();
 
             // User types
             services.AddTransient<IUserRepository, UserRepository>();

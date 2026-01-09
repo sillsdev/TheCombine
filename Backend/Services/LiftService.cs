@@ -102,10 +102,6 @@ namespace BackendFramework.Services
 
     public class LiftService : ILiftService
     {
-        private readonly ISemanticDomainRepository _semDomRepo;
-        private readonly ISpeakerRepository _speakerRepo;
-        private readonly ISemanticDomainCountService _domainCountService;
-
         /// <summary>
         /// A dictionary shared by all Projects for tracking exported projects.
         /// The value is either ("IN_PROGRESS", exportId) or (filePath, exportId), where 
@@ -121,15 +117,8 @@ namespace BackendFramework.Services
         private const string InProgress = "IN_PROGRESS";
         private const string otelTagName = "otel.LiftService";
 
-        public LiftService(
-            ISemanticDomainRepository semDomRepo,
-            ISpeakerRepository speakerRepo,
-            ISemanticDomainCountService domainCountService)
+        public LiftService()
         {
-            _semDomRepo = semDomRepo;
-            _speakerRepo = speakerRepo;
-            _domainCountService = domainCountService;
-
             if (!Sldr.IsInitialized)
             {
                 Sldr.Initialize(true);
@@ -264,17 +253,14 @@ namespace BackendFramework.Services
         /// <summary> Exports information from a project to a lift package zip </summary>
         /// <exception cref="MissingProjectException"> If Project does not exist. </exception>
         /// <returns> Path to compressed zip file containing export. </returns>
-        public async Task<string> LiftExport(
-            string projectId, IWordRepository wordRepo, IProjectRepository projRepo)
+        public async Task<string> LiftExport(string projectId, IProjectRepository projRepo,
+            ISemanticDomainRepository semDomRepo, ISpeakerRepository speakerRepo, IWordRepository wordRepo)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "exporting to LIFT");
 
             // Validate project exists.
-            var proj = await projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                throw new MissingProjectException($"Project does not exist: {projectId}");
-            }
+            var proj = await projRepo.GetProject(projectId)
+                ?? throw new MissingProjectException($"Project does not exist: {projectId}");
 
             // Generate the zip dir.
             var tempExportDir = FileOperations.GetRandomTempDir();
@@ -320,15 +306,15 @@ namespace BackendFramework.Services
             liftWriter.WriteHeader(headerContents);
 
             // Get all project speakers for exporting audio and consents.
-            var projSpeakers = await _speakerRepo.GetAllSpeakers(projectId);
+            var projSpeakers = await speakerRepo.GetAllSpeakers(projectId);
 
             // All words in the frontier with any senses are considered current.
             // The Combine does not import senseless entries and the interface is supposed to prevent creating them.
             // So the words found in allWords with no matching guid in activeWords are exported as 'deleted'.
             var deletedWords = allWords.Where(
                 x => activeWords.All(w => w.Guid != x.Guid)).DistinctBy(w => w.Guid).ToList();
-            var semDomNames = (await _semDomRepo.GetAllSemanticDomainTreeNodes("en") ?? new())
-                .ToDictionary(x => x.Id, x => x.Name);
+            var englishSemDoms = await semDomRepo.GetAllSemanticDomainTreeNodes("en") ?? [];
+            var semDomNames = englishSemDoms.ToDictionary(x => x.Id, x => x.Name);
             foreach (var wordEntry in activeWords)
             {
                 var id = MakeSafeXmlAttribute(wordEntry.Vernacular) + "_" + wordEntry.Guid;
@@ -414,7 +400,7 @@ namespace BackendFramework.Services
             // Export custom semantic domains to lift-ranges
             if (proj.SemanticDomains.Count != 0 || CopyLiftRanges(proj.Id, rangesDest) is null)
             {
-                await CreateLiftRanges(proj.SemanticDomains, rangesDest);
+                await CreateLiftRanges(englishSemDoms, proj.SemanticDomains, rangesDest);
             }
 
             // Export character set to ldml.
@@ -456,7 +442,8 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Export English semantic domains (along with any custom domains) to lift-ranges. </summary>
-        public async Task CreateLiftRanges(List<SemanticDomainFull> projDoms, string rangesDest)
+        public async Task CreateLiftRanges(
+            List<SemanticDomainTreeNode> allDoms, List<SemanticDomainFull> projDoms, string rangesDest)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "creating LIFT ranges");
 
@@ -471,9 +458,7 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteStartElement("range");
             liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
 
-            var englishDomains = await _semDomRepo.GetAllSemanticDomainTreeNodes("en") ?? new();
-
-            englishDomains.ForEach(sd => { WriteRangeElement(liftRangesWriter, sd.Id, sd.Guid, sd.Name, sd.Lang); });
+            allDoms.ForEach(sd => { WriteRangeElement(liftRangesWriter, sd.Id, sd.Guid, sd.Name, sd.Lang); });
 
             // Pull from new semantic domains in project
             foreach (var sd in projDoms)
@@ -482,7 +467,7 @@ namespace BackendFramework.Services
                        ? Guid.NewGuid().ToString()
                        : sd.Guid;
 
-                var parent = $"{sd.ParentId} {englishDomains.Find(d => d.Id == sd.ParentId)?.Name}".Trim();
+                var parent = $"{sd.ParentId} {allDoms.Find(d => d.Id == sd.ParentId)?.Name}".Trim();
                 WriteRangeElement(liftRangesWriter, sd.Id, guid, sd.Name, sd.Lang, sd.Description, parent);
             }
 
@@ -685,9 +670,10 @@ namespace BackendFramework.Services
             return SecurityElement.Escape(sInput);
         }
 
-        public ILiftMerger GetLiftImporterExporter(string projectId, string vernLang, IWordRepository wordRepo)
+        public ILiftMerger GetLiftImporterExporter(string projectId, string vernLang, IWordRepository wordRepo,
+        ISemanticDomainCountService semDomCountService)
         {
-            return new LiftMerger(projectId, vernLang, wordRepo, _domainCountService);
+            return new LiftMerger(projectId, vernLang, wordRepo, semDomCountService);
         }
 
         private static void WriteRangeElement(XmlWriter liftRangesWriter,
@@ -722,12 +708,12 @@ namespace BackendFramework.Services
         }
 
         private sealed class LiftMerger(string projectId, string vernLang, IWordRepository wordRepo,
-            ISemanticDomainCountService domainCountService) : ILiftMerger
+            ISemanticDomainCountService semDomCountService) : ILiftMerger
         {
             private readonly string _projectId = projectId;
             private readonly string _vernLang = vernLang;
             private readonly IWordRepository _wordRepo = wordRepo;
-            private readonly ISemanticDomainCountService _domainCountService = domainCountService;
+            private readonly ISemanticDomainCountService _semDomCountService = semDomCountService;
 
             private readonly List<SemanticDomainFull> _customSemDoms = [];
             private readonly List<Word> _importEntries = [];
@@ -779,7 +765,7 @@ namespace BackendFramework.Services
             public async Task<List<Word>> SaveImportEntries()
             {
                 var savedWords = new List<Word>(await _wordRepo.Create(_importEntries));
-                await _domainCountService.UpdateCountsForWords(savedWords);
+                await _semDomCountService.UpdateCountsForWords(savedWords);
                 _importEntries.Clear();
                 return savedWords;
             }

@@ -22,17 +22,20 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/lift")]
-    public class LiftController(IProjectRepository projRepo,
-        ISemanticDomainCountRepository semanticDomainCountRepository, IWordRepository wordRepo,
+    public class LiftController(IProjectRepository projRepo, ISemanticDomainRepository semDomRepo,
+        ISemanticDomainCountRepository semDomCountRepository, ISpeakerRepository speakerRepo, IWordRepository wordRepo,
         ILiftService liftService, IHubContext<ExportHub> notifyService, IPermissionService permissionService,
-        ILogger<LiftController> logger) : Controller
+        ISemanticDomainCountService semDomCountService, ILogger<LiftController> logger) : Controller
     {
         private readonly IProjectRepository _projRepo = projRepo;
-        private readonly ISemanticDomainCountRepository _semanticDomainCountRepository = semanticDomainCountRepository;
+        private readonly ISemanticDomainRepository _semDomRepo = semDomRepo;
+        private readonly ISemanticDomainCountRepository _semDomCountRepository = semDomCountRepository;
+        private readonly ISpeakerRepository _speakerRepo = speakerRepo;
         private readonly IWordRepository _wordRepo = wordRepo;
         private readonly ILiftService _liftService = liftService;
         private readonly IHubContext<ExportHub> _notifyService = notifyService;
         private readonly IPermissionService _permissionService = permissionService;
+        private readonly ISemanticDomainCountService _semDomCountService = semDomCountService;
         private readonly ILogger<LiftController> _logger = logger;
 
         private const string otelTagName = "otel.LiftController";
@@ -109,7 +112,7 @@ namespace BackendFramework.Controllers
 
             // Delete all frontier words and load the LIFT data
             await _wordRepo.DeleteAllFrontierWords(projectId);
-            await _semanticDomainCountRepository.DeleteAllCounts(projectId);
+            await _semDomCountRepository.DeleteAllCounts(projectId);
             return await FinishUploadLiftFile(projectId, userId, true);
         }
 
@@ -262,7 +265,7 @@ namespace BackendFramework.Controllers
             int countWordsImported;
             // Sets the projectId of our parser to add words to that project
             var liftMerger = _liftService.GetLiftImporterExporter(
-                projectId, proj.VernacularWritingSystem.Bcp47, _wordRepo);
+                projectId, proj.VernacularWritingSystem.Bcp47, _wordRepo, _semDomCountService);
             var importedAnalysisWritingSystems = new List<WritingSystem>();
             var doesImportHaveDefinitions = false;
             var doesImportHaveGrammaticalInfo = false;
@@ -425,7 +428,7 @@ namespace BackendFramework.Controllers
 
         internal async Task<string> CreateLiftExport(string projectId)
         {
-            return await _liftService.LiftExport(projectId, _wordRepo, _projRepo);
+            return await _liftService.LiftExport(projectId, _projRepo, _semDomRepo, _speakerRepo, _wordRepo);
         }
 
         /// <summary> Cancel project export </summary>
