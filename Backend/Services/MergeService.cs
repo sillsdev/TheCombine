@@ -19,6 +19,9 @@ namespace BackendFramework.Services
         private readonly IWordService _wordService;
         private readonly IMemoryCache _cache;
 
+        /// <summary> Lock object for thread-safe counter operations. </summary>
+        private static readonly object _counterLock = new();
+
         /// <summary> Cache key for the merge counter. </summary>
         private const string MergeCounterCacheKey = "MergeService_Counter";
         /// <summary> Cache key prefix for potential duplicates (userId will be appended). </summary>
@@ -50,21 +53,25 @@ namespace BackendFramework.Services
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1)
             };
 
-            // Get the current value to compare counters
-            if (_cache.TryGetValue(cacheKey, out (ulong, List<List<Word>>?) existingValue))
+            // Thread-safe update using lock
+            lock (_counterLock)
             {
-                // Only update if the new counter is greater than or equal to the existing one
-                if (counter >= existingValue.Item1)
+                // Get the current value to compare counters
+                if (_cache.TryGetValue(cacheKey, out (ulong, List<List<Word>>?) existingValue))
                 {
-                    _cache.Set(cacheKey, (counter, dups), cacheOptions);
-                    return counter;
+                    // Only update if the new counter is greater than or equal to the existing one
+                    if (counter >= existingValue.Item1)
+                    {
+                        _cache.Set(cacheKey, (counter, dups), cacheOptions);
+                        return counter;
+                    }
+                    return existingValue.Item1;
                 }
-                return existingValue.Item1;
-            }
 
-            // No existing value, set the new one
-            _cache.Set(cacheKey, (counter, dups), cacheOptions);
-            return counter;
+                // No existing value, set the new one
+                _cache.Set(cacheKey, (counter, dups), cacheOptions);
+                return counter;
+            }
         }
 
         /// <summary> Retrieve potential duplicates for a user. </summary>
@@ -431,9 +438,9 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting and storing potential duplicates");
 
-            // Thread-safe counter increment using lock
+            // Thread-safe counter increment using dedicated lock object
             ulong counter;
-            lock (_cache)
+            lock (_counterLock)
             {
                 counter = _cache.GetOrCreate(MergeCounterCacheKey, entry =>
                 {
