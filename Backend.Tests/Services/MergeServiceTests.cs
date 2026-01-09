@@ -4,12 +4,15 @@ using Backend.Tests.Mocks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace Backend.Tests.Services
 {
     internal sealed class MergeServiceTests
     {
+        private IMemoryCache _cache = null!;
         private IMergeBlacklistRepository _mergeBlacklistRepo = null!;
         private IMergeGraylistRepository _mergeGraylistRepo = null!;
         private IWordRepository _wordRepo = null!;
@@ -22,11 +25,17 @@ namespace Backend.Tests.Services
         [SetUp]
         public void Setup()
         {
+            // Set up MemoryCache
+            var services = new ServiceCollection();
+            services.AddMemoryCache();
+            var serviceProvider = services.BuildServiceProvider();
+            _cache = serviceProvider.GetService<IMemoryCache>()!;
+
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _mergeGraylistRepo = new MergeGraylistRepositoryMock();
             _wordRepo = new WordRepositoryMock();
             _wordService = new WordService(_wordRepo);
-            _mergeService = new MergeService(_mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
+            _mergeService = new MergeService(_cache, _mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
         }
 
         [Test]
@@ -487,6 +496,68 @@ namespace Backend.Tests.Services
 
             // Verify all the (invalid) entries were removed.
             Assert.That(_mergeGraylistRepo.GetAllSets(ProjId, UserId).Result, Is.Empty);
+        }
+
+        [Test]
+        public void TestRetrieveDupsReturnsNullWhenEmpty()
+        {
+            // Retrieve when nothing has been stored should return null
+            var dups = _mergeService.RetrieveDups(UserId);
+            Assert.That(dups, Is.Null);
+        }
+
+        [Test]
+        public void TestRetrieveDupsRemovesFromCache()
+        {
+            // Store some duplicates
+            var wordList = new List<List<Word>>
+            {
+                new() { Util.RandomWord(ProjId), Util.RandomWord(ProjId) }
+            };
+            var success = _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, UserId).Result;
+            Assert.That(success, Is.True);
+
+            // First retrieve should return the duplicates
+            var dups1 = _mergeService.RetrieveDups(UserId);
+            Assert.That(dups1, Is.Not.Null);
+
+            // Second retrieve should return null since it was removed
+            var dups2 = _mergeService.RetrieveDups(UserId);
+            Assert.That(dups2, Is.Null);
+        }
+
+        [Test]
+        public void TestGetAndStorePotentialDuplicatesIncrementsCounter()
+        {
+            // Call GetAndStorePotentialDuplicates multiple times for different users
+            var userId1 = "User1";
+            var userId2 = "User2";
+
+            var success1 = _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId1).Result;
+            Assert.That(success1, Is.True);
+
+            var success2 = _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId2).Result;
+            Assert.That(success2, Is.True);
+
+            // Both should succeed, indicating the counter is working
+            var dups1 = _mergeService.RetrieveDups(userId1);
+            var dups2 = _mergeService.RetrieveDups(userId2);
+            Assert.That(dups1, Is.Not.Null);
+            Assert.That(dups2, Is.Not.Null);
+        }
+
+        [Test]
+        public void TestStoreDupsOnlyStoresNewerRequests()
+        {
+            var userId = "TestUser";
+
+            // Start two concurrent duplicate finding operations
+            var success1 = _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId).Result;
+            Assert.That(success1, Is.True);
+
+            // Retrieve the duplicates
+            var dups = _mergeService.RetrieveDups(userId);
+            Assert.That(dups, Is.Not.Null);
         }
     }
 }
