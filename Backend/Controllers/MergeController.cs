@@ -5,6 +5,7 @@ using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Otel;
+using BackendFramework.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -174,7 +175,7 @@ namespace BackendFramework.Controllers
             using var activity = OtelService.StartActivityWithTag(otelTagName, "retrieving potential duplicates");
 
             var userId = _permissionService.GetUserId(HttpContext);
-            var dups = _mergeService.RetrieveDups(userId);
+            var dups = MergeService.RetrieveDups(userId);
             return dups is null ? BadRequest() : Ok(dups);
         }
 

@@ -12,30 +12,22 @@ using BackendFramework.Otel;
 namespace BackendFramework.Services
 {
     /// <summary> More complex functions and application logic for <see cref="Word"/>s </summary>
-    public class MergeService : IMergeService
+    public class MergeService(IMergeBlacklistRepository mergeBlacklistRepo, IMergeGraylistRepository mergeGraylistRepo,
+        IWordRepository wordRepo, IWordService wordService) : IMergeService
     {
-        private readonly IMergeBlacklistRepository _mergeBlacklistRepo;
-        private readonly IMergeGraylistRepository _mergeGraylistRepo;
-        private readonly IWordRepository _wordRepo;
-        private readonly IWordService _wordService;
+        private readonly IMergeBlacklistRepository _mergeBlacklistRepo = mergeBlacklistRepo;
+        private readonly IMergeGraylistRepository _mergeGraylistRepo = mergeGraylistRepo;
+        private readonly IWordRepository _wordRepo = wordRepo;
+        private readonly IWordService _wordService = wordService;
 
         /// <summary> Counter to uniquely id find-duplicates requests. </summary>
-        private ulong _mergeCounter;
+        /// <remarks> Static for sharing across transient instances of MergeService. </remarks>
+        private static ulong _mergeCounter;
         /// <summary> A dictionary shared by all Projects for storing and retrieving potential duplicates. </summary>
-        private readonly ConcurrentDictionary<string, (ulong, List<List<Word>>?)> _potentialDups;
+        /// <remarks> Static for sharing across transient instances of MergeService. </remarks>
+        private static readonly ConcurrentDictionary<string, (ulong, List<List<Word>>?)> _potentialDups = [];
 
         private const string otelTagName = "otel.MergeService";
-
-        public MergeService(IMergeBlacklistRepository mergeBlacklistRepo, IMergeGraylistRepository mergeGraylistRepo,
-            IWordRepository wordRepo, IWordService wordService)
-        {
-            _mergeBlacklistRepo = mergeBlacklistRepo;
-            _mergeGraylistRepo = mergeGraylistRepo;
-            _wordRepo = wordRepo;
-            _wordService = wordService;
-
-            _potentialDups = [];
-        }
 
         /// <summary> Store potential duplicates, but only for the user's most recent duplicates request. </summary>
         /// <param name="userId"> Id of user requesting duplicates. </param>
@@ -43,7 +35,7 @@ namespace BackendFramework.Services
         /// <param name="dups"> List of sets of potential duplicates,
         /// or null to indicate the duplicates finding has just begun. </param>
         /// <returns> Counter of the newest request stored. </returns>
-        private ulong StoreDups(string userId, ulong counter, List<List<Word>>? dups)
+        private static ulong StoreDups(string userId, ulong counter, List<List<Word>>? dups)
         {
             return _potentialDups
                 .AddOrUpdate(userId, (counter, dups), (_, v) => counter >= v.Item1 ? (counter, dups) : v).Item1;
@@ -52,7 +44,7 @@ namespace BackendFramework.Services
         /// <summary> Retrieve potential duplicates for a user. </summary>
         /// <param name="userId"> Id of user retrieving duplicates. </param>
         /// <returns> List of Lists of potential duplicate Words. </returns>
-        public List<List<Word>>? RetrieveDups(string userId)
+        public static List<List<Word>>? RetrieveDups(string userId)
         {
             _potentialDups.TryRemove(userId, out var dups);
             return dups.Item2;
