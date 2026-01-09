@@ -431,17 +431,21 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting and storing potential duplicates");
 
-            // Get and increment the counter from cache (no expiration)
-            var counter = _cache.GetOrCreate(MergeCounterCacheKey, entry =>
+            // Thread-safe counter increment using lock
+            ulong counter;
+            lock (_cache)
             {
-                entry.Priority = CacheItemPriority.NeverRemove;
-                return 0UL;
-            });
-            counter++;
-            _cache.Set(MergeCounterCacheKey, counter, new MemoryCacheEntryOptions
-            {
-                Priority = CacheItemPriority.NeverRemove
-            });
+                counter = _cache.GetOrCreate(MergeCounterCacheKey, entry =>
+                {
+                    entry.Priority = CacheItemPriority.NeverRemove;
+                    return 0UL;
+                });
+                counter++;
+                _cache.Set(MergeCounterCacheKey, counter, new MemoryCacheEntryOptions
+                {
+                    Priority = CacheItemPriority.NeverRemove
+                });
+            }
 
             if (StoreDups(userId, counter, null) != counter)
             {
