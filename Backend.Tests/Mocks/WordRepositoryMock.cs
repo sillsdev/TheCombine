@@ -9,13 +9,20 @@ namespace Backend.Tests.Mocks
 {
     internal sealed class WordRepositoryMock : IWordRepository
     {
-        private readonly List<Word> _words;
-        private readonly List<Word> _frontier;
+        private readonly List<Word> _words = [];
+        private readonly List<Word> _frontier = [];
 
-        public WordRepositoryMock()
+        private TaskCompletionSource<bool>? _getFrontierDelay;
+        private int _getFrontierCallCount;
+
+        /// <summary>
+        /// Sets a delay for the GetFrontier method. The first call to GetFrontier will wait
+        /// until the provided TaskCompletionSource is completed.
+        /// </summary>
+        public void SetGetFrontierDelay(TaskCompletionSource<bool> delay)
         {
-            _words = new List<Word>();
-            _frontier = new List<Word>();
+            _getFrontierDelay = delay;
+            _getFrontierCallCount = 0;
         }
 
         public Task<List<Word>> GetAllWords(string projectId)
@@ -87,9 +94,18 @@ namespace Backend.Tests.Mocks
                 _frontier.Where(w => w.ProjectId == projectId && wordIds.Contains(w.Id)).Count() >= count);
         }
 
-        public Task<List<Word>> GetFrontier(string projectId)
+        public async Task<List<Word>> GetFrontier(string projectId)
         {
-            return Task.FromResult(_frontier.Where(w => w.ProjectId == projectId).Select(w => w.Clone()).ToList());
+            if (_getFrontierDelay != null)
+            {
+                if (++_getFrontierCallCount == 1)
+                {
+                    // First call waits for the signal
+                    await _getFrontierDelay.Task;
+                }
+            }
+
+            return _frontier.Where(w => w.ProjectId == projectId).Select(w => w.Clone()).ToList();
         }
 
         public Task<List<Word>> GetFrontierWithVernacular(string projectId, string vernacular)
