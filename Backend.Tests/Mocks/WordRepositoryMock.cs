@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -90,15 +91,15 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> AreInFrontier(string projectId, List<string> wordIds, int count)
         {
-            return Task.FromResult(
-                _frontier.Where(w => w.ProjectId == projectId && wordIds.Contains(w.Id)).Count() >= count);
+            return Task.FromResult(_frontier.Count(w => w.ProjectId == projectId && wordIds.Contains(w.Id)) >= count);
         }
 
         public async Task<List<Word>> GetFrontier(string projectId)
         {
             if (_getFrontierDelay != null)
             {
-                if (++_getFrontierCallCount == 1)
+                var callCount = Interlocked.Increment(ref _getFrontierCallCount);
+                if (callCount == 1)
                 {
                     // First call waits for the signal
                     await _getFrontierDelay.Task;
