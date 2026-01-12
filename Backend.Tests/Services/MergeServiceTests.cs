@@ -6,7 +6,6 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace Backend.Tests.Services
@@ -25,12 +24,12 @@ namespace Backend.Tests.Services
         [SetUp]
         public void Setup()
         {
-            var cache = new ServiceCollection().AddMemoryCache().BuildServiceProvider().GetService<IMemoryCache>()!;
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _mergeGraylistRepo = new MergeGraylistRepositoryMock();
             _wordRepo = new WordRepositoryMock();
             _wordService = new WordService(_wordRepo);
-            _mergeService = new MergeService(cache, _mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
+            _mergeService = new MergeService(new MemoryCache(new MemoryCacheOptions()), _mergeBlacklistRepo,
+                _mergeGraylistRepo, _wordRepo, _wordService);
         }
 
         [Test]
