@@ -46,7 +46,7 @@ namespace BackendFramework.Services
             // Thread-safe update using lock
             lock (_cacheLock)
             {
-                // Update if the static counter doesn't exceed the cached counter
+                // Update if counter doesn't exceed the cached counter
                 var exists = _cache.TryGetValue(cacheKey, out (ulong, List<List<Word>>?) existingValue);
                 if (!exists || counter >= existingValue.Item1)
                 {
@@ -62,13 +62,17 @@ namespace BackendFramework.Services
         /// <returns> List of Lists of potential duplicate Words. </returns>
         public List<List<Word>>? RetrieveDups(string userId)
         {
-            var cacheKey = PotentialDupsCacheKeyPrefix + userId;
-            if (_cache.TryGetValue(cacheKey, out (ulong, List<List<Word>>?) value))
+            // Thread-safe update using lock
+            lock (_cacheLock)
             {
-                _cache.Remove(cacheKey);
-                return value.Item2;
+                var cacheKey = PotentialDupsCacheKeyPrefix + userId;
+                if (_cache.TryGetValue(cacheKey, out (ulong, List<List<Word>>?) value))
+                {
+                    _cache.Remove(cacheKey);
+                    return value.Item2;
+                }
+                return null;
             }
-            return null;
         }
 
         /// <summary> Prepares a merge parent to be added to the database. </summary>
