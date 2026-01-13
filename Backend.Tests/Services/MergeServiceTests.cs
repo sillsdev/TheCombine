@@ -6,12 +6,14 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace Backend.Tests.Services
 {
     internal sealed class MergeServiceTests
     {
+        private IMemoryCache _cache = null!;
         private IMergeBlacklistRepository _mergeBlacklistRepo = null!;
         private IMergeGraylistRepository _mergeGraylistRepo = null!;
         private IWordRepository _wordRepo = null!;
@@ -24,12 +26,13 @@ namespace Backend.Tests.Services
         [SetUp]
         public void Setup()
         {
+            _cache =
+                new ServiceCollection().AddMemoryCache().BuildServiceProvider().GetRequiredService<IMemoryCache>();
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _mergeGraylistRepo = new MergeGraylistRepositoryMock();
             _wordRepo = new WordRepositoryMock();
             _wordService = new WordService(_wordRepo);
-            _mergeService = new MergeService(new MemoryCache(new MemoryCacheOptions()), _mergeBlacklistRepo,
-                _mergeGraylistRepo, _wordRepo, _wordService);
+            _mergeService = new MergeService(_cache, _mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
         }
 
         [Test]
@@ -500,15 +503,18 @@ namespace Backend.Tests.Services
         {
             var userId1 = "User1";
             var userId2 = "User2";
+            var userId3 = "User3";
 
             Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId1), Is.True);
             Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId2), Is.True);
+            Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId3), Is.True);
             Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId2), Is.True);
             Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId1), Is.True);
             Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId1), Is.True);
 
             Assert.That(_mergeService.RetrieveDups(userId1), Is.Not.Null);
             Assert.That(_mergeService.RetrieveDups(userId2), Is.Not.Null);
+            Assert.That(_mergeService.RetrieveDups(userId3), Is.Not.Null);
         }
 
         [Test]
