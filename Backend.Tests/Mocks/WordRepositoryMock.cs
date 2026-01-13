@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -9,13 +10,20 @@ namespace Backend.Tests.Mocks
 {
     internal sealed class WordRepositoryMock : IWordRepository
     {
-        private readonly List<Word> _words;
-        private readonly List<Word> _frontier;
+        private readonly List<Word> _words = [];
+        private readonly List<Word> _frontier = [];
 
-        public WordRepositoryMock()
+        private Task<bool>? _getFrontierDelay;
+        private int _getFrontierCallCount;
+
+        /// <summary>
+        /// Sets a delay for the GetFrontier method. The first call to GetFrontier will wait
+        /// until the provided Task is completed.
+        /// </summary>
+        public void SetGetFrontierDelay(Task<bool> delay)
         {
-            _words = new List<Word>();
-            _frontier = new List<Word>();
+            _getFrontierDelay = delay;
+            _getFrontierCallCount = 0;
         }
 
         public Task<List<Word>> GetAllWords(string projectId)
@@ -83,13 +91,22 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> AreInFrontier(string projectId, List<string> wordIds, int count)
         {
-            return Task.FromResult(
-                _frontier.Where(w => w.ProjectId == projectId && wordIds.Contains(w.Id)).Count() >= count);
+            return Task.FromResult(_frontier.Count(w => w.ProjectId == projectId && wordIds.Contains(w.Id)) >= count);
         }
 
-        public Task<List<Word>> GetFrontier(string projectId)
+        public async Task<List<Word>> GetFrontier(string projectId)
         {
-            return Task.FromResult(_frontier.Where(w => w.ProjectId == projectId).Select(w => w.Clone()).ToList());
+            if (_getFrontierDelay is not null)
+            {
+                var callCount = Interlocked.Increment(ref _getFrontierCallCount);
+                if (callCount == 1)
+                {
+                    // First call waits for the signal
+                    await _getFrontierDelay;
+                }
+            }
+
+            return _frontier.Where(w => w.ProjectId == projectId).Select(w => w.Clone()).ToList();
         }
 
         public Task<List<Word>> GetFrontierWithVernacular(string projectId, string vernacular)

@@ -1,15 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Backend.Tests.Mocks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace Backend.Tests.Services
 {
     internal sealed class MergeServiceTests
     {
+        private IMemoryCache _cache = null!;
         private IMergeBlacklistRepository _mergeBlacklistRepo = null!;
         private IMergeGraylistRepository _mergeGraylistRepo = null!;
         private IWordRepository _wordRepo = null!;
@@ -22,11 +26,13 @@ namespace Backend.Tests.Services
         [SetUp]
         public void Setup()
         {
+            _cache =
+                new ServiceCollection().AddMemoryCache().BuildServiceProvider().GetRequiredService<IMemoryCache>();
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _mergeGraylistRepo = new MergeGraylistRepositoryMock();
             _wordRepo = new WordRepositoryMock();
             _wordService = new WordService(_wordRepo);
-            _mergeService = new MergeService(_mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
+            _mergeService = new MergeService(_cache, _mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
         }
 
         [Test]
@@ -39,13 +45,10 @@ namespace Backend.Tests.Services
             var mergeObject = new MergeWords
             {
                 Parent = thisWord,
-                Children = new List<MergeSourceWord>
-                {
-                    new() { SrcWordId = thisWord.Id }
-                }
+                Children = [new() { SrcWordId = thisWord.Id }]
             };
 
-            var newWords = _mergeService.Merge(ProjId, UserId, new List<MergeWords> { mergeObject }).Result;
+            var newWords = _mergeService.Merge(ProjId, UserId, [mergeObject]).Result;
 
             // There should only be 1 word added and it should be identical to what we passed in
             Assert.That(newWords, Has.Count.EqualTo(1));
@@ -71,15 +74,11 @@ namespace Backend.Tests.Services
             var mergeObject = new MergeWords
             {
                 Parent = thisWord,
-                Children = new List<MergeSourceWord>
-                {
-                    new() { SrcWordId = thisWord.Id }
-                },
+                Children = [new() { SrcWordId = thisWord.Id }],
                 DeleteOnly = true
             };
 
-            var newWords = _mergeService.Merge(ProjId, UserId, new List<MergeWords> { mergeObject }).Result;
-
+            var newWords = _mergeService.Merge(ProjId, UserId, [mergeObject]).Result;
             // There should be no word added and no words left in the frontier.
             Assert.That(newWords, Is.Empty);
             var frontier = _wordRepo.GetFrontier(ProjId).Result;
@@ -151,13 +150,10 @@ namespace Backend.Tests.Services
             var mergeObject = new MergeWords
             {
                 Parent = thisWord,
-                Children = new List<MergeSourceWord>
-                {
-                    new() { SrcWordId = thisWord.Id }
-                }
+                Children = [new() { SrcWordId = thisWord.Id }]
             };
 
-            var newWords = _mergeService.Merge(ProjId, UserId, new List<MergeWords> { mergeObject }).Result;
+            var newWords = _mergeService.Merge(ProjId, UserId, [mergeObject]).Result;
 
             // There should only be 1 word added and it should be identical to what we passed in
             Assert.That(newWords, Has.Count.EqualTo(1));
@@ -230,12 +226,12 @@ namespace Backend.Tests.Services
         [Test]
         public void AddMergeToBlacklistErrorTest()
         {
-            var wordIds0 = new List<string>();
-            var wordIds1 = new List<string> { "1" };
             Assert.That(
-                async () => { await _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIds0); }, Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
+                async () => { await _mergeService.AddToMergeBlacklist(ProjId, UserId, []); },
+                Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
             Assert.That(
-                async () => { await _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIds1); }, Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
+                async () => { await _mergeService.AddToMergeBlacklist(ProjId, UserId, ["1"]); },
+                Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
         }
 
         [Test]
@@ -252,12 +248,12 @@ namespace Backend.Tests.Services
         [Test]
         public void IsInMergeBlacklistErrorTest()
         {
-            var wordIds0 = new List<string>();
-            var wordIds1 = new List<string> { "1" };
             Assert.That(
-                async () => { await _mergeService.IsInMergeBlacklist(ProjId, wordIds0); }, Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
+                async () => { await _mergeService.IsInMergeBlacklist(ProjId, []); },
+                Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
             Assert.That(
-                async () => { await _mergeService.IsInMergeBlacklist(ProjId, wordIds1); }, Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
+                async () => { await _mergeService.IsInMergeBlacklist(ProjId, ["1"]); },
+                Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
         }
 
         [Test]
@@ -268,14 +264,14 @@ namespace Backend.Tests.Services
                 Id = "A",
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = new List<string> { "1", "2", "3" }
+                WordIds = ["1", "2", "3"]
             };
             var entryB = new MergeWordSet
             {
                 Id = "B",
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = new List<string> { "1", "4" }
+                WordIds = ["1", "4"]
             };
 
             _ = _mergeBlacklistRepo.Create(entryA);
@@ -332,13 +328,11 @@ namespace Backend.Tests.Services
         [Test]
         public void AddMergeToGraylistErrorTest()
         {
-            var wordIds = new List<string>();
-            var wordIds1 = new List<string> { "1" };
             Assert.That(
-                async () => { await _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds); },
+                async () => { await _mergeService.AddToMergeGraylist(ProjId, UserId, []); },
                 Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
             Assert.That(
-                async () => { await _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds1); },
+                async () => { await _mergeService.AddToMergeGraylist(ProjId, UserId, ["1"]); },
                 Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
         }
 
@@ -367,13 +361,11 @@ namespace Backend.Tests.Services
         [Test]
         public void RemoveFromMergeGraylistErrorTest()
         {
-            var wordIds = new List<string>();
-            var wordIds1 = new List<string> { "1" };
             Assert.That(
-                async () => { await _mergeService.RemoveFromMergeGraylist(ProjId, UserId, wordIds); },
+                async () => { await _mergeService.RemoveFromMergeGraylist(ProjId, UserId, []); },
                 Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
             Assert.That(
-                async () => { await _mergeService.RemoveFromMergeGraylist(ProjId, UserId, wordIds1); },
+                async () => { await _mergeService.RemoveFromMergeGraylist(ProjId, UserId, ["1"]); },
                 Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
         }
 
@@ -391,13 +383,11 @@ namespace Backend.Tests.Services
         [Test]
         public void IsInMergeGraylistErrorTest()
         {
-            var wordIds0 = new List<string>();
-            var wordIds1 = new List<string> { "1" };
             Assert.That(
-                async () => { await _mergeService.IsInMergeGraylist(ProjId, wordIds0); },
+                async () => { await _mergeService.IsInMergeGraylist(ProjId, []); },
                 Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
             Assert.That(
-                async () => { await _mergeService.IsInMergeGraylist(ProjId, wordIds1); },
+                async () => { await _mergeService.IsInMergeGraylist(ProjId, ["1"]); },
                 Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
         }
 
@@ -409,14 +399,14 @@ namespace Backend.Tests.Services
                 Id = "A",
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = new List<string> { "1", "2", "3" }
+                WordIds = ["1", "2", "3"]
             };
             var entryB = new MergeWordSet
             {
                 Id = "B",
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = new List<string> { "1", "4" }
+                WordIds = ["1", "4"]
             };
 
             _ = _mergeGraylistRepo.Create(entryA);
@@ -487,6 +477,92 @@ namespace Backend.Tests.Services
 
             // Verify all the (invalid) entries were removed.
             Assert.That(_mergeGraylistRepo.GetAllSets(ProjId, UserId).Result, Is.Empty);
+        }
+
+        [Test]
+        public void TestRetrieveDupsReturnsNullWhenEmpty()
+        {
+            // Retrieve when nothing has been stored should return null
+            Assert.That(_mergeService.RetrieveDups(UserId), Is.Null);
+        }
+
+        [Test]
+        public async Task TestRetrieveDupsRemovesFromCache()
+        {
+            Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, UserId), Is.True);
+
+            // First retrieve should return the duplicates
+            Assert.That(_mergeService.RetrieveDups(UserId), Is.Not.Null);
+
+            // Second retrieve should return null since it was removed
+            Assert.That(_mergeService.RetrieveDups(UserId), Is.Null);
+        }
+
+        [Test]
+        public async Task TestGetAndStorePotentialDuplicatesMultipleUsersMultipleCalls()
+        {
+            var userId1 = "User1";
+            var userId2 = "User2";
+            var userId3 = "User3";
+
+            Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId1), Is.True);
+            Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId2), Is.True);
+            Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId3), Is.True);
+            Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId2), Is.True);
+            Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId1), Is.True);
+            Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId1), Is.True);
+
+            Assert.That(_mergeService.RetrieveDups(userId1), Is.Not.Null);
+            Assert.That(_mergeService.RetrieveDups(userId2), Is.Not.Null);
+            Assert.That(_mergeService.RetrieveDups(userId3), Is.Not.Null);
+        }
+
+        [Test]
+        public async Task TestGetAndStorePotentialDuplicatesSecondCallWins()
+        {
+            // If a users makes a second call to GetAndStorePotentialDuplicates while a first call is in progress,
+            // the first call should return false and the second call should return true.
+            // This ensures that only the most recently requested duplicates are stored for the user.
+            var userId = "TestUser";
+
+            // Delay first GetFrontier call
+            var delaySignal = new TaskCompletionSource<bool>();
+            ((WordRepositoryMock)_wordRepo).SetGetFrontierDelay(delaySignal.Task);
+            var firstCallTask = _mergeService.GetAndStorePotentialDuplicates(ProjId, 10, 10, userId);
+
+            // Give first call time to start
+            await Task.Delay(50);
+
+            // Run the second call (will complete immediately)
+            Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 10, 10, userId), Is.True);
+
+            // Release and finish the first call
+            delaySignal.SetResult(true);
+            Assert.That(await firstCallTask, Is.False);
+        }
+
+        [Test]
+        public async Task TestGetAndStorePotentialDuplicatesMultipleConcurrentUsers()
+        {
+            // If two users concurrently call GetAndStorePotentialDuplicates, both should return true, even if the
+            // calls complete in different orders than they began.
+            var userId1 = "User1";
+            var userId2 = "User2";
+
+            // Delay first GetFrontier call
+            var delaySignal = new TaskCompletionSource<bool>();
+            ((WordRepositoryMock)_wordRepo).SetGetFrontierDelay(delaySignal.Task);
+            var firstCallTask = _mergeService.GetAndStorePotentialDuplicates(ProjId, 10, 10, userId1);
+
+            // Give first call time to start
+            await Task.Delay(50);
+
+            // Run the second call (will complete immediately)
+            Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 10, 10, userId2), Is.True);
+
+            // Release and finish the first call
+            delaySignal.SetResult(true);
+            Assert.That(await firstCallTask, Is.True);
         }
     }
 }

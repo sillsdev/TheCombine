@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -8,34 +7,30 @@ using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Otel;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BackendFramework.Services
 {
     /// <summary> More complex functions and application logic for <see cref="Word"/>s </summary>
-    public class MergeService : IMergeService
+    public class MergeService(IMemoryCache cache, IMergeBlacklistRepository mergeBlacklistRepo,
+        IMergeGraylistRepository mergeGraylistRepo, IWordRepository wordRepo, IWordService wordService) : IMergeService
     {
-        private readonly IMergeBlacklistRepository _mergeBlacklistRepo;
-        private readonly IMergeGraylistRepository _mergeGraylistRepo;
-        private readonly IWordRepository _wordRepo;
-        private readonly IWordService _wordService;
+        private readonly IMemoryCache _cache = cache;
+        private readonly IMergeBlacklistRepository _mergeBlacklistRepo = mergeBlacklistRepo;
+        private readonly IMergeGraylistRepository _mergeGraylistRepo = mergeGraylistRepo;
+        private readonly IWordRepository _wordRepo = wordRepo;
+        private readonly IWordService _wordService = wordService;
 
-        /// <summary> Counter to uniquely id find-duplicates requests. </summary>
-        private ulong _mergeCounter;
-        /// <summary> A dictionary shared by all Projects for storing and retrieving potential duplicates. </summary>
-        private readonly ConcurrentDictionary<string, (ulong, List<List<Word>>?)> _potentialDups;
+        /// <summary> Counter to uniquely id find-duplicates requests across instances. </summary>
+        private static ulong _mergeCounter;
+
+        /// <summary> Lock object for thread-safe cache operations. </summary>
+        private static readonly object _cacheLock = new();
+
+        /// <summary> Cache key prefix for potential duplicates (userId will be appended). </summary>
+        private const string PotentialDupsCacheKeyPrefix = "MergeService_PotentialDups_";
 
         private const string otelTagName = "otel.MergeService";
-
-        public MergeService(IMergeBlacklistRepository mergeBlacklistRepo, IMergeGraylistRepository mergeGraylistRepo,
-            IWordRepository wordRepo, IWordService wordService)
-        {
-            _mergeBlacklistRepo = mergeBlacklistRepo;
-            _mergeGraylistRepo = mergeGraylistRepo;
-            _wordRepo = wordRepo;
-            _wordService = wordService;
-
-            _potentialDups = [];
-        }
 
         /// <summary> Store potential duplicates, but only for the user's most recent duplicates request. </summary>
         /// <param name="userId"> Id of user requesting duplicates. </param>
@@ -45,8 +40,21 @@ namespace BackendFramework.Services
         /// <returns> Counter of the newest request stored. </returns>
         private ulong StoreDups(string userId, ulong counter, List<List<Word>>? dups)
         {
-            return _potentialDups
-                .AddOrUpdate(userId, (counter, dups), (_, v) => counter >= v.Item1 ? (counter, dups) : v).Item1;
+            var cacheKey = PotentialDupsCacheKeyPrefix + userId;
+            var cacheOptions = new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1) };
+
+            // Thread-safe update using lock
+            lock (_cacheLock)
+            {
+                // Update if counter doesn't exceed the cached counter
+                var exists = _cache.TryGetValue(cacheKey, out (ulong, List<List<Word>>?) existingValue);
+                if (!exists || counter >= existingValue.Item1)
+                {
+                    _cache.Set(cacheKey, (counter, dups), cacheOptions);
+                    return counter;
+                }
+                return existingValue.Item1;
+            }
         }
 
         /// <summary> Retrieve potential duplicates for a user. </summary>
@@ -54,8 +62,17 @@ namespace BackendFramework.Services
         /// <returns> List of Lists of potential duplicate Words. </returns>
         public List<List<Word>>? RetrieveDups(string userId)
         {
-            _potentialDups.TryRemove(userId, out var dups);
-            return dups.Item2;
+            // Thread-safe update using lock
+            lock (_cacheLock)
+            {
+                var cacheKey = PotentialDupsCacheKeyPrefix + userId;
+                if (_cache.TryGetValue(cacheKey, out (ulong, List<List<Word>>?) value))
+                {
+                    _cache.Remove(cacheKey);
+                    return value.Item2;
+                }
+                return null;
+            }
         }
 
         /// <summary> Prepares a merge parent to be added to the database. </summary>

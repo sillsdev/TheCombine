@@ -259,7 +259,7 @@ namespace BackendFramework
             // Merge types
             services.AddTransient<IMergeBlacklistRepository, MergeBlacklistRepository>();
             services.AddTransient<IMergeGraylistRepository, MergeGraylistRepository>();
-            services.AddSingleton<IMergeService, MergeService>();
+            services.AddTransient<IMergeService, MergeService>();
 
             // Permission types
             services.AddTransient<IPermissionService, PermissionService>();
