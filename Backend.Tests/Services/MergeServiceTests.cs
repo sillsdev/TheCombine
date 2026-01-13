@@ -496,13 +496,15 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public async Task TestGetAndStorePotentialDuplicatesMultipleUsers()
+        public async Task TestGetAndStorePotentialDuplicatesMultipleUsersMultipleCalls()
         {
             var userId1 = "User1";
             var userId2 = "User2";
 
             Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId1), Is.True);
             Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId2), Is.True);
+            Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId2), Is.True);
+            Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId1), Is.True);
             Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 5, 5, userId1), Is.True);
 
             Assert.That(_mergeService.RetrieveDups(userId1), Is.Not.Null);
@@ -512,11 +514,14 @@ namespace Backend.Tests.Services
         [Test]
         public async Task TestGetAndStorePotentialDuplicatesSecondCallWins()
         {
+            // If a users makes a second call to GetAndStorePotentialDuplicates while a first call is in progress,
+            // the first call should return false and the second call should return true.
+            // This ensures that only the most recently requested duplicates are stored for the user.
             var userId = "TestUser";
 
             // Delay first GetFrontier call
             var delaySignal = new TaskCompletionSource<bool>();
-            ((WordRepositoryMock)_wordRepo).SetGetFrontierDelay(delaySignal);
+            ((WordRepositoryMock)_wordRepo).SetGetFrontierDelay(delaySignal.Task);
             var firstCallTask = _mergeService.GetAndStorePotentialDuplicates(ProjId, 10, 10, userId);
 
             // Give first call time to start
@@ -528,6 +533,30 @@ namespace Backend.Tests.Services
             // Release and finish the first call
             delaySignal.SetResult(true);
             Assert.That(await firstCallTask, Is.False);
+        }
+
+        [Test]
+        public async Task TestGetAndStorePotentialDuplicatesMultipleConcurrentUsers()
+        {
+            // If two users concurrently call GetAndStorePotentialDuplicates, both should return true, even if the
+            // calls complete in different orders than they began.
+            var userId1 = "User1";
+            var userId2 = "User2";
+
+            // Delay first GetFrontier call
+            var delaySignal = new TaskCompletionSource<bool>();
+            ((WordRepositoryMock)_wordRepo).SetGetFrontierDelay(delaySignal.Task);
+            var firstCallTask = _mergeService.GetAndStorePotentialDuplicates(ProjId, 10, 10, userId1);
+
+            // Give first call time to start
+            await Task.Delay(50);
+
+            // Run the second call (will complete immediately)
+            Assert.That(await _mergeService.GetAndStorePotentialDuplicates(ProjId, 10, 10, userId2), Is.True);
+
+            // Release and finish the first call
+            delaySignal.SetResult(true);
+            Assert.That(await firstCallTask, Is.True);
         }
     }
 }
