@@ -7,12 +7,15 @@ using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
     internal sealed class MergeControllerTests : IDisposable
     {
+        private IMemoryCache _cache = null!;
         private IMergeBlacklistRepository _mergeBlacklistRepo = null!;
         private IMergeGraylistRepository _mergeGraylistRepo = null!;
         private IWordRepository _wordRepo = null!;
@@ -31,14 +34,17 @@ namespace Backend.Tests.Controllers
         [SetUp]
         public void Setup()
         {
+            _cache =
+                new ServiceCollection().AddMemoryCache().BuildServiceProvider().GetRequiredService<IMemoryCache>();
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _mergeGraylistRepo = new MergeGraylistRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _wordService =
-                new WordService(_wordRepo, new SemanticDomainCountService(new SemanticDomainCountRepositoryMock()));
-            _mergeService = new MergeService(_mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
-            _mergeController = new MergeController(
-                _mergeService, new HubContextMock<MergeHub>(), new PermissionServiceMock());
+            var semDomCountService = new SemanticDomainCountService(new SemanticDomainCountRepositoryMock());
+            _wordService = new WordService(_wordRepo, semDomCountService);
+            _mergeService = new MergeService(_cache, _mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
+            var notifyService = new HubContextMock<MergeHub>();
+            var permissionService = new PermissionServiceMock();
+            _mergeController = new MergeController(_mergeService, notifyService, permissionService);
         }
 
         [Test]
