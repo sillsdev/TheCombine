@@ -690,6 +690,14 @@ export async function getProgressEstimationLineChartRoot(
   return response.data ?? undefined;
 }
 
+export async function getDomainProgress(domainId: string): Promise<number> {
+  const response = await statisticsApi.getDomainProgressProportion(
+    { projectId: LocalStorage.getProjectId(), domainId },
+    defaultOptions()
+  );
+  return response.data;
+}
+
 /* UserController.cs */
 
 export async function verifyCaptchaToken(token: string): Promise<boolean> {

@@ -149,11 +149,16 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(word);
         }
 
+        public Task<bool> FrontierHasWordsWithDomain(string projectId, string domainId)
+        {
+            return Task.FromResult(_frontier.Any(
+                w => w.ProjectId == projectId && w.Senses.Any(s => s.SemanticDomains.Any(sd => sd.Id == domainId))));
+        }
+
         public Task<int> CountFrontierWordsWithDomain(string projectId, string domainId)
         {
-            var count = _frontier.Count(
-                w => w.ProjectId == projectId && w.Senses.Any(s => s.SemanticDomains.Any(sd => sd.Id == domainId)));
-            return Task.FromResult(count);
+            return Task.FromResult(_frontier.Count(
+                w => w.ProjectId == projectId && w.Senses.Any(s => s.SemanticDomains.Any(sd => sd.Id == domainId))));
         }
     }
 }

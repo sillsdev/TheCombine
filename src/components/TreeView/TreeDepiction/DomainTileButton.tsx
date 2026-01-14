@@ -4,11 +4,19 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
 } from "@mui/icons-material";
-import { Button, Stack, SxProps, Typography } from "@mui/material";
-import { ReactElement } from "react";
+import {
+  Box,
+  Button,
+  Stack,
+  SxProps,
+  Typography,
+  useTheme,
+} from "@mui/material";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { SemanticDomain } from "api/models";
+import { getDomainProgress } from "backend";
 import DomainCountBadge from "components/TreeView/TreeDepiction/DomainCountBadge";
 import { Direction } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
 import { rootId } from "types/semanticDomain";
@@ -92,6 +100,21 @@ export default function DomainTileButton(
   props: DomainTileButtonProps
 ): ReactElement {
   const { onClick, ...domainTileProps } = props;
+
+  const [progress, setProgress] = useState<number>(0);
+  const theme = useTheme();
+
+  const shouldShowProgress = domainTileProps.direction !== Direction.Up;
+
+  useEffect(() => {
+    if (shouldShowProgress) {
+      setProgress(0);
+      getDomainProgress(props.domain.id)
+        .then(setProgress)
+        .catch(() => {}); // Silently fail
+    }
+  }, [shouldShowProgress, props.domain.id]);
+
   return (
     <Button
       id={props.domain.id}
@@ -104,6 +127,30 @@ export default function DomainTileButton(
       <DomainTile {...domainTileProps} />
 
       <DomainCountBadge className={badgeClass} domainId={props.domain.id} />
+
+      {shouldShowProgress && (
+        <Box
+          sx={{
+            backgroundColor: theme.palette.action.disabledBackground,
+            borderBottomLeftRadius: theme.shape.borderRadius,
+            borderBottomRightRadius: theme.shape.borderRadius,
+            height: 3,
+            inset: "auto 0 0 0",
+            position: "absolute",
+          }}
+        >
+          <Box
+            sx={{
+              backgroundColor: theme.palette.primary.main,
+              borderBottomLeftRadius: theme.shape.borderRadius,
+              borderBottomRightRadius: progress * theme.shape.borderRadius,
+              height: "100%",
+              transition: progress ? "width .5s ease" : undefined,
+              width: `${progress * 100}%`,
+            }}
+          />
+        </Box>
+      )}
     </Button>
   );
 }

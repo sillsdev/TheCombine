@@ -6,14 +6,9 @@ import testDomainMap, {
 } from "components/TreeView/tests/SemanticDomainMock";
 
 jest.mock("backend", () => ({
-  getDomainWordCount: () => mockGetDomainWordCount(),
+  getDomainProgress: () => Promise.resolve(0.5),
+  getDomainWordCount: () => Promise.resolve(0),
 }));
-
-const mockGetDomainWordCount = jest.fn();
-
-beforeEach(() => {
-  mockGetDomainWordCount.mockResolvedValue(0);
-});
 
 describe("TreeDepiction", () => {
   for (const small of [false, true]) {
