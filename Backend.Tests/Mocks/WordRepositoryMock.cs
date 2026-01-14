@@ -127,19 +127,20 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(words);
         }
 
-        public Task<bool> DeleteFrontier(string projectId, string wordId)
+        public Task<Word?> DeleteFrontier(string projectId, string wordId, string? fileName = null)
         {
-            var origLength = _frontier.Count;
-            _frontier.RemoveAll(word => word.ProjectId == projectId && word.Id == wordId);
-            return Task.FromResult(origLength != _frontier.Count);
-        }
+            var index = _frontier.FindIndex(
+                w => w.ProjectId == projectId && w.Id == wordId &&
+                (fileName is null || w.Audio.Any(a => a.FileName == fileName)));
 
-        public Task<long> DeleteFrontier(string projectId, List<string> wordIds)
-        {
-            long deletedCount = 0;
-            wordIds.ForEach(id => deletedCount += _frontier.RemoveAll(
-                word => word.ProjectId == projectId && word.Id == id));
-            return Task.FromResult(deletedCount);
+            if (index == -1)
+            {
+                return Task.FromResult<Word?>(null);
+            }
+
+            var word = _frontier[index];
+            _frontier.RemoveAt(index);
+            return Task.FromResult<Word?>(word);
         }
 
         public Task<Word> Add(Word word)

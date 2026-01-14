@@ -416,7 +416,7 @@ namespace Backend.Tests.Controllers
             word.Vernacular = "updated";
 
             await _wordService.Update(_projId, UserId, wordToUpdate.Id, word);
-            await _wordService.DeleteFrontierWord(_projId, UserId, wordToDelete.Id);
+            await _wordService.MakeFrontierDeleted(_projId, UserId, wordToDelete.Id);
 
             _liftService.SetExportInProgress(UserId, ExportId);
             await _liftController.CreateLiftExportThenSignal(_projId, UserId, ExportId);
