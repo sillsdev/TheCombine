@@ -251,13 +251,12 @@ namespace BackendFramework.Repositories
         }
 
         /// <summary> Removes <see cref="Word"/> from the Frontier with specified wordId and projectId </summary>
-        /// <returns> A bool: success of operation </returns>
-        public async Task<bool> DeleteFrontier(string projectId, string wordId)
+        /// <returns> The deleted word, or null if not found. </returns>
+        public async Task<Word?> DeleteFrontier(string projectId, string wordId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
 
-            var deleted = await _frontier.DeleteOneAsync(GetProjectWordFilter(projectId, wordId));
-            return deleted.DeletedCount > 0;
+            return await _frontier.FindOneAndDeleteAsync(GetProjectWordFilter(projectId, wordId));
         }
 
         /// <summary> Removes <see cref="Word"/>s from the Frontier with specified wordIds and projectId </summary>
