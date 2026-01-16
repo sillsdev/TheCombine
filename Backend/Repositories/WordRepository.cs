@@ -40,6 +40,15 @@ namespace BackendFramework.Repositories
             return filterDef.And(filterDef.Eq(w => w.ProjectId, projectId), filterDef.Eq(w => w.Id, wordId));
         }
 
+        /// <summary> Creates a mongo filter for project words with specified wordId and audio. </summary>
+        private static FilterDefinition<Word> GetProjectWordWithAudioFilter(
+            string projectId, string wordId, string fileName)
+        {
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            return filterDef.And(filterDef.Eq(w => w.ProjectId, projectId), filterDef.Eq(w => w.Id, wordId),
+                filterDef.ElemMatch(w => w.Audio, a => a.FileName == fileName));
+        }
+
         /// <summary> Creates a mongo filter for words in a specified project with specified wordIds. </summary>
         private static FilterDefinition<Word> GetProjectWordsFilter(string projectId, List<string> wordIds)
         {
@@ -251,18 +260,20 @@ namespace BackendFramework.Repositories
         }
 
         /// <summary> Removes <see cref="Word"/> from the Frontier with specified wordId and projectId </summary>
-        /// <returns> A bool: success of operation </returns>
-        public async Task<bool> DeleteFrontier(string projectId, string wordId)
+        /// <returns> The deleted word, or null if not found. </returns>
+        public async Task<Word?> DeleteFrontier(string projectId, string wordId, string? audioFileName = null)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
 
-            var deleted = await _frontier.DeleteOneAsync(GetProjectWordFilter(projectId, wordId));
-            return deleted.DeletedCount > 0;
+            return string.IsNullOrEmpty(audioFileName)
+                ? await _frontier.FindOneAndDeleteAsync(GetProjectWordFilter(projectId, wordId))
+                : await _frontier.FindOneAndDeleteAsync(
+                    GetProjectWordWithAudioFilter(projectId, wordId, audioFileName));
         }
 
         /// <summary> Removes <see cref="Word"/>s from the Frontier with specified wordIds and projectId </summary>
         /// <returns> Number of words deleted </returns>
-        public async Task<long> DeleteFrontier(string projectId, List<string> wordIds)
+        public async Task<long> DeleteFrontierWords(string projectId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting words from Frontier");
 
