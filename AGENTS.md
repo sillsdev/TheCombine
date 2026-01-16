@@ -8,9 +8,8 @@ This document provides guidelines for AI coding agents working on The Combine co
 2. [Code Style](#code-style)
 3. [Formatting](#formatting)
 4. [Dependency Management](#dependency-management)
-5. [React Components](#react-components)
-6. [Backend Controllers](#backend-controllers)
-7. [Localization](#localization)
+5. [Backend Controllers](#backend-controllers)
+6. [Localization](#localization)
 
 ---
 
@@ -122,39 +121,6 @@ This command:
 
 ---
 
-## React Components
-
-### Component Props
-
-**Always alphabetize React component props** for consistency and readability.
-
-**Example:**
-
-```tsx
-// Good ✓
-interface MyComponentProps {
-  className?: string;
-  id: string;
-  onClick: () => void;
-  title: string;
-}
-
-// Bad ✗
-interface MyComponentProps {
-  title: string;
-  id: string;
-  onClick: () => void;
-  className?: string;
-}
-```
-
-This convention applies to:
-- Interface/type definitions for component props
-- Prop destructuring in function parameters
-- Props passed to components in JSX
-
----
-
 ## Backend Controllers
 
 **When there are changes in `Backend/Controllers/`**, you must regenerate the OpenAPI specification.
@@ -251,6 +217,5 @@ Before finalizing your changes, ensure you have:
 - [ ] Run `npm run fmt-frontend` after frontend changes
 - [ ] Run `npm run license-report-backend` after backend dependency changes
 - [ ] Run `npm run license-report-frontend` after frontend dependency changes
-- [ ] Alphabetized React component props
 - [ ] Regenerated OpenAPI specification after `Backend/Controllers/` changes
 - [ ] Added only English strings to translation files (no manual translations)
