@@ -40,12 +40,11 @@ namespace BackendFramework.Repositories
         }
 
         /// <summary> Creates a mongo filter for project words with specified wordId and audio. </summary>
-        private static FilterDefinition<Word> GetProjectWordFilter(string projectId, string wordId, string fileName)
+        private static FilterDefinition<Word> GetProjectWordWithAudioFilter(
+            string projectId, string wordId, string fileName)
         {
             var filterDef = new FilterDefinitionBuilder<Word>();
-            return filterDef.And(
-                filterDef.Eq(w => w.ProjectId, projectId),
-                filterDef.Eq(w => w.Id, wordId),
+            return filterDef.And(filterDef.Eq(w => w.ProjectId, projectId), filterDef.Eq(w => w.Id, wordId),
                 filterDef.ElemMatch(w => w.Audio, a => a.FileName == fileName));
         }
 
@@ -260,14 +259,15 @@ namespace BackendFramework.Repositories
         }
 
         /// <summary> Removes <see cref="Word"/> from the Frontier with specified wordId and projectId </summary>
-        /// <returns> A bool: success of operation </returns>
-        public async Task<Word?> DeleteFrontier(string projectId, string wordId, string? fileName = null)
+        /// <returns> The deleted word, or null if not found. </returns>
+        public async Task<Word?> DeleteFrontier(string projectId, string wordId, string? audioFileName = null)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
 
-            return fileName is null
-                    ? await _frontier.FindOneAndDeleteAsync(GetProjectWordFilter(projectId, wordId))
-                    : await _frontier.FindOneAndDeleteAsync(GetProjectWordFilter(projectId, wordId, fileName));
+            return string.IsNullOrEmpty(audioFileName)
+                ? await _frontier.FindOneAndDeleteAsync(GetProjectWordFilter(projectId, wordId))
+                : await _frontier.FindOneAndDeleteAsync(
+                    GetProjectWordWithAudioFilter(projectId, wordId, audioFileName));
         }
     }
 }

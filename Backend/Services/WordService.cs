@@ -8,10 +8,10 @@ using BackendFramework.Otel;
 namespace BackendFramework.Services
 {
     /// <summary> More complex functions and application logic for <see cref="Word"/>s </summary>
-    public class WordService(IWordRepository wordRepo, ISemanticDomainCountService domainCountService) : IWordService
+    public class WordService(IWordRepository wordRepo, ISemanticDomainCountService semDomCountService) : IWordService
     {
         private readonly IWordRepository _wordRepo = wordRepo;
-        private readonly ISemanticDomainCountService _domainCountService = domainCountService;
+        private readonly ISemanticDomainCountService _semDomCountService = semDomCountService;
 
         private const string otelTagName = "otel.WordService";
 
@@ -37,7 +37,7 @@ namespace BackendFramework.Services
             using var activity = OtelService.StartActivityWithTag(otelTagName, "creating a word");
 
             var createdWord = await _wordRepo.Create(PrepEditedData(userId, word));
-            await _domainCountService.UpdateCountsForWord(createdWord);
+            await _semDomCountService.UpdateCountsForWord(createdWord);
             return createdWord;
         }
 
@@ -48,7 +48,7 @@ namespace BackendFramework.Services
             using var activity = OtelService.StartActivityWithTag(otelTagName, "creating words");
 
             var createdWords = await _wordRepo.Create(words.Select(w => PrepEditedData(userId, w)).ToList());
-            await _domainCountService.UpdateCountsForWords(createdWords);
+            await _semDomCountService.UpdateCountsForWords(createdWords);
             return createdWords;
         }
 
@@ -89,7 +89,7 @@ namespace BackendFramework.Services
             }
 
             // Decrement counts for the deleted word's semantic domains
-            await _domainCountService.UpdateCountsForWordDeletion(word);
+            await _semDomCountService.UpdateCountsForWordDeletion(word);
             return word;
         }
 
@@ -149,19 +149,18 @@ namespace BackendFramework.Services
                 words.Add(word);
             }
             await _wordRepo.AddFrontier(words);
-            await _domainCountService.UpdateCountsForWords(words);
+            await _semDomCountService.UpdateCountsForWords(words);
             return true;
         }
 
         /// <summary> Makes a new word in the Frontier with changes made </summary>
-        /// <returns> Id of the updated word </returns>
+        /// <returns> Id of updated word, or null if not found </returns>
         public async Task<string?> Update(string projectId, string userId, string wordId, Word word)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a word in Frontier");
 
-            var oldWord = await _wordRepo.DeleteFrontier(projectId, wordId);
-
             // We only want to update words that are in the frontier
+            var oldWord = await _wordRepo.DeleteFrontier(projectId, wordId);
             if (oldWord is null)
             {
                 return null;
@@ -175,7 +174,7 @@ namespace BackendFramework.Services
             word.History.Add(wordId);
 
             var createdWord = await _wordRepo.Create(PrepEditedData(userId, word));
-            await _domainCountService.UpdateCountsAfterWordUpdate(oldWord, createdWord);
+            await _semDomCountService.UpdateCountsAfterWordUpdate(oldWord, createdWord);
 
             return createdWord.Id;
         }
