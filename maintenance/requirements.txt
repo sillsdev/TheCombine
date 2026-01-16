@@ -32,7 +32,7 @@ oauthlib==3.2.2
     # via
     #   kubernetes
     #   requests-oauthlib
-pyasn1==0.6.1
+pyasn1==0.6.2
     # via
     #   pyasn1-modules
     #   rsa
@@ -44,8 +44,6 @@ pymongo==4.13.0
     # via -r requirements.in
 pyopenssl==25.1.0
     # via -r requirements.in
-pyreadline3==3.5.4
-    # via humanfriendly
 python-dateutil==2.9.0.post0
     # via kubernetes
 pyyaml==6.0.2
