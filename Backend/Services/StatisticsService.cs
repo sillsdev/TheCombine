@@ -9,12 +9,12 @@ using static SIL.Extensions.DateTimeExtensions;
 
 namespace BackendFramework.Services
 {
-    public class StatisticsService(ISemanticDomainRepository domainRepo,
-        ISemanticDomainCountRepository domainCountRepo, IUserRepository userRepo, IWordRepository wordRepo)
+    public class StatisticsService(ISemanticDomainRepository semDomRepo,
+        ISemanticDomainCountRepository semDomCountRepo, IUserRepository userRepo, IWordRepository wordRepo)
         : IStatisticsService
     {
-        private readonly ISemanticDomainRepository _domainRepo = domainRepo;
-        private readonly ISemanticDomainCountRepository _domainCountRepo = domainCountRepo;
+        private readonly ISemanticDomainRepository _semDomRepo = semDomRepo;
+        private readonly ISemanticDomainCountRepository _semDomCountRepo = semDomCountRepo;
         private readonly IUserRepository _userRepo = userRepo;
         private readonly IWordRepository _wordRepo = wordRepo;
 
@@ -30,11 +30,11 @@ namespace BackendFramework.Services
         /// <summary>
         /// Get a count of the number of senses associated with a semantic domain
         /// </summary>
-        public Task<int> GetDomainCount(string projectId, string domainId)
+        public async Task<int> GetDomainCount(string projectId, string domainId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain count");
 
-            return _domainCountRepo.GetCount(projectId, domainId);
+            return await _semDomCountRepo.GetCount(projectId, domainId);
         }
 
         /// <summary>
@@ -44,13 +44,13 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting semantic domain counts");
 
-            var domainTreeNodeList = await _domainRepo.GetAllSemanticDomainTreeNodes(lang);
+            var domainTreeNodeList = await _semDomRepo.GetAllSemanticDomainTreeNodes(lang);
             if (domainTreeNodeList is null || domainTreeNodeList.Count == 0)
             {
                 return [];
             }
 
-            var domainCounts = await _domainCountRepo.GetAllCounts(projectId);
+            var domainCounts = await _semDomCountRepo.GetAllCounts(projectId);
             if (domainCounts.Count == 0)
             {
                 return [];

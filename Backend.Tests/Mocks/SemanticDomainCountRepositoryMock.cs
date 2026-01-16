@@ -27,10 +27,7 @@ namespace Backend.Tests.Mocks
             var count = _counts.FirstOrDefault(c => c.ProjectId == projectId && c.DomainId == domainId);
             if (count is null)
             {
-                count = new ProjectSemanticDomainCount(projectId, domainId, amount)
-                {
-                    Id = Util.RandString()
-                };
+                count = new(projectId, domainId, amount) { Id = Util.RandString() };
                 _counts.Add(count);
             }
             else

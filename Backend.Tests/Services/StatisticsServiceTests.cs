@@ -11,8 +11,8 @@ namespace Backend.Tests.Services
 {
     internal sealed class StatisticsServiceTests
     {
-        private ISemanticDomainRepository _domainRepo = null!;
-        private ISemanticDomainCountRepository _domainCountRepo = null!;
+        private ISemanticDomainRepository _semDomRepo = null!;
+        private ISemanticDomainCountRepository _semDomCountRepo = null!;
         private IUserRepository _userRepo = null!;
         private IWordRepository _wordRepo = null!;
         private IStatisticsService _statsService = null!;
@@ -46,18 +46,18 @@ namespace Backend.Tests.Services
         [SetUp]
         public void Setup()
         {
-            _domainRepo = new SemanticDomainRepositoryMock();
-            _domainCountRepo = new SemanticDomainCountRepositoryMock();
+            _semDomRepo = new SemanticDomainRepositoryMock();
+            _semDomCountRepo = new SemanticDomainCountRepositoryMock();
             _userRepo = new UserRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _statsService = new StatisticsService(_domainRepo, _domainCountRepo, _userRepo, _wordRepo);
+            _statsService = new StatisticsService(_semDomRepo, _semDomCountRepo, _userRepo, _wordRepo);
         }
 
         [Test]
         public void GetSemanticDomainCountsTestNullDomainList()
         {
             // Add a domain count to the database and leave the semantic domain list null
-            _domainCountRepo.Increment(ProjId, SemDomId).Wait();
+            _semDomCountRepo.Increment(ProjId, SemDomId).Wait();
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Is.Empty);
@@ -67,8 +67,8 @@ namespace Backend.Tests.Services
         public void GetSemanticDomainCountsTestEmptyDomainList()
         {
             // Add to the database an empty list of semantic domains and a domain count
-            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(new List<SemanticDomainTreeNode>());
-            _domainCountRepo.Increment(ProjId, SemDomId).Wait();
+            ((SemanticDomainRepositoryMock)_semDomRepo).SetNextResponse(new List<SemanticDomainTreeNode>());
+            _semDomCountRepo.Increment(ProjId, SemDomId).Wait();
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Is.Empty);
@@ -78,7 +78,7 @@ namespace Backend.Tests.Services
         public void GetSemanticDomainCountsTestEmptyCounts()
         {
             // Add to the database a semantic domain but no word
-            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodes);
+            ((SemanticDomainRepositoryMock)_semDomRepo).SetNextResponse(TreeNodes);
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Is.Empty);
@@ -88,8 +88,8 @@ namespace Backend.Tests.Services
         public void GetSemanticDomainCountsTestIdMismatch()
         {
             // Add to the database a semantic domain and count with a different domain id
-            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodes);
-            _domainCountRepo.Increment(ProjId, "DifferentId").Wait();
+            ((SemanticDomainRepositoryMock)_semDomRepo).SetNextResponse(TreeNodes);
+            _semDomCountRepo.Increment(ProjId, "DifferentId").Wait();
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Has.Count.EqualTo(1));
@@ -100,8 +100,8 @@ namespace Backend.Tests.Services
         public void GetSemanticDomainCountsTestIdMatch()
         {
             // Add to the database a semantic domain and a corresponding count
-            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodes);
-            _domainCountRepo.Increment(ProjId, SemDomId).Wait();
+            ((SemanticDomainRepositoryMock)_semDomRepo).SetNextResponse(TreeNodes);
+            _semDomCountRepo.Increment(ProjId, SemDomId).Wait();
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Has.Count.EqualTo(1));

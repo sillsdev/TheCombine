@@ -80,6 +80,8 @@ namespace BackendFramework.Services
             return await Create(userId, wordWithAudioToDelete);
         }
 
+        /// <summary> Deletes a word from the frontier </summary>
+        /// <returns> The deleted word, or null if not found </returns>
         public async Task<Word?> DeleteFrontierWord(string projectId, string wordId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
@@ -95,6 +97,8 @@ namespace BackendFramework.Services
             return word;
         }
 
+        /// <summary> Deletes words from the frontier </summary>
+        /// <returns> The number of words deleted </returns>
         public async Task<int> DeleteFrontierWords(string projectId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting words from Frontier");
@@ -110,13 +114,8 @@ namespace BackendFramework.Services
             return deletedCount;
         }
 
-        /// <summary>
-        /// Deletes word in frontier collection. Conditionally adds word with deleted tag in word collection
-        /// </summary>
-        /// <param name="projectId"> The project id </param>
-        /// <param name="userId"> The user id </param>
-        /// <param name="wordId"> The word id </param>
-        /// <returns> A string: id of new word </returns>
+        /// <summary> Deletes frontier word and updates it as deleted in word collection </summary>
+        /// <returns> The id of new word, or null if not found </returns>
         public async Task<string?> MakeFrontierDeleted(string projectId, string userId, string wordId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");

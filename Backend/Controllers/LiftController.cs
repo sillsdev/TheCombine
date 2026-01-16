@@ -23,13 +23,12 @@ namespace BackendFramework.Controllers
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/lift")]
     public class LiftController(IProjectRepository projRepo, ISemanticDomainRepository semDomRepo,
-        ISemanticDomainCountRepository semDomCountRepository, ISpeakerRepository speakerRepo, IWordRepository wordRepo,
-        ILiftService liftService, IHubContext<ExportHub> notifyService, IPermissionService permissionService,
-        IWordService wordService, ILogger<LiftController> logger) : Controller
+        ISpeakerRepository speakerRepo, IWordRepository wordRepo, ILiftService liftService,
+        IHubContext<ExportHub> notifyService, IPermissionService permissionService, IWordService wordService,
+        ILogger<LiftController> logger) : Controller
     {
         private readonly IProjectRepository _projRepo = projRepo;
         private readonly ISemanticDomainRepository _semDomRepo = semDomRepo;
-        private readonly ISemanticDomainCountRepository _semDomCountRepository = semDomCountRepository;
         private readonly ISpeakerRepository _speakerRepo = speakerRepo;
         private readonly IWordRepository _wordRepo = wordRepo;
         private readonly ILiftService _liftService = liftService;
