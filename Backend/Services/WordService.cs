@@ -60,25 +60,14 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting an audio");
 
-            var wordWithAudioToDelete = await _wordRepo.GetWord(projectId, wordId);
+            // We only want to update words that are in the frontier
+            var wordWithAudioToDelete = await _wordRepo.DeleteFrontier(projectId, wordId, fileName);
             if (wordWithAudioToDelete is null)
             {
                 return null;
             }
 
-            var audioToRemove = wordWithAudioToDelete.Audio.Find(a => a.FileName == fileName);
-            if (audioToRemove is null)
-            {
-                return null;
-            }
-
-            // We only want to update words that are in the frontier
-            if (await _wordRepo.DeleteFrontier(projectId, wordId) is null)
-            {
-                return null;
-            }
-
-            wordWithAudioToDelete.Audio.Remove(audioToRemove);
+            wordWithAudioToDelete.Audio.RemoveAll(a => a.FileName == fileName);
             wordWithAudioToDelete.History.Add(wordId);
 
             return await Create(userId, wordWithAudioToDelete);
