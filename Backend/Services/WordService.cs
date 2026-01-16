@@ -132,9 +132,7 @@ namespace BackendFramework.Services
             word.ProjectId = projectId;
             word.History.Add(wordId);
 
-            await Create(userId, word);
-
-            return word.Id;
+            return (await Create(userId, word)).Id;
         }
 
         /// <summary> Checks if a word being added is a duplicate of a preexisting word. </summary>

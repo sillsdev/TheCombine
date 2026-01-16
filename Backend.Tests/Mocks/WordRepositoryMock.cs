@@ -130,7 +130,7 @@ namespace Backend.Tests.Mocks
         public Task<Word?> DeleteFrontier(string projectId, string wordId, string? audioFileName = null)
         {
             var word = _frontier.Find(w => w.ProjectId == projectId && w.Id == wordId &&
-                (audioFileName is null || w.Audio.Any(a => a.FileName == audioFileName)));
+                (string.IsNullOrEmpty(audioFileName) || w.Audio.Any(a => a.FileName == audioFileName)));
             if (word is null)
             {
                 return Task.FromResult<Word?>(null);
