@@ -73,8 +73,6 @@ flake8-eradicate==1.5.0
     # via -r dev-requirements.in
 ghp-import==2.1.0
     # via mkdocs
-google-auth==2.47.0
-    # via kubernetes
 humanfriendly==10.0
     # via -r dev-requirements.in
 idna==3.11
@@ -89,9 +87,9 @@ jinja2==3.1.6
     #   mkdocs-material
 jinja2-base64-filters==0.1.4
     # via -r dev-requirements.in
-kubernetes==34.1.0
+kubernetes==35.0.0
     # via -r dev-requirements.in
-librt==0.7.7
+librt==0.7.8
     # via mypy
 markdown==3.10
     # via
@@ -155,12 +153,6 @@ platformdirs==4.5.1
     #   virtualenv
 pluggy==1.6.0
     # via tox
-pyasn1==0.6.1
-    # via
-    #   pyasn1-modules
-    #   rsa
-pyasn1-modules==0.4.2
-    # via google-auth
 pycodestyle==2.14.0
     # via flake8
 pycparser==2.23
@@ -197,7 +189,7 @@ pyyaml==6.0.3
     #   pyyaml-env-tag
 pyyaml-env-tag==1.1
     # via mkdocs
-regex==2025.11.3
+regex==2026.1.15
     # via -r dev-requirements.in
 requests==2.32.5
     # via
@@ -207,8 +199,6 @@ requests==2.32.5
     #   requests-oauthlib
 requests-oauthlib==2.0.0
     # via kubernetes
-rsa==4.9.1
-    # via google-auth
 six==1.17.0
     # via
     #   kubernetes
@@ -234,7 +224,7 @@ typing-extensions==4.15.0
     #   beautifulsoup4
     #   mypy
     #   pyopenssl
-urllib3==2.3.0
+urllib3==2.6.3
     # via
     #   kubernetes
     #   requests

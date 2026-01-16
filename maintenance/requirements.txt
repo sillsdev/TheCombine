@@ -18,22 +18,14 @@ dnspython==2.8.0
     # via pymongo
 durationpy==0.10
     # via kubernetes
-google-auth==2.47.0
-    # via kubernetes
 humanfriendly==10.0
     # via -r requirements.in
 idna==3.11
     # via requests
-kubernetes==34.1.0
+kubernetes==35.0.0
     # via -r requirements.in
 oauthlib==3.3.1
     # via requests-oauthlib
-pyasn1==0.6.1
-    # via
-    #   pyasn1-modules
-    #   rsa
-pyasn1-modules==0.4.2
-    # via google-auth
 pycparser==2.23
     # via cffi
 pymongo==4.16.0
@@ -52,15 +44,13 @@ requests==2.32.5
     #   requests-oauthlib
 requests-oauthlib==2.0.0
     # via kubernetes
-rsa==4.9.1
-    # via google-auth
 six==1.17.0
     # via
     #   kubernetes
     #   python-dateutil
 typing-extensions==4.15.0
     # via pyopenssl
-urllib3==2.3.0
+urllib3==2.6.3
     # via
     #   kubernetes
     #   requests
