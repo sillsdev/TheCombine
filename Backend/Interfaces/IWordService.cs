@@ -14,6 +14,7 @@ namespace BackendFramework.Interfaces
         Task<int> DeleteFrontierWords(string projectId, List<string> wordIds);
         Task<string?> MakeFrontierDeleted(string projectId, string userId, string wordId);
         Task<bool> RestoreFrontierWords(string projectId, List<string> wordIds);
+        Task<bool> ClearFrontier(string projectId);
         Task<string?> FindContainingWord(Word word);
     }
 }

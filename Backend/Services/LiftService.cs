@@ -670,10 +670,9 @@ namespace BackendFramework.Services
             return SecurityElement.Escape(sInput);
         }
 
-        public ILiftMerger GetLiftImporterExporter(string projectId, string vernLang, IWordRepository wordRepo,
-        ISemanticDomainCountService semDomCountService)
+        public ILiftMerger GetLiftImporterExporter(string projectId, string vernLang, IWordService wordService)
         {
-            return new LiftMerger(projectId, vernLang, wordRepo, semDomCountService);
+            return new LiftMerger(projectId, vernLang, wordService);
         }
 
         private static void WriteRangeElement(XmlWriter liftRangesWriter,
@@ -707,13 +706,11 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteEndElement(); // end element
         }
 
-        private sealed class LiftMerger(string projectId, string vernLang, IWordRepository wordRepo,
-            ISemanticDomainCountService semDomCountService) : ILiftMerger
+        private sealed class LiftMerger(string projectId, string vernLang, IWordService wordService) : ILiftMerger
         {
             private readonly string _projectId = projectId;
             private readonly string _vernLang = vernLang;
-            private readonly IWordRepository _wordRepo = wordRepo;
-            private readonly ISemanticDomainCountService _semDomCountService = semDomCountService;
+            private readonly IWordService _wordService = wordService;
 
             private readonly List<SemanticDomainFull> _customSemDoms = [];
             private readonly List<Word> _importEntries = [];
@@ -764,8 +761,7 @@ namespace BackendFramework.Services
             /// <returns> The words saved. </returns>
             public async Task<List<Word>> SaveImportEntries()
             {
-                var savedWords = new List<Word>(await _wordRepo.Create(_importEntries));
-                await _semDomCountService.UpdateCountsForWords(savedWords);
+                var savedWords = new List<Word>(await _wordService.Create("", _importEntries));
                 _importEntries.Clear();
                 return savedWords;
             }

@@ -51,10 +51,10 @@ namespace Backend.Tests.Controllers
             _wordRepo = new WordRepositoryMock();
             _liftService = new LiftService();
             var semDomCountService = new SemanticDomainCountService(semDomCountRepo);
-            _wordService = new WordService(_wordRepo, semDomCountService);
+            _wordService = new WordService(semDomCountRepo, _wordRepo, semDomCountService);
             _liftController = new LiftController(_projRepo, new SemanticDomainRepositoryMock(), semDomCountRepo,
                 _speakerRepo, _wordRepo, _liftService, new HubContextMock<ExportHub>(), new PermissionServiceMock(),
-                semDomCountService, new MockLogger());
+                _wordService, new MockLogger());
 
             _projId = _projRepo.Create(new Project { Name = ProjName }).Result!.Id;
             _file = new FormFile(_stream, 0, _stream.Length, "Name", FileName);
