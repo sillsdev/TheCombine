@@ -161,7 +161,7 @@ This convention applies to:
 
 ### Prerequisites
 
-1. Set up a Python virtual environment per the [README instructions](https://github.com/sillsdev/TheCombine?tab=readme-ov-file#python):
+1. Set up a Python virtual environment per the README instructions (see the "Python" section under "Getting Started with Development"):
 
    ```bash
    # Create virtual environment (if not already created)
