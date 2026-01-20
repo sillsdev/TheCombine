@@ -37,10 +37,9 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(count.Count);
         }
 
-        public Task<bool> DeleteAllCounts(string projectId)
+        public Task<int> DeleteAllCounts(string projectId)
         {
-            var removed = _counts.RemoveAll(c => c.ProjectId == projectId);
-            return Task.FromResult(removed > 0);
+            return Task.FromResult(_counts.RemoveAll(c => c.ProjectId == projectId));
         }
     }
 }

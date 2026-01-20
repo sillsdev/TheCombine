@@ -34,7 +34,7 @@ namespace Backend.Tests.Controllers
             var semDomCountRepo = new SemanticDomainCountRepositoryMock();
             _wordRepo = new WordRepositoryMock();
             var semDomCountService = new SemanticDomainCountService(semDomCountRepo);
-            _wordService = new WordService(semDomCountRepo, _wordRepo, semDomCountService);
+            _wordService = new WordService(_wordRepo, semDomCountService);
             _permissionService = new PermissionServiceMock();
             _wordController = new WordController(_wordRepo, _wordService, _permissionService);
         }

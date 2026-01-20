@@ -28,6 +28,14 @@ namespace BackendFramework.Services
             return domainCounts;
         }
 
+        /// <summary> Clears all counts for a project </summary>
+        public async Task ClearCountsForProject(string projectId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "clearing counts for project");
+
+            await _countRepo.DeleteAllCounts(projectId);
+        }
+
         /// <summary> Updates counts when a new word is added </summary>
         public async Task UpdateCountsForWord(Word word)
         {
@@ -74,6 +82,11 @@ namespace BackendFramework.Services
         public async Task UpdateCountsAfterWordUpdate(Word oldWord, Word newWord)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating counts after word update");
+
+            if (oldWord.ProjectId != newWord.ProjectId)
+            {
+                throw new System.ArgumentException("Old and new words must belong to the same project");
+            }
 
             var oldDomains = GetDomainCounts(oldWord);
             var newDomains = GetDomainCounts(newWord);

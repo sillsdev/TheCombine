@@ -33,7 +33,7 @@ namespace Backend.Tests.Services
             var semDomCountRepo = new SemanticDomainCountRepositoryMock();
             _wordRepo = new WordRepositoryMock();
             var semDomCountService = new SemanticDomainCountService(semDomCountRepo);
-            _wordService = new WordService(semDomCountRepo, _wordRepo, semDomCountService);
+            _wordService = new WordService(_wordRepo, semDomCountService);
             _mergeService = new MergeService(_cache, _mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
         }
 

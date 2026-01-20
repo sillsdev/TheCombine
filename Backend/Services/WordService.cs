@@ -8,10 +8,8 @@ using BackendFramework.Otel;
 namespace BackendFramework.Services
 {
     /// <summary> More complex functions and application logic for <see cref="Word"/>s </summary>
-    public class WordService(ISemanticDomainCountRepository semDomCountRepo, IWordRepository wordRepo,
-        ISemanticDomainCountService semDomCountService) : IWordService
+    public class WordService(IWordRepository wordRepo, ISemanticDomainCountService semDomCountService) : IWordService
     {
-        private readonly ISemanticDomainCountRepository _semDomCountRepo = semDomCountRepo;
         private readonly IWordRepository _wordRepo = wordRepo;
         private readonly ISemanticDomainCountService _semDomCountService = semDomCountService;
 
@@ -187,7 +185,7 @@ namespace BackendFramework.Services
             var success = await _wordRepo.DeleteAllFrontierWords(projectId);
             if (success)
             {
-                await _semDomCountRepo.DeleteAllCounts(projectId);
+                await _semDomCountService.ClearCountsForProject(projectId);
             }
             return success;
         }

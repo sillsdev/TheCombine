@@ -68,12 +68,11 @@ namespace BackendFramework.Repositories
         }
 
         /// <summary> Deletes all counts for a project </summary>
-        public async Task<bool> DeleteAllCounts(string projectId)
+        public async Task<int> DeleteAllCounts(string projectId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting all semantic domain counts");
 
-            var result = await _counts.DeleteManyAsync(ProjectFilter(projectId));
-            return result.DeletedCount > 0;
+            return (int)(await _counts.DeleteManyAsync(ProjectFilter(projectId))).DeletedCount;
         }
     }
 }

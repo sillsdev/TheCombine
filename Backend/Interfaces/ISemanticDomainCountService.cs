@@ -6,6 +6,7 @@ namespace BackendFramework.Interfaces
 {
     public interface ISemanticDomainCountService
     {
+        Task ClearCountsForProject(string projectId);
         Task UpdateCountsForWord(Word word);
         Task UpdateCountsForWords(List<Word> words);
         Task UpdateCountsAfterWordUpdate(Word oldWord, Word newWord);
