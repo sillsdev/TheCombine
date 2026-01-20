@@ -81,7 +81,8 @@ namespace Backend.Tests.Services
             ((SemanticDomainRepositoryMock)_semDomRepo).SetNextResponse(TreeNodes);
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
-            Assert.That(result, Is.Empty);
+            Assert.That(result, Is.Not.Empty);
+            Assert.That(result.First().Count, Is.EqualTo(0));
         }
 
         [Test]
