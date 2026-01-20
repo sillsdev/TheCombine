@@ -106,7 +106,7 @@ namespace BackendFramework.Services
             var deletedCount = 0;
             foreach (var wordId in wordIds)
             {
-                if (await _wordRepo.DeleteFrontier(projectId, wordId) is not null)
+                if (await DeleteFrontierWord(projectId, wordId) is not null)
                 {
                     deletedCount++;
                 }

@@ -50,16 +50,11 @@ namespace BackendFramework.Services
                 return [];
             }
 
-            var domainCounts = await _semDomCountRepo.GetAllCounts(projectId);
-            if (domainCounts.Count == 0)
-            {
-                return [];
-            }
-            var domainCountDict = domainCounts.ToDictionary(dc => dc.DomainId, dc => dc.Count);
+            var domainCounts =
+                (await _semDomCountRepo.GetAllCounts(projectId)).ToDictionary(dc => dc.DomainId, dc => dc.Count);
 
-            return domainTreeNodeList.Select(domainTreeNode =>
-                new SemanticDomainCount(domainTreeNode, domainCountDict.GetValueOrDefault(domainTreeNode.Id, 0))
-                ).ToList();
+            return domainTreeNodeList
+                .Select(node => new SemanticDomainCount(node, domainCounts.GetValueOrDefault(node.Id, 0))).ToList();
         }
 
         /// <summary>
