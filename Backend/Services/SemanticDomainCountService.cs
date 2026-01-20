@@ -41,7 +41,6 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Updates counts when multiple new words are added </summary>
-        /// <remarks> Assumes all words belong to the same project </remarks>
         public async Task UpdateCountsForWords(List<Word> words)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating counts for words");
@@ -51,17 +50,23 @@ namespace BackendFramework.Services
                 return;
             }
 
-            var projectId = words.First().ProjectId;
-
-            var domainCounts = new Dictionary<string, int>();
+            var domainCounts = new Dictionary<string, Dictionary<string, int>>();
             foreach (var word in words)
             {
-                GetDomainCounts(word, domainCounts);
+                if (!domainCounts.TryGetValue(word.ProjectId, out var projectDomainCounts))
+                {
+                    projectDomainCounts = [];
+                    domainCounts[word.ProjectId] = projectDomainCounts;
+                }
+                GetDomainCounts(word, projectDomainCounts);
             }
 
-            foreach (var entry in domainCounts)
+            foreach (var projectEntry in domainCounts)
             {
-                await _countRepo.Increment(projectId, entry.Key, entry.Value);
+                foreach (var domainEntry in projectEntry.Value)
+                {
+                    await _countRepo.Increment(projectEntry.Key, domainEntry.Key, domainEntry.Value);
+                }
             }
         }
 

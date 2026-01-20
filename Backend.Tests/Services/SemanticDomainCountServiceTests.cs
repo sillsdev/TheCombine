@@ -50,12 +50,12 @@ namespace Backend.Tests.Services
                 new()
                 {
                     ProjectId = ProjId,
-                Senses = [new() { SemanticDomains = [new() { Id = DomainId1 }] }]
+                    Senses = [new() { SemanticDomains = [new() { Id = DomainId1 }] }]
                 },
                 new()
                 {
                     ProjectId = ProjId,
-                Senses = [new() { SemanticDomains = [new() { Id = DomainId1 }, new() { Id = DomainId2 }] }],
+                    Senses = [new() { SemanticDomains = [new() { Id = DomainId1 }, new() { Id = DomainId2 }] }],
                 }
             };
 

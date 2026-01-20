@@ -40,5 +40,16 @@ namespace BackendFramework.Models
             DomainId = domainId;
             Count = count;
         }
+
+        public ProjectSemanticDomainCount Clone()
+        {
+            return new()
+            {
+                Id = Id,
+                ProjectId = ProjectId,
+                DomainId = DomainId,
+                Count = Count
+            };
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace Backend.Tests.Mocks
 
         public Task<List<ProjectSemanticDomainCount>> GetAllCounts(string projectId)
         {
-            var counts = _counts.Where(c => c.ProjectId == projectId).ToList();
+            var counts = _counts.Where(c => c.ProjectId == projectId).Select(c => c.Clone()).ToList();
             return Task.FromResult(counts);
         }
 

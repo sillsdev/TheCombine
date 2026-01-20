@@ -17,13 +17,13 @@ namespace BackendFramework.Repositories
 
         private const string otelTagName = "otel.SemanticDomainCountRepository";
 
-        private static FilterDefinition<ProjectSemanticDomainCount>? ProjectFilter(string projectId)
+        private static FilterDefinition<ProjectSemanticDomainCount> ProjectFilter(string projectId)
         {
             var filterDef = new FilterDefinitionBuilder<ProjectSemanticDomainCount>();
             return filterDef.Eq(c => c.ProjectId, projectId);
         }
 
-        private static FilterDefinition<ProjectSemanticDomainCount>? ProjectDomainFilter(string projectId, string domainId)
+        private static FilterDefinition<ProjectSemanticDomainCount> ProjectDomainFilter(string projectId, string domainId)
         {
             var filterDef = new FilterDefinitionBuilder<ProjectSemanticDomainCount>();
             return filterDef.And(filterDef.Eq(c => c.ProjectId, projectId), filterDef.Eq(c => c.DomainId, domainId));
