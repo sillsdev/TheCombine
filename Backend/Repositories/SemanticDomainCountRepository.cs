@@ -10,12 +10,26 @@ namespace BackendFramework.Repositories
 {
     /// <summary> Atomic database functions for <see cref="ProjectSemanticDomainCount"/>s. </summary>
     [ExcludeFromCodeCoverage]
-    public class SemanticDomainCountRepository(IMongoDbContext dbContext) : ISemanticDomainCountRepository
+    public class SemanticDomainCountRepository : ISemanticDomainCountRepository
     {
-        private readonly IMongoCollection<ProjectSemanticDomainCount> _counts =
-            dbContext.Db.GetCollection<ProjectSemanticDomainCount>("SemanticDomainCountCollection");
+        private readonly IMongoCollection<ProjectSemanticDomainCount> _counts;
 
         private const string otelTagName = "otel.SemanticDomainCountRepository";
+
+        public SemanticDomainCountRepository(IMongoDbContext dbContext)
+        {
+            _counts = dbContext.Db.GetCollection<ProjectSemanticDomainCount>("SemanticDomainCountCollection");
+
+            // Create unique compound index on (ProjectId, DomainId) to optimize queries and enforce uniqueness
+            var indexKeys = Builders<ProjectSemanticDomainCount>.IndexKeys
+                .Ascending(p => p.ProjectId)
+                .Ascending(p => p.DomainId);
+            var indexOptions = new CreateIndexOptions { Unique = true };
+            var indexModel = new CreateIndexModel<ProjectSemanticDomainCount>(indexKeys, indexOptions);
+
+            // Create the index if it doesn't already exist
+            _counts.Indexes.CreateOne(indexModel);
+        }
 
         private static FilterDefinition<ProjectSemanticDomainCount>? ProjectFilter(string projectId)
         {
