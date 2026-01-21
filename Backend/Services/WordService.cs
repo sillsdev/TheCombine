@@ -71,10 +71,10 @@ namespace BackendFramework.Services
             {
                 return null;
             }
+            await _semDomCountService.UpdateCountsForWordDeletion(wordWithAudioToDelete);
 
             wordWithAudioToDelete.Audio.RemoveAll(a => a.FileName == fileName);
             wordWithAudioToDelete.History.Add(wordId);
-
             return await Create(userId, wordWithAudioToDelete);
         }
 
