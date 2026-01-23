@@ -79,7 +79,7 @@ install-kubernetes () {
   cd ${DEPLOY_DIR}/ansible
 
   # Set -e/--extra-vars for ansible-playbook
-  EXTRA_VARS="-e k8s_user=${whoami}"
+  EXTRA_VARS="-e k8s_user=$(whoami)"
   if [ -d "${DEPLOY_DIR}/airgap-images" ] ; then
     EXTRA_VARS="${EXTRA_VARS} -e install_airgap_images=true"
   fi
