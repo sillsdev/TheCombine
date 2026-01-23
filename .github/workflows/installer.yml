@@ -7,6 +7,7 @@ on:
     branches: [master]
     paths:
       - ".github/workflows/installer.yml"
+      - "deploy/scripts/*install-combine*"
       - "installer/**"
 
 concurrency:
