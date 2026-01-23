@@ -19,13 +19,13 @@
   shell: >
     getent passwd {{ k8s_user }} | awk -F: '{ print $6 }'
   register: k8s_user_home
-  changed_when: no
+  changed_when: False
 
 - name: Get user group id for {{ k8s_user }}
   shell: >
     getent passwd {{ k8s_user }} | awk -F: '{ print $4 }'
   register: k8s_user_group_id
-  changed_when: no
+  changed_when: False
 
 - name: Create .kube directories
   file:
@@ -67,7 +67,7 @@
   shell: >
     getent passwd {{ k8s_user }} | awk -F: '{ print $6 }'
   register: k8s_user_home
-  changed_when: no
+  changed_when: False
 
 - name: update profile
   lineinfile:

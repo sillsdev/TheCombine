@@ -8,11 +8,11 @@
   fetch:
     src: "{{ k8s_user_home.stdout }}/.kube/config"
     dest: "{{ kubecfg }}"
-    flat: yes
+    flat: True
 
 - name: Update kubeconfig file
   delegate_to: localhost
-  become: no
+  become: False
   block:
     - name: Restrict permissions to kubeconfig to owner
       file:
@@ -35,7 +35,7 @@
         state: present
         path: "{{ kubecfg }}"
         regexp: '^(\s+server: https:\/\/)[.0-9]+:(1?6443)'
-        backrefs: yes
+        backrefs: True
         line: '\1{{ k8s_dns_name }}:\2'
 
     - name: Replace 'default' cluster, user, etc with {{ kubecfgdir }}

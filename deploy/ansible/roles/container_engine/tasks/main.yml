@@ -11,9 +11,9 @@
 ##############################################################
 - name: Update apt cache.
   apt:
-    update_cache: yes
+    update_cache: True
     cache_valid_time: 600
-  changed_when: no
+  changed_when: False
 
 - name: Install pre-requisite packages
   apt:
@@ -47,7 +47,7 @@
 - name: Install Docker Packages
   apt:
     name: "{{ container_packages }}"
-    update_cache: yes
+    update_cache: True
 
 - name: Check if reboot is required
   stat:

@@ -3,8 +3,8 @@
   systemd:
     name: "{{ item }}"
     state: started
-    enabled: yes
-    daemon_reload: yes
+    enabled: True
+    daemon_reload: True
   with_items:
     - display-eth.service
     - display-eth.timer

@@ -29,7 +29,7 @@
   community.general.nmcli:
     conn_name: "dummy-{{ virtual_if }}"
     ifname: "{{ virtual_if }}"
-    autoconnect: yes
+    autoconnect: True
     ip4: 172.16.1.23/16
     gw4: 172.16.1.23
     method4: "manual"
