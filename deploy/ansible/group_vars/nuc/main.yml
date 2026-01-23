@@ -14,7 +14,7 @@
 k8s_engine: k3s
 
 image_pull_secret: aws-login-credentials
-use_airgap_images: false
+use_airgap_images: no
 
 # k8s namespaces
 app_namespace: thecombine

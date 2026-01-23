@@ -40,7 +40,7 @@
       shell:
         cmd: sha256sum --check --ignore-missing sha256sum-{{ cpu_arch }}.txt
         chdir: "{{ package_dir }}"
-      changed_when: false
+      changed_when: no
 
     - name: Download k3s install script
       get_url:

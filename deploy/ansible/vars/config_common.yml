@@ -1,9 +1,9 @@
 ---
 # Configure logging
-combine_use_syslog: true
+combine_use_syslog: yes
 
 # Configure whether airgap images should be installed on target
-install_airgap_images: false
+install_airgap_images: no
 
 # Kubernetes local Working directories
 k8s_working_dir: "{{ lookup('env', 'HOME') }}/.kube/{{ kubecfgdir }}"

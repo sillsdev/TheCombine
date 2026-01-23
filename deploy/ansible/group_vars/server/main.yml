@@ -10,7 +10,7 @@
 ################################################
 
 image_pull_secret: aws-login-credentials
-use_airgap_images: false
+use_airgap_images: no
 
 create_namespaces: []
 # k8s namespaces

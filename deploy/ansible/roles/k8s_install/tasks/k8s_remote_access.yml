@@ -12,7 +12,7 @@
 
 - name: Update kubeconfig file
   delegate_to: localhost
-  become: false
+  become: no
   block:
     - name: Restrict permissions to kubeconfig to owner
       file:

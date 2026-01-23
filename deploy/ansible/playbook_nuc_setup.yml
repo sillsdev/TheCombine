@@ -22,7 +22,7 @@
     - name: Update packages
       apt:
         update_cache: yes
-        upgrade: "yes"
+        upgrade: yes
 
     - name: Setup WiFi Access Point
       import_role:
