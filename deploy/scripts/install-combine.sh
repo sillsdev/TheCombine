@@ -84,6 +84,7 @@ install-kubernetes () {
     EXTRA_VARS="${EXTRA_VARS} -e install_airgap_images=True"
   fi
   
+  export ANSIBLE_ALLOW_BROKEN_CONDITIONALS=True
   ansible-playbook playbook_desktop_setup.yml -K ${EXTRA_VARS} $(((DEBUG == 1)) && echo "-vv")
 }
 
