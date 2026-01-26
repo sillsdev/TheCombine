@@ -1,5 +1,5 @@
 import { Grid2, Typography } from "@mui/material";
-import { FormEvent, ReactElement, useState } from "react";
+import { FormEvent, ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import FileInputButton from "components/Buttons/FileInputButton";
@@ -9,6 +9,7 @@ interface ImageUploadProps {
   doneCallback?: () => void;
   uploadImage: (imgFile: File) => Promise<void>;
   onFileChange?: (hasFile: boolean) => void;
+  onBrowseRef?: (browseCallback: () => void) => void;
 }
 
 /**
@@ -20,6 +21,18 @@ export default function ImageUpload(props: ImageUploadProps): ReactElement {
   const [loading, setLoading] = useState<boolean>(false);
   const [done, setDone] = useState<boolean>(false);
   const { t } = useTranslation();
+
+  // Provide browse callback to parent
+  useEffect(() => {
+    if (props.onBrowseRef) {
+      props.onBrowseRef(() => {
+        const fileInput = document.getElementById("file-input");
+        if (fileInput) {
+          fileInput.click();
+        }
+      });
+    }
+  }, [props.onBrowseRef]);
 
   function updateFile(file: File): void {
     if (file) {

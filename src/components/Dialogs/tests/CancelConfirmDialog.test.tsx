@@ -11,7 +11,7 @@ const renderDialog = async (enableEnterKeyDown = false): Promise<void> => {
   await act(async () => {
     render(
       <CancelConfirmDialog
-        open={true}
+        open
         text="Test dialog text"
         handleCancel={mockHandleCancel}
         handleConfirm={mockHandleConfirm}

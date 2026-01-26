@@ -19,15 +19,13 @@ export default function UploadImageDialog(
   props: UploadImageDialogProps
 ): ReactElement {
   const [hasFile, setHasFile] = useState(false);
+  const [triggerBrowse, setTriggerBrowse] = useState<(() => void) | null>(null);
   const { t } = useTranslation();
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
-    if (event.key === Key.Enter && !hasFile) {
+    if (event.key === Key.Enter && !hasFile && triggerBrowse) {
       // Trigger the Browse button when Enter is pressed and no file is selected
-      const fileInput = document.getElementById("file-input");
-      if (fileInput) {
-        fileInput.click();
-      }
+      triggerBrowse();
     }
     // When a file is selected, the form's onSubmit will handle Enter key
   };
@@ -48,6 +46,7 @@ export default function UploadImageDialog(
           doneCallback={props.close}
           uploadImage={props.uploadImage}
           onFileChange={setHasFile}
+          onBrowseRef={setTriggerBrowse}
         />
       </DialogContent>
     </Dialog>

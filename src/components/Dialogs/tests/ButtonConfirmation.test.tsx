@@ -14,7 +14,7 @@ const renderDialog = async (
   await act(async () => {
     render(
       <ButtonConfirmation
-        open={true}
+        open
         textId="test.text"
         titleId="test.title"
         onClose={mockOnClose}
