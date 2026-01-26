@@ -132,6 +132,15 @@
     "archiveProjectText": "This project will not be accessible to any users.",
     "restoreProjectText": "Somebody probably had a good reason to archive this project. Are you sure you want to restore it?",
     "userList": "Users",
+    "userActions": {
+      "projects": "Projects"
+    },
+    "userProjects": {
+      "title": "User Projects",
+      "loading": "Loading user projects...",
+      "noProjects": "This user has no project roles.",
+      "projectsLoadError": "Failed to load user projects."
+    },
     "deleteUser": {
       "confirm": "Confirm deleting user from The Combine database.",
       "loadingProjects": "Loading user projects...",
