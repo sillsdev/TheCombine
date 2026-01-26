@@ -3,15 +3,12 @@ import { act, render, screen } from "@testing-library/react";
 
 import { User } from "api/models";
 import UserProjectsDialog from "components/SiteSettings/UserManagement/UserProjectsDialog";
-import { newUser } from "types/user";
 
 const mockGetUserProjects = jest.fn();
 
 jest.mock("backend", () => ({
   getUserProjects: (...args: any[]) => mockGetUserProjects(...args),
 }));
-
-const testUser: User = { ...newUser(), id: "test-id", username: "testuser" };
 
 const renderUserProjectsDialog = async (
   user?: User

@@ -5,14 +5,7 @@ import { toast } from "react-toastify";
 
 import { User, UserProjectInfo } from "api/models";
 import { getUserProjects } from "backend";
-
-function compareProjectInfo(a: UserProjectInfo, b: UserProjectInfo): number {
-  return a.projectIsActive && !b.projectIsActive
-    ? -1
-    : !a.projectIsActive && b.projectIsActive
-      ? 1
-      : a.projectName.localeCompare(b.projectName);
-}
+import { compareProjectInfo } from "components/SiteSettings/UserManagement/utilities";
 
 interface UserProjectsDialogProps {
   user?: User;
