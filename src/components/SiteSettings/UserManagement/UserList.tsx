@@ -69,11 +69,11 @@ export default function UserList(props: UserListProps): ReactElement {
   }, [filterInput, props.allUsers]);
 
   const userListButton = (user: User): ReactElement => {
-    const disabled = user.isAdmin || user.id === getUserId();
+    const disableDelete = user.isAdmin || user.id === getUserId();
     return (
       <UserActionsMenu
         user={user}
-        disabled={disabled}
+        disableDelete={disableDelete}
         onDeleteClick={() => props.handleOpenDeleteModal(user)}
         onProjectsClick={() => props.handleOpenProjectsModal(user)}
       />

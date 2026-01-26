@@ -1,4 +1,4 @@
-import { DeleteForever, Folder, MoreVert, VpnKey } from "@mui/icons-material";
+import { DeleteForever, Folder, MoreVert } from "@mui/icons-material";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -11,7 +11,7 @@ const idProjects = `${idAffix}-projects`;
 
 interface UserActionsMenuProps {
   user: User;
-  disabled: boolean;
+  disableDelete: boolean;
   onDeleteClick: () => void;
   onProjectsClick: () => void;
 }
@@ -25,12 +25,11 @@ export default function UserActionsMenu(
   return (
     <>
       <IconButton
-        disabled={props.disabled}
         id={`${idAffix}-${props.user.username}`}
         onClick={(event) => setAnchorEl(event.currentTarget)}
         style={{ minWidth: 0 }}
       >
-        {props.disabled ? <VpnKey /> : <MoreVert />}
+        <MoreVert />
       </IconButton>
       <Menu
         id={`${idAffix}-menu-${props.user.username}`}
@@ -50,6 +49,7 @@ export default function UserActionsMenu(
           {t("siteSettings.userActions.projects")}
         </MenuItem>
         <MenuItem
+          disabled={props.disableDelete}
           id={idDelete}
           onClick={() => {
             setAnchorEl(undefined);
