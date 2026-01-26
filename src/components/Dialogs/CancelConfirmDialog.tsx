@@ -6,8 +6,9 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { type ReactElement, useState } from "react";
+import { type KeyboardEvent, type ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Key } from "ts-key-enum";
 
 import LoadingButton from "components/Buttons/LoadingButton";
 
@@ -22,6 +23,7 @@ interface CancelConfirmDialogProps {
   buttonLabelConfirm?: string;
   disableBackdropClick?: boolean;
   disableEscapeKeyDown?: boolean;
+  enableEnterKeyDown?: boolean;
 }
 
 /**
@@ -52,10 +54,17 @@ export default function CancelConfirmDialog(
     props.handleCancel();
   };
 
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
+    if (event.key === Key.Enter && !loading && props.enableEnterKeyDown) {
+      onConfirm();
+    }
+  };
+
   return (
     <Dialog
       open={props.open}
       onClose={dialogOnClose}
+      onKeyDown={handleKeyDown}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >

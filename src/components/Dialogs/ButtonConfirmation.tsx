@@ -6,8 +6,9 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { ReactElement, useState } from "react";
+import { type KeyboardEvent, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Key } from "ts-key-enum";
 
 import LoadingButton from "components/Buttons/LoadingButton";
 
@@ -21,6 +22,8 @@ interface ButtonConfirmationProps {
   buttonIdConfirm?: string;
   buttonLabelClose?: string;
   buttonLabelConfirm?: string;
+  disableEscapeKeyDown?: boolean;
+  enableEnterKeyDown?: boolean;
 }
 
 /**
@@ -39,10 +42,27 @@ export default function ButtonConfirmation(
     props.onClose();
   }
 
+  const dialogOnClose = (
+    _: unknown,
+    reason: "backdropClick" | "escapeKeyDown"
+  ): void => {
+    if (reason === "escapeKeyDown" && props.disableEscapeKeyDown) {
+      return;
+    }
+    props.onClose();
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
+    if (event.key === Key.Enter && !loading && props.enableEnterKeyDown) {
+      onConfirm();
+    }
+  };
+
   return (
     <Dialog
       open={props.open}
-      onClose={props.onClose}
+      onClose={dialogOnClose}
+      onKeyDown={handleKeyDown}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >

@@ -8,6 +8,7 @@ import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 interface ImageUploadProps {
   doneCallback?: () => void;
   uploadImage: (imgFile: File) => Promise<void>;
+  onFileChange?: (hasFile: boolean) => void;
 }
 
 /**
@@ -24,6 +25,9 @@ export default function ImageUpload(props: ImageUploadProps): ReactElement {
     if (file) {
       setFile(file);
       setFilename(file.name);
+      if (props.onFileChange) {
+        props.onFileChange(true);
+      }
     }
   }
 

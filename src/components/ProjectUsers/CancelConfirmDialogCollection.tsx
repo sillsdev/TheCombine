@@ -175,6 +175,7 @@ export default function CancelConfirmDialogCollection(
         handleConfirm={() => removeUser(props.userId)}
         buttonIdCancel={`${idRemoveUser}-cancel`}
         buttonIdConfirm={`${idRemoveUser}-confirm`}
+        enableEnterKeyDown
       />
       <CancelConfirmDialog
         open={makeHarvesterDialogOpen}
@@ -183,6 +184,7 @@ export default function CancelConfirmDialogCollection(
         handleConfirm={() => makeHarvester(props.userId)}
         buttonIdCancel={`${idHarvester}-cancel`}
         buttonIdConfirm={`${idHarvester}-confirm`}
+        enableEnterKeyDown
       />
       <CancelConfirmDialog
         open={makeEditorDialogOpen}
@@ -191,6 +193,7 @@ export default function CancelConfirmDialogCollection(
         handleConfirm={() => makeEditor(props.userId)}
         buttonIdCancel={`${idEditor}-cancel`}
         buttonIdConfirm={`${idEditor}-confirm`}
+        enableEnterKeyDown
       />
       <CancelConfirmDialog
         open={makeAdminDialogOpen}
@@ -199,6 +202,7 @@ export default function CancelConfirmDialogCollection(
         handleConfirm={() => makeAdmin(props.userId)}
         buttonIdCancel={`${idAdmin}-cancel`}
         buttonIdConfirm={`${idAdmin}-confirm`}
+        enableEnterKeyDown
       />
       <CancelConfirmDialog
         open={makeOwnerDialogOpen}
@@ -207,6 +211,7 @@ export default function CancelConfirmDialogCollection(
         handleConfirm={() => makeOwner(props.userId)}
         buttonIdCancel={`${idOwner}-cancel`}
         buttonIdConfirm={`${idOwner}-confirm`}
+        enableEnterKeyDown
       />
       <Tooltip
         title={t("projectSettings.userManagement.manageUser")}
