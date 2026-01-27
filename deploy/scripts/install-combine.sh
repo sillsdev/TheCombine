@@ -80,7 +80,7 @@ install-kubernetes () {
 
   # Set -e/--extra-vars for ansible-playbook
   K8S_USER=$(whoami)
-  if [ DEBUG == 1 ] ; then
+  if [ $DEBUG == 1 ] ; then
     echo "Kubernetes user: ${K8S_USER}"
   fi
   EXTRA_VARS="-e k8s_user=${K8S_USER}"
