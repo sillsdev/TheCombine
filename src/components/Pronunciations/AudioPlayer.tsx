@@ -23,7 +23,7 @@ import { useTranslation } from "react-i18next";
 import { Pronunciation, Speaker } from "api/models";
 import { getSpeaker } from "backend";
 import { SpeakerMenuList } from "components/AppBar/SpeakerMenu";
-import ButtonConfirmation from "components/Dialogs/ButtonConfirmation";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import {
   playing,
@@ -288,13 +288,13 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
           </MenuItem>
         )}
       </Menu>
-      <ButtonConfirmation
+      <CancelConfirmDialog
         open={deleteConf}
-        textId={props.warningTextId || "buttons.deletePermanently"}
+        text={t(props.warningTextId || "buttons.deletePermanently")}
         titleId="pronunciations.deleteRecording"
-        onClose={() => setDeleteConf(false)}
-        onConfirm={() => props.deleteAudio!(props.audio.fileName)}
-        buttonIdClose="audio-delete-cancel"
+        handleCancel={() => setDeleteConf(false)}
+        handleConfirm={() => props.deleteAudio!(props.audio.fileName)}
+        buttonIdCancel="audio-delete-cancel"
         buttonIdConfirm="audio-delete-confirm"
       />
       <Dialog open={speakerDialog} onClose={() => setSpeakerDialog(false)}>

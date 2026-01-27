@@ -1,7 +1,6 @@
 import { Dialog, DialogContent, DialogTitle, Icon } from "@mui/material";
-import { type KeyboardEvent, ReactElement, useState } from "react";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
-import { Key } from "ts-key-enum";
 
 import CloseButton from "components/Buttons/CloseButton";
 import UploadImage from "components/Dialogs/UploadImage";
@@ -18,20 +17,10 @@ interface UploadImageDialogProps {
 export default function UploadImageDialog(
   props: UploadImageDialogProps
 ): ReactElement {
-  const [hasFile, setHasFile] = useState(false);
-  const [triggerBrowse, setTriggerBrowse] = useState<(() => void) | null>(null);
   const { t } = useTranslation();
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
-    if (event.key === Key.Enter && !hasFile && triggerBrowse) {
-      // Trigger the Browse button when Enter is pressed and no file is selected
-      triggerBrowse();
-    }
-    // When a file is selected, the form's onSubmit will handle Enter key
-  };
-
   return (
-    <Dialog onClose={props.close} open={props.open} onKeyDown={handleKeyDown}>
+    <Dialog onClose={props.close} open={props.open}>
       <DialogTitle>
         {t(props.titleId)}
         <Icon />
@@ -45,8 +34,6 @@ export default function UploadImageDialog(
         <UploadImage
           doneCallback={props.close}
           uploadImage={props.uploadImage}
-          onFileChange={setHasFile}
-          onBrowseRef={setTriggerBrowse}
         />
       </DialogContent>
     </Dialog>

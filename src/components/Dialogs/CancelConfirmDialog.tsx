@@ -15,6 +15,7 @@ import LoadingButton from "components/Buttons/LoadingButton";
 interface CancelConfirmDialogProps {
   open: boolean;
   text: string | ReactElement;
+  titleId?: string;
   handleCancel: () => void;
   handleConfirm: () => Promise<void> | void;
   buttonIdCancel?: string;
@@ -69,7 +70,7 @@ export default function CancelConfirmDialog(
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        {t("buttons.proceedWithCaution")}
+        {t(props.titleId || "buttons.proceedWithCaution")}
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
