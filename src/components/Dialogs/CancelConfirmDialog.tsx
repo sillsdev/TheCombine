@@ -12,7 +12,7 @@ import { Key } from "ts-key-enum";
 
 import LoadingButton from "components/Buttons/LoadingButton";
 
-interface CancelConfirmDialogProps {
+export interface CancelConfirmDialogProps {
   open: boolean;
   text: string | ReactElement;
   titleId?: string;
