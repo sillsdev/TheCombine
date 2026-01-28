@@ -3,18 +3,13 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace BackendFramework.Helper
 {
-    public class CombineHub : Hub
+    public class CombineHub(IAcknowledgmentTracker ackTracker) : Hub
     {
         // Names for the `method` parameter of _notifyService.Clients.All.SendAsync()
         public const string MethodFailure = "Failure";
         public const string MethodSuccess = "Success";
 
-        private readonly IAcknowledgmentTracker _ackTracker;
-
-        public CombineHub(IAcknowledgmentTracker ackTracker)
-        {
-            _ackTracker = ackTracker;
-        }
+        private readonly IAcknowledgmentTracker _ackTracker = ackTracker;
 
         /// <summary>
         /// Client method to acknowledge receipt of a SignalR message.
@@ -27,17 +22,13 @@ namespace BackendFramework.Helper
         }
     }
 
-    public class ExportHub : CombineHub
+    public class ExportHub(IAcknowledgmentTracker ackTracker) : CombineHub(ackTracker)
     {
         public const string Url = "export-hub";
-
-        public ExportHub(IAcknowledgmentTracker ackTracker) : base(ackTracker) { }
     }
 
-    public class MergeHub : CombineHub
+    public class MergeHub(IAcknowledgmentTracker ackTracker) : CombineHub(ackTracker)
     {
         public const string Url = "merge-hub";
-
-        public MergeHub(IAcknowledgmentTracker ackTracker) : base(ackTracker) { }
     }
 }

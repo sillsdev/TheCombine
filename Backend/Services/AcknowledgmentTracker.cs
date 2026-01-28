@@ -9,40 +9,37 @@ namespace BackendFramework.Services
     /// <summary> Tracks SignalR message acknowledgments from clients. </summary>
     public class AcknowledgmentTracker : IAcknowledgmentTracker
     {
-        private readonly ConcurrentDictionary<string, AckStatus> _pendingAcks = new();
+        /// <summary>
+        /// In-memory store of pending acknowledgments.
+        /// Dictionary key is requestId, value is acknowledgment status.
+        /// </summary>
+        private readonly ConcurrentDictionary<string, bool> _pendingAcks = [];
 
-        public void TrackRequest(string requestId, string userId)
+        private void TrackRequest(string requestId)
         {
-            var status = new AckStatus
-            {
-                RequestId = requestId,
-                UserId = userId,
-                SentAt = DateTime.UtcNow,
-                IsAcknowledged = false
-            };
-            _pendingAcks.TryAdd(requestId, status);
+            _pendingAcks.TryAdd(requestId, false);
         }
 
-        public void MarkAcknowledged(string requestId)
+        private bool IsAcknowledged(string requestId)
         {
-            if (_pendingAcks.TryGetValue(requestId, out var status))
+            if (_pendingAcks.TryGetValue(requestId, out var isAcknowledged))
             {
-                status.IsAcknowledged = true;
-            }
-        }
-
-        public bool IsAcknowledged(string requestId)
-        {
-            if (_pendingAcks.TryGetValue(requestId, out var status))
-            {
-                return status.IsAcknowledged;
+                return isAcknowledged;
             }
             return false;
         }
 
-        public void RemoveRequest(string requestId)
+        private void RemoveRequest(string requestId)
         {
             _pendingAcks.TryRemove(requestId, out _);
+        }
+
+        public void MarkAcknowledged(string requestId)
+        {
+            if (_pendingAcks.TryGetValue(requestId, out _))
+            {
+                _pendingAcks[requestId] = true;
+            }
         }
 
         /// <summary>
@@ -53,12 +50,9 @@ namespace BackendFramework.Services
         /// <param name="sendMessageAsync">Async function to send the message</param>
         /// <param name="logger">Logger for tracking retry attempts</param>
         public async Task SendWithRetryAsync(
-            string requestId,
-            string userId,
-            Func<Task> sendMessageAsync,
-            ILogger logger)
+            string requestId, string userId, Func<Task> sendMessageAsync, ILogger logger)
         {
-            TrackRequest(requestId, userId);
+            TrackRequest(requestId);
 
             // Initial send
             await sendMessageAsync();
@@ -89,14 +83,6 @@ namespace BackendFramework.Services
 
             // Clean up
             RemoveRequest(requestId);
-        }
-
-        private class AckStatus
-        {
-            public string RequestId { get; set; } = string.Empty;
-            public string UserId { get; set; } = string.Empty;
-            public DateTime SentAt { get; set; }
-            public bool IsAcknowledged { get; set; }
         }
     }
 }
