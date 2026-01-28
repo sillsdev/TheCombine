@@ -133,24 +133,6 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestFindPotentialDuplicatesReturnsRequestId()
-        {
-            var result = _mergeController.FindPotentialDuplicates(ProjId, 2, 1, false).Result as OkObjectResult;
-            Assert.That(result, Is.Not.Null);
-            var requestId = result!.Value as string;
-            Assert.That(requestId, Is.Not.Null);
-            Assert.That(requestId, Is.Not.Empty);
-        }
-
-        [Test]
-        public void TestGetRequestStatusReturnsNull()
-        {
-            var result = _mergeController.GetRequestStatus("nonexistent-request-id") as OkObjectResult;
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result!.Value, Is.Null);
-        }
-
-        [Test]
         public void TestRetrievePotentialDuplicatesNoDuplicates()
         {
             var result = _mergeController.RetrievePotentialDuplicates();

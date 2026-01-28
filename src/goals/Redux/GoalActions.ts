@@ -13,7 +13,6 @@ import {
   loadUserEditsAction,
   setCurrentGoalAction,
   setDataLoadStatusAction,
-  setMergeRequestIdAction,
   setGoalDataAction,
   setGoalStatusAction,
   updateStepFromDataAction,
@@ -59,10 +58,6 @@ export function setDataLoadStatus(status: DataLoadStatus): PayloadAction {
   return setDataLoadStatusAction(status);
 }
 
-export function setMergeRequestId(requestId?: string): PayloadAction {
-  return setMergeRequestIdAction(requestId);
-}
-
 export function setGoalData(goalData: Word[][]): PayloadAction {
   return setGoalDataAction(goalData);
 }
@@ -93,13 +88,11 @@ export function asyncAddGoal(goal: Goal) {
           // Initialize data loading in the backend.
           dispatch(setDataLoadStatus(DataLoadStatus.Loading));
           const currentProj = getState().currentProjectState.project;
-          const requestId = await Backend.findDuplicates(
+          await Backend.findDuplicates(
             5, // More than 5 entries doesn't fit well.
             maxNumSteps(goal.goalType),
             currentProj.protectedDataMergeAvoidEnabled === OffOnSetting.On
           );
-          // Store the requestId for tracking
-          dispatch(setMergeRequestId(requestId));
           // Don't load goal data, since it'll be triggered by a signal from the backend when data is ready.
         } else {
           // Load the goal data, but don't await, to allow a loading screen.

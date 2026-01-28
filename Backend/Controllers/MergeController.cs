@@ -126,9 +126,8 @@ namespace BackendFramework.Controllers
         /// <param name="maxInList"> Max number of words allowed within a list of potential duplicates. </param>
         /// <param name="maxLists"> Max number of lists of potential duplicates. </param>
         /// <param name="ignoreProtected"> Whether to require each set to have at least one unprotected word. </param>
-        /// <returns> A request ID for tracking the status of the operation. </returns>
         [HttpGet("finddups/{maxInList:int}/{maxLists:int}/{ignoreProtected:bool}", Name = "FindPotentialDuplicates")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> FindPotentialDuplicates(
             string projectId, int maxInList, int maxLists, bool ignoreProtected)
@@ -144,28 +143,23 @@ namespace BackendFramework.Controllers
             await _mergeService.UpdateMergeBlacklist(projectId);
 
             var userId = _permissionService.GetUserId(HttpContext);
-            var requestId = _mergeService.GenerateRequestId();
 
             // Run the task without waiting for completion.
             // This Task will be scheduled within the existing Async executor thread pool efficiently.
             // See: https://stackoverflow.com/a/64614779/1398841
-            _ = Task.Run(() => GetDuplicatesThenSignal(projectId, maxInList, maxLists, userId, requestId, ignoreProtected));
+            _ = Task.Run(() => GetDuplicatesThenSignal(projectId, maxInList, maxLists, userId, ignoreProtected));
 
-            return Ok(requestId);
+            return Ok();
         }
 
         internal async Task<bool> GetDuplicatesThenSignal(
-            string projectId, int maxInList, int maxLists, string userId, string requestId, bool ignoreProtected = false)
+            string projectId, int maxInList, int maxLists, string userId, bool ignoreProtected = false)
         {
             var success = await _mergeService.GetAndStorePotentialDuplicates(
                 projectId, maxInList, maxLists, userId, ignoreProtected);
-            
-            // Store the request status for fallback polling
-            _mergeService.StoreRequestStatus(requestId, success);
-            
             if (success)
             {
-                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId);
+                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId);
             }
             return success;
         }
@@ -182,19 +176,6 @@ namespace BackendFramework.Controllers
             var userId = _permissionService.GetUserId(HttpContext);
             var dups = _mergeService.RetrieveDups(userId);
             return dups is null ? BadRequest() : Ok(dups);
-        }
-
-        /// <summary> Check the status of a duplicates finding request. </summary>
-        /// <param name="requestId"> The request ID returned from FindPotentialDuplicates. </param>
-        /// <returns> True if successful, false if failed, null if not found or still in progress. </returns>
-        [HttpGet("requeststatus/{requestId}", Name = "GetRequestStatus")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool?))]
-        public IActionResult GetRequestStatus(string requestId)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking request status");
-
-            var status = _mergeService.GetRequestStatus(requestId);
-            return Ok(status);
         }
 
         /// <summary> Get whether user has graylist entries. </summary>

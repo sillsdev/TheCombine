@@ -30,9 +30,6 @@ namespace BackendFramework.Services
         /// <summary> Cache key prefix for potential duplicates (userId will be appended). </summary>
         private const string PotentialDupsCacheKeyPrefix = "MergeService_PotentialDups_";
 
-        /// <summary> Cache key prefix for request status tracking. </summary>
-        private const string RequestStatusCacheKeyPrefix = "MergeService_RequestStatus_";
-
         private const string otelTagName = "otel.MergeService";
 
         /// <summary> Store potential duplicates, but only for the user's most recent duplicates request. </summary>
@@ -462,45 +459,6 @@ namespace BackendFramework.Services
             }
 
             return wordLists;
-        }
-
-        /// <summary> Generate a unique request ID for tracking SignalR message delivery. </summary>
-        /// <returns> A unique request ID. </returns>
-        public string GenerateRequestId()
-        {
-            return Guid.NewGuid().ToString();
-        }
-
-        /// <summary> Store the completion status of a request for fallback polling. </summary>
-        /// <param name="requestId"> Unique identifier for the request. </param>
-        /// <param name="success"> Whether the request completed successfully. </param>
-        public void StoreRequestStatus(string requestId, bool success)
-        {
-            var cacheKey = RequestStatusCacheKeyPrefix + requestId;
-            var cacheOptions = new MemoryCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-            };
-            lock (_cacheLock)
-            {
-                _cache.Set(cacheKey, success, cacheOptions);
-            }
-        }
-
-        /// <summary> Check the status of a request for fallback polling. </summary>
-        /// <param name="requestId"> Unique identifier for the request. </param>
-        /// <returns> True if successful, false if failed, null if not found or still in progress. </returns>
-        public bool? GetRequestStatus(string requestId)
-        {
-            var cacheKey = RequestStatusCacheKeyPrefix + requestId;
-            lock (_cacheLock)
-            {
-                if (_cache.TryGetValue(cacheKey, out bool status))
-                {
-                    return status;
-                }
-                return null;
-            }
         }
 
         public sealed class InvalidMergeWordSetException : Exception

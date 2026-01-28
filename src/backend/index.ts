@@ -368,25 +368,12 @@ export async function findDuplicates(
   maxInList: number,
   maxLists: number,
   ignoreProtected = false
-): Promise<string> {
+): Promise<void> {
   const projectId = LocalStorage.getProjectId();
-  const resp = await mergeApi.findPotentialDuplicates(
+  await mergeApi.findPotentialDuplicates(
     { ignoreProtected, maxInList, maxLists, projectId },
     defaultOptions()
   );
-  return resp.data as string; // The API now returns a requestId
-}
-
-/** Check the status of a duplicates finding request. */
-export async function getRequestStatus(
-  requestId: string
-): Promise<boolean | null> {
-  const projectId = LocalStorage.getProjectId();
-  const resp = await axios.get(
-    `${apiBaseURL}/projects/${projectId}/merge/requeststatus/${requestId}`,
-    defaultOptions()
-  );
-  return resp.data;
 }
 
 /** Retrieve list of potential duplicates for merging. */
