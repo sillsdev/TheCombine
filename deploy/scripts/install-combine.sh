@@ -34,6 +34,9 @@ set-combine-env () {
     # Collect values from user
     read -p "Enter AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
     read -p "Enter AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY
+    # Trim whitespace (tabs and newlines cause the installer to fail)
+    AWS_ACCESS_KEY_ID="$(printf '%s' "$AWS_ACCESS_KEY_ID" | xargs)"
+    AWS_SECRET_ACCESS_KEY="$(printf '%s' "$AWS_SECRET_ACCESS_KEY" | xargs)"
     # Write collected values and static values to config file
     cat <<.EOF > ${CONFIG_DIR}/env
     export COMBINE_JWT_SECRET_KEY="${COMBINE_JWT_SECRET_KEY}"
