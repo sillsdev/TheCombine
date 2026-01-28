@@ -1,6 +1,6 @@
 import { UserProjectInfo } from "api/models";
 
-export function compareProjectInfo(
+export function compareUserProjectInfo(
   a: UserProjectInfo,
   b: UserProjectInfo
 ): number {

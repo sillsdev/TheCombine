@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 import { User, UserProjectInfo } from "api/models";
 import { getUserProjects } from "backend";
-import { compareProjectInfo } from "components/SiteSettings/UserManagement/utilities";
+import { compareUserProjectInfo } from "utilities/userProjectUtilities";
 
 interface ConfirmDeletionProps {
   user?: User;
@@ -24,7 +24,7 @@ export default function ConfirmDeletion(
     setProjInfo(undefined);
     if (props.user?.id) {
       getUserProjects(props.user.id)
-        .then((pi) => setProjInfo(pi.sort(compareProjectInfo)))
+        .then((pi) => setProjInfo(pi.sort(compareUserProjectInfo)))
         .catch((err) => {
           console.error("Failed to fetch user projects:", err);
           toast.warning(t("siteSettings.deleteUser.projectsLoadError"));
