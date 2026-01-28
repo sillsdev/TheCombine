@@ -1,3 +1,4 @@
+using BackendFramework.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 
 namespace BackendFramework.Helper
@@ -8,6 +9,13 @@ namespace BackendFramework.Helper
         public const string MethodFailure = "Failure";
         public const string MethodSuccess = "Success";
 
+        private readonly IAcknowledgmentTracker _ackTracker;
+
+        public CombineHub(IAcknowledgmentTracker ackTracker)
+        {
+            _ackTracker = ackTracker;
+        }
+
         /// <summary>
         /// Client method to acknowledge receipt of a SignalR message.
         /// This provides confirmation that messages were successfully delivered.
@@ -15,18 +23,21 @@ namespace BackendFramework.Helper
         /// <param name="requestId">Unique identifier for the request being acknowledged</param>
         public void AcknowledgeMessage(string requestId)
         {
-            // Log the acknowledgment - foundation for future retry logic
-            // For now, this confirms the message was received by the client
+            _ackTracker.MarkAcknowledged(requestId);
         }
     }
 
     public class ExportHub : CombineHub
     {
         public const string Url = "export-hub";
+
+        public ExportHub(IAcknowledgmentTracker ackTracker) : base(ackTracker) { }
     }
 
     public class MergeHub : CombineHub
     {
         public const string Url = "merge-hub";
+
+        public MergeHub(IAcknowledgmentTracker ackTracker) : base(ackTracker) { }
     }
 }

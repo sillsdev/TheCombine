@@ -24,7 +24,8 @@ namespace BackendFramework.Controllers
     [Route("v1/projects/{projectId}/lift")]
     public class LiftController(IProjectRepository projRepo, ISemanticDomainRepository semDomRepo,
         ISpeakerRepository speakerRepo, IWordRepository wordRepo, ILiftService liftService,
-        IHubContext<ExportHub> notifyService, IPermissionService permissionService, ILogger<LiftController> logger)
+        IHubContext<ExportHub> notifyService, IPermissionService permissionService,
+        IAcknowledgmentTracker ackTracker, ILogger<LiftController> logger)
         : Controller
     {
         private readonly IProjectRepository _projRepo = projRepo;
@@ -34,6 +35,7 @@ namespace BackendFramework.Controllers
         private readonly ILiftService _liftService = liftService;
         private readonly IHubContext<ExportHub> _notifyService = notifyService;
         private readonly IPermissionService _permissionService = permissionService;
+        private readonly IAcknowledgmentTracker _ackTracker = ackTracker;
         private readonly ILogger<LiftController> _logger = logger;
 
         private const string otelTagName = "otel.LiftController";
@@ -419,9 +421,45 @@ namespace BackendFramework.Controllers
             if (proceed)
             {
                 var requestId = _liftService.GenerateRequestId();
-                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId);
+                // Run retry logic in background without blocking
+                _ = Task.Run(() => SendWithRetry(requestId, userId));
             }
             return proceed;
+        }
+
+        private async Task SendWithRetry(string requestId, string userId)
+        {
+            _ackTracker.TrackRequest(requestId, userId);
+
+            // Initial send
+            await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId);
+            _logger.LogInformation("Sent success message with requestId {RequestId} to user {UserId}", requestId, userId);
+
+            // Wait 5 seconds
+            await Task.Delay(5000);
+            if (!_ackTracker.IsAcknowledged(requestId))
+            {
+                _logger.LogWarning("No acknowledgment received for requestId {RequestId} after 5 seconds. Retrying...", requestId);
+                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId);
+
+                // Wait another 10 seconds (15 total)
+                await Task.Delay(10000);
+                if (!_ackTracker.IsAcknowledged(requestId))
+                {
+                    _logger.LogWarning("No acknowledgment received for requestId {RequestId} after 15 seconds. Retrying...", requestId);
+                    await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId);
+
+                    // Wait another 15 seconds (30 total)
+                    await Task.Delay(15000);
+                    if (!_ackTracker.IsAcknowledged(requestId))
+                    {
+                        _logger.LogError("No acknowledgment received for requestId {RequestId} after 30 seconds. Giving up.", requestId);
+                    }
+                }
+            }
+
+            // Clean up
+            _ackTracker.RemoveRequest(requestId);
         }
 
         internal async Task<string> CreateLiftExport(string projectId)
