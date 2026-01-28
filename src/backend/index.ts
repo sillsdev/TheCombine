@@ -377,8 +377,8 @@ export async function findIdenticalDuplicates(
   return resp.data;
 }
 
-/** Start finding list of potential duplicates for merging. */
-export async function findDuplicates(
+/** Start finding list of potential duplicates with similar vernaculars. */
+export async function findSimilarDuplicates(
   maxInList: number,
   maxLists: number,
   ignoreProtected = false
@@ -390,7 +390,7 @@ export async function findDuplicates(
   );
 }
 
-/** Retrieve list of potential duplicates for merging. */
+/** Retrieve list of similar potential duplicates for merging. */
 export async function retrieveDuplicates(): Promise<Word[][]> {
   const resp = await mergeApi.retrievePotentialDuplicates(
     { projectId: LocalStorage.getProjectId() },

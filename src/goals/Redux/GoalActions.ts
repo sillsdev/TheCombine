@@ -23,7 +23,11 @@ import { type StoreState, type StoreStateDispatch } from "rootRedux/types";
 import router from "router/browserRouter";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
-import { convertEditToGoal, maxNumSteps } from "utilities/goalUtilities";
+import {
+  convertEditToGoal,
+  maxNumSteps,
+  maxWordsInMergeList,
+} from "utilities/goalUtilities";
 import { getDuplicates } from "utilities/utilities";
 
 // Action Creation Functions
@@ -175,8 +179,8 @@ export function asyncLoadNewGoalData() {
       // Initialize similar-vernacular duplicate finding in the backend.
       dispatch(setDataLoadStatus(DataLoadStatus.Loading));
       const currentProj = getState().currentProjectState.project;
-      await Backend.findDuplicates(
-        5, // More than 5 entries doesn't fit well.
+      await Backend.findSimilarDuplicates(
+        maxWordsInMergeList,
         maxNumSteps(currentGoal.goalType),
         currentProj.protectedDataMergeAvoidEnabled === OffOnSetting.On
       );
@@ -260,7 +264,7 @@ async function loadGoalData(
         dataLoadStatus === DataLoadStatus.Success
           ? await Backend.retrieveDuplicates().catch(() => {})
           : await Backend.findIdenticalDuplicates(
-              5, // More than 5 entries doesn't fit well.
+              maxWordsInMergeList,
               maxNumSteps(goalType),
               project.protectedDataMergeAvoidEnabled === OffOnSetting.On
             ).catch(() => {});
