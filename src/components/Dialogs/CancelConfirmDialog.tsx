@@ -37,6 +37,9 @@ export default function CancelConfirmDialog(
   const { t } = useTranslation();
 
   const onConfirm = async (): Promise<void> => {
+    if (loading) {
+      return;
+    }
     setLoading(true);
     await props.handleConfirm();
     setLoading(false);

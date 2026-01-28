@@ -48,6 +48,15 @@ describe("CancelConfirmDialog keyboard interaction", () => {
     expect(mockHandleConfirm).toHaveBeenCalledTimes(1);
   });
 
+  it("Enter only triggers once when button is focused", async () => {
+    await renderDialog({ enableEnterKeyDown: true });
+    const confirmButton = screen.getByRole("button", { name: /confirm/i });
+
+    await userEvent.type(confirmButton, "{Enter}");
+
+    expect(mockHandleConfirm).toHaveBeenCalledTimes(1);
+  });
+
   it("triggers cancel on Escape key by default", async () => {
     await renderDialog();
     const dialog = screen.getByRole("dialog");
