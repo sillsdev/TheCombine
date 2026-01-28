@@ -3,6 +3,7 @@
 
 # Except the following.
 !.env
+!.npmrc
 !.parcelrc
 !dev-requirements.txt
 !docs/user_guide

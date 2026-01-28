@@ -1,8 +1,11 @@
 name: installer_release
 
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Deploy Update to Live Server"]
+    types:
+      - completed
 
 permissions:
   contents: read
@@ -10,16 +13,20 @@ permissions:
 jobs:
   make_installer:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    outputs:
+      release_tag: ${{ steps.release.outputs.tag }}
     steps:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: block
           allowed-endpoints: >
             *-docker.pkg.dev:443
             *.cloudfront.net:443
+            api.github.com:443
             azure.archive.ubuntu.com:80
             cdn.dl.k8s.io:443
             dl.k8s.io:443
@@ -39,7 +46,7 @@ jobs:
             registry.k8s.io:443
             release-assets.githubusercontent.com:443
       - name: Checkout repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
       - name: Install dependencies
@@ -47,13 +54,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y makeself
         shell: bash
+      - name: Get latest release tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        id: release
+        run: |
+          echo "tag=$(gh release view --json tagName -q .tagName)" >> $GITHUB_OUTPUT
       - name: Make installer with release version
         run: |
           cd installer
-          ./make-combine-installer.sh ${{ github.event.release.tag_name }} --debug
+          ./make-combine-installer.sh ${{ steps.release.outputs.tag }} --debug
         shell: bash
       - name: Upload installer artifact
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: combine-installer
           path: installer/combine-installer.run
@@ -66,25 +79,26 @@ jobs:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: block
           allowed-endpoints: >
+            github.com:443
             s3.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
             sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
       - name: Download installer artifact
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: combine-installer
           path: installer/
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@00943011d9042930efac3dcd3a170e4273319bc8 # v5.1.0
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: Upload installer to S3
         run: |
-          TARGET=s3://software.thecombine.app/combine-installer-${{ github.event.release.tag_name }}.run
+          TARGET=s3://software.thecombine.app/combine-installer-${{ needs.make_installer.outputs.release_tag }}.run
           aws s3 cp installer/combine-installer.run $TARGET --content-type application/octet-stream
         shell: bash

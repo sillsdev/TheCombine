@@ -54,13 +54,14 @@ const authenticationUrls = [
 ];
 
 /** A list of URL patterns for which the frontend explicitly handles errors
- * and the blanket error pop ups should be suppressed.*/
+ * and the blanket error pop-ups should be suppressed.*/
 const whiteListedErrorUrls = [
   "/merge/retrievedups",
   "/speakers/create/",
   "/speakers/update/",
   "/users/authenticate",
   "/users/captcha/",
+  "/users/uilanguage",
 ];
 
 // Create an axios instance to allow for attaching interceptors to it.
@@ -742,6 +743,10 @@ export async function authenticateUser(
   return user;
 }
 
+export async function uiLanguage(uilang: string): Promise<void> {
+  await userApi.uiLanguage({ body: uilang }, defaultOptions());
+}
+
 /** Note: Only usable by site admins. */
 export async function getAllUsers(): Promise<User[]> {
   return (await userApi.getAllUsers(defaultOptions())).data;
@@ -979,4 +984,12 @@ export async function updateWord(word: Word): Promise<Word> {
     defaultOptions()
   );
   return { ...word, id: resp.data };
+}
+
+export async function getDomainWordCount(domainId: string): Promise<number> {
+  const response = await wordApi.getDomainWordCount(
+    { projectId: LocalStorage.getProjectId(), domainId },
+    defaultOptions()
+  );
+  return response.data;
 }

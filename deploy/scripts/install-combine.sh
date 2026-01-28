@@ -3,7 +3,7 @@ set -eo pipefail
 
 #########################################################################################
 #
-# install-combine.sh is intended to install the Combine on an Ubuntu-based Linux machine.
+# install-combine.sh is intended to install The Combine on an Ubuntu-based Linux machine.
 # It should only be executed directly by developers. For general users, it is packaged in
 # a stand-alone installer (see ./installer/README.md or ./installer/README.pdf).
 #
@@ -79,7 +79,11 @@ install-kubernetes () {
   cd ${DEPLOY_DIR}/ansible
 
   # Set -e/--extra-vars for ansible-playbook
-  EXTRA_VARS="-e k8s_user=${whoami}"
+  K8S_USER=$(whoami)
+  if [ $DEBUG == 1 ] ; then
+    echo "Kubernetes user: ${K8S_USER}"
+  fi
+  EXTRA_VARS="-e k8s_user=${K8S_USER}"
   if [ -d "${DEPLOY_DIR}/airgap-images" ] ; then
     EXTRA_VARS="${EXTRA_VARS} -e install_airgap_images=true"
   fi
@@ -260,8 +264,8 @@ while (( "$#" )) ; do
   shift
 done
 
-# Check that we have a COMBINE_VERSION
-if [ -z "${COMBINE_VERSION}" ] ; then
+# Check that we have a COMBINE_VERSION (not needed for uninstall)
+if [[ "${STATE}" != "Uninstall-combine" && -z "${COMBINE_VERSION}" ]] ; then
   error "Combine version is not specified."
 fi
 

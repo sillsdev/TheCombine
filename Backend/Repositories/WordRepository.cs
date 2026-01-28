@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -21,7 +22,7 @@ namespace BackendFramework.Repositories
 
         /// <summary>
         /// Creates a mongo filter for all words in a specified project (and optionally with specified vernacular).
-        /// Since a variant in FLEx can export as an entry without any senses, filters out 0-sense words.
+        /// Since a variant in FieldWorks can export as an entry without any senses, filters out 0-sense words.
         /// </summary>
         private static FilterDefinition<Word> GetAllProjectWordsFilter(string projectId, string? vernacular = null)
         {
@@ -37,6 +38,15 @@ namespace BackendFramework.Repositories
         {
             var filterDef = new FilterDefinitionBuilder<Word>();
             return filterDef.And(filterDef.Eq(w => w.ProjectId, projectId), filterDef.Eq(w => w.Id, wordId));
+        }
+
+        /// <summary> Creates a mongo filter for project words with specified wordId and audio. </summary>
+        private static FilterDefinition<Word> GetProjectWordWithAudioFilter(
+            string projectId, string wordId, string fileName)
+        {
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            return filterDef.And(filterDef.Eq(w => w.ProjectId, projectId), filterDef.Eq(w => w.Id, wordId),
+                filterDef.ElemMatch(w => w.Audio, a => a.FileName == fileName));
         }
 
         /// <summary> Creates a mongo filter for words in a specified project with specified wordIds. </summary>
@@ -250,23 +260,43 @@ namespace BackendFramework.Repositories
         }
 
         /// <summary> Removes <see cref="Word"/> from the Frontier with specified wordId and projectId </summary>
-        /// <returns> A bool: success of operation </returns>
-        public async Task<bool> DeleteFrontier(string projectId, string wordId)
+        /// <returns> The deleted word, or null if not found. </returns>
+        public async Task<Word?> DeleteFrontier(string projectId, string wordId, string? audioFileName = null)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
 
-            var deleted = await _frontier.DeleteOneAsync(GetProjectWordFilter(projectId, wordId));
-            return deleted.DeletedCount > 0;
+            return string.IsNullOrEmpty(audioFileName)
+                ? await _frontier.FindOneAndDeleteAsync(GetProjectWordFilter(projectId, wordId))
+                : await _frontier.FindOneAndDeleteAsync(
+                    GetProjectWordWithAudioFilter(projectId, wordId, audioFileName));
         }
 
         /// <summary> Removes <see cref="Word"/>s from the Frontier with specified wordIds and projectId </summary>
         /// <returns> Number of words deleted </returns>
-        public async Task<long> DeleteFrontier(string projectId, List<string> wordIds)
+        public async Task<long> DeleteFrontierWords(string projectId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting words from Frontier");
 
             var deleted = await _frontier.DeleteManyAsync(GetProjectWordsFilter(projectId, wordIds));
             return deleted.DeletedCount;
+        }
+
+        /// <summary>
+        /// Counts the number of Frontier words that have the specified semantic domain.
+        /// </summary>
+        /// <param name="projectId"> The project id </param>
+        /// <param name="domainId"> The semantic domain id </param>
+        /// <returns> The count of words containing at least one sense with the specified domain. </returns>
+        public async Task<int> CountFrontierWordsWithDomain(string projectId, string domainId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "counting frontier words with domain");
+
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.And(
+                filterDef.Eq(w => w.ProjectId, projectId),
+                filterDef.ElemMatch(w => w.Senses, s => s.SemanticDomains.Any(sd => sd.Id == domainId)));
+
+            return (int)await _frontier.CountDocumentsAsync(filter);
         }
     }
 }

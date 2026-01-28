@@ -11,7 +11,7 @@
 ### 输入已有数据
 
 如果用户已经有词典数据在 [LIFT](https://software.sil.org/lifttools) 文档(很可能是从 The
-Combine、[WeSay](https://software.sil.org/wesay)、[FLEx](https://software.sil.org/fieldworks)、或
+Combine、[FieldWorks](https://software.sil.org/fieldworks)、[WeSay](https://software.sil.org/wesay)、或
 [Lexique Pro](https://software.sil.org/lexiquepro)
 导出的)，只要点击“下载已有数据？”旁的“浏览”键, 就可将数据输入自己的项目。
 

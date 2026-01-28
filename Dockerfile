@@ -7,7 +7,7 @@
 ############################################################
 
 # User guide build environment
-FROM python:3.12.12-slim-bookworm@sha256:235ad56fa1e1407d8883bfcfc3b00fb6f24b43f46153a8163be60d6bb6099e39 AS user_guide_builder
+FROM python:3.12.12-slim-bookworm@sha256:28cf028e5a544e92dbe11450debd93dd5eb70eaf3179a9e878cfaee426556b3b AS user_guide_builder
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -24,19 +24,20 @@ COPY docs/user_guide docs/user_guide
 RUN tox -e user-guide
 
 # Frontend build environment.
-FROM node:22.21.1-bookworm-slim@sha256:4de72fb3998934a953f1bee37f0e0254b27c535200b7fe31040bdd8569f9d6da AS frontend_builder
+FROM node:22.21.1-bookworm-slim@sha256:7378f5a4830ef48eb36d1abf4ef398391db562b5c41a0bded83192fbcea21cc8 AS frontend_builder
 WORKDIR /app
 
 # Install app dependencies.
+COPY .npmrc ./
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --ignore-scripts
 
 # Build application.
 COPY . ./
 RUN npm run build
 
 # Production environment.
-FROM nginx:1.29.3@sha256:bd1578eec775d0b28fd7f664b182b7e1fb75f1dd09f92d865dababe8525dfe8b
+FROM nginx:1.29.4@sha256:ca871a86d45a3ec6864dc45f014b11fe626145569ef0e74deaffc95a3b15b430
 
 WORKDIR /app
 
