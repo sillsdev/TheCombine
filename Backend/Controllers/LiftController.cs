@@ -422,44 +422,13 @@ namespace BackendFramework.Controllers
             {
                 var requestId = _liftService.GenerateRequestId();
                 // Run retry logic in background without blocking
-                _ = Task.Run(() => SendWithRetry(requestId, userId));
+                _ = Task.Run(() => _ackTracker.SendWithRetryAsync(
+                    requestId,
+                    userId,
+                    () => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId),
+                    _logger));
             }
             return proceed;
-        }
-
-        private async Task SendWithRetry(string requestId, string userId)
-        {
-            _ackTracker.TrackRequest(requestId, userId);
-
-            // Initial send
-            await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId);
-            _logger.LogInformation("Sent success message with requestId {RequestId} to user {UserId}", requestId, userId);
-
-            // Wait 5 seconds
-            await Task.Delay(5000);
-            if (!_ackTracker.IsAcknowledged(requestId))
-            {
-                _logger.LogWarning("No acknowledgment received for requestId {RequestId} after 5 seconds. Retrying...", requestId);
-                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId);
-
-                // Wait another 10 seconds (15 total)
-                await Task.Delay(10000);
-                if (!_ackTracker.IsAcknowledged(requestId))
-                {
-                    _logger.LogWarning("No acknowledgment received for requestId {RequestId} after 15 seconds. Retrying...", requestId);
-                    await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId);
-
-                    // Wait another 15 seconds (30 total)
-                    await Task.Delay(15000);
-                    if (!_ackTracker.IsAcknowledged(requestId))
-                    {
-                        _logger.LogError("No acknowledgment received for requestId {RequestId} after 30 seconds. Giving up.", requestId);
-                    }
-                }
-            }
-
-            // Clean up
-            _ackTracker.RemoveRequest(requestId);
         }
 
         internal async Task<string> CreateLiftExport(string projectId)
