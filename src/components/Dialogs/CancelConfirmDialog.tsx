@@ -6,14 +6,15 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { type ReactElement, useState } from "react";
+import { type ReactElement, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import LoadingButton from "components/Buttons/LoadingButton";
 
-interface CancelConfirmDialogProps {
+export interface CancelConfirmDialogProps {
   open: boolean;
   text: string | ReactElement;
+  title?: string;
   handleCancel: () => void;
   handleConfirm: () => Promise<void> | void;
   buttonIdCancel?: string;
@@ -22,6 +23,7 @@ interface CancelConfirmDialogProps {
   buttonLabelConfirm?: string;
   disableBackdropClick?: boolean;
   disableEscapeKeyDown?: boolean;
+  focusOnConfirmButton?: boolean;
 }
 
 /**
@@ -30,10 +32,14 @@ interface CancelConfirmDialogProps {
 export default function CancelConfirmDialog(
   props: CancelConfirmDialogProps
 ): ReactElement {
+  const confirmButtonRef = useRef<HTMLButtonElement>(null);
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
 
   const onConfirm = async (): Promise<void> => {
+    if (loading) {
+      return;
+    }
     setLoading(true);
     await props.handleConfirm();
     setLoading(false);
@@ -52,15 +58,22 @@ export default function CancelConfirmDialog(
     props.handleCancel();
   };
 
+  const onEntered = (): void => {
+    if (props.focusOnConfirmButton) {
+      confirmButtonRef.current?.focus();
+    }
+  };
+
   return (
     <Dialog
       open={props.open}
       onClose={dialogOnClose}
+      slotProps={{ transition: { onEntered } }}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        {t("buttons.proceedWithCaution")}
+        {t(props.title || "buttons.proceedWithCaution")}
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
@@ -80,6 +93,7 @@ export default function CancelConfirmDialog(
           {t("buttons.cancel")}
         </Button>
         <LoadingButton
+          buttonRef={confirmButtonRef}
           buttonProps={{
             "aria-label": props.buttonLabelConfirm,
             "data-testid": props.buttonIdConfirm,
