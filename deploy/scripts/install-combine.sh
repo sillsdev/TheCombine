@@ -264,8 +264,8 @@ while (( "$#" )) ; do
   shift
 done
 
-# Check that we have a COMBINE_VERSION
-if [ -z "${COMBINE_VERSION}" ] ; then
+# Check that we have a COMBINE_VERSION (not needed for uninstall)
+if [[ "${STATE}" != "Uninstall-combine" && -z "${COMBINE_VERSION}" ]] ; then
   error "Combine version is not specified."
 fi
 
