@@ -13,6 +13,7 @@ export interface GoalsState {
   currentGoal: Goal;
   dataLoadStatus: DataLoadStatus;
   history: Goal[];
+  mergeRequestId?: string;
   previousGoalType: GoalType;
 }
 
@@ -28,5 +29,6 @@ export const defaultState: GoalsState = {
   currentGoal: new Goal(),
   dataLoadStatus: DataLoadStatus.Default,
   history: [],
+  mergeRequestId: undefined,
   previousGoalType: GoalType.Default,
 };

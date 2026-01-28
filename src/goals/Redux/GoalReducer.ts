@@ -73,6 +73,9 @@ const goalSlice = createSlice({
     setDataLoadStatusAction: (state, action) => {
       state.dataLoadStatus = action.payload;
     },
+    setMergeRequestIdAction: (state, action) => {
+      state.mergeRequestId = action.payload;
+    },
     setGoalDataAction: (state, action) => {
       if (action.payload.length > 0) {
         state.currentGoal.data = { plannedWords: action.payload };
@@ -108,6 +111,7 @@ export const {
   loadUserEditsAction,
   setCurrentGoalAction,
   setDataLoadStatusAction,
+  setMergeRequestIdAction,
   setGoalDataAction,
   setGoalStatusAction,
   updateStepFromDataAction,
