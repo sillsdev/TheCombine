@@ -46,11 +46,11 @@ export default function ProjectArchive(
       </Button>
       <CancelConfirmDialog
         open={open}
-        text={t(
+        text={
           props.archive
             ? "siteSettings.archiveProjectText"
             : "siteSettings.restoreProjectText"
-        )}
+        }
         handleCancel={() => setOpen(false)}
         handleConfirm={updateProj}
         buttonIdCancel={`proj-${props.projectId}-${

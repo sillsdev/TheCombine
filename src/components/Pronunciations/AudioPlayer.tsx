@@ -290,8 +290,8 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
       </Menu>
       <CancelConfirmDialog
         open={deleteConf}
-        text={t(props.warningTextId || "buttons.deletePermanently")}
-        titleId="pronunciations.deleteRecording"
+        text={props.warningTextId || "buttons.deletePermanently"}
+        title="pronunciations.deleteRecording"
         handleCancel={() => setDeleteConf(false)}
         handleConfirm={() => props.deleteAudio!(props.audio.fileName)}
         buttonIdCancel="audio-delete-cancel"
