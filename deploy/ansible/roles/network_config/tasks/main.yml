@@ -21,6 +21,12 @@
 
 - meta: flush_handlers
 
+- name: Ensure NetworkManager is started and enabled
+  systemd:
+    name: NetworkManager
+    state: started
+    enabled: yes
+
 ###
 # Create a virtual network interface so that k3s can run
 # when no ethernet connection is attached.
