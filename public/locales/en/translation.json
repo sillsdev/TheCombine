@@ -170,6 +170,7 @@
     "contact": "Contact info",
     "glossSuggestion": "Gloss spelling suggestions",
     "glossSuggestionHint": "In Data Entry, give spelling suggestions for the Gloss being typed.",
+    "noChanges": "No changes to save",
     "phone": "Phone number",
     "uiLanguage": "User-interface language",
     "uiLanguageDefault": "(Default to browser language)",
@@ -556,6 +557,7 @@
     "restore": "Restore",
     "save": "Save",
     "saveAndContinue": "Save & Continue",
+    "saveChanges": "Save changes",
     "undecided": "Undecided",
     "upload": "Upload"
   },

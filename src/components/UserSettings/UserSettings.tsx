@@ -49,7 +49,7 @@ enum UserSettingsIds {
 
 export enum UserSettingsTextId {
   ButtonChangeConsent = "userSettings.analyticsConsent.button",
-  ButtonSubmit = "buttons.save",
+  ButtonSubmit = "buttons.saveChanges",
   FieldEmail = "login.email",
   FieldEmailTaken = "login.emailTaken",
   FieldName = "login.name",
@@ -63,6 +63,7 @@ export enum UserSettingsTextId {
   TooltipEmailVerified = "userSettings.verifyEmail.emailVerified",
   TooltipEmailVerifying = "userSettings.verifyEmail.emailVerifying",
   TooltipGlossSuggestion = "userSettings.glossSuggestionHint",
+  TooltipSaveButtonDisabled = "userSettings.noChanges",
   TypographyAnalyticsConsent = "userSettings.analyticsConsent.title",
   TypographyAnalyticsConsentNo = "userSettings.analyticsConsent.consentNo",
   TypographyAnalyticsConsentYes = "userSettings.analyticsConsent.consentYes",
@@ -369,14 +370,24 @@ export function UserSettings(props: {
 
               {/* Save button */}
               <Grid2 container justifyContent="flex-end">
-                <Button
-                  disabled={disabled}
-                  id={UserSettingsIds.ButtonSubmit}
-                  type="submit"
-                  variant="contained"
+                <Tooltip
+                  title={
+                    disabled
+                      ? t(UserSettingsTextId.TooltipSaveButtonDisabled)
+                      : ""
+                  }
                 >
-                  {t(UserSettingsTextId.ButtonSubmit)}
-                </Button>
+                  <span>
+                    <Button
+                      disabled={disabled}
+                      id={UserSettingsIds.ButtonSubmit}
+                      type="submit"
+                      variant="contained"
+                    >
+                      {t(UserSettingsTextId.ButtonSubmit)}
+                    </Button>
+                  </span>
+                </Tooltip>
               </Grid2>
             </Stack>
           </form>
