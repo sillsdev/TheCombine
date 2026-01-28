@@ -10,9 +10,7 @@ jest.mock("backend", () => ({
   getUserProjects: (...args: any[]) => mockGetUserProjects(...args),
 }));
 
-const renderUserProjectsDialog = async (
-  user?: User
-): Promise<void> => {
+const renderUserProjectsDialog = async (user?: User): Promise<void> => {
   await act(async () => {
     render(<UserProjectsDialog user={user} />);
   });

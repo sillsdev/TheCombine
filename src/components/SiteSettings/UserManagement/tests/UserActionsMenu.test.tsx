@@ -42,7 +42,7 @@ describe("UserActionsMenu", () => {
   it("opens menu and shows Projects and Delete options when clicked", async () => {
     const agent = userEvent.setup();
     await renderUserActionsMenu();
-    
+
     const button = screen.getByRole("button");
     await agent.click(button);
 
@@ -56,7 +56,7 @@ describe("UserActionsMenu", () => {
   it("disables Delete menu item when disableDelete is true", async () => {
     const agent = userEvent.setup();
     await renderUserActionsMenu(testUser, true);
-    
+
     const button = screen.getByRole("button");
     await agent.click(button);
 
@@ -68,27 +68,26 @@ describe("UserActionsMenu", () => {
   it("calls onProjectsClick when Projects menu item is clicked", async () => {
     const agent = userEvent.setup();
     await renderUserActionsMenu();
-    
+
     const button = screen.getByRole("button");
     await agent.click(button);
-    
+
     const projectsItem = screen.getByText("siteSettings.userActions.projects");
     await agent.click(projectsItem);
-    
+
     expect(mockOnProjectsClick).toHaveBeenCalledTimes(1);
   });
 
   it("calls onDeleteClick when Delete menu item is clicked", async () => {
     const agent = userEvent.setup();
     await renderUserActionsMenu();
-    
+
     const button = screen.getByRole("button");
     await agent.click(button);
-    
+
     const deleteItem = screen.getByText("buttons.delete");
     await agent.click(deleteItem);
-    
+
     expect(mockOnDeleteClick).toHaveBeenCalledTimes(1);
   });
 });
-

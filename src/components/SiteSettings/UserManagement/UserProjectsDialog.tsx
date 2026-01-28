@@ -50,19 +50,14 @@ export default function UserProjectsDialog(
             {t("siteSettings.userProjects.loading")}
           </Typography>
         ) : projInfo.length ? (
-          <List
-            dense
-            disablePadding
-            sx={{ maxHeight: 400, overflowY: "auto" }}
-          >
+          <List dense disablePadding sx={{ maxHeight: 400, overflowY: "auto" }}>
             {projInfo.map((info) => (
               <ListItem key={info.projectId}>
                 <Typography
                   sx={info.projectIsActive ? {} : { color: "text.secondary" }}
                 >
                   • {info.projectName} (
-                  {t(`projectSettings.roles.${`${info.role}`.toLowerCase()}`)}
-                  )
+                  {t(`projectSettings.roles.${`${info.role}`.toLowerCase()}`)})
                 </Typography>
               </ListItem>
             ))}
