@@ -27,6 +27,7 @@ Key Sections:
   - [Specificity preferred](#specificity-preferred)
 - [`KeyboardEvent`s](#keyboardevents)
 - [Components](#components)
+  - [Component Props](#component-props)
 - [Function return type](#function-return-type)
 - [Hooks](#hooks)
 
@@ -499,6 +500,39 @@ class Component extends React.Component<ComponentProps, ComponentState> {
   }
 }
 ```
+
+### Component Props
+
+- Alphabetize React component props for consistency and readability.
+
+**Good**
+
+```tsx
+interface MyComponentProps {
+  className?: string;
+  id: string;
+  onClick: () => void;
+  title: string;
+}
+```
+
+**Bad**
+
+```tsx
+interface MyComponentProps {
+  title: string;
+  id: string;
+  onClick: () => void;
+  className?: string;
+}
+```
+
+> Reason: Consistent ordering makes props easier to find and reduces merge conflicts.
+
+This convention applies to:
+- Interface/type definitions for component props
+- Prop destructuring in function parameters
+- Props passed to components in JSX
 
 ## Function return type
 
