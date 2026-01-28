@@ -33,6 +33,13 @@
     group: root
     mode: 0755
 
+- name: Remove conflicting Docker apt configuration files
+  shell:
+    cmd: |
+      rm -f /etc/apt/keyrings/*docker* || true
+      rm -f /etc/apt/sources.list.d/*docker* || true
+  changed_when: false
+
 - name: Install Docker apt key
   shell:
     cmd: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o {{ keyring_location }}/docker.gpg"
