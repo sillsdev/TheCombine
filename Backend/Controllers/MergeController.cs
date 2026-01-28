@@ -16,21 +16,15 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/merge")]
-    public class MergeController : Controller
+    public class MergeController(IMergeService mergeService, IHubContext<MergeHub> notifyService,
+        IPermissionService permissionService, IAcknowledgmentTracker ackTracker) : Controller
     {
-        private readonly IMergeService _mergeService;
-        private readonly IHubContext<MergeHub> _notifyService;
-        private readonly IPermissionService _permissionService;
+        private readonly IMergeService _mergeService = mergeService;
+        private readonly IHubContext<MergeHub> _notifyService = notifyService;
+        private readonly IPermissionService _permissionService = permissionService;
+        private readonly IAcknowledgmentTracker _ackTracker = ackTracker;
 
         private const string otelTagName = "otel.MergeController";
-
-        public MergeController(
-            IMergeService mergeService, IHubContext<MergeHub> notifyService, IPermissionService permissionService)
-        {
-            _mergeService = mergeService;
-            _notifyService = notifyService;
-            _permissionService = permissionService;
-        }
 
         /// <summary> Merge children <see cref="Word"/>s with the parent </summary>
         /// <returns> List of ids of new words </returns>
@@ -159,7 +153,10 @@ namespace BackendFramework.Controllers
                 projectId, maxInList, maxLists, userId, ignoreProtected);
             if (success)
             {
-                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId);
+                var requestId = _mergeService.GenerateRequestId();
+                // Run retry logic in background without blocking
+                _ = Task.Run(() => _ackTracker.SendWithRetryAsync(requestId, userId,
+                    () => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId)));
             }
             return success;
         }

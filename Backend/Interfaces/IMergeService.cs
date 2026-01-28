@@ -20,5 +20,6 @@ namespace BackendFramework.Interfaces
         List<List<Word>>? RetrieveDups(string userId);
         Task<bool> HasGraylistEntries(string projectId, string? userId = null);
         Task<List<List<Word>>> GetGraylistEntries(string projectId, int maxLists, string? userId = null);
+        string GenerateRequestId();
     }
 }

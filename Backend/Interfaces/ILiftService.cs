@@ -25,6 +25,7 @@ namespace BackendFramework.Interfaces
         void StoreImport(string userId, string filePath);
         string? RetrieveImport(string userId);
         bool DeleteImport(string userId);
+        string GenerateRequestId();
     }
 
     public interface ILiftMerger : ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>

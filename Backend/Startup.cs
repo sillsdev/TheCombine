@@ -256,6 +256,9 @@ namespace BackendFramework
             // also to avoid leaking LanguageTag data
             services.AddSingleton<ILiftService, LiftService>();
 
+            // Acknowledgment Tracker - Singleton for shared state across requests
+            services.AddSingleton<IAcknowledgmentTracker, AcknowledgmentTracker>();
+
             // Merge types
             services.AddTransient<IMergeBlacklistRepository, MergeBlacklistRepository>();
             services.AddTransient<IMergeGraylistRepository, MergeGraylistRepository>();
