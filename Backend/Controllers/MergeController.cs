@@ -159,7 +159,8 @@ namespace BackendFramework.Controllers
                 projectId, maxInList, maxLists, userId, ignoreProtected);
             if (success)
             {
-                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId);
+                var requestId = _mergeService.GenerateRequestId();
+                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId);
             }
             return success;
         }

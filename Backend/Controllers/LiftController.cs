@@ -418,7 +418,8 @@ namespace BackendFramework.Controllers
             var proceed = _liftService.StoreExport(userId, exportedFilepath, exportId);
             if (proceed)
             {
-                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId);
+                var requestId = _liftService.GenerateRequestId();
+                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId);
             }
             return proceed;
         }
