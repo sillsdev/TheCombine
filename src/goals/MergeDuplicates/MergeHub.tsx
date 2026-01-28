@@ -18,9 +18,8 @@ export default function MergeHub(): ReactElement {
   /** Update the Redux state and trigger continuation of goal loading. */
   const successAction = async (dispatch: StoreStateDispatch): Promise<void> => {
     dispatch(setDataLoadStatus(DataLoadStatus.Success));
-    await dispatch(asyncLoadNewGoalData()).then(() =>
-      setDataLoadStatus(DataLoadStatus.Default)
-    );
+    await dispatch(asyncLoadNewGoalData());
+    dispatch(setDataLoadStatus(DataLoadStatus.Default));
   };
 
   return (
