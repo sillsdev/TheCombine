@@ -85,9 +85,10 @@ install-kubernetes () {
   fi
   EXTRA_VARS="-e k8s_user=${K8S_USER}"
   if [ -d "${DEPLOY_DIR}/airgap-images" ] ; then
-    EXTRA_VARS="${EXTRA_VARS} -e install_airgap_images=true"
+    EXTRA_VARS="${EXTRA_VARS} -e install_airgap_images=True"
   fi
   
+  export ANSIBLE_ALLOW_BROKEN_CONDITIONALS=True
   ansible-playbook playbook_desktop_setup.yml -K ${EXTRA_VARS} $(((DEBUG == 1)) && echo "-vv")
 }
 

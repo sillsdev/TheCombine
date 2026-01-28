@@ -2,5 +2,5 @@
 eth_update_period: 5s
 eth_update_program: /usr/local/bin/display-eth-addr
 
-install_ip_viewer: no
-install_combinectl: no
+install_ip_viewer: False
+install_combinectl: False
