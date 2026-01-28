@@ -422,11 +422,8 @@ namespace BackendFramework.Controllers
             {
                 var requestId = _liftService.GenerateRequestId();
                 // Run retry logic in background without blocking
-                _ = Task.Run(() => _ackTracker.SendWithRetryAsync(
-                    requestId,
-                    userId,
-                    () => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId),
-                    _logger));
+                _ = Task.Run(() => _ackTracker.SendWithRetryAsync(requestId, userId,
+                    () => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId)));
             }
             return proceed;
         }

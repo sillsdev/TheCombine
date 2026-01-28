@@ -19,7 +19,7 @@ namespace Backend.Tests.Mocks
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
             Func<TState, Exception?, string> formatter)
         {
-            // No-op for tests
+            Console.WriteLine($"{logLevel}: {eventId} {state} {exception?.Message ?? ""}");
         }
     }
 }

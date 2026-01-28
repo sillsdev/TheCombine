@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace BackendFramework.Interfaces
 {
@@ -15,7 +14,6 @@ namespace BackendFramework.Interfaces
         /// <param name="requestId">Unique identifier for the request</param>
         /// <param name="userId">User ID for the message</param>
         /// <param name="sendMessageAsync">Async function to send the message</param>
-        /// <param name="logger">Logger for tracking retry attempts</param>
-        Task SendWithRetryAsync(string requestId, string userId, Func<Task> sendMessageAsync, ILogger logger);
+        Task SendWithRetryAsync(string requestId, string userId, Func<Task> sendMessageAsync);
     }
 }

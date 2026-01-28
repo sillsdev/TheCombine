@@ -12,7 +12,6 @@ using BackendFramework.Models;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using static System.Linq.Enumerable;
 
@@ -50,11 +49,10 @@ namespace Backend.Tests.Controllers
             _wordRepo = new WordRepositoryMock();
             _liftService = new LiftService();
             _wordService = new WordService(_wordRepo);
-            var ackTracker = new BackendFramework.Services.AcknowledgmentTracker();
-            var logger = new LoggerMock<LiftController>();
+            var ackTracker = new AcknowledgmentTracker(new LoggerMock<AcknowledgmentTracker>());
             _liftController = new LiftController(_projRepo, new SemanticDomainRepositoryMock(), _speakerRepo,
                 _wordRepo, _liftService, new HubContextMock<ExportHub>(), new PermissionServiceMock(),
-                ackTracker, logger);
+                ackTracker, new LoggerMock<LiftController>());
 
             _projId = _projRepo.Create(new Project { Name = ProjName }).Result!.Id;
             _file = new FormFile(_stream, 0, _stream.Length, "Name", FileName);
@@ -656,33 +654,6 @@ namespace Backend.Tests.Controllers
             foreach (var project in new List<Project> { proj1, proj2 })
             {
                 _projRepo.Delete(project.Id);
-            }
-        }
-
-        private sealed class MockLogger : ILogger<LiftController>
-        {
-#pragma warning disable CS8633
-            public IDisposable BeginScope<TState>(TState state)
-#pragma warning restore CS8633
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool IsEnabled(LogLevel logLevel)
-            {
-                return true;
-            }
-
-            public void Log<TState>(
-                LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception, string> formatter)
-            {
-                var message = "";
-                if (exception is not null)
-                {
-                    message = exception.Message;
-                }
-
-                Console.WriteLine($"{logLevel}: {eventId} {state} {message}");
             }
         }
     }
