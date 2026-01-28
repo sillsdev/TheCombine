@@ -11,19 +11,20 @@ namespace Backend.Tests.Services
 {
     internal sealed class StatisticsServiceTests
     {
-        private ISemanticDomainRepository _domainRepo = null!;
+        private ISemanticDomainRepository _semDomRepo = null!;
+        private ISemanticDomainCountRepository _semDomCountRepo = null!;
         private IUserRepository _userRepo = null!;
         private IWordRepository _wordRepo = null!;
         private IStatisticsService _statsService = null!;
 
         private const string ProjId = "StatsServiceTestProjId";
         private const string SemDomId = "StatsServiceTestSemDomId";
-        private readonly List<DateTime> NonEmptySchedule = new() { DateTime.Now };
-        private readonly List<SemanticDomainTreeNode> TreeNodes = new() { new(new SemanticDomain { Id = SemDomId }) };
+        private readonly List<DateTime> NonEmptySchedule = [DateTime.Now];
+        private readonly List<SemanticDomainTreeNode> TreeNodes = [new(new SemanticDomain { Id = SemDomId })];
 
         private static Sense GetSenseWithDomain(string semDomId = SemDomId)
         {
-            return new() { SemanticDomains = new() { new() { Id = semDomId } } };
+            return new() { SemanticDomains = [new() { Id = semDomId }] };
         }
         private static User GetUserWithProjId(string projId = ProjId)
         {
@@ -37,7 +38,7 @@ namespace Backend.Tests.Services
             {
                 Id = Util.RandString(10),
                 ProjectId = ProjId,
-                Senses = new() { GetSenseWithDomain(semDomId) },
+                Senses = [GetSenseWithDomain(semDomId)],
                 Vernacular = Util.RandString(10)
             };
         }
@@ -45,17 +46,18 @@ namespace Backend.Tests.Services
         [SetUp]
         public void Setup()
         {
-            _domainRepo = new SemanticDomainRepositoryMock();
+            _semDomRepo = new SemanticDomainRepositoryMock();
+            _semDomCountRepo = new SemanticDomainCountRepositoryMock();
             _userRepo = new UserRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _statsService = new StatisticsService(_wordRepo, _domainRepo, _userRepo);
+            _statsService = new StatisticsService(_semDomRepo, _semDomCountRepo, _userRepo, _wordRepo);
         }
 
         [Test]
         public void GetSemanticDomainCountsTestNullDomainList()
         {
-            // Add a word to the database and leave the semantic domain list null
-            _wordRepo.AddFrontier(GetWordWithDomain());
+            // Add a domain count to the database and leave the semantic domain list null
+            _semDomCountRepo.Increment(ProjId, SemDomId).Wait();
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Is.Empty);
@@ -64,30 +66,31 @@ namespace Backend.Tests.Services
         [Test]
         public void GetSemanticDomainCountsTestEmptyDomainList()
         {
-            // Add to the database a word and an empty list of semantic domains
-            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(new List<SemanticDomainTreeNode>());
-            _wordRepo.AddFrontier(GetWordWithDomain());
+            // Add to the database an empty list of semantic domains and a domain count
+            ((SemanticDomainRepositoryMock)_semDomRepo).SetNextResponse(new List<SemanticDomainTreeNode>());
+            _semDomCountRepo.Increment(ProjId, SemDomId).Wait();
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Is.Empty);
         }
 
         [Test]
-        public void GetSemanticDomainCountsTestEmptyFrontier()
+        public void GetSemanticDomainCountsTestEmptyCounts()
         {
             // Add to the database a semantic domain but no word
-            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodes);
+            ((SemanticDomainRepositoryMock)_semDomRepo).SetNextResponse(TreeNodes);
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
-            Assert.That(result, Is.Empty);
+            Assert.That(result, Is.Not.Empty);
+            Assert.That(result.First().Count, Is.EqualTo(0));
         }
 
         [Test]
         public void GetSemanticDomainCountsTestIdMismatch()
         {
-            // Add to the database a semantic domain and a word with a different semantic domain
-            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodes);
-            _wordRepo.AddFrontier(GetWordWithDomain("different-id"));
+            // Add to the database a semantic domain and count with a different domain id
+            ((SemanticDomainRepositoryMock)_semDomRepo).SetNextResponse(TreeNodes);
+            _semDomCountRepo.Increment(ProjId, "DifferentId").Wait();
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Has.Count.EqualTo(1));
@@ -97,9 +100,9 @@ namespace Backend.Tests.Services
         [Test]
         public void GetSemanticDomainCountsTestIdMatch()
         {
-            // Add to the database a semantic domain and a word with the same semantic domain
-            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodes);
-            _wordRepo.AddFrontier(GetWordWithDomain());
+            // Add to the database a semantic domain and a corresponding count
+            ((SemanticDomainRepositoryMock)_semDomRepo).SetNextResponse(TreeNodes);
+            _semDomCountRepo.Increment(ProjId, SemDomId).Wait();
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Has.Count.EqualTo(1));

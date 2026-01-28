@@ -1,0 +1,45 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BackendFramework.Interfaces;
+using BackendFramework.Models;
+
+namespace Backend.Tests.Mocks
+{
+    public sealed class SemanticDomainCountRepositoryMock : ISemanticDomainCountRepository
+    {
+        private readonly List<ProjectSemanticDomainCount> _counts = [];
+
+        public Task<int> GetCount(string projectId, string domainId)
+        {
+            var count = _counts.FirstOrDefault(c => c.ProjectId == projectId && c.DomainId == domainId);
+            return Task.FromResult(count?.Count ?? 0);
+        }
+
+        public Task<List<ProjectSemanticDomainCount>> GetAllCounts(string projectId)
+        {
+            var counts = _counts.Where(c => c.ProjectId == projectId).Select(c => c.Clone()).ToList();
+            return Task.FromResult(counts);
+        }
+
+        public Task<int> Increment(string projectId, string domainId, int amount = 1)
+        {
+            var count = _counts.FirstOrDefault(c => c.ProjectId == projectId && c.DomainId == domainId);
+            if (count is null)
+            {
+                count = new(projectId, domainId, amount) { Id = Util.RandString() };
+                _counts.Add(count);
+            }
+            else
+            {
+                count.Count += amount;
+            }
+            return Task.FromResult(count.Count);
+        }
+
+        public Task<int> DeleteAllCounts(string projectId)
+        {
+            return Task.FromResult(_counts.RemoveAll(c => c.ProjectId == projectId));
+        }
+    }
+}

@@ -43,7 +43,7 @@ namespace BackendFramework.Controllers
             }
             var userId = _permissionService.GetUserId(HttpContext);
 
-            var deletedWordId = await _wordService.DeleteFrontierWord(projectId, userId, wordId);
+            var deletedWordId = await _wordService.MakeFrontierDeleted(projectId, userId, wordId);
             return deletedWordId is null ? NotFound() : Ok();
         }
 
@@ -304,23 +304,6 @@ namespace BackendFramework.Controllers
                 }
             }
             return Ok(updates);
-        }
-
-        /// <summary> Get the count of frontier words with senses in a specific semantic domain </summary>
-        /// <returns> An integer count </returns>
-        [HttpGet("domainwordcount/{domainId}", Name = "GetDomainWordCount")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> GetDomainWordCount(string projectId, string domainId)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain word count");
-
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
-            {
-                return Forbid();
-            }
-
-            return Ok(await _wordRepo.CountFrontierWordsWithDomain(projectId, domainId));
         }
     }
 }
