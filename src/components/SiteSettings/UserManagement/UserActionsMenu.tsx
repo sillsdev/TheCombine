@@ -46,7 +46,7 @@ export default function UserActionsMenu(
           }}
         >
           <Folder style={{ marginInlineEnd: 6 }} />
-          {t("siteSettings.userActions.projects")}
+          {t("siteSettings.projectList")}
         </MenuItem>
         <MenuItem
           disabled={props.disableDelete}

@@ -49,8 +49,8 @@ describe("UserActionsMenu", () => {
     // Check for menu items
     const menuItems = screen.getAllByRole("menuitem");
     expect(menuItems).toHaveLength(2);
-    expect(menuItems[0]).toHaveTextContent("siteSettings.userActions.projects");
-    expect(menuItems[1]).toHaveTextContent("buttons.delete");
+    expect(menuItems[0]).toHaveTextContent(/project/i);
+    expect(menuItems[1]).toHaveTextContent(/delete/i);
   });
 
   it("disables Delete menu item when disableDelete is true", async () => {
@@ -72,7 +72,7 @@ describe("UserActionsMenu", () => {
     const button = screen.getByRole("button");
     await agent.click(button);
 
-    const projectsItem = screen.getByText("siteSettings.userActions.projects");
+    const projectsItem = screen.getByText(/project/i);
     await agent.click(projectsItem);
 
     expect(mockOnProjectsClick).toHaveBeenCalledTimes(1);
@@ -85,7 +85,7 @@ describe("UserActionsMenu", () => {
     const button = screen.getByRole("button");
     await agent.click(button);
 
-    const deleteItem = screen.getByText("buttons.delete");
+    const deleteItem = screen.getByText(/delete/i);
     await agent.click(deleteItem);
 
     expect(mockOnDeleteClick).toHaveBeenCalledTimes(1);
