@@ -6,9 +6,8 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { type KeyboardEvent, type ReactElement, useState } from "react";
+import { type ReactElement, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Key } from "ts-key-enum";
 
 import LoadingButton from "components/Buttons/LoadingButton";
 
@@ -24,7 +23,7 @@ export interface CancelConfirmDialogProps {
   buttonLabelConfirm?: string;
   disableBackdropClick?: boolean;
   disableEscapeKeyDown?: boolean;
-  enableEnterKeyDown?: boolean;
+  focusOnConfirmButton?: boolean;
 }
 
 /**
@@ -33,6 +32,7 @@ export interface CancelConfirmDialogProps {
 export default function CancelConfirmDialog(
   props: CancelConfirmDialogProps
 ): ReactElement {
+  const confirmButtonRef = useRef<HTMLButtonElement>(null);
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
 
@@ -58,9 +58,9 @@ export default function CancelConfirmDialog(
     props.handleCancel();
   };
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
-    if (event.key === Key.Enter && !loading && props.enableEnterKeyDown) {
-      onConfirm();
+  const onEntered = (): void => {
+    if (props.focusOnConfirmButton) {
+      confirmButtonRef.current?.focus();
     }
   };
 
@@ -68,7 +68,7 @@ export default function CancelConfirmDialog(
     <Dialog
       open={props.open}
       onClose={dialogOnClose}
-      onKeyDown={handleKeyDown}
+      slotProps={{ transition: { onEntered } }}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
@@ -93,6 +93,7 @@ export default function CancelConfirmDialog(
           {t("buttons.cancel")}
         </Button>
         <LoadingButton
+          buttonRef={confirmButtonRef}
           buttonProps={{
             "aria-label": props.buttonLabelConfirm,
             "data-testid": props.buttonIdConfirm,

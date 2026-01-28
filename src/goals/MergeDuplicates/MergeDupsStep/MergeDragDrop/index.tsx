@@ -301,7 +301,7 @@ export default function MergeDragDrop(): ReactElement {
             text={override?.protectReason ?? ""}
             handleCancel={() => setOverride(undefined)}
             handleConfirm={onConfirmOverride}
-            enableEnterKeyDown
+            focusOnConfirmButton
           />
 
           <CancelConfirmDialog
@@ -309,7 +309,7 @@ export default function MergeDragDrop(): ReactElement {
             text="mergeDups.helpText.deleteDialog"
             handleCancel={() => setSrcToDelete(undefined)}
             handleConfirm={onConfirmDelete}
-            enableEnterKeyDown
+            focusOnConfirmButton
           />
         </ImageList>
       </Grid2>
