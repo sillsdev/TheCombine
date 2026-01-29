@@ -319,16 +319,17 @@ export const WordApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getProjectFrontierWords: async (
+    getFrontierCount: async (
       projectId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("getProjectFrontierWords", "projectId", projectId);
-      const localVarPath = `/v1/projects/{projectId}/words/frontier`.replace(
-        `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
-      );
+      assertParamExists("getFrontierCount", "projectId", projectId);
+      const localVarPath =
+        `/v1/projects/{projectId}/words/frontiercount`.replace(
+          `{${"projectId"}}`,
+          encodeURIComponent(String(projectId))
+        );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -364,13 +365,13 @@ export const WordApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getProjectWords: async (
+    getProjectFrontierWords: async (
       projectId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("getProjectWords", "projectId", projectId);
-      const localVarPath = `/v1/projects/{projectId}/words`.replace(
+      assertParamExists("getProjectFrontierWords", "projectId", projectId);
+      const localVarPath = `/v1/projects/{projectId}/words/frontier`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
       );
@@ -916,17 +917,14 @@ export const WordApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async getProjectFrontierWords(
+    async getFrontierCount(
       projectId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Word>>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.getProjectFrontierWords(
-          projectId,
-          options
-        );
+        await localVarAxiosParamCreator.getFrontierCount(projectId, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -940,16 +938,17 @@ export const WordApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async getProjectWords(
+    async getProjectFrontierWords(
       projectId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Word>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getProjectWords(
-        projectId,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getProjectFrontierWords(
+          projectId,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -1243,12 +1242,9 @@ export const WordApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getProjectFrontierWords(
-      projectId: string,
-      options?: any
-    ): AxiosPromise<Array<Word>> {
+    getFrontierCount(projectId: string, options?: any): AxiosPromise<number> {
       return localVarFp
-        .getProjectFrontierWords(projectId, options)
+        .getFrontierCount(projectId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1257,12 +1253,12 @@ export const WordApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getProjectWords(
+    getProjectFrontierWords(
       projectId: string,
       options?: any
     ): AxiosPromise<Array<Word>> {
       return localVarFp
-        .getProjectWords(projectId, options)
+        .getProjectFrontierWords(projectId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1485,6 +1481,20 @@ export interface WordApiGetDuplicateIdRequest {
 }
 
 /**
+ * Request parameters for getFrontierCount operation in WordApi.
+ * @export
+ * @interface WordApiGetFrontierCountRequest
+ */
+export interface WordApiGetFrontierCountRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiGetFrontierCount
+   */
+  readonly projectId: string;
+}
+
+/**
  * Request parameters for getProjectFrontierWords operation in WordApi.
  * @export
  * @interface WordApiGetProjectFrontierWordsRequest
@@ -1494,20 +1504,6 @@ export interface WordApiGetProjectFrontierWordsRequest {
    *
    * @type {string}
    * @memberof WordApiGetProjectFrontierWords
-   */
-  readonly projectId: string;
-}
-
-/**
- * Request parameters for getProjectWords operation in WordApi.
- * @export
- * @interface WordApiGetProjectWordsRequest
- */
-export interface WordApiGetProjectWordsRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof WordApiGetProjectWords
    */
   readonly projectId: string;
 }
@@ -1771,6 +1767,22 @@ export class WordApi extends BaseAPI {
 
   /**
    *
+   * @param {WordApiGetFrontierCountRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof WordApi
+   */
+  public getFrontierCount(
+    requestParameters: WordApiGetFrontierCountRequest,
+    options?: any
+  ) {
+    return WordApiFp(this.configuration)
+      .getFrontierCount(requestParameters.projectId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
    * @param {WordApiGetProjectFrontierWordsRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -1782,22 +1794,6 @@ export class WordApi extends BaseAPI {
   ) {
     return WordApiFp(this.configuration)
       .getProjectFrontierWords(requestParameters.projectId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {WordApiGetProjectWordsRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof WordApi
-   */
-  public getProjectWords(
-    requestParameters: WordApiGetProjectWordsRequest,
-    options?: any
-  ) {
-    return WordApiFp(this.configuration)
-      .getProjectWords(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
