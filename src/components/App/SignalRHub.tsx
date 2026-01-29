@@ -92,16 +92,18 @@ export default function SignalRHub(props: SignalRHubProps): ReactElement {
 
   /** Handler used by connection.on for when the success method is invoked. */
   const successMethod = useCallback(
-    async (userId: string, requestId: string): Promise<void> => {
+    (userId: string, requestId: string): void => {
       if (userId === getUserId()) {
-        // Send acknowledgment to the server
-        try {
-          await connection!.invoke(acknowledgeMethodName, requestId);
-        } catch (error) {
-          console.warn("Failed to send acknowledgment:", error);
-        }
-
         dispatch(successAction);
+
+        // Send acknowledgment to the server
+        if (connection) {
+          void connection
+            .invoke(acknowledgeMethodName, requestId)
+            .catch((err) => console.warn("Failed to acknowledge:", err));
+        } else {
+          console.warn("Cannot acknowledge: no connection to server.");
+        }
       }
     },
     [connection, dispatch, successAction]
