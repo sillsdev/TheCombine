@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -44,31 +43,30 @@ namespace BackendFramework.Services
         }
 
         /// <summary>
-        /// Retry sending a message until acknowledged or retries exhausted.
+        /// Retry sending a message until acknowledged.
         /// </summary>
         /// <param name="requestId">Unique identifier for the request</param>
         /// <param name="sendMessageAsync">Async function to send the message</param>
-        /// <param name="delaySeconds">Seconds to delay before each (re)send</param>
-        private async Task SendAfterDelays(string requestId, Func<Task> sendMessageAsync, int[] delaySeconds)
+        /// <param name="sendCount">Max number of send attempts</param>
+        /// <param name="delaySeconds">Seconds to delay before each resend</param>
+        private async Task SendUntilAcknowledged(
+            string requestId, Func<Task> sendMessageAsync, int sendCount = 6, int delaySeconds = 5)
         {
-            var total = delaySeconds.Sum();
-            var subtotal = 0;
-
-            foreach (var delay in delaySeconds)
+            for (int sent = 0; sent <= sendCount; sent++)
             {
-                await Task.Delay(delay * 1000);
+                await Task.Delay(delaySeconds * 1000);
                 if (IsAcknowledged(requestId))
                 {
                     break;
                 }
 
-                subtotal += delay;
-                if (subtotal <= 0)
+                var subtotal = sent * delaySeconds;
+                if (sent == 0)
                 {
                     await sendMessageAsync();
                     logger.LogInformation("Sent message with requestId {RequestId}", requestId);
                 }
-                else if (subtotal < total)
+                else if (sent < sendCount)
                 {
                     logger.LogWarning("Message {RequestId} unacknowledged after {Seconds} seconds. Retrying...",
                         requestId, subtotal
@@ -99,7 +97,7 @@ namespace BackendFramework.Services
             try
             {
                 // Send message with retries if unacknowledged
-                await SendAfterDelays(requestId, () => sendMessageAsync(requestId), [0, 5, 10, 15]);
+                await SendUntilAcknowledged(requestId, () => sendMessageAsync(requestId));
             }
             catch (Exception e)
             {
