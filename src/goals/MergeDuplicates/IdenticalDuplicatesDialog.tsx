@@ -1,3 +1,4 @@
+import { Celebration, LayersOutlined, Warning } from "@mui/icons-material";
 import {
   Button,
   Dialog,
@@ -5,6 +6,7 @@ import {
   DialogContent,
   DialogTitle,
   Stack,
+  SxProps,
   Typography,
 } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
@@ -20,6 +22,12 @@ import { Path } from "types/path";
 
 // Threshold for warning about long processing time
 const LARGE_PROJECT_THRESHOLD = 1000;
+
+const startIconSx: SxProps = {
+  fontSize: "inherit",
+  marginInlineEnd: 1,
+  verticalAlign: "middle",
+};
 
 export default function IdenticalDuplicatesDialog(props: {
   loading?: boolean;
@@ -55,11 +63,13 @@ export default function IdenticalDuplicatesDialog(props: {
       <DialogContent>
         <Stack spacing={2}>
           <Typography>
+            <Celebration sx={startIconSx} />
             {t("mergeDups.identicalCompleted.congratulations")}
           </Typography>
 
           {hasDeferred && (
             <Typography>
+              <LayersOutlined sx={startIconSx} />
               {t("mergeDups.identicalCompleted.hasDeferred")}
             </Typography>
           )}
@@ -71,7 +81,8 @@ export default function IdenticalDuplicatesDialog(props: {
                   {t("mergeDups.identicalCompleted.findingSimilar")}
                 </Typography>
                 {frontierCount > LARGE_PROJECT_THRESHOLD && (
-                  <Typography color="warning.main">
+                  <Typography>
+                    <Warning sx={startIconSx} />
                     {t("mergeDups.identicalCompleted.warning")}
                   </Typography>
                 )}
@@ -91,7 +102,11 @@ export default function IdenticalDuplicatesDialog(props: {
           </Button>
         )}
         {hasDeferred && (
-          <Button onClick={handleReviewDeferred} variant="outlined">
+          <Button
+            onClick={handleReviewDeferred}
+            startIcon={<LayersOutlined />}
+            variant="outlined"
+          >
             {t("mergeDups.identicalCompleted.reviewDeferred")}
           </Button>
         )}
