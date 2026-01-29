@@ -54,6 +54,13 @@ namespace BackendFramework.Services
         {
             for (int sent = 0; sent <= sendCount; sent++)
             {
+                if (sent == 0)
+                {
+                    await sendMessageAsync();
+                    logger.LogInformation("Sent message with requestId {RequestId}", requestId);
+                    continue;
+                }
+
                 await Task.Delay(delaySeconds * 1000);
                 if (IsAcknowledged(requestId))
                 {
@@ -61,12 +68,7 @@ namespace BackendFramework.Services
                 }
 
                 var subtotal = sent * delaySeconds;
-                if (sent == 0)
-                {
-                    await sendMessageAsync();
-                    logger.LogInformation("Sent message with requestId {RequestId}", requestId);
-                }
-                else if (sent < sendCount)
+                if (sent < sendCount)
                 {
                     logger.LogWarning("Message {RequestId} unacknowledged after {Seconds} seconds. Retrying...",
                         requestId, subtotal
