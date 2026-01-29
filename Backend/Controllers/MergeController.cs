@@ -153,10 +153,8 @@ namespace BackendFramework.Controllers
                 projectId, maxInList, maxLists, userId, ignoreProtected);
             if (success)
             {
-                var requestId = _mergeService.GenerateRequestId();
-                // Run retry logic in background without blocking
-                _ = Task.Run(() => _ackTracker.SendWithRetryAsync(requestId, userId,
-                    () => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId)));
+                _ackTracker.SendWithRetryTaskRun(userId,
+                    requestId => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId));
             }
             return success;
         }

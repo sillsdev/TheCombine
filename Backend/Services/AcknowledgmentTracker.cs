@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -36,53 +37,82 @@ namespace BackendFramework.Services
 
         public void MarkAcknowledged(string requestId)
         {
-            if (_pendingAcks.TryGetValue(requestId, out _))
+            if (_pendingAcks.TryUpdate(requestId, true, false))
             {
-                _pendingAcks[requestId] = true;
                 logger.LogInformation("Message with requestId {RequestId} acknowledged", requestId);
             }
         }
 
         /// <summary>
-        /// Send a message with automatic retry logic if acknowledgment is not received.
+        /// Retry sending a message until acknowledged or retries exhausted.
         /// </summary>
         /// <param name="requestId">Unique identifier for the request</param>
-        /// <param name="userId">User ID for the message</param>
         /// <param name="sendMessageAsync">Async function to send the message</param>
-        public async Task SendWithRetryAsync(string requestId, string userId, Func<Task> sendMessageAsync)
+        /// <param name="delaySeconds">Seconds to delay before each (re)send</param>
+        private async Task SendAfterDelays(string requestId, Func<Task> sendMessageAsync, int[] delaySeconds)
         {
-            // Add request to tracking dictionary
-            TrackRequest(requestId);
+            var total = delaySeconds.Sum();
+            var subtotal = 0;
 
-            // Initial send
-            await sendMessageAsync();
-            logger.LogInformation("Sent message with requestId {RequestId} to user {UserId}", requestId, userId);
-
-            // Wait 5 seconds
-            await Task.Delay(5000);
-            if (!IsAcknowledged(requestId))
+            foreach (var delay in delaySeconds)
             {
-                logger.LogWarning("Message {RequestId} unacknowledged after 5 seconds. Retrying...", requestId);
-                await sendMessageAsync();
-
-                // Wait another 10 seconds (15 total)
-                await Task.Delay(10000);
-                if (!IsAcknowledged(requestId))
+                await Task.Delay(delay * 1000);
+                if (IsAcknowledged(requestId))
                 {
-                    logger.LogWarning("Message {RequestId} unacknowledged after 15 seconds. Retrying...", requestId);
-                    await sendMessageAsync();
+                    break;
+                }
 
-                    // Wait another 15 seconds (30 total)
-                    await Task.Delay(15000);
-                    if (!IsAcknowledged(requestId))
-                    {
-                        logger.LogError("Message {RequestId} unacknowledged after 30 seconds. Giving up.", requestId);
-                    }
+                subtotal += delay;
+                if (subtotal <= 0)
+                {
+                    await sendMessageAsync();
+                    logger.LogInformation("Sent message with requestId {RequestId}", requestId);
+                }
+                else if (subtotal < total)
+                {
+                    logger.LogWarning("Message {RequestId} unacknowledged after {Seconds} seconds. Retrying...",
+                        requestId, subtotal
+                    );
+                    await sendMessageAsync();
+                }
+                else
+                {
+                    logger.LogError("Message {RequestId} unacknowledged after {Seconds} seconds. Giving up.",
+                        requestId, subtotal);
                 }
             }
+        }
 
-            // Clean up
-            RemoveRequest(requestId);
+        /// <summary>
+        /// Fire-and-forget send (with retries) to avoid blocking callers.
+        /// </summary>
+        /// <param name="userId">User ID for the message</param>
+        /// <param name="sendMessageAsync">Async function to send the message</param>
+        public void SendWithRetryTaskRun(string userId, Func<string, Task> sendMessageAsync)
+        {
+            var requestId = Guid.NewGuid().ToString();
+            logger.LogInformation("Sending message with requestId {RequestId} to user {UserId}", requestId, userId);
+
+            _ = Task.Run(async () =>
+           {
+               // Add request to tracking dictionary
+               TrackRequest(requestId);
+
+               try
+               {
+                   // Send message with retries if unacknowledged
+                   await SendAfterDelays(requestId, () => sendMessageAsync(requestId), [0, 5, 10, 15]);
+               }
+               catch (Exception e)
+               {
+                   logger.LogError(e, "Failed to send message {RequestId} to user {UserId}", requestId, userId);
+               }
+               finally
+               {
+                   // Clean up
+                   RemoveRequest(requestId);
+               }
+           });
         }
     }
 }

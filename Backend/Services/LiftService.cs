@@ -222,13 +222,6 @@ namespace BackendFramework.Services
             return removeSuccessful;
         }
 
-        /// <summary> Generate a unique request ID for tracking SignalR message delivery. </summary>
-        /// <returns> A unique request ID. </returns>
-        public string GenerateRequestId()
-        {
-            return Guid.NewGuid().ToString();
-        }
-
         /// <summary> Imports main character set for a project from an ldml file. </summary>
         /// <returns> A bool indicating whether a character set was added to the project. </returns>
         public async Task<bool> LdmlImport(string dirPath, IProjectRepository projRepo, Project project)

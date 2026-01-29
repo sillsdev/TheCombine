@@ -420,10 +420,8 @@ namespace BackendFramework.Controllers
             var proceed = _liftService.StoreExport(userId, exportedFilepath, exportId);
             if (proceed)
             {
-                var requestId = _liftService.GenerateRequestId();
-                // Run retry logic in background without blocking
-                _ = Task.Run(() => _ackTracker.SendWithRetryAsync(requestId, userId,
-                    () => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId)));
+                _ackTracker.SendWithRetryTaskRun(userId,
+                    requestId => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId));
             }
             return proceed;
         }

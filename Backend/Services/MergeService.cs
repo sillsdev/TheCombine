@@ -461,13 +461,6 @@ namespace BackendFramework.Services
             return wordLists;
         }
 
-        /// <summary> Generate a unique request ID for tracking SignalR message delivery. </summary>
-        /// <returns> A unique request ID. </returns>
-        public string GenerateRequestId()
-        {
-            return Guid.NewGuid().ToString();
-        }
-
         public sealed class InvalidMergeWordSetException : Exception
         {
             public InvalidMergeWordSetException() { }
