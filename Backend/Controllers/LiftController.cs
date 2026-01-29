@@ -420,7 +420,7 @@ namespace BackendFramework.Controllers
             var proceed = _liftService.StoreExport(userId, exportedFilepath, exportId);
             if (proceed)
             {
-                _ackTracker.SendWithRetryTaskRun(userId,
+                await _ackTracker.SendWithRetry(userId,
                     requestId => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId));
             }
             return proceed;

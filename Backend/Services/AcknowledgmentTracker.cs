@@ -84,35 +84,32 @@ namespace BackendFramework.Services
         }
 
         /// <summary>
-        /// Fire-and-forget send (with retries) to avoid blocking callers.
+        /// Send a message with automatic retry for acknowledgment.
         /// </summary>
         /// <param name="userId">User ID for the message</param>
         /// <param name="sendMessageAsync">Async function to send the message</param>
-        public void SendWithRetryTaskRun(string userId, Func<string, Task> sendMessageAsync)
+        public async Task SendWithRetry(string userId, Func<string, Task> sendMessageAsync)
         {
             var requestId = Guid.NewGuid().ToString();
             logger.LogInformation("Sending message with requestId {RequestId} to user {UserId}", requestId, userId);
 
-            _ = Task.Run(async () =>
-           {
-               // Add request to tracking dictionary
-               TrackRequest(requestId);
+            // Add request to tracking dictionary
+            TrackRequest(requestId);
 
-               try
-               {
-                   // Send message with retries if unacknowledged
-                   await SendAfterDelays(requestId, () => sendMessageAsync(requestId), [0, 5, 10, 15]);
-               }
-               catch (Exception e)
-               {
-                   logger.LogError(e, "Failed to send message {RequestId} to user {UserId}", requestId, userId);
-               }
-               finally
-               {
-                   // Clean up
-                   RemoveRequest(requestId);
-               }
-           });
+            try
+            {
+                // Send message with retries if unacknowledged
+                await SendAfterDelays(requestId, () => sendMessageAsync(requestId), [0, 5, 10, 15]);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Failed to send message {RequestId} to user {UserId}", requestId, userId);
+            }
+            finally
+            {
+                // Clean up
+                RemoveRequest(requestId);
+            }
         }
     }
 }

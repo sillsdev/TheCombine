@@ -9,10 +9,10 @@ namespace BackendFramework.Interfaces
         void MarkAcknowledged(string requestId);
 
         /// <summary>
-        /// Fire-and-forget sending a message with automatic retry for acknowledgment.
+        /// Send a message with automatic retry for acknowledgment.
         /// </summary>
         /// <param name="userId">User ID for the message</param>
         /// <param name="sendMessageAsync">Async function to send the message</param>
-        void SendWithRetryTaskRun(string userId, Func<string, Task> sendMessageAsync);
+        Task SendWithRetry(string userId, Func<string, Task> sendMessageAsync);
     }
 }

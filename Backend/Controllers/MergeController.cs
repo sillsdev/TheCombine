@@ -149,14 +149,14 @@ namespace BackendFramework.Controllers
         internal async Task<bool> GetDuplicatesThenSignal(
             string projectId, int maxInList, int maxLists, string userId, bool ignoreProtected = false)
         {
-            var success = await _mergeService.GetAndStorePotentialDuplicates(
+            var proceed = await _mergeService.GetAndStorePotentialDuplicates(
                 projectId, maxInList, maxLists, userId, ignoreProtected);
-            if (success)
+            if (proceed)
             {
-                _ackTracker.SendWithRetryTaskRun(userId,
+                await _ackTracker.SendWithRetry(userId,
                     requestId => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId));
             }
-            return success;
+            return proceed;
         }
 
         /// <summary> Retrieve current user's potential duplicates for merging. </summary>
