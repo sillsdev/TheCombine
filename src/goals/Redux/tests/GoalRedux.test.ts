@@ -39,7 +39,7 @@ jest.mock("backend", () => ({
   addStepToGoal: jest.fn(),
   createUserEdit: () => mockCreateUserEdit(),
   findIdenticalDuplicates: () => mockFindIdenticalDuplicates(),
-  findSimilarDuplicates: jest.fn(),
+  findSimilarDuplicates: () => mockFindSimilarDuplicates(),
   getGraylistEntries: () => Promise.resolve([]),
   getUserEditById: (...args: any[]) => mockGetUserEditById(...args),
   hasGraylistEntries: jest.fn(),
@@ -52,6 +52,7 @@ jest.mock("router/browserRouter", () => ({
 const mockAddGoalToUserEdit = jest.fn();
 const mockCreateUserEdit = jest.fn();
 const mockFindIdenticalDuplicates = jest.fn();
+const mockFindSimilarDuplicates = jest.fn();
 const mockGetUserEditById = jest.fn();
 const mockNavigate = jest.fn();
 const mockRetrieveDuplicates = jest.fn();
@@ -60,6 +61,7 @@ function setMockFunctions(): void {
   mockAddGoalToUserEdit.mockResolvedValue(0);
   mockCreateUserEdit.mockResolvedValue(mockUser());
   mockFindIdenticalDuplicates.mockResolvedValue([]);
+  mockFindSimilarDuplicates.mockResolvedValue(undefined);
   mockGetUserEditById.mockResolvedValue(mockUserEdit(true));
   mockRetrieveDuplicates.mockResolvedValue(goalDataMock.plannedWords);
 }
