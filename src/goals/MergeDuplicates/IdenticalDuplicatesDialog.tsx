@@ -10,7 +10,7 @@ import {
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { getFrontierWords, hasGraylistEntries } from "backend";
+import { getFrontierCount, hasGraylistEntries } from "backend";
 import { ReviewDeferredDups } from "goals/MergeDuplicates/MergeDupsTypes";
 import { asyncAddGoal, setDataLoadStatus } from "goals/Redux/GoalActions";
 import { DataLoadStatus } from "goals/Redux/GoalReduxTypes";
@@ -46,9 +46,7 @@ export default function IdenticalDuplicatesDialog(props: {
 
   useEffect(() => {
     hasGraylistEntries().then(setHasDeferred);
-    getFrontierWords().then((words) => {
-      setFrontierCount(words.length);
-    });
+    getFrontierCount().then(setFrontierCount);
   }, []);
 
   return (
@@ -67,12 +65,20 @@ export default function IdenticalDuplicatesDialog(props: {
           )}
 
           <div>
-            <Typography>
-              {t("mergeDups.identicalCompleted.findingSimilar")}
-            </Typography>
-            {frontierCount > LARGE_PROJECT_THRESHOLD && props.loading && (
-              <Typography color="warning.main">
-                {t("mergeDups.identicalCompleted.warning")}
+            {props.loading ? (
+              <>
+                <Typography>
+                  {t("mergeDups.identicalCompleted.findingSimilar")}
+                </Typography>
+                {frontierCount > LARGE_PROJECT_THRESHOLD && (
+                  <Typography color="warning.main">
+                    {t("mergeDups.identicalCompleted.warning")}
+                  </Typography>
+                )}
+              </>
+            ) : (
+              <Typography>
+                {t("mergeDups.identicalCompleted.foundSimilar")}
               </Typography>
             )}
           </div>

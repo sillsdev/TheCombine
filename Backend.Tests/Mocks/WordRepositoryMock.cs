@@ -94,6 +94,11 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_frontier.Count(w => w.ProjectId == projectId && wordIds.Contains(w.Id)) >= count);
         }
 
+        public Task<int> GetFrontierCount(string projectId)
+        {
+            return Task.FromResult(_frontier.Count(w => w.ProjectId == projectId));
+        }
+
         public async Task<List<Word>> GetFrontier(string projectId)
         {
             if (_getFrontierDelay is not null)

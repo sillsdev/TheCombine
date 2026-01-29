@@ -926,6 +926,11 @@ export async function getDuplicateId(word: Word): Promise<string> {
   return (await wordApi.getDuplicateId(params, defaultOptions())).data;
 }
 
+export async function getFrontierCount(): Promise<number> {
+  const params = { projectId: LocalStorage.getProjectId() };
+  return (await wordApi.getFrontierCount(params, defaultOptions())).data;
+}
+
 export async function getFrontierWords(): Promise<Word[]> {
   const params = { projectId: LocalStorage.getProjectId() };
   return (await wordApi.getProjectFrontierWords(params, defaultOptions())).data;
