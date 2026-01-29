@@ -183,7 +183,11 @@ export function asyncLoadNewGoalData() {
         maxWordsInMergeList,
         maxNumSteps(currentGoal.goalType),
         currentProj.protectedDataMergeAvoidEnabled === OffOnSetting.On
-      );
+      ).catch(() => {
+        dispatch(setDataLoadStatus(DataLoadStatus.Failure));
+        alert("Failed to request similar duplicates.");
+        router.navigate(Path.Goals);
+      });
       return;
     }
     dispatch(setGoalStatus(GoalStatus.InProgress));
@@ -258,7 +262,7 @@ async function loadGoalData(
   project: Project
 ): Promise<Word[][]> {
   switch (goalType) {
-    case GoalType.MergeDups:
+    case GoalType.MergeDups: {
       // Catch failure and pass to caller to allow for error dispatch.
       const dups =
         dataLoadStatus === DataLoadStatus.Success
@@ -269,6 +273,7 @@ async function loadGoalData(
               project.protectedDataMergeAvoidEnabled === OffOnSetting.On
             ).catch(() => {});
       return dups ? checkMergeData(dups) : Promise.reject();
+    }
     case GoalType.ReviewDeferredDups:
       return checkMergeData(
         await Backend.getGraylistEntries(maxNumSteps(goalType))
