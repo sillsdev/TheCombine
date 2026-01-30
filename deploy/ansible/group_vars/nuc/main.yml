@@ -14,7 +14,7 @@
 k8s_engine: k3s
 
 image_pull_secret: aws-login-credentials
-use_airgap_images: false
+use_airgap_images: False
 
 # k8s namespaces
 app_namespace: thecombine
@@ -24,8 +24,8 @@ k8s_user: sillsdev
 ################################################
 # Support Tool Settings
 ################################################
-install_ip_viewer: yes
-install_combinectl: yes
+install_ip_viewer: True
+install_combinectl: True
 
 ################################################
 # Ingress configuration
@@ -41,12 +41,12 @@ k8s_dns_name: "{{ ansible_hostname }}"
 ################################################
 # Ethernet settings
 ################################################
-eth_optional: yes
+eth_optional: True
 
 ################################################
 # WiFi access point settings
 ################################################
-has_wifi: yes
+has_wifi: True
 ap_domain: thecombine.app
 ap_ssid: "{{ ansible_hostname }}_ap"
 ap_passphrase: "thecombine_pw"
@@ -56,5 +56,5 @@ ap_hostname: "{{ ansible_hostname }}"
 ################################################
 # hardware monitoring settings
 ################################################
-include_hw_monitoring: yes
+include_hw_monitoring: True
 history_days: 60

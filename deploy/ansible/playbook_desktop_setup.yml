@@ -10,8 +10,8 @@
 
 - name: Configure hardware for The Combine
   hosts: localhost
-  gather_facts: yes
-  become: yes
+  gather_facts: True
+  become: True
 
   vars_files:
     - "vars/config_common.yml"

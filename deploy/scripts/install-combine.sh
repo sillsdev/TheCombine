@@ -86,7 +86,7 @@ install-kubernetes () {
   echo "Install Kubernetes with user: ${K8S_USER}"
   EXTRA_VARS="-e k8s_user=${K8S_USER}"
   if [ -d "${DEPLOY_DIR}/airgap-images" ] ; then
-    EXTRA_VARS="${EXTRA_VARS} -e install_airgap_images=true"
+    EXTRA_VARS="${EXTRA_VARS} -e install_airgap_images=True"
   fi
   
   export ANSIBLE_ALLOW_BROKEN_CONDITIONALS=True

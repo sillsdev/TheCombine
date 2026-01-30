@@ -9,4 +9,4 @@ wifi_if_name: "{{ ansible_interfaces | join(' ') | regex_replace('^.*\\b(wl[a-z0
 ap_hosts_config: /etc/create_ap/create_ap.hosts
 create_ap_config: /etc/create_ap/create_ap.conf
 
-test_wifi: true
+test_wifi: True
