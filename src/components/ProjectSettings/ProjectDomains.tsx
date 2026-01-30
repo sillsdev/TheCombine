@@ -210,7 +210,7 @@ function CustomDomain(props: CustomDomainProps): ReactElement {
           handleCancel={() => setDeleteDialogOpen(false)}
           handleConfirm={() => deleteDomain()}
           open={deleteDialogOpen}
-          text={t("projectSettings.domains.deleteConfirm")}
+          text="projectSettings.domains.deleteConfirm"
         />
       </AccordionSummary>
       <AccordionDetails>
