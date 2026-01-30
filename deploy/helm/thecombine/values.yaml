@@ -57,7 +57,8 @@ certManager:
 maintenance:
   backupSchedule: ""
   # Maximum number of backups to keep on AWS S3 service
-  maxBackups: "3"
+  maxBackups: "6"
+  maxMonthlyBackups: "6"
   updateFontsSchedule: ""
 
 ingressClass: nginx
