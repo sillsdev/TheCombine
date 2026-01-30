@@ -23,7 +23,5 @@ namespace BackendFramework.Interfaces
         Task<Word> AddFrontier(Word word);
         Task<List<Word>> AddFrontier(List<Word> words);
         Task<Word?> DeleteFrontier(string projectId, string wordId, string? audioFileName = null);
-        Task<long> DeleteFrontierWords(string projectId, List<string> wordIds);
-        Task<int> CountFrontierWordsWithDomain(string projectId, string domainId);
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -277,34 +276,6 @@ namespace BackendFramework.Repositories
                 ? await _frontier.FindOneAndDeleteAsync(GetProjectWordFilter(projectId, wordId))
                 : await _frontier.FindOneAndDeleteAsync(
                     GetProjectWordWithAudioFilter(projectId, wordId, audioFileName));
-        }
-
-        /// <summary> Removes <see cref="Word"/>s from the Frontier with specified wordIds and projectId </summary>
-        /// <returns> Number of words deleted </returns>
-        public async Task<long> DeleteFrontierWords(string projectId, List<string> wordIds)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting words from Frontier");
-
-            var deleted = await _frontier.DeleteManyAsync(GetProjectWordsFilter(projectId, wordIds));
-            return deleted.DeletedCount;
-        }
-
-        /// <summary>
-        /// Counts the number of Frontier words that have the specified semantic domain.
-        /// </summary>
-        /// <param name="projectId"> The project id </param>
-        /// <param name="domainId"> The semantic domain id </param>
-        /// <returns> The count of words containing at least one sense with the specified domain. </returns>
-        public async Task<int> CountFrontierWordsWithDomain(string projectId, string domainId)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "counting frontier words with domain");
-
-            var filterDef = new FilterDefinitionBuilder<Word>();
-            var filter = filterDef.And(
-                filterDef.Eq(w => w.ProjectId, projectId),
-                filterDef.ElemMatch(w => w.Senses, s => s.SemanticDomains.Any(sd => sd.Id == domainId)));
-
-            return (int)await _frontier.CountDocumentsAsync(filter);
         }
     }
 }

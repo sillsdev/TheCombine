@@ -46,12 +46,14 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _projRepo = new ProjectRepositoryMock();
+            var semDomCountRepo = new SemanticDomainCountRepositoryMock();
             _speakerRepo = new SpeakerRepositoryMock();
             _wordRepo = new WordRepositoryMock();
             _liftService = new LiftService();
-            _wordService = new WordService(_wordRepo);
+            var semDomCountService = new SemanticDomainCountService(semDomCountRepo);
+            _wordService = new WordService(_wordRepo, semDomCountService);
             _liftController = new LiftController(_projRepo, new SemanticDomainRepositoryMock(), _speakerRepo,
-                _wordRepo, _liftService, new HubContextMock<ExportHub>(), new PermissionServiceMock(),
+                _wordRepo, _liftService, new HubContextMock<ExportHub>(), new PermissionServiceMock(), _wordService,
                 new MockLogger());
 
             _projId = _projRepo.Create(new Project { Name = ProjName }).Result!.Id;
@@ -414,7 +416,7 @@ namespace Backend.Tests.Controllers
             word.Vernacular = "updated";
 
             await _wordService.Update(_projId, UserId, wordToUpdate.Id, word);
-            await _wordService.DeleteFrontierWord(_projId, UserId, wordToDelete.Id);
+            await _wordService.MakeFrontierDeleted(_projId, UserId, wordToDelete.Id);
 
             _liftService.SetExportInProgress(UserId, ExportId);
             await _liftController.CreateLiftExportThenSignal(_projId, UserId, ExportId);
