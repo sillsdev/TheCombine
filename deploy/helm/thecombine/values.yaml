@@ -56,8 +56,9 @@ certManager:
 # Maintenance configuration items
 maintenance:
   backupSchedule: ""
-  # Maximum number of backups to keep on AWS S3 service
+  # Maximum number of daily backups to keep on AWS S3 service
   maxBackups: "6"
+  # Maximum number of monthly backups (1st of month) to keep on AWS S3 service
   maxMonthlyBackups: "6"
   updateFontsSchedule: ""
 
