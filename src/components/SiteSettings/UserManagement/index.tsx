@@ -7,7 +7,7 @@ import { User } from "api/models";
 import { deleteUser, getAllUsers } from "backend";
 import ConfirmDeletion from "components/SiteSettings/UserManagement/ConfirmDeletion";
 import UserList from "components/SiteSettings/UserManagement/UserList";
-import UserProjectsDialog from "components/SiteSettings/UserManagement/UserProjectsDialog";
+import UserProjects from "components/SiteSettings/UserManagement/UserProjects";
 
 const customStyles = {
   content: {
@@ -64,12 +64,12 @@ export default function UserManagement(): ReactElement {
       .then(() => {
         toast.success(t("siteSettings.deleteUser.toastSuccess"));
         setOpenUser(undefined);
+        handleCloseDeleteModal();
       })
       .catch((err) => {
         console.error(err);
         toast.error(t("siteSettings.deleteUser.toastFailure"));
       });
-    handleCloseDeleteModal();
   };
 
   return (
@@ -99,7 +99,7 @@ export default function UserManagement(): ReactElement {
         shouldCloseOnOverlayClick
         onRequestClose={handleCloseProjectsModal}
       >
-        <UserProjectsDialog user={openUser} />
+        <UserProjects user={openUser} />
       </Modal>
     </>
   );

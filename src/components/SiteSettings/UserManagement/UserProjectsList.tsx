@@ -32,7 +32,7 @@ export default function UserProjectsList(
           toast.warning(t("siteSettings.deleteUser.projectsLoadError"));
         });
     }
-  }, [props.userId, t]);
+  }, [props.onLoaded, props.userId, t]);
 
   if (!props.userId) {
     return <Fragment />;
@@ -54,7 +54,7 @@ export default function UserProjectsList(
                   sx={info.projectIsActive ? {} : { color: "text.secondary" }}
                 >
                   • {info.projectName} (
-                  {t(`projectSettings.roles.${`${info.role}`.toLowerCase()}`)})
+                  {t(`projectSettings.roles.${info.role.toLowerCase()}`)})
                 </Typography>
               </ListItem>
             ))}

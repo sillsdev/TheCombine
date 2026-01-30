@@ -4,25 +4,29 @@ import { Fragment, ReactElement } from "react";
 import { User } from "api/models";
 import UserProjectsList from "components/SiteSettings/UserManagement/UserProjectsList";
 
-interface UserProjectsDialogProps {
+interface UserProjectsProps {
   user?: User;
 }
 
-export default function UserProjectsDialog(
-  props: UserProjectsDialogProps
-): ReactElement {
+export default function UserProjects(props: UserProjectsProps): ReactElement {
   if (!props.user) {
     return <Fragment />;
   }
+
+  const { email, id, name, username } = props.user;
 
   return (
     <Box sx={{ maxWidth: 500 }}>
       <Stack spacing={2}>
         <Typography align="center" variant="h4">
-          {props.user.username}
+          {name}
         </Typography>
 
-        <UserProjectsList userId={props.user.id} />
+        <Typography align="center" variant="h5">
+          {`(${username} | ${email})`}
+        </Typography>
+
+        <UserProjectsList userId={id} />
       </Stack>
     </Box>
   );

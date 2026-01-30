@@ -1,5 +1,5 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { Fragment, ReactElement, useState } from "react";
+import { Fragment, ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { User } from "api/models";
@@ -18,32 +18,39 @@ export default function ConfirmDeletion(
 
   const { t } = useTranslation();
 
+  useEffect(() => {
+    setLoaded(false);
+  }, [props.user?.id]);
+
   if (!props.user) {
     return <Fragment />;
   }
+
+  const { email, id, name, username } = props.user;
 
   return (
     <Box sx={{ maxWidth: 500 }}>
       <Stack spacing={2}>
         <Typography align="center" sx={{ color: "error.main" }} variant="h4">
-          {props.user.username}
+          {name}
+        </Typography>
+
+        <Typography align="center" variant="h5">
+          {`(${username} | ${email})`}
         </Typography>
 
         <Typography align="center" variant="h6">
           {t("siteSettings.deleteUser.confirm")}
         </Typography>
 
-        <UserProjectsList
-          userId={props.user.id}
-          onLoaded={() => setLoaded(true)}
-        />
+        <UserProjectsList userId={id} onLoaded={() => setLoaded(true)} />
 
         <Stack direction="row" justifyContent="space-evenly">
           <Button
             color="secondary"
-            disabled={!props.user?.id || !loaded}
+            disabled={!id || !loaded}
             id="user-delete-confirm"
-            onClick={() => props.deleteUser(props.user!.id)}
+            onClick={() => props.deleteUser(id)}
             variant="contained"
           >
             <Typography sx={{ color: "error.main" }}>
