@@ -45,7 +45,8 @@ awsEcr:
 
 # Default Backup Schedule - no backups
 backupSchedule: ""
-maxBackups: "3"
+maxBackups: "6"
+maxMonthlyBackups: "6"
 # Seconds to wait for the backend and frontend to be available when running
 # a backup
 waitTime: "120"

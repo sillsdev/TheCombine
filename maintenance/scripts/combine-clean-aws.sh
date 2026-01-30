@@ -30,10 +30,12 @@ usage() {
            for pruning.
 
      max_backups:
-           (DEPRECATED - no longer used) number of backups to keep for the host 
-           being cleaned up.  The script now keeps:
-           - Backups from the latest 6 days
-           - Backups from the first day of the month for the latest 6 months
+           number of days of daily backups to keep for the host being cleaned up.
+           Default = 6
+
+     max_monthly_backups:
+           number of months of monthly backups (1st of month) to keep for the host 
+           being cleaned up.  Default = 6
   Caveats:
     This script assumes that the backups have been created by the combine-backup
     script; specifically, that:
@@ -72,21 +74,27 @@ done
 # Prepend 's3://' to $aws_bucket if it is needed.
 [[ $aws_bucket =~ ^s3:// ]] || aws_bucket=s3://${aws_bucket}
 
+# Set defaults for backup retention
+max_backups=${max_backups:=6}
+max_monthly_backups=${max_monthly_backups:=6}
+
 # Get all backups sorted by name (which is chronological)
 AWS_BACKUPS=($(/usr/local/bin/aws s3 ls ${aws_bucket} --recursive | grep "${backup_filter}" | sed "s/[^\/]*\/\(.*\)/\1/" | sort))
 NUM_BACKUPS=${#AWS_BACKUPS[@]}
 
 # Get current date in seconds since epoch for date comparisons
 CURRENT_DATE=$(date +%s)
-# Calculate date thresholds
-SIX_DAYS_AGO=$(date -d "6 days ago" +%s 2>/dev/null || date -v-6d +%s)
-SIX_MONTHS_AGO=$(date -d "6 months ago" +%s 2>/dev/null || date -v-6m +%s)
+# Calculate date thresholds based on configured retention
+DAILY_THRESHOLD=$(date -d "${max_backups} days ago" +%s 2>/dev/null || date -v-${max_backups}d +%s)
+MONTHLY_THRESHOLD=$(date -d "${max_monthly_backups} months ago" +%s 2>/dev/null || date -v-${max_monthly_backups}m +%s)
 
 if [[ $VERBOSE -eq 1 ]] ; then
+  echo "max_backups: " $max_backups
+  echo "max_monthly_backups: " $max_monthly_backups
   echo "NUM_BACKUPS: " $NUM_BACKUPS
   echo "CURRENT_DATE: $(date -d @${CURRENT_DATE} +%Y-%m-%d 2>/dev/null || date -r ${CURRENT_DATE} +%Y-%m-%d)"
-  echo "SIX_DAYS_AGO: $(date -d @${SIX_DAYS_AGO} +%Y-%m-%d 2>/dev/null || date -r ${SIX_DAYS_AGO} +%Y-%m-%d)"
-  echo "SIX_MONTHS_AGO: $(date -d @${SIX_MONTHS_AGO} +%Y-%m-%d 2>/dev/null || date -r ${SIX_MONTHS_AGO} +%Y-%m-%d)"
+  echo "DAILY_THRESHOLD: $(date -d @${DAILY_THRESHOLD} +%Y-%m-%d 2>/dev/null || date -r ${DAILY_THRESHOLD} +%Y-%m-%d)"
+  echo "MONTHLY_THRESHOLD: $(date -d @${MONTHLY_THRESHOLD} +%Y-%m-%d 2>/dev/null || date -r ${MONTHLY_THRESHOLD} +%Y-%m-%d)"
   echo "LIST OF BACKUPS:"
   for backup in ${AWS_BACKUPS[@]}
   do
@@ -96,8 +104,8 @@ fi
 
 # Determine which backups to keep
 # We keep:
-# 1. All backups from the last 6 days
-# 2. Backups from the first day of the month for the last 6 months
+# 1. All backups from the last max_backups days
+# 2. Backups from the first day of the month for the last max_monthly_backups months
 declare -A KEEP_BACKUPS
 
 for backup in ${AWS_BACKUPS[@]}
@@ -122,14 +130,14 @@ do
       if [[ $VERBOSE -eq 1 ]] ; then
         echo "KEEP (cannot parse date): $backup"
       fi
-    # Check if backup is from the last 6 days
-    elif [[ $BACKUP_DATE -ge $SIX_DAYS_AGO ]] ; then
+    # Check if backup is from the last max_backups days
+    elif [[ $BACKUP_DATE -ge $DAILY_THRESHOLD ]] ; then
       KEEP_BACKUPS[$backup]=1
       if [[ $VERBOSE -eq 1 ]] ; then
-        echo "KEEP (last 6 days): $backup"
+        echo "KEEP (last ${max_backups} days): $backup"
       fi
-    # Check if backup is from first day of month and within last 6 months
-    elif [[ $BACKUP_DATE -ge $SIX_MONTHS_AGO && $DAY == "01" ]] ; then
+    # Check if backup is from first day of month and within last max_monthly_backups months
+    elif [[ $BACKUP_DATE -ge $MONTHLY_THRESHOLD && $DAY == "01" ]] ; then
       KEEP_BACKUPS[$backup]=1
       if [[ $VERBOSE -eq 1 ]] ; then
         echo "KEEP (1st of month): $backup"
