@@ -24,7 +24,8 @@ namespace BackendFramework.Controllers
     [Route("v1/projects/{projectId}/lift")]
     public class LiftController(IProjectRepository projRepo, ISemanticDomainRepository semDomRepo,
         ISpeakerRepository speakerRepo, IWordRepository wordRepo, ILiftService liftService,
-        IHubContext<ExportHub> notifyService, IPermissionService permissionService, ILogger<LiftController> logger)
+        IHubContext<ExportHub> notifyService, IPermissionService permissionService,
+        IAcknowledgmentTracker ackTracker, ILogger<LiftController> logger)
         : Controller
     {
         private readonly IProjectRepository _projRepo = projRepo;
@@ -34,6 +35,7 @@ namespace BackendFramework.Controllers
         private readonly ILiftService _liftService = liftService;
         private readonly IHubContext<ExportHub> _notifyService = notifyService;
         private readonly IPermissionService _permissionService = permissionService;
+        private readonly IAcknowledgmentTracker _ackTracker = ackTracker;
         private readonly ILogger<LiftController> _logger = logger;
 
         private const string otelTagName = "otel.LiftController";
@@ -418,7 +420,8 @@ namespace BackendFramework.Controllers
             var proceed = _liftService.StoreExport(userId, exportedFilepath, exportId);
             if (proceed)
             {
-                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId);
+                await _ackTracker.SendWithRetry(userId,
+                    requestId => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId));
             }
             return proceed;
         }

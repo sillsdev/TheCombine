@@ -33,6 +33,8 @@ interface SignalRHubProps {
 const failureMethodName = "Failure";
 /** Matches `CombineHub.MethodSuccess` in Backend/Helper/CombineHub.cs */
 const successMethodName = "Success";
+/** Matches `CombineHub.AcknowledgeMessage` in Backend/Helper/CombineHub.cs */
+const acknowledgeMethodName = "AcknowledgeMessage";
 
 /** A central hub for monitoring export status on SignalR */
 export default function SignalRHub(props: SignalRHubProps): ReactElement {
@@ -90,12 +92,17 @@ export default function SignalRHub(props: SignalRHubProps): ReactElement {
 
   /** Handler used by connection.on for when the success method is invoked. */
   const successMethod = useCallback(
-    (userId: string): void => {
+    async (userId: string, requestId: string): Promise<void> => {
       if (userId === getUserId()) {
+        // Send acknowledgment to the server
+        await connection
+          ?.invoke(acknowledgeMethodName, requestId)
+          .catch((err) => console.warn("Failed to acknowledge:", err));
+
         dispatch(successAction);
       }
     },
-    [dispatch, successAction]
+    [connection, dispatch, successAction]
   );
 
   /* Once a connection is opened, register the method handlers. */
