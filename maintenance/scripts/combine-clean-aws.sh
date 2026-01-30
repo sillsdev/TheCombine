@@ -89,9 +89,9 @@ DAILY_THRESHOLD=$(date -d "${max_backups} days ago" +%s 2>/dev/null || date -v-$
 MONTHLY_THRESHOLD=$(date -d "${max_monthly_backups} months ago" +%s 2>/dev/null || date -v-${max_monthly_backups}m +%s)
 
 if [[ $VERBOSE -eq 1 ]] ; then
-  echo "max_backups: " $max_backups
-  echo "max_monthly_backups: " $max_monthly_backups
-  echo "NUM_BACKUPS: " $NUM_BACKUPS
+  echo "max_backups: $max_backups"
+  echo "max_monthly_backups: $max_monthly_backups"
+  echo "NUM_BACKUPS: $NUM_BACKUPS"
   echo "CURRENT_DATE: $(date -d @${CURRENT_DATE} +%Y-%m-%d 2>/dev/null || date -r ${CURRENT_DATE} +%Y-%m-%d)"
   echo "DAILY_THRESHOLD: $(date -d @${DAILY_THRESHOLD} +%Y-%m-%d 2>/dev/null || date -r ${DAILY_THRESHOLD} +%Y-%m-%d)"
   echo "MONTHLY_THRESHOLD: $(date -d @${MONTHLY_THRESHOLD} +%Y-%m-%d 2>/dev/null || date -r ${MONTHLY_THRESHOLD} +%Y-%m-%d)"
