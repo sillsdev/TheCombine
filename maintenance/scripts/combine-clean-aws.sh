@@ -114,10 +114,16 @@ do
     SECOND=${BASH_REMATCH[6]}
     
     # Convert backup date to seconds since epoch
-    BACKUP_DATE=$(date -d "${YEAR}-${MONTH}-${DAY} ${HOUR}:${MINUTE}:${SECOND}" +%s 2>/dev/null || date -j -f "%Y-%m-%d %H:%M:%S" "${YEAR}-${MONTH}-${DAY} ${HOUR}:${MINUTE}:${SECOND}" +%s)
+    BACKUP_DATE=$(date -d "${YEAR}-${MONTH}-${DAY} ${HOUR}:${MINUTE}:${SECOND}" +%s 2>/dev/null || date -j -f "%Y-%m-%d %H:%M:%S" "${YEAR}-${MONTH}-${DAY} ${HOUR}:${MINUTE}:${SECOND}" +%s 2>/dev/null)
     
+    # If date conversion failed, keep the backup to be safe
+    if [[ -z "$BACKUP_DATE" ]] ; then
+      KEEP_BACKUPS[$backup]=1
+      if [[ $VERBOSE -eq 1 ]] ; then
+        echo "KEEP (cannot parse date): $backup"
+      fi
     # Check if backup is from the last 6 days
-    if [[ $BACKUP_DATE -ge $SIX_DAYS_AGO ]] ; then
+    elif [[ $BACKUP_DATE -ge $SIX_DAYS_AGO ]] ; then
       KEEP_BACKUPS[$backup]=1
       if [[ $VERBOSE -eq 1 ]] ; then
         echo "KEEP (last 6 days): $backup"
