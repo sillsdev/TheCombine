@@ -117,7 +117,7 @@ export default function ActiveProjectUsers(props: {
         </ListItemAvatar>
         <ListItemText primary={`${user.name} (${user.username})`} />
         <Chip
-          label={t(`projectSettings.roles.${`${userRole}`.toLowerCase()}`)}
+          label={t(`projectSettings.roles.${userRole.toLowerCase()}`)}
           size="small"
         />
         {manageUser}
