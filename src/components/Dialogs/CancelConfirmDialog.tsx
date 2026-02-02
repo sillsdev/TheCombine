@@ -41,8 +41,11 @@ export default function CancelConfirmDialog(
       return;
     }
     setLoading(true);
-    await props.handleConfirm();
-    setLoading(false);
+    try {
+      await props.handleConfirm();
+    } finally {
+      setLoading(false);
+    }
   };
 
   const dialogOnClose = (
