@@ -113,7 +113,7 @@ do
   # Extract date from backup filename
   # Format: hostname-YYYY-MM-DD-HH-MM-SS.tar.gz
   # Extract the date portion using regex
-  if [[ $backup =~ ([0-9]{4})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})\.tar\.gz$ ]] ; then
+  if [[ $backup =~ ^${combine_host}-([0-9]{4})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})\.tar\.gz$ ]] ; then
     YEAR=${BASH_REMATCH[1]}
     MONTH=${BASH_REMATCH[2]}
     DAY=${BASH_REMATCH[3]}
