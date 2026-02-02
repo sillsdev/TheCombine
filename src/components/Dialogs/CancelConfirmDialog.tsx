@@ -22,7 +22,6 @@ export interface CancelConfirmDialogProps {
   buttonLabelCancel?: string;
   buttonLabelConfirm?: string;
   disableBackdropClick?: boolean;
-  disableEscapeKeyDown?: boolean;
   focusOnConfirmButton?: boolean;
 }
 
@@ -52,10 +51,7 @@ export default function CancelConfirmDialog(
     _: unknown,
     reason: "backdropClick" | "escapeKeyDown"
   ): void => {
-    if (
-      (reason === "backdropClick" && props.disableBackdropClick) ||
-      (reason === "escapeKeyDown" && props.disableEscapeKeyDown)
-    ) {
+    if (reason === "backdropClick" && props.disableBackdropClick) {
       return;
     }
     props.handleCancel();

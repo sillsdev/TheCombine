@@ -29,6 +29,8 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
+const backdropSelector = '[class*="Backdrop"]';
+
 describe("CancelConfirmDialog keyboard interaction", () => {
   it("does not trigger confirm on Enter key by default", async () => {
     await renderDialog();
@@ -59,10 +61,18 @@ describe("CancelConfirmDialog keyboard interaction", () => {
     expect(mockHandleConfirm).not.toHaveBeenCalled();
   });
 
-  it("does not trigger cancel on Escape key when disableEscapeKeyDown is true", async () => {
-    await renderDialog({ disableEscapeKeyDown: true });
+  it("triggers cancel on backdrop click by default", async () => {
+    await renderDialog();
 
-    await userEvent.keyboard("{Escape}");
+    await userEvent.click(document.querySelector(backdropSelector)!);
+
+    expect(mockHandleCancel).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not trigger cancel on backdrop click when disableBackdropClick is true", async () => {
+    await renderDialog({ disableBackdropClick: true });
+
+    await userEvent.click(document.querySelector(backdropSelector)!);
 
     expect(mockHandleCancel).not.toHaveBeenCalled();
   });
