@@ -70,8 +70,8 @@ export default function UserProjectsList(
             <Typography
               sx={info.projectIsActive ? {} : { color: "text.secondary" }}
             >
-              • {info.projectName} (
-              {t(`projectSettings.roles.${info.role.toLowerCase()}`)})
+              {`• ${info.projectName} (${info.projectVernacular}): `}
+              {t(`projectSettings.roles.${info.role.toLowerCase()}`)}
             </Typography>
           </ListItem>
         ))}
