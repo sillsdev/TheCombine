@@ -518,6 +518,16 @@
       "yes": "Yes",
       "no": "No"
     },
+    "identicalCompleted": {
+      "title": "All Identical Duplicates Processed",
+      "congratulations": "Congratulations! You have processed all sets of words with identical vernacular forms.",
+      "hasDeferred": "You have deferred duplicate sets that can be reviewed.",
+      "findingSimilar": "The Combine is now searching for potential duplicates with similar (non-identical) vernacular forms.",
+      "foundSimilar": "The Combine has found potential duplicates with similar (non-identical) vernacular forms.",
+      "warning": "Finding similar duplicates may take several minutes.",
+      "reviewDeferred": "Review Deferred",
+      "continue": "Continue"
+    },
     "undo": {
       "undo": "Undo Merge",
       "undoDialog": "Undo this merge?",
@@ -557,7 +567,6 @@
     "restore": "Restore",
     "save": "Save",
     "saveAndContinue": "Save & Continue",
-    "saveChanges": "Save changes",
     "undecided": "Undecided",
     "upload": "Upload"
   },

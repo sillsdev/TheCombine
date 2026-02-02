@@ -49,7 +49,7 @@ enum UserSettingsIds {
 
 export enum UserSettingsTextId {
   ButtonChangeConsent = "userSettings.analyticsConsent.button",
-  ButtonSubmit = "buttons.saveChanges",
+  ButtonSubmit = "buttons.save",
   FieldEmail = "login.email",
   FieldEmailTaken = "login.emailTaken",
   FieldName = "login.name",
