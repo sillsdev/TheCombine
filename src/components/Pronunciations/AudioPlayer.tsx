@@ -293,7 +293,10 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
         text={props.warningTextId || "buttons.deletePermanently"}
         title="pronunciations.deleteRecording"
         handleCancel={() => setDeleteConf(false)}
-        handleConfirm={() => props.deleteAudio!(props.audio.fileName)}
+        handleConfirm={() => {
+          props.deleteAudio!(props.audio.fileName);
+          setDeleteConf(false);
+        }}
         buttonIdCancel="audio-delete-cancel"
         buttonIdConfirm="audio-delete-confirm"
       />
