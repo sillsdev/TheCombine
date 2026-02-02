@@ -335,7 +335,7 @@ while [ "$STATE" != "Done" ] ; do
       next-state "Done"
       ;;
     Uninstall-combine)
-      ${DEPLOY_DIR}/scripts/uninstall-combine
+      ${DEPLOY_DIR}/scripts/uninstall-combine.sh
       next-state "Done"
       ;;
     *)

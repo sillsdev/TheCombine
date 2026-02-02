@@ -7,7 +7,9 @@ on:
     branches: [master]
     paths:
       - ".github/workflows/installer.yml"
-      - "deploy/scripts/*install-combine*"
+      - "deploy/**/*.sh"
+      - "deploy/**/*.yaml"
+      - "deploy/**/*.yml"
       - "installer/**"
 
 concurrency:
@@ -155,14 +157,15 @@ jobs:
       - name: Detect changes to installer scripts
         id: changed-installer
         run: |
-          if git diff --name-only HEAD~1.. | grep -Eq "^installer/make-combine-installer.sh$|^deploy/scripts/.*install-combine.*$"; then
+          paths="^installer/make-combine-installer.sh$|^deploy/.*\.sh$|^deploy/.*\.ya?ml$"
+          if git diff --name-only HEAD~1.. | grep -Eq "$paths"; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
             echo "changed=false" >> $GITHUB_OUTPUT
           fi
         shell: bash
       - name: Download net-installer artifact
-        if: steps.changed-installer.outputs.changed == 'true'&& github.event_name == 'push'
+        if: steps.changed-installer.outputs.changed == 'true' && github.event_name == 'push'
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: combine-net-installer
