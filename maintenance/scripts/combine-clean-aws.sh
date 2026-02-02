@@ -82,19 +82,16 @@ max_monthly_backups=${max_monthly_backups:=6}
 AWS_BACKUPS=($(/usr/local/bin/aws s3 ls ${aws_bucket} --recursive | grep "${backup_filter}" | sed "s/[^\/]*\/\(.*\)/\1/" | sort))
 NUM_BACKUPS=${#AWS_BACKUPS[@]}
 
-# Get current date in seconds since epoch for date comparisons
-CURRENT_DATE=$(date +%s)
-# Calculate date thresholds based on configured retention
-DAILY_THRESHOLD=$(date -d "${max_backups} days ago" +%s 2>/dev/null || date -v-${max_backups}d +%s)
-MONTHLY_THRESHOLD=$(date -d "${max_monthly_backups} months ago" +%s 2>/dev/null || date -v-${max_monthly_backups}m +%s)
+# Calculate date thresholds based on configured retention (in YYYY-MM-DD format)
+DAILY_THRESHOLD=$(date -d "${max_backups} days ago" +%Y-%m-%d 2>/dev/null || date -v-${max_backups}d +%Y-%m-%d)
+MONTHLY_THRESHOLD=$(date -d "${max_monthly_backups} months ago" +%Y-%m-%d 2>/dev/null || date -v-${max_monthly_backups}m +%Y-%m-%d)
 
 if [[ $VERBOSE -eq 1 ]] ; then
   echo "max_backups: $max_backups"
   echo "max_monthly_backups: $max_monthly_backups"
   echo "NUM_BACKUPS: $NUM_BACKUPS"
-  echo "CURRENT_DATE: $(date -d @${CURRENT_DATE} +%Y-%m-%d 2>/dev/null || date -r ${CURRENT_DATE} +%Y-%m-%d)"
-  echo "DAILY_THRESHOLD: $(date -d @${DAILY_THRESHOLD} +%Y-%m-%d 2>/dev/null || date -r ${DAILY_THRESHOLD} +%Y-%m-%d)"
-  echo "MONTHLY_THRESHOLD: $(date -d @${MONTHLY_THRESHOLD} +%Y-%m-%d 2>/dev/null || date -r ${MONTHLY_THRESHOLD} +%Y-%m-%d)"
+  echo "DAILY_THRESHOLD: $DAILY_THRESHOLD"
+  echo "MONTHLY_THRESHOLD: $MONTHLY_THRESHOLD"
   echo "LIST OF BACKUPS:"
   for backup in ${AWS_BACKUPS[@]}
   do
@@ -113,31 +110,22 @@ do
   # Extract date from backup filename
   # Format: hostname-YYYY-MM-DD-HH-MM-SS.tar.gz
   # Extract the date portion using regex
-  if [[ $backup =~ ^${combine_host}-([0-9]{4})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})\.tar\.gz$ ]] ; then
+  if [[ $backup =~ ([0-9]{4})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})\.tar\.gz$ ]] ; then
     YEAR=${BASH_REMATCH[1]}
     MONTH=${BASH_REMATCH[2]}
     DAY=${BASH_REMATCH[3]}
-    HOUR=${BASH_REMATCH[4]}
-    MINUTE=${BASH_REMATCH[5]}
-    SECOND=${BASH_REMATCH[6]}
     
-    # Convert backup date to seconds since epoch
-    BACKUP_DATE=$(date -d "${YEAR}-${MONTH}-${DAY} ${HOUR}:${MINUTE}:${SECOND}" +%s 2>/dev/null || date -j -f "%Y-%m-%d %H:%M:%S" "${YEAR}-${MONTH}-${DAY} ${HOUR}:${MINUTE}:${SECOND}" +%s 2>/dev/null)
+    # Extract date in YYYY-MM-DD format for comparison
+    BACKUP_DATE="${YEAR}-${MONTH}-${DAY}"
     
-    # If date conversion failed, keep the backup to be safe
-    if [[ -z "$BACKUP_DATE" ]] ; then
-      KEEP_BACKUPS[$backup]=1
-      if [[ $VERBOSE -eq 1 ]] ; then
-        echo "KEEP (cannot parse date): $backup"
-      fi
     # Check if backup is from the last max_backups days
-    elif [[ $BACKUP_DATE -ge $DAILY_THRESHOLD ]] ; then
+    if [[ "$BACKUP_DATE" > "$DAILY_THRESHOLD" || "$BACKUP_DATE" == "$DAILY_THRESHOLD" ]] ; then
       KEEP_BACKUPS[$backup]=1
       if [[ $VERBOSE -eq 1 ]] ; then
         echo "KEEP (last ${max_backups} days): $backup"
       fi
     # Check if backup is from first day of month and within last max_monthly_backups months
-    elif [[ $BACKUP_DATE -ge $MONTHLY_THRESHOLD && $DAY == "01" ]] ; then
+    elif [[ "$BACKUP_DATE" > "$MONTHLY_THRESHOLD" || "$BACKUP_DATE" == "$MONTHLY_THRESHOLD" ]] && [[ $DAY == "01" ]] ; then
       KEEP_BACKUPS[$backup]=1
       if [[ $VERBOSE -eq 1 ]] ; then
         echo "KEEP (1st of month): $backup"
