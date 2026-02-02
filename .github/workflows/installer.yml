@@ -7,7 +7,9 @@ on:
     branches: [master]
     paths:
       - ".github/workflows/installer.yml"
-      - "deploy/scripts/*install-combine*"
+      - "deploy/**/*.sh"
+      - "deploy/**/*.yaml"
+      - "deploy/**/*.yml"
       - "installer/**"
 
 concurrency:
@@ -102,7 +104,7 @@ jobs:
       - name: Detect changes to installer README
         id: changed-readme
         run: |
-          if git diff --name-only HEAD~1.. | grep -qE "^installer/README.md$|^deploy/scripts/.*install-combine.*$"; then
+          if git diff --name-only HEAD~1.. | grep -q "^installer/README.md$"; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
             echo "changed=false" >> $GITHUB_OUTPUT
@@ -152,17 +154,18 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 2
-      - name: Detect changes to make-combine-installer.sh
+      - name: Detect changes to installer scripts
         id: changed-installer
         run: |
-          if git diff --name-only HEAD~1.. | grep -q "^installer/make-combine-installer.sh$"; then
+          paths="^installer/make-combine-installer.sh$|^deploy/.*\.sh$|^deploy/.*\.ya?ml$"
+          if git diff --name-only HEAD~1.. | grep -Eq "$paths"; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
             echo "changed=false" >> $GITHUB_OUTPUT
           fi
         shell: bash
       - name: Download net-installer artifact
-        if: steps.changed-installer.outputs.changed == 'true'&& github.event_name == 'push'
+        if: steps.changed-installer.outputs.changed == 'true' && github.event_name == 'push'
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: combine-net-installer
