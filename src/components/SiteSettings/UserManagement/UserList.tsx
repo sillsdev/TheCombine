@@ -68,32 +68,25 @@ export default function UserList(props: UserListProps): ReactElement {
     );
   }, [filterInput, props.allUsers]);
 
-  const userListButton = (user: User): ReactElement => {
-    const disableDelete = user.isAdmin || user.id === getUserId();
-    return (
-      <UserActionsMenu
-        user={user}
-        disableDelete={disableDelete}
-        onDeleteClick={() => props.handleOpenDeleteModal(user)}
-        onProjectsClick={() => props.handleOpenProjectsModal(user)}
-      />
-    );
-  };
-
   const userListItem = (user: User): ReactElement => {
     return (
       <ListItem key={user.id}>
-        <ListItemIcon>{userListButton(user)}</ListItemIcon>
+        <ListItemIcon>
+          <UserActionsMenu
+            disableDelete={user.isAdmin || user.id === getUserId()}
+            onDeleteClick={() => props.handleOpenDeleteModal(user)}
+            onProjectsClick={() => props.handleOpenProjectsModal(user)}
+            user={user}
+          />
+        </ListItemIcon>
         <ListItemAvatar>
           <Avatar
-            alt="User Avatar"
+            alt={`Avatar for ${user.username}`}
             src={userAvatar[user.id]}
             style={{ marginInlineEnd: theme.spacing(1) }}
           />
         </ListItemAvatar>
-        <ListItemText
-          primary={`${user.name} (${user.username} | ${user.email})`}
-        />
+        <ListItemText>{`${user.name} (${user.username} | ${user.email})`}</ListItemText>
       </ListItem>
     );
   };

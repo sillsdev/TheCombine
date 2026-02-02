@@ -1,5 +1,11 @@
 import { DeleteForever, Folder, MoreVert } from "@mui/icons-material";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import {
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -10,10 +16,10 @@ const idDelete = `${idAffix}-delete`;
 const idProjects = `${idAffix}-projects`;
 
 export interface UserActionsMenuProps {
-  user: User;
   disableDelete?: boolean;
   onDeleteClick: () => void;
   onProjectsClick: () => void;
+  user: User;
 }
 
 export default function UserActionsMenu(
@@ -44,8 +50,10 @@ export default function UserActionsMenu(
             props.onProjectsClick();
           }}
         >
-          <Folder style={{ marginInlineEnd: 6 }} />
-          {t("siteSettings.projectList")}
+          <ListItemIcon>
+            <Folder />
+          </ListItemIcon>
+          <ListItemText>{t("siteSettings.projectList")}</ListItemText>
         </MenuItem>
         <MenuItem
           disabled={props.disableDelete}
@@ -55,8 +63,10 @@ export default function UserActionsMenu(
             props.onDeleteClick();
           }}
         >
-          <DeleteForever style={{ marginInlineEnd: 6 }} />
-          {t("buttons.delete")}
+          <ListItemIcon>
+            <DeleteForever />
+          </ListItemIcon>
+          <ListItemText>{t("buttons.delete")}</ListItemText>
         </MenuItem>
       </Menu>
     </>

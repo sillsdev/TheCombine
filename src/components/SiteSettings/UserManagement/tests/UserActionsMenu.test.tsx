@@ -19,10 +19,10 @@ const renderUserActionsMenu = async (
   await act(async () => {
     render(
       <UserActionsMenu
-        user={props?.user ?? testUser}
         disableDelete={props?.disableDelete}
         onDeleteClick={mockOnDeleteClick}
         onProjectsClick={mockOnProjectsClick}
+        user={props?.user ?? testUser}
       />
     );
   });

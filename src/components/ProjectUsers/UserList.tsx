@@ -87,7 +87,7 @@ export default function UserList(props: UserListProps): ReactElement {
           src={userAvatar[user.id]}
           style={{ marginInlineEnd: theme.spacing(1) }}
         />
-        <ListItemText primary={`${user.name} (${user.username})`} />
+        <ListItemText>{`${user.name} (${user.username})`}</ListItemText>
       </ListItem>
     );
   };
@@ -99,7 +99,7 @@ export default function UserList(props: UserListProps): ReactElement {
         onMouseEnter={() => setHoverUserId(user.id)}
         onMouseLeave={() => setHoverUserId("")}
       >
-        <ListItemText primary={`${user.name} (${user.username})`} />
+        <ListItemText>{`${user.name} (${user.username})`}</ListItemText>
         {hoverUserId === user.id && (
           <Button
             onClick={() => props.addToProject(user.id)}

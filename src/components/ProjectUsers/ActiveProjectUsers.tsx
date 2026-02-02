@@ -136,7 +136,7 @@ export default function ActiveProjectUsers(props: {
             style={{ marginInlineEnd: theme.spacing(1) }}
           />
         </ListItemAvatar>
-        <ListItemText primary={`${user.name} (${user.username})`} />
+        <ListItemText>{`${user.name} (${user.username})`}</ListItemText>
         <Chip
           label={t(`projectSettings.roles.${userRole?.toLowerCase()}`)}
           size="small"
