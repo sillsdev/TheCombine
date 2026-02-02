@@ -4,9 +4,8 @@ export function compareUserProjectInfo(
   a: UserProjectInfo,
   b: UserProjectInfo
 ): number {
-  return a.projectIsActive && !b.projectIsActive
-    ? -1
-    : !a.projectIsActive && b.projectIsActive
-      ? 1
-      : a.projectName.localeCompare(b.projectName);
+  if (a.projectIsActive !== b.projectIsActive) {
+    return a.projectIsActive ? -1 : 1;
+  }
+  return a.projectName.localeCompare(b.projectName);
 }
