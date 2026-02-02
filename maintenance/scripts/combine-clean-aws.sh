@@ -119,13 +119,13 @@ do
     BACKUP_DATE="${YEAR}-${MONTH}-${DAY}"
     
     # Check if backup is from the last max_backups days
-    if [[ "$BACKUP_DATE" > "$DAILY_THRESHOLD" || "$BACKUP_DATE" == "$DAILY_THRESHOLD" ]] ; then
+    if [[ ! "$BACKUP_DATE" < "$DAILY_THRESHOLD" ]] ; then
       KEEP_BACKUPS[$backup]=1
       if [[ $VERBOSE -eq 1 ]] ; then
         echo "KEEP (last ${max_backups} days): $backup"
       fi
     # Check if backup is from first day of month and within last max_monthly_backups months
-    elif [[ "$BACKUP_DATE" > "$MONTHLY_THRESHOLD" || "$BACKUP_DATE" == "$MONTHLY_THRESHOLD" ]] && [[ $DAY == "01" ]] ; then
+    elif [[ ! "$BACKUP_DATE" < "$MONTHLY_THRESHOLD" ]] && [[ $DAY == "01" ]] ; then
       KEEP_BACKUPS[$backup]=1
       if [[ $VERBOSE -eq 1 ]] ; then
         echo "KEEP (1st of month): $backup"
