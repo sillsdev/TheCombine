@@ -43,7 +43,7 @@ export default function ConfirmDeletion(
           {t("siteSettings.deleteUser.confirm")}
         </Typography>
 
-        <UserProjectsList userId={id} onLoaded={() => setLoaded(true)} />
+        <UserProjectsList onLoaded={() => setLoaded(true)} userId={id} />
 
         <Stack direction="row" justifyContent="space-evenly">
           <Button

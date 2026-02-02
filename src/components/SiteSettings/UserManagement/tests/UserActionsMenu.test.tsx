@@ -3,7 +3,9 @@ import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { User } from "api/models";
-import UserActionsMenu from "components/SiteSettings/UserManagement/UserActionsMenu";
+import UserActionsMenu, {
+  UserActionsMenuProps,
+} from "components/SiteSettings/UserManagement/UserActionsMenu";
 import { newUser } from "types/user";
 
 const mockOnDeleteClick = jest.fn();
@@ -12,14 +14,13 @@ const mockOnProjectsClick = jest.fn();
 const testUser: User = { ...newUser(), id: "test-id", username: "testuser" };
 
 const renderUserActionsMenu = async (
-  user: User = testUser,
-  disableDelete = false
+  props?: Partial<UserActionsMenuProps>
 ): Promise<void> => {
   await act(async () => {
     render(
       <UserActionsMenu
-        user={user}
-        disableDelete={disableDelete}
+        user={props?.user ?? testUser}
+        disableDelete={props?.disableDelete}
         onDeleteClick={mockOnDeleteClick}
         onProjectsClick={mockOnProjectsClick}
       />
@@ -32,62 +33,54 @@ beforeEach(() => {
 });
 
 describe("UserActionsMenu", () => {
-  it("renders with MoreVert icon", async () => {
+  it("renders with menu button", async () => {
     await renderUserActionsMenu();
     const button = screen.getByRole("button");
     expect(button).toBeInTheDocument();
     expect(button).not.toBeDisabled();
   });
 
-  it("opens menu and shows Projects and Delete options when clicked", async () => {
-    const agent = userEvent.setup();
+  it("opens menu when clicked and shows Projects and Delete options", async () => {
     await renderUserActionsMenu();
 
-    const button = screen.getByRole("button");
-    await agent.click(button);
+    await userEvent.click(screen.getByRole("button"));
 
-    // Check for menu items
     const menuItems = screen.getAllByRole("menuitem");
     expect(menuItems).toHaveLength(2);
     expect(menuItems[0]).toHaveTextContent(/project/i);
     expect(menuItems[1]).toHaveTextContent(/delete/i);
+    expect(menuItems[0]).not.toHaveAttribute("aria-disabled", "true");
+    expect(menuItems[1]).not.toHaveAttribute("aria-disabled", "true");
   });
 
   it("disables Delete menu item when disableDelete is true", async () => {
-    const agent = userEvent.setup();
-    await renderUserActionsMenu(testUser, true);
+    await renderUserActionsMenu({ disableDelete: true });
 
-    const button = screen.getByRole("button");
-    await agent.click(button);
+    await userEvent.click(screen.getByRole("button"));
 
     const menuItems = screen.getAllByRole("menuitem");
+    expect(menuItems).toHaveLength(2);
     expect(menuItems[0]).not.toHaveAttribute("aria-disabled", "true"); // Projects
     expect(menuItems[1]).toHaveAttribute("aria-disabled", "true"); // Delete
   });
 
   it("calls onProjectsClick when Projects menu item is clicked", async () => {
-    const agent = userEvent.setup();
     await renderUserActionsMenu();
 
-    const button = screen.getByRole("button");
-    await agent.click(button);
+    await userEvent.click(screen.getByRole("button"));
+    await userEvent.click(screen.getByText(/project/i));
 
-    const projectsItem = screen.getByText(/project/i);
-    await agent.click(projectsItem);
-
+    expect(mockOnDeleteClick).not.toHaveBeenCalled();
     expect(mockOnProjectsClick).toHaveBeenCalledTimes(1);
   });
 
   it("calls onDeleteClick when Delete menu item is clicked", async () => {
-    const agent = userEvent.setup();
     await renderUserActionsMenu();
 
-    const button = screen.getByRole("button");
-    await agent.click(button);
-
-    const deleteItem = screen.getByText(/delete/i);
-    await agent.click(deleteItem);
+    await userEvent.click(screen.getByRole("button"));
+    await userEvent.click(screen.getByText(/delete/i));
 
     expect(mockOnDeleteClick).toHaveBeenCalledTimes(1);
+    expect(mockOnProjectsClick).not.toHaveBeenCalled();
   });
 });

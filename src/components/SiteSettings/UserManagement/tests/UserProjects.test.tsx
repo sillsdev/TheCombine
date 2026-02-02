@@ -25,12 +25,11 @@ describe("UserProjects", () => {
   });
 
   it("renders name and username when user is provided", async () => {
-    const name = "Test User";
-    const username = "test-user";
-    const testUser: User = { ...newUser(name, username), id: "test-id" };
+    const testUser = newUser("Test User", "test-user");
+    testUser.id = "test-id";
     await renderUserProjects(testUser);
     expect(document.querySelector(typographySelector)).toBeInTheDocument();
-    expect(screen.getByText(new RegExp(name))).toBeInTheDocument();
-    expect(screen.getByText(new RegExp(username))).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(testUser.name))).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(testUser.username))).toBeInTheDocument();
   });
 });

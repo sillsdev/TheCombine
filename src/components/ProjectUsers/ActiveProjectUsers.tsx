@@ -105,11 +105,9 @@ export default function ActiveProjectUsers(props: {
 
   const userListItem = (user: UserStub): ReactElement => {
     const userRole = userRoles[user.id];
-    if (!userRole) {
-      return <Fragment key={user.id} />;
-    }
 
     const canManageUser =
+      userRole &&
       userRole !== Role.Owner &&
       (currentIsProjOwner ||
         currentUser.isAdmin ||
@@ -140,7 +138,7 @@ export default function ActiveProjectUsers(props: {
         </ListItemAvatar>
         <ListItemText primary={`${user.name} (${user.username})`} />
         <Chip
-          label={t(`projectSettings.roles.${userRole.toLowerCase()}`)}
+          label={t(`projectSettings.roles.${userRole?.toLowerCase()}`)}
           size="small"
         />
         {manageUser}

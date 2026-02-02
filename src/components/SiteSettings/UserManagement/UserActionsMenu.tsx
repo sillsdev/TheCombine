@@ -9,9 +9,9 @@ const idAffix = "user-actions";
 const idDelete = `${idAffix}-delete`;
 const idProjects = `${idAffix}-projects`;
 
-interface UserActionsMenuProps {
+export interface UserActionsMenuProps {
   user: User;
-  disableDelete: boolean;
+  disableDelete?: boolean;
   onDeleteClick: () => void;
   onProjectsClick: () => void;
 }
