@@ -39,7 +39,7 @@ export default function UserManagement(): ReactElement {
 
   useEffect(() => {
     Modal.setAppElement("body");
-  }, [populateUsers]);
+  }, []);
 
   useEffect(() => {
     if (!openUser) {

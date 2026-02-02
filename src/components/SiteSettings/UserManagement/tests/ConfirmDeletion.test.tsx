@@ -36,7 +36,7 @@ describe("ConfirmDeletion", () => {
     const testUser = newUser("Test User", "test-user");
     testUser.id = "test-id";
     await renderConfirmDeletion(testUser);
-    expect(screen.getAllByRole("button").length).not.toBe(0);
+    expect(screen.getAllByRole("button").length).toBeGreaterThan(0);
     expect(screen.getByText(new RegExp(testUser.name))).toBeInTheDocument();
     expect(screen.getByText(new RegExp(testUser.username))).toBeInTheDocument();
   });
