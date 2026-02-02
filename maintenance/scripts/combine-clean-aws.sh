@@ -48,6 +48,7 @@ USAGE
 }
 
 DRYRUN=0
+VERBOSE=0
 while [[ $# -gt 0 ]] ; do
   arg="$1"
   shift
@@ -72,11 +73,30 @@ while [[ $# -gt 0 ]] ; do
 done
 
 # Prepend 's3://' to $aws_bucket if it is needed.
+if [[ -z "${aws_bucket:-}" ]] ; then
+  echo "ERROR: aws_bucket environment variable is not set"
+  exit 1
+fi
 [[ $aws_bucket =~ ^s3:// ]] || aws_bucket=s3://${aws_bucket}
 
+if [[ -z "${combine_host:-}" ]] ; then
+  echo "ERROR: combine_host environment variable is not set"
+  exit 1
+fi
+
 # Set defaults for backup retention
-max_backups=${max_backups:=7}
-max_monthly_backups=${max_monthly_backups:=3}
+if [[ ! $max_backups =~ ^[0-9]+$ ]]; then
+  if [[ $VERBOSE -eq 1 ]] ; then
+    echo "Invalid max_backups: ${max_backups} (using default: 7)"
+  fi
+  max_backups=7
+fi
+if [[ ! $max_monthly_backups =~ ^[0-9]+$ ]]; then
+  if [[ $VERBOSE -eq 1 ]] ; then
+    echo "Invalid max_monthly_backups: ${max_monthly_backups} (using default: 3)"
+  fi
+  max_monthly_backups=3
+fi
 
 # Get all backups sorted by name (which is chronological)
 AWS_BACKUPS=($(/usr/local/bin/aws s3 ls ${aws_bucket} --recursive | grep "${backup_filter}" | sed "s/[^\/]*\/\(.*\)/\1/" | sort))
