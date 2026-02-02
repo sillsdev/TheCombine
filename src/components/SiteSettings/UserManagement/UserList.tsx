@@ -13,17 +13,16 @@ import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { User } from "api/models";
-import { avatarSrc } from "backend";
 import { getUserId } from "backend/localStorage";
 import SortOptions, {
   UserOrder,
   getUserCompare,
 } from "components/ProjectUsers/SortOptions";
 import UserActionsMenu from "components/SiteSettings/UserManagement/UserActionsMenu";
-import { Hash } from "types/hash";
 import theme from "types/theme";
 import { doesTextMatchUser } from "types/user";
 import { NormalizedTextField } from "utilities/fontComponents";
+import { useUserAvatar } from "utilities/useAvatarSrc";
 
 interface UserListProps {
   allUsers: User[];
@@ -37,8 +36,10 @@ export default function UserList(props: UserListProps): ReactElement {
   const [reverseSorting, setReverseSorting] = useState<boolean>(false);
   const [sortedUsers, setSortedUsers] = useState<User[]>([]);
   const [userOrder, setUserOrder] = useState(UserOrder.Username);
-  const [userAvatar, setUserAvatar] = useState<Hash<string>>({});
+
   const { t } = useTranslation();
+
+  const { userAvatar } = useUserAvatar(props.allUsers);
 
   const compareUsers = useCallback(
     (a: User, b: User): number =>
@@ -49,16 +50,6 @@ export default function UserList(props: UserListProps): ReactElement {
   useEffect(() => {
     setSortedUsers([...filteredUsers].sort(compareUsers));
   }, [compareUsers, filteredUsers]);
-
-  useEffect(() => {
-    const newUserAvatar: Hash<string> = {};
-    const promises = props.allUsers.map(async (u) => {
-      if (u.hasAvatar) {
-        newUserAvatar[u.id] = await avatarSrc(u.id);
-      }
-    });
-    Promise.all(promises).then(() => setUserAvatar(newUserAvatar));
-  }, [props.allUsers]);
 
   useEffect(() => {
     setFilteredUsers(

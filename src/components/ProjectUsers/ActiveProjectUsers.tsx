@@ -19,7 +19,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 import { Role, UserStub } from "api/models";
-import { avatarSrc, getUserRoles } from "backend";
+import { getUserRoles } from "backend";
 import { getCurrentUser } from "backend/localStorage";
 import CancelConfirmDialogCollection from "components/ProjectUsers/CancelConfirmDialogCollection";
 import SortOptions, {
@@ -30,6 +30,7 @@ import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { type Hash } from "types/hash";
 import theme from "types/theme";
+import { useUserAvatar } from "utilities/useAvatarSrc";
 
 export default function ActiveProjectUsers(props: {
   projectId: string;
@@ -38,13 +39,14 @@ export default function ActiveProjectUsers(props: {
     (state: StoreState) => state.currentProjectState.users
   );
 
-  const [userAvatar, setUserAvatar] = useState<Hash<string> | undefined>();
   const [userRoles, setUserRoles] = useState<Hash<Role> | undefined>();
   const [userOrder, setUserOrder] = useState<UserOrder>(UserOrder.Username);
   const [reverseSorting, setReverseSorting] = useState<boolean>(false);
   const [sortedUsers, setSortedUsers] = useState<UserStub[]>([]);
 
   const { t } = useTranslation();
+
+  const { userAvatar } = useUserAvatar(projectUsers);
 
   const compareUsers = useCallback(
     (a: UserStub, b: UserStub): number =>
@@ -57,7 +59,6 @@ export default function ActiveProjectUsers(props: {
   }, [compareUsers, projectUsers]);
 
   useEffect(() => {
-    setUserAvatar(undefined);
     setUserRoles(undefined);
   }, [props.projectId]);
 
@@ -77,24 +78,6 @@ export default function ActiveProjectUsers(props: {
       canceled = true;
     };
   }, [projectUsers, props.projectId]);
-
-  useEffect(() => {
-    let canceled = false;
-    const newUserAvatar: Hash<string> = {};
-    const promises = projectUsers.map(async (u) => {
-      if (u.hasAvatar) {
-        newUserAvatar[u.id] = await avatarSrc(u.id);
-      }
-    });
-    Promise.all(promises).then(() => {
-      if (!canceled) {
-        setUserAvatar(newUserAvatar);
-      }
-    });
-    return () => {
-      canceled = true;
-    };
-  }, [projectUsers]);
 
   const currentUser = getCurrentUser();
   if (!currentUser || !props.projectId || !userRoles) {
@@ -127,20 +110,21 @@ export default function ActiveProjectUsers(props: {
       </IconButton>
     );
 
+    const roleTextId = userRole
+      ? `projectSettings.roles.${userRole.toLowerCase()}`
+      : "—";
+
     return (
       <ListItem key={user.id}>
         <ListItemAvatar>
           <Avatar
             alt="User Avatar"
-            src={userAvatar?.[user.id]}
+            src={userAvatar[user.id]}
             style={{ marginInlineEnd: theme.spacing(1) }}
           />
         </ListItemAvatar>
         <ListItemText>{`${user.name} (${user.username})`}</ListItemText>
-        <Chip
-          label={t(`projectSettings.roles.${userRole?.toLowerCase()}`)}
-          size="small"
-        />
+        <Chip label={t(roleTextId)} size="small" />
         {manageUser}
       </ListItem>
     );

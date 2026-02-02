@@ -29,6 +29,7 @@ beforeEach(() => {
 describe("ConfirmDeletion", () => {
   it("renders nothing when no user is provided", async () => {
     await renderConfirmDeletion();
+
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 
@@ -36,8 +37,11 @@ describe("ConfirmDeletion", () => {
     const testUser = newUser("Test User", "test-user");
     testUser.id = "test-id";
     await renderConfirmDeletion(testUser);
+
     expect(screen.getAllByRole("button").length).toBeGreaterThan(0);
     expect(screen.getByText(new RegExp(testUser.name))).toBeInTheDocument();
     expect(screen.getByText(new RegExp(testUser.username))).toBeInTheDocument();
+    // Delete button disabled until projects load (mock doesn't call onLoaded)
+    expect(screen.getByRole("button", { name: /delete/i })).toBeDisabled();
   });
 });

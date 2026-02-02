@@ -65,16 +65,20 @@ export default function UserProjectsList(
     <>
       <Typography>{t("siteSettings.deleteUser.projectsTitle")}</Typography>
       <List dense disablePadding sx={{ maxHeight: 500, overflowY: "auto" }}>
-        {projInfo.map((info) => (
-          <ListItem key={info.projectId}>
-            <Typography
-              sx={info.projectIsActive ? {} : { color: "text.secondary" }}
-            >
-              {`• ${info.projectName} (${info.projectVernacular}): `}
-              {t(`projectSettings.roles.${info.role.toLowerCase()}`)}
-            </Typography>
-          </ListItem>
-        ))}
+        {projInfo.map((info) => {
+          const roleTextId = info.role
+            ? `projectSettings.roles.${info.role.toLowerCase()}`
+            : "—";
+          return (
+            <ListItem key={info.projectId}>
+              <Typography
+                sx={info.projectIsActive ? {} : { color: "text.secondary" }}
+              >
+                {`• ${info.projectName} (${info.projectVernacular}): ${t(roleTextId)}`}
+              </Typography>
+            </ListItem>
+          );
+        })}
       </List>
     </>
   );

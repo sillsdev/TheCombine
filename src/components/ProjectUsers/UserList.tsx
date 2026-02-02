@@ -12,10 +12,10 @@ import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { UserStub } from "api/models";
-import { avatarSrc, getUsersByFilter } from "backend";
-import { Hash } from "types/hash";
+import { getUsersByFilter } from "backend";
 import theme from "types/theme";
 import { NormalizedTextField } from "utilities/fontComponents";
+import { useUserAvatar } from "utilities/useAvatarSrc";
 
 interface UserListProps {
   addToProject: (userId: string) => void;
@@ -29,9 +29,10 @@ export default function UserList(props: UserListProps): ReactElement {
   const [filteredNotInProj, setFilteredNotInProj] = useState<UserStub[]>([]);
   const [hoverUserId, setHoverUserId] = useState<string>("");
   const [projUserIds, setProjUserIds] = useState<string[]>([]);
-  const [userAvatar, setUserAvatar] = useState<Hash<string>>({});
 
   const { t } = useTranslation();
+
+  const { userAvatar } = useUserAvatar(props.projectUsers);
 
   const clearFilteredUsers = (): void => {
     setFilteredInProj([]);
@@ -42,14 +43,6 @@ export default function UserList(props: UserListProps): ReactElement {
     setFilterInput("");
     clearFilteredUsers();
     setProjUserIds(props.projectUsers.map((u) => u.id));
-
-    const newUserAvatar: Hash<string> = {};
-    const promises = props.projectUsers.map(async (u) => {
-      if (u.hasAvatar) {
-        newUserAvatar[u.id] = await avatarSrc(u.id);
-      }
-    });
-    Promise.all(promises).then(() => setUserAvatar(newUserAvatar));
   }, [props.projectUsers]);
 
   const setFilteredUsers = useCallback(
