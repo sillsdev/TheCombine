@@ -38,8 +38,8 @@ export default function ActiveProjectUsers(props: {
     (state: StoreState) => state.currentProjectState.users
   );
 
-  const [userAvatar, setUserAvatar] = useState<Hash<string>>({});
-  const [userRoles, setUserRoles] = useState<Hash<Role>>({});
+  const [userAvatar, setUserAvatar] = useState<Hash<string> | undefined>();
+  const [userRoles, setUserRoles] = useState<Hash<Role> | undefined>();
   const [userOrder, setUserOrder] = useState<UserOrder>(UserOrder.Username);
   const [reverseSorting, setReverseSorting] = useState<boolean>(false);
   const [sortedUsers, setSortedUsers] = useState<UserStub[]>([]);
@@ -53,32 +53,51 @@ export default function ActiveProjectUsers(props: {
   );
 
   useEffect(() => {
+    setSortedUsers([...projectUsers].sort(compareUsers));
+  }, [compareUsers, projectUsers]);
+
+  useEffect(() => {
+    setUserAvatar(undefined);
+    setUserRoles(undefined);
+  }, [props.projectId]);
+
+  useEffect(() => {
+    let canceled = false;
     getUserRoles(props.projectId).then((userRoles) => {
       const roles: Hash<Role> = {};
       projectUsers.forEach((u) => {
         const ur = userRoles.find((r) => r.id === u.roleId);
         roles[u.id] = ur?.role ?? Role.None;
       });
-      setUserRoles(roles);
+      if (!canceled) {
+        setUserRoles(roles);
+      }
     });
+    return () => {
+      canceled = true;
+    };
   }, [projectUsers, props.projectId]);
 
   useEffect(() => {
+    let canceled = false;
     const newUserAvatar: Hash<string> = {};
     const promises = projectUsers.map(async (u) => {
       if (u.hasAvatar) {
         newUserAvatar[u.id] = await avatarSrc(u.id);
       }
     });
-    Promise.all(promises).then(() => setUserAvatar(newUserAvatar));
+    Promise.all(promises).then(() => {
+      if (!canceled) {
+        setUserAvatar(newUserAvatar);
+      }
+    });
+    return () => {
+      canceled = true;
+    };
   }, [projectUsers]);
 
-  useEffect(() => {
-    setSortedUsers([...projectUsers].sort(compareUsers));
-  }, [compareUsers, projectUsers]);
-
   const currentUser = getCurrentUser();
-  if (!currentUser || !props.projectId) {
+  if (!currentUser || !props.projectId || !userRoles) {
     return <Fragment />;
   }
 
@@ -86,6 +105,10 @@ export default function ActiveProjectUsers(props: {
 
   const userListItem = (user: UserStub): ReactElement => {
     const userRole = userRoles[user.id];
+    if (!userRole) {
+      return <Fragment key={user.id} />;
+    }
+
     const canManageUser =
       userRole !== Role.Owner &&
       (currentIsProjOwner ||
@@ -111,7 +134,7 @@ export default function ActiveProjectUsers(props: {
         <ListItemAvatar>
           <Avatar
             alt="User Avatar"
-            src={userAvatar[user.id]}
+            src={userAvatar?.[user.id]}
             style={{ marginInlineEnd: theme.spacing(1) }}
           />
         </ListItemAvatar>

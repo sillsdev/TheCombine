@@ -20,11 +20,15 @@ export default function UserProjectsList(
   const { t } = useTranslation();
 
   useEffect(() => {
+    let canceled = false;
     setProjInfo(undefined);
     if (props.userId) {
       getUserProjects(props.userId)
         .then((pi) => {
-          setProjInfo(pi.sort(compareUserProjectInfo));
+          if (canceled) {
+            return;
+          }
+          setProjInfo(pi.toSorted(compareUserProjectInfo));
           props.onLoaded?.();
         })
         .catch((err) => {
@@ -32,39 +36,46 @@ export default function UserProjectsList(
           toast.warning(t("siteSettings.deleteUser.projectsLoadError"));
         });
     }
+    return () => {
+      canceled = true;
+    };
   }, [props.onLoaded, props.userId, t]);
 
   if (!props.userId) {
     return <Fragment />;
   }
 
+  if (!projInfo) {
+    return (
+      <Typography align="center">
+        {t("siteSettings.deleteUser.loadingProjects")}
+      </Typography>
+    );
+  }
+
+  if (!projInfo.length) {
+    return (
+      <Typography align="center">
+        {t("siteSettings.deleteUser.noProjects")}
+      </Typography>
+    );
+  }
+
   return (
     <>
-      {projInfo === undefined ? (
-        <Typography align="center">
-          {t("siteSettings.deleteUser.loadingProjects")}
-        </Typography>
-      ) : projInfo.length ? (
-        <>
-          <Typography>{t("siteSettings.deleteUser.projectsTitle")}</Typography>
-          <List dense disablePadding sx={{ maxHeight: 500, overflowY: "auto" }}>
-            {projInfo.map((info) => (
-              <ListItem key={info.projectId}>
-                <Typography
-                  sx={info.projectIsActive ? {} : { color: "text.secondary" }}
-                >
-                  • {info.projectName} (
-                  {t(`projectSettings.roles.${info.role.toLowerCase()}`)})
-                </Typography>
-              </ListItem>
-            ))}
-          </List>
-        </>
-      ) : (
-        <Typography align="center">
-          {t("siteSettings.deleteUser.noProjects")}
-        </Typography>
-      )}
+      <Typography>{t("siteSettings.deleteUser.projectsTitle")}</Typography>
+      <List dense disablePadding sx={{ maxHeight: 500, overflowY: "auto" }}>
+        {projInfo.map((info) => (
+          <ListItem key={info.projectId}>
+            <Typography
+              sx={info.projectIsActive ? {} : { color: "text.secondary" }}
+            >
+              • {info.projectName} (
+              {t(`projectSettings.roles.${info.role.toLowerCase()}`)})
+            </Typography>
+          </ListItem>
+        ))}
+      </List>
     </>
   );
 }

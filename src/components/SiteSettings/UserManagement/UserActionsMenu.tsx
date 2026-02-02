@@ -34,7 +34,6 @@ export default function UserActionsMenu(
       <Menu
         id={`${idAffix}-menu-${props.user.username}`}
         anchorEl={anchorEl}
-        keepMounted
         open={Boolean(anchorEl)}
         onClose={() => setAnchorEl(undefined)}
       >
