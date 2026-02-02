@@ -31,11 +31,11 @@ usage() {
 
      max_backups:
            number of days of daily backups to keep for the host being cleaned up.
-           Default = 6
+           Default = 7
 
      max_monthly_backups:
            number of months of monthly backups (1st of month) to keep for the host 
-           being cleaned up.  Default = 6
+           being cleaned up.  Default = 3
   Caveats:
     This script assumes that the backups have been created by the combine-backup
     script; specifically, that:
@@ -75,8 +75,8 @@ done
 [[ $aws_bucket =~ ^s3:// ]] || aws_bucket=s3://${aws_bucket}
 
 # Set defaults for backup retention
-max_backups=${max_backups:=6}
-max_monthly_backups=${max_monthly_backups:=6}
+max_backups=${max_backups:=7}
+max_monthly_backups=${max_monthly_backups:=3}
 
 # Get all backups sorted by name (which is chronological)
 AWS_BACKUPS=($(/usr/local/bin/aws s3 ls ${aws_bucket} --recursive | grep "${backup_filter}" | sed "s/[^\/]*\/\(.*\)/\1/" | sort))
@@ -105,7 +105,7 @@ fi
 # 2. Backups from the first day of the month for the last max_monthly_backups months
 declare -A KEEP_BACKUPS
 
-for backup in ${AWS_BACKUPS[@]}
+for backup in "${AWS_BACKUPS[@]}"
 do
   # Extract date from backup filename
   # Format: hostname-YYYY-MM-DD-HH-MM-SS.tar.gz
@@ -144,7 +144,7 @@ do
 done
 
 # Delete backups that are not in the keep list
-for backup in ${AWS_BACKUPS[@]}
+for backup in "${AWS_BACKUPS[@]}"
 do
   if [[ ! ${KEEP_BACKUPS[$backup]} ]] ; then
     cmd="/usr/local/bin/aws s3 rm ${aws_bucket}/${backup}"
