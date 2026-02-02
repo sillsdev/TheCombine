@@ -133,8 +133,6 @@ do
   if [[ $backup =~ ^${combine_host}-([0-9]{4}-[0-9]{2})-([0-9]{2})(-[0-9]{2})+\.tar\.gz$ ]] ; then
     YEAR_MONTH=${BASH_REMATCH[1]}
     DAY=${BASH_REMATCH[2]}
-    
-    # Extract date in YYYY-MM-DD format for comparison
     BACKUP_DATE="${YEAR_MONTH}-${DAY}"
     
     # Check if backup is from the last max_backups days
