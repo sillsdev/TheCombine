@@ -110,22 +110,21 @@ do
   # Extract date from backup filename
   # Format: hostname-YYYY-MM-DD-HH-MM-SS.tar.gz
   # Extract the date portion using regex
-  if [[ $backup =~ ([0-9]{4})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})\.tar\.gz$ ]] ; then
-    YEAR=${BASH_REMATCH[1]}
-    MONTH=${BASH_REMATCH[2]}
-    DAY=${BASH_REMATCH[3]}
+  if [[ $backup =~ ^${combine_host}-([0-9]{4}-[0-9]{2})-([0-9]{2})(-[0-9]{2})+\.tar\.gz$ ]] ; then
+    YEAR_MONTH=${BASH_REMATCH[1]}
+    DAY=${BASH_REMATCH[2]}
     
     # Extract date in YYYY-MM-DD format for comparison
-    BACKUP_DATE="${YEAR}-${MONTH}-${DAY}"
+    BACKUP_DATE="${YEAR_MONTH}-${DAY}"
     
     # Check if backup is from the last max_backups days
-    if [[ ! "$BACKUP_DATE" < "$DAILY_THRESHOLD" ]] ; then
+    if [[ "$BACKUP_DATE" > "$DAILY_THRESHOLD" ]] ; then
       KEEP_BACKUPS[$backup]=1
       if [[ $VERBOSE -eq 1 ]] ; then
         echo "KEEP (last ${max_backups} days): $backup"
       fi
     # Check if backup is from first day of month and within last max_monthly_backups months
-    elif [[ ! "$BACKUP_DATE" < "$MONTHLY_THRESHOLD" ]] && [[ $DAY == "01" ]] ; then
+    elif [[ "$BACKUP_DATE" > "$MONTHLY_THRESHOLD" ]] && [[ $DAY == "01" ]] ; then
       KEEP_BACKUPS[$backup]=1
       if [[ $VERBOSE -eq 1 ]] ; then
         echo "KEEP (1st of month): $backup"
