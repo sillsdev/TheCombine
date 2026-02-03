@@ -25,14 +25,14 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Track a new request for acknowledgment. </summary>
-        private void TrackRequest(string requestId)
+        internal void TrackRequest(string requestId)
         {
             _pendingAcknowledgements.TryAdd(requestId, false);
         }
 
         /// <summary> Check if a request has been acknowledged. </summary>
         /// <returns>True if acknowledged, false if unacknowledged or not in tracking dictionary</returns>
-        private bool IsAcknowledged(string requestId)
+        internal bool IsAcknowledged(string requestId)
         {
             if (_pendingAcknowledgements.TryGetValue(requestId, out var isAcknowledged))
             {
@@ -79,7 +79,7 @@ namespace BackendFramework.Services
         /// <param name="sendMessageAsync">Async function to send the message</param>
         /// <param name="sendCount">Max number of send attempts</param>
         /// <param name="delaySeconds">Seconds to delay before each resend</param>
-        private async Task SendUntilAcknowledged(
+        internal async Task SendUntilAcknowledged(
             string requestId, Func<Task> sendMessageAsync, int sendCount = 6, int delaySeconds = 5)
         {
             for (int sent = 0; sent <= sendCount; sent++)
