@@ -4,7 +4,7 @@ import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { archiveProject, restoreProject } from "backend";
-import ButtonConfirmation from "components/Dialogs/ButtonConfirmation";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import { themeColors } from "types/theme";
 
 interface ProjectArchiveProps extends ButtonProps {
@@ -44,17 +44,16 @@ export default function ProjectArchive(
       >
         {t(props.archive ? "buttons.archive" : "buttons.restore")}
       </Button>
-      <ButtonConfirmation
+      <CancelConfirmDialog
         open={open}
-        textId={
+        text={
           props.archive
             ? "siteSettings.archiveProjectText"
             : "siteSettings.restoreProjectText"
         }
-        titleId="buttons.proceedWithCaution"
-        onClose={() => setOpen(false)}
-        onConfirm={updateProj}
-        buttonIdClose={`proj-${props.projectId}-${
+        handleCancel={() => setOpen(false)}
+        handleConfirm={updateProj}
+        buttonIdCancel={`proj-${props.projectId}-${
           props.archive ? "archive" : "restore"
         }-cancel`}
         buttonIdConfirm={`proj-${props.projectId}-${
