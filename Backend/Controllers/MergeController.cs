@@ -115,6 +115,35 @@ namespace BackendFramework.Controllers
             return Ok(graylistEntry.WordIds);
         }
 
+        /// <summary> Find and return lists of potential duplicates with identical vernacular. </summary>
+        /// <param name="projectId"> Id of project in which to search the frontier for potential duplicates. </param>
+        /// <param name="maxInList"> Max number of words allowed within a list of potential duplicates. </param>
+        /// <param name="maxLists"> Max number of lists of potential duplicates. </param>
+        /// <param name="ignoreProtected"> Whether to require each set to have at least one unprotected word. </param>
+        /// <returns> List of Lists of <see cref="Word"/>s, each sublist a set of potential duplicates. </returns>
+        [HttpGet("findidenticaldups/{maxInList:int}/{maxLists:int}/{ignoreProtected:bool}", Name = "FindIdenticalPotentialDuplicates")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<List<Word>>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> FindIdenticalPotentialDuplicates(
+            string projectId, int maxInList, int maxLists, bool ignoreProtected)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "finding identical potential duplicates");
+
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.MergeAndReviewEntries, projectId))
+            {
+                return Forbid();
+            }
+
+            await _mergeService.UpdateMergeBlacklist(projectId);
+
+            var userId = _permissionService.GetUserId(HttpContext);
+            var dups = await _mergeService.GetPotentialDuplicates(
+                projectId, maxInList, maxLists, identicalVernacular: true, userId, ignoreProtected);
+
+            return Ok(dups);
+        }
+
         /// <summary> Start finding lists of potential duplicates for merging. </summary>
         /// <param name="projectId"> Id of project in which to search the frontier for potential duplicates. </param>
         /// <param name="maxInList"> Max number of words allowed within a list of potential duplicates. </param>

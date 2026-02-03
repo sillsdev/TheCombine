@@ -10,7 +10,7 @@
 ################################################
 
 image_pull_secret: aws-login-credentials
-use_airgap_images: false
+use_airgap_images: False
 
 create_namespaces: []
 # k8s namespaces
@@ -19,8 +19,8 @@ app_namespace: thecombine
 ################################################
 # Support Tool Settings
 ################################################
-install_ip_viewer: no
-install_combinectl: no
+install_ip_viewer: False
+install_combinectl: False
 
 #######################################
 # Ingress configuration
@@ -29,9 +29,9 @@ ingress_namespace: ingress-nginx
 ################################################
 # WiFi access point settings
 ################################################
-has_wifi: no
+has_wifi: False
 
 ################################################
 # hardware monitoring settings
 ################################################
-include_hw_monitoring: no
+include_hw_monitoring: False
