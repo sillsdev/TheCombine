@@ -16,13 +16,13 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/merge")]
-    public class MergeController(IMergeService mergeService, IHubContext<MergeHub> notifyService,
-        IPermissionService permissionService, IAcknowledgmentTracker ackTracker) : Controller
+    public class MergeController(IAcknowledgmentService ackService, IMergeService mergeService,
+        IHubContext<MergeHub> notifyService, IPermissionService permissionService) : Controller
     {
+        private readonly IAcknowledgmentService _ackService = ackService;
         private readonly IMergeService _mergeService = mergeService;
         private readonly IHubContext<MergeHub> _notifyService = notifyService;
         private readonly IPermissionService _permissionService = permissionService;
-        private readonly IAcknowledgmentTracker _ackTracker = ackTracker;
 
         private const string otelTagName = "otel.MergeController";
 
@@ -182,7 +182,7 @@ namespace BackendFramework.Controllers
                 projectId, maxInList, maxLists, userId, ignoreProtected);
             if (proceed)
             {
-                await _ackTracker.SendWithRetry(userId,
+                await _ackService.SendWithRetry(userId,
                     requestId => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId));
             }
             return proceed;

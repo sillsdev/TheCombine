@@ -23,19 +23,18 @@ namespace BackendFramework.Controllers
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/lift")]
     public class LiftController(IProjectRepository projRepo, ISemanticDomainRepository semDomRepo,
-        ISpeakerRepository speakerRepo, IWordRepository wordRepo, ILiftService liftService,
-        IHubContext<ExportHub> notifyService, IPermissionService permissionService,
-        IAcknowledgmentTracker ackTracker, ILogger<LiftController> logger)
-        : Controller
+        ISpeakerRepository speakerRepo, IWordRepository wordRepo, IAcknowledgmentService ackService,
+        ILiftService liftService, IHubContext<ExportHub> notifyService, IPermissionService permissionService,
+        ILogger<LiftController> logger) : Controller
     {
         private readonly IProjectRepository _projRepo = projRepo;
         private readonly ISemanticDomainRepository _semDomRepo = semDomRepo;
         private readonly ISpeakerRepository _speakerRepo = speakerRepo;
         private readonly IWordRepository _wordRepo = wordRepo;
+        private readonly IAcknowledgmentService _ackService = ackService;
         private readonly ILiftService _liftService = liftService;
         private readonly IHubContext<ExportHub> _notifyService = notifyService;
         private readonly IPermissionService _permissionService = permissionService;
-        private readonly IAcknowledgmentTracker _ackTracker = ackTracker;
         private readonly ILogger<LiftController> _logger = logger;
 
         private const string otelTagName = "otel.LiftController";
@@ -420,7 +419,7 @@ namespace BackendFramework.Controllers
             var proceed = _liftService.StoreExport(userId, exportedFilepath, exportId);
             if (proceed)
             {
-                await _ackTracker.SendWithRetry(userId,
+                await _ackService.SendWithRetry(userId,
                     requestId => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId));
             }
             return proceed;

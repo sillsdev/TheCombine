@@ -21,7 +21,6 @@ namespace Backend.Tests.Controllers
         private IWordRepository _wordRepo = null!;
         private IMergeService _mergeService = null!;
         private IWordService _wordService = null!;
-        private IAcknowledgmentTracker _ackTracker = null!;
         private MergeController _mergeController = null!;
 
         private const string ProjId = "MergeServiceTestProjId";
@@ -40,12 +39,12 @@ namespace Backend.Tests.Controllers
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _mergeGraylistRepo = new MergeGraylistRepositoryMock();
             _wordRepo = new WordRepositoryMock();
+            var _ackService = new AcknowledgmentService(new LoggerMock<AcknowledgmentService>());
             _wordService = new WordService(_wordRepo);
             _mergeService = new MergeService(_cache, _mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
-            _ackTracker = new AcknowledgmentTracker(new LoggerMock<AcknowledgmentTracker>());
             var notifyService = new HubContextMock<MergeHub>();
             var permissionService = new PermissionServiceMock();
-            _mergeController = new MergeController(_mergeService, notifyService, permissionService, _ackTracker);
+            _mergeController = new MergeController(_ackService, _mergeService, notifyService, permissionService);
         }
 
         [Test]

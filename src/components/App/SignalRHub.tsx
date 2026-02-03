@@ -29,12 +29,12 @@ interface SignalRHubProps {
   url: string;
 }
 
+/** Matches `CombineHub.AcknowledgeMessage` in Backend/Helper/CombineHub.cs */
+const acknowledgeMethodName = "AcknowledgeMessage";
 /** Matches `CombineHub.MethodFailure` in Backend/Helper/CombineHub.cs */
 const failureMethodName = "Failure";
 /** Matches `CombineHub.MethodSuccess` in Backend/Helper/CombineHub.cs */
 const successMethodName = "Success";
-/** Matches `CombineHub.AcknowledgeMessage` in Backend/Helper/CombineHub.cs */
-const acknowledgeMethodName = "AcknowledgeMessage";
 
 /** A central hub for monitoring export status on SignalR */
 export default function SignalRHub(props: SignalRHubProps): ReactElement {

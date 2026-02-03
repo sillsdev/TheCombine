@@ -235,6 +235,9 @@ namespace BackendFramework
             // Mongo context for use in repo contexts
             services.AddSingleton<IMongoDbContext, MongoDbContext>();
 
+            // Acknowledgment Service - Singleton for shared state across requests
+            services.AddSingleton<IAcknowledgmentService, AcknowledgmentService>();
+
             // Banner types
             services.AddTransient<IBannerRepository, BannerRepository>();
 
@@ -255,9 +258,6 @@ namespace BackendFramework
             // Lift Service - Singleton to avoid initializing the Sldr multiple times,
             // also to avoid leaking LanguageTag data
             services.AddSingleton<ILiftService, LiftService>();
-
-            // Acknowledgment Tracker - Singleton for shared state across requests
-            services.AddSingleton<IAcknowledgmentTracker, AcknowledgmentTracker>();
 
             // Merge types
             services.AddTransient<IMergeBlacklistRepository, MergeBlacklistRepository>();
