@@ -9,6 +9,8 @@ jest.mock("backend", () => ({
   getUserProjects: () => Promise.resolve([]),
 }));
 
+const testUser: User = { ...newUser("Test User", "test-user"), id: "test-id" };
+
 const renderUserProjects = async (user?: User): Promise<void> => {
   await act(async () => {
     render(<UserProjects user={user} />);
@@ -24,8 +26,6 @@ describe("UserProjects", () => {
   });
 
   it("renders name and username when user is provided", async () => {
-    const testUser = newUser("Test User", "test-user");
-    testUser.id = "test-id";
     await renderUserProjects(testUser);
     expect(document.querySelector(typographySelector)).toBeInTheDocument();
     expect(screen.getByText(new RegExp(testUser.name))).toBeInTheDocument();

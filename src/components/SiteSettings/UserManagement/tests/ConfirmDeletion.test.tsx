@@ -11,6 +11,8 @@ jest.mock("backend", () => ({
 
 const mockGetUserProjects = jest.fn();
 
+const testUser: User = { ...newUser("Test User", "test-user"), id: "test-id" };
+
 const renderConfirmDeletion = async (user?: User): Promise<void> => {
   await act(async () => {
     render(
@@ -36,8 +38,6 @@ describe("ConfirmDeletion", () => {
   });
 
   it("renders name and username when user is provided", async () => {
-    const testUser = newUser("Test User", "test-user");
-    testUser.id = "test-id";
     await renderConfirmDeletion(testUser);
 
     expect(screen.getAllByRole("button").length).toBeGreaterThan(0);
@@ -51,8 +51,6 @@ describe("ConfirmDeletion", () => {
       resHolder = res;
     });
     mockGetUserProjects.mockReturnValue(promise);
-    const testUser = newUser("Test User", "test-user");
-    testUser.id = "test-id";
     await renderConfirmDeletion(testUser);
 
     const deleteButton = screen.getByRole("button", { name: /delete/i });

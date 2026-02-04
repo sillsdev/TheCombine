@@ -20,6 +20,7 @@ export function useUserAvatar(users: UserStub[]): { userAvatar: Hash<string> } {
         setUserAvatar(newUserAvatar);
       }
     });
+
     return () => {
       canceled = true;
     };

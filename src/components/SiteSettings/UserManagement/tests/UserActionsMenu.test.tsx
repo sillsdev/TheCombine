@@ -11,7 +11,7 @@ import { newUser } from "types/user";
 const mockOnDeleteClick = jest.fn();
 const mockOnProjectsClick = jest.fn();
 
-const testUser: User = { ...newUser(), id: "test-id", username: "testuser" };
+const testUser: User = { ...newUser("Test User", "test-user"), id: "test-id" };
 
 const renderUserActionsMenu = async (
   props?: Partial<UserActionsMenuProps>
