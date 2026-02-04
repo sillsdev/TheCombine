@@ -109,10 +109,6 @@ export default function ActiveProjectUsers(props: {
       </IconButton>
     );
 
-    const roleTextId = userRole
-      ? `projectSettings.roles.${userRole.toLowerCase()}`
-      : "—";
-
     return (
       <ListItem key={user.id}>
         <ListItemAvatar>
@@ -122,8 +118,14 @@ export default function ActiveProjectUsers(props: {
             sx={{ marginInlineEnd: 1 }}
           />
         </ListItemAvatar>
+
         <ListItemText>{`${user.name} (${user.username})`}</ListItemText>
-        <Chip label={t(roleTextId)} size="small" />
+
+        <Chip
+          label={t([`projectSettings.roles.${userRole?.toLowerCase()}`, "—"])}
+          size="small"
+        />
+
         {manageUser}
       </ListItem>
     );

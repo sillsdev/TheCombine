@@ -67,15 +67,13 @@ export default function UserProjectsList(
 
       <List dense disablePadding sx={{ maxHeight: 500, overflowY: "auto" }}>
         {projInfo.map((info) => {
-          const roleTextId = info.role
-            ? `projectSettings.roles.${info.role.toLowerCase()}`
-            : "—";
+          const roleTextId = `projectSettings.roles.${info.role?.toLowerCase()}`;
           return (
             <ListItem key={info.projectId}>
               <Typography
                 sx={info.projectIsActive ? {} : { color: "text.secondary" }}
               >
-                {`• ${info.projectName} (${info.projectVernacular}): ${t(roleTextId)}`}
+                {`• ${info.projectName} (${info.projectVernacular}): ${t([roleTextId, "—"])}`}
               </Typography>
             </ListItem>
           );

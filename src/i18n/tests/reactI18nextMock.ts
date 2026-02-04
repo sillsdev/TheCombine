@@ -2,7 +2,8 @@
  * (For testing components with `Trans`, see i18n/tests/i18nMock.ts instead.)
  * This import should occur before other internal imports that use `react-i18next`. */
 
-const t = (str: string): string => str;
+const t = (key: string | string[]): string =>
+  Array.isArray(key) ? key[0] : key;
 const i18n = { resolvedLanguage: "" };
 
 jest.mock("react-i18next", () => ({
