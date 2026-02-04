@@ -64,6 +64,7 @@ export default function UserProjectsList(
   return (
     <>
       <Typography>{t("siteSettings.deleteUser.projectsTitle")}</Typography>
+
       <List dense disablePadding sx={{ maxHeight: 500, overflowY: "auto" }}>
         {projInfo.map((info) => {
           const roleTextId = info.role

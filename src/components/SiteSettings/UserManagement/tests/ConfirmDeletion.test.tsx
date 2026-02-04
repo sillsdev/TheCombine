@@ -1,14 +1,15 @@
 import "@testing-library/jest-dom";
 import { act, render, screen } from "@testing-library/react";
 
-import { User } from "api/models";
+import { User, UserProjectInfo } from "api/models";
 import ConfirmDeletion from "components/SiteSettings/UserManagement/ConfirmDeletion";
 import { newUser } from "types/user";
 
-jest.mock("components/SiteSettings/UserManagement/UserProjectsList", () => ({
-  __esModule: true,
-  default: () => <div />,
+jest.mock("backend", () => ({
+  getUserProjects: (userId: string) => mockGetUserProjects(userId),
 }));
+
+const mockGetUserProjects = jest.fn();
 
 const renderConfirmDeletion = async (user?: User): Promise<void> => {
   await act(async () => {
@@ -24,6 +25,7 @@ const renderConfirmDeletion = async (user?: User): Promise<void> => {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockGetUserProjects.mockResolvedValue([]);
 });
 
 describe("ConfirmDeletion", () => {
@@ -41,7 +43,22 @@ describe("ConfirmDeletion", () => {
     expect(screen.getAllByRole("button").length).toBeGreaterThan(0);
     expect(screen.getByText(new RegExp(testUser.name))).toBeInTheDocument();
     expect(screen.getByText(new RegExp(testUser.username))).toBeInTheDocument();
-    // Delete button disabled until projects load (mock doesn't call onLoaded)
-    expect(screen.getByRole("button", { name: /delete/i })).toBeDisabled();
+  });
+
+  it("has delete button disabled until projects load", async () => {
+    let resHolder: (value: UserProjectInfo[]) => void;
+    const promise = new Promise<UserProjectInfo[]>((res) => {
+      resHolder = res;
+    });
+    mockGetUserProjects.mockReturnValue(promise);
+    const testUser = newUser("Test User", "test-user");
+    testUser.id = "test-id";
+    await renderConfirmDeletion(testUser);
+
+    const deleteButton = screen.getByRole("button", { name: /delete/i });
+    expect(deleteButton).toBeDisabled();
+
+    await act(async () => resHolder([]));
+    expect(deleteButton).not.toBeDisabled();
   });
 });

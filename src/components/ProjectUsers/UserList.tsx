@@ -13,7 +13,6 @@ import { useTranslation } from "react-i18next";
 
 import { UserStub } from "api/models";
 import { getUsersByFilter } from "backend";
-import theme from "types/theme";
 import { NormalizedTextField } from "utilities/fontComponents";
 import { useUserAvatar } from "utilities/useAvatarSrc";
 
@@ -75,11 +74,13 @@ export default function UserList(props: UserListProps): ReactElement {
         <ListItemIcon>
           <Done />
         </ListItemIcon>
+
         <Avatar
           alt="User Avatar"
           src={userAvatar[user.id]}
-          style={{ marginInlineEnd: theme.spacing(1) }}
+          sx={{ marginInlineEnd: 1 }}
         />
+
         <ListItemText>{`${user.name} (${user.username})`}</ListItemText>
       </ListItem>
     );
@@ -93,6 +94,7 @@ export default function UserList(props: UserListProps): ReactElement {
         onMouseLeave={() => setHoverUserId("")}
       >
         <ListItemText>{`${user.name} (${user.username})`}</ListItemText>
+
         {hoverUserId === user.id && (
           <Button
             onClick={() => props.addToProject(user.id)}
@@ -108,11 +110,13 @@ export default function UserList(props: UserListProps): ReactElement {
   return (
     <div>
       <Typography>{t("projectSettings.invite.searchTitle")}</Typography>
+
       <NormalizedTextField
         onChange={(e) => updateUsers(e.target.value)}
         placeholder={t("projectSettings.invite.searchPlaceholder")}
         value={filterInput}
       />
+
       <List>
         {filteredInProj.map(inProjListItem)}
         {filteredNotInProj.map(notInProjListItem)}

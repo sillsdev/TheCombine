@@ -4,11 +4,11 @@ import { act, render, screen } from "@testing-library/react";
 import { Role, UserProjectInfo } from "api/models";
 import UserProjectsList from "components/SiteSettings/UserManagement/UserProjectsList";
 
-const mockGetUserProjects = jest.fn();
-
 jest.mock("backend", () => ({
   getUserProjects: (userId: string) => mockGetUserProjects(userId),
 }));
+
+const mockGetUserProjects = jest.fn();
 
 const renderUserProjectsList = async (
   userId = "user-1",

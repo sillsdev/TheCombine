@@ -22,7 +22,7 @@ export default function ConfirmDeletion(
     setLoaded(false);
   }, [props.user?.id]);
 
-  if (!props.user) {
+  if (!props.user?.id) {
     return <Fragment />;
   }
 
@@ -48,7 +48,7 @@ export default function ConfirmDeletion(
         <Stack direction="row" justifyContent="space-evenly">
           <Button
             color="secondary"
-            disabled={!id || !loaded}
+            disabled={!loaded}
             id="user-delete-confirm"
             onClick={() => props.deleteUser(id)}
             variant="contained"

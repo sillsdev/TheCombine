@@ -29,7 +29,6 @@ import SortOptions, {
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { type Hash } from "types/hash";
-import theme from "types/theme";
 import { useUserAvatar } from "utilities/useAvatarSrc";
 
 export default function ActiveProjectUsers(props: {
@@ -120,7 +119,7 @@ export default function ActiveProjectUsers(props: {
           <Avatar
             alt="User Avatar"
             src={userAvatar[user.id]}
-            style={{ marginInlineEnd: theme.spacing(1) }}
+            sx={{ marginInlineEnd: 1 }}
           />
         </ListItemAvatar>
         <ListItemText>{`${user.name} (${user.username})`}</ListItemText>

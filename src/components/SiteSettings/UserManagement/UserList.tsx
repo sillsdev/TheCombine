@@ -19,7 +19,6 @@ import SortOptions, {
   getUserCompare,
 } from "components/ProjectUsers/SortOptions";
 import UserActionsMenu from "components/SiteSettings/UserManagement/UserActionsMenu";
-import theme from "types/theme";
 import { doesTextMatchUser } from "types/user";
 import { NormalizedTextField } from "utilities/fontComponents";
 import { useUserAvatar } from "utilities/useAvatarSrc";
@@ -70,13 +69,15 @@ export default function UserList(props: UserListProps): ReactElement {
             user={user}
           />
         </ListItemIcon>
+
         <ListItemAvatar>
           <Avatar
             alt={`Avatar for ${user.username}`}
             src={userAvatar[user.id]}
-            style={{ marginInlineEnd: theme.spacing(1) }}
+            sx={{ marginInlineEnd: 1 }}
           />
         </ListItemAvatar>
+
         <ListItemText>{`${user.name} (${user.username} | ${user.email})`}</ListItemText>
       </ListItem>
     );

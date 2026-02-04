@@ -33,10 +33,11 @@ export default function UserActionsMenu(
       <IconButton
         id={`${idAffix}-${props.user.username}`}
         onClick={(event) => setAnchorEl(event.currentTarget)}
-        style={{ minWidth: 0 }}
+        sx={{ minWidth: 0 }}
       >
         <MoreVert />
       </IconButton>
+
       <Menu
         id={`${idAffix}-menu-${props.user.username}`}
         anchorEl={anchorEl}
@@ -53,8 +54,10 @@ export default function UserActionsMenu(
           <ListItemIcon>
             <Folder />
           </ListItemIcon>
+
           <ListItemText>{t("siteSettings.projectList")}</ListItemText>
         </MenuItem>
+
         <MenuItem
           disabled={props.disableDelete}
           id={idDelete}
@@ -66,6 +69,7 @@ export default function UserActionsMenu(
           <ListItemIcon>
             <DeleteForever />
           </ListItemIcon>
+
           <ListItemText>{t("buttons.delete")}</ListItemText>
         </MenuItem>
       </Menu>

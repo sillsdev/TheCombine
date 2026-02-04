@@ -5,9 +5,8 @@ import { User } from "api/models";
 import UserProjects from "components/SiteSettings/UserManagement/UserProjects";
 import { newUser } from "types/user";
 
-jest.mock("components/SiteSettings/UserManagement/UserProjectsList", () => ({
-  __esModule: true,
-  default: () => <div />,
+jest.mock("backend", () => ({
+  getUserProjects: () => Promise.resolve([]),
 }));
 
 const renderUserProjects = async (user?: User): Promise<void> => {
