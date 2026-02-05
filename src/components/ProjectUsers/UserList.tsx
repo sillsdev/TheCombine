@@ -1,9 +1,9 @@
 import { Done } from "@mui/icons-material";
 import {
-  Avatar,
   Button,
   List,
   ListItem,
+  ListItemAvatar,
   ListItemIcon,
   ListItemText,
   Typography,
@@ -13,9 +13,8 @@ import { useTranslation } from "react-i18next";
 
 import { UserStub } from "api/models";
 import { getUsersByFilter } from "backend";
-import theme from "types/theme";
+import UserAvatar from "components/ProjectUsers/UserAvatar";
 import { NormalizedTextField } from "utilities/fontComponents";
-import { useUserAvatar } from "utilities/useAvatarSrc";
 
 interface UserListProps {
   addToProject: (userId: string) => void;
@@ -31,8 +30,6 @@ export default function UserList(props: UserListProps): ReactElement {
   const [projUserIds, setProjUserIds] = useState<string[]>([]);
 
   const { t } = useTranslation();
-
-  const { userAvatar } = useUserAvatar(props.projectUsers);
 
   const clearFilteredUsers = (): void => {
     setFilteredInProj([]);
@@ -75,11 +72,11 @@ export default function UserList(props: UserListProps): ReactElement {
         <ListItemIcon>
           <Done />
         </ListItemIcon>
-        <Avatar
-          alt="User Avatar"
-          src={userAvatar[user.id]}
-          style={{ marginInlineEnd: theme.spacing(1) }}
-        />
+
+        <ListItemAvatar>
+          <UserAvatar user={user} />
+        </ListItemAvatar>
+
         <ListItemText primary={`${user.name} (${user.username})`} />
       </ListItem>
     );

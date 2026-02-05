@@ -1,6 +1,5 @@
 import { MoreVert } from "@mui/icons-material";
 import {
-  Avatar,
   Chip,
   IconButton,
   List,
@@ -26,11 +25,10 @@ import SortOptions, {
   UserOrder,
   getUserCompare,
 } from "components/ProjectUsers/SortOptions";
+import UserAvatar from "components/ProjectUsers/UserAvatar";
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { type Hash } from "types/hash";
-import theme from "types/theme";
-import { useUserAvatar } from "utilities/useAvatarSrc";
 
 export default function ActiveProjectUsers(props: {
   projectId: string;
@@ -45,8 +43,6 @@ export default function ActiveProjectUsers(props: {
   const [sortedUsers, setSortedUsers] = useState<UserStub[]>([]);
 
   const { t } = useTranslation();
-
-  const { userAvatar } = useUserAvatar(projectUsers);
 
   const compareUsers = useCallback(
     (a: UserStub, b: UserStub): number =>
@@ -101,11 +97,7 @@ export default function ActiveProjectUsers(props: {
     return (
       <ListItem key={user.id}>
         <ListItemAvatar>
-          <Avatar
-            alt="User Avatar"
-            src={userAvatar[user.id]}
-            style={{ marginInlineEnd: theme.spacing(1) }}
-          />
+          <UserAvatar user={user} />
         </ListItemAvatar>
         <ListItemText primary={`${user.name} (${user.username})`} />
         <Chip

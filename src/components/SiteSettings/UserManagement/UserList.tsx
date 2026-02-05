@@ -1,6 +1,5 @@
 import { DeleteForever, VpnKey } from "@mui/icons-material";
 import {
-  Avatar,
   Button,
   List,
   ListItem,
@@ -20,10 +19,9 @@ import SortOptions, {
   UserOrder,
   getUserCompare,
 } from "components/ProjectUsers/SortOptions";
-import theme from "types/theme";
+import UserAvatar from "components/ProjectUsers/UserAvatar";
 import { doesTextMatchUser } from "types/user";
 import { NormalizedTextField } from "utilities/fontComponents";
-import { useUserAvatar } from "utilities/useAvatarSrc";
 
 interface UserListProps {
   allUsers: User[];
@@ -38,8 +36,6 @@ export default function UserList(props: UserListProps): ReactElement {
   const [userOrder, setUserOrder] = useState(UserOrder.Username);
 
   const { t } = useTranslation();
-
-  const { userAvatar } = useUserAvatar(props.allUsers);
 
   const compareUsers = useCallback(
     (a: User, b: User): number =>
@@ -77,13 +73,11 @@ export default function UserList(props: UserListProps): ReactElement {
     return (
       <ListItem key={user.id}>
         <ListItemIcon>{userListButton(user)}</ListItemIcon>
+
         <ListItemAvatar>
-          <Avatar
-            alt="User Avatar"
-            src={userAvatar[user.id]}
-            style={{ marginInlineEnd: theme.spacing(1) }}
-          />
+          <UserAvatar user={user} />
         </ListItemAvatar>
+
         <ListItemText
           primary={`${user.name} (${user.username} | ${user.email})`}
         />
