@@ -8,7 +8,9 @@ export default function UserAvatar(props: { user: UserStub }): ReactElement {
   const [src, setSrc] = useState<string | undefined>();
 
   useEffect(() => {
-    if (props.user.hasAvatar) avatarSrc(props.user.id).then(setSrc);
+    if (props.user.hasAvatar) {
+      avatarSrc(props.user.id).then(setSrc);
+    }
   }, [props.user.hasAvatar, props.user.id]);
 
   return <Avatar src={src} />;
