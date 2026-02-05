@@ -12,10 +12,9 @@ import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { UserStub } from "api/models";
-import { avatarSrc, getUsersByFilter } from "backend";
-import { Hash } from "types/hash";
-import theme from "types/theme";
+import { getUsersByFilter } from "backend";
 import { NormalizedTextField } from "utilities/fontComponents";
+import { useUserAvatar } from "utilities/useAvatarSrc";
 
 interface UserListProps {
   addToProject: (userId: string) => void;
@@ -29,9 +28,10 @@ export default function UserList(props: UserListProps): ReactElement {
   const [filteredNotInProj, setFilteredNotInProj] = useState<UserStub[]>([]);
   const [hoverUserId, setHoverUserId] = useState<string>("");
   const [projUserIds, setProjUserIds] = useState<string[]>([]);
-  const [userAvatar, setUserAvatar] = useState<Hash<string>>({});
 
   const { t } = useTranslation();
+
+  const { userAvatar } = useUserAvatar(props.projectUsers);
 
   const clearFilteredUsers = (): void => {
     setFilteredInProj([]);
@@ -42,14 +42,6 @@ export default function UserList(props: UserListProps): ReactElement {
     setFilterInput("");
     clearFilteredUsers();
     setProjUserIds(props.projectUsers.map((u) => u.id));
-
-    const newUserAvatar: Hash<string> = {};
-    const promises = props.projectUsers.map(async (u) => {
-      if (u.hasAvatar) {
-        newUserAvatar[u.id] = await avatarSrc(u.id);
-      }
-    });
-    Promise.all(promises).then(() => setUserAvatar(newUserAvatar));
   }, [props.projectUsers]);
 
   const setFilteredUsers = useCallback(
@@ -82,12 +74,14 @@ export default function UserList(props: UserListProps): ReactElement {
         <ListItemIcon>
           <Done />
         </ListItemIcon>
+
         <Avatar
           alt="User Avatar"
           src={userAvatar[user.id]}
-          style={{ marginInlineEnd: theme.spacing(1) }}
+          sx={{ marginInlineEnd: 1 }}
         />
-        <ListItemText primary={`${user.name} (${user.username})`} />
+
+        <ListItemText>{`${user.name} (${user.username})`}</ListItemText>
       </ListItem>
     );
   };
@@ -99,7 +93,8 @@ export default function UserList(props: UserListProps): ReactElement {
         onMouseEnter={() => setHoverUserId(user.id)}
         onMouseLeave={() => setHoverUserId("")}
       >
-        <ListItemText primary={`${user.name} (${user.username})`} />
+        <ListItemText>{`${user.name} (${user.username})`}</ListItemText>
+
         {hoverUserId === user.id && (
           <Button
             onClick={() => props.addToProject(user.id)}
@@ -115,11 +110,13 @@ export default function UserList(props: UserListProps): ReactElement {
   return (
     <div>
       <Typography>{t("projectSettings.invite.searchTitle")}</Typography>
+
       <NormalizedTextField
         onChange={(e) => updateUsers(e.target.value)}
         placeholder={t("projectSettings.invite.searchPlaceholder")}
         value={filterInput}
       />
+
       <List>
         {filteredInProj.map(inProjListItem)}
         {filteredNotInProj.map(notInProjListItem)}
