@@ -1,5 +1,11 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { Fragment, ReactElement, useEffect, useState } from "react";
+import {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import { User } from "api/models";
@@ -22,6 +28,8 @@ export default function ConfirmDeletion(
     setLoaded(false);
   }, [props.user?.id]);
 
+  const handleOnLoaded = useCallback(() => setLoaded(true), []);
+
   if (!props.user?.id) {
     return <Fragment />;
   }
@@ -43,7 +51,7 @@ export default function ConfirmDeletion(
           {t("siteSettings.deleteUser.confirm")}
         </Typography>
 
-        <UserProjectsList onLoaded={() => setLoaded(true)} userId={id} />
+        <UserProjectsList onLoaded={handleOnLoaded} userId={id} />
 
         <Stack direction="row" justifyContent="space-evenly">
           <Button
