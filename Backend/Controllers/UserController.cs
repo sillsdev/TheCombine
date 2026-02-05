@@ -258,6 +258,7 @@ namespace BackendFramework.Controllers
                         ProjectId = projectId,
                         ProjectIsActive = project.IsActive,
                         ProjectName = project.Name,
+                        ProjectVernacular = project.VernacularWritingSystem.Bcp47,
                         Role = userRole.Role
                     });
                 }
