@@ -30,5 +30,5 @@
 - name: Start monitoring service
   service:
     name: sysstat
-    enabled: yes
+    enabled: True
     state: started

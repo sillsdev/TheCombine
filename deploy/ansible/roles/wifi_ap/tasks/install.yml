@@ -9,7 +9,7 @@
       - iw
       - dnsmasq
       - iptables
-    update_cache: yes
+    update_cache: True
     cache_valid_time: 3600
     state: present
   notify: Start create_ap

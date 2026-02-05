@@ -2,6 +2,6 @@
 - name: Reload k3s
   systemd:
     name: k3s
-    daemon_reload: yes
-    enabled: yes
+    daemon_reload: True
+    enabled: True
     state: restarted

@@ -34,6 +34,9 @@ set-combine-env () {
     # Collect values from user
     read -p "Enter AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
     read -p "Enter AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY
+    # Trim whitespace (tabs and newlines cause the installer to fail)
+    AWS_ACCESS_KEY_ID="$(printf '%s' "$AWS_ACCESS_KEY_ID" | xargs)"
+    AWS_SECRET_ACCESS_KEY="$(printf '%s' "$AWS_SECRET_ACCESS_KEY" | xargs)"
     # Write collected values and static values to config file
     cat <<.EOF > ${CONFIG_DIR}/env
     export COMBINE_JWT_SECRET_KEY="${COMBINE_JWT_SECRET_KEY}"
@@ -79,11 +82,14 @@ install-kubernetes () {
   cd ${DEPLOY_DIR}/ansible
 
   # Set -e/--extra-vars for ansible-playbook
-  EXTRA_VARS="-e k8s_user=$(whoami)"
+  K8S_USER=$(whoami)
+  echo "Install Kubernetes with user: ${K8S_USER}"
+  EXTRA_VARS="-e k8s_user=${K8S_USER}"
   if [ -d "${DEPLOY_DIR}/airgap-images" ] ; then
-    EXTRA_VARS="${EXTRA_VARS} -e install_airgap_images=true"
+    EXTRA_VARS="${EXTRA_VARS} -e install_airgap_images=True"
   fi
   
+  export ANSIBLE_ALLOW_BROKEN_CONDITIONALS=True
   ansible-playbook playbook_desktop_setup.yml -K ${EXTRA_VARS} $(((DEBUG == 1)) && echo "-vv")
 }
 
@@ -260,8 +266,8 @@ while (( "$#" )) ; do
   shift
 done
 
-# Check that we have a COMBINE_VERSION
-if [ -z "${COMBINE_VERSION}" ] ; then
+# Check that we have a COMBINE_VERSION (not needed for uninstall)
+if [[ "${STATE}" != "Uninstall-combine" && -z "${COMBINE_VERSION}" ]] ; then
   error "Combine version is not specified."
 fi
 
@@ -329,7 +335,7 @@ while [ "$STATE" != "Done" ] ; do
       next-state "Done"
       ;;
     Uninstall-combine)
-      ${DEPLOY_DIR}/scripts/uninstall-combine
+      ${DEPLOY_DIR}/scripts/uninstall-combine.sh
       next-state "Done"
       ;;
     *)

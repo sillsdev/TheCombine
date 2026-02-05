@@ -126,6 +126,7 @@ export default function SaveDeferButtons(): ReactElement {
         handleConfirm={confirmRevert}
         open={showRevertDialog}
         text="mergeDups.helpText.revertSetDialog"
+        focusOnConfirmButton
       />
     </>
   );

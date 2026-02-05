@@ -363,8 +363,22 @@ export async function graylistAdd(wordIds: string[]): Promise<void> {
   );
 }
 
-/** Start finding list of potential duplicates for merging. */
-export async function findDuplicates(
+/** Find and return lists of potential duplicates with identical vernacular. */
+export async function findIdenticalDuplicates(
+  maxInList: number,
+  maxLists: number,
+  ignoreProtected = false
+): Promise<Word[][]> {
+  const projectId = LocalStorage.getProjectId();
+  const resp = await mergeApi.findIdenticalPotentialDuplicates(
+    { ignoreProtected, maxInList, maxLists, projectId },
+    defaultOptions()
+  );
+  return resp.data;
+}
+
+/** Start finding list of potential duplicates with similar vernaculars. */
+export async function findSimilarDuplicates(
   maxInList: number,
   maxLists: number,
   ignoreProtected = false
@@ -376,7 +390,7 @@ export async function findDuplicates(
   );
 }
 
-/** Retrieve list of potential duplicates for merging. */
+/** Retrieve list of similar potential duplicates for merging. */
 export async function retrieveDuplicates(): Promise<Word[][]> {
   const resp = await mergeApi.retrievePotentialDuplicates(
     { projectId: LocalStorage.getProjectId() },
@@ -910,6 +924,11 @@ export async function deleteFrontierWord(wordId: string): Promise<void> {
 export async function getDuplicateId(word: Word): Promise<string> {
   const params = { projectId: LocalStorage.getProjectId(), word };
   return (await wordApi.getDuplicateId(params, defaultOptions())).data;
+}
+
+export async function getFrontierCount(): Promise<number> {
+  const params = { projectId: LocalStorage.getProjectId() };
+  return (await wordApi.getFrontierCount(params, defaultOptions())).data;
 }
 
 export async function getFrontierWords(): Promise<Word[]> {

@@ -23,6 +23,8 @@ import { ValidateChars } from "goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "goals/ValidateStrWords/ValidateStrWords";
 import { Goal, GoalName, GoalStatus, GoalType } from "types/goals";
 
+export const maxWordsInMergeList = 5;
+
 export function maxNumSteps(type: GoalType): number {
   switch (type) {
     case GoalType.MergeDups:
