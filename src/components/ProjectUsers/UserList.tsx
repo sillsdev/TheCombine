@@ -14,7 +14,6 @@ import { useTranslation } from "react-i18next";
 import { UserStub } from "api/models";
 import { avatarSrc, getUsersByFilter } from "backend";
 import { Hash } from "types/hash";
-import theme from "types/theme";
 import { NormalizedTextField } from "utilities/fontComponents";
 
 interface UserListProps {
@@ -85,7 +84,7 @@ export default function UserList(props: UserListProps): ReactElement {
         <Avatar
           alt="User Avatar"
           src={userAvatar[user.id]}
-          style={{ marginInlineEnd: theme.spacing(1) }}
+          sx={{ marginInlineEnd: 1 }}
         />
         <ListItemText primary={`${user.name} (${user.username})`} />
       </ListItem>

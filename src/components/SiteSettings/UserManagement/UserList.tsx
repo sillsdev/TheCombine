@@ -22,7 +22,6 @@ import SortOptions, {
   getUserCompare,
 } from "components/ProjectUsers/SortOptions";
 import { Hash } from "types/hash";
-import theme from "types/theme";
 import { doesTextMatchUser } from "types/user";
 import { NormalizedTextField } from "utilities/fontComponents";
 
@@ -90,7 +89,7 @@ export default function UserList(props: UserListProps): ReactElement {
           <Avatar
             alt="User Avatar"
             src={userAvatar[user.id]}
-            style={{ marginInlineEnd: theme.spacing(1) }}
+            sx={{ marginInlineEnd: 1 }}
           />
         </ListItemAvatar>
         <ListItemText

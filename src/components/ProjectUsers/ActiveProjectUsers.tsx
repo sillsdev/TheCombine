@@ -29,7 +29,6 @@ import SortOptions, {
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { type Hash } from "types/hash";
-import theme from "types/theme";
 
 export default function ActiveProjectUsers(props: {
   projectId: string;
@@ -112,7 +111,7 @@ export default function ActiveProjectUsers(props: {
           <Avatar
             alt="User Avatar"
             src={userAvatar[user.id]}
-            style={{ marginInlineEnd: theme.spacing(1) }}
+            sx={{ marginInlineEnd: 1 }}
           />
         </ListItemAvatar>
         <ListItemText primary={`${user.name} (${user.username})`} />
