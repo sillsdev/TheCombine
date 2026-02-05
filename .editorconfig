@@ -16,6 +16,8 @@ dotnet_diagnostic.CA1848.severity = none
 dotnet_diagnostic.CS1591.severity = none
 # IDE0005 requires both EnforceCodeStyleInBuild and GenerateDocumentationFile set to true.
 dotnet_diagnostic.IDE0005.severity = warning
+# Warn for unused private members.
+dotnet_diagnostic.IDE0052.severity = warning
 
 [*.py]
 max_line_length = 99
