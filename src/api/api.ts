@@ -13,6 +13,7 @@
  */
 
 export * from "./api/audio-api";
+export * from "./api/auth-api";
 export * from "./api/avatar-api";
 export * from "./api/banner-api";
 export * from "./api/email-verify-api";
