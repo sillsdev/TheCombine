@@ -2,7 +2,7 @@ import { Badge, Tooltip } from "@mui/material";
 import { ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { getDomainCount } from "backend";
+import { getDomainWordCount } from "backend";
 import { rootId } from "types/semanticDomain";
 
 interface DomainCountBadgeProps {
@@ -21,7 +21,7 @@ export default function DomainCountBadge(
   useEffect(() => {
     setWordCount(undefined);
     if (domainId && domainId !== rootId) {
-      getDomainCount(domainId)
+      getDomainWordCount(domainId)
         .then(setWordCount)
         .catch(() =>
           console.warn(`Failed to get word count for domain ${domainId}.`)

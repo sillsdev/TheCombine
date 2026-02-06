@@ -13,30 +13,20 @@ namespace BackendFramework.Controllers
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/statistics")]
 
-    public class StatisticsController(
-        IProjectRepository projRepo, IPermissionService permissionService, IStatisticsService statService) : Controller
+    public class StatisticsController : Controller
     {
-        private readonly IProjectRepository _projRepo = projRepo;
-        private readonly IPermissionService _permissionService = permissionService;
-        private readonly IStatisticsService _statService = statService;
+        private readonly IStatisticsService _statService;
+        private readonly IPermissionService _permissionService;
+        private readonly IProjectRepository _projRepo;
 
         private const string otelTagName = "otel.StatisticsController";
 
-        /// <summary> Get the count of senses in a specific semantic domain </summary>
-        /// <returns> An integer count </returns>
-        [HttpGet("domaincount/{domainId}", Name = "GetDomainCount")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> GetDomainCount(string projectId, string domainId)
+        public StatisticsController(
+            IStatisticsService statService, IPermissionService permissionService, IProjectRepository projRepo)
         {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain count");
-
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
-            {
-                return Forbid();
-            }
-
-            return Ok(await _statService.GetDomainCount(projectId, domainId));
+            _statService = statService;
+            _permissionService = permissionService;
+            _projRepo = projRepo;
         }
 
         /// <summary> Get a list of <see cref="SemanticDomainCount"/>s of a specific project in order </summary>

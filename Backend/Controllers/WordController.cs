@@ -13,20 +13,15 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/words")]
-    public class WordController : Controller
+    public class WordController(ISemanticDomainCountRepository semDomCountRepo, IWordRepository wordRepo,
+        IWordService wordService, IPermissionService permissionService) : Controller
     {
-        private readonly IWordRepository _wordRepo;
-        private readonly IPermissionService _permissionService;
-        private readonly IWordService _wordService;
+        private readonly ISemanticDomainCountRepository _semDomCountRepo = semDomCountRepo;
+        private readonly IWordRepository _wordRepo = wordRepo;
+        private readonly IPermissionService _permissionService = permissionService;
+        private readonly IWordService _wordService = wordService;
 
         private const string otelTagName = "otel.WordController";
-
-        public WordController(IWordRepository repo, IWordService wordService, IPermissionService permissionService)
-        {
-            _wordRepo = repo;
-            _permissionService = permissionService;
-            _wordService = wordService;
-        }
 
         /// <summary> Deletes specified Frontier <see cref="Word"/>. </summary>
         [HttpDelete("frontier/{wordId}", Name = "DeleteFrontierWord")]
@@ -304,6 +299,23 @@ namespace BackendFramework.Controllers
                 }
             }
             return Ok(updates);
+        }
+
+        /// <summary> Get the count of frontier word senses in a specific semantic domain </summary>
+        /// <returns> An integer count </returns>
+        [HttpGet("domainwordcount/{domainId}", Name = "GetDomainWordCount")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetDomainWordCount(string projectId, string domainId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain word count");
+
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
+            {
+                return Forbid();
+            }
+
+            return Ok(await _semDomCountRepo.GetCount(projectId, domainId));
         }
     }
 }

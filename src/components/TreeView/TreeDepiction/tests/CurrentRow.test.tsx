@@ -9,15 +9,15 @@ import testDomainMap, {
 } from "components/TreeView/tests/SemanticDomainMock";
 
 jest.mock("backend", () => ({
-  getDomainCount: () => mockGetDomainCount(),
+  getDomainWordCount: () => mockGetDomainWordCount(),
 }));
 
 const mockAnimate = jest.fn();
-const mockGetDomainCount = jest.fn();
+const mockGetDomainWordCount = jest.fn();
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockGetDomainCount.mockResolvedValue(0);
+  mockGetDomainWordCount.mockResolvedValue(0);
 });
 
 describe("CurrentRow", () => {

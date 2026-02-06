@@ -8,11 +8,6 @@ namespace Backend.Tests.Mocks
 {
     internal sealed class StatisticsServiceMock : IStatisticsService
     {
-        public Task<int> GetDomainCount(string projectId, string domainId)
-        {
-            return Task.FromResult(0);
-        }
-
         public Task<List<SemanticDomainCount>> GetSemanticDomainCounts(string projectId, string lang)
         {
             return Task.FromResult(new List<SemanticDomainCount>());

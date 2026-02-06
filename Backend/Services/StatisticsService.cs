@@ -28,16 +28,6 @@ namespace BackendFramework.Services
         const string StatRunningTotal = "Running Total";
 
         /// <summary>
-        /// Get a count of the number of senses associated with a semantic domain
-        /// </summary>
-        public async Task<int> GetDomainCount(string projectId, string domainId)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain count");
-
-            return await _semDomCountRepo.GetCount(projectId, domainId);
-        }
-
-        /// <summary>
         /// Get a <see cref="SemanticDomainCount"/> to generate a SemanticDomain statistics
         /// </summary>
         public async Task<List<SemanticDomainCount>> GetSemanticDomainCounts(string projectId, string lang)

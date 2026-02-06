@@ -8,9 +8,9 @@ using BackendFramework.Otel;
 namespace BackendFramework.Services
 {
     /// <summary> Service for managing semantic domain sense counts </summary>
-    public class SemanticDomainCountService(ISemanticDomainCountRepository countRepo) : ISemanticDomainCountService
+    public class SemanticDomainCountService(ISemanticDomainCountRepository semDomCountRepo) : ISemanticDomainCountService
     {
-        private readonly ISemanticDomainCountRepository _countRepo = countRepo;
+        private readonly ISemanticDomainCountRepository _semDomCountRepo = semDomCountRepo;
 
         private const string otelTagName = "otel.SemanticDomainCountService";
 
@@ -33,7 +33,7 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "clearing counts for project");
 
-            await _countRepo.DeleteAllCounts(projectId);
+            await _semDomCountRepo.DeleteAllCounts(projectId);
         }
 
         /// <summary> Updates counts when a new word is added </summary>
@@ -44,7 +44,7 @@ namespace BackendFramework.Services
             var domainCounts = GetDomainCounts(word);
             foreach (var entry in domainCounts)
             {
-                await _countRepo.Increment(word.ProjectId, entry.Key, entry.Value);
+                await _semDomCountRepo.Increment(word.ProjectId, entry.Key, entry.Value);
             }
         }
 
@@ -73,7 +73,7 @@ namespace BackendFramework.Services
             {
                 foreach (var domainEntry in projectEntry.Value)
                 {
-                    await _countRepo.Increment(projectEntry.Key, domainEntry.Key, domainEntry.Value);
+                    await _semDomCountRepo.Increment(projectEntry.Key, domainEntry.Key, domainEntry.Value);
                 }
             }
         }
@@ -101,7 +101,7 @@ namespace BackendFramework.Services
 
                 if (diff != 0)
                 {
-                    await _countRepo.Increment(newWord.ProjectId, domainId, diff);
+                    await _semDomCountRepo.Increment(newWord.ProjectId, domainId, diff);
                 }
             }
         }
@@ -114,7 +114,7 @@ namespace BackendFramework.Services
             var domainCounts = GetDomainCounts(word);
             foreach (var entry in domainCounts)
             {
-                await _countRepo.Increment(word.ProjectId, entry.Key, -entry.Value);
+                await _semDomCountRepo.Increment(word.ProjectId, entry.Key, -entry.Value);
             }
         }
     }
