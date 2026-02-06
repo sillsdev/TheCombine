@@ -13,20 +13,15 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/words")]
-    public class WordController : Controller
+    public class WordController(ISemanticDomainCountRepository semDomCountRepo, IWordRepository wordRepo,
+        IWordService wordService, IPermissionService permissionService) : Controller
     {
-        private readonly IWordRepository _wordRepo;
-        private readonly IPermissionService _permissionService;
-        private readonly IWordService _wordService;
+        private readonly ISemanticDomainCountRepository _semDomCountRepo = semDomCountRepo;
+        private readonly IWordRepository _wordRepo = wordRepo;
+        private readonly IPermissionService _permissionService = permissionService;
+        private readonly IWordService _wordService = wordService;
 
         private const string otelTagName = "otel.WordController";
-
-        public WordController(IWordRepository repo, IWordService wordService, IPermissionService permissionService)
-        {
-            _wordRepo = repo;
-            _permissionService = permissionService;
-            _wordService = wordService;
-        }
 
         /// <summary> Deletes specified Frontier <see cref="Word"/>. </summary>
         [HttpDelete("frontier/{wordId}", Name = "DeleteFrontierWord")]
@@ -43,7 +38,7 @@ namespace BackendFramework.Controllers
             }
             var userId = _permissionService.GetUserId(HttpContext);
 
-            var deletedWordId = await _wordService.DeleteFrontierWord(projectId, userId, wordId);
+            var deletedWordId = await _wordService.MakeFrontierDeleted(projectId, userId, wordId);
             return deletedWordId is null ? NotFound() : Ok();
         }
 
@@ -306,7 +301,7 @@ namespace BackendFramework.Controllers
             return Ok(updates);
         }
 
-        /// <summary> Get the count of frontier words with senses in a specific semantic domain </summary>
+        /// <summary> Get the count of frontier word senses in a specific semantic domain </summary>
         /// <returns> An integer count </returns>
         [HttpGet("domainwordcount/{domainId}", Name = "GetDomainWordCount")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
@@ -320,7 +315,7 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
-            return Ok(await _wordRepo.CountFrontierWordsWithDomain(projectId, domainId));
+            return Ok(await _semDomCountRepo.GetCount(projectId, domainId));
         }
     }
 }

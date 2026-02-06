@@ -269,6 +269,8 @@ namespace BackendFramework
 
             // Semantic Domain types
             services.AddSingleton<ISemanticDomainRepository, SemanticDomainRepository>();
+            services.AddTransient<ISemanticDomainCountRepository, SemanticDomainCountRepository>();
+            services.AddTransient<ISemanticDomainCountService, SemanticDomainCountService>();
 
             // Speaker types
             services.AddTransient<ISpeakerRepository, SpeakerRepository>();

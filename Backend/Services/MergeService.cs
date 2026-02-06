@@ -120,7 +120,7 @@ namespace BackendFramework.Services
         private async Task<long> MergeDeleteChildren(string projectId, MergeWords mergeWords)
         {
             var childIds = mergeWords.Children.Select(c => c.SrcWordId).ToList();
-            return await _wordRepo.DeleteFrontierWords(projectId, childIds);
+            return await _wordService.DeleteFrontierWords(projectId, childIds);
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace BackendFramework.Services
             }
             foreach (var parentId in ids.ParentIds)
             {
-                await _wordService.DeleteFrontierWord(projectId, userId, parentId);
+                await _wordService.MakeFrontierDeleted(projectId, userId, parentId);
             }
             return true;
         }

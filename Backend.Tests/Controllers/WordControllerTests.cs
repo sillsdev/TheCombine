@@ -31,10 +31,12 @@ namespace Backend.Tests.Controllers
         [SetUp]
         public void Setup()
         {
+            var semDomCountRepo = new SemanticDomainCountRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _wordService = new WordService(_wordRepo);
+            var semDomCountService = new SemanticDomainCountService(semDomCountRepo);
+            _wordService = new WordService(_wordRepo, semDomCountService);
             _permissionService = new PermissionServiceMock();
-            _wordController = new WordController(_wordRepo, _wordService, _permissionService);
+            _wordController = new WordController(semDomCountRepo, _wordRepo, _wordService, _permissionService);
         }
 
         [Test]

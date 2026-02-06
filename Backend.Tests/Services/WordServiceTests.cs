@@ -19,8 +19,10 @@ namespace Backend.Tests.Services
         [SetUp]
         public void Setup()
         {
+            var semDomCountRepo = new SemanticDomainCountRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _wordService = new WordService(_wordRepo);
+            var semDomCountService = new SemanticDomainCountService(semDomCountRepo);
+            _wordService = new WordService(_wordRepo, semDomCountService);
         }
 
         [Test]
