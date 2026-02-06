@@ -35,7 +35,6 @@ const renderImageUpload = async (): Promise<void> => {
 };
 
 beforeEach(async () => {
-  jest.clearAllMocks();
   await renderImageUpload();
 });
 

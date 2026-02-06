@@ -48,10 +48,6 @@ const renderRecorderIcon = async (wordId = ""): Promise<void> => {
   });
 };
 
-beforeEach(() => {
-  jest.resetAllMocks();
-});
-
 describe("RecorderIcon", () => {
   test("pointerDown records if no recording active", async () => {
     await renderRecorderIcon();

@@ -59,10 +59,6 @@ const renderEditSensesCardContent = async (showSenses = true): Promise<void> =>
     );
   });
 
-beforeEach(async () => {
-  jest.clearAllMocks();
-});
-
 describe("EditSensesCardContent", () => {
   it("renders sense summary", async () => {
     await renderEditSensesCardContent(false);

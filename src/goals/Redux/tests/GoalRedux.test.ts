@@ -56,6 +56,7 @@ const mockFindSimilarDuplicates = jest.fn();
 const mockGetUserEditById = jest.fn();
 const mockNavigate = jest.fn();
 const mockRetrieveDuplicates = jest.fn();
+let spyConvertEditToGoal: jest.SpyInstance | undefined;
 
 function setMockFunctions(): void {
   mockAddGoalToUserEdit.mockResolvedValue(0);
@@ -64,6 +65,12 @@ function setMockFunctions(): void {
   mockFindSimilarDuplicates.mockResolvedValue(undefined);
   mockGetUserEditById.mockResolvedValue(mockUserEdit(true));
   mockRetrieveDuplicates.mockResolvedValue(goalDataMock.plannedWords);
+  spyConvertEditToGoal = jest.spyOn(goalUtilities, "convertEditToGoal");
+}
+
+function cleanUpSpy(): void {
+  spyConvertEditToGoal?.mockRestore();
+  spyConvertEditToGoal = undefined;
 }
 
 const mockProjectId = "123";
@@ -101,12 +108,11 @@ function setupLocalStorage(): void {
 }
 
 beforeEach(() => {
-  // Restore any spied functions before clearing all
-  jest.restoreAllMocks();
-  jest.clearAllMocks();
   setMockFunctions();
   setupLocalStorage();
 });
+
+afterEach(cleanUpSpy);
 
 describe("setCurrentGoal", () => {
   it("calls setCurrentGoal() with no arguments", async () => {
@@ -123,19 +129,16 @@ describe("setCurrentGoal", () => {
 describe("asyncGetUserEdits", () => {
   it("backend returns user edits", async () => {
     const store = setupStore();
-    const convertEditToGoalSpy = jest.spyOn(goalUtilities, "convertEditToGoal");
+
     await act(async () => {
       await store.dispatch(asyncGetUserEdits());
     });
     expect(store.getState().goalsState.history).toHaveLength(1);
-    expect(convertEditToGoalSpy).toHaveBeenCalledTimes(1);
+    expect(spyConvertEditToGoal).toHaveBeenCalledTimes(1);
   });
 
   it("backend returns no user edits", async () => {
     const store = setupStore();
-
-    // setup mocks for testing the action/reducers
-    const convertEditToGoalSpy = jest.spyOn(goalUtilities, "convertEditToGoal");
     mockGetUserEditById.mockResolvedValueOnce(mockUserEdit(false));
 
     // dispatch the action
@@ -143,7 +146,7 @@ describe("asyncGetUserEdits", () => {
       await store.dispatch(asyncGetUserEdits());
     });
     expect(store.getState().goalsState.history).toHaveLength(0);
-    expect(convertEditToGoalSpy).toHaveBeenCalledTimes(0);
+    expect(spyConvertEditToGoal).toHaveBeenCalledTimes(0);
   });
 
   it("creates new user edits", async () => {

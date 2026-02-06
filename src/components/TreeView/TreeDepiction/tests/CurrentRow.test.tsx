@@ -16,7 +16,6 @@ const mockAnimate = jest.fn();
 const mockGetDomainWordCount = jest.fn();
 
 beforeEach(() => {
-  jest.clearAllMocks();
   mockGetDomainWordCount.mockResolvedValue(0);
 });
 

@@ -127,7 +127,6 @@ const renderMergeDragDrop = async (
 };
 
 beforeEach(async () => {
-  jest.clearAllMocks();
   await renderMergeDragDrop(mockTwoWordState());
 });
 

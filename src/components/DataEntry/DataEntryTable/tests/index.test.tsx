@@ -106,7 +106,6 @@ jest.setTimeout(10000);
 let agent: UserEvent;
 
 beforeEach(() => {
-  jest.clearAllMocks();
   setMocks();
   agent = userEvent.setup();
 });

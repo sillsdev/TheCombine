@@ -45,10 +45,6 @@ const mockState = (changes?: CharInvChanges): Partial<StoreState> => ({
   },
 });
 
-beforeEach(() => {
-  jest.resetAllMocks();
-});
-
 describe("CharInvCompleted", () => {
   const renderCharInvCompleted = async (
     changes?: Partial<CharInvChanges>
