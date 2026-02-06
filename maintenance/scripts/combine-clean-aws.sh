@@ -30,7 +30,12 @@ usage() {
            for pruning.
 
      max_backups:
-           number of backups to keep for the host being cleaned up.  Default = 3
+           number of days of daily backups to keep for the host being cleaned up.
+           Default = 7
+
+     max_monthly_backups:
+           number of months of monthly backups (1st of month) to keep for the host 
+           being cleaned up.  Default = 3
   Caveats:
     This script assumes that the backups have been created by the combine-backup
     script; specifically, that:
@@ -43,6 +48,7 @@ USAGE
 }
 
 DRYRUN=0
+VERBOSE=0
 while [[ $# -gt 0 ]] ; do
   arg="$1"
   shift
@@ -67,15 +73,45 @@ while [[ $# -gt 0 ]] ; do
 done
 
 # Prepend 's3://' to $aws_bucket if it is needed.
+if [[ -z "${aws_bucket:-}" ]] ; then
+  echo "ERROR: aws_bucket environment variable is not set"
+  exit 1
+fi
 [[ $aws_bucket =~ ^s3:// ]] || aws_bucket=s3://${aws_bucket}
 
-max_backups=${max_backups:=3}
+if [[ -z "${combine_host:-}" ]] ; then
+  echo "ERROR: combine_host environment variable is not set"
+  exit 1
+fi
+
+# Set defaults for backup retention
+if [[ ! $max_backups =~ ^[0-9]+$ ]]; then
+  if [[ $VERBOSE -eq 1 ]] ; then
+    echo "Invalid max_backups: ${max_backups} (using default: 7)"
+  fi
+  max_backups=7
+fi
+if [[ ! $max_monthly_backups =~ ^[0-9]+$ ]]; then
+  if [[ $VERBOSE -eq 1 ]] ; then
+    echo "Invalid max_monthly_backups: ${max_monthly_backups} (using default: 3)"
+  fi
+  max_monthly_backups=3
+fi
+
+# Get all backups sorted by name (which is chronological)
 AWS_BACKUPS=($(/usr/local/bin/aws s3 ls ${aws_bucket} --recursive | grep "${backup_filter}" | sed "s/[^\/]*\/\(.*\)/\1/" | sort))
 NUM_BACKUPS=${#AWS_BACKUPS[@]}
 
+# Calculate date thresholds based on configured retention (in YYYY-MM-DD format)
+DAILY_THRESHOLD=$(date -d "${max_backups} days ago" +%Y-%m-%d 2>/dev/null || date -v-${max_backups}d +%Y-%m-%d)
+MONTHLY_THRESHOLD=$(date -d "${max_monthly_backups} months ago" +%Y-%m-%d 2>/dev/null || date -v-${max_monthly_backups}m +%Y-%m-%d)
+
 if [[ $VERBOSE -eq 1 ]] ; then
-  echo "max_backups: " $max_backups
-  echo "NUM_BACKUPS: " $NUM_BACKUPS
+  echo "max_backups: $max_backups"
+  echo "max_monthly_backups: $max_monthly_backups"
+  echo "NUM_BACKUPS: $NUM_BACKUPS"
+  echo "DAILY_THRESHOLD: $DAILY_THRESHOLD"
+  echo "MONTHLY_THRESHOLD: $MONTHLY_THRESHOLD"
   echo "LIST OF BACKUPS:"
   for backup in ${AWS_BACKUPS[@]}
   do
@@ -83,15 +119,57 @@ if [[ $VERBOSE -eq 1 ]] ; then
   done
 fi
 
-if [[ ${NUM_BACKUPS} -gt ${max_backups} ]] ; then
-  loop_limit=$(( ${NUM_BACKUPS} - ${max_backups} ))
+# Determine which backups to keep
+# We keep:
+# 1. All backups from the last max_backups days
+# 2. Backups from the first day of the month for the last max_monthly_backups months
+declare -A KEEP_BACKUPS
 
-  for (( bu=0; bu < $loop_limit; bu++ )) ; do
-    cmd="/usr/local/bin/aws s3 rm ${aws_bucket}/${AWS_BACKUPS[${bu}]}"
+for backup in "${AWS_BACKUPS[@]}"
+do
+  # Extract date from backup filename
+  # Format: hostname-YYYY-MM-DD-HH-MM-SS.tar.gz
+  # Extract the date portion using regex
+  if [[ $backup =~ ^${combine_host}-([0-9]{4}-[0-9]{2})-([0-9]{2})(-[0-9]{2})+\.tar\.gz$ ]] ; then
+    YEAR_MONTH=${BASH_REMATCH[1]}
+    DAY=${BASH_REMATCH[2]}
+    BACKUP_DATE="${YEAR_MONTH}-${DAY}"
+    
+    # Check if backup is from the last max_backups days
+    if [[ "$BACKUP_DATE" > "$DAILY_THRESHOLD" ]] ; then
+      KEEP_BACKUPS[$backup]=1
+      if [[ $VERBOSE -eq 1 ]] ; then
+        echo "KEEP (last ${max_backups} days): $backup"
+      fi
+    # Check if backup is from first day of month and within last max_monthly_backups months
+    elif [[ "$BACKUP_DATE" > "$MONTHLY_THRESHOLD" ]] && [[ $DAY == "01" ]] ; then
+      KEEP_BACKUPS[$backup]=1
+      if [[ $VERBOSE -eq 1 ]] ; then
+        echo "KEEP (1st of month): $backup"
+      fi
+    else
+      if [[ $VERBOSE -eq 1 ]] ; then
+        echo "DELETE: $backup"
+      fi
+    fi
+  else
+    # If we can't parse the date, keep it to be safe
+    KEEP_BACKUPS[$backup]=1
+    if [[ $VERBOSE -eq 1 ]] ; then
+      echo "KEEP (cannot parse): $backup"
+    fi
+  fi
+done
+
+# Delete backups that are not in the keep list
+for backup in "${AWS_BACKUPS[@]}"
+do
+  if [[ ! ${KEEP_BACKUPS[$backup]} ]] ; then
+    cmd="/usr/local/bin/aws s3 rm ${aws_bucket}/${backup}"
     if [[ $DRYRUN -eq 1 ]] ; then
       echo "$cmd"
     else
       $cmd
     fi
-  done
-fi
+  fi
+done

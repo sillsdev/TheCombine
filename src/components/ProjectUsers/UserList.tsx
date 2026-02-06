@@ -1,9 +1,9 @@
 import { Done } from "@mui/icons-material";
 import {
-  Avatar,
   Button,
   List,
   ListItem,
+  ListItemAvatar,
   ListItemIcon,
   ListItemText,
   Typography,
@@ -12,8 +12,8 @@ import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { UserStub } from "api/models";
-import { avatarSrc, getUsersByFilter } from "backend";
-import { Hash } from "types/hash";
+import { getUsersByFilter } from "backend";
+import UserAvatar from "components/ProjectUsers/UserAvatar";
 import { NormalizedTextField } from "utilities/fontComponents";
 
 interface UserListProps {
@@ -28,7 +28,6 @@ export default function UserList(props: UserListProps): ReactElement {
   const [filteredNotInProj, setFilteredNotInProj] = useState<UserStub[]>([]);
   const [hoverUserId, setHoverUserId] = useState<string>("");
   const [projUserIds, setProjUserIds] = useState<string[]>([]);
-  const [userAvatar, setUserAvatar] = useState<Hash<string>>({});
 
   const { t } = useTranslation();
 
@@ -41,14 +40,6 @@ export default function UserList(props: UserListProps): ReactElement {
     setFilterInput("");
     clearFilteredUsers();
     setProjUserIds(props.projectUsers.map((u) => u.id));
-
-    const newUserAvatar: Hash<string> = {};
-    const promises = props.projectUsers.map(async (u) => {
-      if (u.hasAvatar) {
-        newUserAvatar[u.id] = await avatarSrc(u.id);
-      }
-    });
-    Promise.all(promises).then(() => setUserAvatar(newUserAvatar));
   }, [props.projectUsers]);
 
   const setFilteredUsers = useCallback(
@@ -81,11 +72,11 @@ export default function UserList(props: UserListProps): ReactElement {
         <ListItemIcon>
           <Done />
         </ListItemIcon>
-        <Avatar
-          alt="User Avatar"
-          src={userAvatar[user.id]}
-          sx={{ marginInlineEnd: 1 }}
-        />
+
+        <ListItemAvatar>
+          <UserAvatar user={user} />
+        </ListItemAvatar>
+
         <ListItemText primary={`${user.name} (${user.username})`} />
       </ListItem>
     );
