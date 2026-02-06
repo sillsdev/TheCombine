@@ -25,10 +25,6 @@ const testProps: TreeSearchProps = {
   customDomains: [],
 };
 
-beforeEach(() => {
-  jest.clearAllMocks();
-});
-
 function setupSpies(domain: SemanticDomainTreeNode | undefined): void {
   jest.spyOn(backend, "getSemanticDomainTreeNode").mockResolvedValue(domain);
   jest

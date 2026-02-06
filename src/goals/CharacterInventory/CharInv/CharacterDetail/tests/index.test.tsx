@@ -42,7 +42,6 @@ async function renderCharacterDetail(): Promise<void> {
 }
 
 beforeEach(async () => {
-  jest.resetAllMocks();
   await renderCharacterDetail();
 });
 

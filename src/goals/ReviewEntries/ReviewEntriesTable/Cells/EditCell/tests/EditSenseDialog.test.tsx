@@ -57,10 +57,6 @@ const getGlossFields = (): HTMLElement[] => {
   return within(region).getAllByRole("textbox");
 };
 
-beforeEach(async () => {
-  jest.clearAllMocks();
-});
-
 describe("EditSenseDialog", () => {
   describe("cancel and save buttons", () => {
     beforeEach(async () => {

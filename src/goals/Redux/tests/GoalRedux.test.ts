@@ -101,9 +101,6 @@ function setupLocalStorage(): void {
 }
 
 beforeEach(() => {
-  // Restore any spied functions before clearing all
-  jest.restoreAllMocks();
-  jest.clearAllMocks();
   setMockFunctions();
   setupLocalStorage();
 });

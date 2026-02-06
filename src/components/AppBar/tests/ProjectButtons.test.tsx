@@ -52,7 +52,6 @@ const renderProjectButtons = async (
 };
 
 beforeEach(() => {
-  jest.resetAllMocks();
   mockHasPermission.mockResolvedValue(false);
 });
 

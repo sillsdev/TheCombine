@@ -24,10 +24,6 @@ const mockGetAllSemDomNames = jest.fn();
 const mockUpdateProject = jest.fn();
 const mockProjId = "project-id";
 
-beforeEach(() => {
-  jest.resetAllMocks();
-});
-
 describe("ProjectActions", () => {
   describe("asyncUpdateCurrentProject", () => {
     it("updates the backend and correctly affects state for different id", async () => {

@@ -17,10 +17,6 @@ const newDomainWithQuestions = (): SemanticDomainFull => ({
   questions: [...questions],
 });
 
-beforeEach(() => {
-  jest.clearAllMocks();
-});
-
 describe("DataEntryHeader", () => {
   it("No questions should disable switch and show no questions", async () => {
     await renderDataEntryHeader(newSemanticDomain(), true);
