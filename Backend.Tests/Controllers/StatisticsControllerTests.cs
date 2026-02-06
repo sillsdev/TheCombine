@@ -33,8 +33,7 @@ namespace Backend.Tests.Controllers
             _projRepo = new ProjectRepositoryMock();
             _userRepo = new UserRepositoryMock();
             _permService = new PermissionServiceMock(_userRepo);
-            var statsService = new StatisticsServiceMock();
-            _statsController = new StatisticsController(statsService, _permService, _projRepo)
+            _statsController = new StatisticsController(new StatisticsServiceMock(), _permService, _projRepo)
             {
                 // Mock the Http Context because this isn't an actual call controller
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
