@@ -156,5 +156,21 @@ namespace Backend.Tests.Controllers
             var result = _mergeController.GetGraylistEntries("projId", 3, "userId").Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
+
+        [Test]
+        public void TestFindIdenticalPotentialDuplicatesNoPermission()
+        {
+            _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _mergeController.FindIdenticalPotentialDuplicates("projId", 2, 1, false).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestFindIdenticalPotentialDuplicates()
+        {
+            // This test verifies the endpoint returns OK and data
+            var result = _mergeController.FindIdenticalPotentialDuplicates(ProjId, 5, 10, false).Result;
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+        }
     }
 }

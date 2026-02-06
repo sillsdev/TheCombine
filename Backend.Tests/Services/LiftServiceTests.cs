@@ -1,5 +1,4 @@
 using System;
-using Backend.Tests.Mocks;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using NUnit.Framework;
@@ -8,8 +7,6 @@ namespace Backend.Tests.Services
 {
     internal sealed class LiftServiceTests : IDisposable
     {
-        private ISemanticDomainRepository _semDomRepo = null!;
-        private ISpeakerRepository _speakerRepo = null!;
         private ILiftService _liftService = null!;
 
         private const string FileName = "file.lift-ranges";
@@ -25,8 +22,6 @@ namespace Backend.Tests.Services
         [SetUp]
         public void Setup()
         {
-            _semDomRepo = new SemanticDomainRepositoryMock();
-            _speakerRepo = new SpeakerRepositoryMock();
             _liftService = new LiftService();
         }
 

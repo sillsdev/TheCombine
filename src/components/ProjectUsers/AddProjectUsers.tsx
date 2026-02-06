@@ -51,7 +51,7 @@ export default function AddProjectUsers(
 
   useEffect(() => {
     Modal.setAppElement("body");
-  }, [projectUsers]);
+  }, []);
 
   function addToProject(userId: string): void {
     if (!projectUsers.some((u) => u.id === userId)) {

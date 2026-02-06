@@ -1,12 +1,14 @@
 import loadable from "@loadable/component";
-import { type ReactElement, useEffect } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import PageNotFound from "components/PageNotFound/component";
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import Loading from "goals/DefaultGoal/Loading";
+import IdenticalDuplicatesDialog from "goals/MergeDuplicates/IdenticalDuplicatesDialog";
 import { clearTree } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { setCurrentGoal } from "goals/Redux/GoalActions";
+import { DataLoadStatus } from "goals/Redux/GoalReduxTypes";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { Goal, GoalStatus, GoalType } from "types/goals";
@@ -39,7 +41,12 @@ export default function LoadingGoalScreen(): ReactElement {
   const { goalType, status } = useAppSelector(
     (state: StoreState) => state.goalsState.currentGoal
   );
+  const { dataLoadStatus } = useAppSelector(
+    (state: StoreState) => state.goalsState
+  );
   const navigate = useNavigate();
+
+  const [openDupsDialog, setOpenDupsDialog] = useState(false);
 
   useEffect(() => {
     // Prevent getting stuck on loading screen when user clicks the back button.
@@ -48,7 +55,26 @@ export default function LoadingGoalScreen(): ReactElement {
     }
   }, [goalType, navigate]);
 
-  return status === GoalStatus.Loading ? <Loading /> : <BaseGoalScreen />;
+  useEffect(() => {
+    if (goalType === GoalType.MergeDups && status !== GoalStatus.Completed) {
+      setOpenDupsDialog(
+        (prev) => prev || dataLoadStatus === DataLoadStatus.Loading
+      );
+    } else {
+      setOpenDupsDialog(false);
+    }
+  }, [dataLoadStatus, goalType, status]);
+
+  return (
+    <>
+      {status === GoalStatus.Loading ? <Loading /> : <BaseGoalScreen />}
+      {openDupsDialog && (
+        <IdenticalDuplicatesDialog
+          loading={dataLoadStatus === DataLoadStatus.Loading}
+        />
+      )}
+    </>
+  );
 }
 
 /**

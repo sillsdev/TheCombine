@@ -47,21 +47,6 @@ namespace BackendFramework.Controllers
             return deletedWordId is null ? NotFound() : Ok();
         }
 
-        /// <summary> Returns all <see cref="Word"/>s for specified <see cref="Project"/>. </summary>
-        [HttpGet(Name = "GetProjectWords")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Word>))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> GetProjectWords(string projectId)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all words");
-
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
-            {
-                return Forbid();
-            }
-            return Ok(await _wordRepo.GetAllWords(projectId));
-        }
-
         /// <summary> Returns <see cref="Word"/> with specified id. </summary>
         [HttpGet("{wordId}", Name = "GetWord")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Word))]
@@ -98,7 +83,22 @@ namespace BackendFramework.Controllers
             return Ok(await _wordRepo.HasFrontierWords(projectId));
         }
 
-        /// <summary> Returns all Frontier <see cref="Word"/> in specified <see cref="Project"/>. </summary>
+        /// <summary> Returns count of Frontier <see cref="Word"/>s in specified <see cref="Project"/>. </summary>
+        [HttpGet("frontiercount", Name = "GetFrontierCount")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetFrontierCount(string projectId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting count of Frontier words");
+
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
+            {
+                return Forbid();
+            }
+            return Ok(await _wordRepo.GetFrontierCount(projectId));
+        }
+
+        /// <summary> Returns all Frontier <see cref="Word"/>s in specified <see cref="Project"/>. </summary>
         [HttpGet("frontier", Name = "GetProjectFrontierWords")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Word>))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]

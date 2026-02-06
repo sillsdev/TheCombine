@@ -98,7 +98,6 @@ export default function SubmitTextDialog(
         <Button
           onClick={onCancel}
           variant="outlined"
-          color="primary"
           data-testid={props.buttonIdCancel}
           id={props.buttonIdCancel}
         >
@@ -106,8 +105,7 @@ export default function SubmitTextDialog(
         </Button>
         <Button
           onClick={onConfirm}
-          variant="outlined"
-          color="primary"
+          variant="contained"
           data-testid={props.buttonIdConfirm}
           id={props.buttonIdConfirm}
         >

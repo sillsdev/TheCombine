@@ -95,28 +95,6 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestGetAllWords()
-        {
-            await _wordRepo.Create(Util.RandomWord(ProjId));
-            await _wordRepo.Create(Util.RandomWord(ProjId));
-            await _wordRepo.Create(Util.RandomWord(ProjId));
-            await _wordRepo.Create(Util.RandomWord("OTHER_PROJECT"));
-
-            var words = (List<Word>)((ObjectResult)await _wordController.GetProjectWords(ProjId)).Value!;
-            Assert.That(words, Has.Count.EqualTo(3));
-            var repoWords = await _wordRepo.GetAllWords(ProjId);
-            repoWords.ForEach(word => Assert.That(words, Does.Contain(word).UsingPropertiesComparer()));
-        }
-
-        [Test]
-        public async Task TestGetAllWordsNoPermission()
-        {
-            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var result = await _wordController.GetProjectWords(ProjId);
-            Assert.That(result, Is.InstanceOf<ForbidResult>());
-        }
-
-        [Test]
         public async Task TestHasFrontierWords()
         {
             await _wordRepo.Create(Util.RandomWord("OTHER_PROJECT"));
@@ -154,6 +132,25 @@ namespace Backend.Tests.Controllers
             var wordInFrontier = await _wordRepo.AddFrontier(Util.RandomWord(ProjId));
             _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = await _wordController.IsInFrontier(ProjId, wordInFrontier.Id);
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public async Task TestGetFrontierCount()
+        {
+            await _wordRepo.Create(Util.RandomWord(ProjId));
+            await _wordRepo.Create(Util.RandomWord(ProjId));
+            await _wordRepo.Create(Util.RandomWord("OTHER_PROJECT"));
+
+            var count = (int)((ObjectResult)await _wordController.GetFrontierCount(ProjId)).Value!;
+            Assert.That(count, Is.EqualTo(2));
+        }
+
+        [Test]
+        public async Task TestGetFrontierCountNoPermission()
+        {
+            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = await _wordController.GetFrontierCount(ProjId);
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 

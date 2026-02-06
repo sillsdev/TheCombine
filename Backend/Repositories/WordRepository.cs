@@ -219,6 +219,14 @@ namespace BackendFramework.Repositories
                 .CountDocumentsAsync(GetProjectWordsFilter(projectId, wordIds), new() { Limit = count }) == count;
         }
 
+        /// <summary> Gets number of <see cref="Word"/>s in the Frontier for specified <see cref="Project"/> </summary>
+        public async Task<int> GetFrontierCount(string projectId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting count of Frontier");
+
+            return (int)await _frontier.CountDocumentsAsync(GetAllProjectWordsFilter(projectId));
+        }
+
         /// <summary> Finds all <see cref="Word"/>s in the Frontier for specified <see cref="Project"/> </summary>
         public async Task<List<Word>> GetFrontier(string projectId)
         {
