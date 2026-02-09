@@ -18,7 +18,9 @@ namespace Backend.Tests.Services
         [Test]
         public void TrackRequestAndMarkAcknowledgedTogglesStatus()
         {
-            var requestId = "request-1";
+            var requestId = "request-acknowledged-without-send";
+            Assert.That(_service.IsAcknowledged(requestId), Is.False);
+
             _service.TrackRequest(requestId);
 
             Assert.That(_service.IsAcknowledged(requestId), Is.False);
@@ -31,7 +33,7 @@ namespace Backend.Tests.Services
         [Test]
         public async Task SendUntilAcknowledgedStopsAfterAcknowledged()
         {
-            var requestId = "request-2";
+            var requestId = "request-acknowledged-after-send";
             _service.TrackRequest(requestId);
 
             var sendCalls = 0;
@@ -50,7 +52,7 @@ namespace Backend.Tests.Services
         [Test]
         public async Task SendUntilAcknowledgedSendsSendCountWhenUnacknowledged()
         {
-            var requestId = "request-3";
+            var requestId = "request-unacknowledged";
             _service.TrackRequest(requestId);
 
             var sendCalls = 0;
