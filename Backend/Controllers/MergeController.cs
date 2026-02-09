@@ -16,21 +16,15 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/merge")]
-    public class MergeController : Controller
+    public class MergeController(IAcknowledgmentService ackService, IMergeService mergeService,
+        IHubContext<MergeHub> notifyService, IPermissionService permissionService) : Controller
     {
-        private readonly IMergeService _mergeService;
-        private readonly IHubContext<MergeHub> _notifyService;
-        private readonly IPermissionService _permissionService;
+        private readonly IAcknowledgmentService _ackService = ackService;
+        private readonly IMergeService _mergeService = mergeService;
+        private readonly IHubContext<MergeHub> _notifyService = notifyService;
+        private readonly IPermissionService _permissionService = permissionService;
 
         private const string otelTagName = "otel.MergeController";
-
-        public MergeController(
-            IMergeService mergeService, IHubContext<MergeHub> notifyService, IPermissionService permissionService)
-        {
-            _mergeService = mergeService;
-            _notifyService = notifyService;
-            _permissionService = permissionService;
-        }
 
         /// <summary> Merge children <see cref="Word"/>s with the parent </summary>
         /// <returns> List of ids of new words </returns>
@@ -184,13 +178,14 @@ namespace BackendFramework.Controllers
         internal async Task<bool> GetDuplicatesThenSignal(
             string projectId, int maxInList, int maxLists, string userId, bool ignoreProtected = false)
         {
-            var success = await _mergeService.GetAndStorePotentialDuplicates(
+            var proceed = await _mergeService.GetAndStorePotentialDuplicates(
                 projectId, maxInList, maxLists, userId, ignoreProtected);
-            if (success)
+            if (proceed)
             {
-                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId);
+                await _ackService.SendWithRetry(userId,
+                    requestId => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId));
             }
-            return success;
+            return proceed;
         }
 
         /// <summary> Retrieve current user's potential duplicates for merging. </summary>
