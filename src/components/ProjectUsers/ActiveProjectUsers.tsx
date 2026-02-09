@@ -55,11 +55,8 @@ export default function ActiveProjectUsers(props: {
   }, [compareUsers, projectUsers]);
 
   useEffect(() => {
-    setUserRoles(undefined);
-  }, [props.projectId]);
-
-  useEffect(() => {
     let canceled = false;
+    setUserRoles(undefined);
     getUserRoles(props.projectId).then((userRoles) => {
       const roles: Hash<Role> = {};
       projectUsers.forEach((u) => {

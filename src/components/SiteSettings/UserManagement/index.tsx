@@ -48,12 +48,14 @@ export default function UserManagement(): ReactElement {
   }, [openUser, populateUsers]);
 
   const handleOpenDeleteModal = (user: User): void => {
+    setShowProjectsModal(false);
     setShowDeleteModal(true);
     setOpenUser(user);
   };
   const handleCloseDeleteModal = (): void => setShowDeleteModal(false);
 
   const handleOpenProjectsModal = (user: User): void => {
+    setShowDeleteModal(false);
     setShowProjectsModal(true);
     setOpenUser(user);
   };
