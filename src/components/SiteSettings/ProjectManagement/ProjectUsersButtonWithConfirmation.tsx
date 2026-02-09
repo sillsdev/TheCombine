@@ -14,7 +14,6 @@ import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
 import ActiveProjectUsers from "components/ProjectUsers/ActiveProjectUsers";
 import AddProjectUsers from "components/ProjectUsers/AddProjectUsers";
 import { useAppDispatch } from "rootRedux/hooks";
-import theme from "types/theme";
 
 interface ProjectUsersButtonWithConfirmationProps {
   projectId: string;
@@ -34,7 +33,7 @@ export default function ProjectUsersButtonWithConfirmation(
         color={"primary"}
         onClick={() => setOpen(true)}
         id={`proj-${props.projectId}-users`}
-        style={{ marginInline: theme.spacing(1) }}
+        sx={{ marginInline: 1 }}
       >
         {t("siteSettings.projectRoles")}
       </Button>
