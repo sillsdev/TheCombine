@@ -70,7 +70,6 @@ const getRegionField = (titleId: EditDialogTextId): HTMLElement => {
 };
 
 beforeEach(async () => {
-  jest.clearAllMocks();
   mockUpdateWord.mockImplementation((w: Word) =>
     Promise.resolve({ ...w, id: `${w.id}++` })
   );

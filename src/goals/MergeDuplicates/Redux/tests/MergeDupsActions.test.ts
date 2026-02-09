@@ -108,7 +108,6 @@ const data: MergeData = {
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
   mockMergeWords.mockImplementation((mwArray: MergeWords[]) =>
     mwArray.filter((mw) => !mw.deleteOnly).map((mw) => mw.parent.id + "+")
   );

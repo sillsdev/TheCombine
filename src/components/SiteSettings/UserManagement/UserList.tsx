@@ -1,5 +1,4 @@
 import {
-  Avatar,
   List,
   ListItem,
   ListItemAvatar,
@@ -18,10 +17,10 @@ import SortOptions, {
   UserOrder,
   getUserCompare,
 } from "components/ProjectUsers/SortOptions";
+import UserAvatar from "components/ProjectUsers/UserAvatar";
 import UserActionsMenu from "components/SiteSettings/UserManagement/UserActionsMenu";
 import { doesTextMatchUser } from "types/user";
 import { NormalizedTextField } from "utilities/fontComponents";
-import { useUserAvatar } from "utilities/useAvatarSrc";
 
 interface UserListProps {
   allUsers: User[];
@@ -37,8 +36,6 @@ export default function UserList(props: UserListProps): ReactElement {
   const [userOrder, setUserOrder] = useState(UserOrder.Username);
 
   const { t } = useTranslation();
-
-  const { userAvatar } = useUserAvatar(props.allUsers);
 
   const compareUsers = useCallback(
     (a: User, b: User): number =>
@@ -71,11 +68,7 @@ export default function UserList(props: UserListProps): ReactElement {
         </ListItemIcon>
 
         <ListItemAvatar>
-          <Avatar
-            alt={`Avatar for ${user.username}`}
-            src={userAvatar[user.id]}
-            sx={{ marginInlineEnd: 1 }}
-          />
+          <UserAvatar user={user} />
         </ListItemAvatar>
 
         <ListItemText>{`${user.name} (${user.username} | ${user.email})`}</ListItemText>

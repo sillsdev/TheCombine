@@ -39,11 +39,12 @@ namespace Backend.Tests.Controllers
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _mergeGraylistRepo = new MergeGraylistRepositoryMock();
             _wordRepo = new WordRepositoryMock();
+            var ackService = new AcknowledgmentServiceMock();
             _wordService = new WordService(_wordRepo);
             _mergeService = new MergeService(_cache, _mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
             var notifyService = new HubContextMock<MergeHub>();
             var permissionService = new PermissionServiceMock();
-            _mergeController = new MergeController(_mergeService, notifyService, permissionService);
+            _mergeController = new MergeController(ackService, _mergeService, notifyService, permissionService);
         }
 
         [Test]

@@ -23,7 +23,6 @@ const mockIsEmailOrUsernameAvailable = jest.fn();
 
 describe("EmailInvite", () => {
   beforeEach(() => {
-    jest.resetAllMocks();
     act(() => {
       render(<EmailInvite addToProject={mockAddToProject} close={mockClose} />);
     });

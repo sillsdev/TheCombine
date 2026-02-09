@@ -20,10 +20,6 @@ const renderSortOptions = async (
   });
 };
 
-beforeEach(() => {
-  jest.resetAllMocks();
-});
-
 describe("SortOptions", () => {
   it("has no reverse button when no reverse function provided", async () => {
     await renderSortOptions();

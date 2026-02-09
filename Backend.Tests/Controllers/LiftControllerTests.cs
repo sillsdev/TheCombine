@@ -12,7 +12,6 @@ using BackendFramework.Models;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using static System.Linq.Enumerable;
 
@@ -46,13 +45,17 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _projRepo = new ProjectRepositoryMock();
+            var semDomRepo = new SemanticDomainRepositoryMock();
             _speakerRepo = new SpeakerRepositoryMock();
             _wordRepo = new WordRepositoryMock();
+            var ackService = new AcknowledgmentServiceMock();
             _liftService = new LiftService();
+            var notifyService = new HubContextMock<ExportHub>();
+            var permissionService = new PermissionServiceMock();
             _wordService = new WordService(_wordRepo);
-            _liftController = new LiftController(_projRepo, new SemanticDomainRepositoryMock(), _speakerRepo,
-                _wordRepo, _liftService, new HubContextMock<ExportHub>(), new PermissionServiceMock(),
-                new MockLogger());
+            var logger = new LoggerMock<LiftController>();
+            _liftController = new LiftController(_projRepo, semDomRepo, _speakerRepo, _wordRepo, ackService,
+                _liftService, notifyService, permissionService, logger);
 
             _projId = _projRepo.Create(new Project { Name = ProjName }).Result!.Id;
             _file = new FormFile(_stream, 0, _stream.Length, "Name", FileName);
@@ -654,33 +657,6 @@ namespace Backend.Tests.Controllers
             foreach (var project in new List<Project> { proj1, proj2 })
             {
                 _projRepo.Delete(project.Id);
-            }
-        }
-
-        private sealed class MockLogger : ILogger<LiftController>
-        {
-#pragma warning disable CS8633
-            public IDisposable BeginScope<TState>(TState state)
-#pragma warning restore CS8633
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool IsEnabled(LogLevel logLevel)
-            {
-                return true;
-            }
-
-            public void Log<TState>(
-                LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception, string> formatter)
-            {
-                var message = "";
-                if (exception is not null)
-                {
-                    message = exception.Message;
-                }
-
-                Console.WriteLine($"{logLevel}: {eventId} {state} {message}");
             }
         }
     }

@@ -56,7 +56,6 @@ async function renderWithWord(word: Word): Promise<void> {
 let agent: UserEvent;
 
 beforeEach(() => {
-  jest.resetAllMocks();
   agent = userEvent.setup();
 });
 
