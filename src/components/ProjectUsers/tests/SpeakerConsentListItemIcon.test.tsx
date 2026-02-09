@@ -51,7 +51,6 @@ async function renderSpeakerConsentListItemIcon(
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
   setMockFunctions();
 });
 

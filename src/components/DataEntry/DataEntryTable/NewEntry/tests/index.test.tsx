@@ -86,10 +86,6 @@ const fireEnterOnActiveElement = async (): Promise<void> => {
   });
 };
 
-beforeEach(() => {
-  jest.clearAllMocks();
-});
-
 afterEach(() => {
   jest.clearAllTimers();
   jest.useRealTimers();

@@ -55,7 +55,6 @@ beforeAll(async () => {
 });
 
 beforeEach(() => {
-  jest.clearAllMocks();
   mockGetCurrentPermissions.mockResolvedValue([
     Permission.CharacterInventory,
     Permission.MergeAndReviewEntries,

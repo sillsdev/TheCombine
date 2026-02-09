@@ -12,7 +12,6 @@ const mockGetSemanticDomainTreeNode = jest.fn();
 const mockGetSemanticDomainTreeNodeByName = jest.fn();
 
 beforeEach(() => {
-  jest.resetAllMocks();
   mockGetSemanticDomainTreeNode.mockImplementation(
     (id: string, lang?: string) =>
       Promise.resolve(

@@ -41,10 +41,6 @@ const renderNavButtons = async (
   });
 };
 
-beforeEach(() => {
-  jest.resetAllMocks();
-});
-
 describe("NavigationButtons", () => {
   describe("only shows data cleanup tab for the correct permissions", () => {
     const renderNavButtonsWithPermission = async (

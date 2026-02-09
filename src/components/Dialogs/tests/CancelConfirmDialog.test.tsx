@@ -25,10 +25,6 @@ const renderDialog = async (
   });
 };
 
-beforeEach(() => {
-  jest.clearAllMocks();
-});
-
 const backdropSelector = '[class*="Backdrop"]';
 
 describe("CancelConfirmDialog keyboard interaction", () => {

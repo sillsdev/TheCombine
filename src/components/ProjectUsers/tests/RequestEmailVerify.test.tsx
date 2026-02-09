@@ -26,7 +26,6 @@ const mockEmail = "user@domain.com";
 const mockUser = { id: "u1", email: mockEmail };
 
 beforeEach(() => {
-  jest.clearAllMocks();
   mockIsEmailOkay.mockResolvedValue(true);
   mockRequestEmailVerify.mockResolvedValue(undefined);
   mockUpdateUser.mockResolvedValue(undefined);

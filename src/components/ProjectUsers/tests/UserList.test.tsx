@@ -28,10 +28,6 @@ const renderUserList = async (users: UserStub[] = []): Promise<void> => {
   });
 };
 
-beforeEach(() => {
-  jest.resetAllMocks();
-});
-
 describe("UserList", () => {
   it("shows no users by default", async () => {
     mockGetUsersByFilter.mockResolvedValue([]);

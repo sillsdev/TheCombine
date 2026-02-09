@@ -23,7 +23,6 @@ const setupMocks = (): void => {
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
   setupMocks();
 });
 

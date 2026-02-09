@@ -31,7 +31,6 @@ function setMockFunctions(): void {
 }
 
 beforeEach(async () => {
-  jest.clearAllMocks();
   setMockFunctions();
   await act(async () => {
     render(<DomainStatistics lang={""} />);

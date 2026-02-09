@@ -89,7 +89,6 @@ const submitAndCheckError = async (id?: SignupField): Promise<void> => {
 };
 
 beforeEach(async () => {
-  jest.clearAllMocks();
   await renderSignup();
 });
 
