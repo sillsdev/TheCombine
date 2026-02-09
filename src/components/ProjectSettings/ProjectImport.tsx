@@ -174,7 +174,7 @@ export default function ProjectImport(
           handleCancel={() => setDialogReuploadOpen(false)}
           handleConfirm={onReuploadConfirm}
           open={dialogReuploadOpen}
-          text={t(ProjectImportTextId.ReuploadConfirm)}
+          text={ProjectImportTextId.ReuploadConfirm}
         />
       )}
     </Grid2>

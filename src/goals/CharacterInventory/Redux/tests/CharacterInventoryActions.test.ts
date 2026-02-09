@@ -57,7 +57,6 @@ const setMockFunctions = (): void => {
 };
 
 beforeEach(() => {
-  jest.resetAllMocks();
   setMockFunctions();
 });
 

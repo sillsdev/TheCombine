@@ -27,10 +27,6 @@ const renderAnnouncementBanner = async (bannerText?: string): Promise<void> => {
   });
 };
 
-beforeEach(() => {
-  jest.clearAllMocks();
-});
-
 describe("AnnouncementBanner", () => {
   it("doesn't load if no banner text", async () => {
     await renderAnnouncementBanner();
