@@ -151,6 +151,9 @@ namespace BackendFramework.Models
         public string ProjectName { get; set; } = "";
 
         [Required]
+        public string ProjectVernacular { get; set; } = "";
+
+        [Required]
         public Role Role { get; set; } = Role.None;
     }
 

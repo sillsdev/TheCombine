@@ -40,6 +40,12 @@ export interface UserProjectInfo {
   projectName: string;
   /**
    *
+   * @type {string}
+   * @memberof UserProjectInfo
+   */
+  projectVernacular: string;
+  /**
+   *
    * @type {Role}
    * @memberof UserProjectInfo
    */
