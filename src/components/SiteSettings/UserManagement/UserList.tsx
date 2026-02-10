@@ -1,6 +1,4 @@
-import { DeleteForever, VpnKey } from "@mui/icons-material";
 import {
-  Button,
   List,
   ListItem,
   ListItemAvatar,
@@ -20,12 +18,14 @@ import SortOptions, {
   getUserCompare,
 } from "components/ProjectUsers/SortOptions";
 import UserAvatar from "components/ProjectUsers/UserAvatar";
+import UserActionsMenu from "components/SiteSettings/UserManagement/UserActionsMenu";
 import { doesTextMatchUser } from "types/user";
 import { NormalizedTextField } from "utilities/fontComponents";
 
 interface UserListProps {
   allUsers: User[];
-  handleOpenModal: (user: User) => void;
+  handleOpenDeleteModal: (user: User) => void;
+  handleOpenProjectsModal: (user: User) => void;
 }
 
 export default function UserList(props: UserListProps): ReactElement {
@@ -55,24 +55,17 @@ export default function UserList(props: UserListProps): ReactElement {
     );
   }, [filterInput, props.allUsers]);
 
-  const userListButton = (user: User): ReactElement => {
-    const disabled = user.isAdmin || user.id === getUserId();
-    return (
-      <Button
-        disabled={disabled}
-        id={`user-delete-${user.username}`}
-        onClick={disabled ? undefined : () => props.handleOpenModal(user)}
-        style={{ minWidth: 0 }}
-      >
-        {disabled ? <VpnKey /> : <DeleteForever />}
-      </Button>
-    );
-  };
-
   const userListItem = (user: User): ReactElement => {
     return (
       <ListItem key={user.id}>
-        <ListItemIcon>{userListButton(user)}</ListItemIcon>
+        <ListItemIcon>
+          <UserActionsMenu
+            disableDelete={user.isAdmin || user.id === getUserId()}
+            onDeleteClick={() => props.handleOpenDeleteModal(user)}
+            onProjectsClick={() => props.handleOpenProjectsModal(user)}
+            user={user}
+          />
+        </ListItemIcon>
 
         <ListItemAvatar>
           <UserAvatar user={user} />
