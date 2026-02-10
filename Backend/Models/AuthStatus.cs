@@ -13,14 +13,13 @@ namespace BackendFramework.Models
             UserId = null,
         };
 
-        public static AuthStatus LoggedInUser(User user)
+        public static AuthStatus LoggedInLexboxUser(LexboxAuthUser user)
         {
-            var displayName = string.IsNullOrWhiteSpace(user.Name) ? user.Username : user.Name;
             return new AuthStatus
             {
                 LoggedIn = true,
-                LoggedInAs = displayName,
-                UserId = user.Id,
+                LoggedInAs = user.DisplayName,
+                UserId = user.UserId,
             };
         }
     }
