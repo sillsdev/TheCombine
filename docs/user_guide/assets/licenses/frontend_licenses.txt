@@ -1606,7 +1606,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-axios 1.13.2
+axios 1.13.5
 MIT
 # Copyright (c) 2014-present Matt Zabriskie & Collaborators
 
@@ -2514,7 +2514,7 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
 IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-form-data 4.0.4
+form-data 4.0.5
 MIT
 Copyright (c) 2012 Felix Geisendörfer (felix@debuggable.com) and contributors
 
@@ -3672,7 +3672,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-mui-language-picker 2.5.2
+mui-language-picker 2.6.1
 MIT
 MIT License
 
