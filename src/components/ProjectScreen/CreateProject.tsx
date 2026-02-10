@@ -25,6 +25,7 @@ import { projectDuplicateCheck, uploadLiftAndGetWritingSystems } from "backend";
 import FileInputButton from "components/Buttons/FileInputButton";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import LanguagePicker from "components/LanguagePicker";
+import LexboxLogin from "components/Lexbox/LexboxLogin";
 import {
   asyncCreateProject,
   asyncFinishProject,
@@ -33,7 +34,6 @@ import { useAppDispatch } from "rootRedux/hooks";
 import theme from "types/theme";
 import { newWritingSystem } from "types/writingSystem";
 import { NormalizedTextField } from "utilities/fontComponents";
-import LexboxLogin from "components/Lexbox/LexboxLogin";
 
 export enum CreateProjectTextId {
   Create = "createProject.create",
