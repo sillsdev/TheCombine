@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Otel;
@@ -11,9 +12,7 @@ namespace BackendFramework.Controllers
 {
     [Produces("application/json")]
     [Route("v1/auth")]
-    public class AuthController(
-        IPermissionService permissionService,
-        ILexboxAuthService lexboxAuthService,
+    public class AuthController(ILexboxAuthService lexboxAuthService, IPermissionService permissionService,
         IConfiguration configuration) : Controller
     {
         private readonly IPermissionService _permissionService = permissionService;
@@ -27,6 +26,7 @@ namespace BackendFramework.Controllers
         /// <summary> Gets authentication status for the current request. </summary>
         [HttpGet("status", Name = "GetAuthStatus")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AuthStatus))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public IActionResult GetAuthStatus()
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting auth status");
@@ -40,10 +40,11 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Generates a Lexbox login URL for OIDC sign-in. </summary>
-        [HttpGet("lexbox/login-url", Name = "GetLexboxLoginUrl")]
+        [HttpGet("lexbox-login-url", Name = "GetLexboxLoginUrl")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LexboxLoginUrl))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult GetLexboxLoginUrl([FromQuery] string? returnUrl = null)
+        public IActionResult GetLexboxLoginUrl()
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting lexbox login url");
             if (!_permissionService.IsCurrentUserAuthenticated(HttpContext))
@@ -62,8 +63,8 @@ namespace BackendFramework.Controllers
                     IsEssential = true,
                     Path = "/",
                 });
-                var normalizedReturnUrl = NormalizeReturnUrl(returnUrl) ??
-                    NormalizeReturnUrl(_configuration[PostLoginRedirectConfigKey]);
+                var normalizedReturnUrl = NormalizeReturnUrl(_configuration[PostLoginRedirectConfigKey])
+                    ?? NormalizeReturnUrl(Domain.FrontendDomain);
                 var result = _lexboxAuthService.CreateLoginUrl(Request, sessionId, normalizedReturnUrl);
                 return Ok(result);
             }
@@ -74,9 +75,10 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Completes the Lexbox OAuth login and stores the login status. </summary>
-        [HttpGet("/api/auth/oauth-callback", Name = "LexboxOauthCallback")]
+        [HttpGet("oauth-callback", Name = "LexboxOauthCallback")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AuthStatus))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CompleteLexboxLogin([FromQuery] string? code, [FromQuery] string? state)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "completing lexbox login");

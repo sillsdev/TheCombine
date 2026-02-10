@@ -46,6 +46,7 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
     setActionLoading(true);
     try {
       const url = await getExternalLoginUrl();
+      console.info("Opening Lexbox login URL:", url);
       if (url) {
         window.open(url);
       } else {
