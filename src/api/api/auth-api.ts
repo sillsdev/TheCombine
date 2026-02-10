@@ -90,7 +90,7 @@ export const AuthApiAxiosParamCreator = function (
      * @throws {RequiredError}
      */
     getLexboxLoginUrl: async (options: any = {}): Promise<RequestArgs> => {
-      const localVarPath = `/v1/auth/lexbox/login-url`;
+      const localVarPath = `/v1/auth/lexbox-login-url`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -105,6 +105,56 @@ export const AuthApiAxiosParamCreator = function (
       };
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} [code]
+     * @param {string} [state]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    lexboxOauthCallback: async (
+      code?: string,
+      state?: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/v1/auth/oauth-callback`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      if (code !== undefined) {
+        localVarQueryParameter["code"] = code;
+      }
+
+      if (state !== undefined) {
+        localVarQueryParameter["state"] = state;
+      }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
@@ -168,6 +218,33 @@ export const AuthApiFp = function (configuration?: Configuration) {
         configuration
       );
     },
+    /**
+     *
+     * @param {string} [code]
+     * @param {string} [state]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async lexboxOauthCallback(
+      code?: string,
+      state?: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuthStatus>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.lexboxOauthCallback(
+          code,
+          state,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
   };
 };
 
@@ -202,8 +279,45 @@ export const AuthApiFactory = function (
         .getLexboxLoginUrl(options)
         .then((request) => request(axios, basePath));
     },
+    /**
+     *
+     * @param {string} [code]
+     * @param {string} [state]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    lexboxOauthCallback(
+      code?: string,
+      state?: string,
+      options?: any
+    ): AxiosPromise<AuthStatus> {
+      return localVarFp
+        .lexboxOauthCallback(code, state, options)
+        .then((request) => request(axios, basePath));
+    },
   };
 };
+
+/**
+ * Request parameters for lexboxOauthCallback operation in AuthApi.
+ * @export
+ * @interface AuthApiLexboxOauthCallbackRequest
+ */
+export interface AuthApiLexboxOauthCallbackRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof AuthApiLexboxOauthCallback
+   */
+  readonly code?: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof AuthApiLexboxOauthCallback
+   */
+  readonly state?: string;
+}
 
 /**
  * AuthApi - object-oriented interface
@@ -233,6 +347,26 @@ export class AuthApi extends BaseAPI {
   public getLexboxLoginUrl(options?: any) {
     return AuthApiFp(this.configuration)
       .getLexboxLoginUrl(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {AuthApiLexboxOauthCallbackRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AuthApi
+   */
+  public lexboxOauthCallback(
+    requestParameters: AuthApiLexboxOauthCallbackRequest = {},
+    options?: any
+  ) {
+    return AuthApiFp(this.configuration)
+      .lexboxOauthCallback(
+        requestParameters.code,
+        requestParameters.state,
+        options
+      )
       .then((request) => request(this.axios, this.basePath));
   }
 }

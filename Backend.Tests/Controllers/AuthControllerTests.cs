@@ -14,8 +14,8 @@ namespace Backend.Tests.Controllers
 {
     internal sealed class AuthControllerTests : IDisposable
     {
-        private PermissionServiceMock _permissionService = null!;
         private LexboxAuthServiceMock _lexboxAuthService = null!;
+        private PermissionServiceMock _permissionService = null!;
         private AuthController _controller = null!;
 
         public void Dispose()
@@ -27,16 +27,11 @@ namespace Backend.Tests.Controllers
         [SetUp]
         public void Setup()
         {
-            _permissionService = new PermissionServiceMock();
             _lexboxAuthService = new LexboxAuthServiceMock();
-            var configValues = new Dictionary<string, string?>
-            {
-                { "LexboxAuth:PostLoginRedirect", "/" },
-            };
-            var configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(configValues)
-                .Build();
-            _controller = new AuthController(_permissionService, _lexboxAuthService, configuration);
+            _permissionService = new PermissionServiceMock();
+            var configValues = new Dictionary<string, string?> { { "LexboxAuth:PostLoginRedirect", "/" } };
+            var configuration = new ConfigurationBuilder().AddInMemoryCollection(configValues).Build();
+            _controller = new AuthController(_lexboxAuthService, _permissionService, configuration);
         }
 
         [Test]
@@ -90,7 +85,7 @@ namespace Backend.Tests.Controllers
 
             public LexboxLoginUrl CreateLoginUrl(HttpRequest request, string sessionId, string? returnUrl)
             {
-                return new LexboxLoginUrl { Url = "https://example.test/login" };
+                return new LexboxLoginUrl { Url = "not-a-valid-url" };
             }
 
             public Task<LexboxAuthResult?> CompleteLoginAsync(HttpRequest request, string code, string state)

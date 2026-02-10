@@ -62,6 +62,7 @@ namespace BackendFramework.Services
             };
 
             var loginReturnUrl = QueryHelpers.AddQueryString("/api/oauth/open-id-auth", query);
+            Console.WriteLine($"Return URL: {loginReturnUrl}");
             var loginUrl = $"{settings.BaseUrl.TrimEnd('/')}/login?ReturnUrl={Uri.EscapeDataString(loginReturnUrl)}";
 
             return new LexboxLoginUrl { Url = loginUrl };
@@ -110,7 +111,7 @@ namespace BackendFramework.Services
         private static string BuildRedirectUri(HttpRequest request)
         {
             var pathBase = request.PathBase.HasValue ? request.PathBase.Value : string.Empty;
-            return $"{request.Scheme}://{request.Host}{pathBase}/api/auth/oauth-callback";
+            return $"{request.Scheme}://{request.Host}{pathBase}/v1/auth/oauth-callback";
         }
 
         private LexboxAuthSettings GetSettings()
