@@ -71,7 +71,7 @@ export function SpeakerListItem(props: ProjSpeakerProps): ReactElement {
       <DeleteSpeakerListItemIcon {...props} />
       <EditSpeakerNameListItemIcon {...props} />
       <SpeakerConsentListItemIcon refresh={refresh} speaker={speaker} />
-      <ListItemText>{speaker.name}</ListItemText>
+      <ListItemText primary={speaker.name} />
     </ListItem>
   );
 }

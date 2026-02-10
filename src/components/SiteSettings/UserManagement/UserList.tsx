@@ -71,7 +71,9 @@ export default function UserList(props: UserListProps): ReactElement {
           <UserAvatar user={user} />
         </ListItemAvatar>
 
-        <ListItemText>{`${user.name} (${user.username} | ${user.email})`}</ListItemText>
+        <ListItemText
+          primary={`${user.name} (${user.username} | ${user.email})`}
+        />
       </ListItem>
     );
   };

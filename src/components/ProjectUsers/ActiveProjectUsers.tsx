@@ -37,7 +37,7 @@ export default function ActiveProjectUsers(props: {
     (state: StoreState) => state.currentProjectState.users
   );
 
-  const [userRoles, setUserRoles] = useState<Hash<Role> | undefined>();
+  const [userRoles, setUserRoles] = useState<Hash<Role>>({});
   const [userOrder, setUserOrder] = useState<UserOrder>(UserOrder.Username);
   const [reverseSorting, setReverseSorting] = useState<boolean>(false);
   const [sortedUsers, setSortedUsers] = useState<UserStub[]>([]);
@@ -51,29 +51,22 @@ export default function ActiveProjectUsers(props: {
   );
 
   useEffect(() => {
-    setSortedUsers([...projectUsers].sort(compareUsers));
-  }, [compareUsers, projectUsers]);
-
-  useEffect(() => {
-    let canceled = false;
-    setUserRoles(undefined);
     getUserRoles(props.projectId).then((userRoles) => {
       const roles: Hash<Role> = {};
       projectUsers.forEach((u) => {
         const ur = userRoles.find((r) => r.id === u.roleId);
         roles[u.id] = ur?.role ?? Role.None;
       });
-      if (!canceled) {
-        setUserRoles(roles);
-      }
+      setUserRoles(roles);
     });
-    return () => {
-      canceled = true;
-    };
   }, [projectUsers, props.projectId]);
 
+  useEffect(() => {
+    setSortedUsers([...projectUsers].sort(compareUsers));
+  }, [compareUsers, projectUsers]);
+
   const currentUser = getCurrentUser();
-  if (!currentUser || !props.projectId || !userRoles) {
+  if (!currentUser || !props.projectId) {
     return <Fragment />;
   }
 
@@ -81,9 +74,7 @@ export default function ActiveProjectUsers(props: {
 
   const userListItem = (user: UserStub): ReactElement => {
     const userRole = userRoles[user.id];
-
     const canManageUser =
-      userRole &&
       userRole !== Role.Owner &&
       (currentIsProjOwner ||
         currentUser.isAdmin ||
@@ -108,14 +99,11 @@ export default function ActiveProjectUsers(props: {
         <ListItemAvatar>
           <UserAvatar user={user} />
         </ListItemAvatar>
-
-        <ListItemText>{`${user.name} (${user.username})`}</ListItemText>
-
+        <ListItemText primary={`${user.name} (${user.username})`} />
         <Chip
-          label={t([`projectSettings.roles.${userRole?.toLowerCase()}`, "—"])}
+          label={t(`projectSettings.roles.${`${userRole}`.toLowerCase()}`)}
           size="small"
         />
-
         {manageUser}
       </ListItem>
     );
