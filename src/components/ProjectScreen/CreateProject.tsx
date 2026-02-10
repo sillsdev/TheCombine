@@ -1,5 +1,6 @@
 import { Cancel } from "@mui/icons-material";
 import {
+  Box,
   Card,
   CardContent,
   Grid2,
@@ -32,6 +33,7 @@ import { useAppDispatch } from "rootRedux/hooks";
 import theme from "types/theme";
 import { newWritingSystem } from "types/writingSystem";
 import { NormalizedTextField } from "utilities/fontComponents";
+import LexboxLogin from "components/Lexbox/LexboxLogin";
 
 export enum CreateProjectTextId {
   Create = "createProject.create",
@@ -234,12 +236,7 @@ export default function CreateProject(): ReactElement {
           />
 
           {/* File upload */}
-          <div
-            style={{
-              marginBottom: theme.spacing(2),
-              marginTop: theme.spacing(1),
-            }}
-          >
+          <Box sx={{ mb: 2, mt: 1 }}>
             <Typography
               variant="body1"
               style={{ marginTop: theme.spacing(2) }}
@@ -274,7 +271,12 @@ export default function CreateProject(): ReactElement {
                 </IconButton>
               </Typography>
             )}
-          </div>
+          </Box>
+
+          {/* Login to Lexbox to select a project. */}
+          <Box sx={{ m: 2 }}>
+            <LexboxLogin />
+          </Box>
 
           {/* Don't render language pickers until project creation begins. */}
           {!!(name || languageData || vernLang.name || analysisLang.name) && (
