@@ -110,7 +110,7 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
-            return Ok(await _wordRepo.GetFrontier(projectId));
+            return Ok(await _wordRepo.GetAllFrontier(projectId));
         }
 
         /// <summary> Checks if Frontier has <see cref="Word"/> in specified <see cref="Project"/>. </summary>
@@ -191,7 +191,7 @@ namespace BackendFramework.Controllers
             }
             word.ProjectId = projectId;
 
-            var duplicatedWord = await _wordRepo.GetWord(word.ProjectId, dupId);
+            var duplicatedWord = await _wordRepo.GetFrontier(word.ProjectId, dupId);
             if (duplicatedWord is null)
             {
                 return NotFound();
@@ -203,9 +203,8 @@ namespace BackendFramework.Controllers
                 return Conflict();
             }
 
-            await _wordService.Update(duplicatedWord.ProjectId, userId, duplicatedWord.Id, duplicatedWord);
-
-            return Ok(duplicatedWord.Id);
+            var newId = await _wordService.Update(userId, duplicatedWord);
+            return newId is null ? NotFound() : Ok(newId);
         }
 
         /// <summary> Creates a <see cref="Word"/>. </summary>
@@ -241,17 +240,13 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
-            var document = await _wordRepo.GetWord(projectId, wordId);
-            if (document is null)
-            {
-                return NotFound();
-            }
 
-            // Add the found id to the updated word.
-            word.Id = document.Id;
-            var userId = _permissionService.GetUserId(HttpContext);
-            await _wordService.Update(projectId, userId, wordId, word);
-            return Ok(word.Id);
+            // Don't allow changing project or manually setting the Id.
+            word.ProjectId = projectId;
+            word.Id = wordId;
+
+            var newId = await _wordService.Update(_permissionService.GetUserId(HttpContext), word);
+            return newId is null ? NotFound() : Ok(newId);
         }
 
         /// <summary> Restore a deleted <see cref="Word"/>. </summary>
@@ -296,11 +291,15 @@ namespace BackendFramework.Controllers
             foreach (var kv in wordIds)
             {
                 var idToRevert = kv.Value;
-                var word = await _wordRepo.GetWord(projectId, kv.Key);
-                if (word is not null && await _wordRepo.IsInFrontier(projectId, idToRevert))
+                var priorWord = await _wordRepo.GetWord(projectId, kv.Key);
+                if (priorWord is not null)
                 {
-                    await _wordService.Update(projectId, userId, idToRevert, word);
-                    updates[idToRevert] = word.Id;
+                    priorWord.Id = idToRevert;
+                    var newId = await _wordService.Update(userId, priorWord);
+                    if (newId is not null)
+                    {
+                        updates[idToRevert] = newId;
+                    }
                 }
             }
             return Ok(updates);

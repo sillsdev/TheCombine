@@ -229,11 +229,23 @@ namespace BackendFramework.Repositories
         }
 
         /// <summary> Finds all <see cref="Word"/>s in the Frontier for specified <see cref="Project"/> </summary>
-        public async Task<List<Word>> GetFrontier(string projectId)
+        public async Task<List<Word>> GetAllFrontier(string projectId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all Frontier words");
 
             return await _frontier.Find(GetAllProjectWordsFilter(projectId)).ToListAsync();
+        }
+
+        /// <summary> Gets a specified <see cref="Word"/> from the Frontier </summary>
+        /// <returns> The word, or null if not found. </returns>
+        public async Task<Word?> GetFrontier(string projectId, string wordId, string? audioFileName = null)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting a word from Frontier");
+
+            return string.IsNullOrEmpty(audioFileName)
+                ? await _frontier.Find(GetProjectWordFilter(projectId, wordId)).FirstOrDefaultAsync()
+                : await _frontier.Find(GetProjectWordWithAudioFilter(projectId, wordId, audioFileName))
+                    .FirstOrDefaultAsync();
         }
 
         /// <summary> Finds all <see cref="Word"/>s in Frontier of specified project with specified vern </summary>

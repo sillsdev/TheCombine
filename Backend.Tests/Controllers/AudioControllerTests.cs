@@ -170,31 +170,24 @@ namespace Backend.Tests.Controllers
         {
             // Refill test database
             _wordRepo.DeleteAllWords(_projId);
+            _wordRepo.DeleteAllFrontierWords(_projId);
             var origWord = Util.RandomWord(_projId);
             const string fileName = "a.wav";
             origWord.Audio.Add(new Pronunciation(fileName));
-            var wordId = _wordRepo.Create(origWord).Result.Id;
+            var oldId = _wordRepo.Create(origWord).Result.Id;
 
             // Test delete function
-            _ = _audioController.DeleteAudioFile(_projId, wordId, fileName).Result;
+            var result = _audioController.DeleteAudioFile(_projId, oldId, fileName).Result as OkObjectResult;
 
-            // Original word persists
-            Assert.That(_wordRepo.GetAllWords(_projId).Result, Has.Count.EqualTo(2));
-
-            // Get the new word from the database
-            var frontier = _wordRepo.GetFrontier(_projId).Result;
-
-            // Ensure the new word has no audio files
-            Assert.That(frontier[0].Audio, Has.Count.EqualTo(0));
-
-            // Test the frontier
-            Assert.That(_wordRepo.GetFrontier(_projId).Result, Has.Count.EqualTo(1));
+            // Ensure returned id in different
+            var newId = result?.Value as string;
+            Assert.That(newId, Is.Not.Null.Or.EqualTo(oldId));
 
             // Ensure the word with deleted audio is in the frontier
+            var frontier = _wordRepo.GetAllFrontier(_projId).Result;
             Assert.That(frontier, Has.Count.EqualTo(1));
-            Assert.That(frontier[0].Id, Is.Not.EqualTo(wordId));
+            Assert.That(frontier[0].Id, Is.EqualTo(newId));
             Assert.That(frontier[0].Audio, Has.Count.EqualTo(0));
-            Assert.That(frontier[0].History, Has.Count.EqualTo(1));
         }
     }
 }

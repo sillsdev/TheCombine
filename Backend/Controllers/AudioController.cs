@@ -123,7 +123,7 @@ namespace BackendFramework.Controllers
                 return BadRequest("Empty File");
             }
 
-            var word = await _wordRepo.GetWord(projectId, wordId);
+            var word = await _wordRepo.GetFrontier(projectId, wordId);
             if (word is null)
             {
                 return NotFound($"wordId: {wordId}");
@@ -144,9 +144,9 @@ namespace BackendFramework.Controllers
             word.Audio.Add(audio);
 
             // Update the word with new audio file
-            await _wordService.Update(projectId, userId, wordId, word);
+            var newId = await _wordService.Update(userId, word);
 
-            return Ok(word.Id);
+            return newId is null ? NotFound($"wordId: {wordId}") : Ok(newId);
         }
 
         /// <summary> Deletes audio in <see cref="Word"/> with specified ID </summary>
@@ -177,12 +177,8 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            var newWord = await _wordService.DeleteAudio(projectId, userId, wordId, fileName);
-            if (newWord is not null)
-            {
-                return Ok(newWord.Id);
-            }
-            return NotFound($"wordId: {wordId}; fileName: {fileName}");
+            var newId = await _wordService.DeleteAudio(projectId, userId, wordId, fileName);
+            return newId is null ? NotFound($"wordId: {wordId}; fileName: {fileName}") : Ok(newId);
         }
     }
 }
