@@ -307,7 +307,7 @@ namespace BackendFramework.Services
             {
                 return 0;
             }
-            var frontierWordIds = (await _wordRepo.GetFrontier(projectId)).Select(word => word.Id);
+            var frontierWordIds = (await _wordRepo.GetAllFrontier(projectId)).Select(word => word.Id);
             var updateCount = 0;
             foreach (var entry in oldBlacklist)
             {
@@ -346,7 +346,7 @@ namespace BackendFramework.Services
             {
                 return 0;
             }
-            var frontierWordIds = (await _wordRepo.GetFrontier(projectId)).Select(word => word.Id);
+            var frontierWordIds = (await _wordRepo.GetAllFrontier(projectId)).Select(word => word.Id);
             var updateCount = 0;
             foreach (var entry in oldGraylist)
             {
@@ -402,7 +402,7 @@ namespace BackendFramework.Services
             {
                 return [];
             }
-            var frontier = await _wordRepo.GetFrontier(projectId);
+            var frontier = await _wordRepo.GetAllFrontier(projectId);
             var wordLists = new List<List<Word>> { Capacity = maxLists };
             foreach (var entry in graylist)
             {
@@ -443,7 +443,7 @@ namespace BackendFramework.Services
         {
             var dupFinder = new DuplicateFinder(maxInList, maxLists, 2);
 
-            var collection = await _wordRepo.GetFrontier(projectId);
+            var collection = await _wordRepo.GetAllFrontier(projectId);
             async Task<bool> isUnavailableSet(List<string> wordIds) =>
                 (await IsInMergeBlacklist(projectId, wordIds, userId)) ||
                 (await IsInMergeGraylist(projectId, wordIds, userId));
