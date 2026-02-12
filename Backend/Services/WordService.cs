@@ -68,7 +68,7 @@ namespace BackendFramework.Services
             }
 
             wordWithAudioToDelete.Audio.RemoveAll(a => a.FileName == fileName);
-            return await Update(userId, wordWithAudioToDelete);
+            return (await Update(userId, wordWithAudioToDelete))?.Id;
         }
 
         /// <summary> Removes word from frontier collection and adds a Deleted copy in the word collection </summary>
@@ -87,12 +87,12 @@ namespace BackendFramework.Services
             word.Accessibility = Status.Deleted;
             word.History.Add(wordId);
 
-            var deletedId = (await Add(userId, word)).Id;
+            var deletedWord = await Add(userId, word);
 
             // Don't remove the Frontier word until the copy is successfully stored as deleted.
             await _wordRepo.DeleteFrontier(projectId, wordId);
 
-            return deletedId;
+            return deletedWord.Id;
         }
 
         /// <summary> Restores words to the Frontier </summary>
@@ -116,8 +116,8 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Makes a new word in the Frontier with changes made </summary>
-        /// <returns> Id of updated word, or null if not found </returns>
-        public async Task<string?> Update(string userId, Word word)
+        /// <returns> Updated word, or null if word-to-update not found </returns>
+        public async Task<Word?> Update(string userId, Word word)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a word in Frontier");
 
@@ -129,17 +129,20 @@ namespace BackendFramework.Services
             }
 
             word.Created = oldWord.Created;
-            word.History.Add(oldWordId);
+            if (!word.History.Contains(oldWordId))
+            {
+                word.History.Add(oldWordId);
+            }
             // If an imported word was using the citation form for its Vernacular,
             // only keep UsingCitationForm true if the Vernacular hasn't changed.
             word.UsingCitationForm &= word.Vernacular == oldWord.Vernacular;
 
-            var newWordId = (await Create(userId, word)).Id;
+            var newWord = await Create(userId, word);
 
             // Don't remove the old Frontier word until the new word is successfully created.
             await _wordRepo.DeleteFrontier(word.ProjectId, oldWordId);
 
-            return newWordId;
+            return newWord;
         }
 
         /// <summary> Checks if a word being added is a duplicate of a preexisting word. </summary>

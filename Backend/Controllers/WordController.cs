@@ -295,7 +295,7 @@ namespace BackendFramework.Controllers
                 if (priorWord is not null)
                 {
                     priorWord.Id = idToRevert;
-                    var newId = await _wordService.Update(userId, priorWord);
+                    var newId = (await _wordService.Update(userId, priorWord))?.Id;
                     if (newId is not null)
                     {
                         updates[idToRevert] = newId;
