@@ -7,6 +7,7 @@ import { User } from "api/models";
 import { deleteUser, getAllUsers } from "backend";
 import ConfirmDeletion from "components/SiteSettings/UserManagement/ConfirmDeletion";
 import UserList from "components/SiteSettings/UserManagement/UserList";
+import UserProjects from "components/SiteSettings/UserManagement/UserProjects";
 
 const customStyles = {
   content: {
@@ -22,7 +23,8 @@ const customStyles = {
 export default function UserManagement(): ReactElement {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [openUser, setOpenUser] = useState<User | undefined>();
-  const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showProjectsModal, setShowProjectsModal] = useState(false);
 
   const { t } = useTranslation();
 
@@ -45,40 +47,61 @@ export default function UserManagement(): ReactElement {
     }
   }, [openUser, populateUsers]);
 
-  const handleOpenModal = (user: User): void => {
-    setShowModal(true);
+  const handleOpenDeleteModal = (user: User): void => {
+    setShowProjectsModal(false);
+    setShowDeleteModal(true);
     setOpenUser(user);
   };
-  const handleCloseModal = (): void => setShowModal(false);
+  const handleCloseDeleteModal = (): void => setShowDeleteModal(false);
+
+  const handleOpenProjectsModal = (user: User): void => {
+    setShowDeleteModal(false);
+    setShowProjectsModal(true);
+    setOpenUser(user);
+  };
+  const handleCloseProjectsModal = (): void => setShowProjectsModal(false);
 
   const delUser = (userId: string): void => {
     deleteUser(userId)
       .then(() => {
         toast.success(t("siteSettings.deleteUser.toastSuccess"));
         setOpenUser(undefined);
+        handleCloseDeleteModal();
       })
       .catch((err) => {
         console.error(err);
         toast.error(t("siteSettings.deleteUser.toastFailure"));
       });
-    handleCloseModal();
   };
 
   return (
     <>
-      <UserList allUsers={allUsers} handleOpenModal={handleOpenModal} />
+      <UserList
+        allUsers={allUsers}
+        handleOpenDeleteModal={handleOpenDeleteModal}
+        handleOpenProjectsModal={handleOpenProjectsModal}
+      />
 
       <Modal
-        isOpen={showModal}
+        isOpen={showDeleteModal}
         style={customStyles}
         shouldCloseOnOverlayClick
-        onRequestClose={handleCloseModal}
+        onRequestClose={handleCloseDeleteModal}
       >
         <ConfirmDeletion
           user={openUser}
           deleteUser={delUser}
-          handleCloseModal={handleCloseModal}
+          handleCloseModal={handleCloseDeleteModal}
         />
+      </Modal>
+
+      <Modal
+        isOpen={showProjectsModal}
+        style={customStyles}
+        shouldCloseOnOverlayClick
+        onRequestClose={handleCloseProjectsModal}
+      >
+        <UserProjects user={openUser} />
       </Modal>
     </>
   );
