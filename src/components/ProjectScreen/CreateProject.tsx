@@ -1,5 +1,6 @@
 import { Cancel } from "@mui/icons-material";
 import {
+  Box,
   Card,
   CardContent,
   Grid2,
@@ -24,6 +25,7 @@ import { projectDuplicateCheck, uploadLiftAndGetWritingSystems } from "backend";
 import FileInputButton from "components/Buttons/FileInputButton";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import LanguagePicker from "components/LanguagePicker";
+import LexboxLogin from "components/Lexbox/LexboxLogin";
 import {
   asyncCreateProject,
   asyncFinishProject,
@@ -234,12 +236,7 @@ export default function CreateProject(): ReactElement {
           />
 
           {/* File upload */}
-          <div
-            style={{
-              marginBottom: theme.spacing(2),
-              marginTop: theme.spacing(1),
-            }}
-          >
+          <Box sx={{ mb: 2, mt: 1 }}>
             <Typography
               variant="body1"
               style={{ marginTop: theme.spacing(2) }}
@@ -274,7 +271,12 @@ export default function CreateProject(): ReactElement {
                 </IconButton>
               </Typography>
             )}
-          </div>
+          </Box>
+
+          {/* Login to Lexbox to select a project. */}
+          <Box sx={{ m: 2 }}>
+            <LexboxLogin />
+          </Box>
 
           {/* Don't render language pickers until project creation begins. */}
           {!!(name || languageData || vernLang.name || analysisLang.name) && (
