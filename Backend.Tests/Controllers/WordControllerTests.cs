@@ -273,8 +273,7 @@ namespace Backend.Tests.Controllers
             dupWord.Flag = new Flag("New Flag");
             var expectedWord = dupWord.Clone();
             var result = (ObjectResult)await _wordController.UpdateDuplicate(ProjId, origWord.Id, dupWord);
-            var id = (string)result.Value!;
-            var updatedWord = await _wordRepo.GetWord(ProjId, id);
+            var updatedWord = (Word)result.Value!;
             Util.AssertEqualWordContent(updatedWord!, expectedWord, true);
         }
 
@@ -339,12 +338,8 @@ namespace Backend.Tests.Controllers
             var modWord = origWord.Clone();
             modWord.Vernacular = "NewVernacular";
 
-            var id = (string)((ObjectResult)await _wordController.UpdateWord(
-                ProjId, modWord.Id, modWord)).Value!;
-
-            var finalWord = modWord.Clone();
-            finalWord.Id = id;
-            finalWord.History = new List<string> { origWord.Id };
+            var result = (ObjectResult)await _wordController.UpdateWord(ProjId, modWord.Id, modWord);
+            var finalWord = (Word)result.Value!;
 
             var allWords = await _wordRepo.GetAllWords(ProjId);
             Assert.That(allWords, Does.Contain(origWord).UsingPropertiesComparer());

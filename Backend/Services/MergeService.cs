@@ -77,11 +77,16 @@ namespace BackendFramework.Services
 
         /// <summary> Prepares a merge parent to be added to the database. </summary>
         /// <returns> Word to add. </returns>
+        /// <remarks>
+        /// If the parent has the same guid as a child:
+        /// * ensures their ids also match;
+        /// * changes UsingCitationForm to false if their Vernaculars differ.
+        /// </remarks>
         private async Task<Word> MergePrepParent(string projectId, MergeWords mergeWords)
         {
             var parent = mergeWords.Parent.Clone();
             parent.ProjectId = projectId;
-            parent.History = new List<string>();
+            parent.History = [];
 
             foreach (var childSource in mergeWords.Children)
             {
@@ -91,6 +96,7 @@ namespace BackendFramework.Services
                 if (child.Guid == parent.Guid)
                 {
                     // Update parent's UsingCitationForm.
+                    parent.Id = child.Id;
                     parent.UsingCitationForm = child.UsingCitationForm && parent.Vernacular == child.Vernacular;
                 }
 
@@ -115,27 +121,50 @@ namespace BackendFramework.Services
             return parent;
         }
 
-        /// <summary> Deletes all the merge children from the frontier. </summary>
-        /// <returns> Number of words deleted. </returns>
-        private async Task<long> MergeDeleteChildren(string projectId, MergeWords mergeWords)
-        {
-            var childIds = mergeWords.Children.Select(c => c.SrcWordId).ToList();
-            return await _wordRepo.DeleteFrontierWords(projectId, childIds);
-        }
-
         /// <summary>
-        /// Given a list of MergeWords, preps the words to be added, removes the children
-        /// from the frontier, and adds the new words to the database.
+        /// Given a list of MergeWords: preps all the parents from their children;
+        /// then creates the parents (updating from a child if they have the same guid);
+        /// then removes from the frontier the children that weren't updated.
         /// </summary>
         /// <returns> List of new words added. </returns>
         public async Task<List<Word>> Merge(string projectId, string userId, List<MergeWords> mergeWordsList)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "merging words");
 
-            var keptWords = mergeWordsList.Where(m => !m.DeleteOnly);
-            var newWords = keptWords.Select(m => MergePrepParent(projectId, m).Result).ToList();
-            await Task.WhenAll(mergeWordsList.Select(m => MergeDeleteChildren(projectId, m)));
-            return await _wordService.Create(userId, newWords);
+            // Prep parents
+            var parentsToPrep = mergeWordsList.Where(m => !m.DeleteOnly);
+            var parents = await Task.WhenAll(parentsToPrep.Select(m => MergePrepParent(projectId, m)));
+
+            // Consolidate children ids
+            var childrenIds = mergeWordsList.SelectMany(m => m.Children.Select(c => c.SrcWordId)).ToHashSet();
+
+            // Create the parents
+            List<Word> addedParents = [];
+            foreach (var parent in parents)
+            {
+                if (childrenIds.Contains(parent.Id))
+                {
+                    var updatedParent = await _wordService.Update(userId, parent);
+                    if (updatedParent is null)
+                    {
+                        addedParents.Add(await _wordService.Create(userId, parent));
+                    }
+                    else
+                    {
+                        addedParents.Add(updatedParent);
+                        childrenIds.Remove(parent.Id);
+                    }
+                }
+                else
+                {
+                    addedParents.Add(await _wordService.Create(userId, parent));
+                }
+            }
+
+            // Remove the children
+            await Task.WhenAll(childrenIds.Select(id => _wordService.DeleteFrontierWord(projectId, userId, id)));
+
+            return addedParents;
         }
 
         /// <summary> Undo merge </summary>

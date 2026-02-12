@@ -108,7 +108,7 @@ namespace Backend.Tests.Services
             Assert.That(word, Is.Not.Null);
             var oldId = word.Id;
             word.Vernacular = "NewVern";
-            Assert.That(_wordService.Update(UserId, word).Result, Is.EqualTo(word.Id));
+            Assert.That(_wordService.Update(UserId, word).Result!.Guid, Is.EqualTo(word.Guid));
             var frontier = _wordRepo.GetAllFrontier(ProjId).Result;
             Assert.That(frontier, Has.Count.EqualTo(1));
             var newWord = frontier.First();
