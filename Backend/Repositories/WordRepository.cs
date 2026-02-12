@@ -80,6 +80,14 @@ namespace BackendFramework.Repositories
             }
         }
 
+        /// <summary> Finds project <see cref="Word"/>s with specified ids </summary>
+        public async Task<List<Word>> GetWords(string projectId, List<string> wordIds)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting words");
+
+            return await _words.Find(GetProjectWordsFilter(projectId, wordIds)).ToListAsync();
+        }
+
         /// <summary> Removes all <see cref="Word"/>s from the WordsCollection and Frontier for specified
         /// <see cref="Project"/> </summary>
         /// <returns> A bool: success of operation </returns>
@@ -218,18 +226,6 @@ namespace BackendFramework.Repositories
 
             return await _frontier
                 .CountDocumentsAsync(GetProjectWordsFilter(projectId, wordIds), new() { Limit = count }) == count;
-        }
-
-        /// <summary> Checks if given words are in the project words collection but not in the Frontier. </summary>
-        public async Task<bool> AreNonFrontierWords(string projectId, List<string> wordIds)
-        {
-            using var activity =
-                OtelService.StartActivityWithTag(otelTagName, "checking if words exist but not in Frontier");
-
-            // Make sure all the words exist
-            wordIds = wordIds.Distinct().ToList();
-            return !await AreInFrontier(projectId, wordIds, 1) &&
-                wordIds.Count == await _words.CountDocumentsAsync(GetProjectWordsFilter(projectId, wordIds));
         }
 
         /// <summary> Gets number of <see cref="Word"/>s in the Frontier for specified <see cref="Project"/> </summary>

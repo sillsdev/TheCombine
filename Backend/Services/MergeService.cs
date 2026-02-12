@@ -182,7 +182,7 @@ namespace BackendFramework.Services
             }
 
             // If children are not restorable, return without deleting the merge parents.
-            if (!await _wordService.RestoreToFrontier(projectId, ids.ChildIds))
+            if (!await _wordService.RestoreFrontierWords(projectId, ids.ChildIds))
             {
                 return false;
             }

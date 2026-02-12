@@ -35,13 +35,18 @@ namespace Backend.Tests.Mocks
         {
             try
             {
-                var foundWord = _words.Single(word => word.Id == wordId);
-                return Task.FromResult<Word?>(foundWord.Clone());
+                return Task.FromResult<Word?>(_words.Single(w => w.ProjectId == projectId && w.Id == wordId).Clone());
             }
             catch (InvalidOperationException)
             {
                 return Task.FromResult<Word?>(null);
             }
+        }
+
+        public async Task<List<Word>> GetWords(string projectId, List<string> wordIds)
+        {
+            return await Task.FromResult(
+                _words.Where(w => w.ProjectId == projectId && wordIds.Contains(w.Id)).Select(w => w.Clone()).ToList());
         }
 
         public Task<Word> Create(Word word)
@@ -92,13 +97,6 @@ namespace Backend.Tests.Mocks
         public Task<bool> AreInFrontier(string projectId, List<string> wordIds, int count)
         {
             return Task.FromResult(_frontier.Count(w => w.ProjectId == projectId && wordIds.Contains(w.Id)) >= count);
-        }
-
-        public Task<bool> AreNonFrontierWords(string projectId, List<string> wordIds)
-        {
-            return Task.FromResult(wordIds.All(id =>
-                !_frontier.Any(w => w.ProjectId == projectId && w.Id == id) &&
-                _words.Any(w => w.ProjectId == projectId && w.Id == id)));
         }
 
         public Task<int> GetFrontierCount(string projectId)

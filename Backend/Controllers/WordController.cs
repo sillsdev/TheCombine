@@ -263,7 +263,7 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
-            return await _wordService.RestoreToFrontier(projectId, wordId) ? Ok() : BadRequest();
+            return await _wordService.RestoreFrontierWords(projectId, [wordId]) ? Ok() : BadRequest();
         }
 
         /// <summary> Revert words from an dictionary of word ids (key: to revert to; value: from frontier). </summary>
