@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -55,7 +56,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Removes audio with specified fileName from a word </summary>
-        /// <returns> New word </returns>
+        /// <returns> A string: id of updated word, or null if not found </returns>
         public async Task<string?> DeleteAudio(string projectId, string userId, string wordId, string fileName)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting an audio");
@@ -71,7 +72,7 @@ namespace BackendFramework.Services
             return (await Update(userId, wordWithAudioToDelete))?.Id;
         }
 
-        /// <summary> Removes word from frontier collection and adds a Deleted copy in the word collection </summary>
+        /// <summary> Removes word from Frontier and adds a Deleted copy in the word collection </summary>
         /// <returns> A string: id of Deleted word </returns>
         public async Task<string?> DeleteFrontierWord(string projectId, string userId, string wordId)
         {
@@ -95,23 +96,75 @@ namespace BackendFramework.Services
             return deletedWord.Id;
         }
 
-        /// <summary> Restores words to the Frontier </summary>
-        /// <returns> A bool: true if successful, false if any don't exist or are already in the Frontier. </returns>
-        public async Task<bool> RestoreFrontierWords(string projectId, List<string> wordIds)
+        /// <summary> Tries to remove words from Frontier and add Deleted copies in the word collection </summary>
+        /// <returns> An int: number of successful deletions </returns>
+        public async Task<int> TryDeleteFrontierWords(string projectId, string userId, List<string> wordIds)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting words from Frontier");
+
+            var deletedCount = 0;
+            foreach (var wordId in wordIds)
+            {
+                try
+                {
+                    if (await DeleteFrontierWord(projectId, userId, wordId) is not null)
+                    {
+                        deletedCount++;
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine($"Failed to delete word with id {wordId} from Frontier");
+                }
+            }
+            return deletedCount;
+        }
+
+        /// <summary> Restore a word to the Frontier </summary>
+        /// <returns> A bool: true if restored; false if already in frontier or word not found </returns>
+        public async Task<bool> RestoreToFrontier(string projectId, string wordId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring a word to Frontier");
+
+            if (await _wordRepo.IsInFrontier(projectId, wordId))
+            {
+                return false;
+            }
+
+            var word = (await _wordRepo.GetWord(projectId, wordId))?.Clone();
+            if (word is null)
+            {
+                return false;
+            }
+
+            await _wordRepo.AddFrontier(word);
+            return true;
+        }
+
+        /// <summary> Restores words to the Frontier that aren't in the Frontier </summary>
+        /// <returns> A bool: true if all successfully restored. </returns>
+        public async Task<bool> RestoreToFrontier(string projectId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring words to Frontier");
 
-            var words = new List<Word>();
+            wordIds = wordIds.Distinct().ToList();
+
+            // Make sure all the words exist but not in the Frontier
+            if (!await _wordRepo.AreNonFrontierWords(projectId, wordIds))
+            {
+                return false;
+            }
+
+            // Restore each word
             foreach (var id in wordIds)
             {
-                var word = await _wordRepo.GetWord(projectId, id);
-                if (word is null || await _wordRepo.IsInFrontier(projectId, id))
+                if (!await RestoreToFrontier(projectId, id))
                 {
+                    Console.WriteLine($"Failed to restore word with id {id} to Frontier of project {projectId}");
                     return false;
                 }
-                words.Add(word);
             }
-            await _wordRepo.AddFrontier(words);
+
             return true;
         }
 

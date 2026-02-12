@@ -162,46 +162,43 @@ namespace BackendFramework.Services
             }
 
             // Remove the children
-            await Task.WhenAll(childrenIds.Select(id => _wordService.DeleteFrontierWord(projectId, userId, id)));
+            await _wordService.TryDeleteFrontierWords(projectId, userId, childrenIds.ToList());
 
             return addedParents;
         }
 
         /// <summary> Undo merge </summary>
-        /// <returns> True if merge was successfully undone </returns>
+        /// <returns> True if merge children were successfully restored </returns>
         public async Task<bool> UndoMerge(string projectId, string userId, MergeUndoIds ids)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "undoing merge");
 
-            foreach (var parentId in ids.ParentIds)
-            {
-                var parentWord = (await _wordRepo.GetWord(projectId, parentId))?.Clone();
-                if (parentWord is null)
-                {
-                    return false;
-                }
-            }
+            var parentIds = ids.ParentIds.Distinct().ToList();
 
-            // If children are not restorable, return without any undo.
-            if (!await _wordService.RestoreFrontierWords(projectId, ids.ChildIds))
+            // If any of the parents aren't in the Frontier, they've been changed since the merge.
+            if (!await _wordRepo.AreInFrontier(projectId, parentIds, parentIds.Count))
             {
                 return false;
             }
-            foreach (var parentId in ids.ParentIds)
+
+            // If children are not restorable, return without deleting the merge parents.
+            if (!await _wordService.RestoreToFrontier(projectId, ids.ChildIds))
             {
-                await _wordService.DeleteFrontierWord(projectId, userId, parentId);
+                return false;
             }
+
+            await _wordService.TryDeleteFrontierWords(projectId, userId, parentIds);
             return true;
         }
 
         /// <summary> Adds a List of wordIds to MergeBlacklist of specified <see cref="Project"/>. </summary>
         /// <exception cref="InvalidMergeWordSetException"> Throws when wordIds has count less than 2. </exception>
         /// <returns> The <see cref="MergeWordSet"/> created. </returns>
-        public async Task<MergeWordSet> AddToMergeBlacklist(
-            string projectId, string userId, List<string> wordIds)
+        public async Task<MergeWordSet> AddToMergeBlacklist(string projectId, string userId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "adding to merge blacklist");
 
+            wordIds = wordIds.Distinct().ToList();
             if (wordIds.Count < 2)
             {
                 throw new InvalidMergeWordSetException("Cannot blacklist a list of fewer than 2 wordIds.");
@@ -225,8 +222,7 @@ namespace BackendFramework.Services
         /// <summary> Adds a List of wordIds to MergeGraylist of specified <see cref="Project"/>. </summary>
         /// <exception cref="InvalidMergeWordSetException"> Throws when wordIds has count less than 2. </exception>
         /// <returns> The <see cref="MergeWordSet"/> created. </returns>
-        public async Task<MergeWordSet> AddToMergeGraylist(
-            string projectId, string userId, List<string> wordIds)
+        public async Task<MergeWordSet> AddToMergeGraylist(string projectId, string userId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "adding to merge graylist");
 
@@ -253,8 +249,7 @@ namespace BackendFramework.Services
         /// <summary> Remove a List of wordIds from MergeGraylist of specified <see cref="Project"/>. </summary>
         /// <exception cref="InvalidMergeWordSetException"> Throws when wordIds has count less than 2. </exception>
         /// <returns> Boolean indicating whether anything was removed. </returns>
-        public async Task<bool> RemoveFromMergeGraylist(
-            string projectId, string userId, List<string> wordIds)
+        public async Task<bool> RemoveFromMergeGraylist(string projectId, string userId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "removing from merge graylist");
 
