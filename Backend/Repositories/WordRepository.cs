@@ -220,6 +220,18 @@ namespace BackendFramework.Repositories
                 .CountDocumentsAsync(GetProjectWordsFilter(projectId, wordIds), new() { Limit = count }) == count;
         }
 
+        /// <summary> Checks if given words are in the project words collection but not in the Frontier. </summary>
+        public async Task<bool> AreNonFrontierWords(string projectId, List<string> wordIds)
+        {
+            using var activity =
+                OtelService.StartActivityWithTag(otelTagName, "checking if words exist but not in Frontier");
+
+            // Make sure all the words exist
+            wordIds = wordIds.Distinct().ToList();
+            return !await AreInFrontier(projectId, wordIds, 1) &&
+                wordIds.Count == await _words.CountDocumentsAsync(GetProjectWordsFilter(projectId, wordIds));
+        }
+
         /// <summary> Gets number of <see cref="Word"/>s in the Frontier for specified <see cref="Project"/> </summary>
         public async Task<int> GetFrontierCount(string projectId)
         {

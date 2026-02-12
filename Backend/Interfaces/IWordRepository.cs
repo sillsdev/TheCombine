@@ -17,6 +17,7 @@ namespace BackendFramework.Interfaces
         Task<bool> HasFrontierWords(string projectId);
         Task<bool> IsInFrontier(string projectId, string wordId);
         Task<bool> AreInFrontier(string projectId, List<string> wordIds, int count);
+        Task<bool> AreNonFrontierWords(string projectId, List<string> wordIds);
         Task<int> GetFrontierCount(string projectId);
         Task<List<Word>> GetAllFrontier(string projectId);
         Task<Word?> GetFrontier(string projectId, string wordId, string? audioFileName = null);
