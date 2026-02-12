@@ -283,6 +283,8 @@ namespace BackendFramework.Services
             // Get every word with all of its information.
             var allWords = await wordRepo.GetAllWords(projectId);
             var frontier = await wordRepo.GetAllFrontier(projectId);
+            // All words in the frontier with any senses are considered current.
+            // The Combine does not import senseless entries and the interface is supposed to prevent creating them.
             var activeWords = frontier.Where(
                 x => x.Senses.Any(s => s.Accessibility == Status.Active || s.Accessibility == Status.Protected)).ToList();
             var hasFlags = activeWords.Any(w => w.Flag.Active);
@@ -308,13 +310,12 @@ namespace BackendFramework.Services
             // Get all project speakers for exporting audio and consents.
             var projSpeakers = await speakerRepo.GetAllSpeakers(projectId);
 
-            // All words in the frontier with any senses are considered current.
-            // The Combine does not import senseless entries and the interface is supposed to prevent creating them.
-            // So the words found in allWords with no matching guid in activeWords are exported as 'deleted'.
-            var deletedWords = allWords.Where(
-                x => activeWords.All(w => w.Guid != x.Guid)).DistinctBy(w => w.Guid).ToList();
+            // Deleted words found in allWords with no matching guid in activeWords are exported as 'deleted'.
+            var deletedWords = allWords.Where(w => w.Accessibility == Status.Deleted).DistinctBy(w => w.Guid)
+                .Where(x => activeWords.All(w => w.Guid != x.Guid)).ToList();
             var englishSemDoms = await semDomRepo.GetAllSemanticDomainTreeNodes("en") ?? [];
             var semDomNames = englishSemDoms.ToDictionary(x => x.Id, x => x.Name);
+
             foreach (var wordEntry in activeWords)
             {
                 var id = MakeSafeXmlAttribute(wordEntry.Vernacular) + "_" + wordEntry.Guid;
