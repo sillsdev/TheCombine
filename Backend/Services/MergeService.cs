@@ -162,7 +162,7 @@ namespace BackendFramework.Services
             }
 
             // Remove the children
-            await _wordService.TryDeleteFrontierWords(projectId, userId, childrenIds.ToList());
+            await _wordService.TryDeleteFrontierWords(projectId, userId, childrenIds.ToList(), Status.Merged);
 
             return addedParents;
         }
@@ -331,7 +331,7 @@ namespace BackendFramework.Services
             {
                 return 0;
             }
-            var frontierWordIds = (await _wordRepo.GetAllFrontier(projectId)).Select(word => word.Id);
+            var frontierWordIds = (await _wordRepo.GetAllFrontier(projectId)).Select(word => word.Id).ToHashSet();
             var updateCount = 0;
             foreach (var entry in oldBlacklist)
             {
@@ -370,7 +370,7 @@ namespace BackendFramework.Services
             {
                 return 0;
             }
-            var frontierWordIds = (await _wordRepo.GetAllFrontier(projectId)).Select(word => word.Id);
+            var frontierWordIds = (await _wordRepo.GetAllFrontier(projectId)).Select(word => word.Id).ToHashSet();
             var updateCount = 0;
             foreach (var entry in oldGraylist)
             {

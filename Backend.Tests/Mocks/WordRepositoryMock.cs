@@ -43,9 +43,9 @@ namespace Backend.Tests.Mocks
             }
         }
 
-        public async Task<List<Word>> GetWords(string projectId, List<string> wordIds)
+        public Task<List<Word>> GetWords(string projectId, List<string> wordIds)
         {
-            return await Task.FromResult(
+            return Task.FromResult(
                 _words.Where(w => w.ProjectId == projectId && wordIds.Contains(w.Id)).Select(w => w.Clone()).ToList());
         }
 
@@ -123,7 +123,7 @@ namespace Backend.Tests.Mocks
         {
             var word = _frontier.Find(w => w.ProjectId == projectId && w.Id == wordId &&
                 (string.IsNullOrEmpty(audioFileName) || w.Audio.Any(a => a.FileName == audioFileName)));
-            return Task.FromResult(word);
+            return Task.FromResult(word?.Clone());
         }
 
         public Task<List<Word>> GetFrontierWithVernacular(string projectId, string vernacular)
