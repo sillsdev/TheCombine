@@ -93,6 +93,8 @@ namespace BackendFramework.Services
                 var child = await _wordRepo.GetWord(projectId, childSource.SrcWordId)
                     ?? throw new KeyNotFoundException($"Unable to locate word: ${childSource.SrcWordId}");
 
+                // We can assume only one child has the same guid as the parent. If that is somehow not the case,
+                // only one will be updated to the parent and the rest deleted, which is okay.
                 if (child.Guid == parent.Guid)
                 {
                     // Update parent's UsingCitationForm.
@@ -156,8 +158,7 @@ namespace BackendFramework.Services
             }
 
             // Remove the children
-            await Task.WhenAll(childrenIds.Select(
-                wordId => _wordService.DeleteFrontierWord(projectId, userId, wordId, Status.Merged)));
+            await Task.WhenAll(childrenIds.Select(id => _wordService.DeleteFrontierWord(projectId, userId, id)));
 
             return addedParents;
         }
@@ -183,8 +184,7 @@ namespace BackendFramework.Services
             }
 
             // Remove the parents
-            await Task.WhenAll(parentIds.Select(
-                wordId => _wordService.DeleteFrontierWord(projectId, userId, wordId, Status.Deleted)));
+            await Task.WhenAll(parentIds.Select(id => _wordService.DeleteFrontierWord(projectId, userId, id)));
 
             return true;
         }

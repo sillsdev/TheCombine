@@ -21,6 +21,5 @@ export enum Status {
   Active = "Active",
   Deleted = "Deleted",
   Duplicate = "Duplicate",
-  Merged = "Merged",
   Protected = "Protected",
 }

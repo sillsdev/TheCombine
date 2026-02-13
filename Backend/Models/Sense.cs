@@ -243,7 +243,6 @@ namespace BackendFramework.Models
         Active,
         Deleted,
         Duplicate,
-        Merged,
         Protected,
     }
 }

@@ -100,9 +100,8 @@ namespace Backend.Tests.Services
         public void TestDeleteFrontierWordNotInFrontierNull()
         {
             var wordNotInFrontier = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
-            Assert.That(_wordService.DeleteFrontierWord(ProjId, UserId, wordNotInFrontier.Id, Status.Deleted).Result,
-                Is.Null);
-            Assert.That(_wordService.DeleteFrontierWord("wrong-proj", UserId, WordId, Status.Deleted).Result, Is.Null);
+            Assert.That(_wordService.DeleteFrontierWord(ProjId, UserId, wordNotInFrontier.Id).Result, Is.Null);
+            Assert.That(_wordService.DeleteFrontierWord("wrong-proj", UserId, WordId).Result, Is.Null);
         }
 
         [Test]
@@ -110,7 +109,7 @@ namespace Backend.Tests.Services
         {
             var oldId = _wordRepo.Create(new Word { ProjectId = ProjId }).Result.Id;
 
-            var deletedId = _wordService.DeleteFrontierWord(ProjId, UserId, oldId, Status.Deleted).Result;
+            var deletedId = _wordService.DeleteFrontierWord(ProjId, UserId, oldId).Result;
 
             Assert.That(deletedId, Is.Not.Null);
             Assert.That(deletedId, Is.Not.EqualTo(oldId));
@@ -126,18 +125,6 @@ namespace Backend.Tests.Services
             Assert.That(allWordIds, Does.Contain(deletedId!));
 
             Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Is.Empty);
-        }
-
-        [Test]
-        public void TestDeleteFrontierWordMergedStatus()
-        {
-            var oldId = _wordRepo.Create(new Word { ProjectId = ProjId }).Result.Id;
-
-            var deletedId = _wordService.DeleteFrontierWord(ProjId, UserId, oldId, Status.Merged).Result;
-
-            var deletedWord = _wordRepo.GetWord(ProjId, deletedId!).Result;
-            Assert.That(deletedWord, Is.Not.Null);
-            Assert.That(deletedWord!.Accessibility, Is.EqualTo(Status.Merged));
         }
 
         [Test]
