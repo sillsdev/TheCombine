@@ -139,26 +139,19 @@ namespace BackendFramework.Services
             var childrenIds = mergeWordsList.SelectMany(m => m.Children.Select(c => c.SrcWordId)).ToHashSet();
 
             // Create the parents
-            List<Word> addedParents = [];
+            var addedParents = new List<Word>();
             foreach (var parent in parents)
             {
+                Word? updatedParent = null;
                 if (childrenIds.Contains(parent.Id))
                 {
-                    var updatedParent = await _wordService.Update(userId, parent);
-                    if (updatedParent is null)
+                    updatedParent = await _wordService.Update(userId, parent);
+                    if (updatedParent is not null)
                     {
-                        addedParents.Add(await _wordService.Create(userId, parent));
-                    }
-                    else
-                    {
-                        addedParents.Add(updatedParent);
                         childrenIds.Remove(parent.Id);
                     }
                 }
-                else
-                {
-                    addedParents.Add(await _wordService.Create(userId, parent));
-                }
+                addedParents.Add(updatedParent ?? await _wordService.Create(userId, parent));
             }
 
             // Remove the children
@@ -169,7 +162,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Undo merge </summary>
-        /// <returns> True if merge children were successfully restored </returns>
+        /// <returns> A bool: true if merge children were successfully restored </returns>
         public async Task<bool> UndoMerge(string projectId, string userId, MergeUndoIds ids)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "undoing merge");
@@ -335,11 +328,11 @@ namespace BackendFramework.Services
             {
                 return 0;
             }
-            var frontierWordIds = (await _wordRepo.GetAllFrontier(projectId)).Select(word => word.Id).ToHashSet();
+            var frontierIds = (await _wordRepo.GetAllFrontier(projectId)).Select(word => word.Id).ToHashSet();
             var updateCount = 0;
             foreach (var entry in oldBlacklist)
             {
-                var newIds = entry.WordIds.Where(id => frontierWordIds.Contains(id)).ToList();
+                var newIds = entry.WordIds.Where(id => frontierIds.Contains(id)).ToList();
                 if (newIds.Count == entry.WordIds.Count)
                 {
                     continue;
@@ -374,11 +367,11 @@ namespace BackendFramework.Services
             {
                 return 0;
             }
-            var frontierWordIds = (await _wordRepo.GetAllFrontier(projectId)).Select(word => word.Id).ToHashSet();
+            var frontierIds = (await _wordRepo.GetAllFrontier(projectId)).Select(word => word.Id).ToHashSet();
             var updateCount = 0;
             foreach (var entry in oldGraylist)
             {
-                var newIds = entry.WordIds.Where(id => frontierWordIds.Contains(id)).ToList();
+                var newIds = entry.WordIds.Where(id => frontierIds.Contains(id)).ToList();
                 if (newIds.Count == entry.WordIds.Count)
                 {
                     continue;
