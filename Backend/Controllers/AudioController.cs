@@ -123,7 +123,7 @@ namespace BackendFramework.Controllers
                 return BadRequest("Empty File");
             }
 
-            var word = await _wordRepo.GetWord(projectId, wordId);
+            var word = await _wordRepo.GetFrontier(projectId, wordId);
             if (word is null)
             {
                 return NotFound($"wordId: {wordId}");
