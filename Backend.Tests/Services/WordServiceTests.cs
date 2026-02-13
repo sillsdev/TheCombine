@@ -75,7 +75,8 @@ namespace Backend.Tests.Services
             var oldId = wordInFrontier.Id;
 
             var newId = _wordService.DeleteAudio(ProjId, UserId, oldId, fileName).Result;
-            Assert.That(newId, Is.Not.Null.Or.EqualTo(oldId));
+            Assert.That(newId, Is.Not.Null);
+            Assert.That(newId, Is.Not.EqualTo(oldId));
 
             // Original word persists
             var allWords = _wordRepo.GetAllWords(ProjId).Result;

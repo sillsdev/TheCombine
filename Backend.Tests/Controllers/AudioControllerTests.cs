@@ -178,10 +178,11 @@ namespace Backend.Tests.Controllers
 
             // Test delete function
             var result = _audioController.DeleteAudioFile(_projId, oldId, fileName).Result as OkObjectResult;
+            var newId = result?.Value as string;
 
             // Ensure returned id in different
-            var newId = result?.Value as string;
-            Assert.That(newId, Is.Not.Null.Or.EqualTo(oldId));
+            Assert.That(newId, Is.Not.Null);
+            Assert.That(newId, Is.Not.EqualTo(oldId));
 
             // Ensure the word with deleted audio is in the frontier
             var frontier = _wordRepo.GetAllFrontier(_projId).Result;
