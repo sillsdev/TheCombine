@@ -13,20 +13,14 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/words")]
-    public class WordController : Controller
+    public class WordController(
+        IWordRepository wordRepo, IWordService wordService, IPermissionService permissionService) : Controller
     {
-        private readonly IWordRepository _wordRepo;
-        private readonly IPermissionService _permissionService;
-        private readonly IWordService _wordService;
+        private readonly IWordRepository _wordRepo = wordRepo;
+        private readonly IPermissionService _permissionService = permissionService;
+        private readonly IWordService _wordService = wordService;
 
         private const string otelTagName = "otel.WordController";
-
-        public WordController(IWordRepository repo, IWordService wordService, IPermissionService permissionService)
-        {
-            _wordRepo = repo;
-            _permissionService = permissionService;
-            _wordService = wordService;
-        }
 
         /// <summary> Deletes specified Frontier <see cref="Word"/>. </summary>
         [HttpDelete("frontier/{wordId}", Name = "DeleteFrontierWord")]
@@ -43,8 +37,8 @@ namespace BackendFramework.Controllers
             }
             var userId = _permissionService.GetUserId(HttpContext);
 
-            var deletedWordId = await _wordService.DeleteFrontierWord(projectId, userId, wordId, Status.Deleted);
-            return deletedWordId is null ? NotFound() : Ok();
+            var deleted = await _wordService.DeleteFrontierWord(projectId, userId, wordId, Status.Deleted);
+            return deleted is null ? NotFound() : Ok();
         }
 
         /// <summary> Returns <see cref="Word"/> with specified id. </summary>
@@ -60,12 +54,9 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
-            var word = await _wordRepo.GetWord(projectId, wordId);
-            if (word is null)
-            {
-                return NotFound();
-            }
-            return Ok(word);
+
+            Word? word = await _wordRepo.GetWord(projectId, wordId);
+            return word is null ? NotFound() : Ok(word);
         }
 
         /// <summary> Checks if Frontier for specified <see cref="Project"/> has any words. </summary>
@@ -80,6 +71,7 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
+
             return Ok(await _wordRepo.HasFrontierWords(projectId));
         }
 
@@ -95,6 +87,7 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
+
             return Ok(await _wordRepo.GetFrontierCount(projectId));
         }
 
@@ -110,6 +103,7 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
+
             return Ok(await _wordRepo.GetAllFrontier(projectId));
         }
 
@@ -125,6 +119,7 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
+
             return Ok(await _wordRepo.IsInFrontier(projectId, wordId));
         }
 
@@ -170,7 +165,8 @@ namespace BackendFramework.Controllers
             }
             word.ProjectId = projectId;
 
-            return Ok(await _wordService.FindContainingWord(word) ?? "");
+            string? containingId = await _wordService.FindContainingWord(word);
+            return Ok(containingId ?? "");
         }
 
         /// <summary> Combines a <see cref="Word"/> into the existing duplicate with specified wordId. </summary>
@@ -203,7 +199,7 @@ namespace BackendFramework.Controllers
                 return Conflict();
             }
 
-            var newId = await _wordService.Update(userId, duplicatedWord);
+            string? newId = (await _wordService.Update(userId, duplicatedWord))?.Id;
             return newId is null ? NotFound() : Ok(newId);
         }
 
@@ -220,9 +216,11 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
+
             word.ProjectId = projectId;
-            var userId = _permissionService.GetUserId(HttpContext);
-            return Ok((await _wordService.Create(userId, word)).Id);
+
+            string newId = (await _wordService.Create(_permissionService.GetUserId(HttpContext), word)).Id;
+            return Ok(newId);
         }
 
         /// <summary> Updates a <see cref="Word"/>. </summary>
@@ -245,7 +243,7 @@ namespace BackendFramework.Controllers
             word.ProjectId = projectId;
             word.Id = wordId;
 
-            var newId = await _wordService.Update(_permissionService.GetUserId(HttpContext), word);
+            string? newId = (await _wordService.Update(_permissionService.GetUserId(HttpContext), word))?.Id;
             return newId is null ? NotFound() : Ok(newId);
         }
 

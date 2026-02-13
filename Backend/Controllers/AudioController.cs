@@ -13,20 +13,14 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/words/{wordId}/audio")]
-    public class AudioController : Controller
+    public class AudioController(
+        IWordRepository wordRepo, IWordService wordService, IPermissionService permissionService) : Controller
     {
-        private readonly IWordRepository _wordRepo;
-        private readonly IPermissionService _permissionService;
-        private readonly IWordService _wordService;
+        private readonly IWordRepository _wordRepo = wordRepo;
+        private readonly IPermissionService _permissionService = permissionService;
+        private readonly IWordService _wordService = wordService;
 
         private const string otelTagName = "otel.AudioController";
-
-        public AudioController(IWordRepository repo, IWordService wordService, IPermissionService permissionService)
-        {
-            _wordRepo = repo;
-            _permissionService = permissionService;
-            _wordService = wordService;
-        }
 
         /// <summary> Gets the audio file in the form of a stream from disk. </summary>
         /// <returns> Audio file stream. </returns>
@@ -144,9 +138,9 @@ namespace BackendFramework.Controllers
             word.Audio.Add(audio);
 
             // Update the word with new audio file
-            var updatedWord = await _wordService.Update(userId, word);
+            string? updatedId = (await _wordService.Update(userId, word))?.Id;
 
-            return updatedWord is null ? NotFound($"wordId: {wordId}") : Ok(updatedWord.Id);
+            return updatedId is null ? NotFound($"wordId: {wordId}") : Ok(updatedId);
         }
 
         /// <summary> Deletes audio in <see cref="Word"/> with specified ID </summary>
@@ -177,7 +171,7 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            var newId = await _wordService.DeleteAudio(projectId, userId, wordId, fileName);
+            string? newId = await _wordService.DeleteAudio(projectId, userId, wordId, fileName);
             return newId is null ? NotFound($"wordId: {wordId}; fileName: {fileName}") : Ok(newId);
         }
     }
