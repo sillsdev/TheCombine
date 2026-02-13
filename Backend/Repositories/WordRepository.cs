@@ -80,8 +80,17 @@ namespace BackendFramework.Repositories
             }
         }
 
-        /// <summary> Removes all <see cref="Word"/>s from the WordsCollection and Frontier for specified
-        /// <see cref="Project"/> </summary>
+        /// <summary> Finds project <see cref="Word"/>s with specified ids </summary>
+        public async Task<List<Word>> GetWords(string projectId, List<string> wordIds)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting words");
+
+            return await _words.Find(GetProjectWordsFilter(projectId, wordIds)).ToListAsync();
+        }
+
+        /// <summary>
+        /// Removes all <see cref="Word"/>s from the WordsCollection and Frontier for specified <see cref="Project"/>
+        /// </summary>
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllWords(string projectId)
         {
@@ -130,7 +139,6 @@ namespace BackendFramework.Repositories
         /// If the Created or Modified time fields are blank, they will automatically calculated using the current
         /// time. This allows services to set or clear the values before creation to control these fields.
         /// </remarks>
-        /// <param name="word"></param>
         /// <returns> The word created </returns>
         public async Task<Word> Create(Word word)
         {
@@ -148,7 +156,6 @@ namespace BackendFramework.Repositories
         /// If the Created or Modified time fields are blank, they will automatically calculated using the current
         /// time. This allows services to set or clear the values before creation to control these fields.
         /// </remarks>
-        /// <param name="words"></param>
         /// <returns> The words created </returns>
         public async Task<List<Word>> Create(List<Word> words)
         {

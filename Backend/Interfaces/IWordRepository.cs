@@ -8,6 +8,7 @@ namespace BackendFramework.Interfaces
     {
         Task<List<Word>> GetAllWords(string projectId);
         Task<Word?> GetWord(string projectId, string wordId);
+        Task<List<Word>> GetWords(string projectId, List<string> wordIds);
         Task<Word> Create(Word word);
         Task<List<Word>> Create(List<Word> words);
         Task<Word> Add(Word word);
