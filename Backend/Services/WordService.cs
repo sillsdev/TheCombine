@@ -92,22 +92,33 @@ namespace BackendFramework.Services
             return (await Add(userId, word)).Id;
         }
 
-        /// <summary> Restores words to the Frontier </summary>
-        /// <returns> A bool: true if successful, false if any don't exist or are already in the Frontier. </returns>
+        /// <summary> Restores words to the Frontier that aren't in the Frontier </summary>
+        /// <returns> A bool: true if all successfully restored </returns>
         public async Task<bool> RestoreFrontierWords(string projectId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring words to Frontier");
 
-            var words = new List<Word>();
-            foreach (var id in wordIds)
+            wordIds = wordIds.Distinct().ToList();
+
+            // Make sure none of the words are in the Frontier.
+            if (await _wordRepo.AreInFrontier(projectId, wordIds, 1))
             {
-                var word = await _wordRepo.GetWord(projectId, id);
-                if (word is null || await _wordRepo.IsInFrontier(projectId, id))
-                {
-                    return false;
-                }
-                words.Add(word);
+                return false;
             }
+
+            // Make sure all the words exist and are valid.
+            var words = await _wordRepo.GetWords(projectId, wordIds);
+            if (words.Count != wordIds.Count)
+            {
+                return false;
+            }
+            if (words.Any(w => w.Accessibility == Status.Deleted))
+            {
+                // We should be restoring words that were removed from the Frontier,
+                // and not their "Deleted" copies in the words collection.
+                return false;
+            }
+
             await _wordRepo.AddFrontier(words);
             return true;
         }
