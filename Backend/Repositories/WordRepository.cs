@@ -138,7 +138,6 @@ namespace BackendFramework.Repositories
         /// If the Created or Modified time fields are blank, they will automatically calculated using the current
         /// time. This allows services to set or clear the values before creation to control these fields.
         /// </remarks>
-        /// <param name="word"></param>
         /// <returns> The word created </returns>
         public async Task<Word> Create(Word word)
         {
@@ -156,7 +155,6 @@ namespace BackendFramework.Repositories
         /// If the Created or Modified time fields are blank, they will automatically calculated using the current
         /// time. This allows services to set or clear the values before creation to control these fields.
         /// </remarks>
-        /// <param name="words"></param>
         /// <returns> The words created </returns>
         public async Task<List<Word>> Create(List<Word> words)
         {

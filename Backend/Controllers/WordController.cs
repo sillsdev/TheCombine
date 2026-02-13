@@ -264,7 +264,7 @@ namespace BackendFramework.Controllers
             return await _wordService.RestoreFrontierWords(projectId, [wordId]) ? Ok() : BadRequest();
         }
 
-        /// <summary> Revert words from an dictionary of word ids (key: to revert to; value: from frontier). </summary>
+        /// <summary> Revert words from a dictionary of word ids (key: to revert to; value: from frontier). </summary>
         /// <returns> Id dictionary of all words successfully updated (key: was in frontier; value: new id). </returns>
         [HttpPost("revertwords", Name = "RevertWords")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Dictionary<string, string>))]
