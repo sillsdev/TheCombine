@@ -385,9 +385,26 @@ namespace Backend.Tests.Controllers
 
             var result = await _wordController.RestoreWord(ProjId, word.Id);
 
-            Assert.That(result, Is.InstanceOf<OkResult>());
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)result).Value, Is.True);
             Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
             Assert.That(await _wordRepo.GetAllFrontier(ProjId), Does.Contain(word).UsingPropertiesComparer());
+        }
+
+        [Test]
+        public async Task TestRestoreWordAlreadyInFrontier()
+        {
+            var word = await _wordRepo.Create(Util.RandomWord(ProjId));
+
+            Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
+            Assert.That(await _wordRepo.GetAllFrontier(ProjId), Does.Contain(word).UsingPropertiesComparer());
+            var frontierCount = await _wordRepo.GetFrontierCount(ProjId);
+
+            var result = await _wordController.RestoreWord(ProjId, word.Id);
+
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)result).Value, Is.False);
+            Assert.That(await _wordRepo.GetFrontierCount(ProjId), Is.EqualTo(frontierCount));
         }
 
         [Test]
@@ -404,20 +421,7 @@ namespace Backend.Tests.Controllers
         public async Task TestRestoreWordMissingWord()
         {
             var wordResult = await _wordController.RestoreWord(ProjId, MissingId);
-            Assert.That(wordResult, Is.InstanceOf<BadRequestResult>());
-        }
-
-        [Test]
-        public async Task TestRestoreWordAlreadyInFrontier()
-        {
-            var word = await _wordRepo.Create(Util.RandomWord(ProjId));
-
-            Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
-            Assert.That(await _wordRepo.GetAllFrontier(ProjId), Does.Contain(word).UsingPropertiesComparer());
-
-            var result = await _wordController.RestoreWord(ProjId, word.Id);
-
-            Assert.That(result, Is.InstanceOf<BadRequestResult>());
+            Assert.That(wordResult, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]

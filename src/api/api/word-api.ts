@@ -1041,7 +1041,7 @@ export const WordApiFp = function (configuration?: Configuration) {
       wordId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.restoreWord(
         projectId,
@@ -1315,7 +1315,7 @@ export const WordApiFactory = function (
       projectId: string,
       wordId: string,
       options?: any
-    ): AxiosPromise<void> {
+    ): AxiosPromise<boolean> {
       return localVarFp
         .restoreWord(projectId, wordId, options)
         .then((request) => request(axios, basePath));
