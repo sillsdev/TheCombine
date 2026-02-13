@@ -959,9 +959,10 @@ export async function isInFrontier(
 export async function restoreWord(
   wordId: string,
   projectId?: string
-): Promise<void> {
+): Promise<boolean> {
   projectId ||= LocalStorage.getProjectId();
-  await wordApi.restoreWord({ projectId, wordId }, defaultOptions());
+  const params = { projectId, wordId };
+  return (await wordApi.restoreWord(params, defaultOptions())).data;
 }
 
 /** Revert word updates given in dictionary of word ids:
