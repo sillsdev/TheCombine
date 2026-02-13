@@ -162,7 +162,8 @@ namespace BackendFramework.Services
             }
 
             // Remove the children
-            await _wordService.TryDeleteFrontierWords(projectId, userId, childrenIds.ToList(), Status.Merged);
+            await Task.WhenAll(childrenIds.Select(
+                async wordId => await _wordService.DeleteFrontierWord(projectId, userId, wordId, Status.Merged)));
 
             return addedParents;
         }
@@ -187,7 +188,10 @@ namespace BackendFramework.Services
                 return false;
             }
 
-            await _wordService.TryDeleteFrontierWords(projectId, userId, parentIds);
+            // Remove the parents
+            await Task.WhenAll(parentIds.Select(
+                async wordId => await _wordService.DeleteFrontierWord(projectId, userId, wordId, Status.Deleted)));
+
             return true;
         }
 
