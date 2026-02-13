@@ -71,9 +71,9 @@ namespace BackendFramework.Services
             return (await Update(userId, wordWithAudioToDelete))?.Id;
         }
 
-        /// <summary> Removes word from Frontier and adds a copy with given status in the words collection </summary>
+        /// <summary> Removes word from Frontier and adds a Deleted copy in the words collection </summary>
         /// <returns> A string: id of deleted word </returns>
-        public async Task<string?> DeleteFrontierWord(string projectId, string userId, string wordId, Status status)
+        public async Task<string?> DeleteFrontierWord(string projectId, string userId, string wordId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
 
@@ -84,7 +84,7 @@ namespace BackendFramework.Services
             }
 
             word.ProjectId = projectId;
-            word.Accessibility = status;
+            word.Accessibility = Status.Deleted;
             word.History.Add(wordId);
 
             var deletedWord = await Add(userId, word);
@@ -115,10 +115,10 @@ namespace BackendFramework.Services
             {
                 return false;
             }
-            if (wordsToRestore.Any(w => w.Accessibility == Status.Deleted || w.Accessibility == Status.Merged))
+            if (wordsToRestore.Any(w => w.Accessibility == Status.Deleted))
             {
                 // We should be restoring words that were removed from the Frontier,
-                // and not their "Deleted" or "Merged" copies in the words collection.
+                // and not their "Deleted" copies in the words collection.
                 return false;
             }
 

@@ -156,14 +156,6 @@ namespace Backend.Tests.Mocks
             return Task.FromResult<Word?>(word);
         }
 
-        public Task<long> DeleteFrontierWords(string projectId, List<string> wordIds)
-        {
-            long deletedCount = 0;
-            wordIds.ForEach(id => deletedCount += _frontier.RemoveAll(
-                word => word.ProjectId == projectId && word.Id == id));
-            return Task.FromResult(deletedCount);
-        }
-
         public Task<Word> Add(Word word)
         {
             word.Id = Guid.NewGuid().ToString();

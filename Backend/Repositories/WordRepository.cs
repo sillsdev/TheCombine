@@ -297,16 +297,6 @@ namespace BackendFramework.Repositories
                     GetProjectWordWithAudioFilter(projectId, wordId, audioFileName));
         }
 
-        /// <summary> Removes <see cref="Word"/>s from the Frontier with specified wordIds and projectId </summary>
-        /// <returns> Number of words deleted </returns>
-        public async Task<long> DeleteFrontierWords(string projectId, List<string> wordIds)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting words from Frontier");
-
-            var deleted = await _frontier.DeleteManyAsync(GetProjectWordsFilter(projectId, wordIds));
-            return deleted.DeletedCount;
-        }
-
         /// <summary>
         /// Counts the number of Frontier words that have the specified semantic domain.
         /// </summary>

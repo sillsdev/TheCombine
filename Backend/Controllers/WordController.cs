@@ -37,7 +37,7 @@ namespace BackendFramework.Controllers
             }
             var userId = _permissionService.GetUserId(HttpContext);
 
-            var deleted = await _wordService.DeleteFrontierWord(projectId, userId, wordId, Status.Deleted);
+            var deleted = await _wordService.DeleteFrontierWord(projectId, userId, wordId);
             return deleted is null ? NotFound() : Ok();
         }
 
