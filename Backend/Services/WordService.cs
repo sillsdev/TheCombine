@@ -117,7 +117,7 @@ namespace BackendFramework.Services
             {
                 try
                 {
-                    if (await DeleteFrontierWord(projectId, userId, wordId) is not null)
+                    if (await DeleteFrontierWord(projectId, userId, wordId, status) is not null)
                     {
                         deletedCount++;
                     }
@@ -145,8 +145,15 @@ namespace BackendFramework.Services
             }
 
             var wordsToRestore = await _wordRepo.GetWords(projectId, wordIds);
+            // Make sure all the words are valid
             if (wordsToRestore.Count != wordIds.Count)
             {
+                return false;
+            }
+            if (wordsToRestore.Any(w => w.Accessibility == Status.Deleted || w.Accessibility == Status.Merged))
+            {
+                // We should be restoring words that was removed from the Frontier,
+                // and not their "Deleted" or "Merged" copies in the word collection.
                 return false;
             }
 
