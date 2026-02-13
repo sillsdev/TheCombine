@@ -144,9 +144,9 @@ namespace BackendFramework.Controllers
             word.Audio.Add(audio);
 
             // Update the word with new audio file
-            var newId = await _wordService.Update(userId, word);
+            var updatedWord = await _wordService.Update(userId, word);
 
-            return newId is null ? NotFound($"wordId: {wordId}") : Ok(newId);
+            return updatedWord is null ? NotFound($"wordId: {wordId}") : Ok(updatedWord.Id);
         }
 
         /// <summary> Deletes audio in <see cref="Word"/> with specified ID </summary>

@@ -310,9 +310,12 @@ namespace BackendFramework.Services
             // Get all project speakers for exporting audio and consents.
             var projSpeakers = await speakerRepo.GetAllSpeakers(projectId);
 
-            // Deleted words found in allWords with no matching guid in activeWords are exported as 'deleted'.
-            var deletedWords = allWords.Where(w => w.Accessibility == Status.Deleted).DistinctBy(w => w.Guid)
-                .Where(x => activeWords.All(w => w.Guid != x.Guid)).ToList();
+            // Deleted or merged words found in allWords with no matching guid in activeWords are exported as 'deleted'.
+            var activeWordGuids = activeWords.Select(w => w.Guid).ToHashSet();
+            var deletedWords = allWords
+                .Where(w => w.Accessibility == Status.Deleted || w.Accessibility == Status.Merged)
+                .DistinctBy(w => w.Guid)
+                .Where(x => !activeWordGuids.Contains(x.Guid)).ToList();
             var englishSemDoms = await semDomRepo.GetAllSemanticDomainTreeNodes("en") ?? [];
             var semDomNames = englishSemDoms.ToDictionary(x => x.Id, x => x.Name);
 

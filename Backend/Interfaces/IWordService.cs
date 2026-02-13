@@ -10,8 +10,10 @@ namespace BackendFramework.Interfaces
         Task<List<Word>> Create(string userId, List<Word> words);
         Task<Word?> Update(string userId, Word word);
         Task<string?> DeleteAudio(string projectId, string userId, string wordId, string fileName);
-        Task<string?> DeleteFrontierWord(string projectId, string userId, string wordId);
-        Task<int> TryDeleteFrontierWords(string projectId, string userId, List<string> wordIds);
+        Task<string?> DeleteFrontierWord(
+            string projectId, string userId, string wordId, Status? status = Status.Deleted);
+        Task<int> TryDeleteFrontierWords(
+            string projectId, string userId, List<string> wordIds, Status? status = Status.Deleted);
         Task<bool> RestoreFrontierWords(string projectId, List<string> wordIds);
         Task<string?> FindContainingWord(Word word);
     }
