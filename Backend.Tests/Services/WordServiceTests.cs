@@ -97,6 +97,50 @@ namespace Backend.Tests.Services
         }
 
         [Test]
+        public void TestDeleteFrontierWordNotInFrontierNull()
+        {
+            var wordNotInFrontier = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
+            Assert.That(_wordService.DeleteFrontierWord(ProjId, UserId, wordNotInFrontier.Id, Status.Deleted).Result,
+                Is.Null);
+            Assert.That(_wordService.DeleteFrontierWord("wrong-proj", UserId, WordId, Status.Deleted).Result, Is.Null);
+        }
+
+        [Test]
+        public void TestDeleteFrontierWordCopiesToWordsAndRemovesFrontier()
+        {
+            var oldId = _wordRepo.Create(new Word { ProjectId = ProjId }).Result.Id;
+
+            var deletedId = _wordService.DeleteFrontierWord(ProjId, UserId, oldId, Status.Deleted).Result;
+
+            Assert.That(deletedId, Is.Not.Null);
+            Assert.That(deletedId, Is.Not.EqualTo(oldId));
+            var deletedWord = _wordRepo.GetWord(ProjId, deletedId!).Result;
+            Assert.That(deletedWord, Is.Not.Null);
+            Assert.That(deletedWord!.Accessibility, Is.EqualTo(Status.Deleted));
+            Assert.That(deletedWord!.History.Last(), Is.EqualTo(oldId));
+            Assert.That(deletedWord!.EditedBy.Last(), Is.EqualTo(UserId));
+
+            var allWordIds = _wordRepo.GetAllWords(ProjId).Result.Select(w => w.Id).ToList();
+            Assert.That(allWordIds, Has.Count.EqualTo(2));
+            Assert.That(allWordIds, Does.Contain(oldId));
+            Assert.That(allWordIds, Does.Contain(deletedId!));
+
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Is.Empty);
+        }
+
+        [Test]
+        public void TestDeleteFrontierWordMergedStatus()
+        {
+            var oldId = _wordRepo.Create(new Word { ProjectId = ProjId }).Result.Id;
+
+            var deletedId = _wordService.DeleteFrontierWord(ProjId, UserId, oldId, Status.Merged).Result;
+
+            var deletedWord = _wordRepo.GetWord(ProjId, deletedId!).Result;
+            Assert.That(deletedWord, Is.Not.Null);
+            Assert.That(deletedWord!.Accessibility, Is.EqualTo(Status.Merged));
+        }
+
+        [Test]
         public void TestUpdateNotInFrontierNull()
         {
             Assert.That(_wordService.Update(UserId, new Word() { Id = WordId, ProjectId = ProjId }).Result, Is.Null);
@@ -127,13 +171,13 @@ namespace Backend.Tests.Services
 
             // Update something other than Vernacular and make sure UsingCitationForm is still true.
             word.Note = new() { Text = "change word's note" };
-            _ = _wordService.Update(UserId, word).Result;
-            Assert.That(word.UsingCitationForm, Is.True);
+            var nonVernUpdate = _wordService.Update(UserId, word).Result;
+            Assert.That(nonVernUpdate!.UsingCitationForm, Is.True);
 
             // Update the Vernacular and make sure UsingCitationForm is false.
-            word.Vernacular = "change word's vernacular form";
-            _ = _wordService.Update(UserId, word).Result;
-            Assert.That(word.UsingCitationForm, Is.False);
+            nonVernUpdate.Vernacular = "change word's vernacular form";
+            var vernUpdate = _wordService.Update(UserId, nonVernUpdate).Result;
+            Assert.That(vernUpdate!.UsingCitationForm, Is.False);
         }
 
         [Test]

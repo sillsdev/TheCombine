@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -72,14 +71,9 @@ namespace BackendFramework.Services
             return (await Update(userId, wordWithAudioToDelete))?.Id;
         }
 
-        /// <summary> Removes word from Frontier and adds a Deleted copy in the word collection </summary>
-        /// <param name="projectId"> The project the word is in </param>
-        /// <param name="userId"> The user performing the deletion </param>
-        /// <param name="wordId"> The id of the word to delete </param>
-        /// <param name="status"> Optional status to set the deleted word to instead of Deleted </param>
+        /// <summary> Removes word from Frontier and adds a copy with given status in the word collection </summary>
         /// <returns> A string: id of Deleted word </returns>
-        public async Task<string?> DeleteFrontierWord(
-            string projectId, string userId, string wordId, Status? status = Status.Deleted)
+        public async Task<string?> DeleteFrontierWord(string projectId, string userId, string wordId, Status status)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
 
@@ -90,7 +84,7 @@ namespace BackendFramework.Services
             }
 
             word.ProjectId = projectId;
-            word.Accessibility = Status.Deleted;
+            word.Accessibility = status;
             word.History.Add(wordId);
 
             var deletedWord = await Add(userId, word);
@@ -99,35 +93,6 @@ namespace BackendFramework.Services
             await _wordRepo.DeleteFrontier(projectId, wordId);
 
             return deletedWord.Id;
-        }
-
-        /// <summary> Tries to remove words from Frontier and add Deleted copies in the word collection </summary>
-        /// <param name="projectId"> The project the word is in </param>
-        /// <param name="userId"> The user performing the deletion </param>
-        /// <param name="wordIds"> The ids of the words to delete </param>
-        /// <param name="status"> Optional status to set the deleted word to instead of Deleted </param>
-        /// <returns> An int: number of successful deletions </returns>
-        public async Task<int> TryDeleteFrontierWords(
-            string projectId, string userId, List<string> wordIds, Status? status = Status.Deleted)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting words from Frontier");
-
-            var deletedCount = 0;
-            foreach (var wordId in wordIds)
-            {
-                try
-                {
-                    if (await DeleteFrontierWord(projectId, userId, wordId, status) is not null)
-                    {
-                        deletedCount++;
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine($"Failed to delete word with id {wordId} from Frontier");
-                }
-            }
-            return deletedCount;
         }
 
         /// <summary> Restores words to the Frontier that aren't in the Frontier </summary>
@@ -167,7 +132,7 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a word in Frontier");
 
-            var oldWordId = word.Id;
+            var oldWordId = word.Id; // Capture the old Id before it's cleared via Create.
             var oldWord = await _wordRepo.GetFrontier(word.ProjectId, oldWordId);
             if (oldWord is null)
             {
