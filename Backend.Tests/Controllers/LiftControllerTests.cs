@@ -413,10 +413,10 @@ namespace Backend.Tests.Controllers
             // Create untouched word.
             await _wordRepo.Create(secondWord);
 
-            word.Id = "";
+            word.Id = wordToUpdate.Id;
             word.Vernacular = "updated";
 
-            await _wordService.Update(_projId, UserId, wordToUpdate.Id, word);
+            await _wordService.Update(UserId, word);
             await _wordService.DeleteFrontierWord(_projId, UserId, wordToDelete.Id);
 
             _liftService.SetExportInProgress(UserId, ExportId);

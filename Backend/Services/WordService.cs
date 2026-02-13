@@ -55,31 +55,29 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Removes audio with specified fileName from a word </summary>
-        /// <returns> New word </returns>
-        public async Task<Word?> DeleteAudio(string projectId, string userId, string wordId, string fileName)
+        /// <returns> A string: id of updated word, or null if not found </returns>
+        public async Task<string?> DeleteAudio(string projectId, string userId, string wordId, string fileName)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting an audio");
 
             // We only want to update words that are in the frontier
-            var wordWithAudioToDelete = await _wordRepo.DeleteFrontier(projectId, wordId, fileName);
+            var wordWithAudioToDelete = (await _wordRepo.GetFrontier(projectId, wordId, fileName))?.Clone();
             if (wordWithAudioToDelete is null)
             {
                 return null;
             }
 
             wordWithAudioToDelete.Audio.RemoveAll(a => a.FileName == fileName);
-            wordWithAudioToDelete.History.Add(wordId);
-
-            return await Create(userId, wordWithAudioToDelete);
+            return (await Update(userId, wordWithAudioToDelete))?.Id;
         }
 
-        /// <summary> Deletes word in frontier collection and adds word with deleted tag in word collection </summary>
-        /// <returns> A string: id of new word </returns>
+        /// <summary> Removes word from Frontier and adds a Deleted copy in the words collection </summary>
+        /// <returns> A string: id of deleted word </returns>
         public async Task<string?> DeleteFrontierWord(string projectId, string userId, string wordId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
 
-            var word = await _wordRepo.DeleteFrontier(projectId, wordId);
+            var word = (await _wordRepo.GetFrontier(projectId, wordId))?.Clone();
             if (word is null)
             {
                 return null;
@@ -89,50 +87,73 @@ namespace BackendFramework.Services
             word.Accessibility = Status.Deleted;
             word.History.Add(wordId);
 
-            return (await Add(userId, word)).Id;
+            var deletedWord = await Add(userId, word);
+
+            // Don't remove the Frontier word until the copy is successfully stored as deleted.
+            await _wordRepo.DeleteFrontier(projectId, wordId);
+
+            return deletedWord.Id;
         }
 
-        /// <summary> Restores words to the Frontier </summary>
-        /// <returns> A bool: true if successful, false if any don't exist or are already in the Frontier. </returns>
+        /// <summary> Restores words to the Frontier that aren't in the Frontier </summary>
+        /// <returns> A bool: true if all successfully restored </returns>
         public async Task<bool> RestoreFrontierWords(string projectId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring words to Frontier");
 
-            var words = new List<Word>();
-            foreach (var id in wordIds)
+            wordIds = wordIds.Distinct().ToList();
+
+            // Make sure all the words exist but not in the Frontier.
+            if (await _wordRepo.AreInFrontier(projectId, wordIds, 1))
             {
-                var word = await _wordRepo.GetWord(projectId, id);
-                if (word is null || await _wordRepo.IsInFrontier(projectId, id))
-                {
-                    return false;
-                }
-                words.Add(word);
+                return false;
             }
-            await _wordRepo.AddFrontier(words);
+
+            var wordsToRestore = await _wordRepo.GetWords(projectId, wordIds);
+            // Make sure all the words are valid
+            if (wordsToRestore.Count != wordIds.Count)
+            {
+                return false;
+            }
+            if (wordsToRestore.Any(w => w.Accessibility == Status.Deleted))
+            {
+                // We should be restoring words that were removed from the Frontier,
+                // and not their "Deleted" copies in the words collection.
+                return false;
+            }
+
+            await _wordRepo.AddFrontier(wordsToRestore);
             return true;
         }
 
         /// <summary> Makes a new word in the Frontier with changes made </summary>
-        /// <returns> Id of updated word, or null if not found </returns>
-        public async Task<string?> Update(string projectId, string userId, string wordId, Word word)
+        /// <returns> Updated word, or null if word-to-update not found </returns>
+        public async Task<Word?> Update(string userId, Word word)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a word in Frontier");
 
-            // We only want to update words that are in the frontier
-            var oldWord = await _wordRepo.DeleteFrontier(projectId, wordId);
+            var oldWordId = word.Id; // Capture the id in case of changes.
+            var oldWord = await _wordRepo.GetFrontier(word.ProjectId, oldWordId);
             if (oldWord is null)
             {
                 return null;
             }
 
+            word.Created = oldWord.Created;
+            if (!word.History.Contains(oldWordId))
+            {
+                word.History.Add(oldWordId);
+            }
             // If an imported word was using the citation form for its Vernacular,
             // only keep UsingCitationForm true if the Vernacular hasn't changed.
             word.UsingCitationForm &= word.Vernacular == oldWord.Vernacular;
 
-            word.ProjectId = projectId;
-            word.History.Add(wordId);
+            var newWord = await Create(userId, word);
 
-            return (await Create(userId, word)).Id;
+            // Don't remove the old Frontier word until the new word is successfully created.
+            await _wordRepo.DeleteFrontier(word.ProjectId, oldWordId);
+
+            return newWord;
         }
 
         /// <summary> Checks if a word being added is a duplicate of a preexisting word. </summary>

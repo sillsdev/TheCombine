@@ -13,7 +13,7 @@ namespace Backend.Tests.Mocks
         private readonly List<Word> _words = [];
         private readonly List<Word> _frontier = [];
 
-        private Task<bool>? _getFrontierDelay;
+        private Task<bool>? _getAllFrontierDelay;
         private int _getFrontierCallCount;
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace Backend.Tests.Mocks
         /// </summary>
         public void SetGetFrontierDelay(Task<bool> delay)
         {
-            _getFrontierDelay = delay;
+            _getAllFrontierDelay = delay;
             _getFrontierCallCount = 0;
         }
 
@@ -35,13 +35,18 @@ namespace Backend.Tests.Mocks
         {
             try
             {
-                var foundWord = _words.Single(word => word.Id == wordId);
-                return Task.FromResult<Word?>(foundWord.Clone());
+                return Task.FromResult<Word?>(_words.Single(w => w.ProjectId == projectId && w.Id == wordId).Clone());
             }
             catch (InvalidOperationException)
             {
                 return Task.FromResult<Word?>(null);
             }
+        }
+
+        public Task<List<Word>> GetWords(string projectId, List<string> wordIds)
+        {
+            return Task.FromResult(
+                _words.Where(w => w.ProjectId == projectId && wordIds.Contains(w.Id)).Select(w => w.Clone()).ToList());
         }
 
         public Task<Word> Create(Word word)
@@ -99,19 +104,26 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_frontier.Count(w => w.ProjectId == projectId));
         }
 
-        public async Task<List<Word>> GetFrontier(string projectId)
+        public async Task<List<Word>> GetAllFrontier(string projectId)
         {
-            if (_getFrontierDelay is not null)
+            if (_getAllFrontierDelay is not null)
             {
                 var callCount = Interlocked.Increment(ref _getFrontierCallCount);
                 if (callCount == 1)
                 {
                     // First call waits for the signal
-                    await _getFrontierDelay;
+                    await _getAllFrontierDelay;
                 }
             }
 
             return _frontier.Where(w => w.ProjectId == projectId).Select(w => w.Clone()).ToList();
+        }
+
+        public Task<Word?> GetFrontier(string projectId, string wordId, string? audioFileName = null)
+        {
+            var word = _frontier.Find(w => w.ProjectId == projectId && w.Id == wordId &&
+                (string.IsNullOrEmpty(audioFileName) || w.Audio.Any(a => a.FileName == audioFileName)));
+            return Task.FromResult(word?.Clone());
         }
 
         public Task<List<Word>> GetFrontierWithVernacular(string projectId, string vernacular)
@@ -142,14 +154,6 @@ namespace Backend.Tests.Mocks
             }
             _frontier.RemoveAll(w => w.ProjectId == projectId && w.Id == wordId);
             return Task.FromResult<Word?>(word);
-        }
-
-        public Task<long> DeleteFrontierWords(string projectId, List<string> wordIds)
-        {
-            long deletedCount = 0;
-            wordIds.ForEach(id => deletedCount += _frontier.RemoveAll(
-                word => word.ProjectId == projectId && word.Id == id));
-            return Task.FromResult(deletedCount);
         }
 
         public Task<Word> Add(Word word)

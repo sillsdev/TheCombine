@@ -8,6 +8,7 @@ namespace BackendFramework.Interfaces
     {
         Task<List<Word>> GetAllWords(string projectId);
         Task<Word?> GetWord(string projectId, string wordId);
+        Task<List<Word>> GetWords(string projectId, List<string> wordIds);
         Task<Word> Create(Word word);
         Task<List<Word>> Create(List<Word> words);
         Task<Word> Add(Word word);
@@ -18,12 +19,12 @@ namespace BackendFramework.Interfaces
         Task<bool> IsInFrontier(string projectId, string wordId);
         Task<bool> AreInFrontier(string projectId, List<string> wordIds, int count);
         Task<int> GetFrontierCount(string projectId);
-        Task<List<Word>> GetFrontier(string projectId);
+        Task<List<Word>> GetAllFrontier(string projectId);
+        Task<Word?> GetFrontier(string projectId, string wordId, string? audioFileName = null);
         Task<List<Word>> GetFrontierWithVernacular(string projectId, string vernacular);
         Task<Word> AddFrontier(Word word);
         Task<List<Word>> AddFrontier(List<Word> words);
         Task<Word?> DeleteFrontier(string projectId, string wordId, string? audioFileName = null);
-        Task<long> DeleteFrontierWords(string projectId, List<string> wordIds);
         Task<int> CountFrontierWordsWithDomain(string projectId, string domainId);
     }
 }

@@ -71,7 +71,7 @@ namespace Backend.Tests.Controllers
                 w.Id == wordToDelete.Id ||
                 w.Id == otherWord.Id ||
                 w.Accessibility == Status.Deleted));
-            var updatedFrontier = await _wordRepo.GetFrontier(ProjId);
+            var updatedFrontier = await _wordRepo.GetAllFrontier(ProjId);
             Assert.That(updatedFrontier, Has.Count.EqualTo(1));
             Assert.That(updatedFrontier.First().Id, Is.EqualTo(otherWord.Id));
         }
@@ -248,7 +248,7 @@ namespace Backend.Tests.Controllers
             });
             var reverted = (Dictionary<string, string>)((OkObjectResult)result).Value!;
             Assert.That(reverted, Has.Count.EqualTo(1));
-            var frontierIds = (await _wordRepo.GetFrontier(ProjId)).Select(w => w.Id).ToList();
+            var frontierIds = (await _wordRepo.GetAllFrontier(ProjId)).Select(w => w.Id).ToList();
             Assert.That(frontierIds, Has.Count.EqualTo(2));
             Assert.That(frontierIds, Does.Contain(frontierWord1.Id));
             Assert.That(frontierIds, Does.Contain(reverted[frontierWord0.Id]));
@@ -317,7 +317,7 @@ namespace Backend.Tests.Controllers
             var allWords = await _wordRepo.GetAllWords(ProjId);
             Assert.That(allWords[0], Is.EqualTo(word).UsingPropertiesComparer());
 
-            var frontier = await _wordRepo.GetFrontier(ProjId);
+            var frontier = await _wordRepo.GetAllFrontier(ProjId);
             Assert.That(frontier[0], Is.EqualTo(word).UsingPropertiesComparer());
         }
 
@@ -350,7 +350,7 @@ namespace Backend.Tests.Controllers
             Assert.That(allWords, Does.Contain(origWord).UsingPropertiesComparer());
             Assert.That(allWords, Does.Contain(finalWord).UsingPropertiesComparer());
 
-            var frontier = await _wordRepo.GetFrontier(ProjId);
+            var frontier = await _wordRepo.GetAllFrontier(ProjId);
             Assert.That(frontier, Has.Count.EqualTo(1));
             Assert.That(frontier, Does.Contain(finalWord).UsingPropertiesComparer());
         }
@@ -381,14 +381,30 @@ namespace Backend.Tests.Controllers
             await _wordRepo.DeleteFrontier(ProjId, word.Id);
 
             Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
-            Assert.That(await _wordRepo.GetFrontier(ProjId), Is.Empty);
+            Assert.That(await _wordRepo.GetAllFrontier(ProjId), Is.Empty);
 
             var result = await _wordController.RestoreWord(ProjId, word.Id);
 
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
             Assert.That(((OkObjectResult)result).Value, Is.True);
             Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
-            Assert.That(await _wordRepo.GetFrontier(ProjId), Does.Contain(word).UsingPropertiesComparer());
+            Assert.That(await _wordRepo.GetAllFrontier(ProjId), Does.Contain(word).UsingPropertiesComparer());
+        }
+
+        [Test]
+        public async Task TestRestoreWordAlreadyInFrontier()
+        {
+            var word = await _wordRepo.Create(Util.RandomWord(ProjId));
+
+            Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
+            Assert.That(await _wordRepo.GetAllFrontier(ProjId), Does.Contain(word).UsingPropertiesComparer());
+            var frontierCount = await _wordRepo.GetFrontierCount(ProjId);
+
+            var result = await _wordController.RestoreWord(ProjId, word.Id);
+
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)result).Value, Is.False);
+            Assert.That(await _wordRepo.GetFrontierCount(ProjId), Is.EqualTo(frontierCount));
         }
 
         [Test]

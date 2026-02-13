@@ -80,6 +80,14 @@ namespace BackendFramework.Repositories
             }
         }
 
+        /// <summary> Finds project <see cref="Word"/>s with specified ids </summary>
+        public async Task<List<Word>> GetWords(string projectId, List<string> wordIds)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting words");
+
+            return await _words.Find(GetProjectWordsFilter(projectId, wordIds)).ToListAsync();
+        }
+
         /// <summary> Removes all <see cref="Word"/>s from the WordsCollection and Frontier for specified
         /// <see cref="Project"/> </summary>
         /// <returns> A bool: success of operation </returns>
@@ -130,7 +138,6 @@ namespace BackendFramework.Repositories
         /// If the Created or Modified time fields are blank, they will automatically calculated using the current
         /// time. This allows services to set or clear the values before creation to control these fields.
         /// </remarks>
-        /// <param name="word"></param>
         /// <returns> The word created </returns>
         public async Task<Word> Create(Word word)
         {
@@ -148,7 +155,6 @@ namespace BackendFramework.Repositories
         /// If the Created or Modified time fields are blank, they will automatically calculated using the current
         /// time. This allows services to set or clear the values before creation to control these fields.
         /// </remarks>
-        /// <param name="words"></param>
         /// <returns> The words created </returns>
         public async Task<List<Word>> Create(List<Word> words)
         {
@@ -229,11 +235,23 @@ namespace BackendFramework.Repositories
         }
 
         /// <summary> Finds all <see cref="Word"/>s in the Frontier for specified <see cref="Project"/> </summary>
-        public async Task<List<Word>> GetFrontier(string projectId)
+        public async Task<List<Word>> GetAllFrontier(string projectId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all Frontier words");
 
             return await _frontier.Find(GetAllProjectWordsFilter(projectId)).ToListAsync();
+        }
+
+        /// <summary> Gets a specified <see cref="Word"/> from the Frontier </summary>
+        /// <returns> The word, or null if not found. </returns>
+        public async Task<Word?> GetFrontier(string projectId, string wordId, string? audioFileName = null)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting a word from Frontier");
+
+            return string.IsNullOrEmpty(audioFileName)
+                ? await _frontier.Find(GetProjectWordFilter(projectId, wordId)).FirstOrDefaultAsync()
+                : await _frontier.Find(GetProjectWordWithAudioFilter(projectId, wordId, audioFileName))
+                    .FirstOrDefaultAsync();
         }
 
         /// <summary> Finds all <see cref="Word"/>s in Frontier of specified project with specified vern </summary>
@@ -277,16 +295,6 @@ namespace BackendFramework.Repositories
                 ? await _frontier.FindOneAndDeleteAsync(GetProjectWordFilter(projectId, wordId))
                 : await _frontier.FindOneAndDeleteAsync(
                     GetProjectWordWithAudioFilter(projectId, wordId, audioFileName));
-        }
-
-        /// <summary> Removes <see cref="Word"/>s from the Frontier with specified wordIds and projectId </summary>
-        /// <returns> Number of words deleted </returns>
-        public async Task<long> DeleteFrontierWords(string projectId, List<string> wordIds)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting words from Frontier");
-
-            var deleted = await _frontier.DeleteManyAsync(GetProjectWordsFilter(projectId, wordIds));
-            return deleted.DeletedCount;
         }
 
         /// <summary>
