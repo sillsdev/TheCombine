@@ -71,8 +71,8 @@ namespace BackendFramework.Services
             return (await Update(userId, wordWithAudioToDelete))?.Id;
         }
 
-        /// <summary> Removes word from Frontier and adds a copy with given status in the word collection </summary>
-        /// <returns> A string: id of Deleted word </returns>
+        /// <summary> Removes word from Frontier and adds a copy with given status in the words collection </summary>
+        /// <returns> A string: id of deleted word </returns>
         public async Task<string?> DeleteFrontierWord(string projectId, string userId, string wordId, Status status)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
@@ -96,14 +96,14 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Restores words to the Frontier that aren't in the Frontier </summary>
-        /// <returns> A bool: true if all successfully restored. </returns>
+        /// <returns> A bool: true if all successfully restored </returns>
         public async Task<bool> RestoreFrontierWords(string projectId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring words to Frontier");
 
             wordIds = wordIds.Distinct().ToList();
 
-            // Make sure all the words exist but not in the Frontier
+            // Make sure all the words exist but not in the Frontier.
             if (await _wordRepo.AreInFrontier(projectId, wordIds, 1))
             {
                 return false;
@@ -117,8 +117,8 @@ namespace BackendFramework.Services
             }
             if (wordsToRestore.Any(w => w.Accessibility == Status.Deleted || w.Accessibility == Status.Merged))
             {
-                // We should be restoring words that was removed from the Frontier,
-                // and not their "Deleted" or "Merged" copies in the word collection.
+                // We should be restoring words that were removed from the Frontier,
+                // and not their "Deleted" or "Merged" copies in the words collection.
                 return false;
             }
 
@@ -132,7 +132,7 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a word in Frontier");
 
-            var oldWordId = word.Id; // Capture the old Id before it's cleared via Create.
+            var oldWordId = word.Id; // Capture the id in case of changes.
             var oldWord = await _wordRepo.GetFrontier(word.ProjectId, oldWordId);
             if (oldWord is null)
             {
