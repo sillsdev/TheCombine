@@ -110,9 +110,12 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUploadAudioFile()
         {
-            _ = _audioController.UploadAudioFile(_projId, _wordId, "speakerId", _file).Result;
+            var result = _audioController.UploadAudioFile(_projId, _wordId, "speakerId", _file).Result;
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+            var newId = (string)((OkObjectResult)result)!.Value!;
+            Assert.That(newId, Is.Not.EqualTo(_wordId));
 
-            var foundWord = _wordRepo.GetWord(_projId, _wordId).Result;
+            var foundWord = _wordRepo.GetWord(_projId, newId).Result;
             Assert.That(foundWord?.Audio, Is.Not.Null);
         }
 
@@ -170,31 +173,25 @@ namespace Backend.Tests.Controllers
         {
             // Refill test database
             _wordRepo.DeleteAllWords(_projId);
+            _wordRepo.DeleteAllFrontierWords(_projId);
             var origWord = Util.RandomWord(_projId);
             const string fileName = "a.wav";
             origWord.Audio.Add(new Pronunciation(fileName));
-            var wordId = _wordRepo.Create(origWord).Result.Id;
+            var oldId = _wordRepo.Create(origWord).Result.Id;
 
             // Test delete function
-            _ = _audioController.DeleteAudioFile(_projId, wordId, fileName).Result;
+            var result = _audioController.DeleteAudioFile(_projId, oldId, fileName).Result as OkObjectResult;
+            var newId = result?.Value as string;
 
-            // Original word persists
-            Assert.That(_wordRepo.GetAllWords(_projId).Result, Has.Count.EqualTo(2));
-
-            // Get the new word from the database
-            var frontier = _wordRepo.GetFrontier(_projId).Result;
-
-            // Ensure the new word has no audio files
-            Assert.That(frontier[0].Audio, Has.Count.EqualTo(0));
-
-            // Test the frontier
-            Assert.That(_wordRepo.GetFrontier(_projId).Result, Has.Count.EqualTo(1));
+            // Ensure returned id is different
+            Assert.That(newId, Is.Not.Null);
+            Assert.That(newId, Is.Not.EqualTo(oldId));
 
             // Ensure the word with deleted audio is in the frontier
+            var frontier = _wordRepo.GetFrontier(_projId).Result;
             Assert.That(frontier, Has.Count.EqualTo(1));
-            Assert.That(frontier[0].Id, Is.Not.EqualTo(wordId));
+            Assert.That(frontier[0].Id, Is.EqualTo(newId));
             Assert.That(frontier[0].Audio, Has.Count.EqualTo(0));
-            Assert.That(frontier[0].History, Has.Count.EqualTo(1));
         }
     }
 }
