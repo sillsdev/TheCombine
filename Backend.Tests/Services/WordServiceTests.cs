@@ -43,7 +43,7 @@ namespace Backend.Tests.Services
         {
             _ = _wordService.Create(UserId, [new() { ProjectId = ProjId }, new() { ProjectId = ProjId }]).Result;
             Assert.That(_wordRepo.GetAllWords(ProjId).Result, Has.Count.EqualTo(2));
-            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(2));
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(2));
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace Backend.Tests.Services
         [Test]
         public void TestUpdateNotInFrontierNull()
         {
-            Assert.That(_wordService.Update(ProjId, UserId, WordId, new Word()).Result, Is.Null);
+            Assert.That(_wordService.Update(UserId, new Word() { Id = WordId, ProjectId = ProjId }).Result, Is.Null);
         }
 
         [Test]
@@ -123,8 +123,8 @@ namespace Backend.Tests.Services
             Assert.That(word, Is.Not.Null);
             var oldId = word.Id;
             word.Vernacular = "NewVern";
-            Assert.That(_wordService.Update(ProjId, UserId, oldId, word).Result, Is.EqualTo(word.Id));
-            var frontier = _wordRepo.GetFrontier(ProjId).Result;
+            Assert.That(_wordService.Update(UserId, word).Result!.Guid, Is.EqualTo(word.Guid));
+            var frontier = _wordRepo.GetAllFrontier(ProjId).Result;
             Assert.That(frontier, Has.Count.EqualTo(1));
             var newWord = frontier.First();
             Assert.That(newWord.Id, Is.Not.EqualTo(oldId));
@@ -141,13 +141,13 @@ namespace Backend.Tests.Services
 
             // Update something other than Vernacular and make sure UsingCitationForm is still true.
             word.Note = new() { Text = "change word's note" };
-            _ = _wordService.Update(ProjId, UserId, word.Id, word).Result;
-            Assert.That(word.UsingCitationForm, Is.True);
+            var nonVernUpdate = _wordService.Update(UserId, word).Result;
+            Assert.That(nonVernUpdate!.UsingCitationForm, Is.True);
 
             // Update the Vernacular and make sure UsingCitationForm is false.
-            word.Vernacular = "change word's vernacular form";
-            _ = _wordService.Update(ProjId, UserId, word.Id, word).Result;
-            Assert.That(word.UsingCitationForm, Is.False);
+            nonVernUpdate.Vernacular = "change word's vernacular form";
+            var vernUpdate = _wordService.Update(UserId, nonVernUpdate).Result;
+            Assert.That(vernUpdate!.UsingCitationForm, Is.False);
         }
 
         [Test]
@@ -162,7 +162,7 @@ namespace Backend.Tests.Services
         {
             var wordNoFrontier = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
             var wordYesFrontier = _wordRepo.Create(new Word { ProjectId = ProjId }).Result;
-            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(1));
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(1));
             Assert.That(
                 _wordService.RestoreFrontierWords(ProjId, [wordNoFrontier.Id, wordYesFrontier.Id]).Result, Is.False);
         }
@@ -172,9 +172,9 @@ namespace Backend.Tests.Services
         {
             var word1 = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
             var word2 = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
-            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Is.Empty);
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Is.Empty);
             Assert.That(_wordService.RestoreFrontierWords(ProjId, [word1.Id, word2.Id]).Result, Is.True);
-            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(2));
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(2));
         }
 
         [Test]
