@@ -136,8 +136,8 @@ namespace BackendFramework.Services
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a word in Frontier");
 
             var oldWordId = word.Id; // Capture the id in case of changes.
-            var oldWord = await _wordRepo.GetWord(word.ProjectId, oldWordId);
-            if (oldWord is null || !await _wordRepo.IsInFrontier(word.ProjectId, oldWordId))
+            var oldWord = await _wordRepo.GetFrontier(word.ProjectId, oldWordId);
+            if (oldWord is null)
             {
                 return null;
             }
