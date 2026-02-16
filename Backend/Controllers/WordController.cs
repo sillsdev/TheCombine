@@ -104,7 +104,7 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
-            return Ok(await _wordRepo.GetFrontier(projectId));
+            return Ok(await _wordRepo.GetAllFrontier(projectId));
         }
 
         /// <summary> Checks if Frontier has <see cref="Word"/> in specified <see cref="Project"/>. </summary>
@@ -187,7 +187,7 @@ namespace BackendFramework.Controllers
             }
             word.ProjectId = projectId;
 
-            var duplicatedWord = await _wordRepo.GetWord(word.ProjectId, dupId);
+            var duplicatedWord = await _wordRepo.GetFrontier(word.ProjectId, dupId);
             if (duplicatedWord is null)
             {
                 return NotFound();

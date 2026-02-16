@@ -182,13 +182,13 @@ namespace Backend.Tests.Controllers
             Assert.That(_wordRepo.GetAllWords(_projId).Result, Has.Count.EqualTo(2));
 
             // Get the new word from the database
-            var frontier = _wordRepo.GetFrontier(_projId).Result;
+            var frontier = _wordRepo.GetAllFrontier(_projId).Result;
 
             // Ensure the new word has no audio files
             Assert.That(frontier[0].Audio, Has.Count.EqualTo(0));
 
             // Test the frontier
-            Assert.That(_wordRepo.GetFrontier(_projId).Result, Has.Count.EqualTo(1));
+            Assert.That(_wordRepo.GetAllFrontier(_projId).Result, Has.Count.EqualTo(1));
 
             // Ensure the word with deleted audio is in the frontier
             Assert.That(frontier, Has.Count.EqualTo(1));
