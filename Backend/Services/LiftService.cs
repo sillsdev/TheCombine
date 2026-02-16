@@ -282,7 +282,7 @@ namespace BackendFramework.Services
 
             // Get every word with all of its information.
             var allWords = await wordRepo.GetAllWords(projectId);
-            var frontier = await wordRepo.GetFrontier(projectId);
+            var frontier = await wordRepo.GetAllFrontier(projectId);
             var activeWords = frontier.Where(
                 x => x.Senses.Any(s => s.Accessibility == Status.Active || s.Accessibility == Status.Protected)).ToList();
             var hasFlags = activeWords.Any(w => w.Flag.Active);

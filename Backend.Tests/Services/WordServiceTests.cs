@@ -43,7 +43,7 @@ namespace Backend.Tests.Services
         {
             _ = _wordService.Create(UserId, [new() { ProjectId = ProjId }, new() { ProjectId = ProjId }]).Result;
             Assert.That(_wordRepo.GetAllWords(ProjId).Result, Has.Count.EqualTo(2));
-            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(2));
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(2));
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace Backend.Tests.Services
 
             // New word is only one in frontier
             Assert.That(_wordRepo.IsInFrontier(ProjId, newWord.Id).Result, Is.True);
-            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(1));
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(1));
 
             // Original word persists
             var allWords = _wordRepo.GetAllWords(ProjId).Result;
@@ -110,7 +110,7 @@ namespace Backend.Tests.Services
             var oldId = word.Id;
             word.Vernacular = "NewVern";
             Assert.That(_wordService.Update(UserId, word).Result!.Guid, Is.EqualTo(word.Guid));
-            var frontier = _wordRepo.GetFrontier(ProjId).Result;
+            var frontier = _wordRepo.GetAllFrontier(ProjId).Result;
             Assert.That(frontier, Has.Count.EqualTo(1));
             var newWord = frontier.First();
             Assert.That(newWord.Id, Is.Not.EqualTo(oldId));
@@ -148,7 +148,7 @@ namespace Backend.Tests.Services
         {
             var wordNoFrontier = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
             var wordYesFrontier = _wordRepo.Create(new Word { ProjectId = ProjId }).Result;
-            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(1));
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(1));
             Assert.That(
                 _wordService.RestoreFrontierWords(ProjId, [wordNoFrontier.Id, wordYesFrontier.Id]).Result, Is.False);
         }
@@ -158,9 +158,9 @@ namespace Backend.Tests.Services
         {
             var word1 = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
             var word2 = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
-            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Is.Empty);
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Is.Empty);
             Assert.That(_wordService.RestoreFrontierWords(ProjId, [word1.Id, word2.Id]).Result, Is.True);
-            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(2));
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(2));
         }
 
         [Test]
