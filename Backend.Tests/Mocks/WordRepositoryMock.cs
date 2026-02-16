@@ -14,7 +14,7 @@ namespace Backend.Tests.Mocks
         private readonly List<Word> _frontier = [];
 
         private Task<bool>? _getAllFrontierDelay;
-        private int _getFrontierCallCount;
+        private int _getAllFrontierCallCount;
 
         /// <summary>
         /// Sets a delay for the GetFrontier method. The first call to GetFrontier will wait
@@ -23,7 +23,7 @@ namespace Backend.Tests.Mocks
         public void SetGetFrontierDelay(Task<bool> delay)
         {
             _getAllFrontierDelay = delay;
-            _getFrontierCallCount = 0;
+            _getAllFrontierCallCount = 0;
         }
 
         public Task<List<Word>> GetAllWords(string projectId)
@@ -108,7 +108,7 @@ namespace Backend.Tests.Mocks
         {
             if (_getAllFrontierDelay is not null)
             {
-                var callCount = Interlocked.Increment(ref _getFrontierCallCount);
+                var callCount = Interlocked.Increment(ref _getAllFrontierCallCount);
                 if (callCount == 1)
                 {
                     // First call waits for the signal

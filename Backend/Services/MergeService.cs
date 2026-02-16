@@ -333,7 +333,7 @@ namespace BackendFramework.Services
             var updateCount = 0;
             foreach (var entry in oldBlacklist)
             {
-                var newIds = entry.WordIds.Where(id => frontierIds.Contains(id)).ToList();
+                var newIds = entry.WordIds.Where(frontierIds.Contains).ToList();
                 if (newIds.Count == entry.WordIds.Count)
                 {
                     continue;
@@ -372,7 +372,7 @@ namespace BackendFramework.Services
             var updateCount = 0;
             foreach (var entry in oldGraylist)
             {
-                var newIds = entry.WordIds.Where(id => frontierIds.Contains(id)).ToList();
+                var newIds = entry.WordIds.Where(frontierIds.Contains).ToList();
                 if (newIds.Count == entry.WordIds.Count)
                 {
                     continue;
