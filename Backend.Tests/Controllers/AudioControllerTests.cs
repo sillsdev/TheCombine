@@ -112,7 +112,7 @@ namespace Backend.Tests.Controllers
         {
             _ = _audioController.UploadAudioFile(_projId, _wordId, "speakerId", _file).Result;
 
-            var foundWord = _wordRepo.GetWord(_projId, _wordId).Result;
+            var foundWord = _wordRepo.GetFrontier(_projId, _wordId).Result;
             Assert.That(foundWord?.Audio, Is.Not.Null);
         }
 
