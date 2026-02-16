@@ -124,26 +124,33 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Makes a new word in the Frontier with changes made </summary>
-        /// <returns> Id of updated word, or null if not found </returns>
-        public async Task<string?> Update(string projectId, string userId, string wordId, Word word)
+        /// <returns> Updated word, or null if word-to-update not found </returns>
+        public async Task<Word?> Update(string userId, Word word)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a word in Frontier");
 
-            // We only want to update words that are in the frontier
-            var oldWord = await _wordRepo.DeleteFrontier(projectId, wordId);
-            if (oldWord is null)
+            var oldWordId = word.Id; // Capture the id in case of changes.
+            var oldWord = await _wordRepo.GetWord(word.ProjectId, oldWordId);
+            if (oldWord is null || !await _wordRepo.IsInFrontier(word.ProjectId, oldWordId))
             {
                 return null;
             }
 
+            word.Created = oldWord.Created;
+            if (!word.History.Contains(oldWordId))
+            {
+                word.History.Add(oldWordId);
+            }
             // If an imported word was using the citation form for its Vernacular,
             // only keep UsingCitationForm true if the Vernacular hasn't changed.
             word.UsingCitationForm &= word.Vernacular == oldWord.Vernacular;
 
-            word.ProjectId = projectId;
-            word.History.Add(wordId);
+            var newWord = await Create(userId, word);
 
-            return (await Create(userId, word)).Id;
+            // Don't remove the old Frontier word until the new word is successfully created.
+            await _wordRepo.DeleteFrontier(word.ProjectId, oldWordId);
+
+            return newWord;
         }
 
         /// <summary> Checks if a word being added is a duplicate of a preexisting word. </summary>
