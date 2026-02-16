@@ -82,7 +82,7 @@ namespace Backend.Tests.Services
         [Test]
         public void TestUpdateNotInFrontierNull()
         {
-            Assert.That(_wordService.Update(ProjId, UserId, WordId, new Word()).Result, Is.Null);
+            Assert.That(_wordService.Update(UserId, new Word() { Id = WordId, ProjectId = ProjId }).Result, Is.Null);
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace Backend.Tests.Services
             Assert.That(word, Is.Not.Null);
             var oldId = word.Id;
             word.Vernacular = "NewVern";
-            Assert.That(_wordService.Update(ProjId, UserId, oldId, word).Result, Is.EqualTo(word.Id));
+            Assert.That(_wordService.Update(UserId, word).Result!.Guid, Is.EqualTo(word.Guid));
             var frontier = _wordRepo.GetAllFrontier(ProjId).Result;
             Assert.That(frontier, Has.Count.EqualTo(1));
             var newWord = frontier.First();
@@ -110,13 +110,13 @@ namespace Backend.Tests.Services
 
             // Update something other than Vernacular and make sure UsingCitationForm is still true.
             word.Note = new() { Text = "change word's note" };
-            _ = _wordService.Update(ProjId, UserId, word.Id, word).Result;
-            Assert.That(word.UsingCitationForm, Is.True);
+            var nonVernUpdate = _wordService.Update(UserId, word).Result;
+            Assert.That(nonVernUpdate!.UsingCitationForm, Is.True);
 
             // Update the Vernacular and make sure UsingCitationForm is false.
-            word.Vernacular = "change word's vernacular form";
-            _ = _wordService.Update(ProjId, UserId, word.Id, word).Result;
-            Assert.That(word.UsingCitationForm, Is.False);
+            nonVernUpdate.Vernacular = "change word's vernacular form";
+            var vernUpdate = _wordService.Update(UserId, nonVernUpdate).Result;
+            Assert.That(vernUpdate!.UsingCitationForm, Is.False);
         }
 
         [Test]
