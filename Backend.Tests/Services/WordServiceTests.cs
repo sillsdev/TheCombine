@@ -107,7 +107,7 @@ namespace Backend.Tests.Services
             Assert.That(allWordIds, Does.Contain(oldId));
             Assert.That(allWordIds, Does.Contain(deletedId!));
 
-            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Is.Empty);
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Is.Empty);
         }
 
         [Test]

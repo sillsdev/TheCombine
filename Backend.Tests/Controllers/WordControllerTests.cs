@@ -397,7 +397,7 @@ namespace Backend.Tests.Controllers
             var word = await _wordRepo.Create(Util.RandomWord(ProjId));
 
             Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
-            Assert.That(await _wordRepo.GetFrontier(ProjId), Does.Contain(word).UsingPropertiesComparer());
+            Assert.That(await _wordRepo.GetAllFrontier(ProjId), Does.Contain(word).UsingPropertiesComparer());
             var frontierCount = await _wordRepo.GetFrontierCount(ProjId);
 
             var result = await _wordController.RestoreWord(ProjId, word.Id);
