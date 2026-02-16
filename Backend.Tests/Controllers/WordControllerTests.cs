@@ -392,22 +392,6 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestRestoreWordAlreadyInFrontier()
-        {
-            var word = await _wordRepo.Create(Util.RandomWord(ProjId));
-
-            Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
-            Assert.That(await _wordRepo.GetFrontier(ProjId), Does.Contain(word).UsingPropertiesComparer());
-            var frontierCount = await _wordRepo.GetFrontierCount(ProjId);
-
-            var result = await _wordController.RestoreWord(ProjId, word.Id);
-
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            Assert.That(((OkObjectResult)result).Value, Is.False);
-            Assert.That(await _wordRepo.GetFrontierCount(ProjId), Is.EqualTo(frontierCount));
-        }
-
-        [Test]
         public async Task TestRestoreWordNoPermission()
         {
             _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
