@@ -98,6 +98,12 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring words to Frontier");
 
+            // Allow calls that don't specify any wordIds, but don't do any work.
+            if (wordIds.Count == 0)
+            {
+                return true;
+            }
+
             wordIds = wordIds.Distinct().ToList();
 
             // Make sure none of the words are in the Frontier.
