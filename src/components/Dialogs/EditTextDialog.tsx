@@ -31,6 +31,7 @@ interface EditTextDialogProps {
   buttonIdConfirm?: string;
   buttonTextIdCancel?: string;
   buttonTextIdConfirm?: string;
+  multiline?: boolean;
   textFieldId?: string;
 }
 
@@ -70,6 +71,7 @@ export default function EditTextDialog(
 
   function confirmIfEnter(event: KeyboardEvent<any>): void {
     if (event.key === Key.Enter) {
+      event.preventDefault(); // Prevent newline if multiline
       onConfirm();
     }
   }
@@ -101,28 +103,27 @@ export default function EditTextDialog(
           variant="standard"
           autoFocus
           value={text}
+          multiline={props.multiline}
           onChange={(event) => setText(event.target.value)}
-          onKeyPress={confirmIfEnter}
+          onKeyDown={confirmIfEnter}
           slotProps={{ input: { endAdornment } }}
           id={props.textFieldId}
         />
       </DialogContent>
       <DialogActions>
         <Button
-          onClick={onCancel}
-          variant="outlined"
-          color="primary"
           data-testid={props.buttonIdCancel}
           id={props.buttonIdCancel}
+          onClick={onCancel}
+          variant="outlined"
         >
           {t(props.buttonTextIdCancel ?? "buttons.cancel")}
         </Button>
         <Button
-          onClick={onConfirm}
-          variant="outlined"
-          color="primary"
           data-testid={props.buttonIdConfirm}
           id={props.buttonIdConfirm}
+          onClick={onConfirm}
+          variant="contained"
         >
           {t(props.buttonTextIdConfirm ?? "buttons.confirm")}
         </Button>
