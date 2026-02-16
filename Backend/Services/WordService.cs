@@ -56,7 +56,7 @@ namespace BackendFramework.Services
 
         /// <summary> Removes audio with specified fileName from a word </summary>
         /// <returns> New word </returns>
-        public async Task<string?> DeleteAudio(string projectId, string userId, string wordId, string fileName)
+        public async Task<Word?> DeleteAudio(string projectId, string userId, string wordId, string fileName)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting an audio");
 
@@ -70,7 +70,7 @@ namespace BackendFramework.Services
             wordWithAudioToDelete.Audio.RemoveAll(a => a.FileName == fileName);
             wordWithAudioToDelete.History.Add(wordId);
 
-            return (await Create(userId, wordWithAudioToDelete)).Id;
+            return await Create(userId, wordWithAudioToDelete);
         }
 
         /// <summary> Deletes word in frontier collection and adds word with deleted tag in word collection </summary>
@@ -120,7 +120,7 @@ namespace BackendFramework.Services
 
             var oldWordId = word.Id; // Capture the id in case of changes.
             var oldWord = await _wordRepo.GetWord(word.ProjectId, oldWordId);
-            if (oldWord is null)
+            if (oldWord is null || !await _wordRepo.IsInFrontier(word.ProjectId, oldWordId))
             {
                 return null;
             }
