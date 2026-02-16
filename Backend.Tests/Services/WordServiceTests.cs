@@ -74,26 +74,26 @@ namespace Backend.Tests.Services
                 new Word() { Audio = [new() { FileName = fileName }], ProjectId = ProjId }).Result;
             var oldId = wordInFrontier.Id;
 
-            var newId = _wordService.DeleteAudio(ProjId, UserId, oldId, fileName).Result;
-            Assert.That(newId, Is.Not.Null);
-            Assert.That(newId, Is.Not.EqualTo(oldId));
+            var newWord = _wordService.DeleteAudio(ProjId, UserId, oldId, fileName).Result;
+
+            // New word is correct
+            Assert.That(newWord, Is.Not.Null);
+            Assert.That(newWord!.Id, Is.Not.EqualTo(oldId));
+            Assert.That(newWord!.EditedBy.Last(), Is.EqualTo(UserId));
+            Assert.That(newWord!.History.Last(), Is.EqualTo(oldId));
+
+            // New word is only one in frontier
+            Assert.That(_wordRepo.IsInFrontier(ProjId, newWord.Id).Result, Is.True);
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(1));
 
             // Original word persists
             var allWords = _wordRepo.GetAllWords(ProjId).Result;
             Assert.That(allWords, Has.Count.EqualTo(2));
-            Assert.That(allWords.Find(w => w.Id == newId), Is.Not.Null);
+            Assert.That(allWords.Find(w => w.Id == newWord.Id), Is.Not.Null);
             var oldWord = allWords.Find(w => w.Id == oldId);
             Assert.That(oldWord, Is.Not.Null);
             Assert.That(oldWord!.Audio, Has.Count.EqualTo(1));
             Assert.That(oldWord!.History, Has.Count.EqualTo(0));
-
-            // Frontier only has the new word with deleted audio
-            var frontier = _wordRepo.GetAllFrontier(ProjId).Result;
-            Assert.That(frontier, Has.Count.EqualTo(1));
-            var newWord = frontier.Find(w => w.Id == newId);
-            Assert.That(newWord, Is.Not.Null);
-            Assert.That(newWord!.EditedBy.Last(), Is.EqualTo(UserId));
-            Assert.That(newWord!.History.Last(), Is.EqualTo(oldId));
         }
 
         [Test]

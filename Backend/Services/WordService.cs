@@ -56,7 +56,7 @@ namespace BackendFramework.Services
 
         /// <summary> Removes audio with specified fileName from a word </summary>
         /// <returns> A string: id of updated word, or null if not found </returns>
-        public async Task<string?> DeleteAudio(string projectId, string userId, string wordId, string fileName)
+        public async Task<Word?> DeleteAudio(string projectId, string userId, string wordId, string fileName)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting an audio");
 
@@ -68,7 +68,7 @@ namespace BackendFramework.Services
             }
 
             wordWithAudioToDelete.Audio.RemoveAll(a => a.FileName == fileName);
-            return (await Update(userId, wordWithAudioToDelete))?.Id;
+            return await Update(userId, wordWithAudioToDelete);
         }
 
         /// <summary> Removes word from Frontier and adds a Deleted copy in the words collection </summary>

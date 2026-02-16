@@ -171,7 +171,7 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            string? newId = await _wordService.DeleteAudio(projectId, userId, wordId, fileName);
+            string? newId = (await _wordService.DeleteAudio(projectId, userId, wordId, fileName))?.Id;
             return newId is null ? NotFound($"wordId: {wordId}; fileName: {fileName}") : Ok(newId);
         }
     }
