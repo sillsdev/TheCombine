@@ -79,8 +79,8 @@ namespace Backend.Tests.Services
             // New word is correct
             Assert.That(newWord, Is.Not.Null);
             Assert.That(newWord!.Id, Is.Not.EqualTo(oldId));
-            Assert.That(newWord!.EditedBy.Last(), Is.EqualTo(UserId));
-            Assert.That(newWord!.History.Last(), Is.EqualTo(oldId));
+            Assert.That(newWord.EditedBy.Last(), Is.EqualTo(UserId));
+            Assert.That(newWord.History.Last(), Is.EqualTo(oldId));
 
             // New word is only one in frontier
             Assert.That(_wordRepo.IsInFrontier(ProjId, newWord.Id).Result, Is.True);
@@ -93,7 +93,7 @@ namespace Backend.Tests.Services
             var oldWord = allWords.Find(w => w.Id == oldId);
             Assert.That(oldWord, Is.Not.Null);
             Assert.That(oldWord!.Audio, Has.Count.EqualTo(1));
-            Assert.That(oldWord!.History, Has.Count.EqualTo(0));
+            Assert.That(oldWord.History, Has.Count.EqualTo(0));
         }
 
         [Test]
