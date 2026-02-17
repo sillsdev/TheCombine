@@ -48,9 +48,10 @@ namespace Backend.Tests.Services
         {
             var invite = _inviteService.CreateProjectInvite(ProjId, Role.Editor, Email).Result;
             var result = _inviteRepo.FindByToken(invite.Token).Result;
-            Assert.That(result?.Email, Is.EqualTo(Email));
-            Assert.That(result?.ProjectId, Is.EqualTo(ProjId));
-            Assert.That(result?.Role, Is.EqualTo(Role.Editor));
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Email, Is.EqualTo(Email));
+            Assert.That(result.ProjectId, Is.EqualTo(ProjId));
+            Assert.That(result.Role, Is.EqualTo(Role.Editor));
         }
 
         [Test]
@@ -74,7 +75,9 @@ namespace Backend.Tests.Services
             var userRoles = _userRoleRepo.GetAllUserRoles(ProjId).Result;
             Assert.That(userRoles, Has.Count.EqualTo(1));
             var userRole = userRoles.First();
-            Assert.That(_userRepo.GetUser(_user.Id).Result!.ProjectRoles[ProjId], Is.EqualTo(userRole.Id));
+            var user = _userRepo.GetUser(_user.Id).Result;
+            Assert.That(user, Is.Not.Null);
+            Assert.That(user.ProjectRoles[ProjId], Is.EqualTo(userRole.Id));
         }
 
         [Test]

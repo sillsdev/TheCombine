@@ -140,8 +140,9 @@ namespace Backend.Tests.Controllers
             await _wordRepo.Create(Util.RandomWord(ProjId));
             await _wordRepo.Create(Util.RandomWord("OTHER_PROJECT"));
 
-            var count = (int)((ObjectResult)await _wordController.GetFrontierCount(ProjId)).Value!;
-            Assert.That(count, Is.EqualTo(2));
+            var result = (OkObjectResult)await _wordController.GetFrontierCount(ProjId);
+            Assert.That(result.Value, Is.InstanceOf<int>());
+            Assert.That(result.Value, Is.EqualTo(2));
         }
 
         [Test]
@@ -159,7 +160,9 @@ namespace Backend.Tests.Controllers
             var inWord2 = await _wordRepo.Create(Util.RandomWord(ProjId));
             await _wordRepo.Create(Util.RandomWord("OTHER_PROJECT"));
 
-            var frontier = (List<Word>)((ObjectResult)await _wordController.GetProjectFrontierWords(ProjId)).Value!;
+            var result = (OkObjectResult)await _wordController.GetProjectFrontierWords(ProjId);
+            Assert.That(result.Value, Is.InstanceOf<List<Word>>());
+            var frontier = (List<Word>)result.Value;
             Assert.That(frontier, Has.Count.EqualTo(2));
             Assert.That(frontier, Does.Contain(inWord1).UsingPropertiesComparer());
             Assert.That(frontier, Does.Contain(inWord2).UsingPropertiesComparer());
@@ -181,9 +184,8 @@ namespace Backend.Tests.Controllers
             await _wordRepo.Create(Util.RandomWord(ProjId));
             await _wordRepo.Create(Util.RandomWord(ProjId));
 
-            var result = await _wordController.GetWord(ProjId, word.Id);
-            Assert.That(result, Is.InstanceOf<ObjectResult>());
-            Assert.That(((ObjectResult)result).Value, Is.EqualTo(word).UsingPropertiesComparer());
+            var result = (OkObjectResult)await _wordController.GetWord(ProjId, word.Id);
+            Assert.That(result.Value, Is.EqualTo(word).UsingPropertiesComparer());
         }
 
         [Test]
@@ -207,18 +209,16 @@ namespace Backend.Tests.Controllers
         public async Task TestGetDuplicateId()
         {
             var word = await _wordRepo.Create(Util.RandomWord(ProjId));
-            var result = await _wordController.GetDuplicateId(ProjId, word);
-            Assert.That(result, Is.InstanceOf<ObjectResult>());
-            Assert.That(((ObjectResult)result).Value, Is.EqualTo(word.Id));
+            var result = (OkObjectResult)await _wordController.GetDuplicateId(ProjId, word);
+            Assert.That(result.Value, Is.EqualTo(word.Id));
         }
 
         [Test]
         public async Task TestGetDuplicateIdNoneFound()
         {
             var word = Util.RandomWord(ProjId);
-            var result = await _wordController.GetDuplicateId(ProjId, word);
-            Assert.That(result, Is.InstanceOf<ObjectResult>());
-            Assert.That(((ObjectResult)result).Value, Is.EqualTo(""));
+            var result = (OkObjectResult)await _wordController.GetDuplicateId(ProjId, word);
+            Assert.That(result.Value, Is.EqualTo(""));
         }
 
         [Test]
@@ -240,14 +240,16 @@ namespace Backend.Tests.Controllers
             var nonFrontierWord1 = await _wordRepo.Add(Util.RandomWord(ProjId));
             var nonFrontierWord2 = await _wordRepo.Add(Util.RandomWord(ProjId));
 
-            var result = await _wordController.RevertWords(ProjId, new()
+            var result = (OkObjectResult)await _wordController.RevertWords(ProjId, new()
             {
                 ["non-id"] = frontierWord1.Id, // Cannot revert with key not a word
                 [nonFrontierWord1.Id] = nonFrontierWord2.Id, // Cannot revert with value not in frontier
                 [nonFrontierWord0.Id] = frontierWord0.Id, // Can revert
             });
-            var reverted = (Dictionary<string, string>)((OkObjectResult)result).Value!;
+            Assert.That(result.Value, Is.InstanceOf<Dictionary<string, string>>());
+            var reverted = (Dictionary<string, string>)result.Value;
             Assert.That(reverted, Has.Count.EqualTo(1));
+
             var frontierIds = (await _wordRepo.GetAllFrontier(ProjId)).Select(w => w.Id).ToList();
             Assert.That(frontierIds, Has.Count.EqualTo(2));
             Assert.That(frontierIds, Does.Contain(frontierWord1.Id));
@@ -272,9 +274,9 @@ namespace Backend.Tests.Controllers
             var dupWord = origWord.Clone();
             dupWord.Flag = new Flag("New Flag");
             var expectedWord = dupWord.Clone();
-            var result = (ObjectResult)await _wordController.UpdateDuplicate(ProjId, origWord.Id, dupWord);
-            var id = (string)result.Value!;
-            var updatedWord = await _wordRepo.GetWord(ProjId, id);
+            var result = (OkObjectResult)await _wordController.UpdateDuplicate(ProjId, origWord.Id, dupWord);
+            Assert.That(result.Value, Is.InstanceOf<string>());
+            var updatedWord = await _wordRepo.GetWord(ProjId, (string)result.Value);
             Util.AssertEqualWordContent(updatedWord!, expectedWord, true);
         }
 
@@ -311,8 +313,9 @@ namespace Backend.Tests.Controllers
         {
             var word = Util.RandomWord(ProjId);
 
-            var id = (string)((ObjectResult)await _wordController.CreateWord(ProjId, word)).Value!;
-            word.Id = id;
+            var result = (OkObjectResult)await _wordController.CreateWord(ProjId, word);
+            Assert.That(result.Value, Is.InstanceOf<string>());
+            word.Id = (string)result.Value;
 
             var allWords = await _wordRepo.GetAllWords(ProjId);
             Assert.That(allWords[0], Is.EqualTo(word).UsingPropertiesComparer());
@@ -339,12 +342,12 @@ namespace Backend.Tests.Controllers
             var modWord = origWord.Clone();
             modWord.Vernacular = "NewVernacular";
 
-            var id = (string)((ObjectResult)await _wordController.UpdateWord(
-                ProjId, modWord.Id, modWord)).Value!;
+            var result = (OkObjectResult)await _wordController.UpdateWord(ProjId, modWord.Id, modWord);
+            Assert.That(result.Value, Is.InstanceOf<string>());
 
             var finalWord = modWord.Clone();
-            finalWord.Id = id;
-            finalWord.History = new List<string> { origWord.Id };
+            finalWord.Id = (string)result.Value;
+            finalWord.History = [origWord.Id];
 
             var allWords = await _wordRepo.GetAllWords(ProjId);
             Assert.That(allWords, Does.Contain(origWord).UsingPropertiesComparer());
@@ -383,10 +386,8 @@ namespace Backend.Tests.Controllers
             Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
             Assert.That(await _wordRepo.GetAllFrontier(ProjId), Is.Empty);
 
-            var result = await _wordController.RestoreWord(ProjId, word.Id);
-
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            Assert.That(((OkObjectResult)result).Value, Is.True);
+            var result = (OkObjectResult)await _wordController.RestoreWord(ProjId, word.Id);
+            Assert.That(result.Value, Is.True);
             Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
             Assert.That(await _wordRepo.GetAllFrontier(ProjId), Does.Contain(word).UsingPropertiesComparer());
         }

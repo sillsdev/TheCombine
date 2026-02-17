@@ -227,8 +227,9 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUploadLiftFileAlreadyImported()
         {
-            var projId = _projRepo.Create(new Project { Name = "already has import", LiftImported = true }).Result!.Id;
-            var result = _liftController.UploadLiftFile(projId, _file).Result;
+            var proj = _projRepo.Create(new Project { Name = "already has import", LiftImported = true }).Result;
+            Assert.That(proj, Is.Not.Null);
+            var result = _liftController.UploadLiftFile(proj.Id, _file).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
             Assert.That(((BadRequestObjectResult)result).Value, Contains.Substring("LIFT"));
         }
@@ -256,7 +257,7 @@ namespace Backend.Tests.Controllers
                 var fileUpload = InitFile(fileStream, fileName);
                 var result = _liftController.UploadLiftFileAndGetWritingSystems(fileUpload, UserId).Result;
                 Assert.That(result, Is.TypeOf<OkObjectResult>());
-                var writingSystems = (result as OkObjectResult)!.Value as List<WritingSystem>;
+                var writingSystems = ((OkObjectResult)result).Value as List<WritingSystem>;
                 Assert.That(writingSystems, Has.Count.Not.Zero);
             }
 
@@ -284,20 +285,21 @@ namespace Backend.Tests.Controllers
         {
             var proj = Util.RandomProject();
             proj = _projRepo.Create(proj).Result;
+            Assert.That(proj, Is.Not.Null);
 
             // No extracted import dir stored for user.
             Assert.That(_liftService.RetrieveImport(UserId), Is.Null);
-            var result = _liftController.FinishUploadLiftFile(proj!.Id, UserId).Result;
+            var result = _liftController.FinishUploadLiftFile(proj.Id, UserId).Result;
             Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
 
             // Empty extracted import dir stored for user.
             _liftService.StoreImport(UserId, "  ");
-            result = _liftController.FinishUploadLiftFile(proj!.Id, UserId).Result;
+            result = _liftController.FinishUploadLiftFile(proj.Id, UserId).Result;
             Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
 
             // Nonsense extracted import dir stored for user.
             _liftService.StoreImport(UserId, "not-a-real-path");
-            result = _liftController.FinishUploadLiftFile(proj!.Id, UserId).Result;
+            result = _liftController.FinishUploadLiftFile(proj.Id, UserId).Result;
             Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
             Assert.That(_liftService.RetrieveImport(UserId), Is.Null);
         }
@@ -529,6 +531,7 @@ namespace Backend.Tests.Controllers
             var proj1 = Util.RandomProject();
             proj1.VernacularWritingSystem.Bcp47 = roundTripObj.Language;
             proj1 = _projRepo.Create(proj1).Result;
+            Assert.That(proj1, Is.Not.Null);
 
             // Upload the zip file.
             // Generate api parameter with file stream.
@@ -537,13 +540,13 @@ namespace Backend.Tests.Controllers
                 var fileUpload = InitFile(fileStream, roundTripObj.Filename);
 
                 // Make api call.
-                var result = _liftController.UploadLiftFile(proj1!.Id, fileUpload).Result;
+                var result = _liftController.UploadLiftFile(proj1.Id, fileUpload).Result;
                 Assert.That(result, Is.TypeOf<OkObjectResult>());
             }
 
             proj1 = _projRepo.GetProject(proj1.Id).Result;
             Assert.That(proj1, Is.Not.Null);
-            Assert.That(proj1!.LiftImported, Is.True);
+            Assert.That(proj1.LiftImported, Is.True);
             Assert.That(proj1.DefinitionsEnabled, Is.EqualTo(roundTripObj.HasDefs));
             Assert.That(proj1.GrammaticalInfoEnabled, Is.EqualTo(roundTripObj.HasGramInfo));
 
@@ -596,6 +599,7 @@ namespace Backend.Tests.Controllers
             var proj2 = Util.RandomProject();
             proj2.VernacularWritingSystem.Bcp47 = roundTripObj.Language;
             proj2 = _projRepo.Create(proj2).Result;
+            Assert.That(proj2, Is.Not.Null);
 
             // Upload the exported words again.
             // Generate api parameter with file stream.
@@ -604,7 +608,7 @@ namespace Backend.Tests.Controllers
                 var fileUpload = InitFile(fileStream, roundTripObj.Filename);
 
                 // Make api call.
-                var result2 = _liftController.UploadLiftFile(proj2!.Id, fileUpload).Result;
+                var result2 = _liftController.UploadLiftFile(proj2.Id, fileUpload).Result;
                 Assert.That(result2, Is.TypeOf<OkObjectResult>());
             }
 
@@ -615,7 +619,7 @@ namespace Backend.Tests.Controllers
             File.Delete(exportedFilePath);
 
             // Ensure that the definitions and grammatical info weren't all lost.
-            Assert.That(proj2!.DefinitionsEnabled, Is.EqualTo(roundTripObj.HasDefs));
+            Assert.That(proj2.DefinitionsEnabled, Is.EqualTo(roundTripObj.HasDefs));
             Assert.That(proj2.GrammaticalInfoEnabled, Is.EqualTo(roundTripObj.HasGramInfo));
 
             allWords = _wordRepo.GetAllWords(proj2.Id).Result;

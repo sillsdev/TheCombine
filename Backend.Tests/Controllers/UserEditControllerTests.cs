@@ -90,9 +90,8 @@ namespace Backend.Tests.Controllers
             await _userEditRepo.Create(RandomUserEdit());
             await _userEditRepo.Create(RandomUserEdit());
 
-            var result = await _userEditController.GetUserEdit(ProjId, userEdit.Id);
-            Assert.That(result, Is.InstanceOf<ObjectResult>());
-            Assert.That(((ObjectResult)result).Value, Is.EqualTo(userEdit).UsingPropertiesComparer());
+            var result = (OkObjectResult)await _userEditController.GetUserEdit(ProjId, userEdit.Id);
+            Assert.That(result.Value, Is.EqualTo(userEdit).UsingPropertiesComparer());
         }
 
         [Test]
@@ -115,11 +114,14 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestCreateUserEdit()
         {
-            var userEdit = new UserEdit { ProjectId = ProjId };
-            var updatedUser = (User)((ObjectResult)await _userEditController.CreateUserEdit(ProjId)).Value!;
-            userEdit.Id = updatedUser.WorkedProjects[ProjId];
+
+            var result = (OkObjectResult)await _userEditController.CreateUserEdit(ProjId);
+            Assert.That(result.Value, Is.InstanceOf<User>());
+            var updatedUser = (User)result.Value;
+
+            var expectedUserEdit = new UserEdit { Id = updatedUser.WorkedProjects[ProjId], ProjectId = ProjId };
             var repoEdits = await _userEditRepo.GetAllUserEdits(ProjId);
-            Assert.That(repoEdits, Does.Contain(userEdit).UsingPropertiesComparer());
+            Assert.That(repoEdits, Does.Contain(expectedUserEdit).UsingPropertiesComparer());
         }
 
         [Test]
@@ -143,7 +145,10 @@ namespace Backend.Tests.Controllers
             await _userEditController.UpdateUserEditGoal(ProjId, userEdit.Id, newEdit);
 
             var repoUserEdit = await _userEditRepo.GetUserEdit(ProjId, userEdit.Id);
-            newEdit.Modified = repoUserEdit!.Edits.FirstOrDefault(e => e.Guid == newEdit.Guid)!.Modified;
+            Assert.That(repoUserEdit, Is.Not.Null);
+            var repoEdit = repoUserEdit.Edits.FirstOrDefault(e => e.Guid == newEdit.Guid);
+            Assert.That(repoEdit, Is.Not.Null);
+            newEdit.Modified = repoEdit.Modified;
             Assert.That(repoUserEdit, Is.EqualTo(updatedUserEdit).UsingPropertiesComparer());
         }
 
@@ -191,7 +196,7 @@ namespace Backend.Tests.Controllers
 
             var userEdit = await _userEditRepo.GetUserEdit(ProjId, origUserEdit.Id);
             Assert.That(userEdit, Is.Not.Null);
-            Assert.That(userEdit!.Edits.First().StepData, Does.Contain(stringStep));
+            Assert.That(userEdit.Edits.First().StepData, Does.Contain(stringStep));
 
             // Now update a step within the goal.
             const string modStringStep = "This is a replacement step.";
@@ -206,7 +211,7 @@ namespace Backend.Tests.Controllers
 
             userEdit = await _userEditRepo.GetUserEdit(ProjId, origUserEdit.Id);
             Assert.That(userEdit, Is.Not.Null);
-            Assert.That(userEdit!.Edits.First().StepData, Does.Contain(modStringStep));
+            Assert.That(userEdit.Edits.First().StepData, Does.Contain(modStringStep));
         }
 
         [Test]

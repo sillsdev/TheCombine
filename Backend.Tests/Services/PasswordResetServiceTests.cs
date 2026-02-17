@@ -31,8 +31,7 @@ namespace Backend.Tests.Services
         [Test]
         public void TestCreatePasswordReset()
         {
-            var user = new User { Email = Email };
-            _userRepo.Create(user);
+            _userRepo.Create(new User { Email = Email }).Wait();
 
             var request = _passwordResetService.CreatePasswordReset(Email).Result;
             Assert.That(_passwordResetRepo.GetResets(), Does.Contain(request).UsingPropertiesComparer());
@@ -41,8 +40,7 @@ namespace Backend.Tests.Services
         [Test]
         public void TestResetPasswordSuccess()
         {
-            var user = new User { Email = Email };
-            _userRepo.Create(user);
+            _userRepo.Create(new User { Email = Email }).Wait();
 
             var request = _passwordResetService.CreatePasswordReset(Email).Result;
             Assert.That(_passwordResetService.ResetPassword(request.Token, Password).Result, Is.True);
@@ -52,8 +50,7 @@ namespace Backend.Tests.Services
         [Test]
         public void TestResetPasswordExpired()
         {
-            var user = new User { Email = Email };
-            _userRepo.Create(user);
+            _userRepo.Create(new User { Email = Email }).Wait();
 
             var request = _passwordResetService.CreatePasswordReset(Email).Result;
             request.Created = DateTime.UtcNow.Subtract(_expireTime).AddMinutes(-1);
@@ -64,8 +61,7 @@ namespace Backend.Tests.Services
         [Test]
         public void TestResetPasswordFuture()
         {
-            var user = new User { Email = Email };
-            _userRepo.Create(user);
+            _userRepo.Create(new User { Email = Email }).Wait();
 
             var request = _passwordResetService.CreatePasswordReset(Email).Result;
             request.Created = DateTime.UtcNow.AddDays(1);
@@ -76,8 +72,7 @@ namespace Backend.Tests.Services
         [Test]
         public void TestResetPasswordBadToken()
         {
-            var user = new User { Email = Email };
-            _userRepo.Create(user);
+            _userRepo.Create(new User { Email = Email }).Wait();
 
             var request = _passwordResetService.CreatePasswordReset(Email).Result;
             Assert.That(request.Email == Email, Is.True);
@@ -92,8 +87,9 @@ namespace Backend.Tests.Services
             var noUserResult = _passwordResetService.ResetPasswordRequest("fake-username").Result;
             Assert.That(noUserResult, Is.True);
 
-            var username = _userRepo.Create(new() { Username = "Imarealboy" }).Result!.Username;
-            var yesUserResult = _passwordResetService.ResetPasswordRequest(username).Result;
+            var user = _userRepo.Create(new() { Username = "Imarealboy" }).Result;
+            Assert.That(user, Is.Not.Null);
+            var yesUserResult = _passwordResetService.ResetPasswordRequest(user.Username).Result;
             Assert.That(yesUserResult, Is.True);
         }
 

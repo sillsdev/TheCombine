@@ -101,7 +101,7 @@ namespace Backend.Tests.Services
             var httpContext = CreateHttpContextWithUser(user);
             var userRole = _userRoleRepo.Create(new UserRole { ProjectId = ProjId, Role = Role.Harvester }).Result;
             user.ProjectRoles[ProjId] = userRole.Id;
-            _ = _userRepo.Update(user.Id, user).Result;
+            _userRepo.Update(user.Id, user).Wait();
             Assert.That(_permService.HasProjectPermission(httpContext, Permission.Import, ProjId).Result, Is.False);
         }
 
@@ -112,7 +112,7 @@ namespace Backend.Tests.Services
             var httpContext = CreateHttpContextWithUser(user);
             var userRole = _userRoleRepo.Create(new UserRole { ProjectId = ProjId, Role = Role.Owner }).Result;
             user.ProjectRoles[ProjId] = userRole.Id;
-            _ = _userRepo.Update(user.Id, user).Result;
+            _userRepo.Update(user.Id, user).Wait();
             Assert.That(_permService.HasProjectPermission(httpContext, Permission.Import, ProjId).Result, Is.True);
         }
 
@@ -137,7 +137,7 @@ namespace Backend.Tests.Services
             var httpContext = CreateHttpContextWithUser(user);
             var userRole = _userRoleRepo.Create(new UserRole { ProjectId = ProjId, Role = Role.Harvester }).Result;
             user.ProjectRoles[ProjId] = userRole.Id;
-            _ = _userRepo.Update(user.Id, user).Result;
+            _userRepo.Update(user.Id, user).Wait();
             Assert.That(_permService.ContainsProjectRole(httpContext, Role.Editor, ProjId).Result, Is.False);
         }
 
@@ -148,7 +148,7 @@ namespace Backend.Tests.Services
             var httpContext = CreateHttpContextWithUser(user);
             var userRole = _userRoleRepo.Create(new UserRole { ProjectId = ProjId, Role = Role.Owner }).Result;
             user.ProjectRoles[ProjId] = userRole.Id;
-            _ = _userRepo.Update(user.Id, user).Result;
+            _userRepo.Update(user.Id, user).Wait();
             Assert.That(_permService.ContainsProjectRole(httpContext, Role.Harvester, ProjId).Result, Is.True);
         }
     }

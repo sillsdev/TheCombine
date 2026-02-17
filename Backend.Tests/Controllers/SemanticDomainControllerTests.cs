@@ -53,11 +53,14 @@ namespace Backend.Tests.Controllers
         public void TestGetSemanticDomainFullDomainFound()
         {
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(new SemanticDomainFull(_semDom));
-            var domain = (SemanticDomainFull?)(
-                (ObjectResult)_semDomController.GetSemanticDomainFull(Id, Lang).Result).Value;
-            Assert.That(domain?.Id, Is.EqualTo(Id));
-            Assert.That(domain?.Lang, Is.EqualTo(Lang));
-            Assert.That(domain?.Name, Is.EqualTo(Name));
+
+            var result = _semDomController.GetSemanticDomainFull(Id, Lang).Result;
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)result).Value, Is.InstanceOf<SemanticDomainFull>());
+            var domain = (SemanticDomainFull)((OkObjectResult)result).Value;
+            Assert.That(domain.Id, Is.EqualTo(Id));
+            Assert.That(domain.Lang, Is.EqualTo(Lang));
+            Assert.That(domain.Name, Is.EqualTo(Name));
         }
 
         [Test]
@@ -71,13 +74,15 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetSemanticDomainTreeNodeDomainFound()
         {
-            var treeNode = new SemanticDomainTreeNode(_semDom);
-            ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(treeNode);
-            var domain = (SemanticDomainTreeNode?)(
-                (ObjectResult)_semDomController.GetSemanticDomainTreeNode(Id, Lang).Result).Value;
-            Assert.That(domain?.Id, Is.EqualTo(Id));
-            Assert.That(domain?.Lang, Is.EqualTo(Lang));
-            Assert.That(domain?.Name, Is.EqualTo(Name));
+            ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(new SemanticDomainTreeNode(_semDom));
+
+            var result = _semDomController.GetSemanticDomainTreeNode(Id, Lang).Result;
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)result).Value, Is.InstanceOf<SemanticDomainTreeNode>());
+            var domain = (SemanticDomainTreeNode)((OkObjectResult)result).Value;
+            Assert.That(domain.Id, Is.EqualTo(Id));
+            Assert.That(domain.Lang, Is.EqualTo(Lang));
+            Assert.That(domain.Name, Is.EqualTo(Name));
         }
 
         [Test]
@@ -91,13 +96,15 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetSemanticDomainTreeNodeByNameDomainFound()
         {
-            var treeNode = new SemanticDomainTreeNode(_semDom);
-            ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(treeNode);
-            var domain = (SemanticDomainTreeNode?)(
-                (ObjectResult)_semDomController.GetSemanticDomainTreeNodeByName(Name, Lang).Result).Value;
-            Assert.That(domain?.Id, Is.EqualTo(Id));
-            Assert.That(domain?.Lang, Is.EqualTo(Lang));
-            Assert.That(domain?.Name, Is.EqualTo(Name));
+            ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(new SemanticDomainTreeNode(_semDom));
+
+            var result = _semDomController.GetSemanticDomainTreeNodeByName(Id, Lang).Result;
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)result).Value, Is.InstanceOf<SemanticDomainTreeNode>());
+            var domain = (SemanticDomainTreeNode)((OkObjectResult)result).Value;
+            Assert.That(domain.Id, Is.EqualTo(Id));
+            Assert.That(domain.Lang, Is.EqualTo(Lang));
+            Assert.That(domain.Name, Is.EqualTo(Name));
         }
 
         [Test]

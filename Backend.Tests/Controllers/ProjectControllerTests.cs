@@ -66,9 +66,9 @@ namespace Backend.Tests.Controllers
         public void TestGetAllProjectUsers()
         {
             const string projId = "some-project";
-            _userRepo.Create(new() { Id = "1", ProjectRoles = { [projId] = "some-project-role" } });
-            _userRepo.Create(new() { Id = "2", ProjectRoles = { [projId] = "other-project-role" } });
-            _userRepo.Create(new() { Id = "not3" });
+            _userRepo.Create(new() { Id = "1", ProjectRoles = { [projId] = "some-project-role" } }).Wait();
+            _userRepo.Create(new() { Id = "2", ProjectRoles = { [projId] = "other-project-role" } }).Wait();
+            _userRepo.Create(new() { Id = "not3" }).Wait();
             var result = _projController.GetAllProjectUsers(projId).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
             Assert.That(((OkObjectResult)result).Value, Has.Count.EqualTo(2));
@@ -79,7 +79,8 @@ namespace Backend.Tests.Controllers
         {
             _projController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var project = _projRepo.Create(Util.RandomProject()).Result;
-            var result = _projController.GetProject(project!.Id).Result;
+            Assert.That(project, Is.Not.Null);
+            var result = _projController.GetProject(project.Id).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
@@ -94,11 +95,11 @@ namespace Backend.Tests.Controllers
         public void TestGetProject()
         {
             var project = _projRepo.Create(Util.RandomProject()).Result;
+            Assert.That(project, Is.Not.Null);
+            _projRepo.Create(Util.RandomProject()).Wait();
+            _projRepo.Create(Util.RandomProject()).Wait();
 
-            _projRepo.Create(Util.RandomProject());
-            _projRepo.Create(Util.RandomProject());
-
-            var result = _projController.GetProject(project!.Id).Result;
+            var result = _projController.GetProject(project.Id).Result;
             Assert.That(result, Is.InstanceOf<ObjectResult>());
             Assert.That(((ObjectResult)result).Value, Is.EqualTo(project).UsingPropertiesComparer());
         }
@@ -115,8 +116,11 @@ namespace Backend.Tests.Controllers
         public void TestCreateProject()
         {
             var project = Util.RandomProject();
-            var userProject = (UserCreatedProject)((ObjectResult)_projController.CreateProject(project).Result).Value!;
-            project.Id = userProject.Project.Id;
+            var result = _projController.CreateProject(project).Result;
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            var userProject = ((OkObjectResult)result).Value;
+            Assert.That(userProject, Is.InstanceOf<UserCreatedProject>());
+            project.Id = ((UserCreatedProject)userProject).Project.Id;
             Assert.That(_projRepo.GetAllProjects().Result, Does.Contain(project).UsingPropertiesComparer());
         }
 
@@ -132,10 +136,11 @@ namespace Backend.Tests.Controllers
         public void TestUpdateProject()
         {
             var origProject = _projRepo.Create(Util.RandomProject()).Result;
-            var modProject = origProject!.Clone();
+            Assert.That(origProject, Is.Not.Null);
+            var modProject = origProject.Clone();
             modProject.Name = "Mark";
 
-            _ = _projController.UpdateProject(modProject.Id, modProject);
+            _projController.UpdateProject(modProject.Id, modProject).Wait();
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(1));
             Assert.That(_projRepo.GetAllProjects().Result, Does.Contain(modProject).UsingPropertiesComparer());
         }
@@ -158,7 +163,8 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestPutCharsNoChange()
         {
-            var proj = _projRepo.Create(Util.RandomProject()).Result!;
+            var proj = _projRepo.Create(Util.RandomProject()).Result;
+            Assert.That(proj, Is.Not.Null);
             var result = _projController.PutChars(proj.Id, proj).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
         }
@@ -167,29 +173,32 @@ namespace Backend.Tests.Controllers
         public void TestPutCharsOnlyChangesChars()
         {
             // Setup
-            var oldProj = _projRepo.Create(Util.RandomProject()).Result!;
+            var oldProj = _projRepo.Create(Util.RandomProject()).Result;
+            Assert.That(oldProj, Is.Not.Null);
             var newProj = Util.RandomProject();
-            Assert.That(newProj.Id, Is.Not.EqualTo((oldProj.Id)));
-            Assert.That(newProj.Name, Is.Not.EqualTo((oldProj.Name)));
+            Assert.That(newProj.Id, Is.Not.EqualTo(oldProj.Id));
+            Assert.That(newProj.Name, Is.Not.EqualTo(oldProj.Name));
             newProj.RejectedCharacters = ["!", "?"];
             newProj.ValidCharacters = ["a", "b", "c"];
 
             // Verify returned project
             var result = _projController.PutChars(oldProj.Id, newProj).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            var resultProj = (Project)((OkObjectResult)result).Value!;
+            Assert.That(((OkObjectResult)result).Value, Is.InstanceOf<Project>());
+            var resultProj = (Project)((OkObjectResult)result).Value;
             Assert.That(resultProj.Id, Is.EqualTo(oldProj.Id));
             Assert.That(resultProj.Name, Is.EqualTo(oldProj.Name));
-            Assert.That(resultProj.RejectedCharacters, Has.Count.EqualTo((2)));
-            Assert.That(resultProj.ValidCharacters, Has.Count.EqualTo((3)));
+            Assert.That(resultProj.RejectedCharacters, Has.Count.EqualTo(2));
+            Assert.That(resultProj.ValidCharacters, Has.Count.EqualTo(3));
 
             // Verify project in repo
             Assert.That(_projRepo.GetProject(newProj.Id).Result, Is.Null);
-            var updatedProj = _projRepo.GetProject(oldProj.Id).Result!;
+            var updatedProj = _projRepo.GetProject(oldProj.Id).Result;
+            Assert.That(updatedProj, Is.Not.Null);
             Assert.That(updatedProj.Id, Is.EqualTo(oldProj.Id));
             Assert.That(updatedProj.Name, Is.EqualTo(oldProj.Name));
-            Assert.That(updatedProj.RejectedCharacters, Has.Count.EqualTo((2)));
-            Assert.That(updatedProj.ValidCharacters, Has.Count.EqualTo((3)));
+            Assert.That(updatedProj.RejectedCharacters, Has.Count.EqualTo(2));
+            Assert.That(updatedProj.ValidCharacters, Has.Count.EqualTo(3));
         }
 
         [Test]
@@ -218,9 +227,10 @@ namespace Backend.Tests.Controllers
         public void TestDeleteProject()
         {
             var origProject = _projRepo.Create(Util.RandomProject()).Result;
+            Assert.That(origProject, Is.Not.Null);
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(1));
 
-            _ = _projController.DeleteProject(origProject!.Id).Result;
+            _projController.DeleteProject(origProject.Id).Wait();
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(0));
         }
 
@@ -236,13 +246,17 @@ namespace Backend.Tests.Controllers
         public void TestProjectDuplicateCheck()
         {
             var project1 = _projRepo.Create(Util.RandomProject()).Result;
-            _ = _projRepo.Create(Util.RandomProject()).Result;
-            _ = _projRepo.Create(Util.RandomProject()).Result;
-            var modProject = project1!.Clone();
+            Assert.That(project1, Is.Not.Null);
+            _projRepo.Create(Util.RandomProject()).Wait();
+            _projRepo.Create(Util.RandomProject()).Wait();
+
+            var modProject = project1.Clone();
             modProject.Name = "Proj";
-            _ = _projController.UpdateProject(modProject.Id, modProject);
+            _projController.UpdateProject(modProject.Id, modProject).Wait();
+
             var isOldProjDupResult = (ObjectResult)_projController.ProjectDuplicateCheck("Proj").Result;
             Assert.That(isOldProjDupResult.Value, Is.True);
+
             var isNewProjDupResult = (ObjectResult)_projController.ProjectDuplicateCheck("NewProj").Result;
             Assert.That(isNewProjDupResult.Value, Is.False);
         }

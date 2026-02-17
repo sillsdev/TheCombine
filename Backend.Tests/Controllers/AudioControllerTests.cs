@@ -110,10 +110,11 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUploadAudioFile()
         {
-            _ = _audioController.UploadAudioFile(_projId, _wordId, "speakerId", _file).Result;
+            _audioController.UploadAudioFile(_projId, _wordId, "speakerId", _file).Wait();
 
             var foundWord = _wordRepo.GetWord(_projId, _wordId).Result;
-            Assert.That(foundWord?.Audio, Is.Not.Null);
+            Assert.That(foundWord, Is.Not.Null);
+            Assert.That(foundWord.Audio, Is.Not.Null);
         }
 
         [Test]
@@ -176,7 +177,7 @@ namespace Backend.Tests.Controllers
             var wordId = _wordRepo.Create(origWord).Result.Id;
 
             // Test delete function
-            _ = _audioController.DeleteAudioFile(_projId, wordId, fileName).Result;
+            _audioController.DeleteAudioFile(_projId, wordId, fileName).Wait();
 
             // Original word persists
             Assert.That(_wordRepo.GetAllWords(_projId).Result, Has.Count.EqualTo(2));

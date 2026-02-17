@@ -177,7 +177,8 @@ namespace Backend.Tests.Services
         [Test]
         public void GetSemanticDomainUserCountsTestDomMatchesUser()
         {
-            var user = _userRepo.Create(GetUserWithProjId()).Result!;
+            var user = _userRepo.Create(GetUserWithProjId()).Result;
+            Assert.That(user, Is.Not.Null);
             var wordCount = 4;
             foreach (var i in Enumerable.Range(0, wordCount))
             {
@@ -187,13 +188,16 @@ namespace Backend.Tests.Services
             }
 
             var result = _statsService.GetSemanticDomainUserCounts(ProjId).Result;
-            Assert.That(result.Find(uc => uc.Id == user.Id)!.WordCount, Is.EqualTo(wordCount));
+            var userCount = result.Find(uc => uc.Id == user.Id);
+            Assert.That(userCount, Is.Not.Null);
+            Assert.That(userCount.WordCount, Is.EqualTo(wordCount));
         }
 
         [Test]
         public void GetSemanticDomainUserCountsTestRecentDomain()
         {
-            var user = _userRepo.Create(GetUserWithProjId()).Result!;
+            var user = _userRepo.Create(GetUserWithProjId()).Result;
+            Assert.That(user, Is.Not.Null);
 
             var olderDomain = new SemanticDomain
             {
@@ -225,7 +229,8 @@ namespace Backend.Tests.Services
 
             var result = _statsService.GetSemanticDomainUserCounts(ProjId).Result;
             var userCount = result.Find(uc => uc.Id == user.Id);
-            Assert.That(userCount?.RecentDomain, Is.EqualTo(newerDomain).UsingPropertiesComparer());
+            Assert.That(userCount, Is.Not.Null);
+            Assert.That(userCount.RecentDomain, Is.EqualTo(newerDomain).UsingPropertiesComparer());
         }
     }
 }

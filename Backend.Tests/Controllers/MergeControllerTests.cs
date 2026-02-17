@@ -79,16 +79,16 @@ namespace Backend.Tests.Controllers
             var wordIdsC = new List<string> { "1", "2", "3" };
 
             // Add two Lists of wordIds.
-            _ = _mergeController.BlacklistAdd(ProjId, wordIdsA).Result;
+            _mergeController.BlacklistAdd(ProjId, wordIdsA).Wait();
             var result = _mergeBlacklistRepo.GetAllSets(ProjId).Result;
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result.First().WordIds, Is.EqualTo(wordIdsA));
-            _ = _mergeController.BlacklistAdd(ProjId, wordIdsB).Result;
+            _mergeController.BlacklistAdd(ProjId, wordIdsB).Wait();
             result = _mergeBlacklistRepo.GetAllSets(ProjId).Result;
             Assert.That(result, Has.Count.EqualTo(2));
 
             // Add a List of wordIds that contains both previous lists.
-            _ = _mergeController.BlacklistAdd(ProjId, wordIdsC).Result;
+            _mergeController.BlacklistAdd(ProjId, wordIdsC).Wait();
             result = _mergeBlacklistRepo.GetAllSets(ProjId).Result;
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result.First().WordIds, Is.EqualTo(wordIdsC));
@@ -110,16 +110,16 @@ namespace Backend.Tests.Controllers
             var wordIdsC = new List<string> { "1", "2", "3" };
 
             // Add two Lists of wordIds.
-            _ = _mergeController.GraylistAdd(ProjId, wordIdsA).Result;
+            _mergeController.GraylistAdd(ProjId, wordIdsA).Wait();
             var result = _mergeGraylistRepo.GetAllSets(ProjId).Result;
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result.First().WordIds, Is.EqualTo(wordIdsA));
-            _ = _mergeController.GraylistAdd(ProjId, wordIdsB).Result;
+            _mergeController.GraylistAdd(ProjId, wordIdsB).Wait();
             result = _mergeGraylistRepo.GetAllSets(ProjId).Result;
             Assert.That(result, Has.Count.EqualTo(2));
 
             // Add a List of wordIds that contains both previous lists.
-            _ = _mergeController.GraylistAdd(ProjId, wordIdsC).Result;
+            _mergeController.GraylistAdd(ProjId, wordIdsC).Wait();
             result = _mergeGraylistRepo.GetAllSets(ProjId).Result;
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result.First().WordIds, Is.EqualTo(wordIdsC));

@@ -57,7 +57,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetProjectSpeakersProjectSpeakers()
         {
-            _ = _speakerRepo.Create(new Speaker { Name = "Sir Other", ProjectId = ProjId }).Result;
+            _speakerRepo.Create(new Speaker { Name = "Sir Other", ProjectId = ProjId }).Wait();
             var speakersInRepo = _speakerRepo.GetAllSpeakers(ProjId).Result;
 
             var result = _speakerController.GetProjectSpeakers(ProjId).Result;
@@ -77,7 +77,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDeleteProjectSpeakers()
         {
-            _ = _speakerRepo.Create(new Speaker { Name = "Sir Other", ProjectId = ProjId }).Result;
+            _speakerRepo.Create(new Speaker { Name = "Sir Other", ProjectId = ProjId }).Wait();
             Assert.That(_speakerRepo.GetAllSpeakers(ProjId).Result, Is.Not.Empty);
 
             var result = _speakerController.DeleteProjectSpeakers(ProjId).Result;
@@ -137,11 +137,15 @@ namespace Backend.Tests.Controllers
         public void TestCreateSpeaker()
         {
             const string NewName = "Miss Novel";
+
             var result = _speakerController.CreateSpeaker(ProjId, NewName).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            var speakerId = ((ObjectResult)result).Value as string;
-            var speakerInRepo = _speakerRepo.GetSpeaker(ProjId, speakerId!).Result;
-            Assert.That(speakerInRepo!.Name, Is.EqualTo(NewName));
+            Assert.That(((OkObjectResult)result).Value, Is.InstanceOf<string>());
+            var speakerId = (string)((OkObjectResult)result).Value;
+
+            var speakerInRepo = _speakerRepo.GetSpeaker(ProjId, speakerId).Result;
+            Assert.That(speakerInRepo, Is.Not.Null);
+            Assert.That(speakerInRepo.Name, Is.EqualTo(NewName));
         }
 
         [Test]
@@ -187,15 +191,17 @@ namespace Backend.Tests.Controllers
         {
             // Set ConsentType in repo
             _speaker.Consent = ConsentType.Audio;
-            _ = _speakerRepo.Update(_speaker.Id, _speaker);
-            var consentInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result!.Consent;
-            Assert.That(consentInRepo, Is.Not.EqualTo(ConsentType.None));
+            _speakerRepo.Update(_speaker.Id, _speaker).Wait();
+            var speakerInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result;
+            Assert.That(speakerInRepo, Is.Not.Null);
+            Assert.That(speakerInRepo.Consent, Is.Not.EqualTo(ConsentType.None));
 
             // Remove consent
             var result = _speakerController.RemoveConsent(ProjId, _speaker.Id).Result;
             Assert.That(result, Is.InstanceOf<OkResult>());
-            consentInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result!.Consent;
-            Assert.That(consentInRepo, Is.EqualTo(ConsentType.None));
+            speakerInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result;
+            Assert.That(speakerInRepo, Is.Not.Null);
+            Assert.That(speakerInRepo.Consent, Is.EqualTo(ConsentType.None));
 
             // Try to remove again
             result = _speakerController.RemoveConsent(ProjId, _speaker.Id).Result;
@@ -239,10 +245,13 @@ namespace Backend.Tests.Controllers
         public void TestUpdateSpeakerNameNewName()
         {
             const string NewName = "Mr. New";
+
             var result = _speakerController.UpdateSpeakerName(ProjId, _speaker.Id, NewName).Result;
             Assert.That(result, Is.InstanceOf<OkResult>());
-            var nameInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result!.Name;
-            Assert.That(nameInRepo, Is.EqualTo(NewName));
+
+            var speakerInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result;
+            Assert.That(speakerInRepo, Is.Not.Null);
+            Assert.That(speakerInRepo.Name, Is.EqualTo(NewName));
         }
 
         [Test]
@@ -302,24 +311,32 @@ namespace Backend.Tests.Controllers
         public void TestUploadConsentAddAudioConsent()
         {
             _file.ContentType = "audio/something";
+
             var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _file).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            var value = (Speaker)((ObjectResult)result).Value!;
-            Assert.That(value.Consent, Is.EqualTo(ConsentType.Audio));
-            var consentInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result!.Consent;
-            Assert.That(consentInRepo, Is.EqualTo(ConsentType.Audio));
+            Assert.That(((ObjectResult)result).Value, Is.InstanceOf<Speaker>());
+            var speaker = (Speaker)((ObjectResult)result).Value;
+            Assert.That(speaker.Consent, Is.EqualTo(ConsentType.Audio));
+
+            var speakerInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result;
+            Assert.That(speakerInRepo, Is.Not.Null);
+            Assert.That(speakerInRepo.Consent, Is.EqualTo(ConsentType.Audio));
         }
 
         [Test]
         public void TestUploadConsentAddImageConsent()
         {
             _file.ContentType = "image/anything";
+
             var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _file).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            var value = (Speaker)((ObjectResult)result).Value!;
-            Assert.That(value.Consent, Is.EqualTo(ConsentType.Image));
-            var consentInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result!.Consent;
-            Assert.That(consentInRepo, Is.EqualTo(ConsentType.Image));
+            Assert.That(((OkObjectResult)result).Value, Is.InstanceOf<Speaker>());
+            var speaker = (Speaker)((OkObjectResult)result).Value;
+            Assert.That(speaker.Consent, Is.EqualTo(ConsentType.Image));
+
+            var speakerInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result;
+            Assert.That(speakerInRepo, Is.Not.Null);
+            Assert.That(speakerInRepo.Consent, Is.EqualTo(ConsentType.Image));
         }
 
         [Test]

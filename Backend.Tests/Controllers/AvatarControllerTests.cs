@@ -98,7 +98,8 @@ namespace Backend.Tests.Controllers
             Assert.That(uploadResult, Is.TypeOf<OkResult>());
 
             var foundUser = _userRepo.GetUser(_userId).Result;
-            Assert.That(foundUser?.Avatar, Is.Not.Null);
+            Assert.That(foundUser, Is.Not.Null);
+            Assert.That(foundUser.Avatar, Is.Not.Null);
 
             // No permissions should be required to download an avatar.
             _avatarController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
@@ -107,7 +108,7 @@ namespace Backend.Tests.Controllers
             Assert.That(fileResult, Is.TypeOf<FileStreamResult>());
 
             // Clean up.
-            fileResult!.FileStream.Dispose();
+            fileResult.FileStream.Dispose();
             DeleteAvatarFile(_userId);
         }
     }

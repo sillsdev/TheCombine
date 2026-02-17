@@ -144,7 +144,7 @@ namespace Backend.Tests.Controllers
         public void TestValidateInviteTokenValidTokenUserAlreadyInProject()
         {
             var roles = new Dictionary<string, string> { [_projId] = "role-id" };
-            _userRepo.Create(new() { Email = EmailActive, ProjectRoles = roles });
+            _userRepo.Create(new() { Email = EmailActive, ProjectRoles = roles }).Wait();
 
             var result = _inviteController.ValidateInviteToken(_projId, _tokenActive).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
@@ -159,9 +159,9 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestValidateInviteTokenExpiredTokenUserAvailable()
         {
-            _userRepo.Create(new() { Id = "other-user" });
+            _userRepo.Create(new() { Id = "other-user" }).Wait();
             // User with an email address matching an invite with an expired token.
-            _userRepo.Create(new() { Id = "invitee", Email = EmailExpired });
+            _userRepo.Create(new() { Id = "invitee", Email = EmailExpired }).Wait();
 
             var result = _inviteController.ValidateInviteToken(_projId, _tokenExpired).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
@@ -177,7 +177,7 @@ namespace Backend.Tests.Controllers
         public void TestValidateInviteTokenValidTokenUserAvailable()
         {
             // User with an email address matching an invite with an active token.
-            _userRepo.Create(new() { Email = EmailActive });
+            _userRepo.Create(new() { Email = EmailActive }).Wait();
 
             // No permissions should be required to validate a token.
             _inviteController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
