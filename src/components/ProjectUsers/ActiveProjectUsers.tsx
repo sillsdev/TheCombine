@@ -67,6 +67,8 @@ export default function ActiveProjectUsers(props: {
         setUserRoles(roles);
       }
     });
+
+    // Cleanup function to prevent setting state with old data if the useEffect is retriggered.
     return () => {
       canceled = true;
     };
