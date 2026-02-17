@@ -57,7 +57,7 @@ const authenticationUrls = [
  * and the blanket error pop-ups should be suppressed.*/
 const whiteListedErrorUrls = [
   "/merge/retrievedups",
-  "/speakers/create/",
+  "/speakers/create",
   "/speakers/update/",
   "/users/authenticate",
   "/users/captcha/",
