@@ -39,7 +39,7 @@ colorama==0.4.6
     #   mkdocs
     #   mkdocs-material
     #   tox
-cryptography==46.0.3
+cryptography==46.0.5
     # via
     #   pyopenssl
     #   types-pyopenssl
