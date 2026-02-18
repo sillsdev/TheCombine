@@ -38,7 +38,7 @@ namespace Backend.Tests.Services
         [TearDown]
         public void TearDown()
         {
-            _cache.Dispose();
+            _cache?.Dispose();
         }
 
         [Test]
