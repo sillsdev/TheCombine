@@ -45,20 +45,15 @@ namespace BackendFramework.Services
             var redirectUri = BuildRedirectUri(request);
             var query = new Dictionary<string, string?>
             {
-                ["scope"] = settings.Scope,
-                ["response_type"] = "code",
-                ["client_id"] = settings.ClientId,
-                ["redirect_uri"] = redirectUri,
-                ["client-request-id"] = Guid.NewGuid().ToString(),
-                ["x-client-SKU"] = settings.ClientSku,
-                ["x-client-Ver"] = settings.ClientVersion,
-                ["x-client-OS"] = settings.ClientOs,
-                ["prompt"] = settings.Prompt,
                 ["code_challenge"] = codeChallenge,
                 ["code_challenge_method"] = "S256",
+                ["client_id"] = settings.ClientId,
+                ["client-request-id"] = Guid.NewGuid().ToString(),
+                ["prompt"] = settings.Prompt,
+                ["redirect_uri"] = redirectUri,
+                ["response_type"] = "code",
+                ["scope"] = settings.Scope,
                 ["state"] = state,
-                ["client_info"] = "1",
-                ["haschrome"] = "1",
             };
 
             var loginReturnUrl = QueryHelpers.AddQueryString("/api/oauth/open-id-auth", query);
@@ -127,12 +122,9 @@ namespace BackendFramework.Services
             {
                 BaseUrl = baseUrl,
                 ClientId = clientId,
+                Prompt = _configuration["LexboxAuth:Prompt"] ?? "select_account",
                 Scope = _configuration["LexboxAuth:Scope"]
                     ?? "profile openid offline_access sendandreceive",
-                Prompt = _configuration["LexboxAuth:Prompt"] ?? "select_account",
-                ClientSku = _configuration["LexboxAuth:ClientSku"] ?? "TheCombine",
-                ClientVersion = _configuration["LexboxAuth:ClientVersion"] ?? "1.0",
-                ClientOs = _configuration["LexboxAuth:ClientOs"] ?? Environment.OSVersion.ToString(),
             };
         }
 
@@ -189,11 +181,8 @@ namespace BackendFramework.Services
         {
             public string BaseUrl { get; set; } = "";
             public string ClientId { get; set; } = "";
-            public string Scope { get; set; } = "";
             public string Prompt { get; set; } = "";
-            public string ClientSku { get; set; } = "";
-            public string ClientVersion { get; set; } = "";
-            public string ClientOs { get; set; } = "";
+            public string Scope { get; set; } = "";
         }
 
         public void Dispose()
