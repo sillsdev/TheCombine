@@ -36,6 +36,8 @@ export default function UserProjectsList(
           toast.warning(t("siteSettings.deleteUser.projectsLoadError"));
         });
     }
+
+    // Cleanup function to prevent setting state with old data if the useEffect is retriggered.
     return () => {
       canceled = true;
     };
