@@ -112,11 +112,14 @@ namespace Backend.Tests.Controllers
         {
             var result = _audioController.UploadAudioFile(_projId, _wordId, "speakerId", _file).Result;
             Assert.That(result, Is.TypeOf<OkObjectResult>());
-            var newId = (string)((OkObjectResult)result)!.Value!;
+            var okResult = (OkObjectResult)result;
+            Assert.That(okResult.Value, Is.TypeOf<string>());
+            var newId = (string)okResult.Value;
             Assert.That(newId, Is.Not.EqualTo(_wordId));
 
             var foundWord = _wordRepo.GetWord(_projId, newId).Result;
-            Assert.That(foundWord?.Audio, Is.Not.Null);
+            Assert.That(foundWord, Is.Not.Null);
+            Assert.That(foundWord.Audio, Is.Not.Null);
         }
 
         [Test]
@@ -182,9 +185,11 @@ namespace Backend.Tests.Controllers
             // Test delete function
             var result = _audioController.DeleteAudioFile(_projId, oldId, fileName).Result;
             Assert.That(result, Is.TypeOf<OkObjectResult>());
+            var okResult = (OkObjectResult)result;
+            Assert.That(okResult.Value, Is.TypeOf<string>());
 
             // Ensure returned id is different
-            var newId = (string)((OkObjectResult)result)!.Value!;
+            var newId = (string)okResult.Value;
             Assert.That(newId, Is.Not.EqualTo(oldId));
 
             // Ensure the word with deleted audio is in the frontier
