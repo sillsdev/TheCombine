@@ -99,16 +99,22 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring words to Frontier");
 
+            // Allow calls that don't specify any wordIds, but don't do any work.
+            if (wordIds.Count == 0)
+            {
+                return true;
+            }
+
             wordIds = wordIds.Distinct().ToList();
 
-            // Make sure all the words exist but not in the Frontier.
+            // Make sure none of the words are in the Frontier.
             if (await _wordRepo.AreInFrontier(projectId, wordIds, 1))
             {
                 return false;
             }
 
+            // Make sure all the words exist and are valid.
             var wordsToRestore = await _wordRepo.GetWords(projectId, wordIds);
-            // Make sure all the words are valid
             if (wordsToRestore.Count != wordIds.Count)
             {
                 return false;
