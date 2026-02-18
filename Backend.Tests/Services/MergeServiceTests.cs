@@ -35,6 +35,12 @@ namespace Backend.Tests.Services
             _mergeService = new MergeService(_cache, _mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            _cache?.Dispose();
+        }
+
         [Test]
         public void MergeWordsOneChildTest()
         {

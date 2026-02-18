@@ -17,11 +17,11 @@ namespace Backend.Tests.Otel
 
             // Act
             var activity = OtelService.StartActivityWithTag("test key", "test val");
-            var tag = activity?.GetTagItem("test key");
-            var wrongTag = activity?.GetTagItem("wrong key");
+            Assert.That(activity, Is.Not.Null);
+            var tag = activity.GetTagItem("test key");
+            var wrongTag = activity.GetTagItem("wrong key");
 
             // Assert
-            Assert.That(activity, Is.Not.Null);
             Assert.That(tag, Is.Not.Null);
             Assert.That(wrongTag, Is.Null);
         }
