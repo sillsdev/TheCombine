@@ -34,6 +34,7 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
+
             var sessionId = Request.Cookies[LexboxSessionCookieName];
             var user = _lexboxAuthService.GetLoggedInUser(sessionId);
             return user is null ? Ok(AuthStatus.LoggedOut()) : Ok(AuthStatus.LoggedInLexboxUser(user));
@@ -58,10 +59,12 @@ namespace BackendFramework.Controllers
                 Response.Cookies.Append(LexboxSessionCookieName, sessionId, new CookieOptions
                 {
                     HttpOnly = true,
-                    SameSite = SameSiteMode.Lax,
-                    Secure = Request.IsHttps,
                     IsEssential = true,
                     Path = "/",
+                    SameSite = SameSiteMode.Lax,
+                    Secure = Request.IsHttps,
+                    // Todo: Add MaxAge or Expires to use this cookie across settings.
+                    // As of now, the cookie is generated but not actually used.
                 });
                 var normalizedReturnUrl = NormalizeReturnUrl(_configuration[PostLoginRedirectConfigKey])
                     ?? NormalizeReturnUrl(Domain.FrontendDomain);
@@ -107,8 +110,12 @@ namespace BackendFramework.Controllers
 
         private static string? NormalizeReturnUrl(string? url)
         {
-            if (string.IsNullOrWhiteSpace(url)) return null;
-            if (!Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var uri)) return null;
+            url = url?.Trim();
+            if (string.IsNullOrEmpty(url) || !Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var uri))
+            {
+                return null;
+            }
+
             return uri.IsAbsoluteUri ? uri.PathAndQuery : uri.ToString();
         }
     }

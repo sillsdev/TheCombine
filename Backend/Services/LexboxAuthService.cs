@@ -65,8 +65,11 @@ namespace BackendFramework.Services
 
         public LexboxAuthUser? GetLoggedInUser(string? sessionId)
         {
-            if (string.IsNullOrWhiteSpace(sessionId)) return null;
-            if (!_sessionStore.TryGetValue(sessionId, out var session)) return null;
+            if (string.IsNullOrWhiteSpace(sessionId) || !_sessionStore.TryGetValue(sessionId, out var session))
+            {
+                return null;
+            }
+
             if (session.ExpiresAt <= DateTimeOffset.UtcNow)
             {
                 _sessionStore.TryRemove(sessionId, out _);
@@ -79,23 +82,29 @@ namespace BackendFramework.Services
         public async Task<LexboxAuthResult?> CompleteLoginAsync(HttpRequest request, string code, string state)
         {
             CleanupExpiredStates();
-            if (!_stateStore.TryRemove(state, out var pending)) return null;
+            if (!_stateStore.TryRemove(state, out var pending))
+            {
+                return null;
+            }
 
             var settings = GetSettings();
             var redirectUri = BuildRedirectUri(request);
             var httpClient = _httpClientFactory.CreateClient();
             var openIdConfig = await GetOpenIdConfigurationAsync(httpClient, settings.BaseUrl);
-            var tokenResponse = await ExchangeCodeForTokenAsync(httpClient,
-                openIdConfig.TokenEndpoint,
-                settings.ClientId,
-                code,
-                redirectUri,
-                pending.CodeVerifier);
-            if (tokenResponse is null) return new LexboxAuthResult { User = null, ReturnUrl = null };
+            var tokenResponse = await ExchangeCodeForTokenAsync(
+                httpClient, openIdConfig.TokenEndpoint, settings.ClientId, code, redirectUri, pending.CodeVerifier);
+            if (tokenResponse is null)
+            {
+                return new LexboxAuthResult { User = null, ReturnUrl = null };
+            }
 
             var user = GetUserFromIdToken(tokenResponse.IdToken)
-                ?? await GetUserFromUserInfoAsync(httpClient, openIdConfig.UserInfoEndpoint, tokenResponse.AccessToken);
-            if (user is null) return new LexboxAuthResult { User = null, ReturnUrl = null };
+                ?? await GetUserFromUserInfoAsync(
+                    httpClient, openIdConfig.UserInfoEndpoint, tokenResponse.AccessToken);
+            if (user is null)
+            {
+                return new LexboxAuthResult { User = null, ReturnUrl = null };
+            }
 
             var expiresInSeconds = tokenResponse.ExpiresIn ?? (int)DefaultTokenLifetime.TotalSeconds;
             var expiresAt = DateTimeOffset.UtcNow.AddSeconds(expiresInSeconds);
@@ -112,7 +121,7 @@ namespace BackendFramework.Services
         private LexboxAuthSettings GetSettings()
         {
             var baseUrl = _configuration["LexboxAuth:BaseUrl"] ?? "https://lexbox.org";
-            var clientId = _configuration["LexboxAuth:ClientId"] ?? string.Empty;
+            var clientId = _configuration["LexboxAuth:ClientId"];
             if (string.IsNullOrWhiteSpace(clientId))
             {
                 throw new InvalidOperationException("LexboxAuth:ClientId must be configured.");
@@ -123,8 +132,7 @@ namespace BackendFramework.Services
                 BaseUrl = baseUrl,
                 ClientId = clientId,
                 Prompt = _configuration["LexboxAuth:Prompt"] ?? "select_account",
-                Scope = _configuration["LexboxAuth:Scope"]
-                    ?? "profile openid offline_access sendandreceive",
+                Scope = _configuration["LexboxAuth:Scope"] ?? "profile openid offline_access sendandreceive",
             };
         }
 
@@ -164,12 +172,11 @@ namespace BackendFramework.Services
         private static string Base64UrlEncode(ReadOnlySpan<byte> data)
         {
             var base64 = Convert.ToBase64String(data);
-            return base64.TrimEnd('=')
-                .Replace('+', '-')
-                .Replace('/', '_');
+            return base64.TrimEnd('=').Replace('+', '-').Replace('/', '_');
         }
 
-        private sealed record LexboxAuthState(string CodeVerifier, DateTimeOffset CreatedAt, string SessionId, string? ReturnUrl);
+        private sealed record LexboxAuthState(
+            string CodeVerifier, DateTimeOffset CreatedAt, string SessionId, string? ReturnUrl);
 
         private sealed record LexboxAuthSession(LexboxAuthUser User, DateTimeOffset ExpiresAt, string? AccessToken);
 
@@ -212,8 +219,8 @@ namespace BackendFramework.Services
                 var payload = await response.Content.ReadAsStringAsync();
                 using var document = JsonDocument.Parse(payload);
                 var root = document.RootElement;
-                var tokenEndpoint = root.GetProperty("token_endpoint").GetString() ??
-                                    throw new InvalidOperationException("Token endpoint missing from discovery document.");
+                var tokenEndpoint = root.GetProperty("token_endpoint").GetString()
+                    ?? throw new InvalidOperationException("Token endpoint missing from discovery document.");
                 var userInfoEndpoint = root.TryGetProperty("userinfo_endpoint", out var userInfoProperty)
                     ? userInfoProperty.GetString()
                     : null;
@@ -228,26 +235,26 @@ namespace BackendFramework.Services
         }
 
         private static async Task<TokenResponse?> ExchangeCodeForTokenAsync(HttpClient httpClient,
-            string tokenEndpoint,
-            string clientId,
-            string code,
-            string redirectUri,
-            string codeVerifier)
+            string tokenEndpoint, string clientId, string code, string redirectUri, string codeVerifier)
         {
             using var request = new HttpRequestMessage(HttpMethod.Post, tokenEndpoint)
             {
                 Content = new FormUrlEncodedContent(new Dictionary<string, string>
                 {
-                    ["grant_type"] = "authorization_code",
                     ["client_id"] = clientId,
                     ["code"] = code,
-                    ["redirect_uri"] = redirectUri,
                     ["code_verifier"] = codeVerifier,
+                    ["grant_type"] = "authorization_code",
+                    ["redirect_uri"] = redirectUri,
                 })
             };
 
             using var response = await httpClient.SendAsync(request);
-            if (!response.IsSuccessStatusCode) return null;
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
             var payload = await response.Content.ReadAsStringAsync();
             using var document = JsonDocument.Parse(payload);
             var root = document.RootElement;
@@ -257,27 +264,34 @@ namespace BackendFramework.Services
             var idToken = root.TryGetProperty("id_token", out var idTokenProperty)
                 ? idTokenProperty.GetString()
                 : null;
-            var expiresIn = root.TryGetProperty("expires_in", out var expiresProperty)
+            int? expiresIn = root.TryGetProperty("expires_in", out var expiresProperty)
                 ? expiresProperty.GetInt32()
-                : (int?)null;
+                : null;
             return new TokenResponse(accessToken, idToken, expiresIn);
         }
 
         private static LexboxAuthUser? GetUserFromIdToken(string? idToken)
         {
-            if (string.IsNullOrWhiteSpace(idToken)) return null;
+            if (string.IsNullOrWhiteSpace(idToken))
+            {
+                return null;
+            }
+
             try
             {
                 var handler = new JwtSecurityTokenHandler();
                 var token = handler.ReadJwtToken(idToken);
-                var userId = GetClaimValue(token, "sub");
+                var userId = GetClaimValue(token, "sub")?.Trim();
                 var displayName = GetClaimValue(token, "preferred_username")
                     ?? GetClaimValue(token, "email")
                     ?? GetClaimValue(token, "name")
                     ?? GetClaimValue(token, "upn")
                     ?? userId;
-                if (string.IsNullOrWhiteSpace(displayName) && string.IsNullOrWhiteSpace(userId)) return null;
-                return new LexboxAuthUser { UserId = userId, DisplayName = displayName };
+                displayName = displayName?.Trim();
+
+                return string.IsNullOrEmpty(displayName) && string.IsNullOrEmpty(userId)
+                    ? null
+                    : new LexboxAuthUser { UserId = userId, DisplayName = displayName };
             }
             catch (Exception)
             {
@@ -287,30 +301,41 @@ namespace BackendFramework.Services
 
         private static string? GetClaimValue(JwtSecurityToken token, string claimType)
         {
-            return token.Claims.FirstOrDefault(claim => string.Equals(claim.Type, claimType, StringComparison.OrdinalIgnoreCase))?.Value;
+            return token.Claims.FirstOrDefault(
+                claim => string.Equals(claim.Type, claimType, StringComparison.OrdinalIgnoreCase))?.Value;
         }
 
-        private static async Task<LexboxAuthUser?> GetUserFromUserInfoAsync(HttpClient httpClient,
-            string? userInfoEndpoint,
-            string? accessToken)
+        private static async Task<LexboxAuthUser?> GetUserFromUserInfoAsync(
+            HttpClient httpClient, string? userInfoEndpoint, string? accessToken)
         {
-            if (string.IsNullOrWhiteSpace(userInfoEndpoint) || string.IsNullOrWhiteSpace(accessToken)) return null;
+            if (string.IsNullOrWhiteSpace(userInfoEndpoint) || string.IsNullOrWhiteSpace(accessToken))
+            {
+                return null;
+            }
+
             using var request = new HttpRequestMessage(HttpMethod.Get, userInfoEndpoint);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             using var response = await httpClient.SendAsync(request);
-            if (!response.IsSuccessStatusCode) return null;
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
             var payload = await response.Content.ReadAsStringAsync();
             using var document = JsonDocument.Parse(payload);
             var root = document.RootElement;
-            var userId = root.TryGetProperty("sub", out var subProperty) ? subProperty.GetString() : null;
+            var userId = root.TryGetProperty("sub", out var subProperty) ? subProperty.GetString()?.Trim() : null;
             var displayName = root.TryGetProperty("preferred_username", out var preferredProperty)
                 ? preferredProperty.GetString()
                 : null;
             displayName ??= root.TryGetProperty("email", out var emailProperty) ? emailProperty.GetString() : null;
             displayName ??= root.TryGetProperty("name", out var nameProperty) ? nameProperty.GetString() : null;
             displayName ??= userId;
-            if (string.IsNullOrWhiteSpace(displayName) && string.IsNullOrWhiteSpace(userId)) return null;
-            return new LexboxAuthUser { UserId = userId, DisplayName = displayName };
+            displayName = displayName?.Trim();
+
+            return (string.IsNullOrEmpty(displayName) && string.IsNullOrEmpty(userId))
+                ? null
+                : new LexboxAuthUser { UserId = userId, DisplayName = displayName };
         }
     }
 }
