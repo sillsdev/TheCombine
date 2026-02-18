@@ -96,16 +96,16 @@ namespace Backend.Tests.Services
 
             Assert.That(deletedId, Is.Not.Null);
             Assert.That(deletedId, Is.Not.EqualTo(oldId));
-            var deletedWord = _wordRepo.GetWord(ProjId, deletedId!).Result;
+            var deletedWord = _wordRepo.GetWord(ProjId, deletedId).Result;
             Assert.That(deletedWord, Is.Not.Null);
-            Assert.That(deletedWord!.Accessibility, Is.EqualTo(Status.Deleted));
-            Assert.That(deletedWord!.History.Last(), Is.EqualTo(oldId));
-            Assert.That(deletedWord!.EditedBy.Last(), Is.EqualTo(UserId));
+            Assert.That(deletedWord.Accessibility, Is.EqualTo(Status.Deleted));
+            Assert.That(deletedWord.History.Last(), Is.EqualTo(oldId));
+            Assert.That(deletedWord.EditedBy.Last(), Is.EqualTo(UserId));
 
             var allWordIds = _wordRepo.GetAllWords(ProjId).Result.Select(w => w.Id).ToList();
             Assert.That(allWordIds, Has.Count.EqualTo(2));
             Assert.That(allWordIds, Does.Contain(oldId));
-            Assert.That(allWordIds, Does.Contain(deletedId!));
+            Assert.That(allWordIds, Does.Contain(deletedId));
 
             Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Is.Empty);
         }
