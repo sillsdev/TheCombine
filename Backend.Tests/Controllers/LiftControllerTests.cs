@@ -188,7 +188,8 @@ namespace Backend.Tests.Controllers
 
         private static async Task<string> DownloadAndReadLift(LiftController liftController, string projId)
         {
-            var liftFile = (FileStreamResult)await liftController.DownloadLiftFile(projId, UserId);
+            var liftFile = await liftController.DownloadLiftFile(projId, UserId) as FileStreamResult;
+            Assert.That(liftFile, Is.Not.Null);
 
             // Read contents.
             byte[] contents;
@@ -227,18 +228,19 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUploadLiftFileAlreadyImported()
         {
-            var projId = _projRepo.Create(new Project { Name = "already has import", LiftImported = true }).Result!.Id;
-            var result = _liftController.UploadLiftFile(projId, _file).Result;
-            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-            Assert.That(((BadRequestObjectResult)result).Value, Contains.Substring("LIFT"));
+            var proj = _projRepo.Create(new Project { Name = "already has import", LiftImported = true }).Result;
+            Assert.That(proj, Is.Not.Null);
+            var result = _liftController.UploadLiftFile(proj.Id, _file).Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Contains.Substring("LIFT"));
         }
 
         [Test]
         public void TestUploadLiftFileBadFile()
         {
-            var result = _liftController.UploadLiftFile(_projId, null).Result;
-            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-            Assert.That(((BadRequestObjectResult)result).Value, Is.InstanceOf<string>());
+            var result = _liftController.UploadLiftFile(_projId, null).Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.InstanceOf<string>());
         }
 
         [Test]
@@ -254,9 +256,11 @@ namespace Backend.Tests.Controllers
             using (var fileStream = File.OpenRead(pathToZip))
             {
                 var fileUpload = InitFile(fileStream, fileName);
-                var result = _liftController.UploadLiftFileAndGetWritingSystems(fileUpload, UserId).Result;
-                Assert.That(result, Is.TypeOf<OkObjectResult>());
-                var writingSystems = (result as OkObjectResult)!.Value as List<WritingSystem>;
+                var result = _liftController.UploadLiftFileAndGetWritingSystems(fileUpload, UserId).Result
+                    as OkObjectResult;
+                Assert.That(result, Is.Not.Null);
+                var writingSystems = result.Value as List<WritingSystem>;
+                Assert.That(writingSystems, Is.Not.Null);
                 Assert.That(writingSystems, Has.Count.Not.Zero);
             }
 
@@ -284,21 +288,22 @@ namespace Backend.Tests.Controllers
         {
             var proj = Util.RandomProject();
             proj = _projRepo.Create(proj).Result;
+            Assert.That(proj, Is.Not.Null);
 
             // No extracted import dir stored for user.
             Assert.That(_liftService.RetrieveImport(UserId), Is.Null);
-            var result = _liftController.FinishUploadLiftFile(proj!.Id, UserId).Result;
-            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            var result = _liftController.FinishUploadLiftFile(proj.Id, UserId).Result;
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
 
             // Empty extracted import dir stored for user.
             _liftService.StoreImport(UserId, "  ");
-            result = _liftController.FinishUploadLiftFile(proj!.Id, UserId).Result;
-            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            result = _liftController.FinishUploadLiftFile(proj.Id, UserId).Result;
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
 
             // Nonsense extracted import dir stored for user.
             _liftService.StoreImport(UserId, "not-a-real-path");
-            result = _liftController.FinishUploadLiftFile(proj!.Id, UserId).Result;
-            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            result = _liftController.FinishUploadLiftFile(proj.Id, UserId).Result;
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
             Assert.That(_liftService.RetrieveImport(UserId), Is.Null);
         }
 
@@ -371,7 +376,7 @@ namespace Backend.Tests.Controllers
                     _liftService.SetExportInProgress(UserId, ExportId);
                     await _liftController.CreateLiftExportThenSignal(invalidProjectId, UserId, ExportId);
                 },
-                Throws.TypeOf<MissingProjectException>());
+                Throws.InstanceOf<MissingProjectException>());
         }
 
         [Test]
@@ -433,7 +438,7 @@ namespace Backend.Tests.Controllers
             // Delete the export
             _liftController.DeleteLiftFile(UserId);
             var notFoundResult = await _liftController.DownloadLiftFile(_projId, UserId);
-            Assert.That(notFoundResult, Is.TypeOf<NotFoundObjectResult>());
+            Assert.That(notFoundResult, Is.InstanceOf<NotFoundObjectResult>());
         }
 
         [Test]
@@ -488,30 +493,30 @@ namespace Backend.Tests.Controllers
             }
 
             // Delete everything
-            mockFiles.ForEach(path => File.Delete(path));
+            mockFiles.ForEach(File.Delete);
             File.Delete(exportedFilePath);
             Directory.Delete(exportedDirectory, true);
         }
 
         private static RoundTripObj[] _roundTripCases =
         {
-            new("Gusillaay.zip", "gsl-Qaaa-x-orth", new List<string>(), 8045),
-            new("GusillaayNoTopLevelFolder.zip", "gsl-Qaaa-x-orth", new List<string>(), 8045),
-            new("Lotud.zip", "dtr", new List<string>(), 5400, "", "", true, true),
-            new("Natqgu.zip", "qaa-x-stc-natqgu", new List<string>(), 11570, "", "", true, true),
-            new("Resembli.zip", "ags", new List<string>(), 255, "", "", true, true),
-            new("RWC.zip", "es", new List<string>(), 132, "", "", true),
-            new("Sena.zip", "seh", new List<string>(), 1462, "", "", true, true),
+            new("Gusillaay.zip", "gsl-Qaaa-x-orth", [], 8045),
+            new("GusillaayNoTopLevelFolder.zip", "gsl-Qaaa-x-orth", [], 8045),
+            new("Lotud.zip", "dtr", [], 5400, "", "", true, true),
+            new("Natqgu.zip", "qaa-x-stc-natqgu", [], 11570, "", "", true, true),
+            new("Resembli.zip", "ags", [], 255, "", "", true, true),
+            new("RWC.zip", "es", [], 132, "", "", true),
+            new("Sena.zip", "seh", [], 1462, "", "", true, true),
             new(
-                "SingleEntryLiftWithSound.zip", "ptn", new List<string> { "short.mp3" }, 1,
+                "SingleEntryLiftWithSound.zip", "ptn",  ["short.mp3" ], 1,
                 "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
                 "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/, true),
             new(
-                "SingleEntryLiftWithTwoSound.zip", "ptn", new List<string> { "short.mp3", "short1.mp3" }, 1,
+                "SingleEntryLiftWithTwoSound.zip", "ptn", ["short.mp3", "short1.mp3"], 1,
                 "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
                 "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/, true),
             new(
-                "SingleEntryLiftWithWebmSound.zip", "ptn", new List<string> { "short.webm" }, 1,
+                "SingleEntryLiftWithWebmSound.zip", "ptn", ["short.webm"], 1,
                 "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
                 "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/, true)
         };
@@ -529,6 +534,7 @@ namespace Backend.Tests.Controllers
             var proj1 = Util.RandomProject();
             proj1.VernacularWritingSystem.Bcp47 = roundTripObj.Language;
             proj1 = _projRepo.Create(proj1).Result;
+            Assert.That(proj1, Is.Not.Null);
 
             // Upload the zip file.
             // Generate api parameter with file stream.
@@ -537,13 +543,13 @@ namespace Backend.Tests.Controllers
                 var fileUpload = InitFile(fileStream, roundTripObj.Filename);
 
                 // Make api call.
-                var result = _liftController.UploadLiftFile(proj1!.Id, fileUpload).Result;
-                Assert.That(result, Is.TypeOf<OkObjectResult>());
+                var result = _liftController.UploadLiftFile(proj1.Id, fileUpload).Result;
+                Assert.That(result, Is.InstanceOf<OkObjectResult>());
             }
 
             proj1 = _projRepo.GetProject(proj1.Id).Result;
             Assert.That(proj1, Is.Not.Null);
-            Assert.That(proj1!.LiftImported, Is.True);
+            Assert.That(proj1.LiftImported, Is.True);
             Assert.That(proj1.DefinitionsEnabled, Is.EqualTo(roundTripObj.HasDefs));
             Assert.That(proj1.GrammaticalInfoEnabled, Is.EqualTo(roundTripObj.HasGramInfo));
 
@@ -556,7 +562,7 @@ namespace Backend.Tests.Controllers
                 var word = allWords[0].Clone();
                 Assert.That(roundTripObj.EntryGuid, Is.Not.EqualTo(""));
                 Assert.That(word.Guid.ToString(), Is.EqualTo(roundTripObj.EntryGuid));
-                if (roundTripObj.SenseGuid != "")
+                if (!string.IsNullOrEmpty(roundTripObj.SenseGuid))
                 {
                     Assert.That(word.Senses[0].Guid.ToString(), Is.EqualTo(roundTripObj.SenseGuid));
                 }
@@ -596,6 +602,7 @@ namespace Backend.Tests.Controllers
             var proj2 = Util.RandomProject();
             proj2.VernacularWritingSystem.Bcp47 = roundTripObj.Language;
             proj2 = _projRepo.Create(proj2).Result;
+            Assert.That(proj2, Is.Not.Null);
 
             // Upload the exported words again.
             // Generate api parameter with file stream.
@@ -604,8 +611,8 @@ namespace Backend.Tests.Controllers
                 var fileUpload = InitFile(fileStream, roundTripObj.Filename);
 
                 // Make api call.
-                var result2 = _liftController.UploadLiftFile(proj2!.Id, fileUpload).Result;
-                Assert.That(result2, Is.TypeOf<OkObjectResult>());
+                var result2 = _liftController.UploadLiftFile(proj2.Id, fileUpload).Result;
+                Assert.That(result2, Is.InstanceOf<OkObjectResult>());
             }
 
             proj2 = _projRepo.GetProject(proj2.Id).Result;
@@ -615,18 +622,18 @@ namespace Backend.Tests.Controllers
             File.Delete(exportedFilePath);
 
             // Ensure that the definitions and grammatical info weren't all lost.
-            Assert.That(proj2!.DefinitionsEnabled, Is.EqualTo(roundTripObj.HasDefs));
+            Assert.That(proj2.DefinitionsEnabled, Is.EqualTo(roundTripObj.HasDefs));
             Assert.That(proj2.GrammaticalInfoEnabled, Is.EqualTo(roundTripObj.HasGramInfo));
 
             allWords = _wordRepo.GetAllWords(proj2.Id).Result;
             Assert.That(allWords, Has.Count.EqualTo(roundTripObj.NumOfWords));
 
             // We are currently only testing guids on the single-entry data sets.
-            if (roundTripObj.EntryGuid != "" && allWords.Count == 1)
+            if (!string.IsNullOrEmpty(roundTripObj.EntryGuid) && allWords.Count == 1)
             {
                 var word = allWords[0];
                 Assert.That(word.Guid.ToString(), Is.EqualTo(roundTripObj.EntryGuid));
-                if (roundTripObj.SenseGuid != "")
+                if (!string.IsNullOrEmpty(roundTripObj.SenseGuid))
                 {
                     Assert.That(word.Senses[0].Guid.ToString(), Is.EqualTo(roundTripObj.SenseGuid));
                 }
