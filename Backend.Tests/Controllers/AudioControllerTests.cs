@@ -195,7 +195,7 @@ namespace Backend.Tests.Controllers
             var frontier = _wordRepo.GetAllFrontier(_projId).Result;
             Assert.That(frontier, Has.Count.EqualTo(1));
             Assert.That(frontier[0].Id, Is.EqualTo(newId));
-            Assert.That(frontier[0].Audio, Has.Count.EqualTo(0));
+            Assert.That(frontier[0].Audio, Is.Empty);
         }
     }
 }
