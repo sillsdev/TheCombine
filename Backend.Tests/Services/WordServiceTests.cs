@@ -146,7 +146,9 @@ namespace Backend.Tests.Services
         public void TestRestoreFrontierWordsMissingWordFalse()
         {
             var word = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
-            Assert.That(_wordService.RestoreFrontierWords(ProjId, ["NotAnId", word.Id]).Result, Is.False);
+
+            var restored = _wordService.RestoreFrontierWords(ProjId, ["NotAnId", word.Id]).Result;
+            Assert.That(restored, Is.False);
         }
 
         [Test]
@@ -155,8 +157,9 @@ namespace Backend.Tests.Services
             var wordNoFrontier = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
             var wordYesFrontier = _wordRepo.Create(new Word { ProjectId = ProjId }).Result;
             Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(1));
-            Assert.That(
-                _wordService.RestoreFrontierWords(ProjId, [wordNoFrontier.Id, wordYesFrontier.Id]).Result, Is.False);
+
+            var restored = _wordService.RestoreFrontierWords(ProjId, [wordNoFrontier.Id, wordYesFrontier.Id]).Result;
+            Assert.That(restored, Is.False);
         }
 
         [Test]
@@ -165,7 +168,9 @@ namespace Backend.Tests.Services
             var word1 = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
             var word2 = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
             Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Is.Empty);
-            Assert.That(_wordService.RestoreFrontierWords(ProjId, [word1.Id, word2.Id]).Result, Is.True);
+
+            var restored = _wordService.RestoreFrontierWords(ProjId, [word1.Id, word2.Id]).Result;
+            Assert.That(restored, Is.True);
             Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(2));
         }
 
