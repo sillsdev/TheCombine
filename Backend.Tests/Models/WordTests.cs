@@ -80,11 +80,11 @@ namespace Backend.Tests.Models
             // Confirm content is appended.
             var updatedSense = oldWord.Senses.Find(s => s.Guid == newSense.Guid);
             Assert.That(updatedSense, Is.Not.Null);
-            var updatedDom = updatedSense!.SemanticDomains.Find(dom => dom.Id == newSemDom.Id);
+            var updatedDom = updatedSense.SemanticDomains.Find(dom => dom.Id == newSemDom.Id);
             Assert.That(updatedDom, Is.Not.Null);
             Assert.That(oldWord.Flag, Is.EqualTo(newFlag).UsingPropertiesComparer());
             Assert.That(oldWord.Note, Is.EqualTo(newNote).UsingPropertiesComparer());
-            Assert.That(oldWord.Audio.Any(p => p.FileName.Equals(Text, System.StringComparison.Ordinal)), Is.True);
+            Assert.That(oldWord.Audio.Any(p => p.FileName.Equals(Text, StringComparison.Ordinal)), Is.True);
             Assert.That(oldWord.EditedBy.Contains(Text), Is.True);
             Assert.That(oldWord.History.Contains(Text), Is.True);
         }

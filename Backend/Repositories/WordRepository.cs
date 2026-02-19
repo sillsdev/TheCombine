@@ -88,8 +88,9 @@ namespace BackendFramework.Repositories
             return await _words.Find(GetProjectWordsFilter(projectId, wordIds)).ToListAsync();
         }
 
-        /// <summary> Removes all <see cref="Word"/>s from the WordsCollection and Frontier for specified
-        /// <see cref="Project"/> </summary>
+        /// <summary>
+        /// Removes all <see cref="Word"/>s from the WordsCollection and Frontier for specified <see cref="Project"/>
+        /// </summary>
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllWords(string projectId)
         {

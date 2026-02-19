@@ -94,21 +94,31 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Restores words to the Frontier that aren't in the Frontier </summary>
-        /// <returns> A bool: true if all successfully restored </returns>
+        /// <remarks>
+        /// Aborts if any word can't be restored for any of the following reasons:
+        /// doesn't exist; has Status.Deleted; or is already in the Frontier
+        /// </remarks>
+        /// <returns> A bool: true if all successfully restored; false if none restored. </returns>
         public async Task<bool> RestoreFrontierWords(string projectId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring words to Frontier");
 
+            // Allow calls that don't specify any wordIds, but don't do any work.
+            if (wordIds.Count == 0)
+            {
+                return true;
+            }
+
             wordIds = wordIds.Distinct().ToList();
 
-            // Make sure all the words exist but not in the Frontier.
+            // Make sure none of the words are in the Frontier.
             if (await _wordRepo.AreInFrontier(projectId, wordIds, 1))
             {
                 return false;
             }
 
+            // Make sure all the words exist and are valid.
             var wordsToRestore = await _wordRepo.GetWords(projectId, wordIds);
-            // Make sure all the words are valid
             if (wordsToRestore.Count != wordIds.Count)
             {
                 return false;
