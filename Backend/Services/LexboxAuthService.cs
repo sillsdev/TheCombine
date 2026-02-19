@@ -42,24 +42,22 @@ namespace BackendFramework.Services
             CleanupExpiredStates();
             _stateStore[state] = new LexboxAuthState(codeVerifier, DateTimeOffset.UtcNow, sessionId, returnUrl);
 
-            var redirectUri = BuildRedirectUri(request);
             var query = new Dictionary<string, string?>
             {
                 ["code_challenge"] = codeChallenge,
                 ["code_challenge_method"] = "S256",
                 ["client_id"] = settings.ClientId,
-                ["client-request-id"] = Guid.NewGuid().ToString(),
                 ["prompt"] = settings.Prompt,
-                ["redirect_uri"] = redirectUri,
+                ["redirect_uri"] = BuildRedirectUri(request),
                 ["response_type"] = "code",
                 ["scope"] = settings.Scope,
                 ["state"] = state,
             };
 
             var loginReturnUrl = QueryHelpers.AddQueryString("/api/oauth/open-id-auth", query);
-            Console.WriteLine($"Return URL: {loginReturnUrl}");
-            var loginUrl = $"{settings.BaseUrl.TrimEnd('/')}/login?ReturnUrl={Uri.EscapeDataString(loginReturnUrl)}";
-
+            Console.WriteLine($"Return URL: {loginReturnUrl}"); // TODO: Remove or replace with proper logging
+            var loginUrl = QueryHelpers.AddQueryString(settings.LoginBaseUrl, "ReturnUrl", loginReturnUrl);
+            Console.WriteLine($"Login URL: {loginUrl}"); // TODO: Remove or replace with proper logging
             return new LexboxLoginUrl { Url = loginUrl };
         }
 
@@ -90,7 +88,7 @@ namespace BackendFramework.Services
             var settings = GetSettings();
             var redirectUri = BuildRedirectUri(request);
             var httpClient = _httpClientFactory.CreateClient();
-            var openIdConfig = await GetOpenIdConfigurationAsync(httpClient, settings.BaseUrl);
+            var openIdConfig = await GetOpenIdConfigurationAsync(httpClient, settings.OpenIdConfigUrl);
             var tokenResponse = await ExchangeCodeForTokenAsync(
                 httpClient, openIdConfig.TokenEndpoint, settings.ClientId, code, redirectUri, pending.CodeVerifier);
             if (tokenResponse is null)
@@ -115,24 +113,25 @@ namespace BackendFramework.Services
         private static string BuildRedirectUri(HttpRequest request)
         {
             var pathBase = request.PathBase.HasValue ? request.PathBase.Value : string.Empty;
-            return $"{request.Scheme}://{request.Host}{pathBase}/v1/auth/oauth-callback";
+            var uriBase = $"{request.Scheme}://{request.Host}{pathBase}".TrimEnd('/');
+            var callBackRoute = "/api/oauth/open-id-auth"; // matches route in AuthController
+            return $"{uriBase}{callBackRoute}";
         }
 
         private LexboxAuthSettings GetSettings()
         {
-            var baseUrl = _configuration["LexboxAuth:BaseUrl"] ?? "https://lexbox.org";
-            var clientId = _configuration["LexboxAuth:ClientId"];
-            if (string.IsNullOrWhiteSpace(clientId))
-            {
-                throw new InvalidOperationException("LexboxAuth:ClientId must be configured.");
-            }
-
             return new LexboxAuthSettings
             {
-                BaseUrl = baseUrl,
-                ClientId = clientId,
-                Prompt = _configuration["LexboxAuth:Prompt"] ?? "select_account",
-                Scope = _configuration["LexboxAuth:Scope"] ?? "profile openid offline_access sendandreceive",
+                ClientId = _configuration["LexboxAuth:ClientId"]
+                    ?? throw new InvalidOperationException("LexboxAuth:ClientId must be configured."),
+                LoginBaseUrl = _configuration["LexboxAuth:LoginBaseUrl"]
+                    ?? "https://lexbox.org/login",
+                OpenIdConfigUrl = _configuration["LexboxAuth:OpenIdConfigUrl"]
+                    ?? "https://lexbox.org/.well-known/openid-configuration",
+                Prompt = _configuration["LexboxAuth:Prompt"]
+                    ?? "select_account",
+                Scope = _configuration["LexboxAuth:Scope"]
+                    ?? "profile openid offline_access sendandreceive",
             };
         }
 
@@ -186,8 +185,9 @@ namespace BackendFramework.Services
 
         private sealed class LexboxAuthSettings
         {
-            public string BaseUrl { get; set; } = "";
             public string ClientId { get; set; } = "";
+            public string LoginBaseUrl { get; set; } = "";
+            public string OpenIdConfigUrl { get; set; } = "";
             public string Prompt { get; set; } = "";
             public string Scope { get; set; } = "";
         }
@@ -198,7 +198,7 @@ namespace BackendFramework.Services
             GC.SuppressFinalize(this);
         }
 
-        private async Task<OpenIdConfiguration> GetOpenIdConfigurationAsync(HttpClient httpClient, string baseUrl)
+        private async Task<OpenIdConfiguration> GetOpenIdConfigurationAsync(HttpClient httpClient, string openIdConfigUrl)
         {
             if (_openIdConfiguration is not null && _openIdConfigExpiresAt > DateTimeOffset.UtcNow)
             {
@@ -213,8 +213,7 @@ namespace BackendFramework.Services
                     return _openIdConfiguration;
                 }
 
-                var configUrl = $"{baseUrl.TrimEnd('/')}/.well-known/openid-configuration";
-                using var response = await httpClient.GetAsync(configUrl);
+                using var response = await httpClient.GetAsync(openIdConfigUrl);
                 response.EnsureSuccessStatusCode();
                 var payload = await response.Content.ReadAsStringAsync();
                 using var document = JsonDocument.Parse(payload);
