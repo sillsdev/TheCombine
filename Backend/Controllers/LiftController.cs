@@ -290,16 +290,17 @@ namespace BackendFramework.Controllers
                 return BadRequest("Error processing the LIFT data. Contact support for help.");
             }
 
-            // Don't update project if no words were imported in the project's vernacular language.
-            if (countWordsImported == 0)
-            {
-                return Ok(0);
-            }
-
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
                 return NotFound($"projectId: {projectId}");
+            }
+
+            // Don't update existing project if no words were imported in the project's vernacular language.
+            var isNewProject = project.AnalysisWritingSystems.All(ws => string.IsNullOrEmpty(ws.Bcp47));
+            if (!isNewProject && countWordsImported == 0)
+            {
+                return Ok(0);
             }
 
             // Add analysis writing systems found in the data, avoiding duplicate and empty bcp47 codes.
