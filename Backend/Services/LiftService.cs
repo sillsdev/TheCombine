@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Security;
 using System.Threading.Tasks;
 using System.Xml;
 using BackendFramework.Helper;
@@ -661,13 +660,16 @@ namespace BackendFramework.Services
         }
 
         /// <summary>
-        /// Fix the string to be safe in an attribute value of XML.
+        /// Fix the string to be safe as part of an XML attribute value used as an id.
+        /// Replaces characters that are invalid or would be XML-escaped with underscores,
+        /// to avoid double-encoding when written by an XmlWriter.
         /// </summary>
         /// <param name="sInput"></param>
         /// <returns></returns>
         public static string MakeSafeXmlAttribute(string sInput)
         {
-            return SecurityElement.Escape(sInput);
+            return string.Concat(sInput.Select(c =>
+                (char.IsLetterOrDigit(c) || c == '-' || c == '.' || c == '_') ? c : '_'));
         }
 
         public ILiftMerger GetLiftImporterExporter(string projectId, string vernLang, IWordRepository wordRepo)

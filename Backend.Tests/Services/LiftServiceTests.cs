@@ -74,5 +74,24 @@ namespace Backend.Tests.Services
             Assert.That(_liftService.DeleteImport(UserId), Is.True);
             Assert.That(_liftService.RetrieveImport(UserId), Is.Null);
         }
+
+        [Test]
+        public void TestMakeSafeXmlAttributeNoDoubleEncoding()
+        {
+            // Apostrophes and other XML-special characters should not be XML-encoded,
+            // because the XmlWriter will encode the result again, causing double-encoding.
+            // They should be replaced with underscores instead.
+            Assert.That(LiftService.MakeSafeXmlAttribute("word's"), Is.EqualTo("word_s"));
+            Assert.That(LiftService.MakeSafeXmlAttribute("a&b"), Is.EqualTo("a_b"));
+            Assert.That(LiftService.MakeSafeXmlAttribute("a<b>c"), Is.EqualTo("a_b_c"));
+            Assert.That(LiftService.MakeSafeXmlAttribute("a\"b"), Is.EqualTo("a_b"));
+        }
+
+        [Test]
+        public void TestMakeSafeXmlAttributePreservesSafeChars()
+        {
+            Assert.That(LiftService.MakeSafeXmlAttribute("word"), Is.EqualTo("word"));
+            Assert.That(LiftService.MakeSafeXmlAttribute("word-1.2_3"), Is.EqualTo("word-1.2_3"));
+        }
     }
 }
