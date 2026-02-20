@@ -321,15 +321,13 @@ namespace BackendFramework.Services
             {
                 var entry = CreateLexEntryWithoutAudio(proj, wordEntry, semDomNames);
                 await AddAudio(entry, wordEntry.Audio, audioDir, projectId, projSpeakers);
-
                 liftWriter.Add(entry);
             }
 
             foreach (var wordEntry in deletedWords)
             {
-                var entry = CreateLexEntryWithoutAudio(proj, wordEntry, semDomNames, isDeleted: true);
+                var entry = new LexEntry(CreateLexEntryId(wordEntry), wordEntry.Guid);
                 await AddAudio(entry, wordEntry.Audio, audioDir, projectId, projSpeakers);
-
                 liftWriter.AddDeletedEntry(entry);
             }
 
@@ -400,40 +398,32 @@ namespace BackendFramework.Services
             return destinationFileName;
         }
 
-        /// <summary>
-        /// Creates a <see cref="LexEntry"/> without audio from a <see cref="Word"/>.
-        /// Populates Id, Guid, CreationTime, and ModificationTime.
-        /// If isDeleted is false (default), also populates Flag, Note, Vernacular, and Senses.
-        /// </summary>
-        /// <remarks> Internal only for testing. </remarks>
+        private static string CreateLexEntryId(Word word) => $"{word.Vernacular}_{word.Guid}";
+
+        /// <summary> Creates a <see cref="LexEntry"/> without audio from a <see cref="Word"/>. </summary>
         /// <returns> A <see cref="LexEntry"/> that still needs audio added. </returns>
         internal static LexEntry CreateLexEntryWithoutAudio(
-            Project project, Word wordEntry, Dictionary<string, string> semDomNames, bool isDeleted = false)
+            Project project, Word wordEntry, Dictionary<string, string> semDomNames)
         {
-            var entry = new LexEntry($"{wordEntry.Vernacular}_{wordEntry.Guid}", wordEntry.Guid);
+            var entry = new LexEntry(CreateLexEntryId(wordEntry), wordEntry.Guid);
 
             if (DateTime.TryParse(wordEntry.Created, out var createdTime))
             {
                 entry.CreationTime = createdTime;
             }
-
             if (DateTime.TryParse(wordEntry.Modified, out var modifiedTime))
             {
                 entry.ModificationTime = modifiedTime;
             }
+            // It is VERY IMPORTANT that the LexEntry's ModificationTime be locked, otherwise anytime the entry
+            // is modified later (e.g. adding Senses) the ModificationTime of the object will be overwritten with
+            // the current time, rather than the modified time stored in the database.
+            entry.ModifiedTimeIsLocked = true;
 
-            if (!isDeleted)
-            {
-                // It is VERY IMPORTANT that the LexEntry's ModificationTime be locked, otherwise anytime the entry
-                // is modified later (e.g. adding Senses) the ModificationTime of the object will be overwritten with
-                // the current time, rather than the modified time stored in the database.
-                entry.ModifiedTimeIsLocked = true;
-
-                AddFlag(entry, wordEntry, project.AnalysisWritingSystems.FirstOrDefault()?.Bcp47 ?? "en");
-                AddNote(entry, wordEntry);
-                AddVern(entry, wordEntry, project.VernacularWritingSystem.Bcp47);
-                AddSenses(entry, wordEntry, semDomNames);
-            }
+            AddFlag(entry, wordEntry, project.AnalysisWritingSystems.FirstOrDefault()?.Bcp47 ?? "en");
+            AddNote(entry, wordEntry);
+            AddVern(entry, wordEntry, project.VernacularWritingSystem.Bcp47);
+            AddSenses(entry, wordEntry, semDomNames);
 
             return entry;
         }

@@ -124,29 +124,6 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestCreateLexEntryWithoutAudioDeleted()
-        {
-            var project = Util.RandomProject();
-            var word = Util.RandomWord(project.Id);
-
-            var entry = LiftService.CreateLexEntryWithoutAudio(project, word, [], isDeleted: true);
-
-            // Deleted entries only need minimal metadata
-            Assert.That(entry.Guid, Is.EqualTo(word.Guid));
-            Assert.That(entry.CreationTime, Is.Not.EqualTo(default(DateTime)));
-            Assert.That(entry.ModificationTime, Is.Not.EqualTo(default(DateTime)));
-            Assert.That(entry.ModifiedTimeIsLocked, Is.False);
-
-            // Don't populate fields unused in the lift writer's AddDeletedEntry
-            Assert.That(entry.CitationForm, Is.Empty);
-            Assert.That(entry.Fields, Is.Empty);
-            Assert.That(entry.LexicalForm, Is.Empty);
-            Assert.That(entry.Pronunciations, Is.Empty);
-            Assert.That(entry.Notes, Is.Empty);
-            Assert.That(entry.Senses, Is.Empty);
-        }
-
-        [Test]
         public void TestCreateLexEntryWithoutAudioCitationForm()
         {
             var project = Util.RandomProject();
