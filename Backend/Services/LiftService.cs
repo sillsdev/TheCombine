@@ -19,6 +19,7 @@ using SIL.DictionaryServices.Model;
 using SIL.Lift;
 using SIL.Lift.Options;
 using SIL.Lift.Parsing;
+using SIL.Linq;
 using SIL.Text;
 using SIL.WritingSystems;
 using Xabe.FFmpeg;
@@ -401,8 +402,8 @@ namespace BackendFramework.Services
 
         /// <summary>
         /// Creates a <see cref="LexEntry"/> without audio from a <see cref="Word"/>.
-        /// Populates Id, Guid, Note, Vernacular, and Senses.
-        /// If isDeleted is false (default), also populates CreationTime, ModificationTime, and Flag.
+        /// Populates Id, Guid, CreationTime, and ModificationTime.
+        /// If isDeleted is false (default), also populates Flag, Note, Vernacular, and Senses.
         /// </summary>
         /// <remarks> Internal only for testing. </remarks>
         /// <returns> A <see cref="LexEntry"/> that still needs audio added. </returns>
@@ -411,29 +412,28 @@ namespace BackendFramework.Services
         {
             var entry = new LexEntry($"{wordEntry.Vernacular}_{wordEntry.Guid}", wordEntry.Guid);
 
+            if (DateTime.TryParse(wordEntry.Created, out var createdTime))
+            {
+                entry.CreationTime = createdTime;
+            }
+
+            if (DateTime.TryParse(wordEntry.Modified, out var modifiedTime))
+            {
+                entry.ModificationTime = modifiedTime;
+            }
+
             if (!isDeleted)
             {
-                if (DateTime.TryParse(wordEntry.Created, out var createdTime))
-                {
-                    entry.CreationTime = createdTime;
-                }
-
-                if (DateTime.TryParse(wordEntry.Modified, out var modifiedTime))
-                {
-                    entry.ModificationTime = modifiedTime;
-                }
-
                 // It is VERY IMPORTANT that the LexEntry's ModificationTime be locked, otherwise anytime the entry
                 // is modified later (e.g. adding Senses) the ModificationTime of the object will be overwritten with
                 // the current time, rather than the modified time stored in the database.
                 entry.ModifiedTimeIsLocked = true;
 
                 AddFlag(entry, wordEntry, project.AnalysisWritingSystems.FirstOrDefault()?.Bcp47 ?? "en");
+                AddNote(entry, wordEntry);
+                AddVern(entry, wordEntry, project.VernacularWritingSystem.Bcp47);
+                AddSenses(entry, wordEntry, semDomNames);
             }
-
-            AddNote(entry, wordEntry);
-            AddVern(entry, wordEntry, project.VernacularWritingSystem.Bcp47);
-            AddSenses(entry, wordEntry, semDomNames);
 
             return entry;
         }
@@ -543,66 +543,73 @@ namespace BackendFramework.Services
         /// <summary> Adds each <see cref="Sense"/> of a word to be written out to lift </summary>
         private static void AddSenses(LexEntry entry, Word wordEntry, Dictionary<string, string> semDomNames)
         {
-            var activeSenses = wordEntry.Senses.Where(
-                s => s.Accessibility == Status.Active || s.Accessibility == Status.Protected).ToList();
-            foreach (var currentSense in activeSenses)
+            wordEntry.Senses
+                .Where(s => s.Accessibility == Status.Active || s.Accessibility == Status.Protected)
+                .ForEach(s => entry.Senses.Add(CreateLexSense(s, semDomNames)));
+        }
+
+        /// <summary>
+        /// Creates a <see cref="LexSense"/> from a <see cref="Sense"/>.
+        /// Populates Id, Definition, Gloss, GrammaticalInfo, and semantic domain properties.
+        /// </summary>
+        internal static LexSense CreateLexSense(
+            Sense sense, Dictionary<string, string> semDomNames, string separator = ";")
+        {
+            var lexSense = new LexSense { Id = sense.Guid.ToString() };
+
+            // Add definitions
+            var defDict = new Dictionary<string, string>();
+            foreach (var def in sense.Definitions)
             {
-                // Merge in senses
-                const string sep = ";";
-                var defDict = new Dictionary<string, string>();
-                foreach (var def in currentSense.Definitions)
+                if (defDict.TryGetValue(def.Language, out var defText))
                 {
-                    if (defDict.TryGetValue(def.Language, out var defText))
-                    {
-                        // This is an unexpected situation but rather than crashing or losing data we
-                        // will just append extra definitions for the language with a separator.
-                        defDict[def.Language] = $"{defText}{sep}{def.Text}";
-                    }
-                    else
-                    {
-                        defDict.Add(def.Language, def.Text);
-                    }
+                    // This is an unexpected situation but rather than crashing or losing data we
+                    // will just append extra definitions for the language with a separator.
+                    defDict[def.Language] = $"{defText}{separator}{def.Text}";
                 }
-                var glossDict = new Dictionary<string, string>();
-                foreach (var gloss in currentSense.Glosses)
+                else
                 {
-                    if (glossDict.TryGetValue(gloss.Language, out var glossDef))
-                    {
-                        // This is an unexpected situation but rather than crashing or losing data we
-                        // will just append extra definitions for the language with a separator.
-                        glossDict[gloss.Language] = $"{glossDef}{sep}{gloss.Def}";
-                    }
-                    else
-                    {
-                        glossDict.Add(gloss.Language, gloss.Def);
-                    }
+                    defDict.Add(def.Language, def.Text);
                 }
-
-                var lexSense = new LexSense();
-                lexSense.Definition.MergeIn(MultiTextBase.Create(defDict));
-                lexSense.Gloss.MergeIn(MultiTextBase.Create(glossDict));
-                lexSense.Id = currentSense.Guid.ToString();
-
-                // Add grammatical info
-                if (currentSense.GrammaticalInfo.CatGroup != GramCatGroup.Unspecified)
-                {
-                    var optionRef = new OptionRef(currentSense.GrammaticalInfo.GrammaticalCategory);
-                    lexSense.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>(
-                        LexSense.WellKnownProperties.PartOfSpeech, optionRef));
-                }
-
-                // Merge in semantic domains
-                foreach (var semDom in currentSense.SemanticDomains)
-                {
-                    var orc = new OptionRefCollection();
-                    semDomNames.TryGetValue(semDom.Id, out string? name);
-                    orc.Add(semDom.Id + " " + (name ?? semDom.Name));
-                    lexSense.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>(
-                        LexSense.WellKnownProperties.SemanticDomainDdp4, orc));
-                }
-
-                entry.Senses.Add(lexSense);
             }
+            lexSense.Definition.MergeIn(MultiTextBase.Create(defDict));
+
+            // Add glosses
+            var glossDict = new Dictionary<string, string>();
+            foreach (var gloss in sense.Glosses)
+            {
+                if (glossDict.TryGetValue(gloss.Language, out var glossDef))
+                {
+                    // This is an unexpected situation but rather than crashing or losing data we
+                    // will just append extra definitions for the language with a separator.
+                    glossDict[gloss.Language] = $"{glossDef}{separator}{gloss.Def}";
+                }
+                else
+                {
+                    glossDict.Add(gloss.Language, gloss.Def);
+                }
+            }
+            lexSense.Gloss.MergeIn(MultiTextBase.Create(glossDict));
+
+            // Add grammatical info
+            if (sense.GrammaticalInfo.CatGroup != GramCatGroup.Unspecified)
+            {
+                var optionRef = new OptionRef(sense.GrammaticalInfo.GrammaticalCategory);
+                lexSense.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>(
+                    LexSense.WellKnownProperties.PartOfSpeech, optionRef));
+            }
+
+            // Add semantic domains
+            foreach (var semDom in sense.SemanticDomains)
+            {
+                var orc = new OptionRefCollection();
+                semDomNames.TryGetValue(semDom.Id, out string? name);
+                orc.Add(semDom.Id + " " + (name ?? semDom.Name));
+                lexSense.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>(
+                    LexSense.WellKnownProperties.SemanticDomainDdp4, orc));
+            }
+
+            return lexSense;
         }
 
         /// <summary> Adds pronunciation audio of a word to be written out to lift </summary>
@@ -612,33 +619,51 @@ namespace BackendFramework.Services
             foreach (var audio in pronunciations)
             {
                 var src = FileStorage.GenerateAudioFilePath(projectId, audio.FileName);
-                if (!File.Exists(src))
+                var href = await CopyAudioConvertingWebmToWav(src, Path.Combine(path, audio.FileName));
+                if (href is not null)
                 {
-                    continue;
+                    var speaker = projectSpeakers.Find(s => s.Id == audio.SpeakerId);
+                    entry.Pronunciations.Add(CreateLexPhonetic(href, speaker));
                 }
-
-                var dest = Path.Combine(path, audio.FileName);
-                if (Path.GetExtension(dest).Equals(".webm", StringComparison.OrdinalIgnoreCase))
-                {
-                    dest = Path.ChangeExtension(dest, ".wav");
-                    await FFmpeg.Conversions.New().Start($"-y -i \"{src}\" \"{dest}\"");
-                }
-                else
-                {
-                    File.Copy(src, dest, true);
-                }
-
-                var lexPhonetic = new LexPhonetic();
-                lexPhonetic.MergeIn(MultiTextBase.Create(new() { { "href", dest } }));
-                // If audio has speaker, include speaker name as a pronunciation label
-                var speaker = projectSpeakers.Find(s => s.Id == audio.SpeakerId);
-                if (speaker is not null)
-                {
-                    lexPhonetic.MergeIn(
-                        MultiTextBase.Create(new() { { "en", $"Speaker: {speaker.Name}" } }));
-                }
-                entry.Pronunciations.Add(lexPhonetic);
             }
+        }
+
+        /// <summary> Copies audio, converting WebM to WAV. </summary>
+        private static async Task<string?> CopyAudioConvertingWebmToWav(string src, string dest)
+        {
+            if (!File.Exists(src))
+            {
+                return null;
+            }
+
+            if (Path.GetExtension(dest).Equals(".webm", StringComparison.OrdinalIgnoreCase))
+            {
+                dest = Path.ChangeExtension(dest, ".wav");
+                await FFmpeg.Conversions.New().Start($"-y -i \"{src}\" \"{dest}\"");
+            }
+            else
+            {
+                File.Copy(src, dest, true);
+            }
+
+            return dest;
+        }
+
+        /// <summary> Creates a <see cref="LexPhonetic"/> object for an audio file. </summary>
+        /// <param name="href"> The file path of the audio. </param>
+        /// <param name="speaker"> The <see cref="Speaker"/> of the audio, if available. </param>
+        internal static LexPhonetic CreateLexPhonetic(string href, Speaker? speaker = null)
+        {
+            var lexPhonetic = new LexPhonetic();
+            lexPhonetic.MergeIn(MultiTextBase.Create(new() { { "href", href } }));
+
+            // If audio has speaker, include speaker name as a pronunciation label
+            if (speaker is not null)
+            {
+                lexPhonetic.MergeIn(MultiTextBase.Create(new() { { "en", $"Speaker: {speaker.Name}" } }));
+            }
+
+            return lexPhonetic;
         }
 
         /// <summary> Exports vernacular language character set to an ldml file </summary>
@@ -724,10 +749,10 @@ namespace BackendFramework.Services
         private sealed class LiftMerger : ILiftMerger
         {
             private readonly string _projectId;
-            private readonly List<SemanticDomainFull> _customSemDoms = new();
+            private readonly List<SemanticDomainFull> _customSemDoms = [];
             private readonly string _vernLang;
             private readonly IWordRepository _wordRepo;
-            private readonly List<Word> _importEntries = new();
+            private readonly List<Word> _importEntries = [];
 
             public LiftMerger(string projectId, string vernLang, IWordRepository wordRepo)
             {
