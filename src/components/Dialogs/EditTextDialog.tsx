@@ -71,7 +71,10 @@ export default function EditTextDialog(
 
   function confirmIfEnter(event: KeyboardEvent<any>): void {
     if (event.key === Key.Enter) {
-      event.preventDefault(); // Prevent newline if multiline
+      // Prevent newline in note. If we want to enable newlines (when multiline
+      // is true), we'll need to manage Enter vs (e.g.) Shift+Enter and which
+      // one confirms vs adds a newline.
+      event.preventDefault();
       onConfirm();
     }
   }
