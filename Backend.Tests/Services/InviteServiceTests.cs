@@ -60,7 +60,7 @@ namespace Backend.Tests.Services
             var invite = new ProjectInvite(ProjId, Email, Role.Owner);
             Assert.That(
                 () => _inviteService.RemoveTokenAndCreateUserRole(ProjId, _user, invite),
-                Throws.TypeOf<InviteService.InviteException>());
+                Throws.InstanceOf<InviteService.InviteException>());
         }
 
         [Test]

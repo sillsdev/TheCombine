@@ -68,7 +68,8 @@ namespace Backend.Tests.Controllers
         public void TestEmailInviteToProject()
         {
             var data = new EmailInviteData { ProjectId = _projId };
-            var result = (ObjectResult)_inviteController.EmailInviteToProject(data).Result;
+            var result = _inviteController.EmailInviteToProject(data).Result as OkObjectResult;
+            Assert.That(result, Is.Not.Null);
             Assert.That(result.Value, Is.Not.Empty);
         }
 
@@ -91,12 +92,11 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestValidateInviteTokenNoTokenNoUser()
         {
-            var result = _inviteController.ValidateInviteToken(_projId, "not-a-token").Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            var value = ((OkObjectResult)result).Value;
-            Assert.That(value, Is.InstanceOf<EmailInviteStatus>());
+            var result = _inviteController.ValidateInviteToken(_projId, "not-a-token").Result as OkObjectResult;
+            Assert.That(result, Is.Not.Null);
 
-            var status = (EmailInviteStatus)value!;
+            var status = result.Value as EmailInviteStatus;
+            Assert.That(status, Is.Not.Null);
             Assert.That(status.IsTokenValid, Is.False);
             Assert.That(status.IsUserValid, Is.False);
         }
@@ -104,12 +104,11 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestValidateInviteTokenExpiredTokenNoUser()
         {
-            var result = _inviteController.ValidateInviteToken(_projId, _tokenExpired).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            var value = ((OkObjectResult)result).Value;
-            Assert.That(value, Is.InstanceOf<EmailInviteStatus>());
+            var result = _inviteController.ValidateInviteToken(_projId, _tokenExpired).Result as OkObjectResult;
+            Assert.That(result, Is.Not.Null);
 
-            var status = (EmailInviteStatus)value!;
+            var status = result.Value as EmailInviteStatus;
+            Assert.That(status, Is.Not.Null);
             Assert.That(status.IsTokenValid, Is.False);
             Assert.That(status.IsUserValid, Is.False);
         }
@@ -117,12 +116,11 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestValidateInviteTokenFutureTokenNoUser()
         {
-            var result = _inviteController.ValidateInviteToken(_projId, _tokenFuture).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            var value = ((OkObjectResult)result).Value;
-            Assert.That(value, Is.InstanceOf<EmailInviteStatus>());
+            var result = _inviteController.ValidateInviteToken(_projId, _tokenFuture).Result as OkObjectResult;
+            Assert.That(result, Is.Not.Null);
 
-            var status = (EmailInviteStatus)value!;
+            var status = result.Value as EmailInviteStatus;
+            Assert.That(status, Is.Not.Null);
             Assert.That(status.IsTokenValid, Is.False);
             Assert.That(status.IsUserValid, Is.False);
         }
@@ -130,12 +128,11 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestValidateInviteTokenValidTokenNoUser()
         {
-            var result = _inviteController.ValidateInviteToken(_projId, _tokenActive).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            var value = ((OkObjectResult)result).Value;
-            Assert.That(value, Is.InstanceOf<EmailInviteStatus>());
+            var result = _inviteController.ValidateInviteToken(_projId, _tokenActive).Result as OkObjectResult;
+            Assert.That(result, Is.Not.Null);
 
-            var status = (EmailInviteStatus)value!;
+            var status = result.Value as EmailInviteStatus;
+            Assert.That(status, Is.Not.Null);
             Assert.That(status.IsTokenValid, Is.True);
             Assert.That(status.IsUserValid, Is.False);
         }
@@ -146,12 +143,11 @@ namespace Backend.Tests.Controllers
             var roles = new Dictionary<string, string> { [_projId] = "role-id" };
             _userRepo.Create(new() { Email = EmailActive, ProjectRoles = roles }).Wait();
 
-            var result = _inviteController.ValidateInviteToken(_projId, _tokenActive).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            var value = ((OkObjectResult)result).Value;
-            Assert.That(value, Is.InstanceOf<EmailInviteStatus>());
+            var result = _inviteController.ValidateInviteToken(_projId, _tokenActive).Result as OkObjectResult;
+            Assert.That(result, Is.Not.Null);
 
-            var status = (EmailInviteStatus)value!;
+            var status = result.Value as EmailInviteStatus;
+            Assert.That(status, Is.Not.Null);
             Assert.That(status.IsTokenValid, Is.True);
             Assert.That(status.IsUserValid, Is.False);
         }
@@ -163,12 +159,11 @@ namespace Backend.Tests.Controllers
             // User with an email address matching an invite with an expired token.
             _userRepo.Create(new() { Id = "invitee", Email = EmailExpired }).Wait();
 
-            var result = _inviteController.ValidateInviteToken(_projId, _tokenExpired).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            var value = ((OkObjectResult)result).Value;
-            Assert.That(value, Is.InstanceOf<EmailInviteStatus>());
+            var result = _inviteController.ValidateInviteToken(_projId, _tokenExpired).Result as OkObjectResult;
+            Assert.That(result, Is.Not.Null);
 
-            var status = (EmailInviteStatus)value!;
+            var status = result.Value as EmailInviteStatus;
+            Assert.That(status, Is.Not.Null);
             Assert.That(status.IsTokenValid, Is.False);
             Assert.That(status.IsUserValid, Is.True);
         }
@@ -182,12 +177,11 @@ namespace Backend.Tests.Controllers
             // No permissions should be required to validate a token.
             _inviteController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
-            var result = _inviteController.ValidateInviteToken(_projId, _tokenActive).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            var value = ((OkObjectResult)result).Value;
-            Assert.That(value, Is.InstanceOf<EmailInviteStatus>());
+            var result = _inviteController.ValidateInviteToken(_projId, _tokenActive).Result as OkObjectResult;
+            Assert.That(result, Is.Not.Null);
 
-            var status = (EmailInviteStatus)value!;
+            var status = result.Value as EmailInviteStatus;
+            Assert.That(status, Is.Not.Null);
             Assert.That(status.IsTokenValid, Is.True);
             Assert.That(status.IsUserValid, Is.True);
         }
