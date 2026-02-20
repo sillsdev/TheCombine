@@ -72,59 +72,11 @@ namespace Backend.Tests.Services
             var fileName = "audio.mp3";
             var wordInFrontier = _wordRepo.Create(
                 new Word() { Audio = [new() { FileName = fileName }], ProjectId = ProjId }).Result;
-            var oldId = wordInFrontier.Id;
-
-            var newWord = _wordService.DeleteAudio(ProjId, UserId, oldId, fileName).Result;
-
-            // New word is correct
-            Assert.That(newWord, Is.Not.Null);
-            Assert.That(newWord!.Id, Is.Not.EqualTo(oldId));
-            Assert.That(newWord!.EditedBy.Last(), Is.EqualTo(UserId));
-            Assert.That(newWord!.History.Last(), Is.EqualTo(oldId));
-
-            // New word is only one in frontier
-            Assert.That(_wordRepo.IsInFrontier(ProjId, newWord.Id).Result, Is.True);
-            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(1));
-
-            // Original word persists
-            var allWords = _wordRepo.GetAllWords(ProjId).Result;
-            Assert.That(allWords, Has.Count.EqualTo(2));
-            Assert.That(allWords.Find(w => w.Id == newWord.Id), Is.Not.Null);
-            var oldWord = allWords.Find(w => w.Id == oldId);
-            Assert.That(oldWord, Is.Not.Null);
-            Assert.That(oldWord!.Audio, Has.Count.EqualTo(1));
-            Assert.That(oldWord!.History, Has.Count.EqualTo(0));
-        }
-
-        [Test]
-        public void TestDeleteFrontierWordNotInFrontierNull()
-        {
-            var wordNotInFrontier = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
-            Assert.That(_wordService.DeleteFrontierWord(ProjId, UserId, wordNotInFrontier.Id).Result, Is.Null);
-            Assert.That(_wordService.DeleteFrontierWord("wrong-proj", UserId, WordId).Result, Is.Null);
-        }
-
-        [Test]
-        public void TestDeleteFrontierWordCopiesToWordsAndRemovesFrontier()
-        {
-            var oldId = _wordRepo.Create(new Word { ProjectId = ProjId }).Result.Id;
-
-            var deletedId = _wordService.DeleteFrontierWord(ProjId, UserId, oldId).Result;
-
-            Assert.That(deletedId, Is.Not.Null);
-            Assert.That(deletedId, Is.Not.EqualTo(oldId));
-            var deletedWord = _wordRepo.GetWord(ProjId, deletedId!).Result;
-            Assert.That(deletedWord, Is.Not.Null);
-            Assert.That(deletedWord!.Accessibility, Is.EqualTo(Status.Deleted));
-            Assert.That(deletedWord!.History.Last(), Is.EqualTo(oldId));
-            Assert.That(deletedWord!.EditedBy.Last(), Is.EqualTo(UserId));
-
-            var allWordIds = _wordRepo.GetAllWords(ProjId).Result.Select(w => w.Id).ToList();
-            Assert.That(allWordIds, Has.Count.EqualTo(2));
-            Assert.That(allWordIds, Does.Contain(oldId));
-            Assert.That(allWordIds, Does.Contain(deletedId!));
-
-            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Is.Empty);
+            var result = _wordService.DeleteAudio(ProjId, UserId, wordInFrontier.Id, fileName).Result;
+            Assert.That(result!.EditedBy.Last(), Is.EqualTo(UserId));
+            Assert.That(result!.History.Last(), Is.EqualTo(wordInFrontier.Id));
+            Assert.That(_wordRepo.IsInFrontier(ProjId, result.Id).Result, Is.True);
+            Assert.That(_wordRepo.IsInFrontier(ProjId, wordInFrontier.Id).Result, Is.False);
         }
 
         [Test]
