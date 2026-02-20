@@ -592,7 +592,7 @@ namespace BackendFramework.Services
             {
                 var orc = new OptionRefCollection();
                 semDomNames.TryGetValue(semDom.Id, out string? name);
-                orc.Add(semDom.Id + " " + (name ?? semDom.Name));
+                orc.Add($"{semDom.Id} {name ?? semDom.Name}".Trim());
                 lexSense.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>(
                     LexSense.WellKnownProperties.SemanticDomainDdp4, orc));
             }
