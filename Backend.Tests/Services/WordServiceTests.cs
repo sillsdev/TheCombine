@@ -47,7 +47,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestDeleteAudioBadInputNull()
+        public void TestDeleteAudioBadInputReturnsNull()
         {
             var fileName = "audio.mp3";
             var wordInFrontier = _wordRepo.Create(
@@ -58,7 +58,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestDeleteAudioNotInFrontierNull()
+        public void TestDeleteAudioNotInFrontierReturnsNull()
         {
             var fileName = "audio.mp3";
             var wordNotInFrontier = _wordRepo.Add(
@@ -98,7 +98,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestUpdateNotInFrontierNull()
+        public void TestUpdateNotInFrontierReturnsNull()
         {
             Assert.That(_wordService.Update(UserId, new Word() { Id = WordId, ProjectId = ProjId }).Result, Is.Null);
         }
