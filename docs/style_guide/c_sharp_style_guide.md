@@ -16,6 +16,31 @@ The following guidelines supersede the Microsoft C# Coding Guidelines, and shoul
 
 Use type inference (`var`) wherever possible. This can improve readability and ease of refactoring.
 
+### `ObjectResult` exception
+
+A Controller method with return type `IActionResult`, may return an `OkObjectResult`. If the method returns with
+`Ok(<something>)`, the type of `<something>` is specified in
+
+```c#
+[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(<type>))]
+```
+
+but nowhere is that type enforced.
+
+If `<type>` is (e.g.), `string`, considering using something like
+
+```
+string thingId = _service.Update(thing);
+return Ok(thinkId)
+```
+
+Using `string thingId` instead of `var stringId` is a guard in case the return type of `Update` changes.
+
+### Initiating empty collections
+
+If the type is otherwise inferred, prefer `[]` over (e.g.) `new List<string>()` or `new Dictionary<string, int>()`, for
+the sake of concision.
+
 ## One-line `if` statements
 
 Add braces to one-line `if` statements;
@@ -75,3 +100,36 @@ for (var i = 1; i < 4; i++)
 - Remove some error-prone boilerplate (`i++`)
 - Remove the possibly of incrementing the wrong value (e.g. incrementing `i` instead of `j` in an inner loop)
 - Express clearly the intent
+
+## Use `IsNullOrEmpty` to compare with empty string
+
+```c#
+var str = "Am I empty?";
+
+# Yes
+if (string.IsNullOrEmpty(str))
+
+if (!string.IsNullOrEmpty(str))
+
+# No
+if (str == "")
+
+if (str != string.Empty)
+
+if (str.Equals(''))
+```
+
+### Rational
+
+Uniform style, and still works if variable being check becomes nullable.
+
+## NUnit testing
+
+### Prefer `InstanceOf` over `TypeOf`
+
+Prefer asserts with `Is.InstanceOf` over `Is.TypeOf` to allow for inheritance, unless the specific type is needed.
+
+### Prefer `AsyncMethod().Wait()` over `_ = AsyncMethod().Result`
+
+If you want to make sure an async method finishes but don't need what it returns, use `.Wait()` rather than assigning it
+to an unused `_` variable.
