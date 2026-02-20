@@ -47,7 +47,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestDeleteAudioBadInputNull()
+        public void TestDeleteAudioBadInputReturnsNull()
         {
             var fileName = "audio.mp3";
             var wordInFrontier = _wordRepo.Create(
@@ -58,7 +58,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestDeleteAudioNotInFrontierNull()
+        public void TestDeleteAudioNotInFrontierReturnsNull()
         {
             var fileName = "audio.mp3";
             var wordNotInFrontier = _wordRepo.Add(
@@ -80,7 +80,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestDeleteFrontierWordNotInFrontierNull()
+        public void TestDeleteFrontierWordNotInFrontierReturnsNull()
         {
             var wordNotInFrontier = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
             Assert.That(_wordService.DeleteFrontierWord(ProjId, UserId, wordNotInFrontier.Id).Result, Is.Null);
@@ -111,7 +111,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestUpdateNotInFrontierNull()
+        public void TestUpdateNotInFrontierReturnsNull()
         {
             Assert.That(_wordService.Update(UserId, new Word() { Id = WordId, ProjectId = ProjId }).Result, Is.Null);
         }
@@ -168,7 +168,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestRestoreFrontierWordsTrue()
+        public void TestRestoreFrontierWordsReturnsTrue()
         {
             var word1 = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
             var word2 = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;

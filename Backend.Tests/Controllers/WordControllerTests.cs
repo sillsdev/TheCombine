@@ -97,7 +97,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestHasFrontierWordsFalse()
+        public async Task TestHasFrontierWordsReturnsFalse()
         {
             await _wordRepo.Create(Util.RandomWord("OTHER_PROJECT"));
 
@@ -107,7 +107,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestHasFrontierWordsTrue()
+        public async Task TestHasFrontierWordsReturnsTrue()
         {
             await _wordRepo.Create(Util.RandomWord(ProjId));
 
@@ -125,7 +125,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestIsInFrontierFalse()
+        public async Task TestIsInFrontierReturnsFalse()
         {
             var wordNotInFrontier = await _wordRepo.Add(Util.RandomWord(ProjId));
             var result = await _wordController.IsInFrontier(ProjId, wordNotInFrontier.Id) as OkObjectResult;
@@ -134,7 +134,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestIsInFrontierTrue()
+        public async Task TestIsInFrontierReturnsTrue()
         {
             var wordInFrontier = await _wordRepo.AddFrontier(Util.RandomWord(ProjId));
             var result = await _wordController.IsInFrontier(ProjId, wordInFrontier.Id) as OkObjectResult;
