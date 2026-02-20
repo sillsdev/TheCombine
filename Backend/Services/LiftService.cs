@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Security;
 using System.Threading.Tasks;
 using System.Xml;
 using BackendFramework.Helper;
@@ -317,8 +316,7 @@ namespace BackendFramework.Services
             var semDomNames = englishSemDoms.ToDictionary(x => x.Id, x => x.Name);
             foreach (var wordEntry in activeWords)
             {
-                var id = MakeSafeXmlAttribute(wordEntry.Vernacular) + "_" + wordEntry.Guid;
-                var entry = new LexEntry(id, wordEntry.Guid);
+                var entry = new LexEntry(CreateLexEntryId(wordEntry), wordEntry.Guid);
                 if (DateTime.TryParse(wordEntry.Created, out var createdTime))
                 {
                     entry.CreationTime = createdTime;
@@ -345,8 +343,7 @@ namespace BackendFramework.Services
 
             foreach (var wordEntry in deletedWords)
             {
-                var id = MakeSafeXmlAttribute(wordEntry.Vernacular) + "_" + wordEntry.Guid;
-                var entry = new LexEntry(id, wordEntry.Guid);
+                var entry = new LexEntry(CreateLexEntryId(wordEntry), wordEntry.Guid);
 
                 AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, proj.VernacularWritingSystem.Bcp47);
@@ -422,6 +419,8 @@ namespace BackendFramework.Services
 
             return destinationFileName;
         }
+
+        private static string CreateLexEntryId(Word word) => $"{word.Vernacular}_{word.Guid}";
 
         /// <summary> Copy imported lift-ranges file, if available </summary>
         /// <returns> Path of lift-ranges file copied, or null if none </returns>
@@ -658,16 +657,6 @@ namespace BackendFramework.Services
             // Write out the new definition
             wsr.Set(wsDef);
             wsr.Save();
-        }
-
-        /// <summary>
-        /// Fix the string to be safe in an attribute value of XML.
-        /// </summary>
-        /// <param name="sInput"></param>
-        /// <returns></returns>
-        public static string MakeSafeXmlAttribute(string sInput)
-        {
-            return SecurityElement.Escape(sInput);
         }
 
         public ILiftMerger GetLiftImporterExporter(string projectId, string vernLang, IWordRepository wordRepo)
