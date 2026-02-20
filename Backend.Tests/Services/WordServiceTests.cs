@@ -98,6 +98,37 @@ namespace Backend.Tests.Services
         }
 
         [Test]
+        public void TestDeleteFrontierWordNotInFrontierReturnsNull()
+        {
+            var wordNotInFrontier = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
+            Assert.That(_wordService.DeleteFrontierWord(ProjId, UserId, wordNotInFrontier.Id).Result, Is.Null);
+            Assert.That(_wordService.DeleteFrontierWord("wrong-proj", UserId, WordId).Result, Is.Null);
+        }
+
+        [Test]
+        public void TestDeleteFrontierWordCopiesToWordsAndRemovesFrontier()
+        {
+            var oldId = _wordRepo.Create(new Word { ProjectId = ProjId }).Result.Id;
+
+            var deletedId = _wordService.DeleteFrontierWord(ProjId, UserId, oldId).Result;
+
+            Assert.That(deletedId, Is.Not.Null);
+            Assert.That(deletedId, Is.Not.EqualTo(oldId));
+            var deletedWord = _wordRepo.GetWord(ProjId, deletedId).Result;
+            Assert.That(deletedWord, Is.Not.Null);
+            Assert.That(deletedWord.Accessibility, Is.EqualTo(Status.Deleted));
+            Assert.That(deletedWord.History.Last(), Is.EqualTo(oldId));
+            Assert.That(deletedWord.EditedBy.Last(), Is.EqualTo(UserId));
+
+            var allWordIds = _wordRepo.GetAllWords(ProjId).Result.Select(w => w.Id).ToList();
+            Assert.That(allWordIds, Has.Count.EqualTo(2));
+            Assert.That(allWordIds, Does.Contain(oldId));
+            Assert.That(allWordIds, Does.Contain(deletedId));
+
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Is.Empty);
+        }
+
+        [Test]
         public void TestUpdateNotInFrontierReturnsNull()
         {
             Assert.That(_wordService.Update(UserId, new Word() { Id = WordId, ProjectId = ProjId }).Result, Is.Null);
@@ -164,7 +195,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestRestoreFrontierWordsTrue()
+        public void TestRestoreFrontierWordsReturnsTrue()
         {
             var word1 = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
             var word2 = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
