@@ -95,17 +95,17 @@ namespace Backend.Tests.Controllers
             using var stream = File.OpenRead(_filePath);
             var file = new FormFile(stream, 0, stream.Length, "formFileName", FileName);
             var uploadResult = _avatarController.UploadAvatar(file).Result;
-            Assert.That(uploadResult, Is.TypeOf<OkResult>());
+            Assert.That(uploadResult, Is.InstanceOf<OkResult>());
 
             var foundUser = _userRepo.GetUser(_userId).Result;
             Assert.That(foundUser, Is.Not.Null);
-            Assert.That(foundUser.Avatar, Is.Not.Null);
+            Assert.That(foundUser.Avatar, Is.Not.Empty);
 
             // No permissions should be required to download an avatar.
             _avatarController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
             var fileResult = _avatarController.DownloadAvatar(_userId).Result as FileStreamResult;
-            Assert.That(fileResult, Is.TypeOf<FileStreamResult>());
+            Assert.That(fileResult, Is.Not.Null);
 
             // Clean up.
             fileResult.FileStream.Dispose();

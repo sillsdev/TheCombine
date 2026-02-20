@@ -93,23 +93,44 @@ namespace BackendFramework.Services
             return deletedWord.Id;
         }
 
-        /// <summary> Restores words to the Frontier </summary>
-        /// <returns> A bool: true if successful, false if any don't exist or are already in the Frontier. </returns>
+        /// <summary> Restores words to the Frontier that aren't in the Frontier </summary>
+        /// <remarks>
+        /// Aborts if any word can't be restored for any of the following reasons:
+        /// doesn't exist; has Status.Deleted; or is already in the Frontier
+        /// </remarks>
+        /// <returns> A bool: true if all successfully restored; false if none restored. </returns>
         public async Task<bool> RestoreFrontierWords(string projectId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring words to Frontier");
 
-            var words = new List<Word>();
-            foreach (var id in wordIds)
+            // Allow calls that don't specify any wordIds, but don't do any work.
+            if (wordIds.Count == 0)
             {
-                var word = await _wordRepo.GetWord(projectId, id);
-                if (word is null || await _wordRepo.IsInFrontier(projectId, id))
-                {
-                    return false;
-                }
-                words.Add(word);
+                return true;
             }
-            await _wordRepo.AddFrontier(words);
+
+            wordIds = wordIds.Distinct().ToList();
+
+            // Make sure none of the words are in the Frontier.
+            if (await _wordRepo.AreInFrontier(projectId, wordIds, 1))
+            {
+                return false;
+            }
+
+            // Make sure all the words exist and are valid.
+            var wordsToRestore = await _wordRepo.GetWords(projectId, wordIds);
+            if (wordsToRestore.Count != wordIds.Count)
+            {
+                return false;
+            }
+            if (wordsToRestore.Any(w => w.Accessibility == Status.Deleted))
+            {
+                // We should be restoring words that were removed from the Frontier,
+                // and not their "Deleted" copies in the words collection.
+                return false;
+            }
+
+            await _wordRepo.AddFrontier(wordsToRestore);
             return true;
         }
 
