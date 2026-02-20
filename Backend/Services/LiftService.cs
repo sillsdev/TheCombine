@@ -346,14 +346,7 @@ namespace BackendFramework.Services
             foreach (var wordEntry in deletedWords)
             {
                 var id = MakeSafeXmlAttribute(wordEntry.Vernacular) + "_" + wordEntry.Guid;
-                var entry = new LexEntry(id, wordEntry.Guid);
-
-                AddNote(entry, wordEntry);
-                AddVern(entry, wordEntry, proj.VernacularWritingSystem.Bcp47);
-                AddSenses(entry, wordEntry, semDomNames);
-                await AddAudio(entry, wordEntry.Audio, audioDir, projectId, projSpeakers);
-
-                liftWriter.AddDeletedEntry(entry);
+                liftWriter.AddDeletedEntry(new LexEntry(id, wordEntry.Guid));
             }
 
             liftWriter.End();
