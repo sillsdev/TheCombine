@@ -326,9 +326,7 @@ namespace BackendFramework.Services
 
             foreach (var wordEntry in deletedWords)
             {
-                var entry = new LexEntry(CreateLexEntryId(wordEntry), wordEntry.Guid);
-                await AddAudio(entry, wordEntry.Audio, audioDir, projectId, projSpeakers);
-                liftWriter.AddDeletedEntry(entry);
+                liftWriter.AddDeletedEntry(new LexEntry(CreateLexEntryId(wordEntry), wordEntry.Guid));
             }
 
             liftWriter.End();
