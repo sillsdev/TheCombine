@@ -316,7 +316,7 @@ namespace BackendFramework.Services
             var semDomNames = englishSemDoms.ToDictionary(x => x.Id, x => x.Name);
             foreach (var wordEntry in activeWords)
             {
-                var entry = new LexEntry($"{wordEntry.Vernacular}_{wordEntry.Guid}", wordEntry.Guid);
+                var entry = new LexEntry(CreateLexEntryId(wordEntry), wordEntry.Guid);
                 if (DateTime.TryParse(wordEntry.Created, out var createdTime))
                 {
                     entry.CreationTime = createdTime;
@@ -343,7 +343,7 @@ namespace BackendFramework.Services
 
             foreach (var wordEntry in deletedWords)
             {
-                var entry = new LexEntry($"{wordEntry.Vernacular}_{wordEntry.Guid}", wordEntry.Guid);
+                var entry = new LexEntry(CreateLexEntryId(wordEntry), wordEntry.Guid);
 
                 AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, proj.VernacularWritingSystem.Bcp47);
@@ -419,6 +419,8 @@ namespace BackendFramework.Services
 
             return destinationFileName;
         }
+
+        private static string CreateLexEntryId(Word word) => $"{word.Vernacular}_{word.Guid}";
 
         /// <summary> Copy imported lift-ranges file, if available </summary>
         /// <returns> Path of lift-ranges file copied, or null if none </returns>
