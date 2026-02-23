@@ -23,7 +23,7 @@ export interface AuthStatus {
    * @type {boolean}
    * @memberof AuthStatus
    */
-  loggedIn?: boolean;
+  isLoggedIn?: boolean;
   /**
    *
    * @type {string}

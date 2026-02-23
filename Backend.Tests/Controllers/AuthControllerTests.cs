@@ -1,22 +1,25 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
-using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
     internal sealed class AuthControllerTests : IDisposable
     {
-        private LexboxAuthServiceMock _lexboxAuthService = null!;
         private PermissionServiceMock _permissionService = null!;
         private AuthController _controller = null!;
+
+        private const string UserId = "AuthControllerTestsUserId";
 
         public void Dispose()
         {
@@ -27,76 +30,99 @@ namespace Backend.Tests.Controllers
         [SetUp]
         public void Setup()
         {
-            _lexboxAuthService = new LexboxAuthServiceMock();
-            _permissionService = new PermissionServiceMock();
             var configValues = new Dictionary<string, string?> { { "LexboxAuth:PostLoginRedirect", "/" } };
             var configuration = new ConfigurationBuilder().AddInMemoryCollection(configValues).Build();
-            _controller = new AuthController(_lexboxAuthService, _permissionService, configuration);
+            _permissionService = new PermissionServiceMock();
+            _controller = new AuthController(configuration, _permissionService);
         }
 
         [Test]
-        public void GetAuthStatusUnauthorizedReturnsForbid()
+        public async Task GetAuthStatusUnauthorizedReturnsForbid()
         {
             _controller.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
-            var result = _controller.GetAuthStatus();
+            var result = await _controller.GetAuthStatus();
 
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
         [Test]
-        public void GetAuthStatusReturnsLexboxUserWhenLoggedIn()
+        public async Task GetAuthStatusReturnsLexboxUserWhenLoggedIn()
         {
-            var context = PermissionServiceMock.HttpContextWithUserId("user-1");
-            context.Request.Headers["Cookie"] = "lexbox_session_id=session-1";
-            _controller.ControllerContext.HttpContext = context;
-            _lexboxAuthService.LoggedInUser = new LexboxAuthUser { UserId = "lex-1", DisplayName = "Lex User" };
+            var claims = new List<Claim> { new("sub", "lex-1"), new("preferred_username", "Lex User") };
+            var authResult = AuthenticateResult.Success(new AuthenticationTicket(
+                new ClaimsPrincipal(new ClaimsIdentity(claims, "LexboxCookie")), "LexboxCookie"));
+            _controller.ControllerContext.HttpContext = GetAuthContext(authResult);
 
-            var result = _controller.GetAuthStatus();
+            var result = await _controller.GetAuthStatus() as OkObjectResult;
 
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            var payload = ((OkObjectResult)result).Value as AuthStatus;
-            Assert.That(payload, Is.Not.Null);
-            Assert.That(payload!.LoggedIn, Is.True);
-            Assert.That(payload.LoggedInAs, Is.EqualTo("Lex User"));
-            Assert.That(payload.UserId, Is.EqualTo("lex-1"));
+            Assert.That(result, Is.Not.Null);
+            var authStatus = result.Value as AuthStatus;
+            Assert.That(authStatus, Is.Not.Null);
+            Assert.That(authStatus.IsLoggedIn, Is.True);
+            Assert.That(authStatus.LoggedInAs, Is.EqualTo("Lex User"));
+            Assert.That(authStatus.UserId, Is.EqualTo("lex-1"));
         }
 
         [Test]
-        public void CompleteLexboxLoginRedirectsWhenReturnUrlPresent()
+        public async Task GetAuthStatusReturnsLoggedOutWhenNotAuthenticatedByLexboxCookie()
         {
-            _controller.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId("user-1");
-            _lexboxAuthService.CompleteResult = new LexboxAuthResult
-            {
-                User = new LexboxAuthUser { UserId = "lex-1", DisplayName = "Lex User" },
-                ReturnUrl = "/after-login",
-            };
+            _controller.ControllerContext.HttpContext = GetAuthContext(AuthenticateResult.NoResult());
 
-            var result = _controller.CompleteLexboxLogin("code", "state").Result;
+            var result = await _controller.GetAuthStatus() as OkObjectResult;
 
-            Assert.That(result, Is.InstanceOf<LocalRedirectResult>());
-            Assert.That(((LocalRedirectResult)result).Url, Is.EqualTo("/after-login"));
+            Assert.That(result, Is.Not.Null);
+            var authStatus = result.Value as AuthStatus;
+            Assert.That(authStatus, Is.Not.Null);
+            Assert.That(authStatus.IsLoggedIn, Is.False);
+            Assert.That(authStatus.LoggedInAs, Is.Null);
+            Assert.That(authStatus.UserId, Is.Null);
         }
 
-        private sealed class LexboxAuthServiceMock : ILexboxAuthService
+        [Test]
+        public void GetLexboxLoginUrlReturnsExpectedLoginPath()
         {
-            public LexboxAuthUser? LoggedInUser { get; set; }
-            public LexboxAuthResult? CompleteResult { get; set; }
+            _controller.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId(UserId);
 
-            public LexboxLoginUrl CreateLoginUrl(HttpRequest request, string sessionId, string? returnUrl)
-            {
-                return new LexboxLoginUrl { Url = "not-a-valid-url" };
-            }
+            var result = _controller.GetLexboxLoginUrl() as OkObjectResult;
 
-            public Task<LexboxAuthResult?> CompleteLoginAsync(HttpRequest request, string code, string state)
-            {
-                return Task.FromResult(CompleteResult);
-            }
+            Assert.That(result, Is.Not.Null);
+            var loginUrl = result.Value as LexboxLoginUrl;
+            Assert.That(loginUrl, Is.Not.Null);
+            Assert.That(loginUrl.Url, Is.EqualTo("/v1/auth/lexbox-login?returnUrl=%2F"));
+        }
 
-            public LexboxAuthUser? GetLoggedInUser(string? sessionId)
-            {
-                return LoggedInUser;
-            }
+        [Test]
+        public void StartLexboxLoginReturnsChallengeWithConfiguredSchemeAndRedirect()
+        {
+            _controller.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId(UserId);
+
+            var challengeResult = _controller.StartLexboxLogin("/after-login") as ChallengeResult;
+
+            Assert.That(challengeResult, Is.Not.Null);
+            Assert.That(challengeResult.AuthenticationSchemes, Has.Count.EqualTo(1));
+            Assert.That(challengeResult.AuthenticationSchemes[0], Is.EqualTo("LexboxOidc"));
+            Assert.That(challengeResult.Properties, Is.Not.Null);
+            Assert.That(challengeResult.Properties.RedirectUri, Is.EqualTo("/after-login"));
+        }
+
+        [Test]
+        public void StartLexboxLoginUnauthorizedReturnsForbid()
+        {
+            _controller.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            var result = _controller.StartLexboxLogin("/after-login");
+
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        private static HttpContext GetAuthContext(AuthenticateResult authenticateResult)
+        {
+            var context = PermissionServiceMock.HttpContextWithUserId(UserId);
+            var services = new ServiceCollection();
+            services.AddSingleton<IAuthenticationService>(new AuthenticationServiceMock(authenticateResult));
+            context.RequestServices = services.BuildServiceProvider();
+            return context;
         }
     }
 }

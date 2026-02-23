@@ -133,6 +133,16 @@ namespace BackendFramework
             }
 
             var key = ASCII.GetBytes(secretKey);
+
+            var lexboxBaseUrl = (Configuration["LexboxAuth:BaseUrl"] ?? "https://lexbox.org").TrimEnd('/');
+            var lexboxAuthority = Configuration["LexboxAuth:Authority"] ?? lexboxBaseUrl;
+            var lexboxMetadataAddress = Configuration["LexboxAuth:OpenIdConfigUrl"]
+                ?? $"{lexboxBaseUrl}/.well-known/openid-configuration";
+            var lexboxClientId = Configuration["LexboxAuth:ClientId"] ?? "the-combine";
+            var lexboxPrompt = Configuration["LexboxAuth:Prompt"] ?? "select_account";
+            var lexboxScope = Configuration["LexboxAuth:Scope"] ?? "profile openid offline_access sendandreceive";
+            var lexboxCallbackPath = Configuration["LexboxAuth:CallbackPath"] ?? "/v1/auth/oauth-callback";
+
             services.AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -144,10 +154,45 @@ namespace BackendFramework
                     x.SaveToken = true;
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateAudience = false,
                         ValidateIssuer = false,
-                        ValidateAudience = false
+                        ValidateIssuerSigningKey = true
+                    };
+                })
+                .AddCookie("LexboxCookie", options =>
+                {
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.IsEssential = true;
+                    options.Cookie.Name = "lexbox_auth";
+                    options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax;
+                    options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.SameAsRequest;
+                    options.ExpireTimeSpan = TimeSpan.FromHours(1);
+                    options.SlidingExpiration = true;
+                })
+                .AddOpenIdConnect("LexboxOidc", options =>
+                {
+                    options.Authority = lexboxAuthority;
+                    options.CallbackPath = lexboxCallbackPath;
+                    options.ClientId = lexboxClientId;
+                    options.GetClaimsFromUserInfoEndpoint = true;
+                    options.MetadataAddress = lexboxMetadataAddress;
+                    options.RequireHttpsMetadata = true;
+                    options.ResponseType = "code";
+                    options.SaveTokens = true;
+                    options.SignInScheme = "LexboxCookie";
+                    options.UsePkce = true;
+
+                    options.Scope.Clear();
+                    foreach (var scope in lexboxScope.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        options.Scope.Add(scope);
+                    }
+
+                    options.Events.OnRedirectToIdentityProvider = context =>
+                    {
+                        context.ProtocolMessage.Prompt = lexboxPrompt;
+                        return System.Threading.Tasks.Task.CompletedTask;
                     };
                 });
 
@@ -254,9 +299,6 @@ namespace BackendFramework
             services.AddTransient<IInviteService, InviteService>();
             services.AddTransient<IPasswordResetRepository, PasswordResetRepository>();
             services.AddTransient<IPasswordResetService, PasswordResetService>();
-
-            // Lexbox Auth
-            services.AddSingleton<ILexboxAuthService, LexboxAuthService>();
 
             // Lift Service - Singleton to avoid initializing the Sldr multiple times,
             // also to avoid leaking LanguageTag data

@@ -192,8 +192,12 @@ export async function getExternalLoginUrl(): Promise<string> {
   return response.data.url ?? "";
 }
 
-export function logoutCurrentUser(): void {
-  LocalStorage.clearLocalStorage();
+export async function logoutCurrentUser(): Promise<void> {
+  return;
+}
+
+export async function startLexboxLogin(): Promise<void> {
+  await authApi.startLexboxLogin(undefined, defaultOptions());
 }
 
 /* AvatarController.cs */
