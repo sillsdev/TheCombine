@@ -114,7 +114,7 @@ namespace BackendFramework.Services
         {
             var pathBase = request.PathBase.HasValue ? request.PathBase.Value : string.Empty;
             var uriBase = $"{request.Scheme}://{request.Host}{pathBase}".TrimEnd('/');
-            var callBackRoute = "/api/oauth/open-id-auth"; // matches route in AuthController
+            var callBackRoute = "/v1/auth/oauth-callback"; // matches route in AuthController
             return $"{uriBase}{callBackRoute}";
         }
 
