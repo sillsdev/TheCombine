@@ -33,11 +33,11 @@ namespace Backend.Tests.Controllers
 
             _passwordResetService.SetNextBoolResponse(false);
             var falseResult = _passwordResetController.ResetPassword(new()).Result;
-            Assert.That(falseResult, Is.TypeOf<ForbidResult>());
+            Assert.That(falseResult, Is.InstanceOf<ForbidResult>());
 
             _passwordResetService.SetNextBoolResponse(true);
             var trueResult = _passwordResetController.ResetPassword(new()).Result;
-            Assert.That(trueResult, Is.TypeOf<OkResult>());
+            Assert.That(trueResult, Is.InstanceOf<OkResult>());
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace Backend.Tests.Controllers
 
             _passwordResetService.SetNextBoolResponse(true);
             var trueResult = _passwordResetController.ResetPasswordRequest("username").Result;
-            Assert.That(trueResult, Is.TypeOf<OkResult>());
+            Assert.That(trueResult, Is.InstanceOf<OkResult>());
         }
 
         [Test]
@@ -64,12 +64,12 @@ namespace Backend.Tests.Controllers
 
             _passwordResetService.SetNextBoolResponse(false);
             var falseResult = _passwordResetController.ValidateResetToken("token").Result;
-            Assert.That(falseResult, Is.TypeOf<OkObjectResult>());
+            Assert.That(falseResult, Is.InstanceOf<OkObjectResult>());
             Assert.That(((OkObjectResult)falseResult).Value, Is.EqualTo(false));
 
             _passwordResetService.SetNextBoolResponse(true);
             var trueResult = _passwordResetController.ValidateResetToken("token").Result;
-            Assert.That(trueResult, Is.TypeOf<OkObjectResult>());
+            Assert.That(trueResult, Is.InstanceOf<OkObjectResult>());
             Assert.That(((OkObjectResult)trueResult).Value, Is.EqualTo(true));
         }
     }
