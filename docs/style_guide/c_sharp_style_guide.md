@@ -31,7 +31,7 @@ If `<type>` is (e.g.), `string`, considering using something like
 
 ```c#
 string thingId = _service.Update(thing);
-return Ok(thingId)
+return Ok(thingId);
 ```
 
 Using `string thingId` instead of `var thingId` is a guard in case the return type of `Update` changes.
@@ -156,7 +156,7 @@ Assert.That(nullableObj!.Id, Is.EqualTo(expectedId));
 
 #### Rationale
 
-Clear assert failure, rather than error, if thing is non-null as expected.
+Clear assert failure, rather than error, if thing is unexpected `null`.
 
 ### Type casting nullable things
 
@@ -174,7 +174,7 @@ Assert.That(nullableWord.Id, Is.EqualTo(expectedId));
 
 // No
 var nullableWord = getWordOrNull();
-Assert.That(nullableWord, Is.InstanceOf(Word));
+Assert.That(nullableWord, Is.InstanceOf<Word>());
 Assert.That(((Word)nullableWord).Id, Is.EqualTo(expectedId));
 ```
 

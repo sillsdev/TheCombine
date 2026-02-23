@@ -47,9 +47,9 @@ namespace Backend.Tests.Controllers
             _passwordResetController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
             _passwordResetService.SetNextBoolResponse(false);
-            var falseResult = _passwordResetController.ResetPasswordRequest("username").Result;
-            Assert.That(((StatusCodeResult)falseResult).StatusCode,
-                Is.EqualTo(StatusCodes.Status500InternalServerError));
+            var falseResult = _passwordResetController.ResetPasswordRequest("username").Result as StatusCodeResult;
+            Assert.That(falseResult, Is.Not.Null);
+            Assert.That(falseResult.StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
 
             _passwordResetService.SetNextBoolResponse(true);
             var trueResult = _passwordResetController.ResetPasswordRequest("username").Result;
@@ -63,14 +63,14 @@ namespace Backend.Tests.Controllers
             _passwordResetController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
             _passwordResetService.SetNextBoolResponse(false);
-            var falseResult = _passwordResetController.ValidateResetToken("token").Result;
-            Assert.That(falseResult, Is.InstanceOf<OkObjectResult>());
-            Assert.That(((OkObjectResult)falseResult).Value, Is.EqualTo(false));
+            var falseResult = _passwordResetController.ValidateResetToken("token").Result as OkObjectResult;
+            Assert.That(falseResult, Is.Not.Null);
+            Assert.That(falseResult.Value, Is.EqualTo(false));
 
             _passwordResetService.SetNextBoolResponse(true);
-            var trueResult = _passwordResetController.ValidateResetToken("token").Result;
-            Assert.That(trueResult, Is.InstanceOf<OkObjectResult>());
-            Assert.That(((OkObjectResult)trueResult).Value, Is.EqualTo(true));
+            var trueResult = _passwordResetController.ValidateResetToken("token").Result as OkObjectResult;
+            Assert.That(trueResult, Is.Not.Null);
+            Assert.That(trueResult.Value, Is.EqualTo(true));
         }
     }
 }
