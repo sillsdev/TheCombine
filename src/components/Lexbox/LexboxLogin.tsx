@@ -71,7 +71,7 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
     }
   };
 
-  const isLoggedIn = status?.loggedIn ?? false;
+  const isLoggedIn = status?.isLoggedIn ?? false;
   const menuOpen = Boolean(menuAnchor);
   const label = status?.loggedInAs ?? t("login.login");
 

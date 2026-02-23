@@ -2,25 +2,20 @@ namespace BackendFramework.Models
 {
     public class AuthStatus
     {
-        public bool LoggedIn { get; set; }
+        public bool IsLoggedIn { get; set; }
         public string? LoggedInAs { get; set; }
         public string? UserId { get; set; }
 
         public static AuthStatus LoggedOut() => new()
         {
-            LoggedIn = false,
-            LoggedInAs = null,
-            UserId = null,
+            IsLoggedIn = false
         };
 
-        public static AuthStatus LoggedInLexboxUser(LexboxAuthUser user)
+        public static AuthStatus LoggedIn(LexboxAuthUser user) => new()
         {
-            return new AuthStatus
-            {
-                LoggedIn = true,
-                LoggedInAs = user.DisplayName,
-                UserId = user.UserId,
-            };
-        }
+            IsLoggedIn = true,
+            LoggedInAs = user.DisplayName,
+            UserId = user.UserId
+        };
     }
 }
