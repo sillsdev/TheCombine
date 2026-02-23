@@ -4,9 +4,9 @@
 
 In general, follow the Microsoft C# Coding Guidelines described in the following links:
 
-- https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/naming-guidelines
-- https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/identifier-names
-- https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions
+- https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/naming-guidelines
+- https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/identifier-names
+- https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions
 
 # Exceptions
 
@@ -29,12 +29,12 @@ but nowhere is that type enforced.
 
 If `<type>` is (e.g.), `string`, considering using something like
 
-```
+```c#
 string thingId = _service.Update(thing);
-return Ok(thinkId)
+return Ok(thingId)
 ```
 
-Using `string thingId` instead of `var stringId` is a guard in case the return type of `Update` changes.
+Using `string thingId` instead of `var thingId` is a guard in case the return type of `Update` changes.
 
 ### Initiating empty collections
 
@@ -46,13 +46,13 @@ the sake of concision.
 Add braces to one-line `if` statements;
 
 ```c#
-# Yes:
+// Yes:
 if (isEmpty)
 {
     callFun();
 }
 
-# No:
+// No:
 if (isEmpty)
     callFun();
 ```
@@ -67,12 +67,12 @@ Avoiding braces can cause developers to miss bugs, such as Apple's infamous
 As an example, to loop `0`, `1`, `2`, `3`:
 
 ```c#
-# Yes:
+// Yes:
 using static System.Linq.Enumerable;
 
 foreach (var i in Range(0, 4))
 
-# No:
+// No:
 for (var i = 0; i < 4; i++)
 ```
 
@@ -85,12 +85,12 @@ Range (int start, int count);
 Another example that loops `1`, `2`, `3`:
 
 ```c#
-# Yes:
+// Yes:
 using static System.Linq.Enumerable;
 
 foreach (var i in Range(1, 3))
 
-# No:
+// No:
 for (var i = 1; i < 4; i++)
 ```
 
@@ -98,7 +98,7 @@ for (var i = 1; i < 4; i++)
 
 - Only need to mention loop variable (e.g. `i`) once
 - Remove some error-prone boilerplate (`i++`)
-- Remove the possibly of incrementing the wrong value (e.g. incrementing `i` instead of `j` in an inner loop)
+- Remove the possibility of incrementing the wrong value (e.g. incrementing `i` instead of `j` in an inner loop)
 - Express clearly the intent
 
 ## Use `IsNullOrEmpty` to compare with empty string
@@ -106,22 +106,22 @@ for (var i = 1; i < 4; i++)
 ```c#
 var str = "Am I empty?";
 
-# Yes
+// Yes
 if (string.IsNullOrEmpty(str))
 
 if (!string.IsNullOrEmpty(str))
 
-# No
+// No
 if (str == "")
 
 if (str != string.Empty)
 
-if (str.Equals(''))
+if (str.Equals(""))
 ```
 
-### Rational
+### Rationale
 
-Uniform style, and still works if variable being check becomes nullable.
+Uniform style, and still works if variable being checked becomes nullable.
 
 ## NUnit testing
 
@@ -133,3 +133,51 @@ Prefer asserts with `Is.InstanceOf` over `Is.TypeOf` to allow for inheritance, u
 
 If you want to make sure an async method finishes but don't need what it returns, use `.Wait()` rather than assigning it
 to an unused `_` variable.
+
+In `async` tests, prefer `await` over either of the above.
+
+### `null` handling
+
+Prefer `Assert.That(..., Is.Not.Null)` over using ? or !.
+
+```c#
+var nullableObj = getObjOrNull();
+
+// Yes
+Assert.That(nullableObj, Is.Not.Null);
+Assert.That(nullableObj.Id, Is.EqualTo(expectedId));
+
+// No
+Assert.That(nullableObj?.Id, Is.EqualTo(expectedId));
+
+// No
+Assert.That(nullableObj!.Id, Is.EqualTo(expectedId));
+```
+
+#### Rationale
+
+Clear assert failure, rather than error, if thing is non-null as expected.
+
+### Type casting nullable things
+
+When type casting is necessary on something that might be null, use soft cast together with a non-null assertion.
+
+```c#
+// Yes
+var nullableWord = getWordOrNull() as Word;
+Assert.That(nullableWord, Is.Not.Null);
+Assert.That(nullableWord.Id, Is.EqualTo(expectedId));
+
+// No
+var nullableWord = (Word)getWordOrNull();
+Assert.That(nullableWord.Id, Is.EqualTo(expectedId));
+
+// No
+var nullableWord = getWordOrNull();
+Assert.That(nullableWord, Is.InstanceOf(Word));
+Assert.That(((Word)nullableWord).Id, Is.EqualTo(expectedId));
+```
+
+#### Rationale
+
+Clear assert failure if thing is non-null as expected, and only have to specify the type once.
