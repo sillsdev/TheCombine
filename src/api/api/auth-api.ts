@@ -38,8 +38,6 @@ import {
 } from "../base";
 // @ts-ignore
 import { AuthStatus } from "../models";
-// @ts-ignore
-import { LexboxLoginUrl } from "../models";
 /**
  * AuthApi - axios parameter creator
  * @export
@@ -201,7 +199,7 @@ export const AuthApiFp = function (configuration?: Configuration) {
     async getLexboxLoginUrl(
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<LexboxLoginUrl>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getLexboxLoginUrl(options);
@@ -262,7 +260,7 @@ export const AuthApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getLexboxLoginUrl(options?: any): AxiosPromise<LexboxLoginUrl> {
+    getLexboxLoginUrl(options?: any): AxiosPromise<void> {
       return localVarFp
         .getLexboxLoginUrl(options)
         .then((request) => request(axios, basePath));

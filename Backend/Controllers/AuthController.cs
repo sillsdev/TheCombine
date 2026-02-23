@@ -7,7 +7,6 @@ using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 
 namespace BackendFramework.Controllers
@@ -49,22 +48,17 @@ namespace BackendFramework.Controllers
 
         /// <summary> Generates a Lexbox login URL for OIDC sign-in. </summary>
         [HttpGet("lexbox-login-url", Name = "GetLexboxLoginUrl")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LexboxLoginUrl))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status302Found)]
         public IActionResult GetLexboxLoginUrl()
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting lexbox login url");
 
-            if (!_permissionService.IsCurrentUserAuthenticated(HttpContext))
-            {
-                return Forbid();
-            }
-
-            var returnUrl = NormalizeReturnUrl(_configuration[PostLoginRedirectConfigKey])
+            var redirectUrl = NormalizeReturnUrl(_configuration[PostLoginRedirectConfigKey])
                 ?? NormalizeReturnUrl(Domain.FrontendDomain)
                 ?? "/";
-            var loginUrl = QueryHelpers.AddQueryString("/v1/auth/lexbox-login", "returnUrl", returnUrl);
-            return Ok(new LexboxLoginUrl { Url = loginUrl });
+            var authProperties = new AuthenticationProperties { RedirectUri = redirectUrl };
+
+            return Challenge(authProperties, LexboxOidcScheme);
         }
 
         /// <summary> Starts Lexbox OpenID Connect login challenge. </summary>

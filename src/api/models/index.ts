@@ -13,7 +13,6 @@ export * from "./flag";
 export * from "./gloss";
 export * from "./gram-cat-group";
 export * from "./grammatical-info";
-export * from "./lexbox-login-url";
 export * from "./merge-source-word";
 export * from "./merge-undo-ids";
 export * from "./merge-words";

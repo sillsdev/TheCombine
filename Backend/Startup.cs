@@ -134,11 +134,10 @@ namespace BackendFramework
 
             var key = ASCII.GetBytes(secretKey);
 
-            var lexboxBaseUrl = (Configuration["LexboxAuth:BaseUrl"] ?? "https://lexbox.org").TrimEnd('/');
-            var lexboxAuthority = Configuration["LexboxAuth:Authority"] ?? lexboxBaseUrl;
-            var lexboxMetadataAddress = Configuration["LexboxAuth:OpenIdConfigUrl"]
-                ?? $"{lexboxBaseUrl}/.well-known/openid-configuration";
+            var lexboxAuthority = (Configuration["LexboxAuth:Authority"] ?? "https://lexbox.org").TrimEnd('/');
             var lexboxClientId = Configuration["LexboxAuth:ClientId"] ?? "the-combine";
+            var lexboxMetadataAddress = Configuration["LexboxAuth:OpenIdConfigUrl"]
+                ?? "https://lexbox.org/.well-known/openid-configuration";
             var lexboxPrompt = Configuration["LexboxAuth:Prompt"] ?? "select_account";
             var lexboxScope = Configuration["LexboxAuth:Scope"] ?? "profile openid offline_access sendandreceive";
             var lexboxCallbackPath = Configuration["LexboxAuth:CallbackPath"] ?? "/v1/auth/oauth-callback";
