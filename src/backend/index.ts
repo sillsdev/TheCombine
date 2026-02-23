@@ -188,8 +188,7 @@ export async function getAuthStatus(): Promise<AuthStatus> {
 }
 
 export async function getExternalLoginUrl(): Promise<string> {
-  const response = await authApi.getLexboxLoginUrl(defaultOptions());
-  return response.data.url ?? "";
+  return `${baseURL}/v1/auth/lexbox-login-url`;
 }
 
 export async function logoutCurrentUser(): Promise<void> {

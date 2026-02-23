@@ -84,12 +84,13 @@ namespace Backend.Tests.Controllers
         {
             _controller.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId(UserId);
 
-            var result = _controller.GetLexboxLoginUrl() as OkObjectResult;
+            var challengeResult = _controller.GetLexboxLoginUrl() as ChallengeResult;
 
-            Assert.That(result, Is.Not.Null);
-            var loginUrl = result.Value as LexboxLoginUrl;
-            Assert.That(loginUrl, Is.Not.Null);
-            Assert.That(loginUrl.Url, Is.EqualTo("/v1/auth/lexbox-login?returnUrl=%2F"));
+            Assert.That(challengeResult, Is.Not.Null);
+            Assert.That(challengeResult.AuthenticationSchemes, Has.Count.EqualTo(1));
+            Assert.That(challengeResult.AuthenticationSchemes[0], Is.EqualTo("LexboxOidc"));
+            Assert.That(challengeResult.Properties, Is.Not.Null);
+            Assert.That(challengeResult.Properties.RedirectUri, Is.EqualTo("/"));
         }
 
         [Test]

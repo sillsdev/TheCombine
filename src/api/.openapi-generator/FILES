@@ -40,7 +40,6 @@ models/gloss.ts
 models/gram-cat-group.ts
 models/grammatical-info.ts
 models/index.ts
-models/lexbox-login-url.ts
 models/merge-source-word.ts
 models/merge-undo-ids.ts
 models/merge-words.ts
