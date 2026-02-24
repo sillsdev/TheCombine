@@ -134,17 +134,19 @@ namespace BackendFramework
 
             var key = ASCII.GetBytes(secretKey);
 
-            var lexboxAuthority = (Configuration["LexboxAuth:Authority"] ?? "https://lexbox.org").TrimEnd('/');
-            var lexboxClientId = Configuration["LexboxAuth:ClientId"] ?? "the-combine";
-            var lexboxMetadataAddress = Configuration["LexboxAuth:OpenIdConfigUrl"]
-                ?? "https://lexbox.org/.well-known/openid-configuration";
+            var lexboxAuthority = Configuration["LexboxAuth:Authority"]?.Trim().TrimEnd('/');
+            lexboxAuthority = string.IsNullOrEmpty(lexboxAuthority) ? "https://lexbox.org" : lexboxAuthority;
+            // Authorization endpoint needs to be defined before discovery happens with the metadata address.
             var lexboxAuthorizationEndpoint = Configuration["LexboxAuth:AuthorizationEndpoint"]?.Trim();
             lexboxAuthorizationEndpoint = string.IsNullOrEmpty(lexboxAuthorizationEndpoint)
                 ? "https://lexbox.org/api/oauth/open-id-auth"
                 : lexboxAuthorizationEndpoint;
+            var lexboxCallbackPath = Configuration["LexboxAuth:CallbackPath"] ?? "/v1/auth/oauth-callback";
+            var lexboxClientId = Configuration["LexboxAuth:ClientId"] ?? "the-combine";
+            var lexboxMetadataAddress = Configuration["LexboxAuth:OpenIdConfigUrl"]
+                ?? "https://lexbox.org/.well-known/openid-configuration";
             var lexboxPrompt = Configuration["LexboxAuth:Prompt"] ?? "select_account";
             var lexboxScope = Configuration["LexboxAuth:Scope"] ?? "profile openid offline_access sendandreceive";
-            var lexboxCallbackPath = Configuration["LexboxAuth:CallbackPath"] ?? "/v1/auth/oauth-callback";
 
             services.AddAuthentication(x =>
                 {
