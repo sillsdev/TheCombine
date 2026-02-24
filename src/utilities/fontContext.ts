@@ -12,6 +12,7 @@ export type WithFontProps = {
 export class ProjectFonts {
   readonly analysisDir: CSSProperties["direction"];
   readonly analysisFont: string;
+  readonly analysisLangs: string[] = [];
   private readonly rtlLangs: Hash<boolean> = {};
   private readonly inherit = "inherit";
   private readonly langMap: Hash<string> = {};
@@ -25,6 +26,8 @@ export class ProjectFonts {
     if (!proj) {
       return;
     }
+
+    this.analysisLangs = proj.analysisWritingSystems.map((ws) => ws.bcp47);
 
     proj.analysisWritingSystems.forEach((ws) => {
       const font = ws.font.replaceAll(" ", "");

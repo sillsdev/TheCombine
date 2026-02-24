@@ -1,6 +1,6 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { Card } from "@mui/material";
-import { type ReactElement } from "react";
+import { type ReactElement, useContext } from "react";
 
 import { trashId } from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/MergeDragDropTypes";
 import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
@@ -8,6 +8,7 @@ import { type MergeTreeSense } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import theme from "types/theme";
+import FontContext from "utilities/fontContext";
 
 interface SidebarDragSenseProps {
   mergeSense: MergeTreeSense;
@@ -17,6 +18,7 @@ interface SidebarDragSenseProps {
 export default function SidebarDragSense(
   props: SidebarDragSenseProps
 ): ReactElement {
+  const analysisLangs = useContext(FontContext).analysisLangs;
   const draggableId = useAppSelector((state: StoreState) => {
     const ref = state.mergeDuplicateGoal.tree.sidebar.senseRef;
     return JSON.stringify({ ...ref, order: props.index });
@@ -59,7 +61,7 @@ export default function SidebarDragSense(
                         : "lightgrey",
             }}
           >
-            <SenseCardContent senses={[props.mergeSense.sense]} sidebar />
+            <SenseCardContent senses={[props.mergeSense.sense]} languages={analysisLangs} sidebar />
           </Card>
         </div>
       )}

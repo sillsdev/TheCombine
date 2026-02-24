@@ -1,6 +1,7 @@
-import { type ReactElement } from "react";
+import { type ReactElement, useContext } from "react";
 
 import { type Sense } from "api/models";
+import FontContext from "utilities/fontContext";
 import { TypographyWithFont } from "utilities/fontComponents";
 
 interface SensesTextSummaryProp {
@@ -16,16 +17,39 @@ export default function SensesTextSummary(
   const interSenseSep = " | ";
   const intraSenseSep = "; ";
 
+  const analysisLangs = useContext(FontContext).analysisLangs;
+
   const typographies: ReactElement[] = [];
 
   props.senses.forEach((sense) => {
     let texts: string[];
+    let lang: string | undefined;
     switch (props.definitionsOrGlosses) {
       case "definitions":
-        texts = sense.definitions.map((d) => d.text.trim());
+        if (analysisLangs.length) {
+          texts = analysisLangs.flatMap((l) =>
+            sense.definitions.filter((d) => d.language === l).map((d) => d.text.trim())
+          );
+          lang = analysisLangs.find((l) =>
+            sense.definitions.some((d) => d.language === l && d.text.trim())
+          );
+        } else {
+          texts = sense.definitions.map((d) => d.text.trim());
+          lang = sense.definitions.find((d) => d.text.trim())?.language;
+        }
         break;
       case "glosses":
-        texts = sense.glosses.map((g) => g.def.trim());
+        if (analysisLangs.length) {
+          texts = analysisLangs.flatMap((l) =>
+            sense.glosses.filter((g) => g.language === l).map((g) => g.def.trim())
+          );
+          lang = analysisLangs.find((l) =>
+            sense.glosses.some((g) => g.language === l && g.def.trim())
+          );
+        } else {
+          texts = sense.glosses.map((g) => g.def.trim());
+          lang = sense.glosses.find((g) => g.def.trim())?.language;
+        }
         break;
     }
     let text = texts.filter((t) => t).join(intraSenseSep);
@@ -49,16 +73,6 @@ export default function SensesTextSummary(
       );
     }
 
-    // Use the analysis language of the first non-empty definition/gloss, if any.
-    let lang: string | undefined;
-    switch (props.definitionsOrGlosses) {
-      case "definitions":
-        lang = sense.definitions.find((d) => d.text.trim())?.language;
-        break;
-      case "glosses":
-        lang = sense.glosses.find((g) => g.def.trim())?.language;
-        break;
-    }
     typographies.push(
       <TypographyWithFont
         analysis
