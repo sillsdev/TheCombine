@@ -180,4 +180,4 @@ Assert.That(((Word)nullableWord).Id, Is.EqualTo(expectedId));
 
 #### Rationale
 
-Clear assert failure if thing is non-null as expected, and only have to specify the type once.
+Clear assert failure if thing is unexpectedly `null`, and only have to specify the type once.
