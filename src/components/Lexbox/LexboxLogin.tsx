@@ -25,7 +25,7 @@ interface LexboxLoginProps {
 
 export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
   const { t } = useTranslation();
-  const [status, setStatus] = useState<AuthStatus | undefined>(undefined);
+  const [status, setStatus] = useState<AuthStatus | undefined>();
   const [statusLoading, setStatusLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -62,15 +62,11 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
     }
   };
 
-  const isLoggedIn = status?.isLoggedIn ?? false;
-  const menuOpen = Boolean(menuAnchor);
-  const label = status?.loggedInAs ?? t("login.login");
-
-  if (!isLoggedIn) {
+  if (!status?.isLoggedIn) {
     return (
       <LoadingButton
-        loading={statusLoading || actionLoading}
         buttonProps={{ onClick: handleLogin, variant: "outlined" }}
+        loading={actionLoading || statusLoading}
       >
         {props.text ?? t("login.login")}
       </LoadingButton>
@@ -80,21 +76,23 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
   return (
     <>
       <Button
-        onClick={(event) => setMenuAnchor(event.currentTarget)}
+        onClick={(e) => setMenuAnchor(e.currentTarget)}
         startIcon={<AccountCircleIcon />}
         variant="outlined"
       >
-        {label}
+        {status?.loggedInAs || t("login.login")}
       </Button>
+
       <Menu
         anchorEl={menuAnchor}
-        open={menuOpen}
         onClose={() => setMenuAnchor(null)}
+        open={Boolean(menuAnchor)}
       >
-        <MenuItem onClick={handleLogout} disabled={actionLoading}>
+        <MenuItem disabled={actionLoading} onClick={handleLogout}>
           <ListItemIcon>
             <LogoutIcon fontSize="small" />
           </ListItemIcon>
+
           <ListItemText>{t("userMenu.logout")}</ListItemText>
         </MenuItem>
       </Menu>
