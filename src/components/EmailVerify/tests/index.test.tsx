@@ -27,8 +27,6 @@ const mockDispatch = jest.fn();
 const mockNavigate = jest.fn();
 const mockVerifyEmail = jest.fn();
 
-beforeEach(jest.clearAllMocks);
-
 async function renderEmailVerify(): Promise<void> {
   await act(async () => {
     render(

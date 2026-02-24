@@ -70,7 +70,6 @@ const updateProjSettings = async (hasSchedule = false): Promise<void> => {
 };
 
 const resetMocks = (): void => {
-  jest.clearAllMocks();
   mockGetCurrentPermissions.mockResolvedValue([]);
 };
 

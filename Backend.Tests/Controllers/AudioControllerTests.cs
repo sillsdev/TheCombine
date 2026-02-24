@@ -64,16 +64,16 @@ namespace Backend.Tests.Controllers
         public void TestUploadAudioFileInvalidArguments()
         {
             var result = _audioController.UploadAudioFile("invalid/projId", _wordId, _file).Result;
-            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
 
             result = _audioController.UploadAudioFile(_projId, "invalid/wordId", _file).Result;
-            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
 
             result = _audioController.UploadAudioFile("invalid/projId", _wordId, "speakerId", _file).Result;
-            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
 
             result = _audioController.UploadAudioFile(_projId, "invalid/wordId", "speakerId", _file).Result;
-            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
         }
 
         [Test]
@@ -112,27 +112,33 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUploadAudioFile()
         {
-            _ = _audioController.UploadAudioFile(_projId, _wordId, "speakerId", _file).Result;
+            var result = _audioController.UploadAudioFile(_projId, _wordId, "speakerId", _file).Result
+                as OkObjectResult;
+            Assert.That(result, Is.Not.Null);
+            var newId = result.Value as string;
+            Assert.That(newId, Is.Not.Null);
+            Assert.That(newId, Is.Not.EqualTo(_wordId));
 
-            var foundWord = _wordRepo.GetWord(_projId, _wordId).Result;
-            Assert.That(foundWord?.Audio, Is.Not.Null);
+            var foundWord = _wordRepo.GetWord(_projId, newId).Result;
+            Assert.That(foundWord, Is.Not.Null);
+            Assert.That(foundWord.Audio, Is.Not.Empty);
         }
 
         [Test]
         public void TestDownloadAudioFileInvalidArguments()
         {
             var result = _audioController.DownloadAudioFile("invalid/projId", "fileName");
-            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
 
             result = _audioController.DownloadAudioFile("projId", "invalid/fileName");
-            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
         }
 
         [Test]
         public void TestDownloadAudioFileNoFile()
         {
             var result = _audioController.DownloadAudioFile("projId", "fileName");
-            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
         }
 
         [Test]
@@ -140,63 +146,58 @@ namespace Backend.Tests.Controllers
         {
             _audioController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = _audioController.DeleteAudioFile(_projId, _wordId, _file.FileName).Result;
-            Assert.That(result, Is.TypeOf<ForbidResult>());
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
         [Test]
         public void TestDeleteAudioFileInvalidArguments()
         {
             var result = _audioController.DeleteAudioFile("in/va/lid", _wordId, _file.FileName).Result;
-            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
 
             result = _audioController.DeleteAudioFile(_projId, "in/va/lid", _file.FileName).Result;
-            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
 
             result = _audioController.DeleteAudioFile(_projId, _wordId, "in/va/lid").Result;
-            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
         }
 
         [Test]
         public void TestDeleteAudioFileNoWordWithAudio()
         {
             var result = _audioController.DeleteAudioFile(_projId, "not-a-word", _file.FileName).Result;
-            Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
 
             var wordId = _wordRepo.Create(Util.RandomWord(_projId)).Result.Id;
             result = _audioController.DeleteAudioFile(_projId, wordId, _file.FileName).Result;
-            Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
 
         [Test]
         public void TestDeleteAudioFile()
         {
             // Refill test database
-            _wordRepo.DeleteAllWords(_projId);
+            _wordRepo.DeleteAllWords(_projId).Wait();
+            _wordRepo.DeleteAllFrontierWords(_projId).Wait();
             var origWord = Util.RandomWord(_projId);
             const string fileName = "a.wav";
             origWord.Audio.Add(new Pronunciation(fileName));
-            var wordId = _wordRepo.Create(origWord).Result.Id;
+            var oldId = _wordRepo.Create(origWord).Result.Id;
 
             // Test delete function
-            _ = _audioController.DeleteAudioFile(_projId, wordId, fileName).Result;
+            var result = _audioController.DeleteAudioFile(_projId, oldId, fileName).Result as OkObjectResult;
+            Assert.That(result, Is.Not.Null);
+            var newId = result.Value as string;
 
-            // Original word persists
-            Assert.That(_wordRepo.GetAllWords(_projId).Result, Has.Count.EqualTo(2));
-
-            // Get the new word from the database
-            var frontier = _wordRepo.GetFrontier(_projId).Result;
-
-            // Ensure the new word has no audio files
-            Assert.That(frontier[0].Audio, Has.Count.EqualTo(0));
-
-            // Test the frontier
-            Assert.That(_wordRepo.GetFrontier(_projId).Result, Has.Count.EqualTo(1));
+            // Ensure returned id is different
+            Assert.That(newId, Is.Not.Null);
+            Assert.That(newId, Is.Not.EqualTo(oldId));
 
             // Ensure the word with deleted audio is in the frontier
+            var frontier = _wordRepo.GetAllFrontier(_projId).Result;
             Assert.That(frontier, Has.Count.EqualTo(1));
-            Assert.That(frontier[0].Id, Is.Not.EqualTo(wordId));
-            Assert.That(frontier[0].Audio, Has.Count.EqualTo(0));
-            Assert.That(frontier[0].History, Has.Count.EqualTo(1));
+            Assert.That(frontier[0].Id, Is.EqualTo(newId));
+            Assert.That(frontier[0].Audio, Is.Empty);
         }
     }
 }

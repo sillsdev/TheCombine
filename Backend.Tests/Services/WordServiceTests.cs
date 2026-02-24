@@ -43,13 +43,13 @@ namespace Backend.Tests.Services
         [Test]
         public void TestCreateMultipleWords()
         {
-            _ = _wordService.Create(UserId, [new() { ProjectId = ProjId }, new() { ProjectId = ProjId }]).Result;
+            _wordService.Create(UserId, [new() { ProjectId = ProjId }, new() { ProjectId = ProjId }]).Wait();
             Assert.That(_wordRepo.GetAllWords(ProjId).Result, Has.Count.EqualTo(2));
-            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(2));
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(2));
         }
 
         [Test]
-        public void TestDeleteAudioBadInputNull()
+        public void TestDeleteAudioBadInputReturnsNull()
         {
             var fileName = "audio.mp3";
             var wordInFrontier = _wordRepo.Create(
@@ -60,7 +60,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestDeleteAudioNotInFrontierNull()
+        public void TestDeleteAudioNotInFrontierReturnsNull()
         {
             var fileName = "audio.mp3";
             var wordNotInFrontier = _wordRepo.Add(
@@ -74,17 +74,66 @@ namespace Backend.Tests.Services
             var fileName = "audio.mp3";
             var wordInFrontier = _wordRepo.Create(
                 new Word() { Audio = [new() { FileName = fileName }], ProjectId = ProjId }).Result;
-            var result = _wordService.DeleteAudio(ProjId, UserId, wordInFrontier.Id, fileName).Result;
-            Assert.That(result!.EditedBy.Last(), Is.EqualTo(UserId));
-            Assert.That(result!.History.Last(), Is.EqualTo(wordInFrontier.Id));
-            Assert.That(_wordRepo.IsInFrontier(ProjId, result.Id).Result, Is.True);
-            Assert.That(_wordRepo.IsInFrontier(ProjId, wordInFrontier.Id).Result, Is.False);
+            var oldId = wordInFrontier.Id;
+
+            var newWord = _wordService.DeleteAudio(ProjId, UserId, oldId, fileName).Result;
+
+            // New word is correct
+            Assert.That(newWord, Is.Not.Null);
+            Assert.That(newWord.Id, Is.Not.EqualTo(oldId));
+            Assert.That(newWord.Audio, Is.Empty);
+            Assert.That(newWord.EditedBy.Last(), Is.EqualTo(UserId));
+            Assert.That(newWord.History.Last(), Is.EqualTo(oldId));
+
+            // New word is only one in frontier
+            Assert.That(_wordRepo.IsInFrontier(ProjId, newWord.Id).Result, Is.True);
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(1));
+
+            // Original word persists
+            var allWords = _wordRepo.GetAllWords(ProjId).Result;
+            Assert.That(allWords, Has.Count.EqualTo(2));
+            Assert.That(allWords.Find(w => w.Id == newWord.Id), Is.Not.Null);
+            var oldWord = allWords.Find(w => w.Id == oldId);
+            Assert.That(oldWord, Is.Not.Null);
+            Assert.That(oldWord.Audio, Has.Count.EqualTo(1));
+            Assert.That(oldWord.History, Is.Empty);
         }
 
         [Test]
-        public void TestUpdateNotInFrontierNull()
+        public void TestDeleteFrontierWordNotInFrontierReturnsNull()
         {
-            Assert.That(_wordService.Update(ProjId, UserId, WordId, new Word()).Result, Is.Null);
+            var wordNotInFrontier = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
+            Assert.That(_wordService.DeleteFrontierWord(ProjId, UserId, wordNotInFrontier.Id).Result, Is.Null);
+            Assert.That(_wordService.DeleteFrontierWord("wrong-proj", UserId, WordId).Result, Is.Null);
+        }
+
+        [Test]
+        public void TestDeleteFrontierWordCopiesToWordsAndRemovesFrontier()
+        {
+            var oldId = _wordRepo.Create(new Word { ProjectId = ProjId }).Result.Id;
+
+            var deletedId = _wordService.DeleteFrontierWord(ProjId, UserId, oldId).Result;
+
+            Assert.That(deletedId, Is.Not.Null);
+            Assert.That(deletedId, Is.Not.EqualTo(oldId));
+            var deletedWord = _wordRepo.GetWord(ProjId, deletedId).Result;
+            Assert.That(deletedWord, Is.Not.Null);
+            Assert.That(deletedWord.Accessibility, Is.EqualTo(Status.Deleted));
+            Assert.That(deletedWord.History.Last(), Is.EqualTo(oldId));
+            Assert.That(deletedWord.EditedBy.Last(), Is.EqualTo(UserId));
+
+            var allWordIds = _wordRepo.GetAllWords(ProjId).Result.Select(w => w.Id).ToList();
+            Assert.That(allWordIds, Has.Count.EqualTo(2));
+            Assert.That(allWordIds, Does.Contain(oldId));
+            Assert.That(allWordIds, Does.Contain(deletedId));
+
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Is.Empty);
+        }
+
+        [Test]
+        public void TestUpdateNotInFrontierReturnsNull()
+        {
+            Assert.That(_wordService.Update(UserId, new Word() { Id = WordId, ProjectId = ProjId }).Result, Is.Null);
         }
 
         [Test]
@@ -94,8 +143,12 @@ namespace Backend.Tests.Services
             Assert.That(word, Is.Not.Null);
             var oldId = word.Id;
             word.Vernacular = "NewVern";
-            Assert.That(_wordService.Update(ProjId, UserId, oldId, word).Result, Is.EqualTo(word.Id));
-            var frontier = _wordRepo.GetFrontier(ProjId).Result;
+
+            var updatedWord = _wordService.Update(UserId, word).Result;
+            Assert.That(updatedWord, Is.Not.Null);
+            Assert.That(updatedWord.Guid, Is.EqualTo(word.Guid));
+
+            var frontier = _wordRepo.GetAllFrontier(ProjId).Result;
             Assert.That(frontier, Has.Count.EqualTo(1));
             var newWord = frontier.First();
             Assert.That(newWord.Id, Is.Not.EqualTo(oldId));
@@ -112,20 +165,24 @@ namespace Backend.Tests.Services
 
             // Update something other than Vernacular and make sure UsingCitationForm is still true.
             word.Note = new() { Text = "change word's note" };
-            _ = _wordService.Update(ProjId, UserId, word.Id, word).Result;
-            Assert.That(word.UsingCitationForm, Is.True);
+            var nonVernUpdate = _wordService.Update(UserId, word).Result;
+            Assert.That(nonVernUpdate, Is.Not.Null);
+            Assert.That(nonVernUpdate.UsingCitationForm, Is.True);
 
             // Update the Vernacular and make sure UsingCitationForm is false.
-            word.Vernacular = "change word's vernacular form";
-            _ = _wordService.Update(ProjId, UserId, word.Id, word).Result;
-            Assert.That(word.UsingCitationForm, Is.False);
+            nonVernUpdate.Vernacular = "change word's vernacular form";
+            var vernUpdate = _wordService.Update(UserId, nonVernUpdate).Result;
+            Assert.That(vernUpdate, Is.Not.Null);
+            Assert.That(vernUpdate.UsingCitationForm, Is.False);
         }
 
         [Test]
         public void TestRestoreFrontierWordsMissingWordFalse()
         {
             var word = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
-            Assert.That(_wordService.RestoreFrontierWords(ProjId, ["NotAnId", word.Id]).Result, Is.False);
+
+            var restored = _wordService.RestoreFrontierWords(ProjId, ["NotAnId", word.Id]).Result;
+            Assert.That(restored, Is.False);
         }
 
         [Test]
@@ -133,19 +190,22 @@ namespace Backend.Tests.Services
         {
             var wordNoFrontier = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
             var wordYesFrontier = _wordRepo.Create(new Word { ProjectId = ProjId }).Result;
-            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(1));
-            Assert.That(
-                _wordService.RestoreFrontierWords(ProjId, [wordNoFrontier.Id, wordYesFrontier.Id]).Result, Is.False);
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(1));
+
+            var restored = _wordService.RestoreFrontierWords(ProjId, [wordNoFrontier.Id, wordYesFrontier.Id]).Result;
+            Assert.That(restored, Is.False);
         }
 
         [Test]
-        public void TestRestoreFrontierWordsTrue()
+        public void TestRestoreFrontierWordsReturnsTrue()
         {
             var word1 = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
             var word2 = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
-            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Is.Empty);
-            Assert.That(_wordService.RestoreFrontierWords(ProjId, [word1.Id, word2.Id]).Result, Is.True);
-            Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(2));
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Is.Empty);
+
+            var restored = _wordService.RestoreFrontierWords(ProjId, [word1.Id, word2.Id]).Result;
+            Assert.That(restored, Is.True);
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(2));
         }
 
         [Test]
@@ -163,9 +223,9 @@ namespace Backend.Tests.Services
         public void TestFindContainingWordNewVern()
         {
             var oldWordSameProj = Util.RandomWord(ProjId);
-            _ = _wordRepo.Create(oldWordSameProj).Result;
+            _wordRepo.Create(oldWordSameProj).Wait();
             var oldWordDiffProj = Util.RandomWord("different");
-            _ = _wordRepo.Create(oldWordDiffProj).Result;
+            _wordRepo.Create(oldWordDiffProj).Wait();
             var newWord = Util.RandomWord(ProjId);
             newWord.Vernacular = oldWordDiffProj.Vernacular;
             newWord.Senses = oldWordDiffProj.Senses.Select(s => s.Clone()).ToList();

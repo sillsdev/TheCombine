@@ -26,7 +26,6 @@ import { getFrontierWords } from "backend";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import LanguagePicker from "components/LanguagePicker";
 import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
-import theme from "types/theme";
 import { newWritingSystem, semDomWritingSystems } from "types/writingSystem";
 import { NormalizedTextField } from "utilities/fontComponents";
 import { getAnalysisLangsFromWords } from "utilities/wordUtilities";
@@ -292,7 +291,7 @@ export default function ProjectLanguages(
         : vernacularLanguageDisplay()}
 
       {/* Analysis languages */}
-      <Typography style={{ marginTop: theme.spacing(1) }} variant="h6">
+      <Typography sx={{ mt: 1 }} variant="h6">
         {t("projectSettings.language.analysis")}
       </Typography>
       {props.project.analysisWritingSystems.map((writingSystem, index) => (
@@ -363,7 +362,7 @@ export function SemanticDomainLanguage(
 
   return (
     <>
-      <Typography style={{ marginTop: theme.spacing(1) }} variant="h6">
+      <Typography sx={{ mt: 1 }} variant="h6">
         {t("projectSettings.language.semanticDomains")}
       </Typography>
       {props.readOnly ? (

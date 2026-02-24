@@ -39,10 +39,6 @@ async function renderAudioPlayer(canDelete = false): Promise<void> {
   });
 }
 
-beforeEach(() => {
-  jest.clearAllMocks();
-});
-
 afterEach(() => {
   jest.clearAllTimers();
   jest.useRealTimers();

@@ -23,7 +23,6 @@ import {
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
-import theme from "types/theme";
 import { TypographyWithFont } from "utilities/fontComponents";
 
 interface DropWordProps {
@@ -45,12 +44,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
     treeWord?.protected && Object.keys(sensesGuids).length === 1;
 
   return (
-    <Card
-      style={{
-        backgroundColor: "lightgrey",
-        paddingBottom: theme.spacing(1),
-      }}
-    >
+    <Card sx={{ backgroundColor: "lightgrey", pb: 1 }}>
       <DropWordCardHeader treeWord={treeWord} wordId={props.wordId} />
 
       <CardContent>
@@ -182,11 +176,11 @@ export function DropWordCardHeader(
     <CardHeader
       title={headerTitle}
       action={headerAction}
-      style={{
+      sx={{
         backgroundColor: treeWord?.protected ? "lightyellow" : "white",
         minHeight: 44,
         minWidth: 150,
-        padding: theme.spacing(1),
+        p: 1,
       }}
     />
   );

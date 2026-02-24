@@ -64,6 +64,7 @@ export default function NoteButton(props: NoteButtonProps): ReactElement {
         buttonIdCancel="note-edit-cancel"
         buttonIdClear="note-edit-clear"
         buttonIdConfirm="note-edit-confirm"
+        multiline
         textFieldId="note-text-field"
       />
     </>

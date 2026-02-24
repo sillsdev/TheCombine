@@ -71,7 +71,6 @@ const renderReviewEntriesTable = async (
 };
 
 function setMockFunctions(): void {
-  jest.clearAllMocks();
   mockGetFrontierWords.mockResolvedValue(mockWords());
 }
 

@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 
 import CharacterStatusText from "goals/CharacterInventory/CharInv/CharacterList/CharacterStatusText";
 import { CharacterStatus } from "goals/CharacterInventory/CharacterInventoryTypes";
-import theme from "types/theme";
 import { TypographyWithFont } from "utilities/fontComponents";
 
 interface CharacterCardProps {
@@ -20,15 +19,12 @@ export default function CharacterCard(props: CharacterCardProps): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <Card
-      style={{ maxWidth: props.cardWidth, margin: theme.spacing(1) }}
-      onClick={props.onClick}
-    >
+    <Card onClick={props.onClick} sx={{ m: 1, maxWidth: props.cardWidth }}>
       <CardActionArea>
         <TypographyWithFont
           align="center"
           id="character"
-          style={{ height: props.fontHeight, paddingTop: theme.spacing(1) }}
+          sx={{ height: props.fontHeight, pt: 1 }}
           variant="h2"
           vernacular
         >

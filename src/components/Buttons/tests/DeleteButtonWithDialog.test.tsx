@@ -29,7 +29,6 @@ const renderDeleteCell = async (): Promise<void> => {
 };
 
 beforeEach(async () => {
-  jest.clearAllMocks();
   await renderDeleteCell();
 });
 

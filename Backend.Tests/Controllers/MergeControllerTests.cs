@@ -40,12 +40,13 @@ namespace Backend.Tests.Controllers
             _mergeGraylistRepo = new MergeGraylistRepositoryMock();
             var semDomCountRepo = new SemanticDomainCountRepositoryMock();
             _wordRepo = new WordRepositoryMock();
+            var ackService = new AcknowledgmentServiceMock();
             var semDomCountService = new SemanticDomainCountService(semDomCountRepo);
             _wordService = new WordService(_wordRepo, semDomCountService);
             _mergeService = new MergeService(_cache, _mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
             var notifyService = new HubContextMock<MergeHub>();
             var permissionService = new PermissionServiceMock();
-            _mergeController = new MergeController(_mergeService, notifyService, permissionService);
+            _mergeController = new MergeController(ackService, _mergeService, notifyService, permissionService);
         }
 
         [Test]

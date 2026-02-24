@@ -17,7 +17,6 @@ import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectArchive from "components/ProjectSettings/ProjectArchive";
 import ProjectUsersButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectUsersButtonWithConfirmation";
-import theme from "types/theme";
 
 /** Component for managing all projects in the database. */
 export default function ProjectManagement(): ReactElement {
@@ -111,7 +110,7 @@ export function ProjectList(props: ProjectListProps): ReactElement {
                 {/* Project name */}
                 <Typography
                   color={project.isActive ? "inherit" : "textSecondary"}
-                  style={{ marginInlineEnd: theme.spacing(1) }}
+                  sx={{ marginInlineEnd: 1 }}
                   variant="h6"
                 >
                   {project.name}

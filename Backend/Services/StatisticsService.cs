@@ -54,7 +54,7 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting words per day per user counts");
 
-            var wordList = await _wordRepo.GetFrontier(projectId);
+            var wordList = await _wordRepo.GetAllFrontier(projectId);
             var shortTimeDictionary = new Dictionary<string, WordsPerDayPerUserCount>();
             var userNameIdDictionary = new Dictionary<string, string>();
 
@@ -120,7 +120,7 @@ namespace BackendFramework.Services
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting progress estimation line chart root");
 
             var LineChartData = new ChartRootData();
-            var wordList = await _wordRepo.GetFrontier(projectId);
+            var wordList = await _wordRepo.GetAllFrontier(projectId);
             var workshopSchedule = new List<string>();
             var totalCountDictionary = new Dictionary<string, int>();
 
@@ -288,7 +288,7 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting semantic domain user counts");
 
-            var wordList = await _wordRepo.GetFrontier(projectId);
+            var wordList = await _wordRepo.GetAllFrontier(projectId);
             var resUserMap = new Dictionary<string, SemanticDomainUserCount>();
 
             // Get all users of the project

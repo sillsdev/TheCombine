@@ -54,7 +54,6 @@ const mockProjectDuplicateCheck = jest.fn();
 const mockUploadLiftAndGetWritingSystems = jest.fn();
 
 beforeEach(async () => {
-  jest.resetAllMocks();
   await act(async () => {
     render(
       <Provider store={configureMockStore()(defaultState)}>

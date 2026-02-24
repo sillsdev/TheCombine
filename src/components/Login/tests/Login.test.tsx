@@ -75,7 +75,6 @@ const loginAndCheckError = async (errorId?: LoginId): Promise<void> => {
 };
 
 beforeEach(async () => {
-  jest.clearAllMocks();
   await renderLogin();
 });
 

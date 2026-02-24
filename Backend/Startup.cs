@@ -235,6 +235,9 @@ namespace BackendFramework
             // Mongo context for use in repo contexts
             services.AddSingleton<IMongoDbContext, MongoDbContext>();
 
+            // Acknowledgment Service - Singleton for shared state across requests
+            services.AddSingleton<IAcknowledgmentService, AcknowledgmentService>();
+
             // Banner types
             services.AddTransient<IBannerRepository, BannerRepository>();
 

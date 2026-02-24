@@ -43,7 +43,6 @@ const eventListeners: Map<string, EventListener> = new Map<
 >();
 
 beforeEach(() => {
-  jest.clearAllMocks();
   window.addEventListener = jest.fn((event, cb) => {
     eventListeners.set(event, cb as EventListener);
   });

@@ -59,14 +59,13 @@ namespace BackendFramework.Services
             return await _wordRepo.Add(PrepEditedData(userId, word));
         }
 
-        /// <summary> Removes audio with specified fileName from a word </summary>
-        /// <returns> New word </returns>
+        /// <summary> Removes audio with specified fileName from a Frontier word </summary>
+        /// <returns> Updated word, or null if not found </returns>
         public async Task<Word?> DeleteAudio(string projectId, string userId, string wordId, string fileName)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting an audio");
 
-            // We only want to update words that are in the frontier
-            var wordWithAudioToDelete = await _wordRepo.DeleteFrontier(projectId, wordId, fileName);
+            var wordWithAudioToDelete = (await _wordRepo.GetFrontier(projectId, wordId, fileName))?.Clone();
             if (wordWithAudioToDelete is null)
             {
                 return null;
@@ -74,108 +73,102 @@ namespace BackendFramework.Services
             await _semDomCountService.UpdateCountsForWordDeletion(wordWithAudioToDelete);
 
             wordWithAudioToDelete.Audio.RemoveAll(a => a.FileName == fileName);
-            wordWithAudioToDelete.History.Add(wordId);
-            return await Create(userId, wordWithAudioToDelete);
+            return await Update(userId, wordWithAudioToDelete);
         }
 
-        /// <summary> Deletes a word from the frontier </summary>
-        /// <returns> The deleted word, or null if not found </returns>
-        public async Task<Word?> DeleteFrontierWord(string projectId, string wordId)
+        /// <summary> Removes word from Frontier and adds a Deleted copy in the words collection </summary>
+        /// <returns> A string: id of deleted word, or null if not found </returns>
+        public async Task<string?> DeleteFrontierWord(string projectId, string userId, string wordId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
 
-            var word = await _wordRepo.DeleteFrontier(projectId, wordId);
+            var word = (await _wordRepo.GetFrontier(projectId, wordId))?.Clone();
             if (word is null)
             {
                 return null;
             }
 
-            // Decrement counts for the deleted word's semantic domains
-            await _semDomCountService.UpdateCountsForWordDeletion(word);
-            return word;
-        }
-
-        /// <summary> Deletes words from the frontier </summary>
-        /// <returns> The number of words deleted </returns>
-        public async Task<int> DeleteFrontierWords(string projectId, List<string> wordIds)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting words from Frontier");
-
-            var deletedCount = 0;
-            foreach (var wordId in wordIds)
-            {
-                if (await DeleteFrontierWord(projectId, wordId) is not null)
-                {
-                    deletedCount++;
-                }
-            }
-            return deletedCount;
-        }
-
-        /// <summary> Deletes frontier word and updates it as deleted in word collection </summary>
-        /// <returns> The id of new word, or null if not found </returns>
-        public async Task<string?> MakeFrontierDeleted(string projectId, string userId, string wordId)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
-
-            var word = await DeleteFrontierWord(projectId, wordId);
-            if (word is null)
-            {
-                return null;
-            }
-
-            word.ProjectId = projectId;
             word.Accessibility = Status.Deleted;
             word.History.Add(wordId);
 
-            return (await Add(userId, word)).Id;
+            var deletedWord = await Add(userId, word);
+            await _semDomCountService.UpdateCountsForWordDeletion(word);
+            // Don't remove the Frontier word until the copy is successfully stored as deleted.
+            await _wordRepo.DeleteFrontier(projectId, wordId);
+
+            return deletedWord.Id;
         }
 
-        /// <summary> Restores words to the Frontier </summary>
-        /// <returns> A bool: true if successful, false if any don't exist or are already in the Frontier. </returns>
+        /// <summary> Restores words to the Frontier that aren't in the Frontier </summary>
+        /// <remarks>
+        /// Aborts if any word can't be restored for any of the following reasons:
+        /// doesn't exist; has Status.Deleted; or is already in the Frontier
+        /// </remarks>
+        /// <returns> A bool: true if all successfully restored; false if none restored. </returns>
         public async Task<bool> RestoreFrontierWords(string projectId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring words to Frontier");
 
-            var words = new List<Word>();
-            foreach (var id in wordIds)
+            // Allow calls that don't specify any wordIds, but don't do any work.
+            if (wordIds.Count == 0)
             {
-                var word = await _wordRepo.GetWord(projectId, id);
-                if (word is null || await _wordRepo.IsInFrontier(projectId, id))
-                {
-                    return false;
-                }
-                words.Add(word);
+                return true;
             }
-            await _wordRepo.AddFrontier(words);
-            await _semDomCountService.UpdateCountsForWords(words);
+
+            wordIds = wordIds.Distinct().ToList();
+
+            // Make sure none of the words are in the Frontier.
+            if (await _wordRepo.AreInFrontier(projectId, wordIds, 1))
+            {
+                return false;
+            }
+
+            // Make sure all the words exist and are valid.
+            var wordsToRestore = await _wordRepo.GetWords(projectId, wordIds);
+            if (wordsToRestore.Count != wordIds.Count)
+            {
+                return false;
+            }
+            if (wordsToRestore.Any(w => w.Accessibility == Status.Deleted))
+            {
+                // We should be restoring words that were removed from the Frontier,
+                // and not their "Deleted" copies in the words collection.
+                return false;
+            }
+
+            await _wordRepo.AddFrontier(wordsToRestore);
+            await _semDomCountService.UpdateCountsForWords(wordsToRestore);
             return true;
         }
 
         /// <summary> Makes a new word in the Frontier with changes made </summary>
-        /// <returns> Id of updated word, or null if not found </returns>
-        public async Task<string?> Update(string projectId, string userId, string wordId, Word word)
+        /// <returns> Updated word, or null if word-to-update not found </returns>
+        public async Task<Word?> Update(string userId, Word word)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a word in Frontier");
 
-            // We only want to update words that are in the frontier
-            var oldWord = await _wordRepo.DeleteFrontier(projectId, wordId);
+            var oldWordId = word.Id; // Capture the id in case of changes.
+            var oldWord = await _wordRepo.GetFrontier(word.ProjectId, oldWordId);
             if (oldWord is null)
             {
                 return null;
             }
 
+            word.Created = oldWord.Created;
+            if (!word.History.Contains(oldWordId))
+            {
+                word.History.Add(oldWordId);
+            }
             // If an imported word was using the citation form for its Vernacular,
             // only keep UsingCitationForm true if the Vernacular hasn't changed.
             word.UsingCitationForm &= word.Vernacular == oldWord.Vernacular;
 
-            word.ProjectId = projectId;
-            word.History.Add(wordId);
+            var newWord = await Create(userId, word);
+            await _semDomCountService.UpdateCountsAfterWordUpdate(oldWord, newWord);
+            // Don't remove the old Frontier word until the new word is successfully created.
+            await _wordRepo.DeleteFrontier(word.ProjectId, oldWordId);
 
-            var createdWord = await _wordRepo.Create(PrepEditedData(userId, word));
-            await _semDomCountService.UpdateCountsAfterWordUpdate(oldWord, createdWord);
-
-            return createdWord.Id;
+            return newWord;
         }
 
         public async Task<bool> ClearFrontier(string projectId)

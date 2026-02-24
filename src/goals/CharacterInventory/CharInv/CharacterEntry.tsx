@@ -1,5 +1,6 @@
 import { KeyboardArrowDown } from "@mui/icons-material";
 import {
+  Box,
   Button,
   Collapse,
   Dialog,
@@ -21,7 +22,6 @@ import {
 } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
-import theme from "types/theme";
 import { TextFieldWithFont } from "utilities/fontComponents";
 
 export enum CharacterEntryTextId {
@@ -55,13 +55,7 @@ export default function CharacterEntry(): ReactElement {
   };
 
   return (
-    <div
-      style={{
-        background: "whitesmoke",
-        border: "1px solid #ccc",
-        padding: theme.spacing(1),
-      }}
-    >
+    <Box sx={{ background: "whitesmoke", border: "1px solid #ccc", p: 1 }}>
       <Grid2 container alignContent="center" justifyContent="space-between">
         <Grid2 container spacing={2}>
           {/* Save button */}
@@ -119,7 +113,7 @@ export default function CharacterEntry(): ReactElement {
           setCharacters={(chars) => dispatch(setRejectedCharacters(chars))}
         />
       </Collapse>
-    </div>
+    </Box>
   );
 }
 
@@ -144,7 +138,7 @@ function CharactersInput(props: CharactersInputProps): ReactElement {
       slotProps={{
         htmlInput: { spellCheck: false, style: { letterSpacing: 5 } },
       }}
-      style={{ marginTop: theme.spacing(2) }}
+      sx={{ mt: 2 }}
       value={props.characters.join("")}
       vernacular
     />
