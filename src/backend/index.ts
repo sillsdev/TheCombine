@@ -183,20 +183,16 @@ export function getAudioUrl(wordId: string, fileName: string): string {
 
 /* AuthController.cs */
 
-export async function getAuthStatus(): Promise<AuthStatus> {
+export async function getLexboxAuthStatus(): Promise<AuthStatus> {
   return (await authApi.getAuthStatus(defaultOptions())).data;
 }
 
-export async function getExternalLoginUrl(): Promise<string> {
-  return `${baseURL}/v1/auth/lexbox-login-url`;
+export function getLexboxLoginUrl(): string {
+  return `${baseURL}/v1/auth/lexbox-login`;
 }
 
-export async function logoutCurrentUser(): Promise<void> {
+export async function logoutLexboxUser(): Promise<void> {
   return;
-}
-
-export async function startLexboxLogin(): Promise<void> {
-  await authApi.startLexboxLogin(undefined, defaultOptions());
 }
 
 /* AvatarController.cs */

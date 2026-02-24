@@ -87,47 +87,7 @@ export const AuthApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getLexboxLoginUrl: async (options: any = {}): Promise<RequestArgs> => {
-      const localVarPath = `/v1/auth/lexbox-login-url`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} [returnUrl]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    startLexboxLogin: async (
-      returnUrl?: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
+    getLexboxLogin: async (options: any = {}): Promise<RequestArgs> => {
       const localVarPath = `/v1/auth/lexbox-login`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -143,10 +103,6 @@ export const AuthApiAxiosParamCreator = function (
       };
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
-
-      if (returnUrl !== undefined) {
-        localVarQueryParameter["returnUrl"] = returnUrl;
-      }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
@@ -196,34 +152,13 @@ export const AuthApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async getLexboxLoginUrl(
+    async getLexboxLogin(
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.getLexboxLoginUrl(options);
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
-     * @param {string} [returnUrl]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async startLexboxLogin(
-      returnUrl?: string,
-      options?: any
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.startLexboxLogin(returnUrl, options);
+        await localVarAxiosParamCreator.getLexboxLogin(options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -260,38 +195,13 @@ export const AuthApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getLexboxLoginUrl(options?: any): AxiosPromise<void> {
+    getLexboxLogin(options?: any): AxiosPromise<void> {
       return localVarFp
-        .getLexboxLoginUrl(options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} [returnUrl]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    startLexboxLogin(returnUrl?: string, options?: any): AxiosPromise<void> {
-      return localVarFp
-        .startLexboxLogin(returnUrl, options)
+        .getLexboxLogin(options)
         .then((request) => request(axios, basePath));
     },
   };
 };
-
-/**
- * Request parameters for startLexboxLogin operation in AuthApi.
- * @export
- * @interface AuthApiStartLexboxLoginRequest
- */
-export interface AuthApiStartLexboxLoginRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof AuthApiStartLexboxLogin
-   */
-  readonly returnUrl?: string;
-}
 
 /**
  * AuthApi - object-oriented interface
@@ -318,25 +228,9 @@ export class AuthApi extends BaseAPI {
    * @throws {RequiredError}
    * @memberof AuthApi
    */
-  public getLexboxLoginUrl(options?: any) {
+  public getLexboxLogin(options?: any) {
     return AuthApiFp(this.configuration)
-      .getLexboxLoginUrl(options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {AuthApiStartLexboxLoginRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof AuthApi
-   */
-  public startLexboxLogin(
-    requestParameters: AuthApiStartLexboxLoginRequest = {},
-    options?: any
-  ) {
-    return AuthApiFp(this.configuration)
-      .startLexboxLogin(requestParameters.returnUrl, options)
+      .getLexboxLogin(options)
       .then((request) => request(this.axios, this.basePath));
   }
 }

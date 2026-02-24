@@ -5,14 +5,14 @@ import userEvent from "@testing-library/user-event";
 import LexboxLogin from "components/Lexbox/LexboxLogin";
 
 jest.mock("backend", () => ({
-  getAuthStatus: () => mockGetAuthStatus(),
-  getExternalLoginUrl: () => mockGetExternalLoginUrl(),
-  logoutCurrentUser: () => mockLogoutCurrentUser(),
+  getLexboxAuthStatus: () => mockGetLexboxAuthStatus(),
+  getLexboxLoginUrl: () => mockGetLexboxLoginUrl(),
+  logoutLexboxUser: () => mockLogoutLexboxUser(),
 }));
 
-const mockGetAuthStatus = jest.fn();
-const mockGetExternalLoginUrl = jest.fn();
-const mockLogoutCurrentUser = jest.fn();
+const mockGetLexboxAuthStatus = jest.fn();
+const mockGetLexboxLoginUrl = jest.fn();
+const mockLogoutLexboxUser = jest.fn();
 
 const testUrl = "not-a-valid-url";
 
@@ -20,28 +20,28 @@ describe("LexboxLogin", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(window, "open").mockImplementation(() => null);
-    mockGetExternalLoginUrl.mockResolvedValue(testUrl);
+    mockGetLexboxLoginUrl.mockReturnValue(testUrl);
   });
 
   it("redirects to Lexbox login when logged out", async () => {
-    mockGetAuthStatus.mockResolvedValue({ isLoggedIn: false });
+    mockGetLexboxAuthStatus.mockResolvedValue({ isLoggedIn: false });
 
     await act(async () => {
       render(<LexboxLogin />);
     });
 
     const loginButton = await screen.findByRole("button", { name: /login/i });
-    await waitFor(() => expect(mockGetAuthStatus).toHaveBeenCalled());
+    await waitFor(() => expect(mockGetLexboxAuthStatus).toHaveBeenCalled());
     await waitFor(() => expect(loginButton).toBeEnabled());
 
     await userEvent.click(loginButton);
 
-    expect(mockGetExternalLoginUrl).toHaveBeenCalledTimes(1);
+    expect(mockGetLexboxLoginUrl).toHaveBeenCalledTimes(1);
     expect(window.open).toHaveBeenCalledWith(testUrl);
   });
 
   it("shows logged-in menu and logs out", async () => {
-    mockGetAuthStatus
+    mockGetLexboxAuthStatus
       .mockResolvedValueOnce({ isLoggedIn: true, loggedInAs: "Lex User" })
       .mockResolvedValueOnce({ isLoggedIn: false });
 
@@ -61,8 +61,8 @@ describe("LexboxLogin", () => {
 
     await userEvent.click(logoutItem);
 
-    expect(mockGetExternalLoginUrl).not.toHaveBeenCalled();
-    expect(mockLogoutCurrentUser).toHaveBeenCalledTimes(1);
+    expect(mockGetLexboxLoginUrl).not.toHaveBeenCalled();
+    expect(mockLogoutLexboxUser).toHaveBeenCalledTimes(1);
     expect(onStatusChange).toHaveBeenCalledWith("logged-out");
   });
 });
