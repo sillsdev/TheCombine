@@ -30,7 +30,7 @@ namespace Backend.Tests.Controllers
             _permissionService = new PermissionServiceMock();
             _emailVerifyController = new EmailVerifyController(userRepo, _emailVerifyService, _permissionService);
 
-            userRepo.Create(new() { Email = Email });
+            userRepo.Create(new() { Email = Email }).Wait();
         }
 
         [Test]
@@ -53,8 +53,9 @@ namespace Backend.Tests.Controllers
         public void TestRequestEmailVerifyFalse()
         {
             _emailVerifyService.SetNextBoolResponse(false);
-            var result = _emailVerifyController.RequestEmailVerify(Email).Result;
-            Assert.That(((StatusCodeResult)result).StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
+            var result = _emailVerifyController.RequestEmailVerify(Email).Result as StatusCodeResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
         }
 
         [Test]
@@ -62,7 +63,7 @@ namespace Backend.Tests.Controllers
         {
             _emailVerifyService.SetNextBoolResponse(true);
             var result = _emailVerifyController.RequestEmailVerify(Email).Result;
-            Assert.That(result, Is.TypeOf<OkResult>());
+            Assert.That(result, Is.InstanceOf<OkResult>());
         }
 
         [Test]
@@ -72,9 +73,9 @@ namespace Backend.Tests.Controllers
             _emailVerifyController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
             _emailVerifyService.SetNextBoolResponse(false);
-            var result = _emailVerifyController.ValidateEmailToken("token").Result;
-            Assert.That(result, Is.TypeOf<OkObjectResult>());
-            Assert.That(((OkObjectResult)result).Value, Is.EqualTo(false));
+            var result = _emailVerifyController.ValidateEmailToken("token").Result as OkObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo(false));
         }
 
         [Test]
@@ -84,9 +85,9 @@ namespace Backend.Tests.Controllers
             _emailVerifyController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
             _emailVerifyService.SetNextBoolResponse(true);
-            var result = _emailVerifyController.ValidateEmailToken("token").Result;
-            Assert.That(result, Is.TypeOf<OkObjectResult>());
-            Assert.That(((OkObjectResult)result).Value, Is.EqualTo(true));
+            var result = _emailVerifyController.ValidateEmailToken("token").Result as OkObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo(true));
         }
     }
 }

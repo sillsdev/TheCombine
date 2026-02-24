@@ -122,8 +122,9 @@ namespace Backend.Tests.Otel
             _locationEnricher.OnEnd(activity);
 
             // Assert
-            Assert.That(activity.Tags.Any(_ => _.Key == "url.full" && _.Value == ""));
-            Assert.That(activity.Tags.Any(_ => _.Key == "url.redacted.ip" && _.Value == LocationProvider.locationGetterUri));
+            Assert.That(activity.Tags.Any(_ => _.Key == "url.full" && string.IsNullOrEmpty(_.Value)));
+            Assert.That(activity.Tags.Any(
+                _ => _.Key == "url.redacted.ip" && _.Value == LocationProvider.locationGetterUri));
         }
     }
 }

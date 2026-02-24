@@ -21,9 +21,13 @@ namespace Backend.Tests
             foreach (var i in Range(0, length))
             {
                 if (i % 4 == 0)
+                {
                     sb.Append((char)rnd.Next('A', 'Z'));
+                }
                 else
+                {
                     sb.Append((char)rnd.Next('a', 'z'));
+                }
             }
             return sb.ToString();
         }
