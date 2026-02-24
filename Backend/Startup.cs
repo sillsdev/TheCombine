@@ -16,8 +16,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Protocols;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using static System.Text.Encoding;
 
@@ -140,12 +138,10 @@ namespace BackendFramework
             var lexboxClientId = Configuration["LexboxAuth:ClientId"] ?? "the-combine";
             var lexboxMetadataAddress = Configuration["LexboxAuth:OpenIdConfigUrl"]
                 ?? "https://lexbox.org/.well-known/openid-configuration";
-            var lexboxAuthorizationEndpoint = Configuration["LexboxAuth:AuthorizationEndpoint"]
-                ?? "https://lexbox.org/api/oauth/open-id-auth";
-            var lexboxTokenEndpoint = Configuration["LexboxAuth:TokenEndpoint"]
-                ?? "https://lexbox.org/api/oauth/token";
-            var lexboxUserInfoEndpoint = Configuration["LexboxAuth:UserInfoEndpoint"]
-                ?? "https://lexbox.org/api/oauth/userinfo";
+            var lexboxAuthorizationEndpoint = Configuration["LexboxAuth:AuthorizationEndpoint"]?.Trim();
+            lexboxAuthorizationEndpoint = string.IsNullOrEmpty(lexboxAuthorizationEndpoint)
+                ? "https://lexbox.org/api/oauth/open-id-auth"
+                : lexboxAuthorizationEndpoint;
             var lexboxPrompt = Configuration["LexboxAuth:Prompt"] ?? "select_account";
             var lexboxScope = Configuration["LexboxAuth:Scope"] ?? "profile openid offline_access sendandreceive";
             var lexboxCallbackPath = Configuration["LexboxAuth:CallbackPath"] ?? "/v1/auth/oauth-callback";
@@ -179,19 +175,9 @@ namespace BackendFramework
                 })
                 .AddOpenIdConnect("LexboxOidc", options =>
                 {
-                    var issuer = $"{lexboxAuthority.TrimEnd('/')}/"; // Ensure ends with one slash.
                     options.Authority = lexboxAuthority;
                     options.CallbackPath = lexboxCallbackPath;
                     options.ClientId = lexboxClientId;
-                    options.Configuration = new OpenIdConnectConfiguration
-                    {
-                        AuthorizationEndpoint = lexboxAuthorizationEndpoint,
-                        Issuer = issuer,
-                        TokenEndpoint = lexboxTokenEndpoint,
-                        UserInfoEndpoint = lexboxUserInfoEndpoint,
-                    };
-                    options.ConfigurationManager =
-                        new StaticConfigurationManager<OpenIdConnectConfiguration>(options.Configuration);
                     options.GetClaimsFromUserInfoEndpoint = true;
                     options.MetadataAddress = lexboxMetadataAddress;
                     options.RequireHttpsMetadata = true;
@@ -208,6 +194,11 @@ namespace BackendFramework
 
                     options.Events.OnRedirectToIdentityProvider = context =>
                     {
+                        if (string.IsNullOrWhiteSpace(context.ProtocolMessage.IssuerAddress))
+                        {
+                            context.ProtocolMessage.IssuerAddress = lexboxAuthorizationEndpoint;
+                        }
+
                         context.ProtocolMessage.Prompt = lexboxPrompt;
                         return System.Threading.Tasks.Task.CompletedTask;
                     };
