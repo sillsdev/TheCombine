@@ -2,9 +2,10 @@
 // to BinData subtype 4 (Standard/RFC 4122).
 //
 // Usage:
-//   mongosh CombineDatabase database/migrate-guids-to-subtype4.ts
+//   npx tsc database/migrate-guids-to-subtype4.ts
+//   mongosh CombineDatabase database/migrate-guids-to-subtype4.js
 //
-// Type-check:
+// Type-check only (no output):
 //   npx tsc --project database/tsconfig.json --noEmit
 //
 // Background:
@@ -18,8 +19,38 @@
 //   Standard (subtype 4) byte order for the same UUID:
 //     stored as [aa,bb,cc,dd, ee,ff, gg,hh, ii,jj,kk,ll,mm,nn,oo,pp]
 
-// Type declarations are in mongosh-globals.d.ts (kept separate so mongosh
-// does not trip over TypeScript `declare` syntax when executing this file).
+// Type declarations for mongosh globals.
+// All `declare` statements are erased by tsc and produce no JS output.
+//
+// The inline BsonBinary interface matches the bson@^7 Binary API:
+//   sub_type is a number property; toString("hex") returns the hex string.
+interface BsonBinary {
+  sub_type: number;
+  toString(encoding: "hex" | "base64" | "utf8" | "utf-8"): string;
+}
+declare const BinData: {
+  new (subtype: number, b64string: string): BsonBinary;
+  (subtype: number, b64string: string): BsonBinary;
+  readonly prototype: BsonBinary;
+};
+declare function UUID(hexstr?: string): BsonBinary;
+declare function print(msg: string): void;
+declare const db: MongoDB;
+
+type MongoDoc = Record<string, unknown>;
+
+interface MongoCursor {
+  forEach(callback: (doc: MongoDoc) => void): void;
+}
+
+interface MongoCollection {
+  find(query: MongoDoc): MongoCursor;
+  updateOne(filter: MongoDoc, update: MongoDoc): void;
+}
+
+interface MongoDB {
+  getCollection(name: string): MongoCollection;
+}
 
 /**
  * Convert a BinData subtype 3 (CSharpLegacy) GUID to BinData subtype 4 (Standard).
