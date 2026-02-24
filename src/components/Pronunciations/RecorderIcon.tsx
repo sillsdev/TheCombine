@@ -1,6 +1,6 @@
 import { FiberManualRecord } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import { ReactElement, useEffect, useRef, useState } from "react";
+import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -30,29 +30,35 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   const recordingId = useAppSelector(
     (state: StoreState) => state.pronunciationsState.wordId
   );
+
+  // Keep a ref to the latest isRecordingThis value for use in the cleanup effect.
+  const isRecordingThisRef = useRef(false);
   const isRecordingThis = isRecording && recordingId === props.id;
+  isRecordingThisRef.current = isRecordingThis;
 
   const dispatch = useAppDispatch();
   const [hasMic, setHasMic] = useState(false);
+
   const { t } = useTranslation();
+
+  const stopAndReset = useCallback(() => {
+    if (isRecordingThisRef.current) {
+      props.stopRecording();
+      dispatch(resetPronunciations());
+    }
+  }, [dispatch, props.stopRecording]);
 
   useEffect(() => {
     checkMicPermission().then(setHasMic);
   }, []);
 
-  // Keep a ref to the latest isRecordingThis value for use in the cleanup effect.
-  const isRecordingThisRef = useRef(isRecordingThis);
-  isRecordingThisRef.current = isRecordingThis;
-
   useEffect(() => {
     return () => {
       // Reset recording state if this component unmounts while recording
       // (e.g., navigating away from the page mid-recording).
-      if (isRecordingThisRef.current) {
-        dispatch(resetPronunciations());
-      }
+      stopAndReset();
     };
-  }, [dispatch]);
+  }, [stopAndReset]);
 
   async function toggleIsRecordingToTrue(): Promise<void> {
     if (!isRecording) {
@@ -69,12 +75,6 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
           "Tried to record for an entry before finishing a recording on another entry."
         );
       }
-    }
-  }
-  function toggleIsRecordingToFalse(): void {
-    if (isRecordingThis) {
-      props.stopRecording();
-      dispatch(resetPronunciations());
     }
   }
 
@@ -94,11 +94,11 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
           data-testid={recordButtonId}
           disabled={props.disabled || !hasMic}
           id={recordButtonId}
-          onBlur={toggleIsRecordingToFalse}
+          onBlur={stopAndReset}
           onContextMenu={(e) => e.preventDefault()}
-          onPointerCancel={toggleIsRecordingToFalse}
+          onPointerCancel={stopAndReset}
           onPointerDown={toggleIsRecordingToTrue}
-          onPointerUp={toggleIsRecordingToFalse}
+          onPointerUp={stopAndReset}
           size="large"
           tabIndex={-1}
         >
