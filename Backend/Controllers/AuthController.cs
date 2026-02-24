@@ -46,11 +46,11 @@ namespace BackendFramework.Controllers
             return user is null ? Ok(AuthStatus.LoggedOut()) : Ok(AuthStatus.LoggedIn(user));
         }
 
-        /// <summary> Generates a Lexbox login URL for OIDC sign-in. </summary>
+        /// <summary> Generates a redirect to Lexbox login for OIDC sign-in. </summary>
         [HttpGet("lexbox-login", Name = "GetLexboxLogin")]
         [ProducesResponseType(StatusCodes.Status302Found)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetLexboxLoginUrl()
+        public async Task<IActionResult> GetLexboxLogin()
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting lexbox login");
 
@@ -60,6 +60,19 @@ namespace BackendFramework.Controllers
             var authProperties = new AuthenticationProperties { RedirectUri = redirectUrl };
 
             return await ChallengeLexboxAsync(authProperties);
+        }
+
+        /// <summary> Signs out the current user from Lexbox cookie and OIDC. </summary>
+        [HttpGet("lexbox-logout", Name = "LogOutLexbox")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> LogOutLexbox()
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "logging out");
+
+            await HttpContext.SignOutAsync(LexboxCookieScheme);
+            await HttpContext.SignOutAsync(LexboxOidcScheme);
+
+            return NoContent();
         }
 
         private async Task<IActionResult> ChallengeLexboxAsync(AuthenticationProperties authProperties)

@@ -80,13 +80,26 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task GetLexboxLoginUrlReturnsExpectedLoginPath()
+        public async Task GetLexboxLoginReturnsExpectedLoginPath()
         {
             _controller.ControllerContext.HttpContext = GetAuthContext(AuthenticateResult.NoResult());
 
-            var result = await _controller.GetLexboxLoginUrl();
+            var result = await _controller.GetLexboxLogin();
 
             Assert.That(result, Is.InstanceOf<EmptyResult>());
+        }
+
+        [Test]
+        public async Task LogOutLexboxReturnsNoContent()
+        {
+            var claims = new List<Claim> { new("sub", "lex-1"), new("preferred_username", "Lex User") };
+            var authResult = AuthenticateResult.Success(new AuthenticationTicket(
+                new ClaimsPrincipal(new ClaimsIdentity(claims, "LexboxCookie")), "LexboxCookie"));
+            _controller.ControllerContext.HttpContext = GetAuthContext(authResult);
+
+            var result = await _controller.LogOutLexbox();
+
+            Assert.That(result, Is.InstanceOf<NoContentResult>());
         }
 
         private static HttpContext GetAuthContext(AuthenticateResult authenticateResult)

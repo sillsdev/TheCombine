@@ -192,7 +192,7 @@ export function getLexboxLoginUrl(): string {
 }
 
 export async function logoutLexboxUser(): Promise<void> {
-  return;
+  await authApi.logOutLexbox(defaultOptions());
 }
 
 /* AvatarController.cs */
