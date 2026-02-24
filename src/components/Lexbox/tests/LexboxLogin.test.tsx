@@ -24,7 +24,7 @@ describe("LexboxLogin", () => {
   });
 
   it("redirects to Lexbox login when logged out", async () => {
-    mockGetAuthStatus.mockResolvedValue({ loggedIn: false });
+    mockGetAuthStatus.mockResolvedValue({ isLoggedIn: false });
 
     await act(async () => {
       render(<LexboxLogin />);
@@ -42,8 +42,8 @@ describe("LexboxLogin", () => {
 
   it("shows logged-in menu and logs out", async () => {
     mockGetAuthStatus
-      .mockResolvedValueOnce({ loggedIn: true, loggedInAs: "Lex User" })
-      .mockResolvedValueOnce({ loggedIn: false });
+      .mockResolvedValueOnce({ isLoggedIn: true, loggedInAs: "Lex User" })
+      .mockResolvedValueOnce({ isLoggedIn: false });
 
     const onStatusChange = jest.fn();
 
