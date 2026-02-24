@@ -1,6 +1,6 @@
 import { FiberManualRecord } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -39,6 +39,20 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   useEffect(() => {
     checkMicPermission().then(setHasMic);
   }, []);
+
+  // Keep a ref to the latest isRecordingThis value for use in the cleanup effect.
+  const isRecordingThisRef = useRef(isRecordingThis);
+  isRecordingThisRef.current = isRecordingThis;
+
+  useEffect(() => {
+    return () => {
+      // Reset recording state if this component unmounts while recording
+      // (e.g., navigating away from the page mid-recording).
+      if (isRecordingThisRef.current) {
+        dispatch(resetPronunciations());
+      }
+    };
+  }, [dispatch]);
 
   async function toggleIsRecordingToTrue(): Promise<void> {
     if (!isRecording) {
@@ -98,6 +112,7 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
           disabled={props.disabled || !hasMic}
           id={recordButtonId}
           onBlur={toggleIsRecordingToFalse}
+          onPointerCancel={toggleIsRecordingToFalse}
           onPointerDown={toggleIsRecordingToTrue}
           onPointerUp={toggleIsRecordingToFalse}
           onTouchEnd={handleTouchEnd}

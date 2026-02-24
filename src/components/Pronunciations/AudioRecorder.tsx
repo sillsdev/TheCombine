@@ -54,6 +54,7 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
         errorMessage += ` ${t("pronunciations.recordingPermission")}`;
       }
       toast.error(errorMessage);
+      setClicked(false);
       return false;
     }
     return true;
