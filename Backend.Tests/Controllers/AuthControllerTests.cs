@@ -80,39 +80,31 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void GetLexboxLoginUrlReturnsExpectedLoginPath()
+        public async Task GetLexboxLoginUrlReturnsExpectedLoginPath()
         {
-            _controller.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId(UserId);
+            _controller.ControllerContext.HttpContext = GetAuthContext(AuthenticateResult.NoResult());
 
-            var challengeResult = _controller.GetLexboxLoginUrl() as ChallengeResult;
+            var result = await _controller.GetLexboxLoginUrl();
 
-            Assert.That(challengeResult, Is.Not.Null);
-            Assert.That(challengeResult.AuthenticationSchemes, Has.Count.EqualTo(1));
-            Assert.That(challengeResult.AuthenticationSchemes[0], Is.EqualTo("LexboxOidc"));
-            Assert.That(challengeResult.Properties, Is.Not.Null);
-            Assert.That(challengeResult.Properties.RedirectUri, Is.EqualTo("/"));
+            Assert.That(result, Is.InstanceOf<EmptyResult>());
         }
 
         [Test]
-        public void StartLexboxLoginReturnsChallengeWithConfiguredSchemeAndRedirect()
+        public async Task StartLexboxLoginReturnsChallengeWithConfiguredSchemeAndRedirect()
         {
-            _controller.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId(UserId);
+            _controller.ControllerContext.HttpContext = GetAuthContext(AuthenticateResult.NoResult());
 
-            var challengeResult = _controller.StartLexboxLogin("/after-login") as ChallengeResult;
+            var result = await _controller.StartLexboxLogin("/after-login");
 
-            Assert.That(challengeResult, Is.Not.Null);
-            Assert.That(challengeResult.AuthenticationSchemes, Has.Count.EqualTo(1));
-            Assert.That(challengeResult.AuthenticationSchemes[0], Is.EqualTo("LexboxOidc"));
-            Assert.That(challengeResult.Properties, Is.Not.Null);
-            Assert.That(challengeResult.Properties.RedirectUri, Is.EqualTo("/after-login"));
+            Assert.That(result, Is.InstanceOf<EmptyResult>());
         }
 
         [Test]
-        public void StartLexboxLoginUnauthorizedReturnsForbid()
+        public async Task StartLexboxLoginUnauthorizedReturnsForbid()
         {
             _controller.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
-            var result = _controller.StartLexboxLogin("/after-login");
+            var result = await _controller.StartLexboxLogin("/after-login");
 
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
