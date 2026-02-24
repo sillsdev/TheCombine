@@ -78,23 +78,6 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
     }
   }
 
-  function handleTouchStart(): void {
-    // Temporarily disable context menu since some browsers
-    // interpret a long-press touch as a right-click.
-    document.addEventListener("contextmenu", disableContextMenu, false);
-  }
-  function handleTouchEnd(): void {
-    enableContextMenu();
-  }
-
-  function disableContextMenu(event: any): void {
-    event.preventDefault();
-    enableContextMenu();
-  }
-  function enableContextMenu(): void {
-    document.removeEventListener("contextmenu", disableContextMenu, false);
-  }
-
   const tooltipId = hasMic
     ? "pronunciations.recordTooltip"
     : "pronunciations.enableMicTooltip";
@@ -112,11 +95,10 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
           disabled={props.disabled || !hasMic}
           id={recordButtonId}
           onBlur={toggleIsRecordingToFalse}
+          onContextMenu={(e) => e.preventDefault()}
           onPointerCancel={toggleIsRecordingToFalse}
           onPointerDown={toggleIsRecordingToTrue}
           onPointerUp={toggleIsRecordingToFalse}
-          onTouchEnd={handleTouchEnd}
-          onTouchStart={handleTouchStart}
           size="large"
           tabIndex={-1}
         >
