@@ -30,7 +30,7 @@ jest.mock("components/LanguagePicker", () => ({
 }));
 
 jest.mock("backend", () => ({
-  getAuthStatus: jest.fn(),
+  getLexboxAuthStatus: jest.fn(),
   projectDuplicateCheck: () => mockProjectDuplicateCheck(),
   uploadLiftAndGetWritingSystems: () => mockUploadLiftAndGetWritingSystems(),
 }));
