@@ -18,36 +18,19 @@
 //   Standard (subtype 4) byte order for the same UUID:
 //     stored as [aa,bb,cc,dd, ee,ff, gg,hh, ii,jj,kk,ll,mm,nn,oo,pp]
 
-// Type declarations for mongosh globals.
-declare class BinData {
-  subtype(): number;
-  hex(): string;
-}
-declare function UUID(uuid: string): BinData;
-declare function print(msg: string): void;
-type MongoDoc = Record<string, unknown>;
-interface MongoCursor {
-  forEach(callback: (doc: MongoDoc) => void): void;
-}
-interface MongoCollection {
-  find(query: MongoDoc): MongoCursor;
-  updateOne(filter: MongoDoc, update: MongoDoc): void;
-}
-interface MongoDB {
-  getCollection(name: string): MongoCollection;
-}
-declare const db: MongoDB;
+// Type declarations are in mongosh-globals.d.ts (kept separate so mongosh
+// does not trip over TypeScript `declare` syntax when executing this file).
 
 /**
  * Convert a BinData subtype 3 (CSharpLegacy) GUID to BinData subtype 4 (Standard).
  * Returns null if the input is not a subtype-3 binary value.
  */
-function csharpGuidToStandard(bin: unknown): BinData | null {
-  if (!(bin instanceof BinData) || bin.subtype() !== 3) {
+function csharpGuidToStandard(bin: unknown): ReturnType<typeof UUID> | null {
+  if (!(bin instanceof BinData) || bin.sub_type !== 3) {
     return null;
   }
-  // Split hex string into 16 byte pairs.
-  const hexBytes = bin.hex().match(/../g);
+  // Split the 32-character hex string into 16 byte pairs.
+  const hexBytes = bin.toString("hex").match(/../g);
   if (hexBytes === null) {
     return null;
   }
@@ -76,7 +59,7 @@ for (const collName of ["WordsCollection", "FrontierCollection"]) {
 
   // Find all words that have binData guid fields (the conversion function handles subtype checking).
   coll.find({ guid: { $type: "binData" } }).forEach((doc) => {
-    const update: Record<string, BinData> = {};
+    const update: Record<string, ReturnType<typeof UUID>> = {};
 
     // Convert top-level guid.
     const newGuid = csharpGuidToStandard(doc["guid"]);
@@ -114,7 +97,7 @@ const userEditsColl = db.getCollection("UserEditsCollection");
 
 // Find all UserEdits that have binData guid fields (the conversion function handles subtype checking).
 userEditsColl.find({ "edits.guid": { $type: "binData" } }).forEach((doc) => {
-  const update: Record<string, BinData> = {};
+  const update: Record<string, ReturnType<typeof UUID>> = {};
 
   if (Array.isArray(doc["edits"])) {
     (doc["edits"] as MongoDoc[]).forEach((edit, i) => {
