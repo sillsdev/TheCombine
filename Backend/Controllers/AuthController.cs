@@ -5,11 +5,9 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 
 namespace BackendFramework.Controllers
 {
@@ -61,7 +59,7 @@ namespace BackendFramework.Controllers
                 ?? "/";
             var authProperties = new AuthenticationProperties { RedirectUri = redirectUrl };
 
-            return await ChallengeLexboxAsync(authProperties, "lexbox-login-url");
+            return await ChallengeLexboxAsync(authProperties);
         }
 
         /// <summary> Starts Lexbox OpenID Connect login challenge. </summary>
@@ -80,13 +78,12 @@ namespace BackendFramework.Controllers
 
             var redirectUrl = NormalizeReturnUrl(returnUrl)
                 ?? NormalizeReturnUrl(_configuration[PostLoginRedirectConfigKey]);
-            Console.WriteLine($"Redirect URL for OIDC login: {redirectUrl}");
             var authProperties = new AuthenticationProperties { RedirectUri = redirectUrl ?? "/" };
 
-            return await ChallengeLexboxAsync(authProperties, "lexbox-login");
+            return await ChallengeLexboxAsync(authProperties);
         }
 
-        private async Task<IActionResult> ChallengeLexboxAsync(AuthenticationProperties authProperties, string source)
+        private async Task<IActionResult> ChallengeLexboxAsync(AuthenticationProperties authProperties)
         {
             try
             {
@@ -95,38 +92,7 @@ namespace BackendFramework.Controllers
             }
             catch (Exception ex)
             {
-                var authority = _configuration["LexboxAuth:Authority"] ?? "(null)";
-                var metadataAddress = _configuration["LexboxAuth:OpenIdConfigUrl"] ?? "(null)";
-                var callbackPath = _configuration["LexboxAuth:CallbackPath"] ?? "/v1/auth/oauth-callback";
-                var configurationDiagnostic = "OpenIdConnect configuration manager not available.";
-
-                var optionsMonitor = HttpContext.RequestServices.GetService(typeof(IOptionsMonitor<OpenIdConnectOptions>))
-                    as IOptionsMonitor<OpenIdConnectOptions>;
-                if (optionsMonitor is not null)
-                {
-                    var options = optionsMonitor.Get(LexboxOidcScheme);
-                    if (options.ConfigurationManager is not null)
-                    {
-                        try
-                        {
-                            var discovered = await options.ConfigurationManager.GetConfigurationAsync(
-                                HttpContext.RequestAborted);
-                            configurationDiagnostic =
-                                $"Discovery loaded. Issuer={discovered.Issuer}, AuthorizationEndpoint={discovered.AuthorizationEndpoint}, TokenEndpoint={discovered.TokenEndpoint}, UserInfoEndpoint={discovered.UserInfoEndpoint}";
-                        }
-                        catch (Exception discoveryEx)
-                        {
-                            configurationDiagnostic =
-                                $"Discovery retrieval failed: {discoveryEx}";
-                        }
-                    }
-                }
-
-                Console.Error.WriteLine(
-                    $"Lexbox OIDC challenge failed from {source}. Authority={authority}, Metadata={metadataAddress}, CallbackPath={callbackPath}. ConfigDiagnostic={configurationDiagnostic}. Exception={ex}");
-                return Problem(
-                    title: "Lexbox OIDC challenge failed",
-                    detail: $"{ex}\n\n{configurationDiagnostic}",
+                return Problem(title: "Lexbox OIDC challenge failed", detail: ex.Message,
                     statusCode: StatusCodes.Status500InternalServerError);
             }
         }
