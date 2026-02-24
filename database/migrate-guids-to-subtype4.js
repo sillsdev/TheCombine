@@ -23,20 +23,14 @@ function csharpGuidToStandard(bin) {
   if (!(bin instanceof BinData) || bin.subtype() !== 3) {
     return null;
   }
-  const hex = bin.hex();
-  // Rearrange the first 8 bytes (4+2+2) from little-endian to big-endian;
-  // the remaining 8 bytes are already in big-endian order.
-  const reordered =
-    hex[6] + hex[7] + hex[4] + hex[5] + hex[2] + hex[3] + hex[0] + hex[1] +
-    hex[10] + hex[11] + hex[8] + hex[9] +
-    hex[14] + hex[15] + hex[12] + hex[13] +
-    hex.substring(16);
+  const hexBytes = bin.hex().match(/../g); // Split hex string into byte pairs.
+  // Rearrange the first 8 bytes (4+2+2) from little-endian to big-endian.
   const uuidStr =
-    reordered.substring(0, 8) + "-" +
-    reordered.substring(8, 12) + "-" +
-    reordered.substring(12, 16) + "-" +
-    reordered.substring(16, 20) + "-" +
-    reordered.substring(20);
+    hexBytes[3] + hexBytes[2] + hexBytes[1] + hexBytes[0] + "-" + // reverse 4 bytes
+    hexBytes[5] + hexBytes[4] + "-" + // reverse 2 bytes
+    hexBytes[7] + hexBytes[6] + "-" + // reverse 2 bytes
+    hexBytes[8] + hexBytes[9] + "-" + // the rest stay the same
+    hexBytes.slice(10).join("");
   return UUID(uuidStr);
 }
 
