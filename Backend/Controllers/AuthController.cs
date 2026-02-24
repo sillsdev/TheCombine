@@ -47,38 +47,17 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Generates a Lexbox login URL for OIDC sign-in. </summary>
-        [HttpGet("lexbox-login-url", Name = "GetLexboxLoginUrl")]
+        [HttpGet("lexbox-login", Name = "GetLexboxLogin")]
         [ProducesResponseType(StatusCodes.Status302Found)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetLexboxLoginUrl()
         {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting lexbox login url");
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting lexbox login");
 
             var redirectUrl = NormalizeReturnUrl(_configuration[PostLoginRedirectConfigKey])
                 ?? NormalizeReturnUrl(Domain.FrontendDomain)
                 ?? "/";
             var authProperties = new AuthenticationProperties { RedirectUri = redirectUrl };
-
-            return await ChallengeLexboxAsync(authProperties);
-        }
-
-        /// <summary> Starts Lexbox OpenID Connect login challenge. </summary>
-        [HttpGet("lexbox-login", Name = "StartLexboxLogin")]
-        [ProducesResponseType(StatusCodes.Status302Found)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> StartLexboxLogin([FromQuery] string? returnUrl)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "starting lexbox login");
-
-            if (!_permissionService.IsCurrentUserAuthenticated(HttpContext))
-            {
-                return Forbid();
-            }
-
-            var redirectUrl = NormalizeReturnUrl(returnUrl)
-                ?? NormalizeReturnUrl(_configuration[PostLoginRedirectConfigKey]);
-            var authProperties = new AuthenticationProperties { RedirectUri = redirectUrl ?? "/" };
 
             return await ChallengeLexboxAsync(authProperties);
         }

@@ -11,7 +11,11 @@ import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { type AuthStatus } from "api/models";
-import { getAuthStatus, getExternalLoginUrl, logoutCurrentUser } from "backend";
+import {
+  getLexboxAuthStatus,
+  getLexboxLoginUrl,
+  logoutLexboxUser,
+} from "backend";
 import LoadingButton from "components/Buttons/LoadingButton";
 
 interface LexboxLoginProps {
@@ -29,7 +33,7 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
   const loadStatus = async (): Promise<void> => {
     setStatusLoading(true);
     try {
-      setStatus(await getAuthStatus());
+      setStatus(await getLexboxAuthStatus());
     } catch (err) {
       console.error("Failed to load auth status", err);
       setStatus(undefined);
@@ -43,26 +47,13 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
   }, []);
 
   const handleLogin = async (): Promise<void> => {
-    setActionLoading(true);
-    try {
-      const url = await getExternalLoginUrl();
-      console.info("Opening Lexbox login URL:", url);
-      if (url) {
-        window.open(url);
-      } else {
-        console.error("Lexbox login URL is empty");
-      }
-    } catch (err) {
-      console.error("Failed to get Lexbox login URL", err);
-    } finally {
-      setActionLoading(false);
-    }
+    window.open(getLexboxLoginUrl());
   };
 
   const handleLogout = async (): Promise<void> => {
     setActionLoading(true);
     try {
-      logoutCurrentUser();
+      await logoutLexboxUser();
       await loadStatus();
       props.onStatusChange?.("logged-out");
     } finally {

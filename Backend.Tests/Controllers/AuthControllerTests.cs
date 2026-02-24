@@ -89,26 +89,6 @@ namespace Backend.Tests.Controllers
             Assert.That(result, Is.InstanceOf<EmptyResult>());
         }
 
-        [Test]
-        public async Task StartLexboxLoginReturnsChallengeWithConfiguredSchemeAndRedirect()
-        {
-            _controller.ControllerContext.HttpContext = GetAuthContext(AuthenticateResult.NoResult());
-
-            var result = await _controller.StartLexboxLogin("/after-login");
-
-            Assert.That(result, Is.InstanceOf<EmptyResult>());
-        }
-
-        [Test]
-        public async Task StartLexboxLoginUnauthorizedReturnsForbid()
-        {
-            _controller.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-
-            var result = await _controller.StartLexboxLogin("/after-login");
-
-            Assert.That(result, Is.InstanceOf<ForbidResult>());
-        }
-
         private static HttpContext GetAuthContext(AuthenticateResult authenticateResult)
         {
             var context = PermissionServiceMock.HttpContextWithUserId(UserId);
