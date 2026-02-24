@@ -5,9 +5,25 @@ import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
+import MockThisContext from "components/Pronunciations/RecorderContext";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { type StoreState, defaultState } from "rootRedux/types";
 import theme, { themeColors } from "types/theme";
+
+jest.mock("react", () => {
+  const actualReact = jest.requireActual("react");
+  return {
+    ...actualReact,
+    useContext: (context: unknown) =>
+      context === MockThisContext
+        ? {
+            getRecordingId: () => undefined,
+            startRecording: jest.fn(() => true),
+            stopRecording: jest.fn(),
+          }
+        : actualReact.useContext(context),
+  };
+});
 
 const mockStore = configureMockStore()(defaultState);
 function mockRecordingState(wordId: string): Partial<StoreState> {
