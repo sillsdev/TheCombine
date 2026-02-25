@@ -46,20 +46,15 @@ function mockRecordingState(wordId: string): Partial<StoreState> {
 }
 const testIdRecordIcon = "FiberManualRecordIcon"; // MUI Icon data-testid
 
-async function renderRecorder(options?: {
-  id?: string;
-  recordingId?: string;
-}): Promise<void> {
-  const id = options?.id || "1";
-  const storeState = options?.recordingId
-    ? mockRecordingState(options.recordingId)
-    : defaultState;
+async function renderRecorder(isRecordingInState = false): Promise<void> {
+  const id = "1";
+  const state = isRecordingInState ? mockRecordingState(id) : defaultState;
 
   await act(async () => {
     render(
       <ThemeProvider theme={theme}>
         <StyledEngineProvider>
-          <Provider store={configureMockStore()(storeState)}>
+          <Provider store={configureMockStore()(state)}>
             <AudioRecorder id={id} uploadAudio={jest.fn()} />
           </Provider>
         </StyledEngineProvider>
@@ -83,8 +78,7 @@ describe("AudioRecorder", () => {
     });
 
     it("depends on pronunciations state", async () => {
-      const wordId = "1";
-      await renderRecorder({ id: wordId, recordingId: wordId });
+      await renderRecorder(true);
       const icon = screen.getByTestId(testIdRecordIcon);
       expect(icon).toHaveStyle({ color: themeColors.recordActive });
     });
@@ -100,7 +94,7 @@ describe("AudioRecorder", () => {
     }
 
     it("prevents start when already clicked once", async () => {
-      await renderRecorder({ id: "1" });
+      await renderRecorder();
 
       const recordButton = await waitForRecordButton();
       await userEvent.click(recordButton);
@@ -111,7 +105,7 @@ describe("AudioRecorder", () => {
 
     it("prevents start when context has another word recording", async () => {
       mockRecorder.getRecordingId.mockReturnValue("different-word-id");
-      await renderRecorder({ id: "1" });
+      await renderRecorder();
 
       const recordButton = await waitForRecordButton();
       await userEvent.click(recordButton);
@@ -122,7 +116,7 @@ describe("AudioRecorder", () => {
 
     it("shows recording error and unlocks retry when start fails", async () => {
       mockRecorder.startRecording.mockReturnValue(false);
-      await renderRecorder({ id: "1" });
+      await renderRecorder();
 
       const recordButton = await waitForRecordButton();
       await userEvent.click(recordButton);
