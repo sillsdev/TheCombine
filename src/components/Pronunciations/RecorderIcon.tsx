@@ -31,15 +31,18 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
     (state: StoreState) => state.pronunciationsState.wordId
   );
 
-  // Keep a ref to the latest isRecordingThis value for use in the cleanup effect.
-  const isRecordingThisRef = useRef(false);
-  const isRecordingThis = isRecording && recordingId === props.id;
-  isRecordingThisRef.current = isRecordingThis;
-
   const dispatch = useAppDispatch();
   const [hasMic, setHasMic] = useState(false);
-
   const { t } = useTranslation();
+
+  // Use refs to keep dependencies stable in useEffect/useCallback.
+  const isRecordingRef = useRef(false);
+  const isRecordingThisRef = useRef(false);
+  const stopAndResetRef = useRef<(() => void) | undefined>();
+
+  isRecordingRef.current = isRecording;
+  const isRecordingThis = isRecording && recordingId === props.id;
+  isRecordingThisRef.current = isRecordingThis;
 
   const stopAndReset = useCallback(() => {
     if (isRecordingThisRef.current) {
@@ -47,36 +50,36 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
       dispatch(resetPronunciations());
     }
   }, [dispatch, props.stopRecording]);
+  stopAndResetRef.current = stopAndReset;
 
   useEffect(() => {
     checkMicPermission().then(setHasMic);
-  }, []);
 
-  useEffect(() => {
     return () => {
       // Reset recording state if this component unmounts while recording
       // (e.g., navigating away from the page mid-recording).
-      stopAndReset();
+      stopAndResetRef.current?.();
     };
-  }, [stopAndReset]);
+  }, []);
 
-  async function toggleIsRecordingToTrue(): Promise<void> {
-    if (!isRecording) {
-      // Only start a recording if there's not another on in progress.
-      if (await props.startRecording()) {
-        dispatch(recording(props.id));
-      }
-    } else {
-      // This triggers if user clicks-and-holds on one entry's record icon,
-      // drags the mouse outside that icon before releasing,
-      // then clicks-and-holds a different entry's record icon.
-      if (recordingId !== props.id) {
+  const start = useCallback(async (): Promise<void> => {
+    if (isRecordingRef.current) {
+      if (!isRecordingThisRef.current) {
+        // This happens if user clicks-and-holds on one entry's record icon,
+        // drags the mouse outside that icon before releasing,
+        // then clicks-and-holds a different entry's record icon.
         console.error(
           "Tried to record for an entry before finishing a recording on another entry."
         );
       }
+      return;
     }
-  }
+
+    // Only start a recording if there's not another on in progress.
+    if (await props.startRecording()) {
+      dispatch(recording(props.id));
+    }
+  }, [dispatch, props.id, props.startRecording]);
 
   const tooltipId = hasMic
     ? "pronunciations.recordTooltip"
@@ -97,7 +100,7 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
           onBlur={stopAndReset}
           onContextMenu={(e) => e.preventDefault()}
           onPointerCancel={stopAndReset}
-          onPointerDown={toggleIsRecordingToTrue}
+          onPointerDown={start}
           onPointerUp={stopAndReset}
           size="large"
           tabIndex={-1}
