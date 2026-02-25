@@ -57,7 +57,7 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
         return false;
       }
     },
-    [props.noSpeaker, props.uploadAudio, speakerId]
+    [props.noSpeaker, props.uploadAudio, speakerId, t]
   );
 
   const stopRecording = useCallback(async (): Promise<void> => {
