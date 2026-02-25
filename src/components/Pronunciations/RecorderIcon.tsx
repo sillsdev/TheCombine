@@ -75,7 +75,7 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
       return;
     }
 
-    // Only start a recording if there's not another on in progress.
+    // Only start a recording if there's not another one in progress.
     if (await props.startRecording()) {
       dispatch(recording(props.id));
     }
