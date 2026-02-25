@@ -46,16 +46,26 @@ function mockRecordingState(wordId: string): Partial<StoreState> {
 }
 const testIdRecordIcon = "FiberManualRecordIcon"; // MUI Icon data-testid
 
-async function renderRecorder(isRecordingInState = false): Promise<void> {
-  const id = "1";
-  const state = isRecordingInState ? mockRecordingState(id) : defaultState;
+/** Render the `AudioRecorder` component in the necessary providers.
+ * Config options:
+ * - `id`: the word id prop for the `AudioRecorder` (default: "test-word-id")
+ * - `recId`: if truthy, the word id in the mock recording state;
+ *   if falsy, use default pronunciations state */
+async function renderRecorder(config?: {
+  id?: string;
+  recId?: string;
+}): Promise<void> {
+  const state = config?.recId ? mockRecordingState(config.recId) : defaultState;
 
   await act(async () => {
     render(
       <ThemeProvider theme={theme}>
         <StyledEngineProvider>
           <Provider store={configureMockStore()(state)}>
-            <AudioRecorder id={id} uploadAudio={jest.fn()} />
+            <AudioRecorder
+              id={config?.id ?? "test-word-id"}
+              uploadAudio={jest.fn()}
+            />
           </Provider>
         </StyledEngineProvider>
       </ThemeProvider>
@@ -77,10 +87,16 @@ describe("AudioRecorder", () => {
       expect(icon).toHaveStyle({ color: themeColors.recordIdle });
     });
 
-    it("depends on pronunciations state", async () => {
-      await renderRecorder(true);
+    it("is active when recording", async () => {
+      await renderRecorder({ id: "test-word-id", recId: "test-word-id" });
       const icon = screen.getByTestId(testIdRecordIcon);
       expect(icon).toHaveStyle({ color: themeColors.recordActive });
+    });
+
+    it("is idle when different word is recording", async () => {
+      await renderRecorder({ id: "test-word-id", recId: "different-word-id" });
+      const icon = screen.getByTestId(testIdRecordIcon);
+      expect(icon).toHaveStyle({ color: themeColors.recordIdle });
     });
   });
 
