@@ -37,35 +37,46 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
     clickedRef.current = false;
   }, [props.id]);
 
+  const uploadAudio = useCallback(
+    (file?: File): boolean => {
+      if (!file?.size) {
+        console.error("No audio file to upload");
+        toast.error(t("pronunciations.recordingError"));
+        return false;
+      }
+
+      try {
+        if (!props.noSpeaker) {
+          (file as FileWithSpeakerId).speakerId = speakerId;
+        }
+        props.uploadAudio(file);
+        return true;
+      } catch (err) {
+        console.error("Error uploading audio:", err);
+        toast.error(t("pronunciations.recordingError"));
+        return false;
+      }
+    },
+    [props.noSpeaker, props.uploadAudio, speakerId]
+  );
+
   const stopRecording = useCallback(async (): Promise<void> => {
     // Prevent triggering this function if no recording is active.
     if (recorder.getRecordingId() === undefined) {
       return;
     }
 
-    if (props.onClick) {
-      props.onClick();
-    }
+    props.onClick?.();
 
-    const file = await recorder.stopRecording();
-    if (!file || !file.size) {
-      toast.error(t("pronunciations.recordingError"));
-      clickedRef.current = false;
-      return;
-    }
+    const uploadSuccess = uploadAudio(await recorder.stopRecording());
 
-    if (!props.noSpeaker) {
-      (file as FileWithSpeakerId).speakerId = speakerId;
-    }
-    props.uploadAudio(file);
-
-    if (!props.id) {
-      // If recorder is on something with an id,
-      // that id will update after the upload is complete,
-      // so rely on the useEffect above to do this.
+    if (uploadSuccess && props.id) {
+      // The id will change when the frontend updates with the new audio,
+      // so we rely on a useEffect above to reset the clickedRef.
+    } else {
       clickedRef.current = false;
     }
-  }, [props.id, props.noSpeaker, props.uploadAudio, recorder, speakerId, t]);
+  }, [props.id, props.onClick, recorder, t, uploadAudio]);
 
   const startRecording = useCallback(async (): Promise<boolean> => {
     if (clickedRef.current) {
@@ -93,6 +104,7 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
       clickedRef.current = false;
       return false;
     }
+
     return true;
   }, [props.id, recorder, stopRecording, t]);
 

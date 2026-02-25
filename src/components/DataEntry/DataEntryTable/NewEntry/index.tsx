@@ -117,6 +117,10 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     [glossInput, vernInput]
   );
 
+  const focusGloss = useCallback((): void => {
+    focus(FocusTarget.Gloss);
+  }, [focus]);
+
   const resetState = useCallback((): void => {
     resetNewEntry();
     setSubmitting(false);
@@ -277,7 +281,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           <NoteButton
             buttonId={NewEntryId.ButtonNote}
             noteText={submitting ? "" : newNote}
-            onExited={() => focus(FocusTarget.Gloss)}
+            onExited={focusGloss}
             updateNote={setNewNote}
           />
         )}
@@ -289,7 +293,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           deleteAudio={delNewAudio}
           replaceAudio={repNewAudio}
           uploadAudio={addNewAudio}
-          onClick={() => focus(FocusTarget.Gloss)}
+          onClick={focusGloss}
         />
       </Grid2>
 
