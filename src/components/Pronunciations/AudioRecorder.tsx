@@ -76,7 +76,7 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
     } else {
       clickedRef.current = false;
     }
-  }, [props.id, props.onClick, recorder, t, uploadAudio]);
+  }, [props.id, props.onClick, recorder, uploadAudio]);
 
   const startRecording = useCallback(async (): Promise<boolean> => {
     if (clickedRef.current) {
