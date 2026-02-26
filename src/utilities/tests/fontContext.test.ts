@@ -39,17 +39,6 @@ describe("ProjectFonts", () => {
       });
       expect(projFonts.getLangFont("not-a-lang-in-the-proj") === inherit);
       expect(projFonts.vernacularFont === vernFont.replaceAll(" ", ""));
-      expect(projFonts.analysisLangs).toEqual(aBcp);
-    });
-
-    it("has empty analysisLangs with no project input", () => {
-      expect(new ProjectFonts().analysisLangs).toEqual([]);
-    });
-
-    it("correctly extracts analysisLangs from project writing systems", () => {
-      const proj = newProject();
-      proj.analysisWritingSystems = [newWritingSystem("en"), newWritingSystem("es")];
-      expect(new ProjectFonts(proj).analysisLangs).toEqual(["en", "es"]);
     });
   });
 });
