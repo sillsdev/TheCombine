@@ -34,7 +34,7 @@ Session.vim
 scripts/*.js
 !scripts/frontendScripts.js
 !scripts/jestTest.js
-!scripts/setupMongo.js
+!scripts/startDatabase.js
 database/*.js
 *.log
 *-debug.log*
