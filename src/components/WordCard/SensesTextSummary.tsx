@@ -1,7 +1,9 @@
-import { type ReactElement, useContext } from "react";
+import { type ReactElement } from "react";
+import { shallowEqual } from "react-redux";
 
 import { type Sense } from "api/models";
-import FontContext from "utilities/fontContext";
+import { useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 import { TypographyWithFont } from "utilities/fontComponents";
 
 interface SensesTextSummaryProp {
@@ -17,7 +19,13 @@ export default function SensesTextSummary(
   const interSenseSep = " | ";
   const intraSenseSep = "; ";
 
-  const analysisLangs = useContext(FontContext).analysisLangs;
+  const analysisLangs = useAppSelector(
+    (state: StoreState) =>
+      state.currentProjectState.project.analysisWritingSystems.map(
+        (ws) => ws.bcp47
+      ),
+    shallowEqual
+  );
 
   const typographies: ReactElement[] = [];
 

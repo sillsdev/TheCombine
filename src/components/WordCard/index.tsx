@@ -23,7 +23,6 @@ import { TypographyWithFont } from "utilities/fontComponents";
 import { getLocalizedDateTimeString } from "utilities/utilities";
 
 interface WordCardProps {
-  languages?: string[];
   provenance?: boolean;
   word: Word;
 }
@@ -40,7 +39,7 @@ export enum WordCardLabel {
 }
 
 export default function WordCard(props: WordCardProps): ReactElement {
-  const { languages, provenance, word } = props;
+  const { provenance, word } = props;
   const { audio, editedBy, flag, id, note, senses } = word;
   const [full, setFull] = useState(false);
   const [username, setUsername] = useState("");
@@ -127,7 +126,6 @@ export default function WordCard(props: WordCardProps): ReactElement {
             {senses.map((s) => (
               <SenseCard
                 key={s.guid}
-                languages={languages}
                 provenance={provenance}
                 sense={s}
               />

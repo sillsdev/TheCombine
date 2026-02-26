@@ -34,13 +34,6 @@ function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
 
 export default function DragSense(props: DragSenseProps): ReactElement {
   const [duplicateCount, setDuplicateCount] = useState<number>(1);
-  const analysisLangs = useAppSelector(
-    (state: StoreState) =>
-      state.currentProjectState.project.analysisWritingSystems.map(
-        (ws) => ws.bcp47
-      ),
-    arraysEqual<string>
-  );
   const dispatch = useAppDispatch();
   const overrideProtection = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal.overrideProtection
@@ -122,7 +115,6 @@ export default function DragSense(props: DragSenseProps): ReactElement {
         >
           <SenseCardContent
             senses={props.mergeSenses.map((s) => s.sense)}
-            languages={analysisLangs}
             toggleFunction={toggleSidebar}
           />
         </Card>
