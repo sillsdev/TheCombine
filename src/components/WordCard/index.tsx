@@ -124,11 +124,7 @@ export default function WordCard(props: WordCardProps): ReactElement {
         {full ? (
           <Stack spacing={1}>
             {senses.map((s) => (
-              <SenseCard
-                key={s.guid}
-                provenance={provenance}
-                sense={s}
-              />
+              <SenseCard key={s.guid} provenance={provenance} sense={s} />
             ))}
           </Stack>
         ) : (

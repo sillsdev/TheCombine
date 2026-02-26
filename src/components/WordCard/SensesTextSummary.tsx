@@ -36,7 +36,9 @@ export default function SensesTextSummary(
       case "definitions":
         if (analysisLangs.length) {
           texts = analysisLangs.flatMap((l) =>
-            sense.definitions.filter((d) => d.language === l).map((d) => d.text.trim())
+            sense.definitions
+              .filter((d) => d.language === l)
+              .map((d) => d.text.trim())
           );
           lang = analysisLangs.find((l) =>
             sense.definitions.some((d) => d.language === l && d.text.trim())
@@ -49,7 +51,9 @@ export default function SensesTextSummary(
       case "glosses":
         if (analysisLangs.length) {
           texts = analysisLangs.flatMap((l) =>
-            sense.glosses.filter((g) => g.language === l).map((g) => g.def.trim())
+            sense.glosses
+              .filter((g) => g.language === l)
+              .map((g) => g.def.trim())
           );
           lang = analysisLangs.find((l) =>
             sense.glosses.some((g) => g.language === l && g.def.trim())
