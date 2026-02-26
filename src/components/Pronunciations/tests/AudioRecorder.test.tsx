@@ -76,10 +76,10 @@ describe("AudioRecorder", () => {
       expect(icon).toHaveStyle({ color: themeColors.recordActive });
     });
 
-    it("is idle when different word is recording", async () => {
+    it("is grey when different word is recording", async () => {
       await renderRecorder({ id: "test-word-id", recId: "different-word-id" });
       const icon = screen.getByTestId(testIdRecordIcon);
-      expect(icon).toHaveStyle({ color: themeColors.recordIdle });
+      expect(icon).toHaveStyle({ color: theme.palette.grey[400] });
     });
   });
 
