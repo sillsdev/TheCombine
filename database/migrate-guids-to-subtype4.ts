@@ -45,6 +45,7 @@ interface MongoCollection {
 
 interface MongoDB {
   getCollection(name: string): MongoCollection;
+  getCollectionNames(): string[];
 }
 
 /**
@@ -114,8 +115,12 @@ for (const collName of ["WordsCollection", "FrontierCollection"]) {
     }
 
     if (Object.keys(update).length > 0) {
-      coll.updateOne({ _id: doc["_id"] }, { $set: update });
-      totalDocumentsUpdated++;
+      try {
+        coll.updateOne({ _id: doc["_id"] }, { $set: update });
+        totalDocumentsUpdated++;
+      } catch (e) {
+        print(`Error updating document ${doc["_id"]}: ${e}`);
+      }
     }
   });
 
@@ -160,60 +165,46 @@ print(
 
 // ── Final verification scan ─────────────────────────────────────────────────
 //
-// Count GUID BinData values that are still not subtype 4 after migration.
+// Recursively scan every collection/document/field and count objects with a
+// sub_type property that is not 4.
 
-function isBinaryWithSubtype4(value: unknown): boolean {
-  return (
-    value !== null &&
-    typeof value === "object" &&
-    "sub_type" in value &&
-    value.sub_type === 4
+function countObjectsWithSubtypeNot4(root: unknown): number {
+  if (root === null || root === undefined || typeof root !== "object") {
+    return 0;
+  }
+
+  if (Array.isArray(root)) {
+    return root.reduce<number>(
+      (sum, item) => sum + countObjectsWithSubtypeNot4(item),
+      0
+    );
+  }
+
+  if ("sub_type" in root && root.sub_type !== 4) {
+    return 1;
+  }
+
+  return Object.values(root as Record<string, unknown>).reduce<number>(
+    (sum, child) => sum + countObjectsWithSubtypeNot4(child),
+    0
   );
 }
 
-let totalNonSubtype4Guids = 0;
+let totalNonSubtype4Objects = 0;
 
-for (const collName of ["WordsCollection", "FrontierCollection"]) {
-  const coll = db.getCollection(collName);
-
-  coll
-    .find({
-      $or: [
-        { guid: { $type: "binData" } },
-        { "senses.guid": { $type: "binData" } },
-      ],
-    })
+for (const collName of db.getCollectionNames()) {
+  print(
+    `Scanning collection ${collName} for objects found with sub_type !== 4...`
+  );
+  db.getCollection(collName)
+    .find({})
     .forEach((doc) => {
-      if (!isBinaryWithSubtype4(doc["guid"])) {
-        totalNonSubtype4Guids++;
+      const subcount = countObjectsWithSubtypeNot4(doc);
+      if (subcount > 0) {
+        print(`* doc ${doc["_id"]}: ${subcount} objects with sub_type !== 4`);
       }
-
-      if (Array.isArray(doc["senses"])) {
-        doc["senses"].forEach((sense) => {
-          if (sense === null || typeof sense !== "object") {
-            return;
-          }
-          if (!isBinaryWithSubtype4(sense["guid"])) {
-            totalNonSubtype4Guids++;
-          }
-        });
-      }
+      totalNonSubtype4Objects += subcount;
     });
 }
 
-userEditsColl.find({ "edits.guid": { $type: "binData" } }).forEach((doc) => {
-  if (Array.isArray(doc["edits"])) {
-    doc["edits"].forEach((edit) => {
-      if (edit === null || typeof edit !== "object") {
-        return;
-      }
-      if (!isBinaryWithSubtype4(edit["guid"])) {
-        totalNonSubtype4Guids++;
-      }
-    });
-  }
-});
-
-print(
-  `Final scan: ${totalNonSubtype4Guids} GUID(s) found with binary.sub_type !== 4.`
-);
+print(`Final scan: ${totalNonSubtype4Objects} objects found.`);
