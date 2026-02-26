@@ -1,6 +1,6 @@
 import { FiberManualRecord } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
+import { ReactElement, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -35,22 +35,20 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   const [hasMic, setHasMic] = useState(false);
   const { t } = useTranslation();
 
-  // Use refs to keep dependencies stable in useEffect/useCallback.
-  const isRecordingRef = useRef(false);
-  const isRecordingThisRef = useRef(false);
-  const stopAndResetRef = useRef<(() => void) | undefined>();
+  // Use refs to for the useEffect cleanup.
+  const stopRef = useRef<(() => void) | undefined>();
 
-  isRecordingRef.current = isRecording;
   const isRecordingThis = isRecording && recordingId === props.id;
-  isRecordingThisRef.current = isRecordingThis;
+  const disabled =
+    props.disabled || !hasMic || (isRecording && !isRecordingThis);
 
-  const stopAndReset = useCallback(() => {
-    if (isRecordingThisRef.current) {
+  const stop = (): void => {
+    if (isRecordingThis) {
       props.stopRecording();
       dispatch(resetPronunciations());
     }
-  }, [dispatch, props.stopRecording]);
-  stopAndResetRef.current = stopAndReset;
+  };
+  stopRef.current = stop;
 
   useEffect(() => {
     checkMicPermission().then(setHasMic);
@@ -58,20 +56,12 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
     return () => {
       // Reset recording state if this component unmounts while recording
       // (e.g., navigating away from the page mid-recording).
-      stopAndResetRef.current?.();
+      stopRef.current?.();
     };
   }, []);
 
-  const start = useCallback(async (): Promise<void> => {
-    if (isRecordingRef.current) {
-      if (!isRecordingThisRef.current) {
-        // This happens if user clicks-and-holds on one entry's record icon,
-        // drags the mouse outside that icon before releasing,
-        // then clicks-and-holds a different entry's record icon.
-        console.error(
-          "Tried to record for an entry before finishing a recording on another entry."
-        );
-      }
+  const start = async (): Promise<void> => {
+    if (isRecording) {
       return;
     }
 
@@ -79,7 +69,7 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
     if (await props.startRecording()) {
       dispatch(recording(props.id));
     }
-  }, [dispatch, props.id, props.startRecording]);
+  };
 
   const tooltipId = hasMic
     ? "pronunciations.recordTooltip"
@@ -89,26 +79,26 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
     <Tooltip
       disableTouchListener // Distracting when already recording with a long-press.
       placement="top"
-      title={!props.disabled && t(tooltipId)}
+      title={disabled ? undefined : t(tooltipId)}
     >
       <span>
         <IconButton
           aria-label="record"
           data-testid={recordButtonId}
-          disabled={props.disabled || !hasMic}
+          disabled={disabled}
           id={recordButtonId}
-          onBlur={stopAndReset}
+          onBlur={stop}
           onContextMenu={(e) => e.preventDefault()}
-          onPointerCancel={stopAndReset}
+          onPointerCancel={stop}
           onPointerDown={start}
-          onPointerUp={stopAndReset}
+          onPointerUp={stop}
           size="large"
           tabIndex={-1}
         >
           <FiberManualRecord
             sx={{
               color: (t) =>
-                props.disabled || !hasMic
+                disabled
                   ? t.palette.grey[400]
                   : isRecordingThis
                     ? themeColors.recordActive
