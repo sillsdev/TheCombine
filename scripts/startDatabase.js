@@ -35,9 +35,13 @@ async function initReplicaSet() {
 async function main() {
   await ensureDir(dbPath);
 
-  const mongod = spawn("mongod", [`--dbpath=${dbPath}`, "--replSet", replSetName], {
-    stdio: "inherit",
-  });
+  const mongod = spawn(
+    "mongod",
+    [`--dbpath=${dbPath}`, "--replSet", replSetName],
+    {
+      stdio: "inherit",
+    }
+  );
 
   mongod.on("error", (err) => {
     console.error(`mongod error: ${err.message}`);
