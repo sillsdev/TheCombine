@@ -30,7 +30,7 @@
       "label": "run-mongo",
       "command": "mongod",
       "type": "process",
-      "args": ["--dbpath", "${workspaceFolder}/mongo_database"],
+      "args": ["--dbpath", "${workspaceFolder}/mongo_database", "--replSet", "rs0"],
       "problemMatcher": "$tsc"
     }
   ]
