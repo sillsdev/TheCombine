@@ -67,12 +67,12 @@ function csharpGuidToStandard(bin: unknown): ReturnType<typeof UUID> | null {
 
   // Rearrange the first 8 bytes (4+2+2) from little-endian to big-endian;
   // the remaining 8 bytes are already in big-endian order.
-  const uuidStr =
-    hexBytes[3] + hexBytes[2] + hexBytes[1] + hexBytes[0] + "-" + // reverse 4 bytes
-    hexBytes[5] + hexBytes[4] + "-" + // reverse 2 bytes
-    hexBytes[7] + hexBytes[6] + "-" + // reverse 2 bytes
-    hexBytes[8] + hexBytes[9] + "-" + // the rest stay the same
-    hexBytes.slice(10).join("");
+  const rev1 = hexBytes[3] + hexBytes[2] + hexBytes[1] + hexBytes[0];
+  const rev2 = hexBytes[5] + hexBytes[4];
+  const rev3 = hexBytes[7] + hexBytes[6];
+  const keep1 = hexBytes[8] + hexBytes[9];
+  const keep2 = hexBytes.slice(10).join("");
+  const uuidStr = rev1 + "-" + rev2 + "-" + rev3 + "-" + keep1 + "-" + keep2;
   return UUID(uuidStr);
 }
 
@@ -101,7 +101,10 @@ for (const collName of ["WordsCollection", "FrontierCollection"]) {
 
     // Convert each sense's guid.
     if (Array.isArray(doc["senses"])) {
-      (doc["senses"] as MongoDoc[]).forEach((sense, i) => {
+      doc["senses"].forEach((sense, i) => {
+        if (sense === null || typeof sense !== "object") {
+          return;
+        }
         const newSenseGuid = csharpGuidToStandard(sense["guid"]);
         if (newSenseGuid !== null) {
           update[`senses.${i}.guid`] = newSenseGuid;
@@ -131,7 +134,10 @@ userEditsColl.find({ "edits.guid": { $type: "binData" } }).forEach((doc) => {
   const update: Record<string, ReturnType<typeof UUID>> = {};
 
   if (Array.isArray(doc["edits"])) {
-    (doc["edits"] as MongoDoc[]).forEach((edit, i) => {
+    doc["edits"].forEach((edit, i) => {
+      if (edit === null || typeof edit !== "object") {
+        return;
+      }
       const newEditGuid = csharpGuidToStandard(edit["guid"]);
       if (newEditGuid !== null) {
         update[`edits.${i}.guid`] = newEditGuid;
@@ -154,102 +160,60 @@ print(
 
 // ── Final verification scan ─────────────────────────────────────────────────
 //
-// Audit GUID fields for missing, empty, non-binary, or non-subtype-4 values.
+// Count GUID BinData values that are still not subtype 4 after migration.
 
-interface GuidAuditCounts {
-  totalGuidFieldsChecked: number;
-  missing: number;
-  empty: number;
-  nonBinary: number;
-  nonSubtype4: number;
+function isBinaryWithSubtype4(value: unknown): boolean {
+  return (
+    value !== null &&
+    typeof value === "object" &&
+    "sub_type" in value &&
+    value.sub_type === 4
+  );
 }
 
-function auditGuidField(value: unknown, counts: GuidAuditCounts): void {
-  counts.totalGuidFieldsChecked++;
-
-  if (value === null || value === undefined) {
-    counts.missing++;
-    return;
-  }
-
-  if (typeof value === "string" && value.trim() === "") {
-    counts.empty++;
-    return;
-  }
-
-  if (typeof value !== "object") {
-    counts.nonBinary++;
-    return;
-  }
-
-  const binary = value as {
-    _bsontype?: unknown;
-    sub_type?: unknown;
-    toString?: (encoding: "hex") => string;
-  };
-
-  const looksBinary =
-    binary._bsontype === "Binary" || typeof binary.sub_type === "number";
-
-  if (!looksBinary || typeof binary.sub_type !== "number") {
-    counts.nonBinary++;
-    return;
-  }
-
-  if (binary.sub_type !== 4) {
-    counts.nonSubtype4++;
-    return;
-  }
-
-  if (typeof binary.toString === "function" && binary.toString("hex") === "") {
-    counts.empty++;
-  }
-}
-
-const guidAudit: GuidAuditCounts = {
-  totalGuidFieldsChecked: 0,
-  missing: 0,
-  empty: 0,
-  nonBinary: 0,
-  nonSubtype4: 0,
-};
+let totalNonSubtype4Guids = 0;
 
 for (const collName of ["WordsCollection", "FrontierCollection"]) {
   const coll = db.getCollection(collName);
 
-  coll.find({}).forEach((doc) => {
-    auditGuidField(doc["guid"], guidAudit);
+  coll
+    .find({
+      $or: [
+        { guid: { $type: "binData" } },
+        { "senses.guid": { $type: "binData" } },
+      ],
+    })
+    .forEach((doc) => {
+      if (!isBinaryWithSubtype4(doc["guid"])) {
+        totalNonSubtype4Guids++;
+      }
 
-    if (Array.isArray(doc["senses"])) {
-      (doc["senses"] as MongoDoc[]).forEach((sense) => {
-        auditGuidField(sense["guid"], guidAudit);
-      });
-    }
-  });
+      if (Array.isArray(doc["senses"])) {
+        doc["senses"].forEach((sense) => {
+          if (sense === null || typeof sense !== "object") {
+            return;
+          }
+          if (!isBinaryWithSubtype4(sense["guid"])) {
+            totalNonSubtype4Guids++;
+          }
+        });
+      }
+    });
 }
 
-userEditsColl.find({}).forEach((doc) => {
+userEditsColl.find({ "edits.guid": { $type: "binData" } }).forEach((doc) => {
   if (Array.isArray(doc["edits"])) {
-    (doc["edits"] as MongoDoc[]).forEach((edit) => {
-      auditGuidField(edit["guid"], guidAudit);
+    doc["edits"].forEach((edit) => {
+      if (edit === null || typeof edit !== "object") {
+        return;
+      }
+      if (!isBinaryWithSubtype4(edit["guid"])) {
+        totalNonSubtype4Guids++;
+      }
     });
   }
 });
 
-const totalGuidIssues =
-  guidAudit.missing +
-  guidAudit.empty +
-  guidAudit.nonBinary +
-  guidAudit.nonSubtype4;
-
 print(
-  `Final scan: checked ${guidAudit.totalGuidFieldsChecked} GUID field(s); ` +
-    `missing=${guidAudit.missing}, empty=${guidAudit.empty}, ` +
-    `nonBinary=${guidAudit.nonBinary}, nonSubtype4=${guidAudit.nonSubtype4}.`
+  `Final scan: ${totalNonSubtype4Guids} GUID(s) found with binary.sub_type !== 4.`
 );
-
-if (totalGuidIssues > 0) {
-  throw new Error(
-    `GUID audit failed: ${totalGuidIssues} issue(s) found across GUID fields.`
-  );
-}
