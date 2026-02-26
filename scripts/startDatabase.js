@@ -48,13 +48,6 @@ async function main() {
     process.exit(1);
   });
 
-  const ready = await waitForMongo();
-  if (ready) {
-    await initReplicaSet();
-  } else {
-    console.error("MongoDB did not start in time");
-  }
-
   process.on("SIGINT", () => {
     mongod.kill("SIGINT");
   });
@@ -62,7 +55,24 @@ async function main() {
     mongod.kill("SIGTERM");
   });
 
-  await new Promise((resolve) => mongod.on("close", (code) => resolve(code)));
+  const ready = await waitForMongo();
+  if (!ready) {
+    console.error("MongoDB did not start in time");
+    mongod.kill("SIGTERM");
+    process.exit(1);
+  }
+
+  const initialized = await initReplicaSet();
+  if (!initialized) {
+    console.error("Replica set initialization failed");
+    mongod.kill("SIGTERM");
+    process.exit(1);
+  }
+
+  const exitCode = await new Promise((resolve) =>
+    mongod.on("close", (code) => resolve(code))
+  );
+  process.exit(exitCode || 1);
 }
 
 main().catch((err) => {
