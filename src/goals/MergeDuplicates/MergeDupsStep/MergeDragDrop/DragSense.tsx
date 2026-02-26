@@ -1,6 +1,7 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { Card } from "@mui/material";
 import { type ReactElement, useCallback, useEffect, useState } from "react";
+import { shallowEqual } from "react-redux";
 
 import { trashId } from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/MergeDragDropTypes";
 import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
@@ -18,18 +19,6 @@ interface DragSenseProps {
   isOnlySenseInProtectedWord: boolean;
   mergeSenses: MergeTreeSense[];
   senseRef: MergeTreeReference;
-}
-
-function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
-  if (arr1.length !== arr2.length) {
-    return false;
-  }
-  for (let i = 0; i < arr1.length; i++) {
-    if (arr1[i] !== arr2[i]) {
-      return false;
-    }
-  }
-  return true;
 }
 
 export default function DragSense(props: DragSenseProps): ReactElement {
@@ -71,7 +60,7 @@ export default function DragSense(props: DragSenseProps): ReactElement {
 
   if (
     isInSidebar &&
-    !arraysEqual(
+    !shallowEqual(
       sidebar.mergeSenses.map((m) => m.sense.guid),
       props.mergeSenses.map((m) => m.sense.guid)
     )
