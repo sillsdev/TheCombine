@@ -12,7 +12,6 @@ import { combineSenses } from "goals/MergeDuplicates/Redux/reducerUtilities";
 interface SenseCardContentProps {
   senses: Sense[];
   isCompleted?: boolean;
-  languages?: string[];
   sidebar?: boolean;
   toggleFunction?: () => void;
 }
@@ -73,7 +72,7 @@ export default function SenseCardContent(
         )}
       </div>
       {/* List glosses and (if any) definitions. */}
-      <SenseCardText languages={props.languages} sense={sense} />
+      <SenseCardText sense={sense} />
       {/* List semantic domains. */}
       <DomainChipsGrid semDoms={semDoms} />
     </CardContent>
