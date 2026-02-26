@@ -152,8 +152,12 @@ userEditsColl.find({ "edits.guid": { $type: "binData" } }).forEach((doc) => {
   }
 
   if (Object.keys(update).length > 0) {
-    userEditsColl.updateOne({ _id: doc["_id"] }, { $set: update });
-    totalDocumentsUpdated++;
+    try {
+      userEditsColl.updateOne({ _id: doc["_id"] }, { $set: update });
+      totalDocumentsUpdated++;
+    } catch (e) {
+      print(`Error updating document ${doc["_id"]}: ${e}`);
+    }
   }
 });
 
