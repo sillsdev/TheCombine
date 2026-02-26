@@ -1,6 +1,6 @@
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import "@testing-library/jest-dom";
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import { toast } from "react-toastify"; // mocked in setupTests.js
@@ -84,18 +84,10 @@ describe("AudioRecorder", () => {
   });
 
   describe("start recording", () => {
-    async function waitForRecordButton(): Promise<HTMLElement> {
-      const recordButton = screen.getByTestId(recordButtonId);
-      await waitFor(() => {
-        expect(recordButton).not.toBeDisabled();
-      });
-      return recordButton;
-    }
-
     it("prevents start when already clicked once", async () => {
       await renderRecorder();
+      const recordButton = screen.getByTestId(recordButtonId);
 
-      const recordButton = await waitForRecordButton();
       await userEvent.click(recordButton);
       await userEvent.click(recordButton);
 
@@ -105,8 +97,8 @@ describe("AudioRecorder", () => {
     it("prevents start when context has another word recording", async () => {
       mockedRecorder.getRecordingId.mockReturnValue("different-word-id");
       await renderRecorder();
+      const recordButton = screen.getByTestId(recordButtonId);
 
-      const recordButton = await waitForRecordButton();
       await userEvent.click(recordButton);
 
       expect(mockedRecorder.startRecording).not.toHaveBeenCalled();
@@ -116,8 +108,8 @@ describe("AudioRecorder", () => {
     it("shows recording error and unlocks retry when start fails", async () => {
       mockedRecorder.startRecording.mockReturnValue(false);
       await renderRecorder();
+      const recordButton = screen.getByTestId(recordButtonId);
 
-      const recordButton = await waitForRecordButton();
       await userEvent.click(recordButton);
 
       expect(mockedRecorder.startRecording).toHaveBeenCalledTimes(1);
