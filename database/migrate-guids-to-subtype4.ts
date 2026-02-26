@@ -147,6 +147,109 @@ userEditsColl.find({ "edits.guid": { $type: "binData" } }).forEach((doc) => {
 });
 
 print("UserEditsCollection: done");
+
 print(
   `Migration complete. ${totalGuidsConverted} GUID(s) converted in ${totalDocumentsUpdated} document(s).`
 );
+
+// ── Final verification scan ─────────────────────────────────────────────────
+//
+// Audit GUID fields for missing, empty, non-binary, or non-subtype-4 values.
+
+interface GuidAuditCounts {
+  totalGuidFieldsChecked: number;
+  missing: number;
+  empty: number;
+  nonBinary: number;
+  nonSubtype4: number;
+}
+
+function auditGuidField(value: unknown, counts: GuidAuditCounts): void {
+  counts.totalGuidFieldsChecked++;
+
+  if (value === null || value === undefined) {
+    counts.missing++;
+    return;
+  }
+
+  if (typeof value === "string" && value.trim() === "") {
+    counts.empty++;
+    return;
+  }
+
+  if (typeof value !== "object") {
+    counts.nonBinary++;
+    return;
+  }
+
+  const binary = value as {
+    _bsontype?: unknown;
+    sub_type?: unknown;
+    toString?: (encoding: "hex") => string;
+  };
+
+  const looksBinary =
+    binary._bsontype === "Binary" || typeof binary.sub_type === "number";
+
+  if (!looksBinary || typeof binary.sub_type !== "number") {
+    counts.nonBinary++;
+    return;
+  }
+
+  if (binary.sub_type !== 4) {
+    counts.nonSubtype4++;
+    return;
+  }
+
+  if (typeof binary.toString === "function" && binary.toString("hex") === "") {
+    counts.empty++;
+  }
+}
+
+const guidAudit: GuidAuditCounts = {
+  totalGuidFieldsChecked: 0,
+  missing: 0,
+  empty: 0,
+  nonBinary: 0,
+  nonSubtype4: 0,
+};
+
+for (const collName of ["WordsCollection", "FrontierCollection"]) {
+  const coll = db.getCollection(collName);
+
+  coll.find({}).forEach((doc) => {
+    auditGuidField(doc["guid"], guidAudit);
+
+    if (Array.isArray(doc["senses"])) {
+      (doc["senses"] as MongoDoc[]).forEach((sense) => {
+        auditGuidField(sense["guid"], guidAudit);
+      });
+    }
+  });
+}
+
+userEditsColl.find({}).forEach((doc) => {
+  if (Array.isArray(doc["edits"])) {
+    (doc["edits"] as MongoDoc[]).forEach((edit) => {
+      auditGuidField(edit["guid"], guidAudit);
+    });
+  }
+});
+
+const totalGuidIssues =
+  guidAudit.missing +
+  guidAudit.empty +
+  guidAudit.nonBinary +
+  guidAudit.nonSubtype4;
+
+print(
+  `Final scan: checked ${guidAudit.totalGuidFieldsChecked} GUID field(s); ` +
+    `missing=${guidAudit.missing}, empty=${guidAudit.empty}, ` +
+    `nonBinary=${guidAudit.nonBinary}, nonSubtype4=${guidAudit.nonSubtype4}.`
+);
+
+if (totalGuidIssues > 0) {
+  throw new Error(
+    `GUID audit failed: ${totalGuidIssues} issue(s) found across GUID fields.`
+  );
+}
