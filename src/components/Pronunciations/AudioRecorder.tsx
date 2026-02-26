@@ -92,19 +92,29 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
 
     clickedRef.current = true;
 
-    // Prevent starting a recording before a previous one is finished.
-    await stopRecording();
+    try {
+      // Prevent starting a recording before a previous one is finished.
+      await stopRecording();
 
-    if (!recorder.startRecording(props.id)) {
-      let errorMessage = t("pronunciations.recordingError");
-      if (isBrowserFirefox()) {
-        errorMessage += ` ${t("pronunciations.recordingPermission")}`;
+      if (!recorder.startRecording(props.id)) {
+        let errorMessage = t("pronunciations.recordingError");
+        if (isBrowserFirefox()) {
+          errorMessage += ` ${t("pronunciations.recordingPermission")}`;
+        }
+        toast.error(errorMessage);
+        clickedRef.current = false;
+        return false;
       }
-      toast.error(errorMessage);
+    } catch (err) {
+      console.error("Error starting recording:", err);
+      toast.error(t("pronunciations.recordingError"));
       clickedRef.current = false;
       return false;
     }
 
+    // Don't set clickedRef to false here;
+    // It will be reset when the id changes after a successful upload,
+    // or in the catch block if there's an error.
     return true;
   }, [props.id, recorder, stopRecording, t]);
 
