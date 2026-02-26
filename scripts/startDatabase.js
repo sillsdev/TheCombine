@@ -72,7 +72,7 @@ async function main() {
   const exitCode = await new Promise((resolve) =>
     mongod.on("close", (code) => resolve(code))
   );
-  process.exit(exitCode || 1);
+  process.exit(exitCode ?? 1);
 }
 
 main().catch((err) => {
