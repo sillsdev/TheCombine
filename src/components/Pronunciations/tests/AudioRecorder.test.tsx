@@ -3,36 +3,20 @@ import "@testing-library/jest-dom";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
-import { toast } from "react-toastify";
+import { toast } from "react-toastify"; // mocked in setupTests.js
 import configureMockStore from "redux-mock-store";
 
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
-import MockThisContext from "components/Pronunciations/RecorderContext";
+import Recorder from "components/Pronunciations/Recorder"; // mocked in setupTests.js
+import RecorderContext from "components/Pronunciations/RecorderContext";
 import { recordButtonId } from "components/Pronunciations/RecorderIcon";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { type StoreState, defaultState } from "rootRedux/types";
 import theme, { themeColors } from "types/theme";
 
-jest.mock("react-toastify", () => ({
-  toast: { error: jest.fn(), success: jest.fn(), warning: jest.fn() },
-}));
+const testIdRecordIcon = "FiberManualRecordIcon"; // MUI Icon data-testid
 
-const mockRecorder = {
-  getRecordingId: jest.fn(),
-  startRecording: jest.fn(),
-  stopRecording: jest.fn(),
-};
-
-jest.mock("react", () => {
-  const actualReact = jest.requireActual("react");
-  return {
-    ...actualReact,
-    useContext: (context: unknown) =>
-      context === MockThisContext
-        ? mockRecorder
-        : actualReact.useContext(context),
-  };
-});
+let mockedRecorder: jest.Mocked<Recorder>;
 
 function mockRecordingState(wordId: string): Partial<StoreState> {
   return {
@@ -44,7 +28,6 @@ function mockRecordingState(wordId: string): Partial<StoreState> {
     },
   };
 }
-const testIdRecordIcon = "FiberManualRecordIcon"; // MUI Icon data-testid
 
 /** Render the `AudioRecorder` component in the necessary providers.
  * Config options:
@@ -62,10 +45,12 @@ async function renderRecorder(config?: {
       <ThemeProvider theme={theme}>
         <StyledEngineProvider>
           <Provider store={configureMockStore()(state)}>
-            <AudioRecorder
-              id={config?.id ?? "test-word-id"}
-              uploadAudio={jest.fn()}
-            />
+            <RecorderContext.Provider value={mockedRecorder}>
+              <AudioRecorder
+                id={config?.id ?? "test-word-id"}
+                uploadAudio={jest.fn()}
+              />
+            </RecorderContext.Provider>
           </Provider>
         </StyledEngineProvider>
       </ThemeProvider>
@@ -74,9 +59,7 @@ async function renderRecorder(config?: {
 }
 
 beforeEach(() => {
-  mockRecorder.getRecordingId.mockReturnValue(undefined);
-  mockRecorder.startRecording.mockReturnValue(true);
-  mockRecorder.stopRecording.mockResolvedValue(undefined);
+  mockedRecorder = new Recorder() as jest.Mocked<Recorder>;
 });
 
 describe("AudioRecorder", () => {
@@ -116,32 +99,32 @@ describe("AudioRecorder", () => {
       await userEvent.click(recordButton);
       await userEvent.click(recordButton);
 
-      expect(mockRecorder.startRecording).toHaveBeenCalledTimes(1);
+      expect(mockedRecorder.startRecording).toHaveBeenCalledTimes(1);
     });
 
     it("prevents start when context has another word recording", async () => {
-      mockRecorder.getRecordingId.mockReturnValue("different-word-id");
+      mockedRecorder.getRecordingId.mockReturnValue("different-word-id");
       await renderRecorder();
 
       const recordButton = await waitForRecordButton();
       await userEvent.click(recordButton);
 
-      expect(mockRecorder.startRecording).not.toHaveBeenCalled();
+      expect(mockedRecorder.startRecording).not.toHaveBeenCalled();
       expect(toast.error).not.toHaveBeenCalled();
     });
 
     it("shows recording error and unlocks retry when start fails", async () => {
-      mockRecorder.startRecording.mockReturnValue(false);
+      mockedRecorder.startRecording.mockReturnValue(false);
       await renderRecorder();
 
       const recordButton = await waitForRecordButton();
       await userEvent.click(recordButton);
 
-      expect(mockRecorder.startRecording).toHaveBeenCalledTimes(1);
+      expect(mockedRecorder.startRecording).toHaveBeenCalledTimes(1);
 
       await userEvent.click(recordButton);
 
-      expect(mockRecorder.startRecording).toHaveBeenCalledTimes(2);
+      expect(mockedRecorder.startRecording).toHaveBeenCalledTimes(2);
       expect(toast.error).toHaveBeenCalledWith("pronunciations.recordingError");
     });
   });
