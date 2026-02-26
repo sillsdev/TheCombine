@@ -28,11 +28,6 @@ interface BsonBinary {
   sub_type: number;
   toString(encoding: "hex" | "base64" | "utf8" | "utf-8"): string;
 }
-declare const BinData: {
-  new (subtype: number, b64string: string): BsonBinary;
-  (subtype: number, b64string: string): BsonBinary;
-  readonly prototype: BsonBinary;
-};
 declare function UUID(hexstr?: string): BsonBinary;
 declare function print(msg: string): void;
 declare const db: MongoDB;
@@ -57,14 +52,19 @@ interface MongoDB {
  * Returns null if the input is not a subtype-3 binary value.
  */
 function csharpGuidToStandard(bin: unknown): ReturnType<typeof UUID> | null {
-  if (!(bin instanceof BinData) || bin.sub_type !== 3) {
+  if (bin === null || typeof bin !== "object") {
+    return null;
+  }
+  const binary = bin as Partial<BsonBinary>;
+  if (binary.sub_type !== 3 || typeof binary.toString !== "function") {
     return null;
   }
   // Split the 32-character hex string into 16 byte pairs.
-  const hexBytes = bin.toString("hex").match(/../g);
-  if (hexBytes === null) {
+  const hexBytes = binary.toString("hex").match(/../g);
+  if (hexBytes === null || hexBytes.length !== 16) {
     return null;
   }
+
   // Rearrange the first 8 bytes (4+2+2) from little-endian to big-endian;
   // the remaining 8 bytes are already in big-endian order.
   const uuidStr =
