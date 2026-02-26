@@ -92,6 +92,7 @@ describe("AudioRecorder", () => {
       await userEvent.click(recordButton);
 
       expect(mockedRecorder.startRecording).toHaveBeenCalledTimes(1);
+      expect(toast.error).not.toHaveBeenCalled();
     });
 
     it("prevents start when context has another word recording", async () => {
@@ -109,15 +110,19 @@ describe("AudioRecorder", () => {
       mockedRecorder.startRecording.mockReturnValue(false);
       await renderRecorder();
       const recordButton = screen.getByTestId(recordButtonId);
+      const toastError = "pronunciations.recordingError";
 
       await userEvent.click(recordButton);
 
       expect(mockedRecorder.startRecording).toHaveBeenCalledTimes(1);
+      expect(toast.error).toHaveBeenCalledTimes(1);
+      expect(toast.error).toHaveBeenLastCalledWith(toastError);
 
       await userEvent.click(recordButton);
 
       expect(mockedRecorder.startRecording).toHaveBeenCalledTimes(2);
-      expect(toast.error).toHaveBeenCalledWith("pronunciations.recordingError");
+      expect(toast.error).toHaveBeenCalledTimes(2);
+      expect(toast.error).toHaveBeenLastCalledWith(toastError);
     });
   });
 });
