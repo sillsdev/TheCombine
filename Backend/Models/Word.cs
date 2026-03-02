@@ -20,7 +20,7 @@ namespace BackendFramework.Models
         /// </summary>
         [Required]
         [BsonElement("guid")]
-        [BsonGuidRepresentation(GuidRepresentation.CSharpLegacy)]
+        [BsonGuidRepresentation(GuidRepresentation.Standard)]
 #pragma warning disable CA1720
         public Guid Guid { get; set; }
 #pragma warning restore CA1720
