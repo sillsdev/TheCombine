@@ -1,4 +1,5 @@
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -42,8 +43,7 @@ namespace BackendFramework.Controllers
                 return Ok(AuthStatus.LoggedOut());
             }
 
-            var user = GetUserFromClaims(result.Principal);
-            return user is null ? Ok(AuthStatus.LoggedOut()) : Ok(AuthStatus.LoggedIn(user));
+            return Ok(AuthStatus.LoggedIn(GetUserFromClaims(result.Principal)));
         }
 
         /// <summary> Generates a redirect to Lexbox login for OIDC sign-in. </summary>
@@ -100,28 +100,19 @@ namespace BackendFramework.Controllers
             return uri.IsAbsoluteUri ? uri.PathAndQuery : uri.ToString();
         }
 
-        private static LexboxAuthUser? GetUserFromClaims(System.Security.Claims.ClaimsPrincipal principal)
+        private static LexboxAuthUser GetUserFromClaims(ClaimsPrincipal principal)
         {
-            var userId = principal.FindFirst("sub")?.Value?.Trim();
+            // https://github.com/sillsdev/languageforge-lexbox/blob/develop/backend/LexCore/Auth/LexAuthConstants.cs
+            var userId = principal.FindFirst("sub")?.Value?.Trim(); // LexAuthConstants.IdClaimType
             if (string.IsNullOrEmpty(userId))
             {
-                userId = principal.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value?.Trim();
+                throw new InvalidOperationException("Missing required Lexbox 'sub' claim.");
             }
 
-            var displayName = principal.FindFirst("preferred_username")?.Value
-                ?? principal.FindFirst("email")?.Value
-                ?? principal.FindFirst("name")?.Value
-                ?? principal.FindFirst("upn")?.Value
-                ?? principal.Identity?.Name;
-            displayName = displayName?.Trim();
-            if (string.IsNullOrEmpty(displayName))
-            {
-                displayName = userId;
-            }
+            var displayName = principal.FindFirst("user")?.Value // LexAuthConstants.UsernameClaimType
+                ?? principal.FindFirst("name")?.Value; // LexAuthConstants.NameClaimType
 
-            return string.IsNullOrEmpty(displayName) && string.IsNullOrEmpty(userId)
-                ? null
-                : new LexboxAuthUser { DisplayName = displayName, UserId = userId };
+            return new LexboxAuthUser { DisplayName = displayName ?? userId, UserId = userId };
         }
     }
 }
