@@ -82,4 +82,21 @@ describe("RecorderIcon", () => {
     });
     expect(mockStopRecording).not.toHaveBeenCalled();
   });
+
+  test("pointerCancel stops recording", async () => {
+    await renderRecorderIcon(mockWordId);
+    expect(mockStopRecording).not.toHaveBeenCalled();
+    await act(async () => {
+      fireEvent.pointerCancel(screen.getByTestId(recordButtonId));
+    });
+    expect(mockStopRecording).toHaveBeenCalled();
+  });
+
+  test("pointerCancel does nothing if no recording active", async () => {
+    await renderRecorderIcon();
+    await act(async () => {
+      fireEvent.pointerCancel(screen.getByTestId(recordButtonId));
+    });
+    expect(mockStopRecording).not.toHaveBeenCalled();
+  });
 });

@@ -1,15 +1,11 @@
 import "@testing-library/jest-dom";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { toast } from "react-toastify"; // mocked in setupTests.js
 
 import ProjectName from "components/ProjectSettings/ProjectName";
 import { randomProject } from "types/project";
 
-jest.mock("react-toastify", () => ({
-  toast: { error: () => mockToastError() },
-}));
-
-const mockToastError = jest.fn();
 const mockSetProject = jest.fn();
 
 const mockProject = randomProject();
@@ -31,7 +27,7 @@ describe("ProjectName", () => {
     mockSetProject.mockResolvedValueOnce({});
     await userEvent.click(saveButton);
     expect(mockSetProject).toHaveBeenCalledWith({ ...mockProject, name });
-    expect(mockToastError).not.toHaveBeenCalled();
+    expect(toast.error).not.toHaveBeenCalled();
   });
 
   it("toasts on error", async () => {
@@ -41,8 +37,8 @@ describe("ProjectName", () => {
     await userEvent.clear(textField);
     await userEvent.type(textField, "whatever");
     mockSetProject.mockRejectedValueOnce({});
-    expect(mockToastError).not.toHaveBeenCalled();
+    expect(toast.error).not.toHaveBeenCalled();
     await userEvent.click(saveButton);
-    expect(mockToastError).toHaveBeenCalledTimes(1);
+    expect(toast.error).toHaveBeenCalledTimes(1);
   });
 });
