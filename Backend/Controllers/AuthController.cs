@@ -63,7 +63,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Signs out the current user from Lexbox cookie and OIDC. </summary>
-        [HttpGet("lexbox-logout", Name = "LogOutLexbox")]
+        [HttpPost("lexbox-logout", Name = "LogOutLexbox")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> LogOutLexbox()
         {

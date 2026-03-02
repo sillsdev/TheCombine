@@ -2,7 +2,7 @@ namespace BackendFramework.Models
 {
     public class LexboxAuthUser
     {
-        public string? UserId { get; init; }
-        public string? DisplayName { get; init; }
+        public required string UserId { get; init; }
+        public required string DisplayName { get; init; }
     }
 }
