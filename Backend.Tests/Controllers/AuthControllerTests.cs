@@ -80,13 +80,16 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task GetLexboxLoginReturnsExpectedLoginPath()
+        public async Task GenerateLexboxLoginChallengesAndReturnsEmpty()
         {
-            _controller.ControllerContext.HttpContext = GetAuthContext(AuthenticateResult.NoResult());
+            var authService = new AuthenticationServiceMock(AuthenticateResult.NoResult());
+            _controller.ControllerContext.HttpContext = GetAuthContext(authService);
+            Assert.That(authService.ChallengeCallCount, Is.Zero);
 
-            var result = await _controller.GetLexboxLogin();
+            var result = await _controller.GenerateLexboxLogin();
 
             Assert.That(result, Is.InstanceOf<EmptyResult>());
+            Assert.That(authService.ChallengeCallCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -103,10 +106,13 @@ namespace Backend.Tests.Controllers
         }
 
         private static HttpContext GetAuthContext(AuthenticateResult authenticateResult)
+            => GetAuthContext(new AuthenticationServiceMock(authenticateResult));
+
+        private static HttpContext GetAuthContext(IAuthenticationService authenticationService)
         {
             var context = PermissionServiceMock.HttpContextWithUserId(UserId);
             var services = new ServiceCollection();
-            services.AddSingleton<IAuthenticationService>(new AuthenticationServiceMock(authenticateResult));
+            services.AddSingleton(authenticationService);
             context.RequestServices = services.BuildServiceProvider();
             return context;
         }

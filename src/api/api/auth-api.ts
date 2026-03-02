@@ -51,8 +51,8 @@ export const AuthApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getAuthStatus: async (options: any = {}): Promise<RequestArgs> => {
-      const localVarPath = `/v1/auth/status`;
+    generateLexboxLogin: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/v1/auth/lexbox-login`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -87,8 +87,8 @@ export const AuthApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getLexboxLogin: async (options: any = {}): Promise<RequestArgs> => {
-      const localVarPath = `/v1/auth/lexbox-login`;
+    getAuthStatus: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/v1/auth/status`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -169,13 +169,13 @@ export const AuthApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async getAuthStatus(
+    async generateLexboxLogin(
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuthStatus>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.getAuthStatus(options);
+        await localVarAxiosParamCreator.generateLexboxLogin(options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -188,13 +188,13 @@ export const AuthApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async getLexboxLogin(
+    async getAuthStatus(
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuthStatus>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.getLexboxLogin(options);
+        await localVarAxiosParamCreator.getAuthStatus(options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -240,9 +240,9 @@ export const AuthApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getAuthStatus(options?: any): AxiosPromise<AuthStatus> {
+    generateLexboxLogin(options?: any): AxiosPromise<void> {
       return localVarFp
-        .getAuthStatus(options)
+        .generateLexboxLogin(options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -250,9 +250,9 @@ export const AuthApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getLexboxLogin(options?: any): AxiosPromise<void> {
+    getAuthStatus(options?: any): AxiosPromise<AuthStatus> {
       return localVarFp
-        .getLexboxLogin(options)
+        .getAuthStatus(options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -281,9 +281,9 @@ export class AuthApi extends BaseAPI {
    * @throws {RequiredError}
    * @memberof AuthApi
    */
-  public getAuthStatus(options?: any) {
+  public generateLexboxLogin(options?: any) {
     return AuthApiFp(this.configuration)
-      .getAuthStatus(options)
+      .generateLexboxLogin(options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -293,9 +293,9 @@ export class AuthApi extends BaseAPI {
    * @throws {RequiredError}
    * @memberof AuthApi
    */
-  public getLexboxLogin(options?: any) {
+  public getAuthStatus(options?: any) {
     return AuthApiFp(this.configuration)
-      .getLexboxLogin(options)
+      .getAuthStatus(options)
       .then((request) => request(this.axios, this.basePath));
   }
 
