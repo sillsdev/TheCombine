@@ -146,7 +146,7 @@ namespace BackendFramework
             var lexboxMetadataAddress = Configuration["LexboxAuth:OpenIdConfigUrl"]
                 ?? "https://lexbox.org/.well-known/openid-configuration";
             var lexboxPrompt = Configuration["LexboxAuth:Prompt"] ?? "select_account";
-            var lexboxScope = Configuration["LexboxAuth:Scope"] ?? "profile openid offline_access sendandreceive";
+            var lexboxScope = Configuration["LexboxAuth:Scope"] ?? "profile openid sendandreceive";
 
             services.AddAuthentication(x =>
                 {

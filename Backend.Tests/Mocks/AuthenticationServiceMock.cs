@@ -7,11 +7,16 @@ namespace Backend.Tests.Mocks
 {
     internal sealed class AuthenticationServiceMock(AuthenticateResult authenticateResult) : IAuthenticationService
     {
+        internal int ChallengeCallCount { get; private set; }
+
         public Task<AuthenticateResult> AuthenticateAsync(HttpContext context, string? scheme)
             => Task.FromResult(authenticateResult);
 
         public Task ChallengeAsync(HttpContext context, string? scheme, AuthenticationProperties? properties)
-            => Task.CompletedTask;
+        {
+            ChallengeCallCount++;
+            return Task.CompletedTask;
+        }
 
         public Task ForbidAsync(HttpContext context, string? scheme, AuthenticationProperties? properties)
             => Task.CompletedTask;

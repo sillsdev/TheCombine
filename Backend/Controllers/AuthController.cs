@@ -47,12 +47,12 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Generates a redirect to Lexbox login for OIDC sign-in. </summary>
-        [HttpGet("lexbox-login", Name = "GetLexboxLogin")]
+        [HttpGet("lexbox-login", Name = "GenerateLexboxLogin")]
         [ProducesResponseType(StatusCodes.Status302Found)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetLexboxLogin()
+        public async Task<IActionResult> GenerateLexboxLogin()
         {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting lexbox login");
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "generating Lexbox login");
 
             var redirectUrl = NormalizeReturnUrl(_configuration[PostLoginRedirectConfigKey])
                 ?? NormalizeReturnUrl(Domain.FrontendDomain)
