@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 import { type AuthStatus } from "api/models";
 import {
@@ -46,8 +47,10 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
     loadStatus();
   }, []);
 
-  const handleLogin = async (): Promise<void> => {
-    window.open(getLexboxLoginUrl());
+  const handleLogin = (): void => {
+    if (!window.open(getLexboxLoginUrl())) {
+      toast.error("Failed to open login window");
+    }
   };
 
   const handleLogout = async (): Promise<void> => {
