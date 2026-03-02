@@ -49,7 +49,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task GetAuthStatusReturnsLexboxUserWhenLoggedIn()
         {
-            var claims = new List<Claim> { new("sub", "lex-1"), new("preferred_username", "Lex User") };
+            var claims = new List<Claim> { new("sub", "lex-1"), new("name", "Lex Name"), new("user", "Lex User") };
             var authResult = AuthenticateResult.Success(new AuthenticationTicket(
                 new ClaimsPrincipal(new ClaimsIdentity(claims, "LexboxCookie")), "LexboxCookie"));
             _controller.ControllerContext.HttpContext = GetAuthContext(authResult);
@@ -80,6 +80,53 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void GetAuthStatusThrowsWhenSubClaimMissing()
+        {
+            var claims = new List<Claim> { new("user", "Lex User") };
+            var authResult = AuthenticateResult.Success(new AuthenticationTicket(
+                new ClaimsPrincipal(new ClaimsIdentity(claims, "LexboxCookie")), "LexboxCookie"));
+            _controller.ControllerContext.HttpContext = GetAuthContext(authResult);
+
+            Assert.ThrowsAsync<InvalidOperationException>(_controller.GetAuthStatus);
+        }
+
+        [Test]
+        public async Task GetAuthStatusFallsBackToUserIdWhenDisplayNameClaimsMissing()
+        {
+            var claims = new List<Claim> { new("sub", "lex-1") };
+            var authResult = AuthenticateResult.Success(new AuthenticationTicket(
+                new ClaimsPrincipal(new ClaimsIdentity(claims, "LexboxCookie")), "LexboxCookie"));
+            _controller.ControllerContext.HttpContext = GetAuthContext(authResult);
+
+            var result = await _controller.GetAuthStatus() as OkObjectResult;
+
+            Assert.That(result, Is.Not.Null);
+            var authStatus = result.Value as AuthStatus;
+            Assert.That(authStatus, Is.Not.Null);
+            Assert.That(authStatus.IsLoggedIn, Is.True);
+            Assert.That(authStatus.LoggedInAs, Is.EqualTo("lex-1"));
+            Assert.That(authStatus.UserId, Is.EqualTo("lex-1"));
+        }
+
+        [Test]
+        public async Task GetAuthStatusUsesNameClaimWhenUserClaimMissing()
+        {
+            var claims = new List<Claim> { new("sub", "lex-1"), new("name", "Lex Name") };
+            var authResult = AuthenticateResult.Success(new AuthenticationTicket(
+                new ClaimsPrincipal(new ClaimsIdentity(claims, "LexboxCookie")), "LexboxCookie"));
+            _controller.ControllerContext.HttpContext = GetAuthContext(authResult);
+
+            var result = await _controller.GetAuthStatus() as OkObjectResult;
+
+            Assert.That(result, Is.Not.Null);
+            var authStatus = result.Value as AuthStatus;
+            Assert.That(authStatus, Is.Not.Null);
+            Assert.That(authStatus.IsLoggedIn, Is.True);
+            Assert.That(authStatus.LoggedInAs, Is.EqualTo("Lex Name"));
+            Assert.That(authStatus.UserId, Is.EqualTo("lex-1"));
+        }
+
+        [Test]
         public async Task GenerateLexboxLoginChallengesAndReturnsEmpty()
         {
             var authService = new AuthenticationServiceMock(AuthenticateResult.NoResult());
@@ -95,7 +142,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task LogOutLexboxReturnsNoContent()
         {
-            var claims = new List<Claim> { new("sub", "lex-1"), new("preferred_username", "Lex User") };
+            var claims = new List<Claim> { new("sub", "lex-1"), new("user", "Lex User") };
             var authResult = AuthenticateResult.Success(new AuthenticationTicket(
                 new ClaimsPrincipal(new ClaimsIdentity(claims, "LexboxCookie")), "LexboxCookie"));
             _controller.ControllerContext.HttpContext = GetAuthContext(authResult);
