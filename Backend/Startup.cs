@@ -134,19 +134,11 @@ namespace BackendFramework
 
             var key = ASCII.GetBytes(secretKey);
 
-            var lexboxAuthority = Configuration["LexboxAuth:Authority"]?.Trim().TrimEnd('/');
-            lexboxAuthority = string.IsNullOrEmpty(lexboxAuthority) ? "https://lexbox.org" : lexboxAuthority;
+            var lexboxAuthConfig = Configuration.GetSection("LexboxAuth");
+
             // Authorization endpoint needs to be defined before discovery happens with the metadata address.
-            var lexboxAuthorizationEndpoint = Configuration["LexboxAuth:AuthorizationEndpoint"]?.Trim();
-            lexboxAuthorizationEndpoint = string.IsNullOrEmpty(lexboxAuthorizationEndpoint)
-                ? "https://lexbox.org/api/oauth/open-id-auth"
-                : lexboxAuthorizationEndpoint;
-            var lexboxCallbackPath = Configuration["LexboxAuth:CallbackPath"] ?? "/v1/auth/oauth-callback";
-            var lexboxClientId = Configuration["LexboxAuth:ClientId"] ?? "the-combine";
-            var lexboxMetadataAddress = Configuration["LexboxAuth:OpenIdConfigUrl"]
-                ?? "https://lexbox.org/.well-known/openid-configuration";
-            var lexboxPrompt = Configuration["LexboxAuth:Prompt"] ?? "select_account";
-            var lexboxScope = Configuration["LexboxAuth:Scope"] ?? "profile openid sendandreceive";
+            var lexboxAuthorizationEndpoint = lexboxAuthConfig["AuthorizationEndpoint"]?.Trim();
+            var lexboxPrompt = lexboxAuthConfig["Prompt"]?.Trim();
 
             services.AddAuthentication(x =>
                 {
@@ -177,31 +169,21 @@ namespace BackendFramework
                 })
                 .AddOpenIdConnect("LexboxOidc", options =>
                 {
-                    options.Authority = lexboxAuthority;
-                    options.CallbackPath = lexboxCallbackPath;
-                    options.ClientId = lexboxClientId;
-                    options.GetClaimsFromUserInfoEndpoint = true;
-                    options.MetadataAddress = lexboxMetadataAddress;
-                    options.RequireHttpsMetadata = true;
-                    options.ResponseType = "code";
-                    options.SaveTokens = true;
-                    options.SignInScheme = "LexboxCookie";
-                    options.UsePkce = true;
-
-                    options.Scope.Clear();
-                    foreach (var scope in lexboxScope.Split(' ', StringSplitOptions.RemoveEmptyEntries))
-                    {
-                        options.Scope.Add(scope);
-                    }
+                    lexboxAuthConfig.Bind(options);
 
                     options.Events.OnRedirectToIdentityProvider = context =>
                     {
-                        if (string.IsNullOrWhiteSpace(context.ProtocolMessage.IssuerAddress))
+                        if (string.IsNullOrWhiteSpace(context.ProtocolMessage.IssuerAddress)
+                            && !string.IsNullOrEmpty(lexboxAuthorizationEndpoint))
                         {
                             context.ProtocolMessage.IssuerAddress = lexboxAuthorizationEndpoint;
                         }
 
-                        context.ProtocolMessage.Prompt = lexboxPrompt;
+                        if (!string.IsNullOrEmpty(lexboxPrompt))
+                        {
+                            context.ProtocolMessage.Prompt = lexboxPrompt;
+                        }
+
                         return System.Threading.Tasks.Task.CompletedTask;
                     };
                 });
