@@ -57,13 +57,14 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetProjectSpeakersProjectSpeakers()
         {
-            _ = _speakerRepo.Create(new Speaker { Name = "Sir Other", ProjectId = ProjId }).Result;
+            _speakerRepo.Create(new Speaker { Name = "Sir Other", ProjectId = ProjId }).Wait();
             var speakersInRepo = _speakerRepo.GetAllSpeakers(ProjId).Result;
 
-            var result = _speakerController.GetProjectSpeakers(ProjId).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            var value = ((ObjectResult)result).Value;
-            Assert.That((List<Speaker>)value!, Has.Count.EqualTo(speakersInRepo.Count));
+            var result = _speakerController.GetProjectSpeakers(ProjId).Result as OkObjectResult;
+            Assert.That(result, Is.Not.Null);
+            var value = result.Value as List<Speaker>;
+            Assert.That(value, Is.Not.Null);
+            Assert.That(value, Has.Count.EqualTo(speakersInRepo.Count));
         }
 
         [Test]
@@ -77,7 +78,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDeleteProjectSpeakers()
         {
-            _ = _speakerRepo.Create(new Speaker { Name = "Sir Other", ProjectId = ProjId }).Result;
+            _speakerRepo.Create(new Speaker { Name = "Sir Other", ProjectId = ProjId }).Wait();
             Assert.That(_speakerRepo.GetAllSpeakers(ProjId).Result, Is.Not.Empty);
 
             var result = _speakerController.DeleteProjectSpeakers(ProjId).Result;
@@ -103,16 +104,18 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetSpeakerSpeaker()
         {
-            var result = _speakerController.GetSpeaker(ProjId, _speaker.Id).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            var value = ((ObjectResult)result).Value;
-            Assert.That(((Speaker)value!).Name, Is.EqualTo(_speaker.Name));
+            var result = _speakerController.GetSpeaker(ProjId, _speaker.Id).Result as OkObjectResult;
+            Assert.That(result, Is.Not.Null);
+            var speaker = result.Value as Speaker;
+            Assert.That(speaker, Is.Not.Null);
+            Assert.That(speaker.Name, Is.EqualTo(_speaker.Name));
         }
 
         [Test]
         public void TestCreateSpeakerUnauthorized()
         {
             _speakerController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
             var result = _speakerController.CreateSpeaker(ProjId, "Miss Novel").Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
@@ -128,6 +131,7 @@ namespace Backend.Tests.Controllers
         public void TestCreateNameTaken()
         {
             var oldCount = _speakerRepo.GetAllSpeakers(ProjId).Result.Count;
+
             var result = _speakerController.CreateSpeaker(ProjId, $"\n{Name} ").Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
             Assert.That(_speakerRepo.GetAllSpeakers(ProjId).Result, Has.Count.EqualTo(oldCount));
@@ -137,17 +141,21 @@ namespace Backend.Tests.Controllers
         public void TestCreateSpeaker()
         {
             const string NewName = "Miss Novel";
-            var result = _speakerController.CreateSpeaker(ProjId, NewName).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            var speakerId = ((ObjectResult)result).Value as string;
-            var speakerInRepo = _speakerRepo.GetSpeaker(ProjId, speakerId!).Result;
-            Assert.That(speakerInRepo!.Name, Is.EqualTo(NewName));
+
+            var result = _speakerController.CreateSpeaker(ProjId, NewName).Result as OkObjectResult;
+            Assert.That(result, Is.Not.Null);
+            var speakerId = result.Value as string;
+            Assert.That(speakerId, Is.Not.Null);
+            var speakerInRepo = _speakerRepo.GetSpeaker(ProjId, speakerId).Result;
+            Assert.That(speakerInRepo, Is.Not.Null);
+            Assert.That(speakerInRepo.Name, Is.EqualTo(NewName));
         }
 
         [Test]
         public void TestDeleteSpeakerUnauthorized()
         {
             _speakerController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
             var result = _speakerController.DeleteSpeaker(ProjId, _speaker.Id).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
@@ -171,6 +179,7 @@ namespace Backend.Tests.Controllers
         public void TestRemoveConsentUnauthorized()
         {
             _speakerController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
             var result = _speakerController.RemoveConsent(ProjId, _speaker.Id).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
@@ -187,25 +196,29 @@ namespace Backend.Tests.Controllers
         {
             // Set ConsentType in repo
             _speaker.Consent = ConsentType.Audio;
-            _ = _speakerRepo.Update(_speaker.Id, _speaker);
-            var consentInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result!.Consent;
-            Assert.That(consentInRepo, Is.Not.EqualTo(ConsentType.None));
+            _speakerRepo.Update(_speaker.Id, _speaker).Wait();
+            var speakerInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result;
+            Assert.That(speakerInRepo, Is.Not.Null);
+            Assert.That(speakerInRepo.Consent, Is.Not.EqualTo(ConsentType.None));
 
             // Remove consent
-            var result = _speakerController.RemoveConsent(ProjId, _speaker.Id).Result;
-            Assert.That(result, Is.InstanceOf<OkResult>());
-            consentInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result!.Consent;
-            Assert.That(consentInRepo, Is.EqualTo(ConsentType.None));
+            var removeResult = _speakerController.RemoveConsent(ProjId, _speaker.Id).Result;
+            Assert.That(removeResult, Is.InstanceOf<OkResult>());
+            speakerInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result;
+            Assert.That(speakerInRepo, Is.Not.Null);
+            Assert.That(speakerInRepo.Consent, Is.EqualTo(ConsentType.None));
 
             // Try to remove again
-            result = _speakerController.RemoveConsent(ProjId, _speaker.Id).Result;
-            Assert.That(((StatusCodeResult)result).StatusCode, Is.EqualTo(StatusCodes.Status304NotModified));
+            var removeAgainResult = _speakerController.RemoveConsent(ProjId, _speaker.Id).Result as StatusCodeResult;
+            Assert.That(removeAgainResult, Is.Not.Null);
+            Assert.That(removeAgainResult.StatusCode, Is.EqualTo(StatusCodes.Status304NotModified));
         }
 
         [Test]
         public void TestUpdateSpeakerNameUnauthorized()
         {
             _speakerController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
             var result = _speakerController.UpdateSpeakerName(ProjId, _speaker.Id, "Mr. New").Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
@@ -227,22 +240,28 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUpdateSpeakerNameNameTaken()
         {
-            var result = _speakerController.UpdateSpeakerName(ProjId, _speaker.Id, $" {Name}\t").Result;
-            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+            var updateResult = _speakerController.UpdateSpeakerName(ProjId, _speaker.Id, $" {Name}\t").Result;
+            Assert.That(updateResult, Is.InstanceOf<BadRequestObjectResult>());
 
-            var idOfNewSpeaker = ((ObjectResult)_speakerController.CreateSpeaker(ProjId, "Ms. Other").Result).Value as string;
-            result = _speakerController.UpdateSpeakerName(ProjId, idOfNewSpeaker!, $"\t{Name}\n").Result;
-            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+            var createResult = _speakerController.CreateSpeaker(ProjId, "Ms. Other").Result as OkObjectResult;
+            Assert.That(createResult, Is.Not.Null);
+            var idOfNewSpeaker = createResult.Value as string;
+            Assert.That(idOfNewSpeaker, Is.Not.Null);
+
+            updateResult = _speakerController.UpdateSpeakerName(ProjId, idOfNewSpeaker, $"\t{Name}\n").Result;
+            Assert.That(updateResult, Is.InstanceOf<BadRequestObjectResult>());
         }
 
         [Test]
         public void TestUpdateSpeakerNameNewName()
         {
             const string NewName = "Mr. New";
+
             var result = _speakerController.UpdateSpeakerName(ProjId, _speaker.Id, NewName).Result;
             Assert.That(result, Is.InstanceOf<OkResult>());
-            var nameInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result!.Name;
-            Assert.That(nameInRepo, Is.EqualTo(NewName));
+            var speakerInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result;
+            Assert.That(speakerInRepo, Is.Not.Null);
+            Assert.That(speakerInRepo.Name, Is.EqualTo(NewName));
         }
 
         [Test]
@@ -259,6 +278,7 @@ namespace Backend.Tests.Controllers
         public void TestUploadConsentUnauthorized()
         {
             _speakerController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
             var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _file).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
@@ -286,6 +306,7 @@ namespace Backend.Tests.Controllers
                 Headers = new HeaderDictionary(),
                 ContentType = "audio"
             };
+
             var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _file).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
         }
@@ -294,6 +315,7 @@ namespace Backend.Tests.Controllers
         public void TestUploadConsentInvalidContentType()
         {
             _file.ContentType = "neither audi0 nor 1mage";
+
             var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _file).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
         }
@@ -302,38 +324,44 @@ namespace Backend.Tests.Controllers
         public void TestUploadConsentAddAudioConsent()
         {
             _file.ContentType = "audio/something";
-            var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _file).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            var value = (Speaker)((ObjectResult)result).Value!;
-            Assert.That(value.Consent, Is.EqualTo(ConsentType.Audio));
-            var consentInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result!.Consent;
-            Assert.That(consentInRepo, Is.EqualTo(ConsentType.Audio));
+
+            var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _file).Result as OkObjectResult;
+            Assert.That(result, Is.Not.Null);
+            var speaker = result.Value as Speaker;
+            Assert.That(speaker, Is.Not.Null);
+            Assert.That(speaker.Consent, Is.EqualTo(ConsentType.Audio));
+            var speakerInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result;
+            Assert.That(speakerInRepo, Is.Not.Null);
+            Assert.That(speakerInRepo.Consent, Is.EqualTo(ConsentType.Audio));
         }
 
         [Test]
         public void TestUploadConsentAddImageConsent()
         {
             _file.ContentType = "image/anything";
-            var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _file).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-            var value = (Speaker)((ObjectResult)result).Value!;
-            Assert.That(value.Consent, Is.EqualTo(ConsentType.Image));
-            var consentInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result!.Consent;
-            Assert.That(consentInRepo, Is.EqualTo(ConsentType.Image));
+
+            var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _file).Result as OkObjectResult;
+            Assert.That(result, Is.Not.Null);
+            var speaker = result.Value as Speaker;
+            Assert.That(speaker, Is.Not.Null);
+            Assert.That(speaker.Consent, Is.EqualTo(ConsentType.Image));
+            var speakerInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result;
+            Assert.That(speakerInRepo, Is.Not.Null);
+            Assert.That(speakerInRepo.Consent, Is.EqualTo(ConsentType.Image));
         }
 
         [Test]
         public void TestDownloadConsentInvalidArguments()
         {
             var result = _speakerController.DownloadConsent("invalid/speakerId");
-            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
         }
 
         [Test]
         public void TestDownloadSpeakerFileNoFile()
         {
             var result = _speakerController.DownloadConsent("speakerId");
-            Assert.That(result, Is.TypeOf<NotFoundResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
     }
 }

@@ -1,4 +1,10 @@
-import { ReactElement, useContext, useEffect, useState } from "react";
+import {
+  ReactElement,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -23,16 +29,57 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
     (state: StoreState) => state.currentProjectState.speaker?.id
   );
   const recorder = useContext(RecorderContext);
-  const [clicked, setClicked] = useState(false);
+  const clickedRef = useRef(false);
   const { t } = useTranslation();
 
   useEffect(() => {
     // Re-enable clicking when the word id has changed
-    setClicked(false);
+    clickedRef.current = false;
   }, [props.id]);
 
-  async function startRecording(): Promise<boolean> {
-    if (clicked) {
+  const uploadAudio = useCallback(
+    (file?: File): boolean => {
+      if (!file?.size) {
+        console.error("No audio file to upload");
+        toast.error(t("pronunciations.recordingError"));
+        return false;
+      }
+
+      try {
+        if (!props.noSpeaker) {
+          (file as FileWithSpeakerId).speakerId = speakerId;
+        }
+        props.uploadAudio(file);
+        return true;
+      } catch (err) {
+        console.error("Error uploading audio:", err);
+        toast.error(t("pronunciations.recordingError"));
+        return false;
+      }
+    },
+    [props.noSpeaker, props.uploadAudio, speakerId, t]
+  );
+
+  const stopRecording = useCallback(async (): Promise<void> => {
+    // Prevent triggering this function if no recording is active.
+    if (recorder.getRecordingId() === undefined) {
+      return;
+    }
+
+    props.onClick?.();
+
+    const uploadSuccess = uploadAudio(await recorder.stopRecording());
+
+    if (uploadSuccess && props.id) {
+      // The id will change when the frontend updates with the new audio,
+      // so we rely on a useEffect above to reset the clickedRef.
+    } else {
+      clickedRef.current = false;
+    }
+  }, [props.id, props.onClick, recorder, uploadAudio]);
+
+  const startRecording = useCallback(async (): Promise<boolean> => {
+    if (clickedRef.current) {
       // Prevent recording again before this word has updated.
       return false;
     }
@@ -43,48 +90,33 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
       return false;
     }
 
-    setClicked(true);
+    clickedRef.current = true;
 
-    // Prevent starting a recording before a previous one is finished.
-    await stopRecording();
+    try {
+      // Prevent starting a recording before a previous one is finished.
+      await stopRecording();
 
-    if (!recorder.startRecording(props.id)) {
-      let errorMessage = t("pronunciations.recordingError");
-      if (isBrowserFirefox()) {
-        errorMessage += ` ${t("pronunciations.recordingPermission")}`;
+      if (!recorder.startRecording(props.id)) {
+        let errorMessage = t("pronunciations.recordingError");
+        if (isBrowserFirefox()) {
+          errorMessage += ` ${t("pronunciations.recordingPermission")}`;
+        }
+        toast.error(errorMessage);
+        clickedRef.current = false;
+        return false;
       }
-      toast.error(errorMessage);
+    } catch (err) {
+      console.error("Error starting recording:", err);
+      toast.error(t("pronunciations.recordingError"));
+      clickedRef.current = false;
       return false;
     }
+
+    // Don't set clickedRef to false here;
+    // It will be reset when the id changes after a successful upload,
+    // or in the catch block if there's an error.
     return true;
-  }
-
-  async function stopRecording(): Promise<void> {
-    // Prevent triggering this function if no recording is active.
-    if (recorder.getRecordingId() === undefined) {
-      return;
-    }
-
-    if (props.onClick) {
-      props.onClick();
-    }
-    const file = await recorder.stopRecording();
-    if (!file || !file.size) {
-      toast.error(t("pronunciations.recordingError"));
-      setClicked(false);
-      return;
-    }
-    if (!props.noSpeaker) {
-      (file as FileWithSpeakerId).speakerId = speakerId;
-    }
-    props.uploadAudio(file);
-    if (!props.id) {
-      // If recorder is on something with an id,
-      // that id will update after the upload is complete,
-      // so rely on the useEffect above to do this.
-      setClicked(false);
-    }
-  }
+  }, [props.id, recorder, stopRecording, t]);
 
   return (
     <RecorderIcon

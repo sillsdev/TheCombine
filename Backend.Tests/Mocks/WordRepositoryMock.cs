@@ -35,13 +35,18 @@ namespace Backend.Tests.Mocks
         {
             try
             {
-                var foundWord = _words.Single(word => word.Id == wordId);
-                return Task.FromResult<Word?>(foundWord.Clone());
+                return Task.FromResult<Word?>(_words.Single(w => w.ProjectId == projectId && w.Id == wordId).Clone());
             }
             catch (InvalidOperationException)
             {
                 return Task.FromResult<Word?>(null);
             }
+        }
+
+        public Task<List<Word>> GetWords(string projectId, List<string> wordIds)
+        {
+            return Task.FromResult(
+                _words.Where(w => w.ProjectId == projectId && wordIds.Contains(w.Id)).Select(w => w.Clone()).ToList());
         }
 
         public Task<Word> Create(Word word)

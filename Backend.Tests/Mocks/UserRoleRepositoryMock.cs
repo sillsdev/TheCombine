@@ -68,6 +68,4 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(ResultOfUpdate.Updated);
         }
     }
-
-    internal sealed class UserRoleCreationException : Exception;
 }

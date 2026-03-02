@@ -1024,7 +1024,7 @@ Task: Restore the CombineDatabase and the Backend files from a backup stored on 
 Run:
 
 ```bash
-kubectl -n thecombine exec -it deployment/maintenance -- combine_restore.py [--verbose] [BACKUP_NAME]
+kubectl -n thecombine exec -it deployment/maintenance -- combine_restore.py [--verbose] [--file BACKUP_NAME]
 ```
 
 Note:

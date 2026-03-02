@@ -14,9 +14,9 @@ namespace BackendFramework.Helper
         /// </summary>
         public static List<string> GetSenseAnalysisLangTags(Sense sense)
         {
-            var tags = sense.Definitions.Select(d => d.Language).ToList();
-            tags.AddRange(sense.Glosses.Select(g => g.Language));
-            return tags.Distinct().ToList();
+            var tags = sense.Definitions.Select(d => d.Language.Trim()).ToList();
+            tags.AddRange(sense.Glosses.Select(g => g.Language.Trim()));
+            return tags.Distinct().Where(tag => !string.IsNullOrEmpty(tag)).ToList();
         }
 
         /// <summary> Convert language tags into writing systems. </summary>
