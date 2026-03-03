@@ -49,9 +49,32 @@ spec:
           args:
             - "--replSet"
             - "rs0"
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    set -e
+                    max_attempts=60
+                    attempt=1
+                    while [ "$attempt" -le "$max_attempts" ]; do
+                      if mongosh --quiet --host 127.0.0.1 --eval "const host = '${MONGO_INITDB_REPLICA_HOST}'; try { rs.status(); print('Replica set already initialized'); } catch (e) { print('Initializing replica set (' + e + ')'); rs.initiate({_id: 'rs0', members: [{_id: 0, host: host}]}); }" ; then
+                        exit 0
+                      fi
+                      sleep 1
+                      attempt=$((attempt + 1))
+                    done
+                    echo "Failed to ensure replica set initialization after ${max_attempts} attempts"
+                    exit 1
           env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
             - name: MONGO_INITDB_REPLICA_HOST
-              value: "database:27017"
+              value: "$(POD_IP):27017"
           ports:
             - containerPort: 27017
           resources:
