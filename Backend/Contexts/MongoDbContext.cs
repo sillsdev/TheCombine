@@ -1,28 +1,44 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace BackendFramework.Contexts
+namespace BackendFramework.Contexts;
+
+public class MongoDbContext : IMongoDbContext
 {
-    [ExcludeFromCodeCoverage]
-    public class MongoDbContext : IMongoDbContext
+    public IMongoDatabase Db { get; }
+
+    public MongoDbContext(IOptions<Startup.Settings> options)
     {
-        private MongoClient _mongoClient { get; }
+        var client = new MongoClient(options.Value.ConnectionString);
+        Db = client.GetDatabase(options.Value.CombineDatabase);
+    }
 
-        public IMongoDatabase Db { get; }
+    public async Task<IMongoTransaction> BeginTransaction()
+    {
+        var session = await Db.Client.StartSessionAsync();
+        session.StartTransaction();
+        return new MongoTransactionWrapper(session);
+    }
 
-        public MongoDbContext(IOptions<Startup.Settings> options)
+    private class MongoTransactionWrapper(IClientSessionHandle session) : IMongoTransaction
+    {
+        private readonly IClientSessionHandle _session = session;
+
+        public Task CommitTransactionAsync()
         {
-            _mongoClient = new MongoClient(options.Value.ConnectionString);
-            Db = _mongoClient.GetDatabase(options.Value.CombineDatabase);
+            return _session.CommitTransactionAsync();
+        }
+
+        public Task AbortTransactionAsync()
+        {
+            return _session.AbortTransactionAsync();
         }
 
         public void Dispose()
         {
-            _mongoClient.Dispose();
-            GC.SuppressFinalize(this);
+            _session.Dispose();
         }
     }
 }
