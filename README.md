@@ -585,11 +585,11 @@ When _Rancher Desktop_ is first run, you will be prompted to select a few initia
 ![alt text](docs/images/rancher-desktop-select-runtime.png "Rancher Desktop Select Runtime")
 
 1. Verify that _Enable Kubernetes_ is checked.
-2. Select the Kubernetes version marked as _stable, latest_.
+2. Select the Kubernetes version marked as _stable_.
 3. Select your container runtime, either _containerd_ or _dockerd (moby)_:
    - _containerd_ matches what is used on the NUC and uses the `k3s` Kubernetes engine. It requires that you set the
      `CONTAINER_CLI` environment variable to `nerdctl` before running the `build.py` script.
-   - _dockerd_ uses the `k3d` (`k3s` in docker).
+   - _dockerd_ (recommended) uses the `k3d` (`k3s` in docker).
 4. Select _Automatic_ or _Manual_ path setup.
 5. Click _Accept_.
 
@@ -780,7 +780,7 @@ otel-opentelemetry-collector-5b5b69557b-zqk5d   1/1     Running     0          1
 
 #### Setup Port Forwarding
 
-_Rancher Desktop only!_
+_Only for Rancher Desktop with `containerd`!_
 
 To connect to _The Combine_ user interface on _Rancher Desktop_, you need to setup port forwarding.
 
@@ -794,7 +794,7 @@ Note that the port forwarding is not persistent; you need to set it up whenever 
 #### Connecting to _The Combine_
 
 You can connect to _The Combine_ by entering the URL `https://thecombine.localhost` in the address bar of your web
-browser. (`https://thecombine.localhost:<portnumber>` for _Rancher Desktop_)
+browser (`https://thecombine.localhost:<portnumber>` for _Rancher Desktop_ with `containerd`).
 
 Notes:
 
