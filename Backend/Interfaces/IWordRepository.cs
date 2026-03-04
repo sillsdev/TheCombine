@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Models;
@@ -9,12 +10,10 @@ namespace BackendFramework.Interfaces
         Task<List<Word>> GetAllWords(string projectId);
         Task<Word?> GetWord(string projectId, string wordId);
         Task<List<Word>> GetWords(string projectId, List<string> wordIds);
-        Task<Word> Create(Word word);
-        Task<List<Word>> Create(List<Word> words);
-        Task<Word> Add(Word word);
-        Task<Word> CreateAndDeleteFrontier(Word newWord, string oldWordId);
-        Task<Word> AddAndDeleteFrontier(Word deletedWord, string wordId);
-        Task<bool> DeleteAllWords(string projectId);
+        Task<Word> Create(Word word, bool clearModified = true);
+        Task<List<Word>> Create(List<Word> words, bool clearModified = true);
+        Task<Word?> Update(Word word);
+        Task<Word?> ModifyAndDeleteFrontier(string projectId, string wordId, Func<Word, Word> modifyWord);
         Task<bool> DeleteAllFrontierWords(string projectId);
         Task<bool> HasWords(string projectId);
         Task<bool> HasFrontierWords(string projectId);
@@ -26,7 +25,6 @@ namespace BackendFramework.Interfaces
         Task<List<Word>> GetFrontierWithVernacular(string projectId, string vernacular);
         Task<Word> AddFrontier(Word word);
         Task<List<Word>> AddFrontier(List<Word> words);
-        Task<Word?> DeleteFrontier(string projectId, string wordId, string? audioFileName = null);
         Task<int> CountFrontierWordsWithDomain(string projectId, string domainId);
     }
 }

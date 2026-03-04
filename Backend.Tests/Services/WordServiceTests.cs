@@ -9,7 +9,7 @@ namespace Backend.Tests.Services
 {
     internal sealed class WordServiceTests
     {
-        private IWordRepository _wordRepo = null!;
+        private WordRepositoryMock _wordRepo = null!;
         private IWordService _wordService = null!;
 
         private const string ProjId = "WordServiceTestProjId";
