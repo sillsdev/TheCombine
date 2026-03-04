@@ -26,6 +26,8 @@ public class MongoDbContext : IMongoDbContext
     {
         private readonly IClientSessionHandle _session = session;
 
+        public IClientSessionHandle Session => _session;
+
         public Task CommitTransactionAsync()
         {
             return _session.CommitTransactionAsync();

@@ -15,6 +15,8 @@ public class MongoDbContextMock : IMongoDbContext
 
     private sealed class MongoTransactionMock : IMongoTransaction
     {
+        public IClientSessionHandle Session => null!;
+
         public Task CommitTransactionAsync()
         {
             return Task.CompletedTask;
