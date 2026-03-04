@@ -12,6 +12,7 @@ public interface IMongoDbContext
 
 public interface IMongoTransaction : IDisposable
 {
+    IClientSessionHandle Session { get; }
     Task CommitTransactionAsync();
     Task AbortTransactionAsync();
 }
