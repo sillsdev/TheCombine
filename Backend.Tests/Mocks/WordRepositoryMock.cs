@@ -163,6 +163,23 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(word);
         }
 
+        public Task<Word> CreateAndDeleteFrontier(Word newWord, string oldWordId)
+        {
+            newWord.Id = Guid.NewGuid().ToString();
+            _words.Add(newWord.Clone());
+            _frontier.Add(newWord.Clone());
+            _frontier.RemoveAll(w => w.ProjectId == newWord.ProjectId && w.Id == oldWordId);
+            return Task.FromResult(newWord.Clone());
+        }
+
+        public Task<Word> AddAndDeleteFrontier(Word deletedWord, string wordId)
+        {
+            deletedWord.Id = Guid.NewGuid().ToString();
+            _words.Add(deletedWord.Clone());
+            _frontier.RemoveAll(w => w.ProjectId == deletedWord.ProjectId && w.Id == wordId);
+            return Task.FromResult(deletedWord.Clone());
+        }
+
         public Task<int> CountFrontierWordsWithDomain(string projectId, string domainId)
         {
             var count = _frontier.Count(
