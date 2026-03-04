@@ -12,6 +12,8 @@ namespace BackendFramework.Interfaces
         Task<Word> Create(Word word);
         Task<List<Word>> Create(List<Word> words);
         Task<Word> Add(Word word);
+        Task<Word> CreateAndDeleteFrontier(Word newWord, string oldWordId);
+        Task<Word> AddAndDeleteFrontier(Word deletedWord, string wordId);
         Task<bool> DeleteAllWords(string projectId);
         Task<bool> DeleteAllFrontierWords(string projectId);
         Task<bool> HasWords(string projectId);

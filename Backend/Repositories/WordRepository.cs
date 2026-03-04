@@ -190,6 +190,45 @@ namespace BackendFramework.Repositories
             return word;
         }
 
+        /// <summary>
+        /// Adds a new <see cref="Word"/> to WordsCollection and Frontier, and removes the old word from Frontier.
+        /// </summary>
+        /// <remarks>
+        /// If the Created or Modified time fields are blank, they will be automatically calculated using the current
+        /// time. This allows services to set or clear the values before creation to control these fields.
+        /// </remarks>
+        /// <returns> The new word created. </returns>
+        public async Task<Word> CreateAndDeleteFrontier(Word newWord, string oldWordId)
+        {
+            using var activity = OtelService.StartActivityWithTag(
+                otelTagName, "creating word in WordsCollection and Frontier, deleting old word from Frontier");
+
+            PopulateBlankWordTimes(newWord);
+            await _words.InsertOneAsync(newWord);
+            await _frontier.InsertOneAsync(newWord);
+            await _frontier.FindOneAndDeleteAsync(GetProjectWordFilter(newWord.ProjectId, oldWordId));
+            return newWord;
+        }
+
+        /// <summary>
+        /// Adds a <see cref="Word"/> only to the WordsCollection and removes a word from the Frontier.
+        /// </summary>
+        /// <remarks>
+        /// If the Created or Modified time fields are blank, they will be automatically calculated using the current
+        /// time. This allows services to set or clear the values before creation to control these fields.
+        /// </remarks>
+        /// <returns> The word added. </returns>
+        public async Task<Word> AddAndDeleteFrontier(Word deletedWord, string wordId)
+        {
+            using var activity = OtelService.StartActivityWithTag(
+                otelTagName, "adding word to WordsCollection, deleting word from Frontier");
+
+            PopulateBlankWordTimes(deletedWord);
+            await _words.InsertOneAsync(deletedWord);
+            await _frontier.FindOneAndDeleteAsync(GetProjectWordFilter(deletedWord.ProjectId, wordId));
+            return deletedWord;
+        }
+
         /// <summary> Checks if Words collection for specified <see cref="Project"/> has any words. </summary>
         public async Task<bool> HasWords(string projectId)
         {

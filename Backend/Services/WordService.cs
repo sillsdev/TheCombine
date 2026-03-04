@@ -47,13 +47,6 @@ namespace BackendFramework.Services
             return await _wordRepo.Create(words.Select(w => PrepEditedData(userId, w)).ToList());
         }
 
-        /// <summary> Adds a new word with updated edited data. </summary>
-        /// <returns> The added word </returns>
-        private async Task<Word> Add(string userId, Word word)
-        {
-            return await _wordRepo.Add(PrepEditedData(userId, word));
-        }
-
         /// <summary> Removes audio with specified fileName from a Frontier word </summary>
         /// <returns> Updated word, or null if not found </returns>
         public async Task<Word?> DeleteAudio(string projectId, string userId, string wordId, string fileName)
@@ -85,10 +78,7 @@ namespace BackendFramework.Services
             word.Accessibility = Status.Deleted;
             word.History.Add(wordId);
 
-            var deletedWord = await Add(userId, word);
-
-            // Don't remove the Frontier word until the copy is successfully stored as deleted.
-            await _wordRepo.DeleteFrontier(projectId, wordId);
+            var deletedWord = await _wordRepo.AddAndDeleteFrontier(PrepEditedData(userId, word), wordId);
 
             return deletedWord.Id;
         }
@@ -156,12 +146,7 @@ namespace BackendFramework.Services
             // only keep UsingCitationForm true if the Vernacular hasn't changed.
             word.UsingCitationForm &= word.Vernacular == oldWord.Vernacular;
 
-            var newWord = await Create(userId, word);
-
-            // Don't remove the old Frontier word until the new word is successfully created.
-            await _wordRepo.DeleteFrontier(word.ProjectId, oldWordId);
-
-            return newWord;
+            return await _wordRepo.CreateAndDeleteFrontier(PrepEditedData(userId, word), oldWordId);
         }
 
         /// <summary> Checks if a word being added is a duplicate of a preexisting word. </summary>
