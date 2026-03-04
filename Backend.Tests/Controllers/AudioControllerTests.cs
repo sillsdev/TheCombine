@@ -14,7 +14,7 @@ namespace Backend.Tests.Controllers
     internal sealed class AudioControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
-        private IWordRepository _wordRepo = null!;
+        private WordRepositoryMock _wordRepo = null!;
         private PermissionServiceMock _permissionService = null!;
         private WordService _wordService = null!;
         private AudioController _audioController = null!;
@@ -175,8 +175,7 @@ namespace Backend.Tests.Controllers
         public void TestDeleteAudioFile()
         {
             // Refill test database
-            _wordRepo.DeleteAllWords(_projId).Wait();
-            _wordRepo.DeleteAllFrontierWords(_projId).Wait();
+            _wordRepo.DeleteAllWords(_projId);
             var origWord = Util.RandomWord(_projId);
             const string fileName = "a.wav";
             origWord.Audio.Add(new Pronunciation(fileName));

@@ -14,7 +14,7 @@ namespace Backend.Tests.Controllers
 {
     internal sealed class WordControllerTests : IDisposable
     {
-        private IWordRepository _wordRepo = null!;
+        private WordRepositoryMock _wordRepo = null!;
         private IPermissionService _permissionService = null!;
         private IWordService _wordService = null!;
         private WordController _wordController = null!;
@@ -411,8 +411,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestRestoreWord()
         {
-            var word = await _wordRepo.Create(Util.RandomWord(ProjId));
-            await _wordRepo.DeleteFrontier(ProjId, word.Id);
+            var word = await _wordRepo.Add(Util.RandomWord(ProjId));
 
             Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
             Assert.That(await _wordRepo.GetAllFrontier(ProjId), Is.Empty);

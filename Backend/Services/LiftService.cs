@@ -784,7 +784,7 @@ namespace BackendFramework.Services
             /// <returns> The words saved. </returns>
             public async Task<List<Word>> SaveImportEntries()
             {
-                var savedWords = new List<Word>(await _wordRepo.Create(_importEntries));
+                var savedWords = new List<Word>(await _wordRepo.Create(_importEntries, clearModified: false));
                 _importEntries.Clear();
                 return savedWords;
             }

@@ -21,7 +21,7 @@ namespace Backend.Tests.Controllers
     {
         private IProjectRepository _projRepo = null!;
         private ISpeakerRepository _speakerRepo = null!;
-        private IWordRepository _wordRepo = null!;
+        private WordRepositoryMock _wordRepo = null!;
         private ILiftService _liftService = null!;
         private IWordService _wordService = null!;
         private LiftController _liftController = null!;
@@ -328,7 +328,7 @@ namespace Backend.Tests.Controllers
             var word = Util.RandomWord(_projId);
             word.Created = Time.ToUtcIso8601(new DateTime(1000, 1, 1));
             word.Modified = Time.ToUtcIso8601(new DateTime(2000, 1, 1));
-            await _wordRepo.Create(word);
+            await _wordRepo.Create(word, clearModified: false);
 
             _liftService.SetExportInProgress(UserId, ExportId);
             await _liftController.CreateLiftExportThenSignal(_projId, UserId, ExportId);
