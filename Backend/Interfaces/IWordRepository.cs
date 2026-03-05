@@ -23,7 +23,6 @@ namespace BackendFramework.Interfaces
         Task<List<Word>> GetAllFrontier(string projectId);
         Task<Word?> GetFrontier(string projectId, string wordId, string? audioFileName = null);
         Task<List<Word>> GetFrontierWithVernacular(string projectId, string vernacular);
-        Task<Word> AddFrontier(Word word);
         Task<List<Word>> AddFrontier(List<Word> words);
         Task<int> CountFrontierWordsWithDomain(string projectId, string domainId);
     }

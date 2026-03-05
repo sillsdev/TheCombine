@@ -142,7 +142,7 @@ namespace Backend.Tests.Mocks
                 w => w.ProjectId == projectId && w.Vernacular == vernacular).Select(w => w.Clone()).ToList());
         }
 
-        public Task<Word> AddFrontier(Word word)
+        internal Task<Word> AddFrontier(Word word)
         {
             _frontier.Add(word.Clone());
             return Task.FromResult(word);
