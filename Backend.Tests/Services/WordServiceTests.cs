@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Backend.Tests.Mocks;
 using BackendFramework.Interfaces;
@@ -179,8 +180,9 @@ namespace Backend.Tests.Services
         {
             var word = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
 
-            var restored = _wordService.RestoreFrontierWords(ProjId, ["NotAnId", word.Id]).Result;
-            Assert.That(restored, Is.False);
+            Assert.That(
+                () => _wordService.RestoreFrontierWords(ProjId, ["NotAnId", word.Id]).Wait(),
+                Throws.TypeOf<AggregateException>());
         }
 
         [Test]
@@ -190,8 +192,9 @@ namespace Backend.Tests.Services
             var wordYesFrontier = _wordRepo.RepoCreate(new Word { ProjectId = ProjId }).Result;
             Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(1));
 
-            var restored = _wordService.RestoreFrontierWords(ProjId, [wordNoFrontier.Id, wordYesFrontier.Id]).Result;
-            Assert.That(restored, Is.False);
+            Assert.That(
+                () => _wordService.RestoreFrontierWords(ProjId, [wordNoFrontier.Id, wordYesFrontier.Id]).Wait(),
+                Throws.TypeOf<AggregateException>());
         }
 
         [Test]
@@ -201,8 +204,7 @@ namespace Backend.Tests.Services
             var word2 = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
             Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Is.Empty);
 
-            var restored = _wordService.RestoreFrontierWords(ProjId, [word1.Id, word2.Id]).Result;
-            Assert.That(restored, Is.True);
+            _wordService.RestoreFrontierWords(ProjId, [word1.Id, word2.Id]).Wait();
             Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(2));
         }
 

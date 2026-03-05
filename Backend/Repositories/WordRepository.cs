@@ -444,9 +444,9 @@ namespace BackendFramework.Repositories
             using var transaction = await _dbContext.BeginTransaction();
             try
             {
-                var wordsToRestore = await RepoRestoreFrontierWithSession(transaction.Session, projectId, wordIds);
+                var restoredWords = await RepoRestoreFrontierWithSession(transaction.Session, projectId, wordIds);
                 await transaction.CommitTransactionAsync();
-                return wordsToRestore;
+                return restoredWords;
             }
             catch
             {
