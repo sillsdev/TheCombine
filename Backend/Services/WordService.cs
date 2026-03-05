@@ -69,6 +69,46 @@ namespace BackendFramework.Services
             return await _wordRepo.RepoCreate(words.Select(w => PrepEditedByAndTimes(userId, w)).ToList());
         }
 
+        /// <summary>
+        /// Replaces merge children in the Frontier with prepared parent words where possible,
+        /// creates remaining parents, and deletes remaining children from the Frontier.
+        /// </summary>
+        /// <remarks>
+        /// Mirrors the current merge-side effects of combining Update, Create, and DeleteFrontierWord:
+        /// updated parents preserve old Created and add old Id to History; created parents get edited/times;
+        /// deleted children are written back as Deleted words with edited/times/history updates.
+        /// </remarks>
+        public async Task<List<Word>?> MergeReplaceFrontier(
+            string projectId, string userId, List<Word> parents, List<string> idsToDelete)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "replacing frontier words for merge");
+
+            return await _wordRepo.RepoReplaceFrontier(projectId, parents.Select(p => PrepEditedByAndTimes(userId, p)).ToList(),
+                idsToDelete, (newWord, oldWord) =>
+                {
+                    if (oldWord is null)
+                    {
+                        return;
+                    }
+                    // Move id to history and update times.
+                    if (!newWord.History.Contains(newWord.Id))
+                    {
+                        newWord.History.Add(newWord.Id);
+                    }
+                    newWord.Created = oldWord.Created;
+
+                    // If an imported word was using the citation form for its Vernacular,
+                    // only keep UsingCitationForm true if the Vernacular hasn't changed.
+                    newWord.UsingCitationForm &= newWord.Vernacular == oldWord.Vernacular;
+                },
+                deletedWord =>
+                {
+                    deletedWord.Accessibility = Status.Deleted;
+                    deletedWord.History.Add(deletedWord.Id);
+                    PrepEditedByAndTimes(userId, deletedWord);
+                });
+        }
+
         /// <summary> Removes audio with specified fileName from a Frontier word </summary>
         /// <returns> Updated word, or null if not found </returns>
         public async Task<Word?> DeleteAudio(string projectId, string userId, string wordId, string fileName)
@@ -153,10 +193,14 @@ namespace BackendFramework.Services
             word.Id = oldWordId;
             return await _wordRepo.RepoUpdateFrontier(word, (newWord, oldWord) =>
             {
-                // Move id to history and update times.
-                if (!newWord.History.Contains(newWord.Id))
+                if (oldWord is null)
                 {
-                    newWord.History.Add(newWord.Id);
+                    return;
+                }
+                // Move id to history and update times.
+                if (!newWord.History.Contains(oldWord.Id))
+                {
+                    newWord.History.Add(oldWord.Id);
                 }
                 newWord.Created = oldWord.Created;
 

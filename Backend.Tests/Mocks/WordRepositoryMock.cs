@@ -71,21 +71,37 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(words);
         }
 
-        public Task<Word?> RepoUpdateFrontier(Word word, Action<Word, Word> modifyNewWordFromOldWord)
+        private Task<Word> RepoUpdateFrontier(Word word, bool createIfNotFound,
+            Action<Word, Word?> modifyNewWordFromOldWord)
         {
             var removedWord = _frontier.Find(w => w.ProjectId == word.ProjectId && w.Id == word.Id);
-            if (removedWord is null)
+            if (removedWord is null && !createIfNotFound)
             {
-                return Task.FromResult<Word?>(null);
+                throw new InvalidOperationException("Cannot update a missing frontier word when createIfNotFound is false");
             }
 
-            _frontier.Remove(removedWord);
-            modifyNewWordFromOldWord(word, removedWord.Clone());
+            if (removedWord is not null)
+            {
+                _frontier.Remove(removedWord);
+            }
+
+            modifyNewWordFromOldWord(word, removedWord?.Clone());
             word.Id = Guid.NewGuid().ToString();
 
             _words.Add(word.Clone());
             _frontier.Add(word.Clone());
-            return Task.FromResult<Word?>(word);
+            return Task.FromResult(word);
+        }
+
+        public async Task<Word?> RepoUpdateFrontier(Word word, Action<Word, Word?> modifyNewWordFromOldWord)
+        {
+            var removedWord = _frontier.Find(w => w.ProjectId == word.ProjectId && w.Id == word.Id);
+            if (removedWord is null)
+            {
+                return null;
+            }
+
+            return await RepoUpdateFrontier(word, createIfNotFound: false, modifyNewWordFromOldWord);
         }
 
         /// <summary> Removes all words and frontier words for the given projectId. </summary>
@@ -196,12 +212,8 @@ namespace Backend.Tests.Mocks
         }
 
         public async Task<List<Word>?> RepoReplaceFrontier(string projectId, List<Word> newWords,
-            List<string> idsToDelete, Action<Word, Word> modifyUpdatedWord, Action<Word> modifyDeletedWord)
+            List<string> idsToDelete, Action<Word, Word?> modifyUpdatedWord, Action<Word> modifyDeletedWord)
         {
-            if (newWords.Count == 0)
-            {
-                return newWords;
-            }
             if (newWords.Any(w => w.ProjectId != projectId))
             {
                 throw new ArgumentException("All new words must have the specified projectId");
@@ -211,10 +223,7 @@ namespace Backend.Tests.Mocks
 
             foreach (var word in newWords)
             {
-                if (await RepoUpdateFrontier(word, modifyUpdatedWord) is null)
-                {
-                    return null;
-                }
+                await RepoUpdateFrontier(word, createIfNotFound: true, modifyUpdatedWord);
                 oldIdSet.Remove(word.Id);
             }
 

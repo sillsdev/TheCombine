@@ -12,9 +12,9 @@ namespace BackendFramework.Interfaces
         Task<List<Word>> GetWords(string projectId, List<string> wordIds);
         Task<Word> RepoCreate(Word word);
         Task<List<Word>> RepoCreate(List<Word> words);
-        Task<Word?> RepoUpdateFrontier(Word word, Action<Word, Word> modifyNewWordFromOldWord);
+        Task<Word?> RepoUpdateFrontier(Word word, Action<Word, Word?> modifyNewWordFromOldWord);
         Task<List<Word>?> RepoReplaceFrontier(string projectId, List<Word> newWords,
-            List<string> idsToDelete, Action<Word, Word> modifyUpdatedWord, Action<Word> modifyDeletedWord);
+            List<string> idsToDelete, Action<Word, Word?> modifyUpdatedWord, Action<Word> modifyDeletedWord);
         Task<List<Word>> RepoRevertReplaceFrontier(string projectId, List<string> idsToRestore,
             List<string> idsToDelete, Action<Word> modifyDeletedWord);
         Task<Word?> RepoDeleteFrontier(string projectId, string wordId, Action<Word> modifyWord);

@@ -139,28 +139,8 @@ namespace BackendFramework.Services
 
             // Consolidate children ids
             var childrenIds = mergeWordsList.SelectMany(m => m.Children.Select(c => c.SrcWordId)).ToHashSet();
-
-            // Create the parents
-            var addedParents = new List<Word>();
-            foreach (var parent in parents)
-            {
-                var parentId = parent.Id; // Capture the id in case of changes.
-                Word? updatedParent = null;
-                if (childrenIds.Contains(parentId))
-                {
-                    updatedParent = await _wordService.Update(userId, parent);
-                    if (updatedParent is not null)
-                    {
-                        childrenIds.Remove(parentId);
-                    }
-                }
-                addedParents.Add(updatedParent ?? await _wordService.Create(userId, parent));
-            }
-
-            // Remove the children
-            await Task.WhenAll(childrenIds.Select(id => _wordService.DeleteFrontierWord(projectId, userId, id)));
-
-            return addedParents;
+            return await _wordService.MergeReplaceFrontier(
+                projectId, userId, parents.ToList(), childrenIds.ToList()) ?? [];
         }
 
         /// <summary> Undo merge </summary>

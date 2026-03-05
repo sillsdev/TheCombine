@@ -9,6 +9,8 @@ namespace BackendFramework.Interfaces
         Task<List<Word>> ImportWords(List<Word> words);
         Task<Word> Create(string userId, Word word);
         Task<List<Word>> Create(string userId, List<Word> words);
+        Task<List<Word>?> MergeReplaceFrontier(
+            string projectId, string userId, List<Word> parents, List<string> idsToDelete);
         Task<Word?> Update(string userId, Word word);
         Task<Word?> DeleteAudio(string projectId, string userId, string wordId, string fileName);
         Task<string?> DeleteFrontierWord(string projectId, string userId, string wordId);
