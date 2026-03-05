@@ -590,7 +590,7 @@ When _Rancher Desktop_ is first run, you will be prompted to select a few initia
    - _containerd_ matches what is used on the NUC and uses the `k3s` Kubernetes engine. It requires that you set the
      `CONTAINER_CLI` environment variable to `nerdctl` before running the `build.py` script.
    - _dockerd_ (recommended) uses the `k3d` (`k3s` in docker).
-4. Select _Automatic_ or _Manual_ path setup.
+4. (Linux only) Select _Automatic_ or _Manual_ path setup.
 5. Click _Accept_.
 
 The _Rancher Desktop_ Main Window will be displayed as it loads the Kubernetes environment. While the page is displayed,
