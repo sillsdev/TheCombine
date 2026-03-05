@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Otel;
@@ -14,14 +15,40 @@ namespace BackendFramework.Services
 
         private const string otelTagName = "otel.WordService";
 
-        /// <summary> Ensure given userId is most recent in EditedBy list. </summary>
-        private static Word PrepEditedData(string userId, Word word)
+        private static Word PrepEditedByAndTimes(string userId, Word word)
         {
+            UpdateTimes(word, clearModified: true);
             if (!string.IsNullOrEmpty(userId) && userId != word.EditedBy.LastOrDefault(""))
             {
                 word.EditedBy.Add(userId);
             }
             return word;
+        }
+
+        /// <summary>
+        /// Adds Created time if blank.
+        /// Updates Modified time to now if blank or if clearModified is true.
+        /// </summary>
+        private static void UpdateTimes(Word word, bool clearModified)
+        {
+            if (string.IsNullOrEmpty(word.Created))
+            {
+                // Use Roundtrip-suitable ISO 8601 format.
+                word.Created = Time.UtcNowIso8601();
+            }
+            if (clearModified || string.IsNullOrEmpty(word.Modified))
+            {
+                word.Modified = Time.UtcNowIso8601();
+            }
+        }
+
+        /// <summary> Adds a list of <see cref="Word"/>s to the WordsCollection and Frontier. </summary>
+        public async Task<List<Word>> ImportWords(List<Word> words)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "creating words in repo");
+
+            words.ForEach(w => UpdateTimes(w, false));
+            return await _wordRepo.RepoCreate(words);
         }
 
         /// <summary> Creates a new word with updated edited data. </summary>
@@ -30,7 +57,7 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "creating a word");
 
-            return await _wordRepo.Create(PrepEditedData(userId, word));
+            return await _wordRepo.RepoCreate(PrepEditedByAndTimes(userId, word));
         }
 
         /// <summary> Creates new words with updated edited data. </summary>
@@ -39,7 +66,7 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "creating words");
 
-            return await _wordRepo.Create(words.Select(w => PrepEditedData(userId, w)).ToList());
+            return await _wordRepo.RepoCreate(words.Select(w => PrepEditedByAndTimes(userId, w)).ToList());
         }
 
         /// <summary> Removes audio with specified fileName from a Frontier word </summary>
@@ -64,10 +91,11 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
 
-            var deletedWord = await _wordRepo.ModifyAndDeleteFrontier(projectId, wordId, word =>
+            var deletedWord = await _wordRepo.RepoDeleteFrontier(projectId, wordId, word =>
             {
                 word.Accessibility = Status.Deleted;
-                return PrepEditedData(userId, word);
+                word.History.Add(wordId);
+                PrepEditedByAndTimes(userId, word);
             });
 
             return deletedWord?.Id;
@@ -121,9 +149,21 @@ namespace BackendFramework.Services
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a word in Frontier");
 
             var oldWordId = word.Id; // Capture the id to update the correct word.
-            PrepEditedData(userId, word);
+            PrepEditedByAndTimes(userId, word);
             word.Id = oldWordId;
-            return await _wordRepo.Update(word);
+            return await _wordRepo.RepoUpdateFrontier(word, (newWord, oldWord) =>
+            {
+                // Move id to history and update times.
+                if (!newWord.History.Contains(newWord.Id))
+                {
+                    newWord.History.Add(newWord.Id);
+                }
+                newWord.Created = oldWord.Created;
+
+                // If an imported word was using the citation form for its Vernacular,
+                // only keep UsingCitationForm true if the Vernacular hasn't changed.
+                newWord.UsingCitationForm &= newWord.Vernacular == oldWord.Vernacular;
+            });
         }
 
         /// <summary> Checks if a word being added is a duplicate of a preexisting word. </summary>

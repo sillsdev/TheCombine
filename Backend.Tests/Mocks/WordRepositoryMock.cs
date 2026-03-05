@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 
@@ -72,19 +71,6 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(words);
         }
 
-        public Task<Word> Create(Word word, bool clearModified = true)
-        {
-            ClearIdAndUpdateTimes(word, clearModified);
-            _words.Add(word.Clone());
-            AddFrontier(word.Clone());
-            return Task.FromResult(word);
-        }
-
-        public Task<List<Word>> Create(List<Word> words, bool clearModified = true)
-        {
-            return Task.FromResult(words.Select(w => Create(w, clearModified).Result).ToList());
-        }
-
         public Task<Word?> RepoUpdateFrontier(Word word, Action<Word, Word> modifyNewWordFromOldWord)
         {
             var removedWord = _frontier.Find(w => w.ProjectId == word.ProjectId && w.Id == word.Id);
@@ -100,19 +86,6 @@ namespace Backend.Tests.Mocks
             _words.Add(word.Clone());
             _frontier.Add(word.Clone());
             return Task.FromResult<Word?>(word);
-        }
-
-        private static void ClearIdAndUpdateTimes(Word word, bool clearModified)
-        {
-            word.Id = Guid.NewGuid().ToString();
-            if (string.IsNullOrEmpty(word.Created))
-            {
-                word.Created = Time.UtcNowIso8601();
-            }
-            if (clearModified || string.IsNullOrEmpty(word.Modified))
-            {
-                word.Modified = Time.UtcNowIso8601();
-            }
         }
 
         /// <summary> Removes all words and frontier words for the given projectId. </summary>
@@ -290,48 +263,6 @@ namespace Backend.Tests.Mocks
             var modifiedWord = removedWord.Clone();
             modifyWord(modifiedWord);
             modifiedWord.Id = Guid.NewGuid().ToString();
-
-            _words.Add(modifiedWord.Clone());
-            return Task.FromResult<Word?>(modifiedWord);
-        }
-
-        public Task<Word?> Update(Word word)
-        {
-            var removedWord = _frontier.Find(w => w.ProjectId == word.ProjectId && w.Id == word.Id);
-            if (removedWord is null)
-            {
-                return Task.FromResult<Word?>(null);
-            }
-
-            _frontier.Remove(removedWord);
-
-            var oldWordId = word.Id;
-            if (!word.History.Contains(oldWordId))
-            {
-                word.History.Add(oldWordId);
-            }
-            word.Created = removedWord.Created;
-            word.UsingCitationForm &= word.Vernacular == removedWord.Vernacular;
-            ClearIdAndUpdateTimes(word, clearModified: true);
-
-            _words.Add(word.Clone());
-            _frontier.Add(word.Clone());
-            return Task.FromResult<Word?>(word);
-        }
-
-        public Task<Word?> ModifyAndDeleteFrontier(string projectId, string wordId, Func<Word, Word> modifyWord)
-        {
-            var removedWord = _frontier.Find(w => w.ProjectId == projectId && w.Id == wordId);
-            if (removedWord is null)
-            {
-                return Task.FromResult<Word?>(null);
-            }
-
-            _frontier.Remove(removedWord);
-
-            var modifiedWord = modifyWord(removedWord.Clone());
-            modifiedWord.History.Add(wordId);
-            ClearIdAndUpdateTimes(modifiedWord, clearModified: true);
 
             _words.Add(modifiedWord.Clone());
             return Task.FromResult<Word?>(modifiedWord);

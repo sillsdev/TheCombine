@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -54,8 +54,8 @@ namespace Backend.Tests.Controllers
             var permissionService = new PermissionServiceMock();
             _wordService = new WordService(_wordRepo);
             var logger = new LoggerMock<LiftController>();
-            _liftController = new LiftController(_projRepo, semDomRepo, _speakerRepo, _wordRepo, ackService,
-                _liftService, notifyService, permissionService, logger);
+            _liftController = new LiftController(_projRepo, semDomRepo, _speakerRepo, _wordRepo, _wordService,
+                ackService, _liftService, notifyService, permissionService, logger);
 
             _projId = _projRepo.Create(new Project { Name = ProjName }).Result!.Id;
             _file = new FormFile(_stream, 0, _stream.Length, "Name", FileName);
@@ -328,7 +328,7 @@ namespace Backend.Tests.Controllers
             var word = Util.RandomWord(_projId);
             word.Created = Time.ToUtcIso8601(new DateTime(1000, 1, 1));
             word.Modified = Time.ToUtcIso8601(new DateTime(2000, 1, 1));
-            await _wordRepo.Create(word, clearModified: false);
+            await _wordRepo.RepoCreate(word);
 
             _liftService.SetExportInProgress(UserId, ExportId);
             await _liftController.CreateLiftExportThenSignal(_projId, UserId, ExportId);
@@ -412,11 +412,11 @@ namespace Backend.Tests.Controllers
             var secondWord = Util.RandomWord(_projId);
             var wordToDelete = Util.RandomWord(_projId);
 
-            var wordToUpdate = await _wordRepo.Create(word);
-            wordToDelete = await _wordRepo.Create(wordToDelete);
+            var wordToUpdate = await _wordRepo.RepoCreate(word);
+            wordToDelete = await _wordRepo.RepoCreate(wordToDelete);
 
             // Create untouched word.
-            await _wordRepo.Create(secondWord);
+            await _wordRepo.RepoCreate(secondWord);
 
             word.Id = wordToUpdate.Id;
             word.Vernacular = "updated";
@@ -445,7 +445,7 @@ namespace Backend.Tests.Controllers
         public async Task TestExportConsentFileWithSpeakerName()
         {
             // Add word so there's something to export
-            await _wordRepo.Create(Util.RandomWord(_projId));
+            await _wordRepo.RepoCreate(Util.RandomWord(_projId));
 
             // Add speakers to project with names that will collide when sanitized
             await _speakerRepo.Create(new Speaker { Name = "No consent!", ProjectId = _projId });
