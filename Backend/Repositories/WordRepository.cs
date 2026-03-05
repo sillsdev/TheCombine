@@ -161,16 +161,16 @@ namespace BackendFramework.Repositories
         /// and adds the modified word to WordsCollection and Frontier.
         /// </remarks>
         private async Task<bool> RepoUpdateFrontierWithSession(
-            IClientSessionHandle session, Word word, Action<Word, Word> modifyNewWordFromOldWord)
+            IClientSessionHandle session, Word word, bool createIfNotFound, Action<Word, Word?> modifyNewWordFromOldWord)
         {
             // Make sure old word exists in the Frontier.
             var deletedWord = await _frontier.FindOneAndDeleteAsync(session, GetProjectWordFilter(word.ProjectId, word.Id));
-            if (deletedWord is null)
+            if (deletedWord is null && !createIfNotFound)
             {
                 return false;
             }
 
-            modifyNewWordFromOldWord(word, deletedWord.Clone());
+            modifyNewWordFromOldWord(word, deletedWord?.Clone());
             word.Id = "";
             await _words.InsertOneAsync(session, word);
             await _frontier.InsertOneAsync(session, word);
@@ -188,7 +188,7 @@ namespace BackendFramework.Repositories
         /// <param name="word"> Updated word. Its Id and ProjectId identify the existing Frontier word to replace. </param>
         /// <param name="modifyNewWordFromOldWord"> Action to modify the new word based on the old word. </param>
         /// <returns> The updated word added to both collections, or null if no matching Frontier word was found. </returns>
-        public async Task<Word?> RepoUpdateFrontier(Word word, Action<Word, Word> modifyNewWordFromOldWord)
+        public async Task<Word?> RepoUpdateFrontier(Word word, Action<Word, Word?> modifyNewWordFromOldWord)
         {
             using var activity = OtelService.StartActivityWithTag(
                 otelTagName, "creating word in WordsCollection and Frontier, deleting old word from Frontier");
@@ -196,7 +196,7 @@ namespace BackendFramework.Repositories
             using var transaction = await _dbContext.BeginTransaction();
             try
             {
-                if (!await RepoUpdateFrontierWithSession(transaction.Session, word, modifyNewWordFromOldWord))
+                if (!await RepoUpdateFrontierWithSession(transaction.Session, word, false, modifyNewWordFromOldWord))
                 {
                     await transaction.AbortTransactionAsync();
                     return null;
@@ -212,12 +212,8 @@ namespace BackendFramework.Repositories
         }
 
         public async Task<List<Word>?> RepoReplaceFrontier(string projectId, List<Word> newWords,
-            List<string> idsToDelete, Action<Word, Word> modifyUpdatedWord, Action<Word> modifyDeletedWord)
+            List<string> idsToDelete, Action<Word, Word?> modifyUpdatedWord, Action<Word> modifyDeletedWord)
         {
-            if (newWords.Count == 0)
-            {
-                return newWords;
-            }
             if (newWords.Any(w => w.ProjectId != projectId))
             {
                 throw new ArgumentException("All new words must have the specified projectId");
@@ -231,7 +227,7 @@ namespace BackendFramework.Repositories
                 // Update the new words
                 foreach (var word in newWords)
                 {
-                    if (!await RepoUpdateFrontierWithSession(transaction.Session, word, modifyUpdatedWord))
+                    if (!await RepoUpdateFrontierWithSession(transaction.Session, word, true, modifyUpdatedWord))
                     {
                         await transaction.AbortTransactionAsync();
                         return null;
