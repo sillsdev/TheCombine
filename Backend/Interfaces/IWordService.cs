@@ -6,6 +6,7 @@ namespace BackendFramework.Interfaces
 {
     public interface IWordService
     {
+        Task<List<Word>> ImportWords(List<Word> words);
         Task<Word> Create(string userId, Word word);
         Task<List<Word>> Create(string userId, List<Word> words);
         Task<Word?> Update(string userId, Word word);

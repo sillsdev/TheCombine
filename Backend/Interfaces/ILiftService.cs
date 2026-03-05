@@ -8,7 +8,7 @@ namespace BackendFramework.Interfaces
 {
     public interface ILiftService : IDisposable
     {
-        ILiftMerger GetLiftImporterExporter(string projectId, string vernLang, IWordRepository wordRepo);
+        ILiftMerger GetLiftImporterExporter(string projectId, string vernLang, IWordService wordService);
         Task<bool> LdmlImport(string dirPath, IProjectRepository projRepo, Project project);
         Task<string> LiftExport(string projectId, IProjectRepository projRepo, ISemanticDomainRepository semDomRepo,
             ISpeakerRepository speakerRepo, IWordRepository wordRepo);

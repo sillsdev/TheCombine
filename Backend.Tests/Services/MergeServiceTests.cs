@@ -46,7 +46,7 @@ namespace Backend.Tests.Services
         {
             var thisWord = Util.RandomWord(ProjId);
             thisWord.UsingCitationForm = true;
-            thisWord = _wordRepo.Create(thisWord).Result;
+            thisWord = _wordRepo.RepoCreate(thisWord).Result;
 
             var mergeObject = new MergeWords
             {
@@ -75,7 +75,7 @@ namespace Backend.Tests.Services
         public void MergeWordsDeleteTest()
         {
             var thisWord = Util.RandomWord(ProjId);
-            thisWord = _wordRepo.Create(thisWord).Result;
+            thisWord = _wordRepo.RepoCreate(thisWord).Result;
 
             var mergeObject = new MergeWords
             {
@@ -107,7 +107,7 @@ namespace Backend.Tests.Services
                     child.Guid = parent.Guid;
                     child.UsingCitationForm = true;
                 }
-                var id = _wordRepo.Create(child).Result.Id;
+                var id = _wordRepo.RepoCreate(child).Result.Id;
                 Assert.That(_wordRepo.GetWord(ProjId, id).Result, Is.Not.Null);
                 mergeWords.Children.Add(new MergeSourceWord { SrcWordId = id });
             }
@@ -151,7 +151,7 @@ namespace Backend.Tests.Services
         public void UndoMergeOneChildTest()
         {
             var thisWord = Util.RandomWord(ProjId);
-            thisWord = _wordRepo.Create(thisWord).Result;
+            thisWord = _wordRepo.RepoCreate(thisWord).Result;
 
             var mergeObject = new MergeWords
             {
@@ -187,7 +187,7 @@ namespace Backend.Tests.Services
             foreach (var _ in Enumerable.Range(0, numberOfChildren))
             {
                 var child = Util.RandomWord(ProjId);
-                var id = _wordRepo.Create(child).Result.Id;
+                var id = _wordRepo.RepoCreate(child).Result.Id;
                 Assert.That(_wordRepo.GetWord(ProjId, id).Result, Is.Not.Null);
                 mergeWords.Children.Add(new MergeSourceWord { SrcWordId = id });
             }

@@ -687,9 +687,9 @@ namespace BackendFramework.Services
             wsr.Save();
         }
 
-        public ILiftMerger GetLiftImporterExporter(string projectId, string vernLang, IWordRepository wordRepo)
+        public ILiftMerger GetLiftImporterExporter(string projectId, string vernLang, IWordService wordService)
         {
-            return new LiftMerger(projectId, vernLang, wordRepo);
+            return new LiftMerger(projectId, vernLang, wordService);
         }
 
         private static void WriteRangeElement(XmlWriter liftRangesWriter,
@@ -728,14 +728,14 @@ namespace BackendFramework.Services
             private readonly string _projectId;
             private readonly List<SemanticDomainFull> _customSemDoms = [];
             private readonly string _vernLang;
-            private readonly IWordRepository _wordRepo;
+            private readonly IWordService _wordService;
             private readonly List<Word> _importEntries = [];
 
-            public LiftMerger(string projectId, string vernLang, IWordRepository wordRepo)
+            public LiftMerger(string projectId, string vernLang, IWordService wordService)
             {
                 _projectId = projectId;
                 _vernLang = vernLang;
-                _wordRepo = wordRepo;
+                _wordService = wordService;
             }
 
             /// <summary>
@@ -784,7 +784,7 @@ namespace BackendFramework.Services
             /// <returns> The words saved. </returns>
             public async Task<List<Word>> SaveImportEntries()
             {
-                var savedWords = new List<Word>(await _wordRepo.Create(_importEntries, clearModified: false));
+                var savedWords = new List<Word>(await _wordService.ImportWords(_importEntries));
                 _importEntries.Clear();
                 return savedWords;
             }
