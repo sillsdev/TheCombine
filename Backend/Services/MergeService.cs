@@ -145,28 +145,11 @@ namespace BackendFramework.Services
 
         /// <summary> Undo merge </summary>
         /// <returns> A bool: true if merge children were successfully restored </returns>
-        public async Task<bool> UndoMerge(string projectId, string userId, MergeUndoIds ids)
+        public async Task UndoMerge(string projectId, string userId, MergeUndoIds ids)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "undoing merge");
 
-            var parentIds = ids.ParentIds.Distinct().ToList();
-
-            // If any of the parents aren't in the Frontier, they've been changed since the merge.
-            if (!await _wordRepo.AreInFrontier(projectId, parentIds, parentIds.Count))
-            {
-                return false;
-            }
-
-            // If children are not restorable, return without deleting the merge parents.
-            if (!await _wordService.RestoreFrontierWords(projectId, ids.ChildIds))
-            {
-                return false;
-            }
-
-            // Remove the parents
-            await Task.WhenAll(parentIds.Select(id => _wordService.DeleteFrontierWord(projectId, userId, id)));
-
-            return true;
+            await _wordService.RevertMergeReplaceFrontier(projectId, userId, ids.ChildIds, ids.ParentIds);
         }
 
         /// <summary> Adds a List of wordIds to MergeBlacklist of specified <see cref="Project"/>. </summary>

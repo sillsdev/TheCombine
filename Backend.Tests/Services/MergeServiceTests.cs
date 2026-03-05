@@ -168,8 +168,7 @@ namespace Backend.Tests.Services
             var childIds = mergeObject.Children.Select(word => word.SrcWordId).ToList();
             var parentIds = new List<string> { newWords[0].Id };
             var mergedWord = new MergeUndoIds(parentIds, childIds);
-            var undo = _mergeService.UndoMerge(ProjId, UserId, mergedWord).Result;
-            Assert.That(undo, Is.True);
+            _mergeService.UndoMerge(ProjId, UserId, mergedWord).Wait();
 
             var frontierWords = _wordRepo.GetAllFrontier(ProjId).Result;
             var frontierWordIds = frontierWords.Select(word => word.Id).ToList();
@@ -201,8 +200,7 @@ namespace Backend.Tests.Services
             var childIds = mergeWords.Children.Select(word => word.SrcWordId).ToList();
             var parentIds = new List<string> { newWords[0].Id };
             var mergedWord = new MergeUndoIds(parentIds, childIds);
-            var undo = _mergeService.UndoMerge(ProjId, UserId, mergedWord).Result;
-            Assert.That(undo, Is.True);
+            _mergeService.UndoMerge(ProjId, UserId, mergedWord).Wait();
 
             var frontierWords = _wordRepo.GetAllFrontier(ProjId).Result;
             var frontierWordIds = frontierWords.Select(word => word.Id).ToList();

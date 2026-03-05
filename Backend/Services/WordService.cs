@@ -109,6 +109,18 @@ namespace BackendFramework.Services
                 });
         }
 
+        public async Task<List<Word>?> RevertMergeReplaceFrontier(string projectId, string userId, List<string> idsToRestore, List<string> idsToDelete)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "reverting replaced frontier words for merge");
+
+            return await _wordRepo.RepoRevertReplaceFrontier(projectId, idsToRestore, idsToDelete, deletedWord =>
+            {
+                deletedWord.Accessibility = Status.Deleted;
+                deletedWord.History.Add(deletedWord.Id);
+                PrepEditedByAndTimes(userId, deletedWord);
+            });
+        }
+
         /// <summary> Removes audio with specified fileName from a Frontier word </summary>
         /// <returns> Updated word, or null if not found </returns>
         public async Task<Word?> DeleteAudio(string projectId, string userId, string wordId, string fileName)
@@ -143,43 +155,21 @@ namespace BackendFramework.Services
 
         /// <summary> Restores words to the Frontier that aren't in the Frontier </summary>
         /// <remarks>
-        /// Aborts if any word can't be restored for any of the following reasons:
-        /// doesn't exist; has Status.Deleted; or is already in the Frontier
+        /// Deduplicates ids and delegates validation/transaction handling to RepoRestoreFrontier.
         /// </remarks>
-        /// <returns> A bool: true if all successfully restored; false if none restored. </returns>
         public async Task<bool> RestoreFrontierWords(string projectId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring words to Frontier");
 
-            // Allow calls that don't specify any wordIds, but don't do any work.
+            wordIds = wordIds.Distinct().ToList();
+
             if (wordIds.Count == 0)
             {
                 return true;
             }
 
-            wordIds = wordIds.Distinct().ToList();
-
-            // Make sure none of the words are in the Frontier.
-            if (await _wordRepo.AreInFrontier(projectId, wordIds, 1))
-            {
-                return false;
-            }
-
-            // Make sure all the words exist and are valid.
-            var wordsToRestore = await _wordRepo.GetWords(projectId, wordIds);
-            if (wordsToRestore.Count != wordIds.Count)
-            {
-                return false;
-            }
-            if (wordsToRestore.Any(w => w.Accessibility == Status.Deleted))
-            {
-                // We should be restoring words that were removed from the Frontier,
-                // and not their "Deleted" copies in the words collection.
-                return false;
-            }
-
-            await _wordRepo.AddFrontier(wordsToRestore);
-            return true;
+            var restoredWords = await _wordRepo.RepoRestoreFrontier(projectId, wordIds);
+            return restoredWords.Count == wordIds.Count;
         }
 
         /// <summary> Makes a new word in the Frontier with changes made </summary>

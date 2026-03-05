@@ -58,7 +58,7 @@ namespace BackendFramework.Controllers
         /// <summary> Undo merge </summary>
         /// <returns> True if merge was successfully undone </returns>
         [HttpPut("undo", Name = "UndoMerge")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> UndoMerge(string projectId, [FromBody, BindRequired] MergeUndoIds merge)
         {
@@ -71,8 +71,8 @@ namespace BackendFramework.Controllers
             }
             var userId = _permissionService.GetUserId(HttpContext);
 
-            var undo = await _mergeService.UndoMerge(projectId, userId, merge);
-            return Ok(undo);
+            await _mergeService.UndoMerge(projectId, userId, merge);
+            return Ok();
         }
 
         /// <summary> Add List of <see cref="Word"/>Ids to merge blacklist </summary>

@@ -432,9 +432,7 @@ namespace Backend.Tests.Controllers
             Assert.That(await _wordRepo.GetAllFrontier(ProjId), Does.Contain(word).UsingPropertiesComparer());
             var frontierCount = await _wordRepo.GetFrontierCount(ProjId);
 
-            var result = await _wordController.RestoreWord(ProjId, word.Id) as OkObjectResult;
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Value, Is.False);
+            Assert.ThrowsAsync<ArgumentException>(async () => await _wordController.RestoreWord(ProjId, word.Id));
             Assert.That(await _wordRepo.GetFrontierCount(ProjId), Is.EqualTo(frontierCount));
         }
 

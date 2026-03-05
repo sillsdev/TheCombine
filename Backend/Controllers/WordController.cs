@@ -266,7 +266,8 @@ namespace BackendFramework.Controllers
                 return NotFound();
             }
 
-            return Ok(await _wordService.RestoreFrontierWords(projectId, [wordId]));
+            var isRestored = await _wordService.RestoreFrontierWords(projectId, [wordId]);
+            return Ok(isRestored);
         }
 
         /// <summary> Revert words from a dictionary of word ids (key: to revert to; value: from frontier). </summary>

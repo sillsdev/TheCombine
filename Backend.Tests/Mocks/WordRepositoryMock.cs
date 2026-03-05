@@ -178,6 +178,11 @@ namespace Backend.Tests.Mocks
                 .Select(w => w.Clone())
                 .ToList();
 
+            if (wordsToRestore.Count != restoreSet.Count)
+            {
+                throw new ArgumentException("Some ids to be restored were not found");
+            }
+
             if (wordsToRestore.Any(w => w.Accessibility == Status.Deleted))
             {
                 throw new ArgumentException("Cannot add a word with Deleted status to Frontier");
