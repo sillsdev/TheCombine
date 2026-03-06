@@ -40,14 +40,19 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestDeleteAudioBadInputReturnsNull()
+        public void TestDeleteAudioBadInput()
         {
             var fileName = "audio.mp3";
             var wordInFrontier = _wordRepo.RepoCreate(
                 new Word() { Audio = [new() { FileName = fileName }], ProjectId = ProjId }).Result;
             Assert.That(_wordService.DeleteAudio("non-proj-id", UserId, wordInFrontier.Id, fileName).Result, Is.Null);
             Assert.That(_wordService.DeleteAudio(ProjId, UserId, "non-word-id", fileName).Result, Is.Null);
-            Assert.That(_wordService.DeleteAudio(ProjId, UserId, wordInFrontier.Id, "non-file-name").Result, Is.Null);
+
+            var ex = Assert.Throws<AggregateException>(() =>
+            {
+                _ = _wordService.DeleteAudio(ProjId, UserId, wordInFrontier.Id, "non-file-name").Result;
+            });
+            Assert.That(ex?.InnerException, Is.InstanceOf<ArgumentException>());
         }
 
         [Test]
@@ -74,7 +79,7 @@ namespace Backend.Tests.Services
             Assert.That(newWord.Id, Is.Not.EqualTo(oldId));
             Assert.That(newWord.Audio, Is.Empty);
             Assert.That(newWord.EditedBy.Last(), Is.EqualTo(UserId));
-            Assert.That(newWord.History.Last(), Is.EqualTo(oldId));
+            Assert.That(newWord.History, Is.Empty);
 
             // New word is only one in frontier
             Assert.That(_wordRepo.IsInFrontier(ProjId, newWord.Id).Result, Is.True);
@@ -168,7 +173,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestRestoreFrontierWordsMissingWordFalse()
+        public void TestRestoreFrontierWordsMissingWordThrows()
         {
             var word = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
 
@@ -178,7 +183,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestRestoreFrontierWordsFrontierWordFalse()
+        public void TestRestoreFrontierWordsAlreadyInFrontierThrows()
         {
             var wordNoFrontier = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
             var wordYesFrontier = _wordRepo.RepoCreate(new Word { ProjectId = ProjId }).Result;
@@ -190,7 +195,7 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestRestoreFrontierWordsReturnsTrue()
+        public void TestRestoreFrontierWordsRestoresWords()
         {
             var word1 = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
             var word2 = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;

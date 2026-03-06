@@ -98,6 +98,25 @@ namespace Backend.Tests.Mocks
             return await RepoUpdateFrontier(word, createIfNotFound: false, modifyNewWordFromOldWord);
         }
 
+        public Task<Word?> RepoUpdateFrontier(string projectId, string wordId, Action<Word> modifyWord)
+        {
+            var removedWord = _frontier.Find(w => w.ProjectId == projectId && w.Id == wordId);
+            if (removedWord is null)
+            {
+                return Task.FromResult<Word?>(null);
+            }
+
+            var modifiedWord = removedWord.Clone();
+            modifyWord(modifiedWord);
+
+            _frontier.Remove(removedWord);
+            modifiedWord.Id = Guid.NewGuid().ToString();
+
+            _words.Add(modifiedWord.Clone());
+            _frontier.Add(modifiedWord.Clone());
+            return Task.FromResult<Word?>(modifiedWord);
+        }
+
         /// <summary> Removes all words and frontier words for the given projectId. </summary>
         internal void DeleteAllWords(string projectId)
         {

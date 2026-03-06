@@ -11,6 +11,7 @@ namespace BackendFramework.Interfaces
         Task<Word?> GetWord(string projectId, string wordId);
         Task<Word> RepoCreate(Word word);
         Task<List<Word>> RepoCreate(List<Word> words);
+        Task<Word?> RepoUpdateFrontier(string projectId, string wordId, Action<Word> modifyWord);
         Task<Word?> RepoUpdateFrontier(Word word, Action<Word, Word?> modifyNewWordFromOldWord);
         Task<List<Word>?> RepoReplaceFrontier(string projectId, List<Word> newWords,
             List<string> idsToDelete, Action<Word, Word?> modifyUpdatedWord, Action<Word> modifyDeletedWord);
