@@ -40,14 +40,6 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestCreateMultipleWords()
-        {
-            _wordService.Create(UserId, [new() { ProjectId = ProjId }, new() { ProjectId = ProjId }]).Wait();
-            Assert.That(_wordRepo.GetAllWords(ProjId).Result, Has.Count.EqualTo(2));
-            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(2));
-        }
-
-        [Test]
         public void TestDeleteAudioBadInputReturnsNull()
         {
             var fileName = "audio.mp3";

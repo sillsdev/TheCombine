@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,9 +16,33 @@ namespace BackendFramework.Services
 
         private const string otelTagName = "otel.WordService";
 
-        private static Word PrepEditedByAndTimes(string userId, Word word)
+        /// <summary>
+        /// Adds Created time if blank.
+        /// Updates Modified time to now if blank or if updateModified is true.
+        /// </summary>
+        /// <returns> The mutated word </returns>
+        private static Word UpdateTimes(Word word, bool updateModified)
         {
-            UpdateTimes(word, clearModified: true);
+            if (string.IsNullOrEmpty(word.Created))
+            {
+                // Use Roundtrip-suitable ISO 8601 format.
+                word.Created = Time.UtcNowIso8601();
+            }
+            if (updateModified || string.IsNullOrEmpty(word.Modified))
+            {
+                word.Modified = Time.UtcNowIso8601();
+            }
+            return word;
+        }
+
+        /// <summary>
+        /// Update the given word's timestamps
+        /// and add the given userId to EditedBy if it's not already last on the list.
+        /// </summary>
+        /// <returns> The mutated word </returns>
+        private static Word PrepEditedData(string userId, Word word)
+        {
+            UpdateTimes(word, updateModified: true);
             if (!string.IsNullOrEmpty(userId) && userId != word.EditedBy.LastOrDefault(""))
             {
                 word.EditedBy.Add(userId);
@@ -26,29 +51,50 @@ namespace BackendFramework.Services
         }
 
         /// <summary>
-        /// Adds Created time if blank.
-        /// Updates Modified time to now if blank or if clearModified is true.
+        /// Creates an action to modify the metadata of a deleted Frontier word for saving to the words collection.
         /// </summary>
-        private static void UpdateTimes(Word word, bool clearModified)
-        {
-            if (string.IsNullOrEmpty(word.Created))
+        private static Action<Word> CreateModifyDeletedWordAction(string userId) =>
+            word =>
             {
-                // Use Roundtrip-suitable ISO 8601 format.
-                word.Created = Time.UtcNowIso8601();
-            }
-            if (clearModified || string.IsNullOrEmpty(word.Modified))
+                PrepEditedData(userId, word);
+                word.Accessibility = Status.Deleted;
+                word.History.Add(word.Id);
+            };
+
+        /// <summary>
+        /// Creates an action to modify the metadata of an update to a Frontier word.
+        /// </summary>
+        private static Action<Word, Word?> CreateModifyUpdatedWordAction(string userId) =>
+            (newWord, oldWord) =>
             {
-                word.Modified = Time.UtcNowIso8601();
-            }
-        }
+                PrepEditedData(userId, newWord);
+
+                // Allow use with a new word that has no predecessor.
+                if (oldWord is null)
+                {
+                    return;
+                }
+
+                // Add Id to history.
+                if (!newWord.History.Contains(newWord.Id))
+                {
+                    newWord.History.Add(newWord.Id);
+                }
+
+                // Preserve Created time.
+                newWord.Created = oldWord.Created;
+
+                // If an imported word was using the citation form for its Vernacular,
+                // only keep UsingCitationForm true if the Vernacular hasn't changed.
+                newWord.UsingCitationForm &= newWord.Vernacular == oldWord.Vernacular;
+            };
 
         /// <summary> Adds a list of <see cref="Word"/>s to the WordsCollection and Frontier. </summary>
         public async Task<List<Word>> ImportWords(List<Word> words)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "creating words in repo");
 
-            words.ForEach(w => UpdateTimes(w, false));
-            return await _wordRepo.RepoCreate(words);
+            return await _wordRepo.RepoCreate(words.Select(w => UpdateTimes(w, updateModified: false)).ToList());
         }
 
         /// <summary> Creates a new word with updated edited data. </summary>
@@ -57,68 +103,30 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "creating a word");
 
-            return await _wordRepo.RepoCreate(PrepEditedByAndTimes(userId, word));
-        }
-
-        /// <summary> Creates new words with updated edited data. </summary>
-        /// <returns> The created words </returns>
-        public async Task<List<Word>> Create(string userId, List<Word> words)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "creating words");
-
-            return await _wordRepo.RepoCreate(words.Select(w => PrepEditedByAndTimes(userId, w)).ToList());
+            return await _wordRepo.RepoCreate(PrepEditedData(userId, word));
         }
 
         /// <summary>
         /// Replaces merge children in the Frontier with prepared parent words where possible,
         /// creates remaining parents, and deletes remaining children from the Frontier.
         /// </summary>
-        /// <remarks>
-        /// Mirrors the current merge-side effects of combining Update, Create, and DeleteFrontierWord:
-        /// updated parents preserve old Created and add old Id to History; created parents get edited/times;
-        /// deleted children are written back as Deleted words with edited/times/history updates.
-        /// </remarks>
         public async Task<List<Word>?> MergeReplaceFrontier(
             string projectId, string userId, List<Word> parents, List<string> idsToDelete)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "replacing frontier words for merge");
 
-            return await _wordRepo.RepoReplaceFrontier(projectId, parents.Select(p => PrepEditedByAndTimes(userId, p)).ToList(),
-                idsToDelete, (newWord, oldWord) =>
-                {
-                    if (oldWord is null)
-                    {
-                        return;
-                    }
-                    // Move id to history and update times.
-                    if (!newWord.History.Contains(newWord.Id))
-                    {
-                        newWord.History.Add(newWord.Id);
-                    }
-                    newWord.Created = oldWord.Created;
-
-                    // If an imported word was using the citation form for its Vernacular,
-                    // only keep UsingCitationForm true if the Vernacular hasn't changed.
-                    newWord.UsingCitationForm &= newWord.Vernacular == oldWord.Vernacular;
-                },
-                deletedWord =>
-                {
-                    deletedWord.Accessibility = Status.Deleted;
-                    deletedWord.History.Add(deletedWord.Id);
-                    PrepEditedByAndTimes(userId, deletedWord);
-                });
+            return await _wordRepo.RepoReplaceFrontier(projectId, parents, idsToDelete,
+                CreateModifyUpdatedWordAction(userId), CreateModifyDeletedWordAction(userId));
         }
 
-        public async Task<List<Word>?> RevertMergeReplaceFrontier(string projectId, string userId, List<string> idsToRestore, List<string> idsToDelete)
+        public async Task<List<Word>?> RevertMergeReplaceFrontier(
+            string projectId, string userId, List<string> idsToRestore, List<string> idsToDelete)
         {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "reverting replaced frontier words for merge");
+            using var activity =
+                OtelService.StartActivityWithTag(otelTagName, "reverting replaced frontier words for merge");
 
-            return await _wordRepo.RepoRevertReplaceFrontier(projectId, idsToRestore, idsToDelete, deletedWord =>
-            {
-                deletedWord.Accessibility = Status.Deleted;
-                deletedWord.History.Add(deletedWord.Id);
-                PrepEditedByAndTimes(userId, deletedWord);
-            });
+            return await _wordRepo.RepoRevertReplaceFrontier(
+                projectId, idsToRestore, idsToDelete, CreateModifyDeletedWordAction(userId));
         }
 
         /// <summary> Removes audio with specified fileName from a Frontier word </summary>
@@ -143,12 +151,8 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
 
-            var deletedWord = await _wordRepo.RepoDeleteFrontier(projectId, wordId, word =>
-            {
-                word.Accessibility = Status.Deleted;
-                word.History.Add(wordId);
-                PrepEditedByAndTimes(userId, word);
-            });
+            var deletedWord = await _wordRepo.RepoDeleteFrontier(
+                projectId, wordId, CreateModifyDeletedWordAction(userId));
 
             return deletedWord?.Id;
         }
@@ -178,26 +182,7 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a word in Frontier");
 
-            var oldWordId = word.Id; // Capture the id to update the correct word.
-            PrepEditedByAndTimes(userId, word);
-            word.Id = oldWordId;
-            return await _wordRepo.RepoUpdateFrontier(word, (newWord, oldWord) =>
-            {
-                if (oldWord is null)
-                {
-                    return;
-                }
-                // Move id to history and update times.
-                if (!newWord.History.Contains(oldWord.Id))
-                {
-                    newWord.History.Add(oldWord.Id);
-                }
-                newWord.Created = oldWord.Created;
-
-                // If an imported word was using the citation form for its Vernacular,
-                // only keep UsingCitationForm true if the Vernacular hasn't changed.
-                newWord.UsingCitationForm &= newWord.Vernacular == oldWord.Vernacular;
-            });
+            return await _wordRepo.RepoUpdateFrontier(word, CreateModifyUpdatedWordAction(userId));
         }
 
         /// <summary> Checks if a word being added is a duplicate of a preexisting word. </summary>

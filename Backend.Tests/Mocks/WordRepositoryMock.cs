@@ -43,12 +43,6 @@ namespace Backend.Tests.Mocks
             }
         }
 
-        public Task<List<Word>> GetWords(string projectId, List<string> wordIds)
-        {
-            return Task.FromResult(
-                _words.Where(w => w.ProjectId == projectId && wordIds.Contains(w.Id)).Select(w => w.Clone()).ToList());
-        }
-
         public async Task<Word> RepoCreate(Word word)
         {
             return (await RepoCreate([word])).First();
