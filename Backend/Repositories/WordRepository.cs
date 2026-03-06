@@ -127,7 +127,7 @@ namespace BackendFramework.Repositories
             using var activity =
                 OtelService.StartActivityWithTag(otelTagName, "creating a word in WordsCollection and Frontier");
 
-            return await RepoCreate([word]).ContinueWith(t => t.Result.First());
+            return (await RepoCreate([word])).First();
         }
 
         /// <summary> Adds <see cref="Word"/>s to the WordsCollection and Frontier </summary>
@@ -140,7 +140,9 @@ namespace BackendFramework.Repositories
             using var activity =
                 OtelService.StartActivityWithTag(otelTagName, "creating words in WordsCollection and Frontier");
 
-            return await ExecuteWithTransaction(async s => await CreateWithSession(s, words));
+            return words.Count == 0
+                ? []
+                : await ExecuteWithTransaction(async s => await CreateWithSession(s, words));
         }
 
         /// <summary>
@@ -213,6 +215,11 @@ namespace BackendFramework.Repositories
         public async Task<List<Word>?> RepoReplaceFrontier(string projectId, List<Word> newWords,
             List<string> idsToDelete, Action<Word, Word?> modifyUpdatedWord, Action<Word> modifyDeletedWord)
         {
+            if (newWords.Count == 0 && idsToDelete.Count == 0)
+            {
+                return [];
+            }
+
             if (newWords.Any(w => w.ProjectId != projectId))
             {
                 throw new ArgumentException("All new words must have the specified projectId");
@@ -225,12 +232,11 @@ namespace BackendFramework.Repositories
                     // Update the new words
                     foreach (var word in newWords)
                     {
+                        oldIdSet.Remove(word.Id);
                         if (await RepoUpdateFrontierWithSession(session, word, true, modifyUpdatedWord) is null)
                         {
                             return null;
                         }
-
-                        oldIdSet.Remove(word.Id);
                     }
 
                     // Delete any remaining old words that weren't updated with a new word
@@ -242,6 +248,11 @@ namespace BackendFramework.Repositories
         public async Task<List<Word>> RepoRevertReplaceFrontier(
             string projectId, List<string> idsToRestore, List<string> idsToDelete, Action<Word> modifyDeletedWord)
         {
+            if (idsToRestore.Count == 0 && idsToDelete.Count == 0)
+            {
+                return [];
+            }
+
             var restoreSet = idsToRestore.ToHashSet();
             var deleteSet = idsToDelete.ToHashSet();
             if (deleteSet.Intersect(restoreSet).Any())
@@ -418,8 +429,9 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring words to Frontier");
 
-            return await ExecuteWithTransaction(
-                async s => await RepoRestoreFrontierWithSession(s, projectId, wordIds));
+            return wordIds.Count == 0
+                ? []
+                : await ExecuteWithTransaction(async s => await RepoRestoreFrontierWithSession(s, projectId, wordIds));
         }
 
         /// <summary> Adds a list of <see cref="Word"/>s only to the Frontier </summary>
