@@ -241,8 +241,8 @@ namespace Backend.Tests.Mocks
 
             foreach (var word in newWords)
             {
-                await RepoUpdateFrontier(word, createIfNotFound: true, modifyUpdatedWord);
                 oldIdSet.Remove(word.Id);
+                await RepoUpdateFrontier(word, createIfNotFound: true, modifyUpdatedWord);
             }
 
             foreach (var oldId in oldIdSet)
