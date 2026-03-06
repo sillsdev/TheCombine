@@ -8,7 +8,6 @@ namespace BackendFramework.Interfaces
     {
         Task<List<Word>> ImportWords(List<Word> words);
         Task<Word> Create(string userId, Word word);
-        Task<List<Word>> Create(string userId, List<Word> words);
         Task<List<Word>?> MergeReplaceFrontier(
             string projectId, string userId, List<Word> parents, List<string> idsToDelete);
         Task<List<Word>?> RevertMergeReplaceFrontier(

@@ -81,14 +81,6 @@ namespace BackendFramework.Repositories
         }
 
         /// <summary> Finds project <see cref="Word"/>s with specified ids </summary>
-        public async Task<List<Word>> GetWords(string projectId, List<string> wordIds)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting words");
-
-            return await _words.Find(GetProjectWordsFilter(projectId, wordIds)).ToListAsync();
-        }
-
-        /// <summary> Finds project <see cref="Word"/>s with specified ids </summary>
         private async Task<List<Word>> GetWordsWithSession(IClientSessionHandle session, string projectId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting words");
