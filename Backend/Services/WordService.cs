@@ -51,6 +51,19 @@ namespace BackendFramework.Services
         }
 
         /// <summary>
+        /// Creates an action to remove a specified audio file from a word.
+        /// </summary>
+        private static Action<Word> CreateDeleteAudioAction(string userId, string fileName) =>
+            word =>
+            {
+                PrepEditedData(userId, word);
+                if (word.Audio.RemoveAll(a => a.FileName == fileName) == 0)
+                {
+                    throw new ArgumentException("Audio file name not found on word.");
+                }
+            };
+
+        /// <summary>
         /// Creates an action to modify the metadata of a deleted Frontier word for saving to the words collection.
         /// </summary>
         private static Action<Word> CreateModifyDeletedWordAction(string userId) =>
@@ -135,14 +148,7 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting an audio");
 
-            var wordWithAudioToDelete = (await _wordRepo.GetFrontier(projectId, wordId, fileName))?.Clone();
-            if (wordWithAudioToDelete is null)
-            {
-                return null;
-            }
-
-            wordWithAudioToDelete.Audio.RemoveAll(a => a.FileName == fileName);
-            return await Update(userId, wordWithAudioToDelete);
+            return await _wordRepo.RepoUpdateFrontier(projectId, wordId, CreateDeleteAudioAction(userId, fileName));
         }
 
         /// <summary> Removes word from Frontier and adds a Deleted copy in the words collection </summary>
@@ -151,17 +157,14 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
 
-            var deletedWord = await _wordRepo.RepoDeleteFrontier(
-                projectId, wordId, CreateModifyDeletedWordAction(userId));
-
-            return deletedWord?.Id;
+            return (await _wordRepo.RepoDeleteFrontier(projectId, wordId, CreateModifyDeletedWordAction(userId)))?.Id;
         }
 
         /// <summary> Restores words to the Frontier that aren't in the Frontier </summary>
         /// <remarks>
         /// Deduplicates ids and delegates validation/transaction handling to RepoRestoreFrontier.
         /// </remarks>
-        public async Task<bool> RestoreFrontierWords(string projectId, List<string> wordIds)
+        public async Task RestoreFrontierWords(string projectId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring words to Frontier");
 
@@ -169,11 +172,10 @@ namespace BackendFramework.Services
 
             if (wordIds.Count == 0)
             {
-                return true;
+                return;
             }
 
-            var restoredWords = await _wordRepo.RepoRestoreFrontier(projectId, wordIds);
-            return restoredWords.Count == wordIds.Count;
+            await _wordRepo.RepoRestoreFrontier(projectId, wordIds);
         }
 
         /// <summary> Makes a new word in the Frontier with changes made </summary>

@@ -824,7 +824,7 @@ export const MergeApiFp = function (configuration?: Configuration) {
       mergeUndoIds: MergeUndoIds,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.undoMerge(
         projectId,
@@ -1011,7 +1011,7 @@ export const MergeApiFactory = function (
       projectId: string,
       mergeUndoIds: MergeUndoIds,
       options?: any
-    ): AxiosPromise<boolean> {
+    ): AxiosPromise<void> {
       return localVarFp
         .undoMerge(projectId, mergeUndoIds, options)
         .then((request) => request(axios, basePath));

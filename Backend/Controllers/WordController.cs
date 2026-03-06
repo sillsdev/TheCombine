@@ -250,7 +250,7 @@ namespace BackendFramework.Controllers
         /// <summary> Restore a deleted <see cref="Word"/>. </summary>
         /// <returns> bool: true if restored; false if already in frontier. </returns>
         [HttpGet("restore/{wordId}", Name = "RestoreWord")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RestoreWord(string projectId, string wordId)
@@ -266,8 +266,8 @@ namespace BackendFramework.Controllers
                 return NotFound();
             }
 
-            var isRestored = await _wordService.RestoreFrontierWords(projectId, [wordId]);
-            return Ok(isRestored);
+            await _wordService.RestoreFrontierWords(projectId, [wordId]);
+            return Ok();
         }
 
         /// <summary> Revert words from a dictionary of word ids (key: to revert to; value: from frontier). </summary>

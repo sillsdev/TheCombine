@@ -167,8 +167,11 @@ namespace Backend.Tests.Controllers
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
 
             var wordId = _wordRepo.RepoCreate(Util.RandomWord(_projId)).Result.Id;
-            result = _audioController.DeleteAudioFile(_projId, wordId, _file.FileName).Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            var ex = Assert.Throws<AggregateException>(() =>
+            {
+                _ = _audioController.DeleteAudioFile(_projId, wordId, _file.FileName).Result;
+            });
+            Assert.That(ex?.InnerException, Is.InstanceOf<ArgumentException>());
         }
 
         [Test]

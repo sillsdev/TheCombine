@@ -416,9 +416,8 @@ namespace Backend.Tests.Controllers
             Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
             Assert.That(await _wordRepo.GetAllFrontier(ProjId), Is.Empty);
 
-            var result = await _wordController.RestoreWord(ProjId, word.Id) as OkObjectResult;
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Value, Is.True);
+            var result = await _wordController.RestoreWord(ProjId, word.Id);
+            Assert.That(result, Is.InstanceOf<OkResult>());
             Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
             Assert.That(await _wordRepo.GetAllFrontier(ProjId), Does.Contain(word).UsingPropertiesComparer());
         }
