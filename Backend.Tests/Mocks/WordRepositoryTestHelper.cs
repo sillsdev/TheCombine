@@ -107,11 +107,12 @@ internal sealed class WordRepositoryTestHelper : IWordRepository
 
     /// <summary>
     /// Adds a word directly to the Words collection (not the Frontier).
-    /// Assigns a new Id if the word has no Id. Mirrors the test behavior of the old WordRepositoryMock.Add.
+    /// Assigns a new valid ObjectId if the word has an empty or non-ObjectId Id.
+    /// Mirrors the test behavior of the old WordRepositoryMock.Add.
     /// </summary>
     public async Task<Word> Add(Word word)
     {
-        if (string.IsNullOrEmpty(word.Id))
+        if (string.IsNullOrEmpty(word.Id) || !ObjectId.TryParse(word.Id, out _))
         {
             word.Id = ObjectId.GenerateNewId().ToString();
         }

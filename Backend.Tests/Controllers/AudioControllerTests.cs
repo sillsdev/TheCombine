@@ -14,7 +14,7 @@ namespace Backend.Tests.Controllers
     internal sealed class AudioControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
-        private WordRepositoryMock _wordRepo = null!;
+        private WordRepositoryTestHelper _wordRepo = null!;
         private PermissionServiceMock _permissionService = null!;
         private WordService _wordService = null!;
         private AudioController _audioController = null!;
@@ -35,7 +35,7 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _projRepo = new ProjectRepositoryMock();
-            _wordRepo = new WordRepositoryMock();
+            _wordRepo = new WordRepositoryTestHelper();
             _permissionService = new PermissionServiceMock();
             _wordService = new WordService(_wordRepo);
             _audioController = new AudioController(_wordRepo, _wordService, _permissionService);

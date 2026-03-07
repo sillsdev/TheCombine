@@ -16,12 +16,22 @@ namespace Backend.Tests.Services
         private IMemoryCache _cache = null!;
         private IMergeBlacklistRepository _mergeBlacklistRepo = null!;
         private IMergeGraylistRepository _mergeGraylistRepo = null!;
-        private IWordRepository _wordRepo = null!;
+        private WordRepositoryTestHelper _wordRepo = null!;
         private IWordService _wordService = null!;
         private IMergeService _mergeService = null!;
 
         private const string ProjId = "MergeServiceTestProjId";
         private const string UserId = "MergeServiceTestUserId";
+
+        // Valid ObjectId-format IDs used in merge blacklist/graylist/frontier tests
+        private const string TestId1 = "000000000000000000000001";
+        private const string TestId2 = "000000000000000000000002";
+        private const string TestId3 = "000000000000000000000003";
+        private const string TestId4 = "000000000000000000000004";
+        private const string TestIdi = "000000000000000000000010";
+        private const string TestIdii = "000000000000000000000011";
+        private const string TestIdiii = "000000000000000000000012";
+        private const string TestIdiv = "000000000000000000000013";
 
         [SetUp]
         public void Setup()
@@ -30,7 +40,7 @@ namespace Backend.Tests.Services
                 new ServiceCollection().AddMemoryCache().BuildServiceProvider().GetRequiredService<IMemoryCache>();
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _mergeGraylistRepo = new MergeGraylistRepositoryMock();
-            _wordRepo = new WordRepositoryMock();
+            _wordRepo = new WordRepositoryTestHelper();
             _wordService = new WordService(_wordRepo);
             _mergeService = new MergeService(_cache, _mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
         }
@@ -268,14 +278,14 @@ namespace Backend.Tests.Services
                 Id = "A",
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = ["1", "2", "3"]
+                WordIds = [TestId1, TestId2, TestId3]
             };
             var entryB = new MergeWordSet
             {
                 Id = "B",
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = ["1", "4"]
+                WordIds = [TestId1, TestId4]
             };
 
             _ = _mergeBlacklistRepo.Create(entryA);
@@ -284,12 +294,12 @@ namespace Backend.Tests.Services
             var oldBlacklist = _mergeBlacklistRepo.GetAllSets(ProjId).Result;
             Assert.That(oldBlacklist, Has.Count.EqualTo(2));
 
-            // Make sure all wordIds are in the frontier EXCEPT 1.
+            // Make sure all wordIds are in the frontier EXCEPT TestId1.
             var frontier = new List<Word>
             {
-                new() {Id = "2", ProjectId = ProjId},
-                new() {Id = "3", ProjectId = ProjId},
-                new() {Id = "4", ProjectId = ProjId}
+                new() {Id = TestId2, ProjectId = ProjId},
+                new() {Id = TestId3, ProjectId = ProjId},
+                new() {Id = TestId4, ProjectId = ProjId}
             };
             _ = _wordRepo.AddFrontier(frontier).Result;
 
@@ -300,7 +310,7 @@ namespace Backend.Tests.Services
             // The only blacklistEntry with at least two ids in the frontier is A.
             var newBlacklist = _mergeBlacklistRepo.GetAllSets(ProjId).Result;
             Assert.That(newBlacklist, Has.Count.EqualTo(1));
-            Assert.That(newBlacklist.First().WordIds, Is.EqualTo(new List<string> { "2", "3" }));
+            Assert.That(newBlacklist.First().WordIds, Is.EqualTo(new List<string> { TestId2, TestId3 }));
         }
 
         [Test]
@@ -403,14 +413,14 @@ namespace Backend.Tests.Services
                 Id = "A",
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = ["1", "2", "3"]
+                WordIds = [TestId1, TestId2, TestId3]
             };
             var entryB = new MergeWordSet
             {
                 Id = "B",
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = ["1", "4"]
+                WordIds = [TestId1, TestId4]
             };
 
             _ = _mergeGraylistRepo.Create(entryA);
@@ -419,12 +429,12 @@ namespace Backend.Tests.Services
             var oldGraylist = _mergeGraylistRepo.GetAllSets(ProjId).Result;
             Assert.That(oldGraylist, Has.Count.EqualTo(2));
 
-            // Make sure all wordIds are in the frontier EXCEPT 1.
+            // Make sure all wordIds are in the frontier EXCEPT TestId1.
             var frontier = new List<Word>
             {
-                new() {Id = "2", ProjectId = ProjId},
-                new() {Id = "3", ProjectId = ProjId},
-                new() {Id = "4", ProjectId = ProjId}
+                new() {Id = TestId2, ProjectId = ProjId},
+                new() {Id = TestId3, ProjectId = ProjId},
+                new() {Id = TestId4, ProjectId = ProjId}
             };
             _ = _wordRepo.AddFrontier(frontier).Result;
 
@@ -435,7 +445,7 @@ namespace Backend.Tests.Services
             // The only graylistEntry with at least two ids in the frontier is A.
             var newGraylist = _mergeGraylistRepo.GetAllSets(ProjId).Result;
             Assert.That(newGraylist, Has.Count.EqualTo(1));
-            Assert.That(newGraylist.First().WordIds, Is.EqualTo(new List<string> { "2", "3" }));
+            Assert.That(newGraylist.First().WordIds, Is.EqualTo(new List<string> { TestId2, TestId3 }));
         }
 
         [Test]
@@ -447,10 +457,10 @@ namespace Backend.Tests.Services
                 Id = "B",
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = ["i", "ii", "iii", "iv"]
+                WordIds = [TestIdi, TestIdii, TestIdiii, TestIdiv]
             });
-            _ = _wordRepo.AddFrontier([new() { Id = "ii", ProjectId = ProjId }]).Result;
-            _ = _wordRepo.AddFrontier([new() { Id = "iv", ProjectId = ProjId }]).Result;
+            _ = _wordRepo.AddFrontier([new() { Id = TestIdii, ProjectId = ProjId }]).Result;
+            _ = _wordRepo.AddFrontier([new() { Id = TestIdiv, ProjectId = ProjId }]).Result;
 
             Assert.That(_mergeService.HasGraylistEntries(ProjId, UserId).Result, Is.True);
         }
@@ -465,16 +475,16 @@ namespace Backend.Tests.Services
                 Id = "B",
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = ["i", "ii", "iii", "iv"]
+                WordIds = [TestIdi, TestIdii, TestIdiii, TestIdiv]
             });
             _ = _mergeGraylistRepo.Create(new()
             {
                 Id = "C",
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = ["1", "2", "3"]
+                WordIds = [TestId1, TestId2, TestId3]
             });
-            _ = _wordRepo.AddFrontier([new() { Id = "1", ProjectId = ProjId }]).Result;
+            _ = _wordRepo.AddFrontier([new() { Id = TestId1, ProjectId = ProjId }]).Result;
 
             // Check for graylist entries.
             Assert.That(_mergeService.HasGraylistEntries(ProjId, UserId).Result, Is.False);
@@ -531,7 +541,7 @@ namespace Backend.Tests.Services
 
             // Delay first GetFrontier call
             var delaySignal = new TaskCompletionSource<bool>();
-            ((WordRepositoryMock)_wordRepo).SetGetFrontierDelay(delaySignal.Task);
+            _wordRepo.SetGetFrontierDelay(delaySignal.Task);
             var firstCallTask = _mergeService.GetAndStorePotentialDuplicates(ProjId, 10, 10, userId);
 
             // Give first call time to start
@@ -555,7 +565,7 @@ namespace Backend.Tests.Services
 
             // Delay first GetFrontier call
             var delaySignal = new TaskCompletionSource<bool>();
-            ((WordRepositoryMock)_wordRepo).SetGetFrontierDelay(delaySignal.Task);
+            _wordRepo.SetGetFrontierDelay(delaySignal.Task);
             var firstCallTask = _mergeService.GetAndStorePotentialDuplicates(ProjId, 10, 10, userId1);
 
             // Give first call time to start

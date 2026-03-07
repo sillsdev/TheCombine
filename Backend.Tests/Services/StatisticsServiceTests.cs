@@ -13,7 +13,7 @@ namespace Backend.Tests.Services
     {
         private ISemanticDomainRepository _domainRepo = null!;
         private IUserRepository _userRepo = null!;
-        private WordRepositoryMock _wordRepo = null!;
+        private WordRepositoryTestHelper _wordRepo = null!;
         private IStatisticsService _statsService = null!;
 
         private const string ProjId = "StatsServiceTestProjId";
@@ -47,7 +47,7 @@ namespace Backend.Tests.Services
         {
             _domainRepo = new SemanticDomainRepositoryMock();
             _userRepo = new UserRepositoryMock();
-            _wordRepo = new WordRepositoryMock();
+            _wordRepo = new WordRepositoryTestHelper();
             _statsService = new StatisticsService(_wordRepo, _domainRepo, _userRepo);
         }
 

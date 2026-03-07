@@ -38,7 +38,7 @@ namespace Backend.Tests.Controllers
                 new ServiceCollection().AddMemoryCache().BuildServiceProvider().GetRequiredService<IMemoryCache>();
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _mergeGraylistRepo = new MergeGraylistRepositoryMock();
-            _wordRepo = new WordRepositoryMock();
+            _wordRepo = new WordRepositoryTestHelper();
             var ackService = new AcknowledgmentServiceMock();
             _wordService = new WordService(_wordRepo);
             _mergeService = new MergeService(_cache, _mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);

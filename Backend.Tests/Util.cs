@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using BackendFramework.Models;
+using MongoDB.Bson;
 using NUnit.Framework;
 using static System.Linq.Enumerable;
 
@@ -53,7 +54,7 @@ namespace Backend.Tests
         {
             return new()
             {
-                Id = RandString(),
+                Id = ObjectId.GenerateNewId().ToString(),
                 Created = RandString(),
                 Vernacular = RandString(),
                 Modified = RandString(),

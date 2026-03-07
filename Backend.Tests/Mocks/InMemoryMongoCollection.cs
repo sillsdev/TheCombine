@@ -188,7 +188,7 @@ internal sealed class InMemoryMongoCollection<T> : IMongoCollection<T>
         return writer.Document;
     }
 
-    private IEnumerable<T> GetMatchingDocuments(FilterDefinition<T> filter, int? limit)
+    private IEnumerable<BsonDocument> GetMatchingBsonDocuments(FilterDefinition<T> filter, int? limit)
     {
         var renderArgs = new RenderArgs<T>(_serializer, _registry);
         var renderedFilter = filter.Render(renderArgs);
@@ -198,18 +198,17 @@ internal sealed class InMemoryMongoCollection<T> : IMongoCollection<T>
             matching = matching.Take(limit.Value);
         }
 
-        return matching.Select(doc => BsonSerializer.Deserialize<T>(doc));
+        return matching;
     }
+
+    private IEnumerable<T> GetMatchingDocuments(FilterDefinition<T> filter, int? limit)
+        => GetMatchingBsonDocuments(filter, limit).Select(doc => BsonSerializer.Deserialize<T>(doc));
 
     private IAsyncCursor<TProjection> BuildCursor<TProjection>(FilterDefinition<T> filter, int? limit)
     {
-        var documents = GetMatchingDocuments(filter, limit);
-        if (typeof(TProjection) != typeof(T))
-        {
-            throw new NotSupportedException("Projection to a different type is not supported in InMemoryMongoCollection");
-        }
-
-        return new InMemoryAsyncCursor<TProjection>(documents.Cast<TProjection>());
+        var matchingDocs = GetMatchingBsonDocuments(filter, limit);
+        var results = matchingDocs.Select(doc => BsonSerializer.Deserialize<TProjection>(doc));
+        return new InMemoryAsyncCursor<TProjection>(results);
     }
 
     // --- BSON filter evaluator ---

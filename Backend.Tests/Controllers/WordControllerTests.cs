@@ -14,7 +14,7 @@ namespace Backend.Tests.Controllers
 {
     internal sealed class WordControllerTests : IDisposable
     {
-        private WordRepositoryMock _wordRepo = null!;
+        private WordRepositoryTestHelper _wordRepo = null!;
         private IPermissionService _permissionService = null!;
         private IWordService _wordService = null!;
         private WordController _wordController = null!;
@@ -31,7 +31,7 @@ namespace Backend.Tests.Controllers
         [SetUp]
         public void Setup()
         {
-            _wordRepo = new WordRepositoryMock();
+            _wordRepo = new WordRepositoryTestHelper();
             _wordService = new WordService(_wordRepo);
             _permissionService = new PermissionServiceMock();
             _wordController = new WordController(_wordRepo, _wordService, _permissionService);
