@@ -33,14 +33,7 @@ namespace Backend.Tests.Mocks
 
         public Task<Word?> GetWord(string projectId, string wordId)
         {
-            try
-            {
-                return Task.FromResult<Word?>(_words.Single(w => w.ProjectId == projectId && w.Id == wordId).Clone());
-            }
-            catch (InvalidOperationException)
-            {
-                return Task.FromResult<Word?>(null);
-            }
+            return Task.FromResult(_words.FirstOrDefault(w => w.ProjectId == projectId && w.Id == wordId)?.Clone());
         }
 
         public async Task<Word> Create(Word word)
@@ -126,8 +119,7 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> DeleteAllFrontierWords(string projectId)
         {
-            _frontier.RemoveAll(word => word.ProjectId == projectId);
-            return Task.FromResult(true);
+            return Task.FromResult(_frontier.RemoveAll(word => word.ProjectId == projectId) != 0);
         }
 
         public Task<bool> HasWords(string projectId)
@@ -203,6 +195,7 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(true);
         }
 
+        /// <summary> Adds a new word to the frontier without adding it to the words. </summary>
         internal Task<Word> AddFrontier(Word word)
         {
             _frontier.Add(word.Clone());
@@ -215,7 +208,7 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(words);
         }
 
-        /// <summary> Adds a new word to the repository without adding it to the frontier. </summary>
+        /// <summary> Adds a new word to the words without adding it to the frontier. </summary>
         internal Task<Word> Add(Word word)
         {
             word.Id = Guid.NewGuid().ToString();
@@ -250,13 +243,12 @@ namespace Backend.Tests.Mocks
             string projectId, List<string> idsToRestore, List<string> idsToDelete, Action<Word> modifyDeletedWord)
         {
             var restoreSet = idsToRestore.ToHashSet();
-            var deleteSet = idsToDelete.ToHashSet();
-            if (deleteSet.Intersect(restoreSet).Any())
+            if (restoreSet.Intersect(idsToDelete).Any())
             {
                 throw new ArgumentException("Ids to delete and restore must be disjoint");
             }
 
-            foreach (var id in deleteSet)
+            foreach (var id in idsToDelete)
             {
                 await DeleteFrontier(projectId, id, modifyDeletedWord);
             }
