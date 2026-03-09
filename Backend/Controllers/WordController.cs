@@ -261,13 +261,8 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
-            if (await _wordRepo.GetWord(projectId, wordId) is null)
-            {
-                return NotFound();
-            }
 
-            await _wordService.RestoreFrontierWords(projectId, [wordId]);
-            return Ok();
+            return await _wordService.RestoreFrontierWord(projectId, wordId) ? Ok() : NotFound();
         }
 
         /// <summary> Revert words from a dictionary of word ids (key: to revert to; value: from frontier). </summary>

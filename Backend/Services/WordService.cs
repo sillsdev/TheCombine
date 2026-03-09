@@ -107,7 +107,7 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "creating words in repo");
 
-            return await _wordRepo.RepoCreate(words.Select(w => UpdateTimes(w, updateModified: false)).ToList());
+            return await _wordRepo.Create(words.Select(w => UpdateTimes(w, updateModified: false)).ToList());
         }
 
         /// <summary> Creates a new word with updated edited data. </summary>
@@ -116,7 +116,7 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "creating a word");
 
-            return await _wordRepo.RepoCreate(PrepEditedData(userId, word));
+            return await _wordRepo.Create(PrepEditedData(userId, word));
         }
 
         /// <summary>
@@ -128,17 +128,17 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "replacing frontier words for merge");
 
-            return await _wordRepo.RepoReplaceFrontier(projectId, parents, idsToDelete,
+            return await _wordRepo.ReplaceFrontier(projectId, parents, idsToDelete,
                 CreateModifyUpdatedWordAction(userId), CreateModifyDeletedWordAction(userId));
         }
 
-        public async Task<List<Word>?> RevertMergeReplaceFrontier(
+        public async Task<bool> RevertMergeReplaceFrontier(
             string projectId, string userId, List<string> idsToRestore, List<string> idsToDelete)
         {
             using var activity =
                 OtelService.StartActivityWithTag(otelTagName, "reverting replaced frontier words for merge");
 
-            return await _wordRepo.RepoRevertReplaceFrontier(
+            return await _wordRepo.RevertReplaceFrontier(
                 projectId, idsToRestore, idsToDelete, CreateModifyDeletedWordAction(userId));
         }
 
@@ -148,7 +148,7 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting an audio");
 
-            return await _wordRepo.RepoUpdateFrontier(projectId, wordId, CreateDeleteAudioAction(userId, fileName));
+            return await _wordRepo.UpdateFrontier(projectId, wordId, CreateDeleteAudioAction(userId, fileName));
         }
 
         /// <summary> Removes word from Frontier and adds a Deleted copy in the words collection </summary>
@@ -157,15 +157,15 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
 
-            return (await _wordRepo.RepoDeleteFrontier(projectId, wordId, CreateModifyDeletedWordAction(userId)))?.Id;
+            return (await _wordRepo.DeleteFrontier(projectId, wordId, CreateModifyDeletedWordAction(userId)))?.Id;
         }
 
         /// <summary> Restores words to the Frontier that aren't in the Frontier </summary>
-        public async Task RestoreFrontierWords(string projectId, List<string> wordIds)
+        public async Task<bool> RestoreFrontierWord(string projectId, string wordId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring words to Frontier");
 
-            await _wordRepo.RepoRestoreFrontier(projectId, wordIds);
+            return await _wordRepo.RestoreFrontier(projectId, wordId);
         }
 
         /// <summary> Makes a new word in the Frontier with changes made </summary>
@@ -174,7 +174,7 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a word in Frontier");
 
-            return await _wordRepo.RepoUpdateFrontier(word, CreateModifyUpdatedWordAction(userId));
+            return await _wordRepo.UpdateFrontier(word, CreateModifyUpdatedWordAction(userId));
         }
 
         /// <summary> Checks if a word being added is a duplicate of a preexisting word. </summary>

@@ -10,12 +10,12 @@ namespace BackendFramework.Interfaces
         Task<Word> Create(string userId, Word word);
         Task<List<Word>?> MergeReplaceFrontier(
             string projectId, string userId, List<Word> parents, List<string> idsToDelete);
-        Task<List<Word>?> RevertMergeReplaceFrontier(
+        Task<bool> RevertMergeReplaceFrontier(
             string projectId, string userId, List<string> idsToRestore, List<string> idsToDelete);
         Task<Word?> Update(string userId, Word word);
         Task<Word?> DeleteAudio(string projectId, string userId, string wordId, string fileName);
         Task<string?> DeleteFrontierWord(string projectId, string userId, string wordId);
-        Task RestoreFrontierWords(string projectId, List<string> wordIds);
+        Task<bool> RestoreFrontierWord(string projectId, string wordId);
         Task<string?> FindContainingWord(Word word);
     }
 }
