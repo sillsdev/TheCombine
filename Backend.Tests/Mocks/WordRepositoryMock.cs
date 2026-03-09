@@ -58,58 +58,6 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(words);
         }
 
-        private Task<Word> UpdateFrontier(Word word, bool createIfNotFound,
-            Action<Word, Word?> modifyNewWordFromOldWord)
-        {
-            var removedWord = _frontier.Find(w => w.ProjectId == word.ProjectId && w.Id == word.Id);
-            if (removedWord is null && !createIfNotFound)
-            {
-                throw new InvalidOperationException("Cannot update a missing frontier word when createIfNotFound is false");
-            }
-
-            if (removedWord is not null)
-            {
-                _frontier.Remove(removedWord);
-            }
-
-            modifyNewWordFromOldWord(word, removedWord?.Clone());
-            word.Id = Guid.NewGuid().ToString();
-
-            _words.Add(word.Clone());
-            _frontier.Add(word.Clone());
-            return Task.FromResult(word);
-        }
-
-        public async Task<Word?> UpdateFrontier(Word word, Action<Word, Word?> modifyNewWordFromOldWord)
-        {
-            var removedWord = _frontier.Find(w => w.ProjectId == word.ProjectId && w.Id == word.Id);
-            if (removedWord is null)
-            {
-                return null;
-            }
-
-            return await UpdateFrontier(word, createIfNotFound: false, modifyNewWordFromOldWord);
-        }
-
-        public Task<Word?> UpdateFrontier(string projectId, string wordId, Action<Word> modifyWord)
-        {
-            var removedWord = _frontier.Find(w => w.ProjectId == projectId && w.Id == wordId);
-            if (removedWord is null)
-            {
-                return Task.FromResult<Word?>(null);
-            }
-
-            var modifiedWord = removedWord.Clone();
-            modifyWord(modifiedWord);
-
-            _frontier.Remove(removedWord);
-            modifiedWord.Id = Guid.NewGuid().ToString();
-
-            _words.Add(modifiedWord.Clone());
-            _frontier.Add(modifiedWord.Clone());
-            return Task.FromResult<Word?>(modifiedWord);
-        }
-
         /// <summary> Removes all words and frontier words for the given projectId. </summary>
         internal void DeleteAllWords(string projectId)
         {
@@ -175,6 +123,45 @@ namespace Backend.Tests.Mocks
                 w => w.ProjectId == projectId && w.Vernacular == vernacular).Select(w => w.Clone()).ToList());
         }
 
+        /// <summary> Adds a new word to the words without adding it to the frontier. </summary>
+        internal Task<Word> Add(Word word)
+        {
+            word.Id = Guid.NewGuid().ToString();
+            _words.Add(word.Clone());
+            return Task.FromResult(word);
+        }
+
+        /// <summary> Adds a new word to the frontier without adding it to the words. </summary>
+        internal Task<Word> AddFrontier(Word word)
+        {
+            _frontier.Add(word.Clone());
+            return Task.FromResult(word);
+        }
+
+        public Task<List<Word>> AddFrontier(List<Word> words)
+        {
+            words.ForEach(w => _frontier.Add(w.Clone()));
+            return Task.FromResult(words);
+        }
+
+        public Task<Word?> DeleteFrontier(string projectId, string wordId, Action<Word> modifyDeletedWord)
+        {
+            var removedWord = _frontier.Find(w => w.ProjectId == projectId && w.Id == wordId);
+            if (removedWord is null)
+            {
+                return Task.FromResult<Word?>(null);
+            }
+
+            _frontier.Remove(removedWord);
+
+            var modifiedWord = removedWord.Clone();
+            modifyDeletedWord(modifiedWord);
+            modifiedWord.Id = Guid.NewGuid().ToString();
+
+            _words.Add(modifiedWord.Clone());
+            return Task.FromResult<Word?>(modifiedWord);
+        }
+
         public Task<bool> RestoreFrontier(string projectId, string wordId)
         {
             var word = _words.FirstOrDefault(w => w.ProjectId == projectId && w.Id == wordId);
@@ -195,25 +182,55 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(true);
         }
 
-        /// <summary> Adds a new word to the frontier without adding it to the words. </summary>
-        internal Task<Word> AddFrontier(Word word)
+        private Task<Word?> UpdateFrontier(Word word, bool createIfNotFound, Action<Word, Word?> modifyUpdatedWord)
         {
-            _frontier.Add(word.Clone());
-            return Task.FromResult(word);
-        }
+            var removedWord = _frontier.Find(w => w.ProjectId == word.ProjectId && w.Id == word.Id);
+            if (removedWord is null && !createIfNotFound)
+            {
+                return Task.FromResult<Word?>(null);
+            }
 
-        public Task<List<Word>> AddFrontier(List<Word> words)
-        {
-            words.ForEach(w => _frontier.Add(w.Clone()));
-            return Task.FromResult(words);
-        }
+            if (removedWord is not null)
+            {
+                _frontier.Remove(removedWord);
+            }
 
-        /// <summary> Adds a new word to the words without adding it to the frontier. </summary>
-        internal Task<Word> Add(Word word)
-        {
+            modifyUpdatedWord(word, removedWord?.Clone());
             word.Id = Guid.NewGuid().ToString();
+
             _words.Add(word.Clone());
-            return Task.FromResult(word);
+            _frontier.Add(word.Clone());
+            return Task.FromResult<Word?>(word);
+        }
+
+        public Task<Word?> UpdateFrontier(string projectId, string wordId, Action<Word> modifyUpdatedWord)
+        {
+            var removedWord = _frontier.Find(w => w.ProjectId == projectId && w.Id == wordId);
+            if (removedWord is null)
+            {
+                return Task.FromResult<Word?>(null);
+            }
+
+            var modifiedWord = removedWord.Clone();
+            modifyUpdatedWord(modifiedWord);
+
+            _frontier.Remove(removedWord);
+            modifiedWord.Id = Guid.NewGuid().ToString();
+
+            _words.Add(modifiedWord.Clone());
+            _frontier.Add(modifiedWord.Clone());
+            return Task.FromResult<Word?>(modifiedWord);
+        }
+
+        public async Task<Word?> UpdateFrontier(Word word, Action<Word, Word?> modifyUpdatedWord)
+        {
+            var removedWord = _frontier.Find(w => w.ProjectId == word.ProjectId && w.Id == word.Id);
+            if (removedWord is null)
+            {
+                return null;
+            }
+
+            return await UpdateFrontier(word, createIfNotFound: false, modifyUpdatedWord);
         }
 
         public async Task<List<Word>?> ReplaceFrontier(string projectId, List<Word> newWords,
@@ -262,24 +279,6 @@ namespace Backend.Tests.Mocks
             }
 
             return true;
-        }
-
-        public Task<Word?> DeleteFrontier(string projectId, string wordId, Action<Word> modifyWord)
-        {
-            var removedWord = _frontier.Find(w => w.ProjectId == projectId && w.Id == wordId);
-            if (removedWord is null)
-            {
-                return Task.FromResult<Word?>(null);
-            }
-
-            _frontier.Remove(removedWord);
-
-            var modifiedWord = removedWord.Clone();
-            modifyWord(modifiedWord);
-            modifiedWord.Id = Guid.NewGuid().ToString();
-
-            _words.Add(modifiedWord.Clone());
-            return Task.FromResult<Word?>(modifiedWord);
         }
 
         public Task<int> CountFrontierWordsWithDomain(string projectId, string domainId)
