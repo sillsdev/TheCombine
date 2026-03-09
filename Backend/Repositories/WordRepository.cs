@@ -15,6 +15,7 @@ namespace BackendFramework.Repositories
     [ExcludeFromCodeCoverage]
     public class WordRepository(IMongoDbContext dbContext) : IWordRepository
     {
+        private readonly IMongoDbContext _dbContext = dbContext;
         private readonly IMongoCollection<Word> _frontier = dbContext.Db.GetCollection<Word>("FrontierCollection");
         private readonly IMongoCollection<Word> _words = dbContext.Db.GetCollection<Word>("WordsCollection");
 
@@ -100,9 +101,19 @@ namespace BackendFramework.Repositories
             var filterDef = new FilterDefinitionBuilder<Word>();
             var filter = filterDef.Eq(x => x.ProjectId, projectId);
 
-            var deleted = await _words.DeleteManyAsync(filter);
-            await _frontier.DeleteManyAsync(filter);
-            return deleted.DeletedCount != 0;
+            using var transaction = await _dbContext.BeginTransaction();
+            try
+            {
+                var deleted = await _words.DeleteManyAsync(transaction.Session, filter);
+                await _frontier.DeleteManyAsync(transaction.Session, filter);
+                await transaction.CommitTransactionAsync();
+                return deleted.DeletedCount != 0;
+            }
+            catch
+            {
+                await transaction.AbortTransactionAsync();
+                throw;
+            }
         }
 
         /// <summary> Removes all <see cref="Word"/>s from the Frontier for specified <see cref="Project"/> </summary>
@@ -146,8 +157,18 @@ namespace BackendFramework.Repositories
                 OtelService.StartActivityWithTag(otelTagName, "creating a word in WordsCollection and Frontier");
 
             PopulateBlankWordTimes(word);
-            await _words.InsertOneAsync(word);
-            await AddFrontier(word);
+            using var transaction = await _dbContext.BeginTransaction();
+            try
+            {
+                await _words.InsertOneAsync(transaction.Session, word);
+                await _frontier.InsertOneAsync(transaction.Session, word);
+                await transaction.CommitTransactionAsync();
+            }
+            catch
+            {
+                await transaction.AbortTransactionAsync();
+                throw;
+            }
             return word;
         }
 
@@ -170,8 +191,18 @@ namespace BackendFramework.Repositories
             {
                 PopulateBlankWordTimes(w);
             }
-            await _words.InsertManyAsync(words);
-            await AddFrontier(words);
+            using var transaction = await _dbContext.BeginTransaction();
+            try
+            {
+                await _words.InsertManyAsync(transaction.Session, words);
+                await _frontier.InsertManyAsync(transaction.Session, words);
+                await transaction.CommitTransactionAsync();
+            }
+            catch
+            {
+                await transaction.AbortTransactionAsync();
+                throw;
+            }
             return words;
         }
 
@@ -188,6 +219,67 @@ namespace BackendFramework.Repositories
             PopulateBlankWordTimes(word);
             await _words.InsertOneAsync(word);
             return word;
+        }
+
+        /// <summary>
+        /// Adds a new <see cref="Word"/> to WordsCollection and Frontier, and removes the old word from Frontier.
+        /// </summary>
+        /// <remarks>
+        /// If the Created or Modified time fields are blank, they will be automatically calculated using the current
+        /// time. This allows services to set or clear the values before creation to control these fields.
+        /// </remarks>
+        /// <returns> The new word created. </returns>
+        public async Task<Word> CreateAndDeleteFrontier(Word newWord, string oldWordId)
+        {
+            using var activity = OtelService.StartActivityWithTag(
+                otelTagName, "creating word in WordsCollection and Frontier, deleting old word from Frontier");
+
+            PopulateBlankWordTimes(newWord);
+            using var transaction = await _dbContext.BeginTransaction();
+            try
+            {
+                await _words.InsertOneAsync(transaction.Session, newWord);
+                await _frontier.InsertOneAsync(transaction.Session, newWord);
+                await _frontier.FindOneAndDeleteAsync(
+                    transaction.Session, GetProjectWordFilter(newWord.ProjectId, oldWordId));
+                await transaction.CommitTransactionAsync();
+            }
+            catch
+            {
+                await transaction.AbortTransactionAsync();
+                throw;
+            }
+            return newWord;
+        }
+
+        /// <summary>
+        /// Adds a <see cref="Word"/> only to the WordsCollection and removes a word from the Frontier.
+        /// </summary>
+        /// <remarks>
+        /// If the Created or Modified time fields are blank, they will be automatically calculated using the current
+        /// time. This allows services to set or clear the values before creation to control these fields.
+        /// </remarks>
+        /// <returns> The word added. </returns>
+        public async Task<Word> AddAndDeleteFrontier(Word deletedWord, string wordId)
+        {
+            using var activity = OtelService.StartActivityWithTag(
+                otelTagName, "adding word to WordsCollection, deleting word from Frontier");
+
+            PopulateBlankWordTimes(deletedWord);
+            using var transaction = await _dbContext.BeginTransaction();
+            try
+            {
+                await _words.InsertOneAsync(transaction.Session, deletedWord);
+                await _frontier.FindOneAndDeleteAsync(
+                    transaction.Session, GetProjectWordFilter(deletedWord.ProjectId, wordId));
+                await transaction.CommitTransactionAsync();
+            }
+            catch
+            {
+                await transaction.AbortTransactionAsync();
+                throw;
+            }
+            return deletedWord;
         }
 
         /// <summary> Checks if Words collection for specified <see cref="Project"/> has any words. </summary>
