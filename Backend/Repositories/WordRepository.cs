@@ -20,6 +20,8 @@ namespace BackendFramework.Repositories
 
         private const string otelTagName = "otel.WordRepository";
 
+        // GET FILTER HELPER METHODS
+
         /// <summary>
         /// Creates a mongo filter for all words in a specified project (and optionally with specified vernacular).
         /// Since a variant in FieldWorks can export as an entry without any senses, filters out 0-sense words.
@@ -50,11 +52,13 @@ namespace BackendFramework.Repositories
         }
 
         /// <summary> Creates a mongo filter for words in a specified project with specified wordIds. </summary>
-        private static FilterDefinition<Word> GetProjectWordsFilter(string projectId, List<string> wordIds)
+        private static FilterDefinition<Word> GetProjectWordsFilter(string projectId, IEnumerable<string> wordIds)
         {
             var filterDef = new FilterDefinitionBuilder<Word>();
             return filterDef.And(filterDef.Eq(w => w.ProjectId, projectId), filterDef.In(w => w.Id, wordIds));
         }
+
+        // PUBLIC REPOSITORY METHODS
 
         /// <summary> Finds all <see cref="Word"/>s with specified projectId </summary>
         public async Task<List<Word>> GetAllWords(string projectId)
@@ -80,17 +84,6 @@ namespace BackendFramework.Repositories
             }
         }
 
-        /// <summary> Finds project <see cref="Word"/>s with specified ids </summary>
-        private async Task<List<Word>> GetWordsWithSession(IClientSessionHandle session,
-            string projectId, List<string> wordIds)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting words");
-
-            return wordIds.Count == 0
-                ? []
-                : await _words.Find(session, GetProjectWordsFilter(projectId, wordIds)).ToListAsync();
-        }
-
         /// <summary> Removes all <see cref="Word"/>s from the Frontier for specified <see cref="Project"/> </summary>
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllFrontierWords(string projectId)
@@ -102,19 +95,6 @@ namespace BackendFramework.Repositories
 
             var deleted = await _frontier.DeleteManyAsync(filter);
             return deleted.DeletedCount != 0;
-        }
-
-        private async Task<List<Word>> CreateWithSession(IClientSessionHandle session, List<Word> words)
-        {
-            if (words.Count == 0)
-            {
-                return words;
-            }
-
-            words.ForEach(w => w.Id = "");
-            await _words.InsertManyAsync(session, words);
-            await _frontier.InsertManyAsync(session, words);
-            return words;
         }
 
         /// <summary> Adds a <see cref="Word"/> to the WordsCollection and Frontier </summary>
@@ -145,51 +125,13 @@ namespace BackendFramework.Repositories
                 : await _dbContext.ExecuteWithTransaction(async s => await CreateWithSession(s, words));
         }
 
-        /// <summary>
-        /// Replaces a Frontier <see cref="Word"/> with an updated copy in both collections.
-        /// </summary>
-        /// <remarks>
-        /// Removes the existing Frontier word identified by <paramref name="word"/>'s Id and ProjectId, modifies the
-        /// provided word based on the removed word using <paramref name="modifyNewWordFromOldWord"/>, clears the ID,
-        /// and adds the modified word to WordsCollection and Frontier.
-        /// </remarks>
-        private async Task<Word?> RepoUpdateFrontierWithSession(IClientSessionHandle session,
-            Word word, bool createIfNotFound, Action<Word, Word?> modifyNewWordFromOldWord)
-        {
-            // Make sure old word exists in the Frontier.
-            var deletedWord =
-                await _frontier.FindOneAndDeleteAsync(session, GetProjectWordFilter(word.ProjectId, word.Id));
-            if (deletedWord is null && !createIfNotFound)
-            {
-                return null;
-            }
-
-            modifyNewWordFromOldWord(word, deletedWord?.Clone());
-            await CreateWithSession(session, [word]);
-            return word;
-        }
-
-
         public async Task<Word?> RepoUpdateFrontier(string projectId, string wordId, Action<Word> modifyWord)
         {
             using var activity = OtelService.StartActivityWithTag(
                 otelTagName, "updating a word in WordsCollection and Frontier, deleting old word from Frontier");
 
-            return await _dbContext.ExecuteWithTransactionAllowNull(async session =>
-                {
-                    // Make sure old word exists in the Frontier.
-                    var deletedWord =
-                        await _frontier.FindOneAndDeleteAsync(session, GetProjectWordFilter(projectId, wordId));
-                    if (deletedWord is null)
-                    {
-                        return null;
-                    }
-
-                    var word = deletedWord.Clone();
-                    modifyWord(word);
-                    await CreateWithSession(session, [word]);
-                    return word;
-                });
+            return await _dbContext.ExecuteWithTransactionAllowNull(
+                async s => await UpdateFrontierWithSession(s, projectId, wordId, modifyWord));
         }
 
         /// <summary>
@@ -209,110 +151,25 @@ namespace BackendFramework.Repositories
                 otelTagName, "creating word in WordsCollection and Frontier, deleting old word from Frontier");
 
             return await _dbContext.ExecuteWithTransactionAllowNull(
-                async s => await RepoUpdateFrontierWithSession(s, word, false, modifyNewWordFromOldWord));
+                async s => await UpdateFrontierWithSession(s, word, false, modifyNewWordFromOldWord));
         }
 
         public async Task<List<Word>?> RepoReplaceFrontier(string projectId, List<Word> newWords,
             List<string> idsToDelete, Action<Word, Word?> modifyUpdatedWord, Action<Word> modifyDeletedWord)
         {
-            if (newWords.Count == 0 && idsToDelete.Count == 0)
-            {
-                return [];
-            }
-
-            if (newWords.Any(w => w.ProjectId != projectId))
-            {
-                throw new ArgumentException("All new words must have the specified projectId");
-            }
-
-            var oldIdSet = idsToDelete.ToHashSet();
-
-            return await _dbContext.ExecuteWithTransactionAllowNull(async session =>
-                {
-                    // Update the new words
-                    foreach (var word in newWords)
-                    {
-                        oldIdSet.Remove(word.Id);
-                        if (await RepoUpdateFrontierWithSession(session, word, true, modifyUpdatedWord) is null)
-                        {
-                            return null;
-                        }
-                    }
-
-                    // Delete any remaining old words that weren't updated with a new word
-                    await RepoDeleteFrontierWithSession(session, projectId, oldIdSet, modifyDeletedWord);
-                    return newWords;
-                });
+            return (newWords.Count == 0 && idsToDelete.Count == 0)
+                ? []
+                : await _dbContext.ExecuteWithTransactionAllowNull(async s => await ReplaceFrontierWithSession(
+                    s, projectId, newWords, idsToDelete, modifyUpdatedWord, modifyDeletedWord));
         }
 
         public async Task<List<Word>> RepoRevertReplaceFrontier(
             string projectId, List<string> idsToRestore, List<string> idsToDelete, Action<Word> modifyDeletedWord)
         {
-            if (idsToRestore.Count == 0 && idsToDelete.Count == 0)
-            {
-                return [];
-            }
-
-            var restoreSet = idsToRestore.ToHashSet();
-            var deleteSet = idsToDelete.ToHashSet();
-            if (deleteSet.Intersect(restoreSet).Any())
-            {
-                throw new ArgumentException("Ids to delete and restore must be disjoint");
-            }
-
-            return await _dbContext.ExecuteWithTransaction(async session =>
-                {
-                    var restoredWords = await RepoRestoreFrontierWithSession(session, projectId, restoreSet.ToList());
-                    if (restoredWords.Count != restoreSet.Count)
-                    {
-                        throw new ArgumentException("Some ids to be restored were not found");
-                    }
-
-                    await RepoDeleteFrontierWithSession(session, projectId, deleteSet, modifyDeletedWord);
-                    return restoredWords;
-                });
-        }
-
-        /// <remarks> This will throw if any of the words has Deleted status or an Id already in the Frontier </remarks>
-        private async Task<List<Word>> RepoAddFrontierWithSession(IClientSessionHandle session, List<Word> words)
-        {
-            if (words.Count == 0)
-            {
-                return words;
-            }
-
-            if (words.Any(w => w.Accessibility == Status.Deleted))
-            {
-                throw new ArgumentException("Cannot add a word with Deleted status to Frontier");
-            }
-
-            await _frontier.InsertManyAsync(session, words);
-            return words;
-        }
-
-        private async Task RepoDeleteFrontierWithSession(IClientSessionHandle session,
-            string projectId, HashSet<string> wordIds, Action<Word> modifyWord)
-        {
-            foreach (var id in wordIds)
-            {
-                await RepoDeleteFrontierWithSession(session, projectId, id, modifyWord);
-            }
-        }
-
-        private async Task<Word?> RepoDeleteFrontierWithSession(IClientSessionHandle session,
-            string projectId, string wordId, Action<Word> modifyWord)
-        {
-            var deletedWord = await _frontier.FindOneAndDeleteAsync(session, GetProjectWordFilter(projectId, wordId));
-            if (deletedWord is null)
-            {
-                return null;
-            }
-
-            var modifiedWord = deletedWord.Clone();
-            modifyWord(modifiedWord);
-            modifiedWord.Id = "";
-            await _words.InsertOneAsync(session, modifiedWord);
-            return modifiedWord;
+            return idsToRestore.Count == 0 && idsToDelete.Count == 0
+                ? []
+                : await _dbContext.ExecuteWithTransaction(async s => await RevertReplaceFrontierWithSession(
+                    s, projectId, idsToRestore, idsToDelete, modifyDeletedWord));
         }
 
         /// <summary>
@@ -335,7 +192,7 @@ namespace BackendFramework.Repositories
                 otelTagName, "adding word to WordsCollection, deleting word from Frontier");
 
             return await _dbContext.ExecuteWithTransactionAllowNull(
-                async s => await RepoDeleteFrontierWithSession(s, projectId, wordId, modifyWord)
+                async s => await DeleteFrontierWithSession(s, projectId, wordId, modifyWord)
             );
         }
 
@@ -415,16 +272,6 @@ namespace BackendFramework.Repositories
 
         /// <summary> Restores non-Frontier words to the Frontier </summary>
         /// <returns> The restored words </returns>
-        private async Task<List<Word>> RepoRestoreFrontierWithSession(IClientSessionHandle session,
-            string projectId, List<string> wordIds)
-        {
-            var wordsToRestore = await GetWordsWithSession(session, projectId, wordIds);
-            await RepoAddFrontierWithSession(session, wordsToRestore);
-            return wordsToRestore;
-        }
-
-        /// <summary> Restores non-Frontier words to the Frontier </summary>
-        /// <returns> The restored words </returns>
         public async Task<List<Word>> RepoRestoreFrontier(string projectId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring words to Frontier");
@@ -432,7 +279,7 @@ namespace BackendFramework.Repositories
             return wordIds.Count == 0
                 ? []
                 : await _dbContext.ExecuteWithTransaction(
-                    async s => await RepoRestoreFrontierWithSession(s, projectId, wordIds));
+                    async s => await RestoreFrontierWithSession(s, projectId, wordIds));
         }
 
         /// <summary> Adds a list of <see cref="Word"/>s only to the Frontier </summary>
@@ -471,7 +318,163 @@ namespace BackendFramework.Repositories
 
         // WITH-SESSION HELPER METHODS
 
-        // TODO: Move them all here.
+        /// <summary> Finds project <see cref="Word"/>s with specified ids </summary>
+        private async Task<List<Word>> GetWordsWithSession(IClientSessionHandle session,
+            string projectId, IEnumerable<string> wordIds)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting words");
 
+            return wordIds.Any()
+                ? await _words.Find(session, GetProjectWordsFilter(projectId, wordIds)).ToListAsync()
+                : [];
+        }
+
+        private async Task<List<Word>> CreateWithSession(IClientSessionHandle session, List<Word> words)
+        {
+            if (words.Count == 0)
+            {
+                return words;
+            }
+
+            words.ForEach(w => w.Id = "");
+            await _words.InsertManyAsync(session, words);
+            await _frontier.InsertManyAsync(session, words);
+            return words;
+        }
+
+        /// <summary>
+        /// Replaces a Frontier <see cref="Word"/> with an updated copy in both collections.
+        /// </summary>
+        /// <remarks>
+        /// Removes the existing Frontier word identified by <paramref name="word"/>'s Id and ProjectId, modifies the
+        /// provided word based on the removed word using <paramref name="modifyNewWordFromOldWord"/>, clears the ID,
+        /// and adds the modified word to WordsCollection and Frontier.
+        /// </remarks>
+        private async Task<Word?> UpdateFrontierWithSession(IClientSessionHandle session,
+            Word word, bool createIfNotFound, Action<Word, Word?> modifyNewWordFromOldWord)
+        {
+            // Make sure old word exists in the Frontier.
+            var deletedWord =
+                await _frontier.FindOneAndDeleteAsync(session, GetProjectWordFilter(word.ProjectId, word.Id));
+            if (deletedWord is null && !createIfNotFound)
+            {
+                return null;
+            }
+
+            modifyNewWordFromOldWord(word, deletedWord?.Clone());
+            await CreateWithSession(session, [word]);
+            return word;
+        }
+
+        private async Task<Word?> UpdateFrontierWithSession(IClientSessionHandle session,
+            string projectId, string wordId, Action<Word> modifyWord)
+        {
+
+            var deletedWord = await _frontier.FindOneAndDeleteAsync(session, GetProjectWordFilter(projectId, wordId));
+            if (deletedWord is null)
+            {
+                return null;
+            }
+
+            var word = deletedWord.Clone();
+            modifyWord(word);
+            await CreateWithSession(session, [word]);
+            return word;
+        }
+
+        private async Task<List<Word>> RevertReplaceFrontierWithSession(IClientSessionHandle session,
+            string projectId, IEnumerable<string> idsToRestore, IEnumerable<string> idsToDelete, Action<Word> modifyDeletedWord)
+        {
+            if (idsToDelete.Intersect(idsToRestore).Any())
+            {
+                throw new ArgumentException("Ids to delete and restore must be disjoint");
+            }
+
+            var restoredWords = await RestoreFrontierWithSession(session, projectId, idsToRestore);
+            await DeleteFrontierWithSession(session, projectId, idsToDelete, modifyDeletedWord);
+            return restoredWords;
+        }
+
+        private async Task<List<Word>?> ReplaceFrontierWithSession(IClientSessionHandle session,
+            string projectId, List<Word> newWords, IEnumerable<string> oldWordIds,
+            Action<Word, Word?> modifyUpdatedWord, Action<Word> modifyDeletedWord)
+        {
+            if (newWords.Any(w => w.ProjectId != projectId))
+            {
+                throw new ArgumentException("All new words must have the specified projectId");
+            }
+
+            var oldIdSet = oldWordIds.ToHashSet();
+
+            // Delete the old words from the Frontier, keeping track of the deleted words to modify and add to WordsCollection
+            // Update the new words
+            foreach (var word in newWords)
+            {
+                oldIdSet.Remove(word.Id);
+                if (await UpdateFrontierWithSession(session, word, true, modifyUpdatedWord) is null)
+                {
+                    return null;
+                }
+            }
+
+            // Delete any remaining old words that weren't updated with a new word
+            await DeleteFrontierWithSession(session, projectId, oldIdSet, modifyDeletedWord);
+            return newWords;
+        }
+
+        /// <remarks> This will throw if any of the words has Deleted status or an Id already in the Frontier </remarks>
+        private async Task<List<Word>> AddFrontierWithSession(IClientSessionHandle session, List<Word> words)
+        {
+            if (words.Count == 0)
+            {
+                return words;
+            }
+
+            if (words.Any(w => w.Accessibility == Status.Deleted))
+            {
+                throw new ArgumentException("Cannot add a word with Deleted status to Frontier");
+            }
+
+            await _frontier.InsertManyAsync(session, words);
+            return words;
+        }
+
+        private async Task DeleteFrontierWithSession(IClientSessionHandle session,
+            string projectId, IEnumerable<string> wordIds, Action<Word> modifyWord)
+        {
+            await Task.WhenAll(wordIds.Select(id => DeleteFrontierWithSession(session, projectId, id, modifyWord)));
+        }
+
+        private async Task<Word?> DeleteFrontierWithSession(IClientSessionHandle session,
+            string projectId, string wordId, Action<Word> modifyWord)
+        {
+            var deletedWord = await _frontier.FindOneAndDeleteAsync(session, GetProjectWordFilter(projectId, wordId));
+            if (deletedWord is null)
+            {
+                return null;
+            }
+
+            var modifiedWord = deletedWord.Clone();
+            modifyWord(modifiedWord);
+            modifiedWord.Id = "";
+            await _words.InsertOneAsync(session, modifiedWord);
+            return modifiedWord;
+        }
+
+        /// <summary> Restores non-Frontier words to the Frontier </summary>
+        /// <returns> The restored words </returns>
+        private async Task<List<Word>> RestoreFrontierWithSession(IClientSessionHandle session,
+            string projectId, IEnumerable<string> wordIds)
+        {
+            var wordIdSet = wordIds.ToHashSet(); // Get rid of duplicates.
+            var wordsToRestore = await GetWordsWithSession(session, projectId, wordIds);
+            if (wordsToRestore.Count != wordIdSet.Count)
+            {
+                throw new ArgumentException("Some wordIds were not found in WordsCollection");
+            }
+
+            await AddFrontierWithSession(session, wordsToRestore);
+            return wordsToRestore;
+        }
     }
 }
