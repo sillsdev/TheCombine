@@ -142,7 +142,7 @@ namespace BackendFramework.Repositories
 
             return words.Count == 0
                 ? []
-                : await ExecuteWithTransaction(async s => await CreateWithSession(s, words));
+                : await _dbContext.ExecuteWithTransaction(async s => await CreateWithSession(s, words));
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace BackendFramework.Repositories
             using var activity = OtelService.StartActivityWithTag(
                 otelTagName, "updating a word in WordsCollection and Frontier, deleting old word from Frontier");
 
-            return await ExecuteWithTransactionAllowNull(async session =>
+            return await _dbContext.ExecuteWithTransactionAllowNull(async session =>
                 {
                     // Make sure old word exists in the Frontier.
                     var deletedWord =
@@ -208,7 +208,7 @@ namespace BackendFramework.Repositories
             using var activity = OtelService.StartActivityWithTag(
                 otelTagName, "creating word in WordsCollection and Frontier, deleting old word from Frontier");
 
-            return await ExecuteWithTransactionAllowNull(
+            return await _dbContext.ExecuteWithTransactionAllowNull(
                 async s => await RepoUpdateFrontierWithSession(s, word, false, modifyNewWordFromOldWord));
         }
 
@@ -227,7 +227,7 @@ namespace BackendFramework.Repositories
 
             var oldIdSet = idsToDelete.ToHashSet();
 
-            return await ExecuteWithTransactionAllowNull(async session =>
+            return await _dbContext.ExecuteWithTransactionAllowNull(async session =>
                 {
                     // Update the new words
                     foreach (var word in newWords)
@@ -260,7 +260,7 @@ namespace BackendFramework.Repositories
                 throw new ArgumentException("Ids to delete and restore must be disjoint");
             }
 
-            return await ExecuteWithTransaction(async session =>
+            return await _dbContext.ExecuteWithTransaction(async session =>
                 {
                     var restoredWords = await RepoRestoreFrontierWithSession(session, projectId, restoreSet.ToList());
                     if (restoredWords.Count != restoreSet.Count)
@@ -334,7 +334,7 @@ namespace BackendFramework.Repositories
             using var activity = OtelService.StartActivityWithTag(
                 otelTagName, "adding word to WordsCollection, deleting word from Frontier");
 
-            return await ExecuteWithTransactionAllowNull(
+            return await _dbContext.ExecuteWithTransactionAllowNull(
                 async s => await RepoDeleteFrontierWithSession(s, projectId, wordId, modifyWord)
             );
         }
@@ -431,7 +431,8 @@ namespace BackendFramework.Repositories
 
             return wordIds.Count == 0
                 ? []
-                : await ExecuteWithTransaction(async s => await RepoRestoreFrontierWithSession(s, projectId, wordIds));
+                : await _dbContext.ExecuteWithTransaction(
+                    async s => await RepoRestoreFrontierWithSession(s, projectId, wordIds));
         }
 
         /// <summary> Adds a list of <see cref="Word"/>s only to the Frontier </summary>
@@ -472,51 +473,5 @@ namespace BackendFramework.Repositories
 
         // TODO: Move them all here.
 
-        // TRANSACTION SCAFFOLDING
-
-        /// <summary>
-        /// Executes the given operation in a transaction and commits if it succeeds.
-        /// </summary>
-        private async Task<T> ExecuteWithTransaction<T>(Func<IClientSessionHandle, Task<T>> operation)
-        {
-            using var transaction = await _dbContext.BeginTransaction();
-            try
-            {
-                var result = await operation(transaction.Session);
-                await transaction.CommitTransactionAsync();
-                return result;
-            }
-            catch
-            {
-                await transaction.AbortTransactionAsync();
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Executes the given operation in a transaction and aborts if the operation returns null.
-        /// </summary>
-        private async Task<T?> ExecuteWithTransactionAllowNull<T>(Func<IClientSessionHandle, Task<T?>> operation)
-            where T : class
-        {
-            using var transaction = await _dbContext.BeginTransaction();
-            try
-            {
-                var result = await operation(transaction.Session);
-                if (result is null)
-                {
-                    await transaction.AbortTransactionAsync();
-                    return null;
-                }
-
-                await transaction.CommitTransactionAsync();
-                return result;
-            }
-            catch
-            {
-                await transaction.AbortTransactionAsync();
-                throw;
-            }
-        }
     }
 }
