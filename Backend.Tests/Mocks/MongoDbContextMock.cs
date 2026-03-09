@@ -12,12 +12,12 @@ public class MongoDbContextMock : IMongoDbContext
     public Task<IMongoTransaction> BeginTransaction()
         => Task.FromResult<IMongoTransaction>(new MongoTransactionMock());
 
-    public Task<T> ExecuteWithTransaction<T>(Func<IClientSessionHandle, Task<T>> operation)
+    public Task<T> ExecuteInTransaction<T>(Func<IClientSessionHandle, Task<T>> operation)
     {
         throw new NotImplementedException();
     }
 
-    public Task<T?> ExecuteWithTransactionAllowNull<T>(Func<IClientSessionHandle, Task<T?>> operation) where T : class
+    public Task<T?> ExecuteInTransactionAllowNull<T>(Func<IClientSessionHandle, Task<T?>> operation) where T : class
     {
         throw new NotImplementedException();
     }

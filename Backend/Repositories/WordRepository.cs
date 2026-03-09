@@ -139,7 +139,7 @@ namespace BackendFramework.Repositories
 
             return words.Count == 0
                 ? []
-                : await _dbContext.ExecuteWithTransaction(async s => await CreateWithSession(s, words));
+                : await _dbContext.ExecuteInTransaction(async s => await CreateWithSession(s, words));
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace BackendFramework.Repositories
             using var activity = OtelService.StartActivityWithTag(
                 otelTagName, "updating a word in WordsCollection and Frontier, deleting old word from Frontier");
 
-            return await _dbContext.ExecuteWithTransactionAllowNull(
+            return await _dbContext.ExecuteInTransactionAllowNull(
                 async s => await UpdateFrontierWithSession(s, projectId, wordId, modifyWord));
         }
 
@@ -175,7 +175,7 @@ namespace BackendFramework.Repositories
             using var activity = OtelService.StartActivityWithTag(
                 otelTagName, "creating word in WordsCollection and Frontier, deleting old word from Frontier");
 
-            return await _dbContext.ExecuteWithTransactionAllowNull(
+            return await _dbContext.ExecuteInTransactionAllowNull(
                 async s => await UpdateFrontierWithSession(s, word, false, modifyNewWordFromOldWord));
         }
 
@@ -195,7 +195,7 @@ namespace BackendFramework.Repositories
         {
             return (newWords.Count == 0 && idsToDelete.Count == 0)
                 ? []
-                : await _dbContext.ExecuteWithTransactionAllowNull(async s => await ReplaceFrontierWithSession(
+                : await _dbContext.ExecuteInTransactionAllowNull(async s => await ReplaceFrontierWithSession(
                     s, projectId, newWords, idsToDelete, modifyUpdatedWord, modifyDeletedWord));
         }
 
@@ -212,7 +212,7 @@ namespace BackendFramework.Repositories
         {
             return idsToRestore.Count == 0 && idsToDelete.Count == 0
                 ? true
-                : await _dbContext.ExecuteWithTransaction(async s => await RevertReplaceFrontierWithSession(
+                : await _dbContext.ExecuteInTransaction(async s => await RevertReplaceFrontierWithSession(
                     s, projectId, idsToRestore, idsToDelete, modifyDeletedWord));
         }
 
@@ -233,7 +233,7 @@ namespace BackendFramework.Repositories
             using var activity = OtelService.StartActivityWithTag(
                 otelTagName, "adding word to WordsCollection, deleting word from Frontier");
 
-            return await _dbContext.ExecuteWithTransactionAllowNull(
+            return await _dbContext.ExecuteInTransactionAllowNull(
                 async s => await DeleteFrontierWithSession(s, projectId, wordId, modifyWord)
             );
         }
@@ -338,7 +338,7 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring word to Frontier");
 
-            return await _dbContext.ExecuteWithTransaction(
+            return await _dbContext.ExecuteInTransaction(
                     async s => await RestoreFrontierWithSession(s, projectId, wordId));
         }
 
