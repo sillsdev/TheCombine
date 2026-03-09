@@ -161,19 +161,9 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Restores words to the Frontier that aren't in the Frontier </summary>
-        /// <remarks>
-        /// Deduplicates ids and delegates validation/transaction handling to RepoRestoreFrontier.
-        /// </remarks>
         public async Task RestoreFrontierWords(string projectId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring words to Frontier");
-
-            wordIds = wordIds.Distinct().ToList();
-
-            if (wordIds.Count == 0)
-            {
-                return;
-            }
 
             await _wordRepo.RepoRestoreFrontier(projectId, wordIds);
         }
