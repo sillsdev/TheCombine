@@ -41,7 +41,7 @@ namespace Backend.Tests.Controllers
             _audioController = new AudioController(_wordRepo, _wordService, _permissionService);
 
             _projId = _projRepo.Create(new Project { Name = "AudioControllerTests" }).Result!.Id;
-            _wordId = _wordRepo.RepoCreate(Util.RandomWord(_projId)).Result.Id;
+            _wordId = _wordRepo.Create(Util.RandomWord(_projId)).Result.Id;
 
             _file = new FormFile(_stream, 0, _stream.Length, "Name", FileName);
         }
@@ -166,7 +166,7 @@ namespace Backend.Tests.Controllers
             var result = _audioController.DeleteAudioFile(_projId, "not-a-word", _file.FileName).Result;
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
 
-            var wordId = _wordRepo.RepoCreate(Util.RandomWord(_projId)).Result.Id;
+            var wordId = _wordRepo.Create(Util.RandomWord(_projId)).Result.Id;
             var ex = Assert.Throws<AggregateException>(() =>
             {
                 _ = _audioController.DeleteAudioFile(_projId, wordId, _file.FileName).Result;
@@ -182,7 +182,7 @@ namespace Backend.Tests.Controllers
             var origWord = Util.RandomWord(_projId);
             const string fileName = "a.wav";
             origWord.Audio.Add(new Pronunciation(fileName));
-            var oldId = _wordRepo.RepoCreate(origWord).Result.Id;
+            var oldId = _wordRepo.Create(origWord).Result.Id;
 
             // Test delete function
             var result = _audioController.DeleteAudioFile(_projId, oldId, fileName).Result as OkObjectResult;

@@ -43,7 +43,7 @@ namespace Backend.Tests.Services
         public void TestDeleteAudioBadInput()
         {
             var fileName = "audio.mp3";
-            var wordInFrontier = _wordRepo.RepoCreate(
+            var wordInFrontier = _wordRepo.Create(
                 new Word() { Audio = [new() { FileName = fileName }], ProjectId = ProjId }).Result;
             Assert.That(_wordService.DeleteAudio("non-proj-id", UserId, wordInFrontier.Id, fileName).Result, Is.Null);
             Assert.That(_wordService.DeleteAudio(ProjId, UserId, "non-word-id", fileName).Result, Is.Null);
@@ -68,7 +68,7 @@ namespace Backend.Tests.Services
         public void TestDeleteAudio()
         {
             var fileName = "audio.mp3";
-            var wordInFrontier = _wordRepo.RepoCreate(
+            var wordInFrontier = _wordRepo.Create(
                 new Word() { Audio = [new() { FileName = fileName }], ProjectId = ProjId }).Result;
             var oldId = wordInFrontier.Id;
 
@@ -106,7 +106,7 @@ namespace Backend.Tests.Services
         [Test]
         public void TestDeleteFrontierWordCopiesToWordsAndRemovesFrontier()
         {
-            var oldId = _wordRepo.RepoCreate(new Word { ProjectId = ProjId }).Result.Id;
+            var oldId = _wordRepo.Create(new Word { ProjectId = ProjId }).Result.Id;
 
             var deletedId = _wordService.DeleteFrontierWord(ProjId, UserId, oldId).Result;
 
@@ -135,7 +135,7 @@ namespace Backend.Tests.Services
         [Test]
         public void TestUpdateReplacesFrontierWord()
         {
-            var word = _wordRepo.RepoCreate(new Word { ProjectId = ProjId }).Result;
+            var word = _wordRepo.Create(new Word { ProjectId = ProjId }).Result;
             Assert.That(word, Is.Not.Null);
             var oldId = word.Id;
             word.Vernacular = "NewVern";
@@ -155,7 +155,7 @@ namespace Backend.Tests.Services
         public void TestUpdateUsingCitationForm()
         {
             // Create a word with UsingCitationForm true.
-            var word = _wordRepo.RepoCreate(new Word { ProjectId = ProjId, UsingCitationForm = true }).Result;
+            var word = _wordRepo.Create(new Word { ProjectId = ProjId, UsingCitationForm = true }).Result;
             Assert.That(word, Is.Not.Null);
             Assert.That(word.UsingCitationForm, Is.True);
 
@@ -173,36 +173,37 @@ namespace Backend.Tests.Services
         }
 
         [Test]
-        public void TestRestoreFrontierWordsMissingWordThrows()
+        public void TestRestoreFrontierWordAlreadyInFrontierThrows()
         {
-            var word = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
-
-            Assert.That(
-                () => _wordService.RestoreFrontierWords(ProjId, ["NotAnId", word.Id]).Wait(),
-                Throws.TypeOf<AggregateException>());
-        }
-
-        [Test]
-        public void TestRestoreFrontierWordsAlreadyInFrontierThrows()
-        {
-            var wordNoFrontier = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
-            var wordYesFrontier = _wordRepo.RepoCreate(new Word { ProjectId = ProjId }).Result;
+            var wordInFrontier = _wordRepo.Create(new Word { ProjectId = ProjId }).Result;
             Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(1));
 
             Assert.That(
-                () => _wordService.RestoreFrontierWords(ProjId, [wordNoFrontier.Id, wordYesFrontier.Id]).Wait(),
+                () => _wordService.RestoreFrontierWord(ProjId, wordInFrontier.Id).Wait(),
                 Throws.TypeOf<AggregateException>());
         }
 
         [Test]
-        public void TestRestoreFrontierWordsRestoresWords()
+        public void TestRestoreFrontierWordMissingWordReturnsFalse()
         {
-            var word1 = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
-            var word2 = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
+            var word = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
+
+            var result = _wordService.RestoreFrontierWord(ProjId, "NotAnId").Result;
+
+            Assert.That(result, Is.False);
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Is.Empty);
+        }
+
+        [Test]
+        public void TestRestoreFrontierWordReturnsTrueRestoresWords()
+        {
+            var word = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
             Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Is.Empty);
 
-            _wordService.RestoreFrontierWords(ProjId, [word1.Id, word2.Id]).Wait();
-            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(2));
+            var result = _wordService.RestoreFrontierWord(ProjId, word.Id).Result;
+
+            Assert.That(result, Is.True);
+            Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -220,9 +221,9 @@ namespace Backend.Tests.Services
         public void TestFindContainingWordNewVern()
         {
             var oldWordSameProj = Util.RandomWord(ProjId);
-            _wordRepo.RepoCreate(oldWordSameProj).Wait();
+            _wordRepo.Create(oldWordSameProj).Wait();
             var oldWordDiffProj = Util.RandomWord("different");
-            _wordRepo.RepoCreate(oldWordDiffProj).Wait();
+            _wordRepo.Create(oldWordDiffProj).Wait();
             var newWord = Util.RandomWord(ProjId);
             newWord.Vernacular = oldWordDiffProj.Vernacular;
             newWord.Senses = oldWordDiffProj.Senses.Select(s => s.Clone()).ToList();
@@ -245,7 +246,7 @@ namespace Backend.Tests.Services
             oldSense.Definitions.Add(Util.RandomDefinition());
             oldSense.Glosses.Add(Util.RandomGloss());
             oldWord.Senses.Add(oldSense);
-            oldWord = _wordRepo.RepoCreate(oldWord).Result;
+            oldWord = _wordRepo.Create(oldWord).Result;
 
             var dupId = _wordService.FindContainingWord(newWord).Result;
             Assert.That(dupId, Is.EqualTo(oldWord.Id));
@@ -255,7 +256,7 @@ namespace Backend.Tests.Services
         public void TestFindContainingWordSameVernEmptySensesDiffDoms()
         {
             var oldWord = Util.RandomWord(ProjId);
-            oldWord = _wordRepo.RepoCreate(oldWord).Result;
+            oldWord = _wordRepo.Create(oldWord).Result;
             var newWord = Util.RandomWord(ProjId);
             newWord.Vernacular = oldWord.Vernacular;
 
@@ -285,7 +286,7 @@ namespace Backend.Tests.Services
             newWord.Senses = [emptySense.Clone()];
             emptySense.SemanticDomains.Add(Util.RandomSemanticDomain());
             oldWord.Senses.Add(emptySense);
-            oldWord = _wordRepo.RepoCreate(oldWord).Result;
+            oldWord = _wordRepo.Create(oldWord).Result;
 
             var dupId = _wordService.FindContainingWord(newWord).Result;
             Assert.That(dupId, Is.EqualTo(oldWord.Id));

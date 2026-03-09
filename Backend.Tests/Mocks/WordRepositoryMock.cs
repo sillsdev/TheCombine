@@ -20,7 +20,7 @@ namespace Backend.Tests.Mocks
         /// Sets a delay for the GetFrontier method. The first call to GetFrontier will wait
         /// until the provided Task is completed.
         /// </summary>
-        public void SetGetFrontierDelay(Task<bool> delay)
+        internal void SetGetFrontierDelay(Task<bool> delay)
         {
             _getAllFrontierDelay = delay;
             _getAllFrontierCallCount = 0;
@@ -43,12 +43,12 @@ namespace Backend.Tests.Mocks
             }
         }
 
-        public async Task<Word> RepoCreate(Word word)
+        public async Task<Word> Create(Word word)
         {
-            return (await RepoCreate([word])).First();
+            return (await Create([word])).First();
         }
 
-        public Task<List<Word>> RepoCreate(List<Word> words)
+        public Task<List<Word>> Create(List<Word> words)
         {
             if (words.Count == 0)
             {
@@ -65,7 +65,7 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(words);
         }
 
-        private Task<Word> RepoUpdateFrontier(Word word, bool createIfNotFound,
+        private Task<Word> UpdateFrontier(Word word, bool createIfNotFound,
             Action<Word, Word?> modifyNewWordFromOldWord)
         {
             var removedWord = _frontier.Find(w => w.ProjectId == word.ProjectId && w.Id == word.Id);
@@ -87,7 +87,7 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(word);
         }
 
-        public async Task<Word?> RepoUpdateFrontier(Word word, Action<Word, Word?> modifyNewWordFromOldWord)
+        public async Task<Word?> UpdateFrontier(Word word, Action<Word, Word?> modifyNewWordFromOldWord)
         {
             var removedWord = _frontier.Find(w => w.ProjectId == word.ProjectId && w.Id == word.Id);
             if (removedWord is null)
@@ -95,10 +95,10 @@ namespace Backend.Tests.Mocks
                 return null;
             }
 
-            return await RepoUpdateFrontier(word, createIfNotFound: false, modifyNewWordFromOldWord);
+            return await UpdateFrontier(word, createIfNotFound: false, modifyNewWordFromOldWord);
         }
 
-        public Task<Word?> RepoUpdateFrontier(string projectId, string wordId, Action<Word> modifyWord)
+        public Task<Word?> UpdateFrontier(string projectId, string wordId, Action<Word> modifyWord)
         {
             var removedWord = _frontier.Find(w => w.ProjectId == projectId && w.Id == wordId);
             if (removedWord is null)
@@ -183,30 +183,24 @@ namespace Backend.Tests.Mocks
                 w => w.ProjectId == projectId && w.Vernacular == vernacular).Select(w => w.Clone()).ToList());
         }
 
-        public Task<List<Word>> RepoRestoreFrontier(string projectId, List<string> wordIds)
+        public Task<bool> RestoreFrontier(string projectId, string wordId)
         {
-            var restoreSet = wordIds.ToHashSet();
-            var wordsToRestore = _words
-                .Where(w => w.ProjectId == projectId && restoreSet.Contains(w.Id))
-                .Select(w => w.Clone())
-                .ToList();
-
-            if (wordsToRestore.Count != restoreSet.Count)
+            var word = _words.FirstOrDefault(w => w.ProjectId == projectId && w.Id == wordId);
+            if (word is null)
             {
-                throw new ArgumentException("Some ids to be restored were not found");
+                return Task.FromResult(false);
             }
-
-            if (wordsToRestore.Any(w => w.Accessibility == Status.Deleted))
+            if (word.Accessibility == Status.Deleted)
             {
                 throw new ArgumentException("Cannot add a word with Deleted status to Frontier");
             }
-            if (wordsToRestore.Any(word => _frontier.Any(f => f.ProjectId == projectId && f.Id == word.Id)))
+            if (_frontier.Any(f => f.ProjectId == projectId && f.Id == word.Id))
             {
                 throw new ArgumentException("Cannot restore a word with an Id already in the Frontier");
             }
 
-            wordsToRestore.ForEach(word => _frontier.Add(word.Clone()));
-            return Task.FromResult(wordsToRestore);
+            _frontier.Add(word.Clone());
+            return Task.FromResult(true);
         }
 
         internal Task<Word> AddFrontier(Word word)
@@ -229,7 +223,7 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(word);
         }
 
-        public async Task<List<Word>?> RepoReplaceFrontier(string projectId, List<Word> newWords,
+        public async Task<List<Word>?> ReplaceFrontier(string projectId, List<Word> newWords,
             List<string> idsToDelete, Action<Word, Word?> modifyUpdatedWord, Action<Word> modifyDeletedWord)
         {
             if (newWords.Any(w => w.ProjectId != projectId))
@@ -242,18 +236,17 @@ namespace Backend.Tests.Mocks
             foreach (var word in newWords)
             {
                 oldIdSet.Remove(word.Id);
-                await RepoUpdateFrontier(word, createIfNotFound: true, modifyUpdatedWord);
+                await UpdateFrontier(word, createIfNotFound: true, modifyUpdatedWord);
             }
 
             foreach (var oldId in oldIdSet)
             {
-                await RepoDeleteFrontier(projectId, oldId, modifyDeletedWord);
+                await DeleteFrontier(projectId, oldId, modifyDeletedWord);
             }
 
             return newWords;
         }
-
-        public async Task<List<Word>> RepoRevertReplaceFrontier(
+        public async Task<bool> RevertReplaceFrontier(
             string projectId, List<string> idsToRestore, List<string> idsToDelete, Action<Word> modifyDeletedWord)
         {
             var restoreSet = idsToRestore.ToHashSet();
@@ -263,21 +256,23 @@ namespace Backend.Tests.Mocks
                 throw new ArgumentException("Ids to delete and restore must be disjoint");
             }
 
-            var restoredWords = await RepoRestoreFrontier(projectId, restoreSet.ToList());
-            if (restoredWords.Count != restoreSet.Count)
-            {
-                throw new ArgumentException("Some ids to be restored were not found");
-            }
-
             foreach (var id in deleteSet)
             {
-                await RepoDeleteFrontier(projectId, id, modifyDeletedWord);
+                await DeleteFrontier(projectId, id, modifyDeletedWord);
             }
 
-            return restoredWords;
+            foreach (var id in restoreSet)
+            {
+                if (!await RestoreFrontier(projectId, id))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
-        public Task<Word?> RepoDeleteFrontier(string projectId, string wordId, Action<Word> modifyWord)
+        public Task<Word?> DeleteFrontier(string projectId, string wordId, Action<Word> modifyWord)
         {
             var removedWord = _frontier.Find(w => w.ProjectId == projectId && w.Id == wordId);
             if (removedWord is null)
