@@ -25,7 +25,7 @@ namespace BackendFramework.Interfaces
         Task<bool> RestoreFrontier(string projectId, string wordId);
         Task<Word?> UpdateFrontier(string projectId, string wordId, Action<Word> modifyUpdatedWord);
         Task<Word?> UpdateFrontier(Word word, Action<Word, Word?> modifyUpdatedWord);
-        Task<List<Word>?> ReplaceFrontier(string projectId, List<Word> newWords, List<string> idsToDelete,
+        Task<List<Word>> ReplaceFrontier(string projectId, List<Word> newWords, List<string> idsToDelete,
             Action<Word, Word?> modifyUpdatedWord, Action<Word> modifyDeletedWord);
         Task<bool> RevertReplaceFrontier(string projectId, List<string> idsToRestore, List<string> idsToDelete,
             Action<Word> modifyDeletedWord);

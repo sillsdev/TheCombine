@@ -139,8 +139,7 @@ namespace BackendFramework.Services
 
             // Consolidate children ids
             var childrenIds = mergeWordsList.SelectMany(m => m.Children.Select(c => c.SrcWordId)).ToHashSet();
-            return await _wordService.MergeReplaceFrontier(
-                projectId, userId, parents.ToList(), childrenIds.ToList()) ?? [];
+            return await _wordService.MergeReplaceFrontier(projectId, userId, parents.ToList(), childrenIds.ToList());
         }
 
         /// <summary> Undo merge </summary>

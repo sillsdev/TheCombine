@@ -124,7 +124,7 @@ namespace BackendFramework.Repositories
                 OtelService.StartActivityWithTag(otelTagName, "creating words in WordsCollection and Frontier");
 
             return words.Count == 0
-                ? []
+                ? words
                 : await _dbContext.ExecuteInTransaction(async s => await CreateWithSession(s, words));
         }
 
@@ -335,15 +335,13 @@ namespace BackendFramework.Repositories
         /// <param name="modifyDeletedWord">
         /// Action applied to words deleted from Frontier before inserting into WordsCollection.
         /// </param>
-        /// <returns>
-        /// The replacement words when successful, an empty list if no work is needed, or null if replacement fails.
-        /// </returns>
-        public async Task<List<Word>?> ReplaceFrontier(string projectId, List<Word> newWords,
+        /// <returns>The replacement words when successful, an empty list if no work is needed.</returns>
+        public async Task<List<Word>> ReplaceFrontier(string projectId, List<Word> newWords,
             List<string> idsToDelete, Action<Word, Word?> modifyUpdatedWord, Action<Word> modifyDeletedWord)
         {
             return (newWords.Count == 0 && idsToDelete.Count == 0)
-                ? []
-                : await _dbContext.ExecuteInTransactionAllowNull(async s => await ReplaceFrontierWithSession(
+                ? newWords
+                : await _dbContext.ExecuteInTransaction(async s => await ReplaceFrontierWithSession(
                     s, projectId, newWords, idsToDelete, modifyUpdatedWord, modifyDeletedWord));
         }
 
@@ -469,8 +467,9 @@ namespace BackendFramework.Repositories
         /// <param name="modifyDeletedWord">Action applied on deleted Frontier words added to WordsCollection.</param>
         /// <returns>True when all requested restores succeed; otherwise false.</returns>
         /// <exception cref="ArgumentException">Thrown when restore and delete id sets are not disjoint.</exception>
-        private async Task<bool> RevertReplaceFrontierWithSession(IClientSessionHandle session, string projectId,
-            IEnumerable<string> idsToRestore, IEnumerable<string> idsToDelete, Action<Word> modifyDeletedWord)
+        private async Task<bool> RevertReplaceFrontierWithSession(IClientSessionHandle session,
+            string projectId, IEnumerable<string> idsToRestore, IEnumerable<string> idsToDelete,
+            Action<Word> modifyDeletedWord)
         {
             var restoreSet = idsToRestore.ToHashSet(); // Remove duplicates
             if (restoreSet.Intersect(idsToDelete).Any())
@@ -498,9 +497,9 @@ namespace BackendFramework.Repositories
         /// <param name="oldWordIds">Ids of Frontier words that will be replaced or deleted.</param>
         /// <param name="modifyUpdatedWord">Action applied when building each replacement word.</param>
         /// <param name="modifyDeletedWord">Action applied on deleted Frontier words added to WordsCollection.</param>
-        /// <returns>The replacement words, or null if a required update fails.</returns>
+        /// <returns>The replaced words.</returns>
         /// <exception cref="ArgumentException">Thrown when a replacement word has a different project id.</exception>
-        private async Task<List<Word>?> ReplaceFrontierWithSession(IClientSessionHandle session,
+        private async Task<List<Word>> ReplaceFrontierWithSession(IClientSessionHandle session,
             string projectId, List<Word> newWords, IEnumerable<string> oldWordIds,
             Action<Word, Word?> modifyUpdatedWord, Action<Word> modifyDeletedWord)
         {
@@ -509,15 +508,14 @@ namespace BackendFramework.Repositories
                 throw new ArgumentException("All new words must have the specified projectId");
             }
 
-            var oldIdSet = oldWordIds.ToHashSet(); // Remove duplicates
+            var oldIdSet = oldWordIds.ToHashSet(); // Remove duplicates and allow easy removal for each update.
 
             foreach (var word in newWords)
             {
+                // Remove the id from the old ids (if present) before the word is updated and given a new id.
                 oldIdSet.Remove(word.Id);
-                if (await UpdateFrontierWithSession(session, word, createIfNotFound: true, modifyUpdatedWord) is null)
-                {
-                    return null;
-                }
+                // `createIfNotFound: true` so the word is created even if the id isn't in the Frontier.
+                await UpdateFrontierWithSession(session, word, createIfNotFound: true, modifyUpdatedWord);
             }
 
             // Delete any remaining old words that weren't updated with a new word

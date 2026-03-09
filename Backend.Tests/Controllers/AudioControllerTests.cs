@@ -163,15 +163,12 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDeleteAudioFileNoWordWithAudio()
         {
-            var result = _audioController.DeleteAudioFile(_projId, "not-a-word", _file.FileName).Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            var result1 = _audioController.DeleteAudioFile(_projId, "not-a-word", _file.FileName).Result;
+            Assert.That(result1, Is.InstanceOf<NotFoundObjectResult>());
 
             var wordId = _wordRepo.Create(Util.RandomWord(_projId)).Result.Id;
-            var ex = Assert.Throws<AggregateException>(() =>
-            {
-                _ = _audioController.DeleteAudioFile(_projId, wordId, _file.FileName).Result;
-            });
-            Assert.That(ex?.InnerException, Is.InstanceOf<ArgumentException>());
+            var result2 = _audioController.DeleteAudioFile(_projId, wordId, _file.FileName).Result;
+            Assert.That(result2, Is.InstanceOf<NotFoundObjectResult>());
         }
 
         [Test]
