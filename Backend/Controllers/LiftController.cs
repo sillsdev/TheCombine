@@ -25,7 +25,7 @@ namespace BackendFramework.Controllers
     public class LiftController(IProjectRepository projRepo, ISemanticDomainRepository semDomRepo,
         ISpeakerRepository speakerRepo, IWordRepository wordRepo, IAcknowledgmentService ackService,
         ILiftService liftService, IHubContext<ExportHub> notifyService, IPermissionService permissionService,
-        ILogger<LiftController> logger) : Controller
+        IWordService wordService, ILogger<LiftController> logger) : Controller
     {
         private readonly IProjectRepository _projRepo = projRepo;
         private readonly ISemanticDomainRepository _semDomRepo = semDomRepo;
@@ -35,6 +35,7 @@ namespace BackendFramework.Controllers
         private readonly ILiftService _liftService = liftService;
         private readonly IHubContext<ExportHub> _notifyService = notifyService;
         private readonly IPermissionService _permissionService = permissionService;
+        private readonly IWordService _wordService = wordService;
         private readonly ILogger<LiftController> _logger = logger;
 
         private const string otelTagName = "otel.LiftController";
@@ -110,7 +111,7 @@ namespace BackendFramework.Controllers
             }
 
             // Delete all frontier words and load the LIFT data
-            await _wordRepo.DeleteAllFrontierWords(projectId);
+            await _wordService.ClearFrontier(projectId);
             return await FinishUploadLiftFile(projectId, userId, true);
         }
 
@@ -262,8 +263,8 @@ namespace BackendFramework.Controllers
 
             int countWordsImported;
             // Sets the projectId of our parser to add words to that project
-            var liftMerger = _liftService.GetLiftImporterExporter(
-                projectId, proj.VernacularWritingSystem.Bcp47, _wordRepo);
+            var liftMerger =
+                _liftService.GetLiftImporterExporter(projectId, proj.VernacularWritingSystem.Bcp47, _wordService);
             var importedAnalysisWritingSystems = new List<WritingSystem>();
             var doesImportHaveDefinitions = false;
             var doesImportHaveGrammaticalInfo = false;

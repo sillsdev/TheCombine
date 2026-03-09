@@ -35,9 +35,11 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _projRepo = new ProjectRepositoryMock();
+            var semDomCountRepo = new SemanticDomainCountRepositoryMock();
             _wordRepo = new WordRepositoryMock();
             _permissionService = new PermissionServiceMock();
-            _wordService = new WordService(_wordRepo);
+            var semDomCountService = new SemanticDomainCountService(semDomCountRepo);
+            _wordService = new WordService(_wordRepo, semDomCountService);
             _audioController = new AudioController(_wordRepo, _wordService, _permissionService);
 
             _projId = _projRepo.Create(new Project { Name = "AudioControllerTests" }).Result!.Id;

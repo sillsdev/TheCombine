@@ -30,8 +30,10 @@ namespace Backend.Tests.Services
                 new ServiceCollection().AddMemoryCache().BuildServiceProvider().GetRequiredService<IMemoryCache>();
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _mergeGraylistRepo = new MergeGraylistRepositoryMock();
+            var semDomCountRepo = new SemanticDomainCountRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _wordService = new WordService(_wordRepo);
+            var semDomCountService = new SemanticDomainCountService(semDomCountRepo);
+            _wordService = new WordService(_wordRepo, semDomCountService);
             _mergeService = new MergeService(_cache, _mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
         }
 

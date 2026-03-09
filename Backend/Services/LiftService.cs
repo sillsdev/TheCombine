@@ -687,9 +687,9 @@ namespace BackendFramework.Services
             wsr.Save();
         }
 
-        public ILiftMerger GetLiftImporterExporter(string projectId, string vernLang, IWordRepository wordRepo)
+        public ILiftMerger GetLiftImporterExporter(string projectId, string vernLang, IWordService wordService)
         {
-            return new LiftMerger(projectId, vernLang, wordRepo);
+            return new LiftMerger(projectId, vernLang, wordService);
         }
 
         private static void WriteRangeElement(XmlWriter liftRangesWriter,
@@ -723,20 +723,13 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteEndElement(); // end element
         }
 
-        private sealed class LiftMerger : ILiftMerger
+        private sealed class LiftMerger(string projectId, string vernLang, IWordService wordService) : ILiftMerger
         {
-            private readonly string _projectId;
+            private readonly string _projectId = projectId;
             private readonly List<SemanticDomainFull> _customSemDoms = [];
-            private readonly string _vernLang;
-            private readonly IWordRepository _wordRepo;
+            private readonly string _vernLang = vernLang;
+            private readonly IWordService _wordService = wordService;
             private readonly List<Word> _importEntries = [];
-
-            public LiftMerger(string projectId, string vernLang, IWordRepository wordRepo)
-            {
-                _projectId = projectId;
-                _vernLang = vernLang;
-                _wordRepo = wordRepo;
-            }
 
             /// <summary>
             /// Check for any Definitions in the private field <see cref="_importEntries"/>
@@ -784,7 +777,7 @@ namespace BackendFramework.Services
             /// <returns> The words saved. </returns>
             public async Task<List<Word>> SaveImportEntries()
             {
-                var savedWords = new List<Word>(await _wordRepo.Create(_importEntries));
+                var savedWords = new List<Word>(await _wordService.Create("", _importEntries));
                 _importEntries.Clear();
                 return savedWords;
             }

@@ -12,6 +12,7 @@ namespace BackendFramework.Interfaces
         Task<Word?> DeleteAudio(string projectId, string userId, string wordId, string fileName);
         Task<string?> DeleteFrontierWord(string projectId, string userId, string wordId);
         Task<bool> RestoreFrontierWords(string projectId, List<string> wordIds);
+        Task<bool> ClearFrontier(string projectId);
         Task<string?> FindContainingWord(Word word);
     }
 }
