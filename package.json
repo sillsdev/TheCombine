@@ -31,6 +31,8 @@
     "test": "run-s test-backend test-frontend",
     "test-backend": "         dotnet test Backend.Tests/Backend.Tests.csproj",
     "test-backend:coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:Threshold=77",
+    "test-backend:integration": "dotnet test Backend.Tests/Backend.Tests.csproj --filter \"TestCategory=IntegrationTest\"",
+    "test-backend:unit": "dotnet test Backend.Tests/Backend.Tests.csproj --filter \"TestCategory!=IntegrationTest\"",
     "test-frontend": "         node               scripts/jestTest.js",
     "test-frontend:coverage": "node               scripts/jestTest.js --coverage --watchAll=false",
     "test-frontend:debug": "   node --inspect-brk scripts/jestTest.js --runInBand --no-cache",
