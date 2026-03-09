@@ -60,6 +60,7 @@ namespace BackendFramework.Controllers
         [HttpPut("undo", Name = "UndoMerge")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UndoMerge(string projectId, [FromBody, BindRequired] MergeUndoIds merge)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "undoing merge");
@@ -71,8 +72,7 @@ namespace BackendFramework.Controllers
             }
             var userId = _permissionService.GetUserId(HttpContext);
 
-            await _mergeService.UndoMerge(projectId, userId, merge);
-            return Ok();
+            return await _mergeService.UndoMerge(projectId, userId, merge) ? Ok() : NotFound();
         }
 
         /// <summary> Add List of <see cref="Word"/>Ids to merge blacklist </summary>

@@ -145,11 +145,11 @@ namespace BackendFramework.Services
 
         /// <summary> Undo merge </summary>
         /// <returns> A bool: true if merge children were successfully restored </returns>
-        public async Task UndoMerge(string projectId, string userId, MergeUndoIds ids)
+        public async Task<bool> UndoMerge(string projectId, string userId, MergeUndoIds ids)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "undoing merge");
 
-            await _wordService.RevertMergeReplaceFrontier(projectId, userId, ids.ChildIds, ids.ParentIds);
+            return await _wordService.RevertMergeReplaceFrontier(projectId, userId, ids.ChildIds, ids.ParentIds);
         }
 
         /// <summary> Adds a List of wordIds to MergeBlacklist of specified <see cref="Project"/>. </summary>
