@@ -13,7 +13,7 @@ namespace BackendFramework.Interfaces
         Task<bool> RestoreFrontierWord(string projectId, string wordId);
         Task<Word?> Update(string userId, Word word);
         Task<string?> FindContainingWord(Word word);
-        Task<List<Word>?> MergeReplaceFrontier(
+        Task<List<Word>> MergeReplaceFrontier(
             string projectId, string userId, List<Word> parents, List<string> idsToDelete);
         Task<bool> RevertMergeReplaceFrontier(
             string projectId, string userId, List<string> idsToRestore, List<string> idsToDelete);

@@ -99,9 +99,8 @@ namespace Backend.Tests.Services
             Assert.That(_wordService.DeleteAudio("non-proj-id", UserId, wordInFrontier.Id, fileName).Result, Is.Null);
             Assert.That(_wordService.DeleteAudio(ProjId, UserId, "non-word-id", fileName).Result, Is.Null);
 
-            var ex = Assert.Throws<AggregateException>(
-                () => _wordService.DeleteAudio(ProjId, UserId, wordInFrontier.Id, "non-file-name").Wait());
-            Assert.That(ex?.InnerException, Is.InstanceOf<ArgumentException>());
+            var result = _wordService.DeleteAudio(ProjId, UserId, wordInFrontier.Id, "non-file-name").Result;
+            Assert.That(result, Is.Null);
         }
 
         [Test]
@@ -197,9 +196,9 @@ namespace Backend.Tests.Services
             var wordInFrontier = _wordRepo.Create(new Word { ProjectId = ProjId }).Result;
             Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Has.Count.EqualTo(1));
 
-            Assert.That(
-                () => _wordService.RestoreFrontierWord(ProjId, wordInFrontier.Id).Wait(),
-                Throws.TypeOf<AggregateException>());
+            var ex = Assert.Throws<AggregateException>(
+                () => _wordService.RestoreFrontierWord(ProjId, wordInFrontier.Id).Wait());
+            Assert.That(ex?.InnerException, Is.InstanceOf<ArgumentException>());
         }
 
         [Test]

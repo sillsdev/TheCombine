@@ -151,7 +151,14 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting an audio");
 
-            return await _wordRepo.UpdateFrontier(projectId, wordId, CreateDeleteAudioAction(userId, fileName));
+            try
+            {
+                return await _wordRepo.UpdateFrontier(projectId, wordId, CreateDeleteAudioAction(userId, fileName));
+            }
+            catch (ArgumentException)
+            {
+                return null;
+            }
         }
 
         /// <summary> Removes word from Frontier and adds a Deleted copy in the words collection </summary>
@@ -208,8 +215,8 @@ namespace BackendFramework.Services
         /// <param name="userId">Id of the user performing the merge.</param>
         /// <param name="parents">Parent words to create or use as replacements.</param>
         /// <param name="idsToDelete">Ids of merge children to delete from Frontier.</param>
-        /// <returns>The updated parent words, or null if replacement fails.</returns>
-        public async Task<List<Word>?> MergeReplaceFrontier(
+        /// <returns>The updated parent words.</returns>
+        public async Task<List<Word>> MergeReplaceFrontier(
             string projectId, string userId, List<Word> parents, List<string> idsToDelete)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "replacing frontier words for merge");

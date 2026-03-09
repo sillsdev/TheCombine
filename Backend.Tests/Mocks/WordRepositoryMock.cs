@@ -233,7 +233,7 @@ namespace Backend.Tests.Mocks
             return await UpdateFrontier(word, createIfNotFound: false, modifyUpdatedWord);
         }
 
-        public async Task<List<Word>?> ReplaceFrontier(string projectId, List<Word> newWords,
+        public async Task<List<Word>> ReplaceFrontier(string projectId, List<Word> newWords,
             List<string> idsToDelete, Action<Word, Word?> modifyUpdatedWord, Action<Word> modifyDeletedWord)
         {
             if (newWords.Any(w => w.ProjectId != projectId))

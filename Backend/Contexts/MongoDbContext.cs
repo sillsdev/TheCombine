@@ -33,8 +33,16 @@ public class MongoDbContext : IMongoDbContext
     public async Task<IMongoTransaction> BeginTransaction()
     {
         var session = await Db.Client.StartSessionAsync();
-        session.StartTransaction();
-        return new MongoTransactionWrapper(session);
+        try
+        {
+            session.StartTransaction();
+            return new MongoTransactionWrapper(session);
+        }
+        catch
+        {
+            session.Dispose();
+            throw;
+        }
     }
 
     /// <summary>
