@@ -264,8 +264,8 @@ namespace BackendFramework.Controllers
 
             int countWordsImported;
             // Sets the projectId of our parser to add words to that project
-            var liftMerger = _liftService.GetLiftImporterExporter(projectId, proj.VernacularWritingSystem.Bcp47,
-                _wordService);
+            var liftMerger = _liftService.GetLiftImporterExporter(
+                projectId, proj.VernacularWritingSystem.Bcp47, _wordService);
             var importedAnalysisWritingSystems = new List<WritingSystem>();
             var doesImportHaveDefinitions = false;
             var doesImportHaveGrammaticalInfo = false;
