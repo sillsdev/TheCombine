@@ -133,6 +133,13 @@ namespace BackendFramework
             }
 
             var key = ASCII.GetBytes(secretKey);
+
+            var lexboxAuthConfig = Configuration.GetSection("LexboxAuth");
+
+            // Authorization endpoint needs to be defined before discovery happens with the metadata address.
+            var lexboxAuthorizationEndpoint = lexboxAuthConfig["AuthorizationEndpoint"]?.Trim();
+            var lexboxPrompt = lexboxAuthConfig["Prompt"]?.Trim();
+
             services.AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -144,10 +151,40 @@ namespace BackendFramework
                     x.SaveToken = true;
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateAudience = false,
                         ValidateIssuer = false,
-                        ValidateAudience = false
+                        ValidateIssuerSigningKey = true
+                    };
+                })
+                .AddCookie("LexboxCookie", options =>
+                {
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.IsEssential = true;
+                    options.Cookie.Name = "lexbox_auth";
+                    options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax;
+                    options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.SameAsRequest;
+                    options.ExpireTimeSpan = TimeSpan.FromHours(1);
+                    options.SlidingExpiration = true;
+                })
+                .AddOpenIdConnect("LexboxOidc", options =>
+                {
+                    lexboxAuthConfig.Bind(options);
+
+                    options.Events.OnRedirectToIdentityProvider = context =>
+                    {
+                        if (string.IsNullOrWhiteSpace(context.ProtocolMessage.IssuerAddress)
+                            && !string.IsNullOrEmpty(lexboxAuthorizationEndpoint))
+                        {
+                            context.ProtocolMessage.IssuerAddress = lexboxAuthorizationEndpoint;
+                        }
+
+                        if (!string.IsNullOrEmpty(lexboxPrompt))
+                        {
+                            context.ProtocolMessage.Prompt = lexboxPrompt;
+                        }
+
+                        return System.Threading.Tasks.Task.CompletedTask;
                     };
                 });
 
