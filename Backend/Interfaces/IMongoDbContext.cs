@@ -26,17 +26,18 @@ public interface IMongoDbContext
     /// <typeparam name="T">The operation result type.</typeparam>
     /// <param name="operation">Operation to execute with the transaction session.</param>
     /// <returns>The operation result.</returns>
-    Task<T> ExecuteWithTransaction<T>(Func<IClientSessionHandle, Task<T>> operation);
+    Task<T> ExecuteInTransaction<T>(Func<IClientSessionHandle, Task<T>> operation);
 
     /// <summary>
     /// Executes an operation in a transaction, committing only when a non-null result is returned.
+    /// Null represents an operation that could complete and shouldn't be committed, so it aborts.
     /// </summary>
     /// <typeparam name="T">The operation result reference type.</typeparam>
     /// <param name="operation">Operation to execute with the transaction session.</param>
     /// <returns>
     /// The operation result when non-null; otherwise <see langword="null"/> after aborting the transaction.
     /// </returns>
-    Task<T?> ExecuteWithTransactionAllowNull<T>(Func<IClientSessionHandle, Task<T?>> operation)
+    Task<T?> ExecuteInTransactionAllowNull<T>(Func<IClientSessionHandle, Task<T?>> operation)
         where T : class;
 }
 
