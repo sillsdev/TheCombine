@@ -471,7 +471,7 @@ namespace BackendFramework.Repositories
             }
 
             await DeleteFrontierWithSession(session, projectId, idsToDelete, modifyDeletedWord);
-            foreach (var id in idsToRestore)
+            foreach (var id in restoreSet)
             {
                 if (!await RestoreFrontierWithSession(session, projectId, id))
                 {
