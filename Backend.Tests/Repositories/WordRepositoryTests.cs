@@ -14,6 +14,7 @@ namespace Backend.Tests.Repositories
     /// Integration tests for <see cref="WordRepository"/> that spin up an actual MongoDB instance.
     /// </summary>
     [TestFixture]
+    [Category("IntegrationTest")]
     public sealed class WordRepositoryTests
     {
         private static MongoDbTestRunner _runner = null!;
