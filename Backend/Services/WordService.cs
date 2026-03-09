@@ -119,29 +119,6 @@ namespace BackendFramework.Services
             return await _wordRepo.Create(PrepEditedData(userId, word));
         }
 
-        /// <summary>
-        /// Replaces merge children in the Frontier with prepared parent words where possible,
-        /// creates remaining parents, and deletes remaining children from the Frontier.
-        /// </summary>
-        public async Task<List<Word>?> MergeReplaceFrontier(
-            string projectId, string userId, List<Word> parents, List<string> idsToDelete)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "replacing frontier words for merge");
-
-            return await _wordRepo.ReplaceFrontier(projectId, parents, idsToDelete,
-                CreateModifyUpdatedWordAction(userId), CreateModifyDeletedWordAction(userId));
-        }
-
-        public async Task<bool> RevertMergeReplaceFrontier(
-            string projectId, string userId, List<string> idsToRestore, List<string> idsToDelete)
-        {
-            using var activity =
-                OtelService.StartActivityWithTag(otelTagName, "reverting replaced frontier words for merge");
-
-            return await _wordRepo.RevertReplaceFrontier(
-                projectId, idsToRestore, idsToDelete, CreateModifyDeletedWordAction(userId));
-        }
-
         /// <summary> Removes audio with specified fileName from a Frontier word </summary>
         /// <returns> Updated word, or null if not found </returns>
         public async Task<Word?> DeleteAudio(string projectId, string userId, string wordId, string fileName)
@@ -186,6 +163,29 @@ namespace BackendFramework.Services
             var wordsWithVern = await _wordRepo.GetFrontierWithVernacular(word.ProjectId, word.Vernacular);
             var duplicatedWord = wordsWithVern.Find(w => w.Contains(word));
             return duplicatedWord?.Id;
+        }
+
+        /// <summary>
+        /// Replaces merge children in the Frontier with prepared parent words where possible,
+        /// creates remaining parents, and deletes remaining children from the Frontier.
+        /// </summary>
+        public async Task<List<Word>?> MergeReplaceFrontier(
+            string projectId, string userId, List<Word> parents, List<string> idsToDelete)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "replacing frontier words for merge");
+
+            return await _wordRepo.ReplaceFrontier(projectId, parents, idsToDelete,
+                CreateModifyUpdatedWordAction(userId), CreateModifyDeletedWordAction(userId));
+        }
+
+        public async Task<bool> RevertMergeReplaceFrontier(
+            string projectId, string userId, List<string> idsToRestore, List<string> idsToDelete)
+        {
+            using var activity =
+                OtelService.StartActivityWithTag(otelTagName, "reverting replaced frontier words for merge");
+
+            return await _wordRepo.RevertReplaceFrontier(
+                projectId, idsToRestore, idsToDelete, CreateModifyDeletedWordAction(userId));
         }
     }
 }
