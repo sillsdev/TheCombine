@@ -441,8 +441,8 @@ namespace BackendFramework.Repositories
         /// <param name="projectId">Id of the project containing the word.</param>
         /// <param name="wordId">Id of the word to restore.</param>
         /// <returns>A bool: true if restored, false if not found</returns>
-        /// <exception cref="MongoWriteException">
-        /// Thrown when the word to restore has id already in the Frontier.
+        /// <exception cref="ArgumentException">
+        /// Thrown when the word to restore has either Deleted status or Id already in the Frontier.
         /// </exception>
         private async Task<bool> RestoreFrontierWithSession(IClientSessionHandle session,
             string projectId, string wordId)
@@ -455,6 +455,10 @@ namespace BackendFramework.Repositories
             if (word.Accessibility == Status.Deleted)
             {
                 throw new ArgumentException("Cannot add a word with Deleted status to Frontier");
+            }
+            if (await _frontier.Find(session, GetProjectWordFilter(projectId, wordId)).AnyAsync())
+            {
+                throw new ArgumentException("Cannot restore a word with an Id already in the Frontier");
             }
 
             await _frontier.InsertOneAsync(session, word);

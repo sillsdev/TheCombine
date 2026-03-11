@@ -175,7 +175,6 @@ namespace Backend.Tests.Mocks
             }
             if (_frontier.Any(f => f.Id == word.Id))
             {
-                // Throws a MongoWriteException in production.
                 throw new ArgumentException("Cannot restore a word with an Id already in the Frontier");
             }
             return true;
