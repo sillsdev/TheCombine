@@ -336,6 +336,9 @@ namespace BackendFramework.Repositories
         /// Action applied to words deleted from Frontier before inserting into WordsCollection.
         /// </param>
         /// <returns>The replacement words when successful, an empty list if no work is needed.</returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when an old word id doesn't exist in Frontier or a replacement word has a different project id.
+        /// </exception>
         public async Task<List<Word>> ReplaceFrontier(string projectId, List<Word> newWords,
             List<string> idsToDelete, Action<Word, Word?> modifyUpdatedWord, Action<Word> modifyDeletedWord)
         {
@@ -399,146 +402,11 @@ namespace BackendFramework.Repositories
             }
 
             words.ForEach(w => w.Id = "");
+            // Don't clone, but insert the same instance in both collections.
+            // The first collection insert will generate the id, which should match in the second collection.
             await _words.InsertManyAsync(session, words);
             await _frontier.InsertManyAsync(session, words);
             return words;
-        }
-
-        /// <summary>
-        /// Replaces a Frontier <see cref="Word"/> with an updated copy in both collections.
-        /// </summary>
-        /// <remarks>
-        /// Removes the existing Frontier word identified by <paramref name="word"/>'s Id and ProjectId, modifies the
-        /// provided word based on the removed word using <paramref name="modifyUpdatedWord"/>, clears the ID,
-        /// and adds the modified word to WordsCollection and Frontier.
-        /// </remarks>
-        /// <param name="session">Mongo transaction session.</param>
-        /// <param name="word">Updated word whose Id and ProjectId identify the Frontier word to replace.</param>
-        /// <param name="createIfNotFound">Whether to create the word if Frontier word not found to update.</param>
-        /// <param name="modifyUpdatedWord">Action to modify the new word using the deleted old word.</param>
-        /// <returns>The updated word added to both collections, or null if not found and create not allowed.</returns>
-        private async Task<Word?> UpdateFrontierWithSession(IClientSessionHandle session,
-            Word word, bool createIfNotFound, Action<Word, Word?> modifyUpdatedWord)
-        {
-            // Make sure old word exists in the Frontier.
-            var deletedWord =
-                await _frontier.FindOneAndDeleteAsync(session, GetProjectWordFilter(word.ProjectId, word.Id));
-            if (deletedWord is null && !createIfNotFound)
-            {
-                return null;
-            }
-
-            modifyUpdatedWord(word, deletedWord?.Clone());
-            await CreateWithSession(session, [word]);
-            return word;
-        }
-
-        /// <summary>
-        /// Replaces a Frontier word by deleting it, applying a modification, and re-creating it in both collections.
-        /// </summary>
-        /// <param name="session">Mongo transaction session.</param>
-        /// <param name="projectId">Id of the project containing the Frontier word.</param>
-        /// <param name="wordId">Id of the Frontier word to update.</param>
-        /// <param name="modifyUpdatedWord">Action that mutates the cloned word before it is re-created.</param>
-        /// <returns>The updated word, or null if no matching Frontier word was found.</returns>
-        private async Task<Word?> UpdateFrontierWithSession(IClientSessionHandle session,
-            string projectId, string wordId, Action<Word> modifyUpdatedWord)
-        {
-
-            var deletedWord = await _frontier.FindOneAndDeleteAsync(session, GetProjectWordFilter(projectId, wordId));
-            if (deletedWord is null)
-            {
-                return null;
-            }
-
-            var word = deletedWord.Clone();
-            modifyUpdatedWord(word);
-            await CreateWithSession(session, [word]);
-            return word;
-        }
-
-        /// <summary>
-        /// Reverts a frontier replacement operation within an existing transaction session.
-        /// </summary>
-        /// <param name="session">Mongo transaction session.</param>
-        /// <param name="projectId">Id of the project containing the Frontier words.</param>
-        /// <param name="idsToRestore">Ids of WordsCollection words to restore to Frontier.</param>
-        /// <param name="idsToDelete">Ids of Frontier words to delete.</param>
-        /// <param name="modifyDeletedWord">Action applied on deleted Frontier words added to WordsCollection.</param>
-        /// <returns>True when all requested restores succeed; otherwise false.</returns>
-        /// <exception cref="ArgumentException">Thrown when restore and delete id sets are not disjoint.</exception>
-        private async Task<bool?> RevertReplaceFrontierWithSession(IClientSessionHandle session,
-            string projectId, IEnumerable<string> idsToRestore, IEnumerable<string> idsToDelete,
-            Action<Word> modifyDeletedWord)
-        {
-            var restoreSet = idsToRestore.ToHashSet(); // Remove duplicates
-            if (restoreSet.Intersect(idsToDelete).Any())
-            {
-                throw new ArgumentException("Ids to delete and restore must be disjoint");
-            }
-
-            await DeleteFrontierWithSession(session, projectId, idsToDelete, modifyDeletedWord);
-            foreach (var id in restoreSet)
-            {
-                if (!await RestoreFrontierWithSession(session, projectId, id))
-                {
-                    return null; // Return null instead of false to abort transaction.
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Replaces and/or deletes Frontier words within an existing transaction session.
-        /// </summary>
-        /// <param name="session">Mongo transaction session.</param>
-        /// <param name="projectId">Id of the project containing the Frontier words.</param>
-        /// <param name="newWords">Words that replace existing Frontier words.</param>
-        /// <param name="oldWordIds">Ids of Frontier words that will be replaced or deleted.</param>
-        /// <param name="modifyUpdatedWord">Action applied when building each replacement word.</param>
-        /// <param name="modifyDeletedWord">Action applied on deleted Frontier words added to WordsCollection.</param>
-        /// <returns>The replaced words.</returns>
-        /// <exception cref="ArgumentException">Thrown when a replacement word has a different project id.</exception>
-        private async Task<List<Word>> ReplaceFrontierWithSession(IClientSessionHandle session,
-            string projectId, List<Word> newWords, IEnumerable<string> oldWordIds,
-            Action<Word, Word?> modifyUpdatedWord, Action<Word> modifyDeletedWord)
-        {
-            if (newWords.Any(w => w.ProjectId != projectId))
-            {
-                throw new ArgumentException("All new words must have the specified projectId");
-            }
-
-            var oldIdSet = oldWordIds.ToHashSet(); // Remove duplicates and allow easy removal for each update.
-
-            foreach (var word in newWords)
-            {
-                // Remove the id from the old ids (if present) before the word is updated and given a new id.
-                oldIdSet.Remove(word.Id);
-                // `createIfNotFound: true` so the word is created even if the id isn't in the Frontier.
-                await UpdateFrontierWithSession(session, word, createIfNotFound: true, modifyUpdatedWord);
-            }
-
-            // Delete any remaining old words that weren't updated with a new word
-            await DeleteFrontierWithSession(session, projectId, oldIdSet, modifyDeletedWord);
-            return newWords;
-        }
-
-        /// <summary>
-        /// Deletes multiple Frontier words, modifies each deleted word, and inserts each into WordsCollection.
-        /// </summary>
-        /// <param name="session">Mongo transaction session.</param>
-        /// <param name="projectId">Id of the project containing the Frontier words.</param>
-        /// <param name="wordIds">Ids of Frontier words to delete.</param>
-        /// <param name="modifyDeletedWord">
-        /// Action applied before each deleted word is inserted into WordsCollection.
-        /// </param>
-        private async Task DeleteFrontierWithSession(IClientSessionHandle session,
-            string projectId, IEnumerable<string> wordIds, Action<Word> modifyDeletedWord)
-        {
-            foreach (var id in wordIds)
-            {
-                await DeleteFrontierWithSession(session, projectId, id, modifyDeletedWord);
-            }
         }
 
         /// <summary>
@@ -573,6 +441,9 @@ namespace BackendFramework.Repositories
         /// <param name="projectId">Id of the project containing the word.</param>
         /// <param name="wordId">Id of the word to restore.</param>
         /// <returns>A bool: true if restored, false if not found</returns>
+        /// <exception cref="MongoWriteException">
+        /// Thrown when the word to restore has id already in the Frontier.
+        /// </exception>
         private async Task<bool> RestoreFrontierWithSession(IClientSessionHandle session,
             string projectId, string wordId)
         {
@@ -587,6 +458,141 @@ namespace BackendFramework.Repositories
             }
 
             await _frontier.InsertOneAsync(session, word);
+            return true;
+        }
+
+        /// <summary>
+        /// Replaces a Frontier word by deleting it, applying a modification, and re-creating it in both collections.
+        /// </summary>
+        /// <param name="session">Mongo transaction session.</param>
+        /// <param name="projectId">Id of the project containing the Frontier word.</param>
+        /// <param name="wordId">Id of the Frontier word to update.</param>
+        /// <param name="modifyUpdatedWord">Action that mutates the cloned word before it is re-created.</param>
+        /// <returns>The updated word, or null if no matching Frontier word was found.</returns>
+        private async Task<Word?> UpdateFrontierWithSession(IClientSessionHandle session,
+            string projectId, string wordId, Action<Word> modifyUpdatedWord)
+        {
+
+            var deletedWord = await _frontier.FindOneAndDeleteAsync(session, GetProjectWordFilter(projectId, wordId));
+            if (deletedWord is null)
+            {
+                return null;
+            }
+
+            var word = deletedWord.Clone();
+            modifyUpdatedWord(word);
+            await CreateWithSession(session, [word]);
+            return word;
+        }
+
+        /// <summary>
+        /// Replaces a Frontier <see cref="Word"/> with an updated copy in both collections.
+        /// </summary>
+        /// <remarks>
+        /// Removes the existing Frontier word identified by <paramref name="word"/>'s Id and ProjectId, modifies the
+        /// provided word based on the removed word using <paramref name="modifyUpdatedWord"/>, clears the ID,
+        /// and adds the modified word to WordsCollection and Frontier.
+        /// </remarks>
+        /// <param name="session">Mongo transaction session.</param>
+        /// <param name="word">Updated word whose Id and ProjectId identify the Frontier word to replace.</param>
+        /// <param name="createIfNotFound">Whether to create the word if Frontier word not found to update.</param>
+        /// <param name="modifyUpdatedWord">Action to modify the new word using the deleted old word.</param>
+        /// <returns>The updated word added to both collections, or null if not found and create not allowed.</returns>
+        private async Task<Word?> UpdateFrontierWithSession(IClientSessionHandle session,
+            Word word, bool createIfNotFound, Action<Word, Word?> modifyUpdatedWord)
+        {
+            // Make sure old word exists in the Frontier.
+            var deletedWord =
+                await _frontier.FindOneAndDeleteAsync(session, GetProjectWordFilter(word.ProjectId, word.Id));
+            if (deletedWord is null && !createIfNotFound)
+            {
+                return null;
+            }
+
+            modifyUpdatedWord(word, deletedWord?.Clone());
+            await CreateWithSession(session, [word]);
+            return word;
+        }
+
+        /// <summary>
+        /// Replaces and/or deletes Frontier words within an existing transaction session.
+        /// </summary>
+        /// <param name="session">Mongo transaction session.</param>
+        /// <param name="projectId">Id of the project containing the Frontier words.</param>
+        /// <param name="newWords">Words that replace existing Frontier words.</param>
+        /// <param name="oldWordIds">Ids of Frontier words that will be replaced or deleted.</param>
+        /// <param name="modifyUpdatedWord">Action applied when building each replacement word.</param>
+        /// <param name="modifyDeletedWord">Action applied on deleted Frontier words added to WordsCollection.</param>
+        /// <returns>The replaced words.</returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when an old word id doesn't exist in Frontier or a replacement word has a different project id.
+        /// </exception>
+        private async Task<List<Word>> ReplaceFrontierWithSession(IClientSessionHandle session,
+            string projectId, List<Word> newWords, IEnumerable<string> oldWordIds,
+            Action<Word, Word?> modifyUpdatedWord, Action<Word> modifyDeletedWord)
+        {
+            if (newWords.Any(w => w.ProjectId != projectId))
+            {
+                throw new ArgumentException("All new words must have the specified projectId");
+            }
+
+            var oldIdSet = oldWordIds.ToHashSet(); // Remove duplicates and allow easy removal for each update.
+
+            foreach (var word in newWords)
+            {
+                // Remove the id from the old ids (if present) before the word is updated and given a new id.
+                oldIdSet.Remove(word.Id);
+                // `createIfNotFound: true` so the word is created even if the id isn't in the Frontier.
+                await UpdateFrontierWithSession(session, word, createIfNotFound: true, modifyUpdatedWord);
+            }
+
+            // Delete remaining old words that weren't updated with a new word
+            foreach (var id in oldIdSet)
+            {
+                if (await DeleteFrontierWithSession(session, projectId, id, modifyDeletedWord) is null)
+                {
+                    throw new ArgumentException("All old words being replaced must exist in the Frontier");
+                }
+            }
+            return newWords;
+        }
+
+        /// <summary>
+        /// Reverts a frontier replacement operation within an existing transaction session.
+        /// </summary>
+        /// <param name="session">Mongo transaction session.</param>
+        /// <param name="projectId">Id of the project containing the Frontier words.</param>
+        /// <param name="idsToRestore">Ids of WordsCollection words to restore to Frontier.</param>
+        /// <param name="idsToDelete">Ids of Frontier words to delete.</param>
+        /// <param name="modifyDeletedWord">Action applied on deleted Frontier words added to WordsCollection.</param>
+        /// <returns>True when all requested restores succeed; otherwise false.</returns>
+        /// <exception cref="ArgumentException">Thrown when restore and delete id sets are not disjoint.</exception>
+        private async Task<bool?> RevertReplaceFrontierWithSession(IClientSessionHandle session,
+            string projectId, IEnumerable<string> idsToRestore, IEnumerable<string> idsToDelete,
+            Action<Word> modifyDeletedWord)
+        {
+            // Remove duplicates and enforce no overlap.
+            var restoreSet = idsToRestore.ToHashSet();
+            var deleteSet = idsToDelete.ToHashSet();
+            if (restoreSet.Intersect(deleteSet).Any())
+            {
+                throw new ArgumentException("Ids to delete and restore must be disjoint");
+            }
+
+            foreach (var id in deleteSet)
+            {
+                if (await DeleteFrontierWithSession(session, projectId, id, modifyDeletedWord) is null)
+                {
+                    return null; // Return null instead of false to abort transaction.
+                }
+            }
+            foreach (var id in restoreSet)
+            {
+                if (!await RestoreFrontierWithSession(session, projectId, id))
+                {
+                    return null; // Return null instead of false to abort transaction.
+                }
+            }
             return true;
         }
     }

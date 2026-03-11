@@ -173,7 +173,7 @@ namespace Backend.Tests.Mocks
             {
                 throw new ArgumentException("Cannot add a word with Deleted status to Frontier");
             }
-            if (_frontier.Any(f => f.ProjectId == projectId && f.Id == word.Id))
+            if (_frontier.Any(f => f.Id == word.Id))
             {
                 // Throws a MongoWriteException in production.
                 throw new ArgumentException("Cannot restore a word with an Id already in the Frontier");
@@ -254,6 +254,11 @@ namespace Backend.Tests.Mocks
             }
 
             var oldIdSet = idsToDelete.ToHashSet();
+            // Make sure the replace is valid, mimicking a canceled transaction in production.
+            if (oldIdSet.Any(id => !_frontier.Any(f => f.ProjectId == projectId && f.Id == id)))
+            {
+                throw new ArgumentException("All old words being replaced must exist in the Frontier");
+            }
 
             foreach (var word in newWords)
             {
@@ -271,29 +276,32 @@ namespace Backend.Tests.Mocks
         public async Task<bool> RevertReplaceFrontier(
             string projectId, List<string> idsToRestore, List<string> idsToDelete, Action<Word> modifyDeletedWord)
         {
+            // Remove duplicates and enforce no overlap.
             var restoreSet = idsToRestore.ToHashSet();
-            if (restoreSet.Intersect(idsToDelete).Any())
+            var deleteSet = idsToDelete.ToHashSet();
+            if (restoreSet.Intersect(deleteSet).Any())
             {
                 throw new ArgumentException("Ids to delete and restore must be disjoint");
             }
 
-            // Make sure all restores can work to mimic transaction.
+            // Make sure the revert is valid, mimicking a canceled transaction in production.
+            if (deleteSet.Any(id => !_frontier.Any(f => f.ProjectId == projectId && f.Id == id)))
+            {
+                return false;
+            }
             if (restoreSet.Any(id => !CanRestore(projectId, id)))
             {
                 return false;
             }
 
-            foreach (var id in idsToDelete)
+            foreach (var id in deleteSet)
             {
                 await DeleteFrontier(projectId, id, modifyDeletedWord);
             }
-
             foreach (var id in restoreSet)
             {
-                if (!await RestoreFrontier(projectId, id))
-                {
-                    return false;
-                }
+                // The restore will pass since we checked CanRestore above.
+                await RestoreFrontier(projectId, id);
             }
 
             return true;
