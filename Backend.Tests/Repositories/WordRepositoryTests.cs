@@ -401,6 +401,16 @@ namespace Backend.Tests.Repositories
         }
 
         [Test]
+        public async Task TestRestoreFrontierAlreadyInFrontierThrows()
+        {
+            var word = await CreateWord();
+            // Word is already in frontier; restoring it again should throw.
+            var ex = Assert.ThrowsAsync<ArgumentException>(() =>
+                _repo.RestoreFrontier(_projectId, word.Id));
+            Assert.That(ex, Is.Not.Null);
+        }
+
+        [Test]
         public async Task TestRestoreFrontierDeletedWordThrows()
         {
             // Create a word and archive it as Deleted
