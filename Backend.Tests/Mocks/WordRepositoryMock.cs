@@ -162,12 +162,12 @@ namespace Backend.Tests.Mocks
             return Task.FromResult<Word?>(modifiedWord);
         }
 
-        public Task<bool> RestoreFrontier(string projectId, string wordId)
+        private bool CanRestore(string projectId, string wordId)
         {
             var word = _words.FirstOrDefault(w => w.ProjectId == projectId && w.Id == wordId);
             if (word is null)
             {
-                return Task.FromResult(false);
+                return false;
             }
             if (word.Accessibility == Status.Deleted)
             {
@@ -175,9 +175,21 @@ namespace Backend.Tests.Mocks
             }
             if (_frontier.Any(f => f.ProjectId == projectId && f.Id == word.Id))
             {
+                // Throws a MongoWriteException in production.
                 throw new ArgumentException("Cannot restore a word with an Id already in the Frontier");
             }
+            return true;
+        }
 
+        public Task<bool> RestoreFrontier(string projectId, string wordId)
+        {
+            if (!CanRestore(projectId, wordId))
+            {
+                return Task.FromResult(false);
+            }
+
+            // Word non-null because of the check in CanRestore.
+            var word = _words.FirstOrDefault(w => w.ProjectId == projectId && w.Id == wordId)!;
             _frontier.Add(word.Clone());
             return Task.FromResult(true);
         }
@@ -263,6 +275,12 @@ namespace Backend.Tests.Mocks
             if (restoreSet.Intersect(idsToDelete).Any())
             {
                 throw new ArgumentException("Ids to delete and restore must be disjoint");
+            }
+
+            // Make sure all restores can work to mimic transaction.
+            if (restoreSet.Any(id => !CanRestore(projectId, id)))
+            {
+                return false;
             }
 
             foreach (var id in idsToDelete)

@@ -56,7 +56,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Undo merge </summary>
-        /// <returns> True if merge was successfully undone </returns>
+        /// <returns> Ok if merge was successfully undone </returns>
         [HttpPut("undo", Name = "UndoMerge")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]

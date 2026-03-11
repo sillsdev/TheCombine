@@ -431,6 +431,7 @@ namespace Backend.Tests.Controllers
             Assert.That(await _wordRepo.GetAllFrontier(ProjId), Does.Contain(word).UsingPropertiesComparer());
             var frontierCount = await _wordRepo.GetFrontierCount(ProjId);
 
+            // The mock throws an ArgumentException, but in production, this would throw a MongoWriteException.
             Assert.ThrowsAsync<ArgumentException>(async () => await _wordController.RestoreWord(ProjId, word.Id));
             Assert.That(await _wordRepo.GetFrontierCount(ProjId), Is.EqualTo(frontierCount));
         }

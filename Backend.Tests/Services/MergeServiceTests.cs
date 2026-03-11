@@ -347,7 +347,7 @@ namespace Backend.Tests.Services
             _ = _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds).Result;
             Assert.That(_mergeGraylistRepo.GetAllSets(ProjId).Result, Has.Count.EqualTo(1));
             Assert.That(_mergeService.RemoveFromMergeGraylist(ProjId, UserId, wordIds).Result, Is.True);
-            Assert.That(_mergeGraylistRepo.GetAllSets(ProjId).Result, Has.Count.EqualTo(0));
+            Assert.That(_mergeGraylistRepo.GetAllSets(ProjId).Result, Is.Empty);
         }
 
         [Test]

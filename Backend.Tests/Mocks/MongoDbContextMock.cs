@@ -17,7 +17,7 @@ public class MongoDbContextMock : IMongoDbContext
         throw new NotImplementedException();
     }
 
-    public Task<T?> ExecuteInTransactionAllowNull<T>(Func<IClientSessionHandle, Task<T?>> operation) where T : class
+    public Task<T?> ExecuteInTransactionAllowNull<T>(Func<IClientSessionHandle, Task<T?>> operation)
     {
         throw new NotImplementedException();
     }

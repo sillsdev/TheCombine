@@ -127,7 +127,8 @@ namespace Backend.Tests.Services
             Assert.That(newWord.Id, Is.Not.EqualTo(oldId));
             Assert.That(newWord.Audio, Is.Empty);
             Assert.That(newWord.EditedBy.Last(), Is.EqualTo(UserId));
-            Assert.That(newWord.History, Is.Empty);
+            Assert.That(newWord.History, Has.Count.EqualTo(1));
+            Assert.That(newWord.History.Last(), Is.EqualTo(oldId));
 
             // New word is only one in frontier
             Assert.That(_wordRepo.IsInFrontier(ProjId, newWord.Id).Result, Is.True);
@@ -479,7 +480,7 @@ namespace Backend.Tests.Services
                 ProjId, UserId, ["missing-id"], [frontierWordToDelete.Id]).Result;
 
             Assert.That(result, Is.False);
-            Assert.That(_wordRepo.IsInFrontier(ProjId, frontierWordToDelete.Id).Result, Is.False);
+            Assert.That(_wordRepo.IsInFrontier(ProjId, frontierWordToDelete.Id).Result, Is.True);
         }
 
         [Test]

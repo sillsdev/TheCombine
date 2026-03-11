@@ -248,7 +248,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Restore a deleted <see cref="Word"/>. </summary>
-        /// <returns> bool: true if restored; false if already in frontier. </returns>
+        /// <returns> Ok if the word successfully restored. </returns>
         [HttpGet("restore/{wordId}", Name = "RestoreWord")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]

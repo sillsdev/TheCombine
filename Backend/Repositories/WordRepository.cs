@@ -360,8 +360,8 @@ namespace BackendFramework.Repositories
         {
             return idsToRestore.Count == 0 && idsToDelete.Count == 0
                 ? true
-                : await _dbContext.ExecuteInTransaction(async s => await RevertReplaceFrontierWithSession(
-                    s, projectId, idsToRestore, idsToDelete, modifyDeletedWord));
+                : await _dbContext.ExecuteInTransactionAllowNull(async s => await RevertReplaceFrontierWithSession(
+                    s, projectId, idsToRestore, idsToDelete, modifyDeletedWord)) ?? false;
         }
 
         /// <summary>
@@ -467,7 +467,7 @@ namespace BackendFramework.Repositories
         /// <param name="modifyDeletedWord">Action applied on deleted Frontier words added to WordsCollection.</param>
         /// <returns>True when all requested restores succeed; otherwise false.</returns>
         /// <exception cref="ArgumentException">Thrown when restore and delete id sets are not disjoint.</exception>
-        private async Task<bool> RevertReplaceFrontierWithSession(IClientSessionHandle session,
+        private async Task<bool?> RevertReplaceFrontierWithSession(IClientSessionHandle session,
             string projectId, IEnumerable<string> idsToRestore, IEnumerable<string> idsToDelete,
             Action<Word> modifyDeletedWord)
         {
@@ -482,7 +482,7 @@ namespace BackendFramework.Repositories
             {
                 if (!await RestoreFrontierWithSession(session, projectId, id))
                 {
-                    return false;
+                    return null; // Return null instead of false to abort transaction.
                 }
             }
             return true;

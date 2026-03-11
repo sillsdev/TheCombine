@@ -71,13 +71,12 @@ public class MongoDbContext : IMongoDbContext
     /// Executes an operation in a transaction, committing when a non-null result is returned.
     /// Null represents an operation that could complete and shouldn't be committed, so it aborts.
     /// </summary>
-    /// <typeparam name="T">The operation result reference type.</typeparam>
+    /// <typeparam name="T">The operation result type.</typeparam>
     /// <param name="operation">Operation to execute with the transaction session.</param>
     /// <returns>
     /// The operation result when non-null; otherwise <see langword="null"/> after aborting the transaction.
     /// </returns>
     public async Task<T?> ExecuteInTransactionAllowNull<T>(Func<IClientSessionHandle, Task<T?>> operation)
-        where T : class
     {
         using var transaction = await BeginTransaction();
         try
@@ -86,7 +85,7 @@ public class MongoDbContext : IMongoDbContext
             if (result is null)
             {
                 await transaction.AbortTransactionAsync();
-                return null;
+                return default;
             }
 
             await transaction.CommitTransactionAsync();

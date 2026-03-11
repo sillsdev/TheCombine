@@ -73,6 +73,7 @@ namespace BackendFramework.Services
                 {
                     throw new ArgumentException("Audio file name not found on word.");
                 }
+                word.History.Add(word.Id);
             };
 
         /// <summary>
