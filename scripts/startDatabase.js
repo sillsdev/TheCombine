@@ -26,10 +26,21 @@ async function waitForMongo() {
 async function initReplicaSet() {
   const result = spawnSync(
     "mongosh",
-    ["--eval", "try { rs.status() } catch(e) { rs.initiate() }", "--quiet"],
+    [
+      "--eval",
+      "try { rs.status() } catch(e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }] }) }",
+      "--quiet",
+    ],
     { stdio: "inherit" }
   );
   return result.status === 0;
+}
+
+async function waitForMongoToCloseThenExit(mongod) {
+  const exitCode = await new Promise((resolve) =>
+    mongod.on("close", (code) => resolve(code))
+  );
+  process.exit(exitCode ?? 1);
 }
 
 async function main() {
@@ -59,20 +70,17 @@ async function main() {
   if (!ready) {
     console.error("MongoDB did not start in time");
     mongod.kill("SIGTERM");
-    process.exit(1);
+    await waitForMongoToCloseThenExit(mongod);
   }
 
   const initialized = await initReplicaSet();
   if (!initialized) {
     console.error("Replica set initialization failed");
     mongod.kill("SIGTERM");
-    process.exit(1);
+    await waitForMongoToCloseThenExit(mongod);
   }
 
-  const exitCode = await new Promise((resolve) =>
-    mongod.on("close", (code) => resolve(code))
-  );
-  process.exit(exitCode ?? 1);
+  await waitForMongoToCloseThenExit(mongod);
 }
 
 main().catch((err) => {
