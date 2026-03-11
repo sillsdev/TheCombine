@@ -60,7 +60,7 @@ spec:
                     max_attempts=60
                     attempt=1
                     while [ "$attempt" -le "$max_attempts" ]; do
-                      if mongosh --quiet --host 127.0.0.1 --eval "const host = '${MONGO_INITDB_REPLICA_HOST}'; try { rs.status(); print('Replica set already initialized'); } catch (e) { print('Initializing replica set (' + e + ')'); rs.initiate({_id: 'rs0', members: [{_id: 0, host: host}]}); }" ; then
+                      if mongosh --quiet --host 127.0.0.1 --eval "const host = '${MONGO_INITDB_REPLICA_HOST}'; try { rs.status(); const conf = rs.conf(); if (conf.members[0].host !== host) { print('Updating replica set member host to ' + host); conf.members[0].host = host; conf.version++; rs.reconfig(conf); } else { print('Replica set already initialized with correct host'); } } catch (e) { print('Initializing replica set (' + e + ')'); rs.initiate({_id: 'rs0', members: [{_id: 0, host: host}]}); }" ; then
                         exit 0
                       fi
                       sleep 1
