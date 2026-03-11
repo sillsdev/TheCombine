@@ -168,13 +168,14 @@ namespace Backend.Tests.Services
             var childIds = mergeObject.Children.Select(word => word.SrcWordId).ToList();
             var parentIds = new List<string> { newWords[0].Id };
             var mergedWord = new MergeUndoIds(parentIds, childIds);
-            _mergeService.UndoMerge(ProjId, UserId, mergedWord).Wait();
+
+            var result = _mergeService.UndoMerge(ProjId, UserId, mergedWord).Result;
+            Assert.That(result, Is.True);
 
             var frontierWords = _wordRepo.GetAllFrontier(ProjId).Result;
-            var frontierWordIds = frontierWords.Select(word => word.Id).ToList();
-
             Assert.That(frontierWords, Has.Count.EqualTo(1));
-            Assert.That(frontierWordIds, Does.Contain(childIds[0]));
+            Assert.That(frontierWords[0].Id, Is.EqualTo(childIds[0]));
+
         }
 
         [Test]
@@ -200,12 +201,13 @@ namespace Backend.Tests.Services
             var childIds = mergeWords.Children.Select(word => word.SrcWordId).ToList();
             var parentIds = new List<string> { newWords[0].Id };
             var mergedWord = new MergeUndoIds(parentIds, childIds);
-            _mergeService.UndoMerge(ProjId, UserId, mergedWord).Wait();
+
+            var result = _mergeService.UndoMerge(ProjId, UserId, mergedWord).Result;
+            Assert.That(result, Is.True);
 
             var frontierWords = _wordRepo.GetAllFrontier(ProjId).Result;
-            var frontierWordIds = frontierWords.Select(word => word.Id).ToList();
-
             Assert.That(frontierWords, Has.Count.EqualTo(numberOfChildren));
+            var frontierWordIds = frontierWords.Select(w => w.Id).ToList();
             childIds.ForEach(id => Assert.That(frontierWordIds, Does.Contain(id)));
         }
 
