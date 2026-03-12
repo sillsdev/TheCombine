@@ -62,18 +62,14 @@ spec:
                     until mongosh --quiet --host 127.0.0.1 --eval "db.adminCommand({ ping: 1 }).ok" >/dev/null 2>&1; do
                       attempts=$((attempts + 1))
                       if [ "${attempts}" -ge 120 ]; then
-                        echo "[postStart] Timed out waiting for mongod" >&2
                         exit 1
                       fi
                       sleep 1
                     done
-                    echo "[postStart] Ensuring replica set host: ${MONGO_INITDB_REPLICA_HOST}"
+                    echo "[postStart] Ensuring replica set host"
                     if ! mongosh --quiet --host 127.0.0.1 /docker-entrypoint-initdb.d/00-replica-set.js; then
-                      rc=$?
-                      echo "[postStart] 00-replica-set.js failed with exit code ${rc}" >&2
-                      exit ${rc}
+                      exit $?
                     fi
-                    echo "[postStart] Replica set script completed successfully"
           env:
             - name: POD_IP
               valueFrom:

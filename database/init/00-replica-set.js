@@ -13,33 +13,20 @@ function ensurePrimaryHost(forceReconfig) {
   try {
     conf = rs.conf();
   } catch (error) {
-    if (!forceReconfig) {
-      throw error;
-    }
-
-    conf = db.getSiblingDB("local").system.replset.findOne();
-    if (!conf) {
+    if (!forceReconfig || !db.getSiblingDB("local").system.replset.findOne()) {
       throw error;
     }
   }
 
-  if (!conf.members || conf.members.length === 0) {
+  if (!conf.members?.length) {
     throw new Error("Replica set config has no members");
-  }
-
-  if (conf.members[0].host === host) {
-    return true;
   }
 
   if (conf.members[0].host !== host) {
     print(`Updating replica set member host to ${host}`);
     conf.members[0].host = host;
     conf.version = (conf.version || 1) + 1;
-    if (forceReconfig) {
-      rs.reconfig(conf, { force: true });
-    } else {
-      rs.reconfig(conf);
-    }
+    rs.reconfig(conf, { force: forceReconfig });
 
     return false;
   }
@@ -49,31 +36,16 @@ function ensurePrimaryHost(forceReconfig) {
 
 while (Date.now() - start < maxWaitMs) {
   try {
-    const hello = db.hello();
-    if (hello.isWritablePrimary) {
-      try {
-        const hostIsAligned = ensurePrimaryHost(false);
-        if (hostIsAligned) {
-          print("Replica set is PRIMARY with correct host");
-          quit(0);
-        }
-
-        print("Replica set host updated, waiting for PRIMARY");
-      } catch (error) {
-        print(`Host alignment deferred (${error})`);
+    if (db.hello().isWritablePrimary) {
+      if (ensurePrimaryHost(false)) {
+        print("Replica set is PRIMARY with correct host");
+        quit(0);
       }
+    } else {
+      ensurePrimaryHost(true);
     }
   } catch (error) {
-    print(`Replica set not writable yet (${error})`);
-  }
-
-  try {
-    const hostIsAligned = ensurePrimaryHost(true);
-    if (!hostIsAligned) {
-      print("Forced host alignment requested, waiting for PRIMARY");
-    }
-  } catch (error) {
-    print(`Forced host alignment deferred (${error})`);
+    print(`Host alignment deferred (${error})`);
   }
 
   try {
