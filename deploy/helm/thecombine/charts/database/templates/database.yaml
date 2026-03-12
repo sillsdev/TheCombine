@@ -57,17 +57,23 @@ spec:
                   - -c
                   - |
                     set -e
-                    max_attempts=60
-                    attempt=1
-                    while [ "$attempt" -le "$max_attempts" ]; do
-                      if mongosh --quiet --host 127.0.0.1 --eval "const host = '${MONGO_INITDB_REPLICA_HOST}'; try { rs.status(); const conf = rs.conf(); if (conf.members[0].host !== host) { print('Updating replica set member host to ' + host); conf.members[0].host = host; conf.version++; rs.reconfig(conf); } else { print('Replica set already initialized with correct host'); } } catch (e) { print('Initializing replica set (' + e + ')'); rs.initiate({_id: 'rs0', members: [{_id: 0, host: host}]}); }" ; then
-                        exit 0
+                    echo "[postStart] Waiting for mongod to accept connections"
+                    attempts=0
+                    until mongosh --quiet --host 127.0.0.1 --eval "db.adminCommand({ ping: 1 }).ok" >/dev/null 2>&1; do
+                      attempts=$((attempts + 1))
+                      if [ "${attempts}" -ge 120 ]; then
+                        echo "[postStart] Timed out waiting for mongod" >&2
+                        exit 1
                       fi
                       sleep 1
-                      attempt=$((attempt + 1))
                     done
-                    echo "Failed to ensure replica set initialization after ${max_attempts} attempts"
-                    exit 1
+                    echo "[postStart] Ensuring replica set host: ${MONGO_INITDB_REPLICA_HOST}"
+                    if ! mongosh --quiet --host 127.0.0.1 /docker-entrypoint-initdb.d/00-replica-set.js; then
+                      rc=$?
+                      echo "[postStart] 00-replica-set.js failed with exit code ${rc}" >&2
+                      exit ${rc}
+                    fi
+                    echo "[postStart] Replica set script completed successfully"
           env:
             - name: POD_IP
               valueFrom:
