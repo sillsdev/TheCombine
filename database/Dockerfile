@@ -5,7 +5,7 @@
 #   - Intel/AMD 64-bit
 #   - ARM 64-bit
 ############################################################
-FROM mongo:7.0.28-jammy@sha256:8ddd3db4d2638eb914cce56284e2f0d6daf140bba31679b2af86f7d790a4c77e
+FROM mongo:7.0.30-jammy@sha256:aee9bae9f1a5507a51e19f24b015162cbcd7004695d99175dbccc427e20760e2
 
 WORKDIR /
 
