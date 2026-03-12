@@ -9,17 +9,17 @@ FROM mongo:7.0.30-jammy@sha256:aee9bae9f1a5507a51e19f24b015162cbcd7004695d99175d
 
 WORKDIR /
 
-RUN mkdir /data/semantic-domains
+RUN mkdir -p /data/semantic-domains /opt/thecombine
 
 # Copy semantic domain import files
 COPY semantic_domains/* /data/semantic-domains/
 
 # from https://hub.docker.com/_/mongo
-# Initializing a fresh instance
-# When a container is started for the first time it will execute files
-# with extensions .sh and .js that are found in /docker-entrypoint-initdb.d.
-# Files will be executed in alphabetical order. .js files will be executed
-# by mongosh (mongo on versions below 6) using the database specified by
-# the MONGO_INITDB_DATABASE variable, if it is present, or test otherwise.
-# You may also switch databases within the .js script.
-COPY init/* /docker-entrypoint-initdb.d/
+# Scripts in /docker-entrypoint-initdb.d run only on first startup of an empty
+# data directory. We intentionally keep setup scripts out of initdb.d and run
+# them from Kubernetes postStart to avoid first-boot race conditions.
+COPY init/update-semantic-domains.sh /opt/thecombine/update-semantic-domains.sh
+
+# Replica set readiness/alignment runs from Kubernetes postStart hook on every
+# container start, so this script is intentionally kept out of initdb.d.
+COPY init/00-replica-set.js /opt/thecombine/00-replica-set.js
