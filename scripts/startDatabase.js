@@ -109,7 +109,7 @@ async function initReplicaSet() {
     const result = runMongosh(
       [
         "--eval",
-        "try { rs.status() } catch(e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }] }) }",
+        `try { rs.status() } catch { rs.initiate({ _id: '${replSetName}', members: [{ _id: 0, host: 'localhost:27017' }] }) }`,
       ],
       { stdio: "inherit" }
     );
@@ -127,7 +127,7 @@ async function main() {
 
   mongodProcess = spawn(
     "mongod",
-    [`--dbpath=${dbPath}`, "--replSet", replSetName],
+    ["--dbpath", dbPath, "--replSet", replSetName, "--quiet"],
     { stdio: "inherit" }
   );
 
