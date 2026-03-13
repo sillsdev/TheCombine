@@ -473,7 +473,7 @@ npm run license-report-frontend
 
 To browse the database locally during development, open [MongoDB Compass](https://www.mongodb.com/try/download/compass).
 
-1. Under New Connection, enter `mongodb://localhost:27017`
+1. Under New Connection, enter `mongodb://localhost:27017/?replicaSet=rs0`
 2. Under Databases, select CombineDatabase
 
 ### Add or Update Dictionary Files
