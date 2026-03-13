@@ -67,9 +67,7 @@ spec:
                       sleep 1
                     done
                     echo "[postStart] Ensuring replica set host"
-                    if ! mongosh --quiet --host 127.0.0.1 /opt/thecombine/00-replica-set.js; then
-                      exit $?
-                    fi
+                    mongosh --quiet --host 127.0.0.1 /opt/thecombine/00-replica-set.js || exit $?
                     needs_semantic_import="$(mongosh --quiet --host 127.0.0.1 --eval "const combineDb = db.getSiblingDB('CombineDatabase'); const treeCount = combineDb.SemanticDomainTree.countDocuments({}); const domainCount = combineDb.SemanticDomains.countDocuments({}); print(treeCount === 0 || domainCount === 0 ? 'yes' : 'no');")"
                     if [ "${needs_semantic_import}" = "yes" ]; then
                       /bin/bash /opt/thecombine/update-semantic-domains.sh
