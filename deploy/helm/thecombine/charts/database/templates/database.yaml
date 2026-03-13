@@ -62,6 +62,7 @@ spec:
                     until mongosh --quiet --host 127.0.0.1 --eval "db.adminCommand({ ping: 1 }).ok" >/dev/null 2>&1; do
                       attempts=$((attempts + 1))
                       if [ "${attempts}" -ge 120 ]; then
+                        echo "[postStart] Failed to connect to mongod after ${attempts} attempts, exiting"
                         exit 1
                       fi
                       sleep 1
