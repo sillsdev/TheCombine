@@ -1,86 +1,138 @@
 "use strict";
 
 const { spawn, spawnSync } = require("child_process");
+const readline = require("readline");
+
 const { ensureDir } = require("fs-extra");
 
 const dbPath = "./mongo_database";
 const replSetName = "rs0";
 const maxAttempts = 30;
-const retryInterval = 1000; // ms
+const retryIntervalSeconds = 1;
+const mongoshTimeoutSeconds = 10;
+let mongodProcess;
+let exiting = false;
+
+function forceExit(exitCode = 0) {
+  if (exiting) {
+    return;
+  }
+  exiting = true;
+
+  if (process.stdin.isTTY && typeof process.stdin.setRawMode === "function") {
+    process.stdin.setRawMode(false);
+    process.stdin.pause();
+  }
+
+  if (mongodProcess && !mongodProcess.killed) {
+    mongodProcess.kill("SIGKILL");
+  }
+  process.exit(exitCode);
+}
+
+function setUpInterruptHandling() {
+  process.on("SIGINT", () => forceExit(130));
+  process.on("SIGTERM", () => forceExit(143));
+  process.on("SIGBREAK", () => forceExit(131));
+
+  if (process.stdin.isTTY && typeof process.stdin.setRawMode === "function") {
+    readline.emitKeypressEvents(process.stdin);
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
+    process.stdin.on("keypress", (_text, key) => {
+      if (key && key.ctrl && key.name === "c") {
+        forceExit(130);
+      }
+    });
+  }
+}
+
+function getErrorMessage(error) {
+  return error instanceof Error
+    ? `${error.code}: ${error.message}`
+    : String(error);
+}
+
+function runMongosh(args, options = {}) {
+  const result = spawnSync("mongosh", [...args, "--quiet"], {
+    timeout: mongoshTimeoutSeconds * 1000,
+    killSignal: "SIGTERM",
+    ...options,
+  });
+
+  if (result.error) {
+    throw result.error;
+  }
+  if (result.signal) {
+    throw new Error(`mongosh exited due to signal ${result.signal}`);
+  }
+
+  return result;
+}
 
 async function waitForMongo() {
   for (let i = 0; i < maxAttempts; i++) {
-    const result = spawnSync("mongosh", [
-      "--eval",
-      "db.adminCommand('ping')",
-      "--quiet",
-    ]);
+    let result;
+    try {
+      result = runMongosh(["--eval", "db.adminCommand('ping')"]);
+    } catch (error) {
+      console.warn(`MongoDB ping failed: ${getErrorMessage(error)}`);
+      return false;
+    }
+
     if (result.status === 0) {
       return true;
     }
-    await new Promise((resolve) => setTimeout(resolve, retryInterval));
+
+    await new Promise((res) => setTimeout(res, retryIntervalSeconds * 1000));
   }
+
+  console.error(`MongoDB pings failed after ${maxAttempts} attempts`);
   return false;
 }
 
 async function initReplicaSet() {
-  const result = spawnSync(
-    "mongosh",
-    [
-      "--eval",
-      "try { rs.status() } catch(e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }] }) }",
-      "--quiet",
-    ],
-    { stdio: "inherit" }
-  );
-  return result.status === 0;
-}
-
-async function waitForMongoToCloseThenExit(mongod) {
-  const exitCode = await new Promise((resolve) =>
-    mongod.on("close", (code) => resolve(code))
-  );
-  process.exit(exitCode ?? 1);
+  try {
+    const result = runMongosh(
+      [
+        "--eval",
+        "try { rs.status() } catch(e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }] }) }",
+      ],
+      { stdio: "inherit" }
+    );
+    return result.status === 0;
+  } catch (error) {
+    console.error(`Replica set init failed: ${getErrorMessage(error)}`);
+    return false;
+  }
 }
 
 async function main() {
+  setUpInterruptHandling();
+
   await ensureDir(dbPath);
 
-  const mongod = spawn(
+  mongodProcess = spawn(
     "mongod",
     [`--dbpath=${dbPath}`, "--replSet", replSetName],
     {
-      stdio: "inherit",
+      stdio: ["ignore", "inherit", "inherit"],
     }
   );
 
-  mongod.on("error", (err) => {
+  mongodProcess.on("error", (err) => {
     console.error(`mongod error: ${err.message}`);
-    process.exit(1);
+    forceExit(1);
   });
 
-  process.on("SIGINT", () => {
-    mongod.kill("SIGINT");
-  });
-  process.on("SIGTERM", () => {
-    mongod.kill("SIGTERM");
-  });
-
-  const ready = await waitForMongo();
-  if (!ready) {
+  if (!(await waitForMongo())) {
     console.error("MongoDB did not start in time");
-    mongod.kill("SIGTERM");
-    await waitForMongoToCloseThenExit(mongod);
+    forceExit(1);
   }
-
-  const initialized = await initReplicaSet();
-  if (!initialized) {
+  if (!(await initReplicaSet())) {
     console.error("Replica set initialization failed");
-    mongod.kill("SIGTERM");
-    await waitForMongoToCloseThenExit(mongod);
+    forceExit(1);
   }
-
-  await waitForMongoToCloseThenExit(mongod);
 }
 
 main().catch((err) => {
