@@ -1,7 +1,7 @@
 "use strict";
 
 const { spawn, spawnSync } = require("child_process");
-const readline = require("readline");
+const { emitKeypressEvents } = require("readline");
 
 const { ensureDir } = require("fs-extra");
 
@@ -13,38 +13,51 @@ const mongoshTimeoutSeconds = 10;
 let mongodProcess;
 let exiting = false;
 
-function forceExit(exitCode = 0) {
-  if (exiting) {
-    return;
-  }
-  exiting = true;
+function canUseRawMode() {
+  return process.stdin.isTTY && typeof process.stdin.setRawMode === "function";
+}
 
-  if (process.stdin.isTTY && typeof process.stdin.setRawMode === "function") {
+function stopRawMode() {
+  if (canUseRawMode()) {
     process.stdin.setRawMode(false);
     process.stdin.pause();
   }
-
-  if (mongodProcess && !mongodProcess.killed) {
-    mongodProcess.kill("SIGKILL");
-  }
-  process.exit(exitCode);
 }
 
-function setUpInterruptHandling() {
-  process.on("SIGINT", () => forceExit(130));
-  process.on("SIGTERM", () => forceExit(143));
-  process.on("SIGBREAK", () => forceExit(131));
-
-  if (process.stdin.isTTY && typeof process.stdin.setRawMode === "function") {
-    readline.emitKeypressEvents(process.stdin);
+/** Enable raw mode to capture Ctrl+C when it doesn't otherwise work. */
+function startRawMode() {
+  if (canUseRawMode()) {
+    emitKeypressEvents(process.stdin);
     process.stdin.setRawMode(true);
     process.stdin.resume();
     process.stdin.on("keypress", (_text, key) => {
-      if (key && key.ctrl && key.name === "c") {
+      if (key?.ctrl && key.name === "c") {
         forceExit(130);
       }
     });
   }
+}
+
+function forceExit(code = 0) {
+  if (exiting) {
+    return;
+  }
+
+  exiting = true;
+
+  stopRawMode();
+
+  if (mongodProcess && !mongodProcess.killed) {
+    mongodProcess.kill("SIGKILL");
+  }
+  process.exit(code);
+}
+
+function setUpInterruptHandling() {
+  process.on("SIGINT", () => forceExit(130));
+  process.on("SIGBREAK", () => forceExit(131));
+  process.on("SIGTERM", () => forceExit(143));
+  startRawMode();
 }
 
 function getErrorMessage(error) {
@@ -115,9 +128,7 @@ async function main() {
   mongodProcess = spawn(
     "mongod",
     [`--dbpath=${dbPath}`, "--replSet", replSetName],
-    {
-      stdio: ["ignore", "inherit", "inherit"],
-    }
+    { stdio: "inherit" }
   );
 
   mongodProcess.on("error", (err) => {
