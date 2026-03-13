@@ -95,19 +95,18 @@ async function waitForMongo() {
     let result;
     try {
       result = runMongosh(["--eval", "db.adminCommand('ping')"]);
-    } catch (error) {
-      console.warn(`MongoDB ping failed: ${getErrorMessage(error)}`);
-      return false;
+    } catch (err) {
+      console.warn(`ping attempt ${i + 1} failed: ${getErrorMessage(err)}`);
     }
-
-    if (result.status === 0) {
+    if (result?.status === 0) {
       return true;
     }
-
-    await new Promise((res) => setTimeout(res, retryIntervalSeconds * 1000));
+    if (i < maxAttempts - 1) {
+      await new Promise((res) => setTimeout(res, retryIntervalSeconds * 1000));
+    }
   }
 
-  console.error(`MongoDB pings failed after ${maxAttempts} attempts`);
+  console.error(`MongoDB pings failed after ${maxAttempts} attempts.`);
   return false;
 }
 
