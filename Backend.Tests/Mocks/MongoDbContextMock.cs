@@ -3,33 +3,34 @@ using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using MongoDB.Driver;
 
-namespace Backend.Tests.Mocks;
-
-public class MongoDbContextMock : IMongoDbContext
+namespace Backend.Tests.Mocks
 {
-    public IMongoDatabase Db => throw new NotSupportedException();
-
-    public Task<IMongoTransaction> BeginTransaction()
-        => Task.FromResult<IMongoTransaction>(new MongoTransactionMock());
-
-    public Task<T> ExecuteInTransaction<T>(Func<IClientSessionHandle, Task<T>> operation)
+    public class MongoDbContextMock : IMongoDbContext
     {
-        throw new NotImplementedException();
-    }
+        public IMongoDatabase Db => throw new NotSupportedException();
 
-    public Task<T?> ExecuteInTransactionAllowNull<T>(Func<IClientSessionHandle, Task<T?>> operation)
-    {
-        throw new NotImplementedException();
-    }
+        public Task<IMongoTransaction> BeginTransaction()
+            => Task.FromResult<IMongoTransaction>(new MongoTransactionMock());
 
-    private sealed class MongoTransactionMock : IMongoTransaction
-    {
-        public IClientSessionHandle Session => null!;
+        public Task<T> ExecuteInTransaction<T>(Func<IClientSessionHandle, Task<T>> operation)
+        {
+            throw new NotImplementedException();
+        }
 
-        public Task CommitTransactionAsync() => Task.CompletedTask;
+        public Task<T?> ExecuteInTransactionAllowNull<T>(Func<IClientSessionHandle, Task<T?>> operation)
+        {
+            throw new NotImplementedException();
+        }
 
-        public Task AbortTransactionAsync() => Task.CompletedTask;
+        private sealed class MongoTransactionMock : IMongoTransaction
+        {
+            public IClientSessionHandle Session => null!;
 
-        public void Dispose() { }
+            public Task CommitTransactionAsync() => Task.CompletedTask;
+
+            public Task AbortTransactionAsync() => Task.CompletedTask;
+
+            public void Dispose() { }
+        }
     }
 }
