@@ -13,7 +13,8 @@ function ensurePrimaryHost(forceReconfig) {
   try {
     conf = rs.conf();
   } catch (error) {
-    if (!forceReconfig || !db.getSiblingDB("local").system.replset.findOne()) {
+    conf = db.getSiblingDB("local").system.replset.findOne();
+    if (!forceReconfig || !conf) {
       throw error;
     }
   }
