@@ -139,28 +139,7 @@ namespace BackendFramework.Services
 
             // Consolidate children ids
             var childrenIds = mergeWordsList.SelectMany(m => m.Children.Select(c => c.SrcWordId)).ToHashSet();
-
-            // Create the parents
-            var addedParents = new List<Word>();
-            foreach (var parent in parents)
-            {
-                var parentId = parent.Id; // Capture the id in case of changes.
-                Word? updatedParent = null;
-                if (childrenIds.Contains(parentId))
-                {
-                    updatedParent = await _wordService.Update(userId, parent);
-                    if (updatedParent is not null)
-                    {
-                        childrenIds.Remove(parentId);
-                    }
-                }
-                addedParents.Add(updatedParent ?? await _wordService.Create(userId, parent));
-            }
-
-            // Remove the children
-            await Task.WhenAll(childrenIds.Select(id => _wordService.DeleteFrontierWord(projectId, userId, id)));
-
-            return addedParents;
+            return await _wordService.MergeReplaceFrontier(projectId, userId, parents.ToList(), childrenIds.ToList());
         }
 
         /// <summary> Undo merge </summary>
@@ -169,24 +148,7 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "undoing merge");
 
-            var parentIds = ids.ParentIds.Distinct().ToList();
-
-            // If any of the parents aren't in the Frontier, they've been changed since the merge.
-            if (!await _wordRepo.AreInFrontier(projectId, parentIds, parentIds.Count))
-            {
-                return false;
-            }
-
-            // If children are not restorable, return without deleting the merge parents.
-            if (!await _wordService.RestoreFrontierWords(projectId, ids.ChildIds))
-            {
-                return false;
-            }
-
-            // Remove the parents
-            await Task.WhenAll(parentIds.Select(id => _wordService.DeleteFrontierWord(projectId, userId, id)));
-
-            return true;
+            return await _wordService.RevertMergeReplaceFrontier(projectId, userId, ids.ChildIds, ids.ParentIds);
         }
 
         /// <summary> Adds a List of wordIds to MergeBlacklist of specified <see cref="Project"/>. </summary>

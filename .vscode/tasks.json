@@ -28,9 +28,9 @@
     },
     {
       "label": "run-mongo",
-      "command": "mongod",
+      "command": "npm",
       "type": "process",
-      "args": ["--dbpath", "${workspaceFolder}/mongo_database"],
+      "args": ["run", "database"],
       "problemMatcher": "$tsc"
     }
   ]

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
@@ -14,7 +14,7 @@ namespace Backend.Tests.Controllers
     internal sealed class AudioControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
-        private IWordRepository _wordRepo = null!;
+        private WordRepositoryMock _wordRepo = null!;
         private PermissionServiceMock _permissionService = null!;
         private WordService _wordService = null!;
         private AudioController _audioController = null!;
@@ -163,20 +163,19 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDeleteAudioFileNoWordWithAudio()
         {
-            var result = _audioController.DeleteAudioFile(_projId, "not-a-word", _file.FileName).Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            var result1 = _audioController.DeleteAudioFile(_projId, "not-a-word", _file.FileName).Result;
+            Assert.That(result1, Is.InstanceOf<NotFoundObjectResult>());
 
             var wordId = _wordRepo.Create(Util.RandomWord(_projId)).Result.Id;
-            result = _audioController.DeleteAudioFile(_projId, wordId, _file.FileName).Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            var result2 = _audioController.DeleteAudioFile(_projId, wordId, _file.FileName).Result;
+            Assert.That(result2, Is.InstanceOf<NotFoundObjectResult>());
         }
 
         [Test]
         public void TestDeleteAudioFile()
         {
             // Refill test database
-            _wordRepo.DeleteAllWords(_projId).Wait();
-            _wordRepo.DeleteAllFrontierWords(_projId).Wait();
+            _wordRepo.DeleteAllWords(_projId);
             var origWord = Util.RandomWord(_projId);
             const string fileName = "a.wav";
             origWord.Audio.Add(new Pronunciation(fileName));

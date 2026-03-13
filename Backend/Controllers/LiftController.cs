@@ -23,7 +23,8 @@ namespace BackendFramework.Controllers
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/lift")]
     public class LiftController(IProjectRepository projRepo, ISemanticDomainRepository semDomRepo,
-        ISpeakerRepository speakerRepo, IWordRepository wordRepo, IAcknowledgmentService ackService,
+        ISpeakerRepository speakerRepo, IWordRepository wordRepo, IWordService wordService,
+        IAcknowledgmentService ackService,
         ILiftService liftService, IHubContext<ExportHub> notifyService, IPermissionService permissionService,
         ILogger<LiftController> logger) : Controller
     {
@@ -31,6 +32,7 @@ namespace BackendFramework.Controllers
         private readonly ISemanticDomainRepository _semDomRepo = semDomRepo;
         private readonly ISpeakerRepository _speakerRepo = speakerRepo;
         private readonly IWordRepository _wordRepo = wordRepo;
+        private readonly IWordService _wordService = wordService;
         private readonly IAcknowledgmentService _ackService = ackService;
         private readonly ILiftService _liftService = liftService;
         private readonly IHubContext<ExportHub> _notifyService = notifyService;
@@ -263,7 +265,7 @@ namespace BackendFramework.Controllers
             int countWordsImported;
             // Sets the projectId of our parser to add words to that project
             var liftMerger = _liftService.GetLiftImporterExporter(
-                projectId, proj.VernacularWritingSystem.Bcp47, _wordRepo);
+                projectId, proj.VernacularWritingSystem.Bcp47, _wordService);
             var importedAnalysisWritingSystems = new List<WritingSystem>();
             var doesImportHaveDefinitions = false;
             var doesImportHaveGrammaticalInfo = false;
