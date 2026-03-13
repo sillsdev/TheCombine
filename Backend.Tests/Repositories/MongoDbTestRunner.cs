@@ -16,6 +16,7 @@ namespace Backend.Tests.Repositories
     /// </summary>
     internal sealed class MongoDbTestRunner : IDisposable
     {
+        private const string Host = "127.0.0.1";
         private const string ReplicaSetName = "rs0";
 
         private readonly Process _process;
@@ -55,7 +56,7 @@ namespace Backend.Tests.Repositories
                 throw;
             }
 
-            var connectionString = $"mongodb://127.0.0.1:{port}/?directConnection=true&replicaSet={ReplicaSetName}";
+            var connectionString = $"mongodb://{Host}:{port}/?directConnection=true&replicaSet={ReplicaSetName}";
             return new MongoDbTestRunner(process, dataDirectory, connectionString);
         }
 
@@ -107,7 +108,7 @@ namespace Backend.Tests.Repositories
         {
             var args = string.Join(" ",
                 $"--replSet {ReplicaSetName}",
-                "--bind_ip 127.0.0.1",
+                $"--bind_ip {Host}",
                 $"--port {port}",
                 $"--dbpath \"{dataDirectory}\"",
                 "--noauth",
@@ -136,7 +137,7 @@ namespace Backend.Tests.Repositories
                 try
                 {
                     using var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    socket.Connect("127.0.0.1", port);
+                    socket.Connect(Host, port);
                     return;
                 }
                 catch (SocketException)
@@ -150,12 +151,12 @@ namespace Backend.Tests.Repositories
 
         private static void InitializeReplicaSet(int port)
         {
-            var client = new MongoClient($"mongodb://127.0.0.1:{port}/?directConnection=true");
+            var client = new MongoClient($"mongodb://{Host}:{port}/?directConnection=true");
             var admin = client.GetDatabase("admin");
             var config = new BsonDocument
             {
                 { "_id", ReplicaSetName },
-                { "members", new BsonArray { new BsonDocument { { "_id", 0 }, { "host", $"127.0.0.1:{port}" } } } }
+                { "members", new BsonArray { new BsonDocument { { "_id", 0 }, { "host", $"{Host}:{port}" } } } }
             };
             admin.RunCommand<BsonDocument>(new BsonDocument("replSetInitiate", config));
         }
@@ -163,7 +164,7 @@ namespace Backend.Tests.Repositories
         private static void WaitForReplicaSetReady(int port, int timeoutSeconds = 30)
         {
             var client = new MongoClient(
-                $"mongodb://127.0.0.1:{port}/?directConnection=true&replicaSet={ReplicaSetName}");
+                $"mongodb://{Host}:{port}/?directConnection=true&replicaSet={ReplicaSetName}");
             var deadline = DateTime.UtcNow.AddSeconds(timeoutSeconds);
             Exception? lastException = null;
             while (DateTime.UtcNow < deadline)
@@ -172,7 +173,7 @@ namespace Backend.Tests.Repositories
                 {
                     var admin = client.GetDatabase("admin");
                     var status = admin.RunCommand<BsonDocument>(new BsonDocument("replSetGetStatus", 1));
-                    if (status["ok"].AsDouble == 1.0)
+                    if (status["ok"].ToInt32() == 1 && status["myState"].ToInt32() == 1)
                     {
                         return;
                     }
