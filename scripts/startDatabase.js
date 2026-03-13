@@ -13,10 +13,12 @@ const mongoshTimeoutSeconds = 10;
 let mongodProcess;
 let exiting = false;
 
+/** Check if TTY and raw mode are available. */
 function canUseRawMode() {
   return process.stdin.isTTY && typeof process.stdin.setRawMode === "function";
 }
 
+/** Disable raw mode. */
 function stopRawMode() {
   if (canUseRawMode()) {
     process.stdin.setRawMode(false);
@@ -38,6 +40,7 @@ function startRawMode() {
   }
 }
 
+/** Unless already exiting, forcibly kill mongod and exit process. */
 function forceExit(code = 0) {
   if (exiting) {
     return;
@@ -53,6 +56,7 @@ function forceExit(code = 0) {
   process.exit(code);
 }
 
+/** Set up handlers for various interrupts. */
 function setUpInterruptHandling() {
   process.on("SIGINT", () => forceExit(130));
   process.on("SIGBREAK", () => forceExit(131));
@@ -60,12 +64,14 @@ function setUpInterruptHandling() {
   startRawMode();
 }
 
+/** Convert error to string. */
 function getErrorMessage(error) {
   return error instanceof Error
     ? `${error.code}: ${error.message}`
     : String(error);
 }
 
+/** Run a mongosh command with timeout and interrupt handling. */
 function runMongosh(args, options = {}) {
   const result = spawnSync("mongosh", [...args, "--quiet"], {
     timeout: mongoshTimeoutSeconds * 1000,
@@ -83,6 +89,7 @@ function runMongosh(args, options = {}) {
   return result;
 }
 
+/** Ping with mongosh until available, up to a preset number of attempts. */
 async function waitForMongo() {
   for (let i = 0; i < maxAttempts; i++) {
     let result;
@@ -104,6 +111,7 @@ async function waitForMongo() {
   return false;
 }
 
+/** Start a replica set if not already initialized. */
 async function initReplicaSet() {
   try {
     const result = runMongosh(
@@ -125,15 +133,29 @@ async function main() {
 
   await ensureDir(dbPath);
 
+  // Start the mongod process
   mongodProcess = spawn(
     "mongod",
     ["--dbpath", dbPath, "--replSet", replSetName, "--quiet"],
     { stdio: "inherit" }
   );
 
+  // Exit when the mongod process errors
   mongodProcess.on("error", (err) => {
     console.error(`mongod error: ${err.message}`);
     forceExit(1);
+  });
+
+  // Exit when the mongod process exits
+  mongodProcess.on("exit", (code, signal) => {
+    if (exiting) {
+      return;
+    }
+
+    if (code || signal) {
+      console.error(`mongod exited with code ${code}, signal ${signal}`);
+    }
+    forceExit(signal ? 1 : (code ?? 1));
   });
 
   if (!(await waitForMongo())) {
@@ -148,5 +170,5 @@ async function main() {
 
 main().catch((err) => {
   console.error(err);
-  process.exit(1);
+  forceExit(1);
 });
