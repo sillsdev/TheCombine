@@ -234,22 +234,6 @@ namespace BackendFramework.Repositories
             return await _frontier.Find(GetAllProjectWordsFilter(projectId, vernacular)).ToListAsync();
         }
 
-        /// <summary> Adds a list of <see cref="Word"/>s only to the Frontier </summary>
-        /// <param name="words">Words to add to Frontier.</param>
-        /// <returns>The words created</returns>
-        public async Task<List<Word>> AddFrontier(List<Word> words)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "adding words to Frontier");
-
-            if (words.Count == 0)
-            {
-                return words;
-            }
-
-            await _frontier.InsertManyAsync(words);
-            return words;
-        }
-
         /// <summary>
         /// Removes a <see cref="Word"/> from the Frontier, modifies it, and adds it to the WordsCollection.
         /// </summary>

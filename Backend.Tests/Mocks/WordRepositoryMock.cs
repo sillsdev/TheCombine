@@ -138,7 +138,8 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(word);
         }
 
-        public Task<List<Word>> AddFrontier(List<Word> words)
+        /// <summary> Adds new words to the frontier without adding them to the words. </summary>
+        internal Task<List<Word>> AddFrontier(List<Word> words)
         {
             words.ForEach(w => _frontier.Add(w.Clone()));
             return Task.FromResult(words);

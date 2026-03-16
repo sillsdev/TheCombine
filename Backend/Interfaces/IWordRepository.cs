@@ -20,7 +20,6 @@ namespace BackendFramework.Interfaces
         Task<List<Word>> GetAllFrontier(string projectId);
         Task<Word?> GetFrontier(string projectId, string wordId, string? audioFileName = null);
         Task<List<Word>> GetFrontierWithVernacular(string projectId, string vernacular);
-        Task<List<Word>> AddFrontier(List<Word> words);
         Task<Word?> DeleteFrontier(string projectId, string wordId, Action<Word> modifyDeletedWord);
         Task<bool> RestoreFrontier(string projectId, string wordId);
         Task<Word?> UpdateFrontier(string projectId, string wordId, Action<Word> modifyUpdatedWord);

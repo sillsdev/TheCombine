@@ -333,29 +333,6 @@ namespace Backend.Tests.Repositories
             Assert.That(results, Is.Empty);
         }
 
-        // ADD FRONTIER
-
-        [Test]
-        public async Task TestAddFrontierAddsWordsOnlyToFrontier()
-        {
-            var word = Util.RandomWord(_projectId);
-            var newId = NewObjectId();
-            word.Id = newId;
-
-            var added = await _repo.AddFrontier([word]);
-
-            Assert.That(added, Has.Count.EqualTo(1));
-            Assert.That(await _repo.IsInFrontier(_projectId, newId), Is.True);
-            Assert.That(await _repo.GetWord(_projectId, newId), Is.Null);
-        }
-
-        [Test]
-        public async Task TestAddFrontierEmptyListReturnsEmpty()
-        {
-            var result = await _repo.AddFrontier([]);
-            Assert.That(result, Is.Empty);
-        }
-
         // DELETE FRONTIER
 
         [Test]
