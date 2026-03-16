@@ -19,21 +19,19 @@ dnspython==2.8.0
 durationpy==0.10
     # via kubernetes
 humanfriendly==10.0
-    # via -r requirements.in
+    # via -r maintenance/requirements.in
 idna==3.11
     # via requests
 kubernetes==35.0.0
-    # via -r requirements.in
+    # via -r maintenance/requirements.in
 oauthlib==3.3.1
     # via requests-oauthlib
 pycparser==2.23
     # via cffi
 pymongo==4.16.0
-    # via -r requirements.in
-pyopenssl==25.3.0
-    # via -r requirements.in
-pyreadline3==3.5.4
-    # via humanfriendly
+    # via -r maintenance/requirements.in
+pyopenssl==26.0.0
+    # via -r maintenance/requirements.in
 python-dateutil==2.9.0.post0
     # via kubernetes
 pyyaml==6.0.3
