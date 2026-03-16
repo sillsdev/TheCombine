@@ -41,7 +41,7 @@ packaging==25.0
     # via ansible-core
 pycparser==2.23
     # via cffi
-pyopenssl==25.3.0
+pyopenssl==26.0.0
     # via -r requirements.in
 python-dateutil==2.9.0.post0
     # via kubernetes
