@@ -170,7 +170,7 @@ function WordCard(props: { wordId: string }): ReactElement {
       />
 
       <CardContent>
-        <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
+        <div style={{ maxHeight: "55vh", overflowX: "hidden", overflowY: "auto" }}>
           {word?.senses?.map(SenseCard)}
         </div>
       </CardContent>
@@ -186,7 +186,6 @@ function SenseCard(sense: Sense): ReactElement {
         bgcolor: "white",
         m: 1,
         maxWidth: 300,
-        minWidth: 150,
         userSelect: "none",
       }}
     >
