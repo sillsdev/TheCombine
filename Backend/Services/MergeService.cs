@@ -129,6 +129,9 @@ namespace BackendFramework.Services
         /// then removes from the frontier the children that weren't updated.
         /// </summary>
         /// <returns> List of new words added. </returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when a parent word has a different project id or a child id isn't in Frontier.
+        /// </exception>
         public async Task<List<Word>> Merge(string projectId, string userId, List<MergeWords> mergeWordsList)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "merging words");
@@ -144,6 +147,7 @@ namespace BackendFramework.Services
 
         /// <summary> Undo merge </summary>
         /// <returns> A bool: true if merge children were successfully restored </returns>
+        /// <exception cref="ArgumentException"> Thrown when ids to restore and delete are not disjoint. </exception>
         public async Task<bool> UndoMerge(string projectId, string userId, MergeUndoIds ids)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "undoing merge");

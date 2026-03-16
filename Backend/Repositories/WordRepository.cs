@@ -276,6 +276,9 @@ namespace BackendFramework.Repositories
         /// <param name="projectId">Id of the project containing the word.</param>
         /// <param name="wordId">Id of the word to restore.</param>
         /// <returns>True if the word was restored; false if it was not found.</returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the word has Deleted status or when its Id already exists in Frontier.
+        /// </exception>
         public async Task<bool> RestoreFrontier(string projectId, string wordId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring word to Frontier");
@@ -356,6 +359,7 @@ namespace BackendFramework.Repositories
         /// Action applied before deleted Frontier words are added to WordsCollection.
         /// </param>
         /// <returns>True when all requested restores succeed; otherwise false.</returns>
+        /// <exception cref="ArgumentException">Thrown when ids to restore and delete are not disjoint.</exception>
         public async Task<bool> RevertReplaceFrontier(
             string projectId, List<string> idsToRestore, List<string> idsToDelete, Action<Word> modifyDeletedWord)
         {

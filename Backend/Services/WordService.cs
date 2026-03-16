@@ -182,6 +182,9 @@ namespace BackendFramework.Services
         /// <param name="projectId">Id of the project containing the word.</param>
         /// <param name="wordId">Id of the word to restore.</param>
         /// <returns>True if the word is restored; false if it is not found.</returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the word has Deleted status or when its Id already exists in Frontier.
+        /// </exception>
         public async Task<bool> RestoreFrontierWord(string projectId, string wordId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "restoring words to Frontier");
@@ -221,6 +224,9 @@ namespace BackendFramework.Services
         /// <param name="parents">Parent words to create or use as replacements.</param>
         /// <param name="idsToDelete">Ids of merge children to delete from Frontier.</param>
         /// <returns>The updated parent words.</returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when a parent word has a different project id or a child id to replace/delete isn't in Frontier.
+        /// </exception>
         public async Task<List<Word>> MergeReplaceFrontier(
             string projectId, string userId, List<Word> parents, List<string> idsToDelete)
         {
@@ -238,6 +244,7 @@ namespace BackendFramework.Services
         /// <param name="idsToRestore">Ids of words to restore to Frontier.</param>
         /// <param name="idsToDelete">Ids of Frontier words to delete.</param>
         /// <returns>True when all requested restores succeed; otherwise false.</returns>
+        /// <exception cref="ArgumentException">Thrown when ids to restore and delete are not disjoint.</exception>
         public async Task<bool> RevertMergeReplaceFrontier(
             string projectId, string userId, List<string> idsToRestore, List<string> idsToDelete)
         {
