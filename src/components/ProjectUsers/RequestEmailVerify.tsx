@@ -58,6 +58,7 @@ export default function RequestEmailVerify(
 
         {/* Email address */}
         <NormalizedTextField
+          autoComplete="email"
           autoFocus
           error={isTaken}
           fullWidth
