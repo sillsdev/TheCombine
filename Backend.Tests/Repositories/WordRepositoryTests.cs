@@ -255,7 +255,7 @@ namespace Backend.Tests.Repositories
         [Test]
         public async Task TestGetFrontierCountEmptyProjectReturnsZero()
         {
-            Assert.That(await _repo.GetFrontierCount(_projectId), Is.EqualTo(0));
+            Assert.That(await _repo.GetFrontierCount(_projectId), Is.Zero);
         }
 
         // GET ALL FRONTIER
@@ -339,14 +339,14 @@ namespace Backend.Tests.Repositories
         public async Task TestAddFrontierAddsWordsOnlyToFrontier()
         {
             var word = Util.RandomWord(_projectId);
-            word.Id = NewObjectId();
+            var newId = NewObjectId();
+            word.Id = newId;
 
             var added = await _repo.AddFrontier([word]);
 
             Assert.That(added, Has.Count.EqualTo(1));
-            Assert.That(await _repo.IsInFrontier(_projectId, word.Id), Is.True);
-            // Word was NOT added to the words collection
-            Assert.That(await _repo.GetWord(_projectId, word.Id), Is.Null);
+            Assert.That(await _repo.IsInFrontier(_projectId, newId), Is.True);
+            Assert.That(await _repo.GetWord(_projectId, newId), Is.Null);
         }
 
         [Test]
@@ -362,13 +362,13 @@ namespace Backend.Tests.Repositories
         public async Task TestDeleteFrontierRemovesFromFrontierAndArchives()
         {
             var created = await CreateWord();
-            var deleted = await _repo.DeleteFrontier(
-                _projectId, created.Id, w => w.Accessibility = Status.Deleted);
+            var createdId = created.Id;
+
+            var deleted = await _repo.DeleteFrontier(_projectId, createdId, w => w.Accessibility = Status.Deleted);
 
             Assert.That(deleted, Is.Not.Null);
-            Assert.That(await _repo.IsInFrontier(_projectId, created.Id), Is.False);
-            // The archived word has a new ID
-            Assert.That(deleted.Id, Is.Not.EqualTo(created.Id));
+            Assert.That(await _repo.IsInFrontier(_projectId, createdId), Is.False);
+            Assert.That(deleted.Id, Is.Not.EqualTo(createdId));
             Assert.That(deleted.Accessibility, Is.EqualTo(Status.Deleted));
         }
 
@@ -379,18 +379,41 @@ namespace Backend.Tests.Repositories
             Assert.That(result, Is.Null);
         }
 
+        [Test]
+        public async Task TestDeleteFrontierModifyActionThrowsLeavesRepoUnchanged()
+        {
+            var created = await CreateWord();
+            var createdId = created.Id;
+
+            var ex = Assert.ThrowsAsync<InvalidOperationException>(() =>
+                _repo.DeleteFrontier(_projectId, createdId, w =>
+                {
+                    w.Accessibility = Status.Deleted;
+                    throw new InvalidOperationException();
+                }));
+
+            Assert.That(ex, Is.Not.Null);
+            Assert.That((await _repo.GetAllWords(_projectId)).Select(w => w.Id), Is.EqualTo([createdId]));
+
+            Assert.That(await _repo.GetFrontierCount(_projectId), Is.EqualTo(1));
+            var frontierWord = await _repo.GetFrontier(_projectId, createdId);
+            Assert.That(frontierWord, Is.Not.Null);
+            Assert.That(frontierWord.Accessibility, Is.Not.EqualTo(Status.Deleted));
+        }
+
         // RESTORE FRONTIER
 
         [Test]
         public async Task TestRestoreFrontierRestoresWordToFrontier()
         {
             var word = await CreateWord();
-            await _repo.DeleteFrontier(_projectId, word.Id, _ => { });
-            Assert.That(await _repo.IsInFrontier(_projectId, word.Id), Is.False);
+            var wordId = word.Id;
+            await _repo.DeleteFrontier(_projectId, wordId, _ => { });
+            Assert.That(await _repo.IsInFrontier(_projectId, wordId), Is.False);
 
-            var restored = await _repo.RestoreFrontier(_projectId, word.Id);
+            var restored = await _repo.RestoreFrontier(_projectId, wordId);
             Assert.That(restored, Is.True);
-            Assert.That(await _repo.IsInFrontier(_projectId, word.Id), Is.True);
+            Assert.That(await _repo.IsInFrontier(_projectId, wordId), Is.True);
         }
 
         [Test]
@@ -405,8 +428,7 @@ namespace Backend.Tests.Repositories
         {
             var word = await CreateWord();
             // Word is already in frontier; restoring it again should throw.
-            var ex = Assert.ThrowsAsync<ArgumentException>(() =>
-                _repo.RestoreFrontier(_projectId, word.Id));
+            var ex = Assert.ThrowsAsync<ArgumentException>(() => _repo.RestoreFrontier(_projectId, word.Id));
             Assert.That(ex, Is.Not.Null);
         }
 
@@ -415,8 +437,7 @@ namespace Backend.Tests.Repositories
         {
             // Create a word and archive it as Deleted
             var word = await CreateWord();
-            var archivedWord = await _repo.DeleteFrontier(
-                _projectId, word.Id, w => w.Accessibility = Status.Deleted);
+            var archivedWord = await _repo.DeleteFrontier(_projectId, word.Id, w => w.Accessibility = Status.Deleted);
             Assert.That(archivedWord, Is.Not.Null);
 
             var ex = Assert.ThrowsAsync<ArgumentException>(() => _repo.RestoreFrontier(_projectId, archivedWord.Id));
@@ -429,14 +450,15 @@ namespace Backend.Tests.Repositories
         public async Task TestUpdateFrontierByIdsUpdatesWord()
         {
             var created = await CreateWord();
+            var createdId = created.Id;
             const string newVernacular = "updated_vernacular";
 
-            var updated = await _repo.UpdateFrontier(_projectId, created.Id, w => w.Vernacular = newVernacular);
+            var updated = await _repo.UpdateFrontier(_projectId, createdId, w => w.Vernacular = newVernacular);
 
             Assert.That(updated, Is.Not.Null);
             Assert.That(updated.Vernacular, Is.EqualTo(newVernacular));
-            Assert.That(updated.Id, Is.Not.EqualTo(created.Id));
-            Assert.That(await _repo.IsInFrontier(_projectId, created.Id), Is.False);
+            Assert.That(updated.Id, Is.Not.EqualTo(createdId));
+            Assert.That(await _repo.IsInFrontier(_projectId, createdId), Is.False);
             Assert.That(await _repo.IsInFrontier(_projectId, updated.Id), Is.True);
         }
 
@@ -447,35 +469,85 @@ namespace Backend.Tests.Repositories
             Assert.That(result, Is.Null);
         }
 
+        [Test]
+        public async Task TestUpdateFrontierByIdsModifyActionThrowsLeavesRepoUnchanged()
+        {
+            var created = await CreateWord();
+            var createdId = created.Id;
+            const string newVernacular = "should_not_persist";
+
+            var ex = Assert.ThrowsAsync<InvalidOperationException>(() =>
+                _repo.UpdateFrontier(_projectId, createdId, w =>
+                {
+                    w.Vernacular = newVernacular;
+                    throw new InvalidOperationException();
+                }));
+
+            Assert.That(ex, Is.Not.Null);
+            Assert.That((await _repo.GetAllWords(_projectId)).Select(w => w.Id), Is.EqualTo([createdId]));
+
+            Assert.That(await _repo.GetFrontierCount(_projectId), Is.EqualTo(1));
+            var frontierWord = await _repo.GetFrontier(_projectId, createdId);
+            Assert.That(frontierWord, Is.Not.Null);
+            Assert.That(frontierWord.Vernacular, Is.Not.EqualTo(newVernacular));
+        }
+
         // UPDATE FRONTIER (by word and action)
 
         [Test]
         public async Task TestUpdateFrontierByWordUpdatesWord()
         {
             var created = await CreateWord();
+            var createdId = created.Id;
+            const string newVernacular = "updated_vernacular";
             var updatedWord = created.Clone();
-            updatedWord.Vernacular = "new_vernacular";
+            updatedWord.Vernacular = newVernacular;
 
             var result = await _repo.UpdateFrontier(updatedWord, (newWord, oldWord) =>
             {
                 Assert.That(oldWord, Is.Not.Null);
-                Assert.That(oldWord.Id, Is.EqualTo(created.Id));
-                newWord.History = [created.Id];
+                newWord.History = [oldWord.Id];
             });
 
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.History, Contains.Item(created.Id));
-            Assert.That(await _repo.IsInFrontier(_projectId, created.Id), Is.False);
+            Assert.That(result.History, Is.EqualTo([createdId]));
+            Assert.That(result.Vernacular, Is.EqualTo(newVernacular));
+            Assert.That(await _repo.IsInFrontier(_projectId, createdId), Is.False);
             Assert.That(await _repo.IsInFrontier(_projectId, result.Id), Is.True);
         }
 
         [Test]
-        public async Task TestUpdateFrontierByWordNotInFrontierReturnsNull()
+        public async Task TestUpdateFrontierByWordNotInFrontierReturnsNullAndLeavesRepoUnchanged()
         {
             var word = Util.RandomWord(_projectId);
             word.Id = NewObjectId();
+
             var result = await _repo.UpdateFrontier(word, (_, _) => { });
+
             Assert.That(result, Is.Null);
+            Assert.That(await _repo.HasWords(_projectId), Is.False);
+            Assert.That(await _repo.HasFrontierWords(_projectId), Is.False);
+        }
+
+        [Test]
+        public async Task TestUpdateFrontierByWordModifyActionThrowsLeavesRepoUnchanged()
+        {
+            var created = await CreateWord();
+            var createdId = created.Id;
+            const string newVernacular = "should_not_persist";
+            var updatedWord = created.Clone();
+            updatedWord.Vernacular = newVernacular;
+
+            var ex = Assert.ThrowsAsync<InvalidOperationException>(() =>
+                _repo.UpdateFrontier(updatedWord, (_, _) => throw new InvalidOperationException()));
+
+            Assert.That(ex, Is.Not.Null);
+            Assert.That((await _repo.GetAllWords(_projectId)).Select(w => w.Id), Is.EqualTo([createdId]));
+
+            Assert.That(await _repo.GetFrontierCount(_projectId), Is.EqualTo(1));
+            var frontierWord = await _repo.GetFrontier(_projectId, createdId);
+            Assert.That(frontierWord, Is.Not.Null);
+            Assert.That(frontierWord.Vernacular, Is.Not.EqualTo(newVernacular));
         }
 
         // REPLACE FRONTIER
@@ -484,27 +556,36 @@ namespace Backend.Tests.Repositories
         public async Task TestReplaceFrontierUpdatesAndDeletesWords()
         {
             var toUpdate = await CreateWord();
+            var toUpdateId = toUpdate.Id;
             var toDelete = await CreateWord();
-
+            var toDeleteId = toDelete.Id;
+            const string newVernacular = "updated_vernacular";
             var updatedWord = toUpdate.Clone();
-            updatedWord.Vernacular = "replaced";
-            string? capturedOldId = null;
+            updatedWord.Vernacular = newVernacular;
 
-            var result = await _repo.ReplaceFrontier(
-                _projectId,
-                newWords: [updatedWord],
-                idsToDelete: [toUpdate.Id, toDelete.Id],
+            var result = await _repo.ReplaceFrontier(_projectId, [updatedWord], [toUpdateId, toDeleteId],
                 modifyUpdatedWord: (newWord, oldWord) =>
                 {
-                    capturedOldId = oldWord?.Id;
-                    newWord.History = [oldWord?.Id ?? ""];
+                    Assert.That(oldWord, Is.Not.Null);
+                    newWord.History = [oldWord.Id];
                 },
                 modifyDeletedWord: w => w.Accessibility = Status.Deleted);
 
             Assert.That(result, Is.Not.Null);
-            Assert.That(capturedOldId, Is.EqualTo(toUpdate.Id));
-            Assert.That(await _repo.IsInFrontier(_projectId, toUpdate.Id), Is.False);
-            Assert.That(await _repo.IsInFrontier(_projectId, toDelete.Id), Is.False);
+            Assert.That(result, Has.Count.EqualTo(1));
+            Assert.That(result[0].History, Is.EqualTo([toUpdateId]));
+            Assert.That(result[0].Vernacular, Is.EqualTo(newVernacular));
+
+            var allWords = await _repo.GetAllWords(_projectId);
+            Assert.That(allWords, Has.Count.EqualTo(4));
+            Assert.That(allWords.Where(w => w.Accessibility != Status.Deleted).Select(w => w.Id),
+                Is.EquivalentTo([toUpdateId, toDeleteId, result[0].Id]));
+
+            Assert.That(await _repo.IsInFrontier(_projectId, toUpdateId), Is.False);
+            Assert.That(await _repo.IsInFrontier(_projectId, toDeleteId), Is.False);
+            Assert.That(await _repo.GetFrontierCount(_projectId), Is.EqualTo(1));
+            Assert.That(await _repo.IsInFrontier(_projectId, result[0].Id), Is.True);
+
         }
 
         [Test]
@@ -521,12 +602,52 @@ namespace Backend.Tests.Repositories
             var newWord = Util.RandomWord(_projectId);
             newWord.Id = NewObjectId();
 
-            var result = await _repo.ReplaceFrontier(
-                _projectId, [newWord], [], (_, _) => { }, _ => { });
+            var result = await _repo.ReplaceFrontier(_projectId, [newWord], [], (_, _) => { }, _ => { });
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(await _repo.IsInFrontier(_projectId, result[0].Id), Is.True);
+        }
+
+        [Test]
+        public async Task TestReplaceFrontierModifyUpdatedActionThrowsLeavesRepoUnchanged()
+        {
+            var toUpdate = await CreateWord();
+            var toUpdateId = toUpdate.Id;
+            var toDelete = await CreateWord();
+            var toDeleteId = toDelete.Id;
+            const string newVernacular = "should_not_persist";
+            var updatedWord = toUpdate.Clone();
+            updatedWord.Vernacular = newVernacular;
+
+            var ex = Assert.ThrowsAsync<InvalidOperationException>(() => _repo.ReplaceFrontier(_projectId,
+                [updatedWord], [toUpdateId, toDeleteId], (_, _) => throw new InvalidOperationException(), _ => { }));
+
+            Assert.That(ex, Is.Not.Null);
+            Assert.That((await _repo.GetAllWords(_projectId)).Select(w => w.Id),
+                Is.EquivalentTo([toUpdateId, toDeleteId]));
+
+            Assert.That(await _repo.GetFrontierCount(_projectId), Is.EqualTo(2));
+            Assert.That(await _repo.IsInFrontier(_projectId, toDeleteId), Is.True);
+            var frontierWordToUpdate = await _repo.GetFrontier(_projectId, toUpdateId);
+            Assert.That(frontierWordToUpdate, Is.Not.Null);
+            Assert.That(frontierWordToUpdate.Vernacular, Is.Not.EqualTo(newVernacular));
+        }
+
+        [Test]
+        public async Task TestReplaceFrontierModifyDeletedActionThrowsLeavesRepoUnchanged()
+        {
+            var toDelete = await CreateWord();
+            var toDeleteId = toDelete.Id;
+
+            var ex = Assert.ThrowsAsync<InvalidOperationException>(() => _repo.ReplaceFrontier(
+                _projectId, [], [toDeleteId], (_, _) => { }, _ => throw new InvalidOperationException()));
+
+            Assert.That(ex, Is.Not.Null);
+            Assert.That((await _repo.GetAllWords(_projectId)).Select(w => w.Id), Is.EqualTo([toDeleteId]));
+
+            Assert.That(await _repo.GetFrontierCount(_projectId), Is.EqualTo(1));
+            Assert.That(await _repo.IsInFrontier(_projectId, toDeleteId), Is.True);
         }
 
         [Test]
@@ -555,20 +676,19 @@ namespace Backend.Tests.Repositories
         public async Task TestRevertReplaceFrontierRestoresAndDeletes()
         {
             var toRestore = await CreateWord();
+            var toRestoreId = toRestore.Id;
             var toDelete = await CreateWord();
+            var toDeleteId = toDelete.Id;
 
             // Remove toRestore from frontier so it can be restored later
-            await _repo.DeleteFrontier(_projectId, toRestore.Id, _ => { });
+            await _repo.DeleteFrontier(_projectId, toRestoreId, _ => { });
 
             var result = await _repo.RevertReplaceFrontier(
-                _projectId,
-                idsToRestore: [toRestore.Id],
-                idsToDelete: [toDelete.Id],
-                modifyDeletedWord: w => w.Accessibility = Status.Deleted);
+                _projectId, [toRestoreId], [toDeleteId], w => w.Accessibility = Status.Deleted);
 
             Assert.That(result, Is.True);
-            Assert.That(await _repo.IsInFrontier(_projectId, toRestore.Id), Is.True);
-            Assert.That(await _repo.IsInFrontier(_projectId, toDelete.Id), Is.False);
+            Assert.That(await _repo.IsInFrontier(_projectId, toRestoreId), Is.True);
+            Assert.That(await _repo.IsInFrontier(_projectId, toDeleteId), Is.False);
         }
 
         [Test]
@@ -579,28 +699,57 @@ namespace Backend.Tests.Repositories
         }
 
         [Test]
-        public async Task TestRevertReplaceFrontierMissingDeleteIdReturnsFalseAndAborts()
+        public async Task TestRevertReplaceFrontierMissingDeleteIdReturnsFalseAndLeavesRepoUnchanged()
         {
             var toRestore = await CreateWord();
-            await _repo.DeleteFrontier(_projectId, toRestore.Id, _ => { });
+            var toRestoreId = toRestore.Id;
+            var toDelete = await CreateWord();
+            var toDeleteId = toDelete.Id;
+            await _repo.DeleteFrontier(_projectId, toRestoreId, _ => { });
 
             var result = await _repo.RevertReplaceFrontier(
-                _projectId, idsToRestore: [toRestore.Id], idsToDelete: [NewObjectId()], modifyDeletedWord: _ => { });
+                _projectId, [toRestoreId], [toDeleteId, NewObjectId()], _ => { });
 
             Assert.That(result, Is.False);
-            Assert.That(await _repo.IsInFrontier(_projectId, toRestore.Id), Is.False);
+            Assert.That(await _repo.IsInFrontier(_projectId, toRestoreId), Is.False);
+            Assert.That(await _repo.IsInFrontier(_projectId, toDeleteId), Is.True);
         }
 
         [Test]
-        public async Task TestRevertReplaceFrontierMissingRestoreIdReturnsFalseAndAborts()
+        public async Task TestRevertReplaceFrontierMissingRestoreIdReturnsFalseAndLeavesRepoUnchanged()
         {
+            var toRestore = await CreateWord();
+            var toRestoreId = toRestore.Id;
             var toDelete = await CreateWord();
+            var toDeleteId = toDelete.Id;
+            await _repo.DeleteFrontier(_projectId, toRestoreId, _ => { });
 
-            var result = await _repo.RevertReplaceFrontier(_projectId, idsToRestore: [NewObjectId()],
-                idsToDelete: [toDelete.Id], modifyDeletedWord: w => w.Accessibility = Status.Deleted);
+            var result = await _repo.RevertReplaceFrontier(
+                _projectId, [toRestoreId, NewObjectId()], [toDeleteId], _ => { });
 
             Assert.That(result, Is.False);
-            Assert.That(await _repo.IsInFrontier(_projectId, toDelete.Id), Is.True);
+            Assert.That(await _repo.IsInFrontier(_projectId, toDeleteId), Is.True);
+            Assert.That(await _repo.IsInFrontier(_projectId, toRestoreId), Is.False);
+        }
+
+        [Test]
+        public async Task TestRevertReplaceFrontierModifyDeletedActionThrowsLeavesRepoUnchanged()
+        {
+            var toRestore = await CreateWord();
+            var toRestoreId = toRestore.Id;
+            var toDelete = await CreateWord();
+            var toDeleteId = toDelete.Id;
+            await _repo.DeleteFrontier(_projectId, toRestoreId, _ => { });
+
+            var ex = Assert.ThrowsAsync<InvalidOperationException>(() => _repo.RevertReplaceFrontier(
+                _projectId, [toRestoreId], [toDeleteId], _ => throw new InvalidOperationException()));
+
+            Assert.That(ex, Is.Not.Null);
+            Assert.That((await _repo.GetAllWords(_projectId)).Count, Is.EqualTo(3));
+
+            Assert.That(await _repo.GetFrontierCount(_projectId), Is.EqualTo(1));
+            Assert.That(await _repo.IsInFrontier(_projectId, toDeleteId), Is.True);
+            Assert.That(await _repo.IsInFrontier(_projectId, toRestoreId), Is.False);
         }
 
         [Test]
@@ -631,7 +780,7 @@ namespace Backend.Tests.Repositories
         {
             await CreateWord();
             var count = await _repo.CountFrontierWordsWithDomain(_projectId, "99.99");
-            Assert.That(count, Is.EqualTo(0));
+            Assert.That(count, Is.Zero);
         }
     }
 }
