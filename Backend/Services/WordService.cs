@@ -109,13 +109,16 @@ namespace BackendFramework.Services
                 }
 
                 // Add Id to history.
-                if (!newWord.History.Contains(newWord.Id))
+                if (!newWord.History.Contains(oldWord.Id))
                 {
-                    newWord.History.Add(newWord.Id);
+                    newWord.History.Add(oldWord.Id);
                 }
 
                 // Preserve Created time.
-                newWord.Created = oldWord.Created;
+                if (!string.IsNullOrEmpty(oldWord.Created))
+                {
+                    newWord.Created = oldWord.Created;
+                }
 
                 // If an imported word was using the citation form for its Vernacular,
                 // only keep UsingCitationForm true if the Vernacular hasn't changed.
