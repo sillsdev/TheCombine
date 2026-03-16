@@ -31,7 +31,7 @@ namespace Backend.Tests.Repositories
         [OneTimeTearDown]
         public static void StopMongo()
         {
-            _runner.Dispose();
+            _runner?.Dispose();
         }
 
         [SetUp]
