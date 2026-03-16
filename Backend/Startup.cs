@@ -350,7 +350,7 @@ namespace BackendFramework
 
             // If an admin user has been created via the command line, treat that as a single action and shut the
             // server down so the calling script knows it's been completed successfully or unsuccessfully.
-            using var startupScope = app.ApplicationServices.CreateAsyncScope();
+            using var startupScope = app.ApplicationServices.CreateScope();
             var userRepo = startupScope.ServiceProvider.GetService<IUserRepository>();
             if (userRepo is not null && CreateAdminUser(userRepo))
             {
