@@ -77,6 +77,7 @@ export default function ResetRequest(): ReactElement {
                 <Typography>{t(ResetRequestTextId.Instructions)}</Typography>
 
                 <NormalizedTextField
+                  autoComplete="username"
                   fullWidth
                   helperText={
                     isError && t(ResetRequestTextId.FieldEmailOrUsernameError)
