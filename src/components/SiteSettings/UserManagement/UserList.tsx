@@ -81,7 +81,6 @@ export default function UserList(props: UserListProps): ReactElement {
       <Typography>{t("projectSettings.invite.searchTitle")}</Typography>
       <Stack alignItems="flex-end" direction="row">
         <NormalizedTextField
-          autoComplete="off"
           onChange={(e) => setFilterInput(e.target.value)}
           placeholder={t("projectSettings.invite.searchPlaceholder")}
           value={filterInput}
