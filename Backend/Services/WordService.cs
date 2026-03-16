@@ -27,14 +27,15 @@ namespace BackendFramework.Services
         /// <returns>The mutated word.</returns>
         private static Word UpdateTimes(Word word, bool updateModified)
         {
+            // Use Roundtrip-suitable ISO 8601 format.
+            var now = Time.UtcNowIso8601();
             if (string.IsNullOrEmpty(word.Created))
             {
-                // Use Roundtrip-suitable ISO 8601 format.
-                word.Created = Time.UtcNowIso8601();
+                word.Created = string.IsNullOrEmpty(word.Modified) ? now : word.Modified;
             }
             if (updateModified || string.IsNullOrEmpty(word.Modified))
             {
-                word.Modified = Time.UtcNowIso8601();
+                word.Modified = now;
             }
             return word;
         }
