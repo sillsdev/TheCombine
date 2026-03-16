@@ -385,14 +385,13 @@ namespace Backend.Tests.Repositories
             var created = await CreateWord();
             var createdId = created.Id;
 
-            var ex = Assert.ThrowsAsync<InvalidOperationException>(() =>
+            Assert.ThrowsAsync<InvalidOperationException>(() =>
                 _repo.DeleteFrontier(_projectId, createdId, w =>
                 {
                     w.Accessibility = Status.Deleted;
                     throw new InvalidOperationException();
                 }));
 
-            Assert.That(ex, Is.Not.Null);
             Assert.That((await _repo.GetAllWords(_projectId)).Select(w => w.Id), Is.EqualTo([createdId]));
 
             Assert.That(await _repo.GetFrontierCount(_projectId), Is.EqualTo(1));
@@ -427,9 +426,7 @@ namespace Backend.Tests.Repositories
         public async Task TestRestoreFrontierAlreadyInFrontierThrows()
         {
             var word = await CreateWord();
-            // Word is already in frontier; restoring it again should throw.
-            var ex = Assert.ThrowsAsync<ArgumentException>(() => _repo.RestoreFrontier(_projectId, word.Id));
-            Assert.That(ex, Is.Not.Null);
+            Assert.ThrowsAsync<ArgumentException>(() => _repo.RestoreFrontier(_projectId, word.Id));
         }
 
         [Test]
@@ -440,8 +437,7 @@ namespace Backend.Tests.Repositories
             var archivedWord = await _repo.DeleteFrontier(_projectId, word.Id, w => w.Accessibility = Status.Deleted);
             Assert.That(archivedWord, Is.Not.Null);
 
-            var ex = Assert.ThrowsAsync<ArgumentException>(() => _repo.RestoreFrontier(_projectId, archivedWord.Id));
-            Assert.That(ex, Is.Not.Null);
+            Assert.ThrowsAsync<ArgumentException>(() => _repo.RestoreFrontier(_projectId, archivedWord.Id));
         }
 
         // UPDATE FRONTIER (by projectId, wordId, modifyWord)
@@ -476,14 +472,13 @@ namespace Backend.Tests.Repositories
             var createdId = created.Id;
             const string newVernacular = "should_not_persist";
 
-            var ex = Assert.ThrowsAsync<InvalidOperationException>(() =>
-                _repo.UpdateFrontier(_projectId, createdId, w =>
-                {
-                    w.Vernacular = newVernacular;
-                    throw new InvalidOperationException();
-                }));
+            Assert.ThrowsAsync<InvalidOperationException>(() =>
+                 _repo.UpdateFrontier(_projectId, createdId, w =>
+                 {
+                     w.Vernacular = newVernacular;
+                     throw new InvalidOperationException();
+                 }));
 
-            Assert.That(ex, Is.Not.Null);
             Assert.That((await _repo.GetAllWords(_projectId)).Select(w => w.Id), Is.EqualTo([createdId]));
 
             Assert.That(await _repo.GetFrontierCount(_projectId), Is.EqualTo(1));
@@ -538,10 +533,9 @@ namespace Backend.Tests.Repositories
             var updatedWord = created.Clone();
             updatedWord.Vernacular = newVernacular;
 
-            var ex = Assert.ThrowsAsync<InvalidOperationException>(() =>
+            Assert.ThrowsAsync<InvalidOperationException>(() =>
                 _repo.UpdateFrontier(updatedWord, (_, _) => throw new InvalidOperationException()));
 
-            Assert.That(ex, Is.Not.Null);
             Assert.That((await _repo.GetAllWords(_projectId)).Select(w => w.Id), Is.EqualTo([createdId]));
 
             Assert.That(await _repo.GetFrontierCount(_projectId), Is.EqualTo(1));
@@ -620,10 +614,9 @@ namespace Backend.Tests.Repositories
             var updatedWord = toUpdate.Clone();
             updatedWord.Vernacular = newVernacular;
 
-            var ex = Assert.ThrowsAsync<InvalidOperationException>(() => _repo.ReplaceFrontier(_projectId,
+            Assert.ThrowsAsync<InvalidOperationException>(() => _repo.ReplaceFrontier(_projectId,
                 [updatedWord], [toUpdateId, toDeleteId], (_, _) => throw new InvalidOperationException(), _ => { }));
 
-            Assert.That(ex, Is.Not.Null);
             Assert.That((await _repo.GetAllWords(_projectId)).Select(w => w.Id),
                 Is.EquivalentTo([toUpdateId, toDeleteId]));
 
@@ -640,10 +633,9 @@ namespace Backend.Tests.Repositories
             var toDelete = await CreateWord();
             var toDeleteId = toDelete.Id;
 
-            var ex = Assert.ThrowsAsync<InvalidOperationException>(() => _repo.ReplaceFrontier(
+            Assert.ThrowsAsync<InvalidOperationException>(() => _repo.ReplaceFrontier(
                 _projectId, [], [toDeleteId], (_, _) => { }, _ => throw new InvalidOperationException()));
 
-            Assert.That(ex, Is.Not.Null);
             Assert.That((await _repo.GetAllWords(_projectId)).Select(w => w.Id), Is.EqualTo([toDeleteId]));
 
             Assert.That(await _repo.GetFrontierCount(_projectId), Is.EqualTo(1));
@@ -654,20 +646,15 @@ namespace Backend.Tests.Repositories
         public void TestReplaceFrontierDifferentProjectIdThrows()
         {
             var newWord = Util.RandomWord(Guid.NewGuid().ToString());
-
-            var ex = Assert.ThrowsAsync<ArgumentException>(() =>
+            Assert.ThrowsAsync<ArgumentException>(() =>
                 _repo.ReplaceFrontier(_projectId, [newWord], [], (_, _) => { }, _ => { }));
-
-            Assert.That(ex, Is.Not.Null);
         }
 
         [Test]
         public void TestReplaceFrontierMissingDeleteIdThrows()
         {
-            var ex = Assert.ThrowsAsync<ArgumentException>(() =>
+            Assert.ThrowsAsync<ArgumentException>(() =>
                 _repo.ReplaceFrontier(_projectId, [], [NewObjectId()], (_, _) => { }, _ => { }));
-
-            Assert.That(ex, Is.Not.Null);
         }
 
         // REVERT REPLACE FRONTIER
@@ -741,10 +728,9 @@ namespace Backend.Tests.Repositories
             var toDeleteId = toDelete.Id;
             await _repo.DeleteFrontier(_projectId, toRestoreId, _ => { });
 
-            var ex = Assert.ThrowsAsync<InvalidOperationException>(() => _repo.RevertReplaceFrontier(
+            Assert.ThrowsAsync<InvalidOperationException>(() => _repo.RevertReplaceFrontier(
                 _projectId, [toRestoreId], [toDeleteId], _ => throw new InvalidOperationException()));
 
-            Assert.That(ex, Is.Not.Null);
             Assert.That((await _repo.GetAllWords(_projectId)).Count, Is.EqualTo(3));
 
             Assert.That(await _repo.GetFrontierCount(_projectId), Is.EqualTo(1));
@@ -756,9 +742,8 @@ namespace Backend.Tests.Repositories
         public async Task TestRevertReplaceFrontierOverlappingIdsThrows()
         {
             var word = await CreateWord();
-            var ex = Assert.ThrowsAsync<ArgumentException>(() =>
+            Assert.ThrowsAsync<ArgumentException>(() =>
                 _repo.RevertReplaceFrontier(_projectId, [word.Id], [word.Id], _ => { }));
-            Assert.That(ex, Is.Not.Null);
         }
 
         // COUNT FRONTIER WORDS WITH DOMAIN
