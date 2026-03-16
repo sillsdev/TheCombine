@@ -183,6 +183,16 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier contains words");
 
+            if (count <= 0)
+            {
+                return true;
+            }
+
+            if (wordIds.Count < count)
+            {
+                return false;
+            }
+
             return await _frontier
                 .CountDocumentsAsync(GetProjectWordsFilter(projectId, wordIds), new() { Limit = count }) == count;
         }

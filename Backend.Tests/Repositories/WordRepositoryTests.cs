@@ -221,6 +221,18 @@ namespace Backend.Tests.Repositories
         }
 
         [Test]
+        public async Task TestAreInFrontierNegativeCountReturnsTrue()
+        {
+            Assert.That(await _repo.AreInFrontier(_projectId, [], -1), Is.True);
+        }
+
+        [Test]
+        public async Task TestAreInFrontierZeroCountReturnsTrue()
+        {
+            Assert.That(await _repo.AreInFrontier(_projectId, [NewObjectId()], 0), Is.True);
+        }
+
+        [Test]
         public async Task TestAreInFrontierAllPresentReturnsTrue()
         {
             var w1 = await CreateWord();
