@@ -533,7 +533,7 @@ namespace Backend.Tests.Services
 
             // Delay first GetFrontier call
             var delaySignal = new TaskCompletionSource<bool>();
-            ((WordRepositoryMock)_wordRepo).SetGetFrontierDelay(delaySignal.Task);
+            _wordRepo.SetGetFrontierDelay(delaySignal.Task);
             var firstCallTask = _mergeService.GetAndStorePotentialDuplicates(ProjId, 10, 10, userId);
 
             // Give first call time to start
@@ -557,7 +557,7 @@ namespace Backend.Tests.Services
 
             // Delay first GetFrontier call
             var delaySignal = new TaskCompletionSource<bool>();
-            ((WordRepositoryMock)_wordRepo).SetGetFrontierDelay(delaySignal.Task);
+            _wordRepo.SetGetFrontierDelay(delaySignal.Task);
             var firstCallTask = _mergeService.GetAndStorePotentialDuplicates(ProjId, 10, 10, userId1);
 
             // Give first call time to start

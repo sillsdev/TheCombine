@@ -462,7 +462,6 @@ namespace BackendFramework.Repositories
         private async Task<Word?> UpdateFrontierWithSession(IClientSessionHandle session,
             string projectId, string wordId, Action<Word> modifyUpdatedWord)
         {
-
             var deletedWord = await _frontier.FindOneAndDeleteAsync(session, GetProjectWordFilter(projectId, wordId));
             if (deletedWord is null)
             {
