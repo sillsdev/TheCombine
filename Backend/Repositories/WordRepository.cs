@@ -18,7 +18,7 @@ namespace BackendFramework.Repositories
 
         private const string otelTagName = "otel.WordRepository";
 
-        // GET FILTER HELPER METHODS
+        #region Private get-filter helper methods
 
         /// <summary>
         /// Creates a mongo filter for all words in a specified project (and optionally with specified vernacular).
@@ -69,7 +69,9 @@ namespace BackendFramework.Repositories
             return filterDef.And(filterDef.Eq(w => w.ProjectId, projectId), filterDef.In(w => w.Id, wordIds));
         }
 
-        // PUBLIC REPOSITORY METHODS
+        #endregion
+
+        #region Public repository methods
 
         /// <summary> Finds all <see cref="Word"/>s with specified projectId </summary>
         /// <param name="projectId">Id of the project to query.</param>
@@ -381,7 +383,9 @@ namespace BackendFramework.Repositories
             return (int)await _frontier.CountDocumentsAsync(filter);
         }
 
-        // WITH-SESSION HELPER METHODS
+        #endregion
+
+        #region Private with-session helper methods
 
         /// <summary>
         /// Adds words to both WordsCollection and Frontier inside an existing transaction session.
@@ -594,5 +598,7 @@ namespace BackendFramework.Repositories
             }
             return true;
         }
+
+        #endregion
     }
 }

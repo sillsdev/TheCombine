@@ -65,8 +65,6 @@ namespace Backend.Tests.Repositories
         /// <summary> Generates a valid MongoDB ObjectId string that does not exist in the database. </summary>
         private static string NewObjectId() => ObjectId.GenerateNewId().ToString();
 
-        // GET ALL WORDS
-
         [Test]
         public async Task TestGetAllWords()
         {
@@ -91,8 +89,6 @@ namespace Backend.Tests.Repositories
             Assert.That(otherProjectWords, Is.Empty);
         }
 
-        // GET WORD
-
         [Test]
         public async Task TestGetWord()
         {
@@ -108,8 +104,6 @@ namespace Backend.Tests.Repositories
             var result = await _repo.GetWord(_projectId, NewObjectId());
             Assert.That(result, Is.Null);
         }
-
-        // CREATE
 
         [Test]
         public async Task TestCreateSingleWordAddsToWordsAndFrontier()
@@ -153,8 +147,6 @@ namespace Backend.Tests.Repositories
             Assert.That(created, Is.Empty);
         }
 
-        // DELETE ALL FRONTIER WORDS
-
         [Test]
         public async Task TestDeleteAllFrontierWordsRemovesAllFrontierWords()
         {
@@ -174,8 +166,6 @@ namespace Backend.Tests.Repositories
             var result = await _repo.DeleteAllFrontierWords(_projectId);
             Assert.That(result, Is.False);
         }
-
-        // HAS WORDS / HAS FRONTIER WORDS
 
         [Test]
         public async Task TestHasWordsAfterCreateReturnsTrue()
@@ -204,8 +194,6 @@ namespace Backend.Tests.Repositories
             await _repo.DeleteAllFrontierWords(_projectId);
             Assert.That(await _repo.HasFrontierWords(_projectId), Is.False);
         }
-
-        // IS IN FRONTIER / ARE IN FRONTIER
 
         [Test]
         public async Task TestIsInFrontierExistingWordReturnsTrue()
@@ -254,8 +242,6 @@ namespace Backend.Tests.Repositories
             Assert.That(await _repo.AreInFrontier(_projectId, [w1.Id, NewObjectId()], 2), Is.False);
         }
 
-        // GET FRONTIER COUNT
-
         [Test]
         public async Task TestGetFrontierCountReturnsCorrectCount()
         {
@@ -270,8 +256,6 @@ namespace Backend.Tests.Repositories
             Assert.That(await _repo.GetFrontierCount(_projectId), Is.Zero);
         }
 
-        // GET ALL FRONTIER
-
         [Test]
         public async Task TestGetAllFrontierReturnsAllFrontierWords()
         {
@@ -282,8 +266,6 @@ namespace Backend.Tests.Repositories
             Assert.That(ids, Contains.Item(w1.Id));
             Assert.That(ids, Contains.Item(w2.Id));
         }
-
-        // GET FRONTIER (single word)
 
         [Test]
         public async Task TestGetFrontierExistingWordReturnsWord()
@@ -323,8 +305,6 @@ namespace Backend.Tests.Repositories
             Assert.That(retrieved, Is.Null);
         }
 
-        // GET FRONTIER WITH VERNACULAR
-
         [Test]
         public async Task TestGetFrontierWithVernacularReturnsMatchingWords()
         {
@@ -344,8 +324,6 @@ namespace Backend.Tests.Repositories
             var results = await _repo.GetFrontierWithVernacular(_projectId, "nonexistent");
             Assert.That(results, Is.Empty);
         }
-
-        // DELETE FRONTIER
 
         [Test]
         public async Task TestDeleteFrontierRemovesFromFrontierAndArchives()
@@ -389,8 +367,6 @@ namespace Backend.Tests.Repositories
             Assert.That(frontierWord.Accessibility, Is.Not.EqualTo(Status.Deleted));
         }
 
-        // RESTORE FRONTIER
-
         [Test]
         public async Task TestRestoreFrontierRestoresWordToFrontier()
         {
@@ -428,8 +404,6 @@ namespace Backend.Tests.Repositories
 
             Assert.ThrowsAsync<ArgumentException>(() => _repo.RestoreFrontier(_projectId, archivedWord.Id));
         }
-
-        // UPDATE FRONTIER (by projectId, wordId, modifyWord)
 
         [Test]
         public async Task TestUpdateFrontierByIdsUpdatesWord()
@@ -475,8 +449,6 @@ namespace Backend.Tests.Repositories
             Assert.That(frontierWord, Is.Not.Null);
             Assert.That(frontierWord.Vernacular, Is.Not.EqualTo(newVernacular));
         }
-
-        // UPDATE FRONTIER (by word and action)
 
         [Test]
         public async Task TestUpdateFrontierByWordUpdatesWord()
@@ -532,8 +504,6 @@ namespace Backend.Tests.Repositories
             Assert.That(frontierWord, Is.Not.Null);
             Assert.That(frontierWord.Vernacular, Is.Not.EqualTo(newVernacular));
         }
-
-        // REPLACE FRONTIER
 
         [Test]
         public async Task TestReplaceFrontierUpdatesAndDeletesWords()
@@ -646,8 +616,6 @@ namespace Backend.Tests.Repositories
                 _repo.ReplaceFrontier(_projectId, [], [NewObjectId()], (_, _) => { }, _ => { }));
         }
 
-        // REVERT REPLACE FRONTIER
-
         [Test]
         public async Task TestRevertReplaceFrontierRestoresAndDeletes()
         {
@@ -734,8 +702,6 @@ namespace Backend.Tests.Repositories
             Assert.ThrowsAsync<ArgumentException>(() =>
                 _repo.RevertReplaceFrontier(_projectId, [word.Id], [word.Id], _ => { }));
         }
-
-        // COUNT FRONTIER WORDS WITH DOMAIN
 
         [Test]
         public async Task TestCountFrontierWordsWithDomainReturnsCorrectCount()
