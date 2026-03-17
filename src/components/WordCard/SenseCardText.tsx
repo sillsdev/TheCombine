@@ -58,7 +58,18 @@ export default function SenseCardText(props: SenseCardTextProps): ReactElement {
       ),
     shallowEqual
   );
-  const senseTextInLangs = getSenseInLanguages(props.sense, analysisLangs);
+  const senseLangSet = new Set([
+    ...props.sense.glosses.map((g) => g.language),
+    ...props.sense.definitions.map((d) => d.language),
+  ]);
+  const otherLangs = Array.from(senseLangSet).filter(
+    (l) => !analysisLangs.includes(l)
+  );
+  // Display the sense in the analysis languages order first, followed by any other languages.
+  const senseTextInLangs = getSenseInLanguages(props.sense, [
+    ...analysisLangs,
+    ...otherLangs,
+  ]);
 
   return (
     <Table padding="none">
