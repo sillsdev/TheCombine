@@ -82,27 +82,25 @@ const defaultEditSenseFieldChanged: EditSenseFieldChanged = {
   [EditSenseField.SemanticDomains]: false,
 };
 
-export function getOrderedLanguageObjects<T extends { language: string }>(
-  objects: T[],
+function getOrderedLanguageItems<T extends { language: string }>(
+  /** Assumes array of items with distinct language tags. */
+  items: T[],
+  /** Assumes array of distinct language tags. */
   analysisLangs: string[],
-  createEmptyItem: (language: string) => T
+  createEmptyObject: (language: string) => T
 ): T[] {
-  const orderedItems: T[] = [];
   const usedIndexes = new Set<number>();
-
-  analysisLangs.forEach((lang) => {
-    const itemIndex = objects.findIndex(
-      (obj, i) => obj.language === lang && !usedIndexes.has(i)
-    );
+  const orderedItems = analysisLangs.map((lang) => {
+    const itemIndex = items.findIndex((item) => item.language === lang);
     if (itemIndex >= 0) {
-      orderedItems.push(objects[itemIndex]);
       usedIndexes.add(itemIndex);
+      return items[itemIndex];
     } else {
-      orderedItems.push(createEmptyItem(lang));
+      return createEmptyObject(lang);
     }
   });
 
-  return orderedItems.concat(objects.filter((_, i) => !usedIndexes.has(i)));
+  return orderedItems.concat(items.filter((_, idx) => !usedIndexes.has(idx)));
 }
 
 interface EditSenseDialogProps {
@@ -330,7 +328,7 @@ interface DefinitionListProps {
 }
 
 function DefinitionList(props: DefinitionListProps): ReactElement {
-  const definitions = getOrderedLanguageObjects(
+  const definitions = getOrderedLanguageItems(
     props.definitions,
     props.analysisLangs,
     (lang) => newDefinition("", lang)
@@ -391,7 +389,7 @@ interface GlossListProps {
 }
 
 function GlossList(props: GlossListProps): ReactElement {
-  const glosses = getOrderedLanguageObjects(
+  const glosses = getOrderedLanguageItems(
     props.glosses,
     props.analysisLangs,
     (lang) => newGloss("", lang)
