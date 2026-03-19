@@ -256,6 +256,7 @@ export function UserSettings(props: {
                     {/* Don't use NormalizedTextField for type="email".
                     At best, it doesn't normalize, because of the punycode. */}
                     <TextField
+                      autoComplete="email"
                       id={UserSettingsIds.FieldEmail}
                       required
                       fullWidth

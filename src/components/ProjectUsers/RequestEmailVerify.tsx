@@ -1,11 +1,17 @@
-import { Box, Button, Grid2, Stack, Typography } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Grid2,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { ReactElement, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import validator from "validator";
 
 import { isEmailOkay, requestEmailVerify, updateUser } from "backend";
 import { getCurrentUser } from "backend/localStorage";
-import { NormalizedTextField } from "utilities/fontComponents";
+import { normalizeEmail } from "utilities/userUtilities";
 
 export enum RequestEmailVerifyTextId {
   ButtonCancel = "buttons.cancel",
@@ -23,17 +29,25 @@ interface RequestEmailVerifyProps {
 export default function RequestEmailVerify(
   props: RequestEmailVerifyProps
 ): ReactElement {
+  const emailRef = useRef<HTMLInputElement>(null);
+
   const [currentUser] = useState(getCurrentUser()!);
   const [email, setEmail] = useState(currentUser.email);
+  const [emailPunycode, setEmailPunycode] = useState(currentUser.email);
   const [isTaken, setIsTaken] = useState(false);
   const [isValid, setIsValid] = useState(false);
 
   const { t } = useTranslation();
 
   useEffect(() => {
+    setEmail(normalizeEmail(emailPunycode));
     setIsTaken(false);
-    setIsValid(validator.isEmail(email));
-  }, [email]);
+  }, [emailPunycode]);
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setIsValid(emailRef.current?.checkValidity() ?? false);
+    setEmailPunycode(e.target.value);
+  };
 
   const onSubmit = async (): Promise<void> => {
     if (!(await isEmailOkay(email))) {
@@ -57,7 +71,9 @@ export default function RequestEmailVerify(
         </Typography>
 
         {/* Email address */}
-        <NormalizedTextField
+        {/* Don't use NormalizedTextField for type="email".
+        At best, it doesn't normalize, because of the punycode. */}
+        <TextField
           autoComplete="email"
           autoFocus
           error={isTaken}
@@ -66,10 +82,12 @@ export default function RequestEmailVerify(
             isTaken ? t(RequestEmailVerifyTextId.FieldEmailTaken) : undefined
           }
           label={t(RequestEmailVerifyTextId.FieldEmail)}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleEmailChange}
+          ref={emailRef}
           required
           slotProps={{ htmlInput: { maxLength: 320 } }}
-          value={email}
+          type="email" // silently converts input to punycode
+          value={emailPunycode}
         />
 
         {/* Buttons: cancel, submit */}

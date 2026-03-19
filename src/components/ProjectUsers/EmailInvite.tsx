@@ -1,14 +1,14 @@
-import { Box, Grid2, Stack, Typography } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import { Box, Grid2, Stack, TextField, Typography } from "@mui/material";
+import { ReactElement, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import validator from "validator";
 
 import { Role } from "api/models";
 import * as backend from "backend";
 import { getProjectId } from "backend/localStorage";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import { NormalizedTextField } from "utilities/fontComponents";
+import { normalizeEmail } from "utilities/userUtilities";
 
 export enum EmailInviteTextId {
   ButtonSubmit = "buttons.invite",
@@ -24,15 +24,23 @@ interface InviteProps {
 }
 
 export default function EmailInvite(props: InviteProps): ReactElement {
-  const [email, setEmail] = useState("");
+  const emailRef = useRef<HTMLInputElement>(null);
+
+  const [emailPunycode, setEmailPunycode] = useState("");
   const [isDone, setIsDone] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isValid, setIsValid] = useState(false);
   const [message, setMessage] = useState("");
+  const [isValid, setIsValid] = useState(false);
 
   const { t } = useTranslation();
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setIsValid(emailRef.current?.checkValidity() ?? false);
+    setEmailPunycode(e.target.value);
+  };
+
   const onSubmit = async (): Promise<void> => {
+    const email = normalizeEmail(emailPunycode);
     setIsLoading(true);
     if (await backend.isEmailOrUsernameAvailable(email)) {
       await backend.emailInviteToProject(
@@ -50,10 +58,6 @@ export default function EmailInvite(props: InviteProps): ReactElement {
     props.close();
   };
 
-  useEffect(() => {
-    setIsValid(validator.isEmail(email) && email !== "example@gmail.com");
-  }, [email]);
-
   return (
     <Box sx={{ width: 450 }}>
       <Stack alignContent="center" spacing={2}>
@@ -63,14 +67,20 @@ export default function EmailInvite(props: InviteProps): ReactElement {
         </Typography>
 
         {/* Email address input */}
-        <NormalizedTextField
+        {/* Don't use NormalizedTextField for type="email".
+        At best, it doesn't normalize, because of the punycode. */}
+        <TextField
+          autoComplete="off" // invitee's, not user's
           autoFocus
           fullWidth
           id="project-user-invite-email"
           label={t(EmailInviteTextId.TextFieldEmail)}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleEmailChange}
+          ref={emailRef}
           required
           slotProps={{ htmlInput: { maxLength: 320 } }}
+          type="email" // silently converts input to punycode
+          value={emailPunycode}
         />
 
         {/* Email message input */}
