@@ -23,10 +23,18 @@ inputs:
   update_cert_proxy:
     description: "Specification for whether the combine-cert-proxy should be updated."
     required: true
+
 runs:
   using: "composite"
   steps:
-    - name: Install pre-requisites
+    - name: Install Helm
+      run: |
+        echo "Installing Helm"
+        curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+        helm version
+      shell: bash
+
+    - name: Install Kubectl
       run: |
         cd
         echo "Installing kubectl version ${{ inputs.kubectl_version }}"
@@ -34,37 +42,32 @@ runs:
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
         kubectl version --output=yaml
       shell: bash
+
     - name: Deploy updated images
       run: echo "Update images with version ${{ inputs.image_tag }}"
       shell: bash
-    - name: Update database
-      run: kubectl --context ${{ inputs.kube_context }}
-        --namespace thecombine
-        set image deployment/database
-        database="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_database:${{ inputs.image_tag }}"
+
+    - name: Deploy via Helm
+      run: |
+        # Pass both the tag AND the registry/alias to Helm
+        helm upgrade thecombine ./deploy/helm/thecombine \
+          --install \
+          --namespace thecombine \
+          --kube-context ${{ inputs.kube_context }} \
+          --set global.imageTag=${{ inputs.image_tag }} \
+          --set global.imageRegistry=${{ inputs.image_registry }}${{ inputs.image_registry_alias }} \
+          --reuse-values \
+          --wait \
+          --timeout 10m
       shell: bash
-    - name: Update frontend
-      run: kubectl --context ${{ inputs.kube_context }}
-        --namespace thecombine
-        set image deployment/frontend
-        frontend="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_frontend:${{ inputs.image_tag }}"
-      shell: bash
-    - name: Update backend
-      run: kubectl --context ${{ inputs.kube_context }}
-        --namespace thecombine
-        set image deployment/backend
-        backend="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_backend:${{ inputs.image_tag }}"
-      shell: bash
-    - name: Update maintenance
-      run: kubectl --context ${{ inputs.kube_context }}
-        --namespace thecombine
-        set image deployment/maintenance
-        maintenance="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_maint:${{ inputs.image_tag }}"
-      shell: bash
+
     - name: Update Cert Proxy Server
+      # We keep this as kubectl because it targets a different namespace
+      # that is likely not in your main Helm chart.
       if: ${{ inputs.update_cert_proxy == 'true' }}
-      run: kubectl --context ${{ inputs.kube_context }}
-        --namespace combine-cert-proxy
-        set image deployment/combine-cert-proxy
-        combine-cert-proxy="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_maint:${{ inputs.image_tag }}"
+      run: |
+        kubectl --context ${{ inputs.kube_context }} \
+          --namespace combine-cert-proxy \
+          set image deployment/combine-cert-proxy \
+          combine-cert-proxy="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_maint:${{ inputs.image_tag }}"
       shell: bash
