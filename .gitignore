@@ -35,7 +35,6 @@ scripts/*.js
 !scripts/frontendScripts.js
 !scripts/jestTest.js
 !scripts/startDatabase.js
-database/*.js
 *.log
 *-debug.log*
 *-error.log*
