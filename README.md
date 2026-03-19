@@ -59,14 +59,14 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    8. [Cleanup Local Repository](#cleanup-local-repository)
    9. [Generate Installer Script for The Combine](#generate-installer-script-for-the-combine-linux-only)
    10. [Generate Tutorial Video Subtitles](#generate-tutorial-video-subtitles)
-3. [Setup Local Kubernetes Cluster](#setup-local-kubernetes-cluster)
+3. [Set Up Local Kubernetes Cluster](#set-up-local-kubernetes-cluster)
    1. [Install Rancher Desktop](#install-rancher-desktop)
    2. [Install Docker Desktop](#install-docker-desktop)
    3. [Install Kubernetes Tools](#install-kubernetes-tools)
-4. [Setup _The Combine_](#setup-the-combine)
+4. [Set Up _The Combine_](#set-up-the-combine)
    1. [Install Required Charts](#install-required-charts)
    2. [Build _The Combine_ Containers](#build-the-combine-containers)
-   3. [Setup Environment Variables](#setup-environment-variables)
+   3. [Set Up Environment Variables](#set-up-environment-variables)
    4. [Install/Update _The Combine_](#installupdate-the-combine)
    5. [Connecting to your Cluster](#connecting-to-your-cluster)
    6. [Rancher Dashboard](#rancher-dashboard)
@@ -116,7 +116,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    - When you open this repo folder in VS Code, it should recommend the extensions used in this project (see
      `.vscode/extensions.json`).
 7. [Python](#python): The Python section of this document has instructions for installing _Python 3_ on each of the
-   supported platforms and how to setup your virtual environment.
+   supported platforms and how to set up your virtual environment.
 8. [FFmpeg](https://www.ffmpeg.org/download.html) and add its `/bin` to your PATH.
    - On Mac:
      - If using [homebrew](https://formulae.brew.sh/formula/ffmpeg): `brew install ffmpeg`
@@ -553,7 +553,7 @@ optionally attach them to a video file), run from within a Python virtual enviro
 python scripts/subtitle_tutorial_video.py -s <subtitles_subfolder_name> [-i <input_video_path> -o <output_video_path>] [-v]
 ```
 
-## Setup Local Kubernetes Cluster
+## Set Up Local Kubernetes Cluster
 
 This section describes how to create a local Kubernetes cluster using either _Rancher Desktop_ or _Docker Desktop_.
 
@@ -573,7 +573,7 @@ The steps to install _The Combine_ in a local Kubernetes client are:
 
 1. [Install Rancher Desktop](#install-rancher-desktop) OR [Install Docker Desktop](#install-docker-desktop)
 2. [Install Kubernetes Tools](#install-kubernetes-tools)
-3. [Setup The Combine](#setup-the-combine)
+3. [Set Up The Combine](#set-up-the-combine)
 
 ### Install Rancher Desktop
 
@@ -585,12 +585,12 @@ When _Rancher Desktop_ is first run, you will be prompted to select a few initia
 ![alt text](docs/images/rancher-desktop-select-runtime.png "Rancher Desktop Select Runtime")
 
 1. Verify that _Enable Kubernetes_ is checked.
-2. Select the Kubernetes version marked as _stable, latest_.
+2. Select the Kubernetes version marked as _stable_.
 3. Select your container runtime, either _containerd_ or _dockerd (moby)_:
    - _containerd_ matches what is used on the NUC and uses the `k3s` Kubernetes engine. It requires that you set the
      `CONTAINER_CLI` environment variable to `nerdctl` before running the `build.py` script.
-   - _dockerd_ uses the `k3d` (`k3s` in docker).
-4. Select _Automatic_ or _Manual_ path setup.
+   - _dockerd_ (recommended) uses the `k3d` (`k3s` in docker).
+4. (Linux only) Select _Automatic_ or _Manual_ path setup.
 5. Click _Accept_.
 
 The _Rancher Desktop_ Main Window will be displayed as it loads the Kubernetes environment. While the page is displayed,
@@ -641,7 +641,7 @@ links:
 2. [helm](https://helm.sh/docs/intro/install/)
    - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernetes-helm`
 
-## Setup _The Combine_
+## Set Up _The Combine_
 
 This section describes how to build and deploy _The Combine_ to your Kubernetes cluster. Unless specified otherwise, all
 of the commands below are run from _The Combine's_ project directory and are run in an activated Python virtual
@@ -655,7 +655,7 @@ Install the required charts by running:
 python deploy/scripts/setup_cluster.py --type development
 ```
 
-`deploy/scripts/setup_cluster.py` assumes that the `kubectl` configuration file is setup to manage the desired
+`deploy/scripts/setup_cluster.py` assumes that the `kubectl` configuration file is set up to manage the desired
 Kubernetes cluster. For most development users, there will only be the _Rancher Desktop_/_Docker Desktop_ cluster to
 manage and the installation process will set that up correctly. If there are multiple clusters to manage, the
 `--kubeconfig` and `--context` options will let you specify a different cluster.
@@ -700,7 +700,7 @@ Notes:
   newest, untagged image will be pulled.
 - `--repo` and `--tag` are not specified under normal development use.
 
-### Setup Environment Variables
+### Set Up Environment Variables
 
 Before installing _The Combine_ in Kubernetes, you need to set the following environment variables:
 `COMBINE_CAPTCHA_SECRET_KEY`, `COMBINE_JWT_SECRET_KEY`. For development environments, you can use the values defined in
@@ -709,7 +709,7 @@ Before installing _The Combine_ in Kubernetes, you need to set the following env
 
 _Note: The following is optional for Development Environments._
 
-In addition to the environment variables defined in [Prepare the Environment](#prepare-the-environment), you may setup
+In addition to the environment variables defined in [Prepare the Environment](#prepare-the-environment), you may set up
 the following environment variables:
 
 - `AWS_ACCOUNT`
@@ -739,7 +739,7 @@ Notes:
   with no arguments.
 
 - If an invalid target is entered, the script will list available targets and prompt the user his/her selection.
-  `deploy/scripts/setup_combine.py` assumes that the `kubectl` configuration file is setup to manage the desired
+  `deploy/scripts/setup_combine.py` assumes that the `kubectl` configuration file is set up to manage the desired
   Kubernetes cluster. For most development users, there will only be the _Rancher Desktop/Docker Desktop_ cluster to
   manage and the installation process will set that up correctly. If there are multiple clusters to manage, the
   `--kubeconfig` and `--context` options will let you specify a different cluster.
@@ -778,11 +778,11 @@ otel-opentelemetry-collector-5b5b69557b-zqk5d   1/1     Running     0          1
 
 ### Connecting to Your Cluster
 
-#### Setup Port Forwarding
+#### Set Up Port Forwarding
 
-_Rancher Desktop only!_
+_Only for Rancher Desktop on Linux!_
 
-To connect to _The Combine_ user interface on _Rancher Desktop_, you need to setup port forwarding.
+To connect to _The Combine_ user interface on _Rancher Desktop_ on Linux, you need to set up port forwarding.
 
 1. From the _Rancher Desktop_ main window, click on _Port Forwarding_ on the left-hand side.
 2. Click the _Forward_ button to the left of the `https` port for `ingress-controller-ingress-nginx-controller` in the
@@ -794,7 +794,7 @@ Note that the port forwarding is not persistent; you need to set it up whenever 
 #### Connecting to _The Combine_
 
 You can connect to _The Combine_ by entering the URL `https://thecombine.localhost` in the address bar of your web
-browser. (`https://thecombine.localhost:<portnumber>` for _Rancher Desktop_)
+browser (`https://thecombine.localhost:<portnumber>` for _Rancher Desktop_ on Linux).
 
 Notes:
 
@@ -917,10 +917,10 @@ delete. These are listed in the output of `helm list -A`.
 You can delete the entire `thecombine` namespace and its charts with `kubectl delete namespace thecombine`. However,
 then you will have to rerun `setup_cluster.py` (to install `otel-opentelemetry-collector`) before `setup_combine.py`.
 
-#### Checking The System Status
+#### Checking the System Status
 
 Once _The Combine_ is installed, it is useful to be able to see the state of the system and to look at the logs. _The
-Combine_ is setup as five deployments:
+Combine_ is set up as five deployments:
 
 - frontend
 - backend
