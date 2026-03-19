@@ -16,7 +16,7 @@ namespace Backend.Tests.Services
         private IMemoryCache _cache = null!;
         private IMergeBlacklistRepository _mergeBlacklistRepo = null!;
         private IMergeGraylistRepository _mergeGraylistRepo = null!;
-        private IWordRepository _wordRepo = null!;
+        private WordRepositoryMock _wordRepo = null!;
         private IWordService _wordService = null!;
         private IMergeService _mergeService = null!;
 
@@ -168,14 +168,14 @@ namespace Backend.Tests.Services
             var childIds = mergeObject.Children.Select(word => word.SrcWordId).ToList();
             var parentIds = new List<string> { newWords[0].Id };
             var mergedWord = new MergeUndoIds(parentIds, childIds);
-            var undo = _mergeService.UndoMerge(ProjId, UserId, mergedWord).Result;
-            Assert.That(undo, Is.True);
+
+            var result = _mergeService.UndoMerge(ProjId, UserId, mergedWord).Result;
+            Assert.That(result, Is.True);
 
             var frontierWords = _wordRepo.GetAllFrontier(ProjId).Result;
-            var frontierWordIds = frontierWords.Select(word => word.Id).ToList();
-
             Assert.That(frontierWords, Has.Count.EqualTo(1));
-            Assert.That(frontierWordIds, Does.Contain(childIds[0]));
+            Assert.That(frontierWords[0].Id, Is.EqualTo(childIds[0]));
+
         }
 
         [Test]
@@ -201,13 +201,13 @@ namespace Backend.Tests.Services
             var childIds = mergeWords.Children.Select(word => word.SrcWordId).ToList();
             var parentIds = new List<string> { newWords[0].Id };
             var mergedWord = new MergeUndoIds(parentIds, childIds);
-            var undo = _mergeService.UndoMerge(ProjId, UserId, mergedWord).Result;
-            Assert.That(undo, Is.True);
+
+            var result = _mergeService.UndoMerge(ProjId, UserId, mergedWord).Result;
+            Assert.That(result, Is.True);
 
             var frontierWords = _wordRepo.GetAllFrontier(ProjId).Result;
-            var frontierWordIds = frontierWords.Select(word => word.Id).ToList();
-
             Assert.That(frontierWords, Has.Count.EqualTo(numberOfChildren));
+            var frontierWordIds = frontierWords.Select(w => w.Id).ToList();
             childIds.ForEach(id => Assert.That(frontierWordIds, Does.Contain(id)));
         }
 
@@ -217,10 +217,10 @@ namespace Backend.Tests.Services
             var wordIds = new List<string> { "1", "2" };
 
             // Adding to blacklist should clear from graylist
-            _ = _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds).Result;
+            _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds).Wait();
             Assert.That(_mergeGraylistRepo.GetAllSets(ProjId).Result, Is.Not.Empty);
 
-            _ = _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIds).Result;
+            _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIds).Wait();
             var blacklist = _mergeBlacklistRepo.GetAllSets(ProjId).Result;
             Assert.That(blacklist, Has.Count.EqualTo(1));
             var expectedEntry = new MergeWordSet { ProjectId = ProjId, UserId = UserId, WordIds = wordIds };
@@ -247,7 +247,7 @@ namespace Backend.Tests.Services
             var subWordIds = new List<string> { "3", "2" };
 
             Assert.That(_mergeService.IsInMergeBlacklist(ProjId, subWordIds).Result, Is.False);
-            _ = _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIds).Result;
+            _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIds).Wait();
             Assert.That(_mergeService.IsInMergeBlacklist(ProjId, subWordIds).Result, Is.True);
         }
 
@@ -280,8 +280,8 @@ namespace Backend.Tests.Services
                 WordIds = ["1", "4"]
             };
 
-            _ = _mergeBlacklistRepo.Create(entryA);
-            _ = _mergeBlacklistRepo.Create(entryB);
+            _mergeBlacklistRepo.Create(entryA).Wait();
+            _mergeBlacklistRepo.Create(entryB).Wait();
 
             var oldBlacklist = _mergeBlacklistRepo.GetAllSets(ProjId).Result;
             Assert.That(oldBlacklist, Has.Count.EqualTo(2));
@@ -293,7 +293,7 @@ namespace Backend.Tests.Services
                 new() {Id = "3", ProjectId = ProjId},
                 new() {Id = "4", ProjectId = ProjId}
             };
-            _ = _wordRepo.AddFrontier(frontier).Result;
+            _wordRepo.AddFrontier(frontier).Wait();
 
             // All entries affected.
             var updatedEntriesCount = _mergeService.UpdateMergeBlacklist(ProjId).Result;
@@ -309,7 +309,7 @@ namespace Backend.Tests.Services
         public void AddMergeToGraylistTest()
         {
             var wordIds = new List<string> { "1", "2" };
-            _ = _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds).Result;
+            _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds).Wait();
             var graylist = _mergeGraylistRepo.GetAllSets(ProjId).Result;
             Assert.That(graylist, Has.Count.EqualTo(1));
             var expectedEntry = new MergeWordSet { ProjectId = ProjId, UserId = UserId, WordIds = wordIds };
@@ -323,11 +323,11 @@ namespace Backend.Tests.Services
             var wordIds13 = new List<string> { "1", "3" };
             var wordIds123 = new List<string> { "1", "2", "3" };
 
-            _ = _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds12).Result;
-            _ = _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds13).Result;
+            _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds12).Wait();
+            _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds13).Wait();
             Assert.That(_mergeGraylistRepo.GetAllSets(ProjId).Result, Has.Count.EqualTo(2));
 
-            _ = _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds123).Result;
+            _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds123).Wait();
             Assert.That(_mergeGraylistRepo.GetAllSets(ProjId).Result, Has.Count.EqualTo(1));
         }
 
@@ -346,17 +346,17 @@ namespace Backend.Tests.Services
         public void RemoveFromMergeGraylistTest()
         {
             var wordIds = new List<string> { "1", "2", "3" };
-            _ = _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds).Result;
+            _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds).Wait();
             Assert.That(_mergeGraylistRepo.GetAllSets(ProjId).Result, Has.Count.EqualTo(1));
             Assert.That(_mergeService.RemoveFromMergeGraylist(ProjId, UserId, wordIds).Result, Is.True);
-            Assert.That(_mergeGraylistRepo.GetAllSets(ProjId).Result, Has.Count.EqualTo(0));
+            Assert.That(_mergeGraylistRepo.GetAllSets(ProjId).Result, Is.Empty);
         }
 
         [Test]
         public void RemoveFromMergeGraylistSupersetTest()
         {
             var wordIds = new List<string> { "1", "2" };
-            _ = _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds).Result;
+            _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds).Wait();
             Assert.That(_mergeGraylistRepo.GetAllSets(ProjId).Result, Has.Count.EqualTo(1));
 
             wordIds.Add("3");
@@ -382,7 +382,7 @@ namespace Backend.Tests.Services
             var subWordIds = new List<string> { "3", "2" };
 
             Assert.That(_mergeService.IsInMergeGraylist(ProjId, subWordIds).Result, Is.False);
-            _ = _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds).Result;
+            _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds).Wait();
             Assert.That(_mergeService.IsInMergeGraylist(ProjId, subWordIds).Result, Is.True);
         }
 
@@ -415,8 +415,8 @@ namespace Backend.Tests.Services
                 WordIds = ["1", "4"]
             };
 
-            _ = _mergeGraylistRepo.Create(entryA);
-            _ = _mergeGraylistRepo.Create(entryB);
+            _mergeGraylistRepo.Create(entryA).Wait();
+            _mergeGraylistRepo.Create(entryB).Wait();
 
             var oldGraylist = _mergeGraylistRepo.GetAllSets(ProjId).Result;
             Assert.That(oldGraylist, Has.Count.EqualTo(2));
@@ -428,7 +428,7 @@ namespace Backend.Tests.Services
                 new() {Id = "3", ProjectId = ProjId},
                 new() {Id = "4", ProjectId = ProjId}
             };
-            _ = _wordRepo.AddFrontier(frontier).Result;
+            _wordRepo.AddFrontier(frontier).Wait();
 
             // All entries affected.
             var updatedEntriesCount = _mergeService.UpdateMergeGraylist(ProjId).Result;
@@ -443,16 +443,16 @@ namespace Backend.Tests.Services
         [Test]
         public void HasGraylistEntriesTrueTest()
         {
-            _ = _mergeGraylistRepo.Create(new() { Id = "A", ProjectId = ProjId, UserId = UserId });
-            _ = _mergeGraylistRepo.Create(new()
+            _mergeGraylistRepo.Create(new() { Id = "A", ProjectId = ProjId, UserId = UserId }).Wait();
+            _mergeGraylistRepo.Create(new()
             {
                 Id = "B",
                 ProjectId = ProjId,
                 UserId = UserId,
                 WordIds = ["i", "ii", "iii", "iv"]
-            });
-            _ = _wordRepo.AddFrontier([new() { Id = "ii", ProjectId = ProjId }]).Result;
-            _ = _wordRepo.AddFrontier([new() { Id = "iv", ProjectId = ProjId }]).Result;
+            }).Wait();
+            _wordRepo.AddFrontier([new() { Id = "ii", ProjectId = ProjId }]).Wait();
+            _wordRepo.AddFrontier([new() { Id = "iv", ProjectId = ProjId }]).Wait();
 
             Assert.That(_mergeService.HasGraylistEntries(ProjId, UserId).Result, Is.True);
         }
@@ -461,22 +461,22 @@ namespace Backend.Tests.Services
         public void HasGraylistEntriesRemovesInvalidEntriesTest()
         {
             // Create graylist entries with fewer than 2 words in the Frontier.
-            _ = _mergeGraylistRepo.Create(new() { Id = "A", ProjectId = ProjId, UserId = UserId });
-            _ = _mergeGraylistRepo.Create(new()
+            _mergeGraylistRepo.Create(new() { Id = "A", ProjectId = ProjId, UserId = UserId }).Wait();
+            _mergeGraylistRepo.Create(new()
             {
                 Id = "B",
                 ProjectId = ProjId,
                 UserId = UserId,
                 WordIds = ["i", "ii", "iii", "iv"]
-            });
-            _ = _mergeGraylistRepo.Create(new()
+            }).Wait();
+            _mergeGraylistRepo.Create(new()
             {
                 Id = "C",
                 ProjectId = ProjId,
                 UserId = UserId,
                 WordIds = ["1", "2", "3"]
-            });
-            _ = _wordRepo.AddFrontier([new() { Id = "1", ProjectId = ProjId }]).Result;
+            }).Wait();
+            _wordRepo.AddFrontier([new() { Id = "1", ProjectId = ProjId }]).Wait();
 
             // Check for graylist entries.
             Assert.That(_mergeService.HasGraylistEntries(ProjId, UserId).Result, Is.False);
@@ -533,7 +533,7 @@ namespace Backend.Tests.Services
 
             // Delay first GetFrontier call
             var delaySignal = new TaskCompletionSource<bool>();
-            ((WordRepositoryMock)_wordRepo).SetGetFrontierDelay(delaySignal.Task);
+            _wordRepo.SetGetFrontierDelay(delaySignal.Task);
             var firstCallTask = _mergeService.GetAndStorePotentialDuplicates(ProjId, 10, 10, userId);
 
             // Give first call time to start
@@ -557,7 +557,7 @@ namespace Backend.Tests.Services
 
             // Delay first GetFrontier call
             var delaySignal = new TaskCompletionSource<bool>();
-            ((WordRepositoryMock)_wordRepo).SetGetFrontierDelay(delaySignal.Task);
+            _wordRepo.SetGetFrontierDelay(delaySignal.Task);
             var firstCallTask = _mergeService.GetAndStorePotentialDuplicates(ProjId, 10, 10, userId1);
 
             // Give first call time to start
