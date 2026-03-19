@@ -37,7 +37,7 @@ runs:
         helm version
       shell: bash
 
-    - name: Install Kubectl
+    - name: Install kubectl
       run: |
         cd
         echo "Installing kubectl version ${{ inputs.kubectl_version }}"
@@ -46,13 +46,9 @@ runs:
         kubectl version --output=yaml
       shell: bash
 
-    - name: Deploy updated images
-      run: echo "Update images with version ${{ inputs.image_tag }}"
-      shell: bash
-
-    - name: Deploy via Helm
+    - name: Deploy images via Helm
       run: |
-        # Pass both the tag AND the registry/alias to Helm
+        echo "Updating images with version ${{ inputs.image_tag }}"
         helm upgrade thecombine ./deploy/helm/thecombine \
           --install \
           --namespace thecombine \
@@ -63,11 +59,10 @@ runs:
           --timeout 10m
       shell: bash
 
-    - name: Update Cert Proxy Server
-      # We keep this as kubectl because it targets a different namespace
-      # that is likely not in your main Helm chart.
+    - name: Update Cert Proxy Server via kubectl
       if: ${{ inputs.update_cert_proxy == 'true' }}
       run: |
+        echo "Updating cert-proxy with version ${{ inputs.image_tag }}"
         kubectl --context ${{ inputs.kube_context }} \
           --namespace combine-cert-proxy \
           set image deployment/combine-cert-proxy \
