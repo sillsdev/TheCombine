@@ -14,7 +14,7 @@ namespace Backend.Tests.Controllers
 {
     internal sealed class WordControllerTests : IDisposable
     {
-        private IWordRepository _wordRepo = null!;
+        private WordRepositoryMock _wordRepo = null!;
         private IPermissionService _permissionService = null!;
         private IWordService _wordService = null!;
         private WordController _wordController = null!;
@@ -411,15 +411,13 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestRestoreWord()
         {
-            var word = await _wordRepo.Create(Util.RandomWord(ProjId));
-            await _wordRepo.DeleteFrontier(ProjId, word.Id);
+            var word = await _wordRepo.Add(Util.RandomWord(ProjId));
 
             Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
             Assert.That(await _wordRepo.GetAllFrontier(ProjId), Is.Empty);
 
-            var result = await _wordController.RestoreWord(ProjId, word.Id) as OkObjectResult;
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Value, Is.True);
+            var result = await _wordController.RestoreWord(ProjId, word.Id);
+            Assert.That(result, Is.InstanceOf<OkResult>());
             Assert.That(await _wordRepo.GetAllWords(ProjId), Does.Contain(word).UsingPropertiesComparer());
             Assert.That(await _wordRepo.GetAllFrontier(ProjId), Does.Contain(word).UsingPropertiesComparer());
         }
@@ -433,9 +431,7 @@ namespace Backend.Tests.Controllers
             Assert.That(await _wordRepo.GetAllFrontier(ProjId), Does.Contain(word).UsingPropertiesComparer());
             var frontierCount = await _wordRepo.GetFrontierCount(ProjId);
 
-            var result = await _wordController.RestoreWord(ProjId, word.Id) as OkObjectResult;
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Value, Is.False);
+            Assert.ThrowsAsync<ArgumentException>(async () => await _wordController.RestoreWord(ProjId, word.Id));
             Assert.That(await _wordRepo.GetFrontierCount(ProjId), Is.EqualTo(frontierCount));
         }
 

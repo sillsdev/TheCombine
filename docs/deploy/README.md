@@ -415,7 +415,7 @@ Notes:
   rerun manually:
 
   ```console
-  kubectl -n thecombine exec deployment/database -- /docker-entrypoint-initdb.d/update-semantic-domains.sh
+  kubectl -n thecombine exec deployment/database -- /opt/thecombine/update-semantic-domains.sh
   ```
 
 ## Maintenance

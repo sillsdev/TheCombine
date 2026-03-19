@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -21,7 +21,7 @@ namespace Backend.Tests.Controllers
     {
         private IProjectRepository _projRepo = null!;
         private ISpeakerRepository _speakerRepo = null!;
-        private IWordRepository _wordRepo = null!;
+        private WordRepositoryMock _wordRepo = null!;
         private ILiftService _liftService = null!;
         private IWordService _wordService = null!;
         private LiftController _liftController = null!;
@@ -54,8 +54,8 @@ namespace Backend.Tests.Controllers
             var permissionService = new PermissionServiceMock();
             _wordService = new WordService(_wordRepo);
             var logger = new LoggerMock<LiftController>();
-            _liftController = new LiftController(_projRepo, semDomRepo, _speakerRepo, _wordRepo, ackService,
-                _liftService, notifyService, permissionService, logger);
+            _liftController = new LiftController(_projRepo, semDomRepo, _speakerRepo, _wordRepo, _wordService,
+                ackService, _liftService, notifyService, permissionService, logger);
 
             _projId = _projRepo.Create(new Project { Name = ProjName }).Result!.Id;
             _file = new FormFile(_stream, 0, _stream.Length, "Name", FileName);
