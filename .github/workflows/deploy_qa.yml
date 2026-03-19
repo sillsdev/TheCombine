@@ -116,6 +116,7 @@ jobs:
       - name: Deploy The Combine Update
         uses: ./.github/actions/combine-deploy-update
         with:
+          helm_version: ${{ vars.HELM_VERSION }}
           image_registry: ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
           image_tag: ${{ needs.build.outputs.image_tag }}
           kube_context: ${{ secrets.LTOPS_K8S_STAGING_CONTEXT }}

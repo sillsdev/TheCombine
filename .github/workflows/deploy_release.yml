@@ -75,6 +75,7 @@ jobs:
       - name: Deploy The Combine Update to QA
         uses: ./.github/actions/combine-deploy-update
         with:
+          helm_version: ${{ vars.HELM_VERSION }}
           image_registry: public.ecr.aws
           image_registry_alias: "/thecombine"
           image_tag: ${{ needs.build.outputs.image_tag }}
@@ -84,6 +85,7 @@ jobs:
       - name: Deploy The Combine Update to Production
         uses: ./.github/actions/combine-deploy-update
         with:
+          helm_version: ${{ vars.HELM_VERSION }}
           image_registry: public.ecr.aws
           image_registry_alias: "/thecombine"
           image_tag: ${{ needs.build.outputs.image_tag }}

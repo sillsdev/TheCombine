@@ -1,6 +1,9 @@
 name: "Combine Deploy Updates"
 description: "Deploy updated images for The Combine to the Kubernetes cluster"
 inputs:
+  helm_version:
+    description: "Version of helm to install on the runner"
+    required: true
   image_registry:
     description: "Docker Image Registry"
     required: true
@@ -29,8 +32,8 @@ runs:
   steps:
     - name: Install Helm
       run: |
-        echo "Installing Helm"
-        curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+        echo "Installing Helm version ${{ inputs.helm_version }}"
+        curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | DESIRED_VERSION=${{ inputs.helm_version }} bash
         helm version
       shell: bash
 
@@ -54,9 +57,8 @@ runs:
           --install \
           --namespace thecombine \
           --kube-context ${{ inputs.kube_context }} \
-          --set global.imageTag=${{ inputs.image_tag }} \
-          --set global.imageRegistry=${{ inputs.image_registry }}${{ inputs.image_registry_alias }} \
-          --reuse-values \
+          --set global.imageTag="${{ inputs.image_tag }}" \
+          --set global.imageRegistry="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}" \
           --wait \
           --timeout 10m
       shell: bash
