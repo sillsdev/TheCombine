@@ -1,5 +1,5 @@
 import { Box, Grid2, Stack, TextField, Typography } from "@mui/material";
-import { ReactElement, useRef, useState } from "react";
+import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -24,9 +24,7 @@ interface InviteProps {
 }
 
 export default function EmailInvite(props: InviteProps): ReactElement {
-  const emailRef = useRef<HTMLInputElement>(null);
-
-  const [emailPunycode, setEmailPunycode] = useState("");
+  const [email, setEmail] = useState("");
   const [isDone, setIsDone] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -35,12 +33,11 @@ export default function EmailInvite(props: InviteProps): ReactElement {
   const { t } = useTranslation();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setIsValid(emailRef.current?.checkValidity() ?? false);
-    setEmailPunycode(e.target.value);
+    setEmail(normalizeEmail(e.target.value));
+    setIsValid(e.target.checkValidity());
   };
 
   const onSubmit = async (): Promise<void> => {
-    const email = normalizeEmail(emailPunycode);
     setIsLoading(true);
     if (await backend.isEmailOrUsernameAvailable(email)) {
       await backend.emailInviteToProject(
@@ -74,13 +71,11 @@ export default function EmailInvite(props: InviteProps): ReactElement {
           autoFocus
           fullWidth
           id="project-user-invite-email"
-          inputRef={emailRef}
           label={t(EmailInviteTextId.TextFieldEmail)}
           onChange={handleEmailChange}
           required
           slotProps={{ htmlInput: { maxLength: 320 } }}
           type="email" // silently converts input to punycode
-          value={emailPunycode}
         />
 
         {/* Email message input */}

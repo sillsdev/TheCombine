@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ReactElement, useEffect, useRef, useState } from "react";
+import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { isEmailOkay, requestEmailVerify, updateUser } from "backend";
@@ -29,22 +29,22 @@ interface RequestEmailVerifyProps {
 export default function RequestEmailVerify(
   props: RequestEmailVerifyProps
 ): ReactElement {
-  const emailRef = useRef<HTMLInputElement>(null);
-
   const [currentUser] = useState(getCurrentUser()!);
-  const [emailPunycode, setEmailPunycode] = useState(currentUser.email);
+  const [email, setEmail] = useState(currentUser.email);
   const [isTaken, setIsTaken] = useState(false);
-  const [isValid, setIsValid] = useState(false);
+  // Assume current email is valid to start,
+  // since it was created with a type="email" field.
+  const [isValid, setIsValid] = useState(!!currentUser.email);
 
   const { t } = useTranslation();
 
-  useEffect(() => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setEmail(normalizeEmail(e.target.value));
     setIsTaken(false);
-    setIsValid(emailRef.current?.checkValidity() ?? false);
-  }, [emailPunycode]);
+    setIsValid(e.target.checkValidity());
+  };
 
   const onSubmit = async (): Promise<void> => {
-    const email = normalizeEmail(emailPunycode);
     if (!(await isEmailOkay(email))) {
       setIsTaken(true);
       return;
@@ -71,18 +71,17 @@ export default function RequestEmailVerify(
         <TextField
           autoComplete="email"
           autoFocus
+          defaultValue={currentUser.email}
           error={isTaken}
           fullWidth
           helperText={
             isTaken ? t(RequestEmailVerifyTextId.FieldEmailTaken) : undefined
           }
-          inputRef={emailRef}
           label={t(RequestEmailVerifyTextId.FieldEmail)}
-          onChange={(e) => setEmailPunycode(e.target.value)}
+          onChange={handleEmailChange}
           required
           slotProps={{ htmlInput: { maxLength: 320 } }}
           type="email" // silently converts input to punycode
-          value={emailPunycode}
         />
 
         {/* Buttons: cancel, submit */}
