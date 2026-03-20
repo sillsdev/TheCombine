@@ -33,7 +33,8 @@ export default function RequestEmailVerify(
   const [email, setEmail] = useState(currentUser.email);
   const [isTaken, setIsTaken] = useState(false);
   // Assume current email is valid to start,
-  // since it was created with a type="email" field.
+  // since it was created with a type="email" field,
+  // and TextField's defaultValue doesn't trigger onChange.
   const [isValid, setIsValid] = useState(!!currentUser.email);
 
   const { t } = useTranslation();
