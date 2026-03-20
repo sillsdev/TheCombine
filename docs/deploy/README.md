@@ -25,10 +25,11 @@ This document describes how to deploy _The Combine_ to a target Kubernetes clust
    2. [Setup Environment](#setup-environment)
 7. [Install Helm Charts Required by _The Combine_](#install-helm-charts-required-by-the-combine)
 8. [Install _The Combine_](#install-the-combine)
-9. [Maintenance](#maintenance)
-   1. [Maintenance Scripts for Kubernetes](#maintenance-scripts-for-kubernetes)
-   2. [Checking Certificate Expiration](#checking-certificate-expiration)
-   3. [Creating your own Configurations](#creating-your-own-configurations)
+9. [GitHub Actions CI/CD Setup](#github-actions-cicd-setup)
+10. [Maintenance](#maintenance)
+    1. [Maintenance Scripts for Kubernetes](#maintenance-scripts-for-kubernetes)
+    2. [Checking Certificate Expiration](#checking-certificate-expiration)
+    3. [Creating your own Configurations](#creating-your-own-configurations)
 
 ## System Design
 
@@ -417,6 +418,66 @@ Notes:
   ```console
   kubectl -n thecombine exec deployment/database -- /opt/thecombine/update-semantic-domains.sh
   ```
+
+## GitHub Actions CI/CD Setup
+
+The repository uses two GitHub Actions workflows to automatically deploy _The Combine_ to the QA and Production servers
+using `helm upgrade` via the `deploy/scripts/setup_combine.py` script.
+
+### CI/CD Workflow Overview
+
+- **`deploy_qa.yml`**: Triggered on every push to the `master` branch. Builds new images from the latest code and
+  deploys them to the QA server using the private AWS ECR registry.
+- **`deploy_release.yml`**: Triggered when a new GitHub release is published. Deploys the released images (from the
+  public AWS ECR registry) to both the QA and Production servers.
+
+Both workflows run the deploy step on a `[self-hosted, thecombine]` runner that has network access to the Kubernetes
+clusters (e.g. via WireGuard). The runner must have its `~/.kube/config` pre-configured with the cluster contexts.
+
+### Required GitHub Repository Secrets
+
+The following secrets must be configured in the GitHub repository settings under
+_Settings → Secrets and variables → Actions_:
+
+**AWS Secrets** (already required for image builds):
+
+| Secret | Description |
+|---|---|
+| `AWS_ACCOUNT` | AWS Account ID |
+| `AWS_DEFAULT_REGION` | AWS default region (e.g. `us-east-1`) |
+| `AWS_ACCESS_KEY_ID` | AWS access key with ECR read/write access |
+| `AWS_SECRET_ACCESS_KEY` | AWS secret access key |
+
+**Kubernetes Cluster Secrets** (already required):
+
+| Secret | Description |
+|---|---|
+| `LTOPS_K8S_STAGING_CONTEXT` | kubectl context name for the QA cluster |
+| `LTOPS_K8S_PRODUCTION_CONTEXT` | kubectl context name for the Production cluster |
+
+**Combine Application Secrets** (required for helm deployment — add these):
+
+| Secret | Description |
+|---|---|
+| `COMBINE_CAPTCHA_SECRET_KEY` | Cloudflare Turnstile secret key |
+| `COMBINE_JWT_SECRET_KEY` | JWT secret key for user authentication |
+| `COMBINE_SMTP_USERNAME` | SMTP username for email notifications |
+| `COMBINE_SMTP_PASSWORD` | SMTP password for email notifications |
+| `COMBINE_ADMIN_USERNAME` | Username for the application admin user |
+| `COMBINE_ADMIN_PASSWORD` | Password for the application admin user |
+| `COMBINE_ADMIN_EMAIL` | Email address for the application admin user |
+
+If you need the values for these secrets, send a request to
+[admin@thecombine.app](mailto:admin@thecombine.app).
+
+### GitHub Actions Variables to Remove
+
+The following GitHub Actions variable is no longer used and can be removed from
+_Settings → Secrets and variables → Actions → Variables_:
+
+| Variable | Reason |
+|---|---|
+| `KUBECTL_VERSION` | The deployment now installs the latest stable kubectl version automatically. |
 
 ## Maintenance
 

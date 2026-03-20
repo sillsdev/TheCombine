@@ -1,70 +1,91 @@
 name: "Combine Deploy Updates"
-description: "Deploy updated images for The Combine to the Kubernetes cluster"
+description: "Deploy updated Helm charts for The Combine to the Kubernetes cluster"
 inputs:
   image_registry:
-    description: "Docker Image Registry"
+    description: "Docker Image Registry (full path, e.g. public.ecr.aws/thecombine)"
     required: true
-  image_registry_alias:
-    description: >
-      Custom or default alias for AWS Public ECR registries.  Blank for AWS ECR Private registries.
-      If the image_registry_alias is specified, include the '/' at the beginning of the string,
-      e.g. /thecombine
-    required: false
-    default: ""
   image_tag:
     description: "Image Tag for docker images"
     required: true
   kube_context:
-    description: "Context for the kubectl commands"
+    description: "Context for the kubectl/helm commands"
     required: true
-  kubectl_version:
-    description: "Version of kubectl to install on the runner"
+  target:
+    description: "Deployment target as defined in deploy/scripts/setup_files/combine_config.yaml (e.g. qa, prod)"
     required: true
-  update_cert_proxy:
-    description: "Specification for whether the combine-cert-proxy should be updated."
+  aws_account:
+    description: "AWS Account ID"
+    required: true
+  aws_default_region:
+    description: "AWS Default Region"
+    required: true
+  aws_access_key_id:
+    description: "AWS Access Key ID"
+    required: true
+  aws_secret_access_key:
+    description: "AWS Secret Access Key"
+    required: true
+  combine_captcha_secret_key:
+    description: "Cloudflare Turnstile secret key for The Combine"
+    required: true
+  combine_jwt_secret_key:
+    description: "JWT secret key for The Combine"
+    required: true
+  combine_smtp_username:
+    description: "SMTP username for sending emails from The Combine"
+    required: true
+  combine_smtp_password:
+    description: "SMTP password for sending emails from The Combine"
+    required: true
+  combine_admin_username:
+    description: "Username for The Combine admin user"
+    required: true
+  combine_admin_password:
+    description: "Password for The Combine admin user"
+    required: true
+  combine_admin_email:
+    description: "Email address for The Combine admin user"
     required: true
 runs:
   using: "composite"
   steps:
-    - name: Install pre-requisites
+    - name: Install kubectl
       run: |
         cd
-        echo "Installing kubectl version ${{ inputs.kubectl_version }}"
-        curl -LO https://dl.k8s.io/release/${{ inputs.kubectl_version }}/bin/linux/amd64/kubectl
+        KUBECTL_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
+        echo "Installing kubectl ${KUBECTL_VERSION}"
+        curl -LO https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
         kubectl version --output=yaml
       shell: bash
-    - name: Deploy updated images
-      run: echo "Update images with version ${{ inputs.image_tag }}"
+    - name: Install helm
+      run: |
+        HELM_VERSION=$(curl -fsSL https://api.github.com/repos/helm/helm/releases/latest | grep '"tag_name"' | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
+        echo "Installing helm ${HELM_VERSION}"
+        curl -fsSL "https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz" | tar -xz -C /tmp
+        sudo mv /tmp/linux-amd64/helm /usr/local/bin/helm
+        helm version
       shell: bash
-    - name: Update database
-      run: kubectl --context ${{ inputs.kube_context }}
-        --namespace thecombine
-        set image deployment/database
-        database="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_database:${{ inputs.image_tag }}"
+    - name: Install Python requirements
+      run: python3 -m pip install -r deploy/requirements.txt
       shell: bash
-    - name: Update frontend
-      run: kubectl --context ${{ inputs.kube_context }}
-        --namespace thecombine
-        set image deployment/frontend
-        frontend="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_frontend:${{ inputs.image_tag }}"
+    - name: Deploy with Helm
+      run: >
+        deploy/scripts/setup_combine.py
+        --context ${{ inputs.kube_context }}
+        --repo ${{ inputs.image_registry }}
+        --tag ${{ inputs.image_tag }}
+        --target ${{ inputs.target }}
       shell: bash
-    - name: Update backend
-      run: kubectl --context ${{ inputs.kube_context }}
-        --namespace thecombine
-        set image deployment/backend
-        backend="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_backend:${{ inputs.image_tag }}"
-      shell: bash
-    - name: Update maintenance
-      run: kubectl --context ${{ inputs.kube_context }}
-        --namespace thecombine
-        set image deployment/maintenance
-        maintenance="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_maint:${{ inputs.image_tag }}"
-      shell: bash
-    - name: Update Cert Proxy Server
-      if: ${{ inputs.update_cert_proxy == 'true' }}
-      run: kubectl --context ${{ inputs.kube_context }}
-        --namespace combine-cert-proxy
-        set image deployment/combine-cert-proxy
-        combine-cert-proxy="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_maint:${{ inputs.image_tag }}"
-      shell: bash
+      env:
+        AWS_ACCOUNT: ${{ inputs.aws_account }}
+        AWS_DEFAULT_REGION: ${{ inputs.aws_default_region }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}
+        COMBINE_CAPTCHA_SECRET_KEY: ${{ inputs.combine_captcha_secret_key }}
+        COMBINE_JWT_SECRET_KEY: ${{ inputs.combine_jwt_secret_key }}
+        COMBINE_SMTP_USERNAME: ${{ inputs.combine_smtp_username }}
+        COMBINE_SMTP_PASSWORD: ${{ inputs.combine_smtp_password }}
+        COMBINE_ADMIN_USERNAME: ${{ inputs.combine_admin_username }}
+        COMBINE_ADMIN_PASSWORD: ${{ inputs.combine_admin_password }}
+        COMBINE_ADMIN_EMAIL: ${{ inputs.combine_admin_email }}
