@@ -74,9 +74,9 @@ export default function EmailInvite(props: InviteProps): ReactElement {
           autoFocus
           fullWidth
           id="project-user-invite-email"
+          inputRef={emailRef}
           label={t(EmailInviteTextId.TextFieldEmail)}
           onChange={handleEmailChange}
-          ref={emailRef}
           required
           slotProps={{ htmlInput: { maxLength: 320 } }}
           type="email" // silently converts input to punycode

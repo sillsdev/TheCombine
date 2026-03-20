@@ -32,7 +32,6 @@ export default function RequestEmailVerify(
   const emailRef = useRef<HTMLInputElement>(null);
 
   const [currentUser] = useState(getCurrentUser()!);
-  const [email, setEmail] = useState(currentUser.email);
   const [emailPunycode, setEmailPunycode] = useState(currentUser.email);
   const [isTaken, setIsTaken] = useState(false);
   const [isValid, setIsValid] = useState(false);
@@ -40,16 +39,12 @@ export default function RequestEmailVerify(
   const { t } = useTranslation();
 
   useEffect(() => {
-    setEmail(normalizeEmail(emailPunycode));
     setIsTaken(false);
+    setIsValid(emailRef.current?.checkValidity() ?? false);
   }, [emailPunycode]);
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setIsValid(emailRef.current?.checkValidity() ?? false);
-    setEmailPunycode(e.target.value);
-  };
-
   const onSubmit = async (): Promise<void> => {
+    const email = normalizeEmail(emailPunycode);
     if (!(await isEmailOkay(email))) {
       setIsTaken(true);
       return;
@@ -81,9 +76,9 @@ export default function RequestEmailVerify(
           helperText={
             isTaken ? t(RequestEmailVerifyTextId.FieldEmailTaken) : undefined
           }
+          inputRef={emailRef}
           label={t(RequestEmailVerifyTextId.FieldEmail)}
-          onChange={handleEmailChange}
-          ref={emailRef}
+          onChange={(e) => setEmailPunycode(e.target.value)}
           required
           slotProps={{ htmlInput: { maxLength: 320 } }}
           type="email" // silently converts input to punycode
