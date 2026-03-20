@@ -88,6 +88,7 @@ export default function PasswordReset(): ReactElement {
         <CardContent>
           <Stack alignItems="flex-end" spacing={2}>
             <NormalizedTextField
+              autoComplete="new-password"
               error={!passwordFitsRequirements}
               fullWidth
               helperText={
@@ -104,6 +105,7 @@ export default function PasswordReset(): ReactElement {
             />
 
             <NormalizedTextField
+              autoComplete="new-password"
               error={!isPasswordConfirmed && passwordConfirm.length > 0}
               fullWidth
               helperText={
