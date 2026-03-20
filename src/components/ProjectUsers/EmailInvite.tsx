@@ -27,8 +27,8 @@ export default function EmailInvite(props: InviteProps): ReactElement {
   const [email, setEmail] = useState("");
   const [isDone, setIsDone] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState("");
   const [isValid, setIsValid] = useState(false);
+  const [message, setMessage] = useState("");
 
   const { t } = useTranslation();
 

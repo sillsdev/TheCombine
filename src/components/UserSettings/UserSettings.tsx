@@ -180,8 +180,8 @@ export function UserSettings(props: {
 
                 <Grid2 size="grow">
                   <NormalizedTextField
-                    id={UserSettingsIds.FieldName}
                     autoComplete="name"
+                    id={UserSettingsIds.FieldName}
                     fullWidth
                     variant="outlined"
                     value={name}
@@ -214,8 +214,8 @@ export function UserSettings(props: {
 
                   <Grid2 size="grow">
                     <NormalizedTextField
-                      id={UserSettingsIds.FieldPhone}
                       autoComplete="tel"
+                      id={UserSettingsIds.FieldPhone}
                       fullWidth
                       variant="outlined"
                       value={phone}
