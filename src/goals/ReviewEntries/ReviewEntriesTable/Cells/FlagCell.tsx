@@ -10,7 +10,7 @@ export default function FlagCell(props: CellProps): ReactElement {
     const oldFlag = props.word.flag;
     if (oldFlag.active !== flag.active || oldFlag.text !== flag.text) {
       const newId = (await updateWord({ ...props.word, flag })).id;
-      await props.replace?.(props.word.id, newId);
+      await props.replace(props.word.id, newId);
     }
   };
 

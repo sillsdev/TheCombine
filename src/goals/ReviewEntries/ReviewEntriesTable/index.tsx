@@ -16,6 +16,7 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 import {
+  type ComponentType,
   type ReactElement,
   useCallback,
   useEffect,
@@ -33,6 +34,7 @@ import {
 } from "components/Project/ProjectActions";
 import { asyncUpdateEntry } from "goals/Redux/GoalActions";
 import * as Cell from "goals/ReviewEntries/ReviewEntriesTable/Cells";
+import { type CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 import * as ff from "goals/ReviewEntries/ReviewEntriesTable/filterFn";
 import * as sf from "goals/ReviewEntries/ReviewEntriesTable/sortingFn";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
@@ -234,14 +236,22 @@ export default function ReviewEntriesTable(props: {
 
   const columnHelper = createMRTColumnHelper<Word>();
 
-  type CellProps = { row: MRT_Row<Word> };
+  const CellFactory = useCallback(
+    (Component: ComponentType<CellProps>) =>
+      ({ row }: { row: MRT_Row<Word> }): ReactElement => (
+        <Component
+          delete={deleteWord}
+          replace={replaceWord}
+          word={row.original}
+        />
+      ),
+    [deleteWord, replaceWord]
+  );
 
   const columns = [
     // Edit column
     columnHelper.display({
-      Cell: ({ row }: CellProps) => (
-        <Cell.Edit replace={replaceWord} word={row.original} />
-      ),
+      Cell: CellFactory(Cell.Edit),
       enableHiding: false,
       Header: "",
       header: t(ColumnHeaderTextId[ColumnId.Edit]),
@@ -252,7 +262,7 @@ export default function ReviewEntriesTable(props: {
 
     // Vernacular column
     columnHelper.accessor("vernacular", {
-      Cell: ({ row }: CellProps) => <Cell.Vernacular word={row.original} />,
+      Cell: CellFactory(Cell.Vernacular),
       enableColumnOrdering: false,
       enableHiding: false,
       filterFn: ff.filterFnString,
@@ -282,7 +292,7 @@ export default function ReviewEntriesTable(props: {
 
     // Definitions column
     columnHelper.accessor((w) => w.senses.flatMap((s) => s.definitions), {
-      Cell: ({ row }: CellProps) => <Cell.Definitions word={row.original} />,
+      Cell: CellFactory(Cell.Definitions),
       filterFn: ff.filterFnDefinitions,
       header: t(ColumnHeaderTextId[ColumnId.Definitions]),
       id: ColumnId.Definitions,
@@ -293,7 +303,7 @@ export default function ReviewEntriesTable(props: {
 
     // Glosses column
     columnHelper.accessor((w) => w.senses.flatMap((s) => s.glosses), {
-      Cell: ({ row }: CellProps) => <Cell.Glosses word={row.original} />,
+      Cell: CellFactory(Cell.Glosses),
       filterFn: ff.filterFnGlosses,
       header: t(ColumnHeaderTextId[ColumnId.Glosses]),
       id: ColumnId.Glosses,
@@ -302,7 +312,7 @@ export default function ReviewEntriesTable(props: {
 
     // Part of Speech column
     columnHelper.accessor((w) => w.senses.map((s) => s.grammaticalInfo), {
-      Cell: ({ row }: CellProps) => <Cell.PartOfSpeech word={row.original} />,
+      Cell: CellFactory(Cell.PartOfSpeech),
       filterFn: (row, id, filterValue: GramCatGroup) =>
         row
           .getValue<GrammaticalInfo[]>(id)
@@ -320,7 +330,7 @@ export default function ReviewEntriesTable(props: {
 
     // Domains column
     columnHelper.accessor((w) => w.senses.flatMap((s) => s.semanticDomains), {
-      Cell: ({ row }: CellProps) => <Cell.Domains word={row.original} />,
+      Cell: CellFactory(Cell.Domains),
       filterFn: ff.filterFnDomains,
       header: t(ColumnHeaderTextId[ColumnId.Domains]),
       id: ColumnId.Domains,
@@ -329,9 +339,7 @@ export default function ReviewEntriesTable(props: {
 
     // Pronunciations column
     columnHelper.accessor((w) => w.audio, {
-      Cell: ({ row }: CellProps) => (
-        <Cell.Pronunciations replace={replaceWord} word={row.original} />
-      ),
+      Cell: CellFactory(Cell.Pronunciations),
       filterFn: ff.filterFnPronunciations(speakers),
       Header: (
         <>
@@ -356,7 +364,7 @@ export default function ReviewEntriesTable(props: {
 
     // Note column
     columnHelper.accessor((w) => w.note.text || undefined, {
-      Cell: ({ row }: CellProps) => <Cell.Note word={row.original} />,
+      Cell: CellFactory(Cell.Note),
       filterFn: ff.filterFnString,
       header: t(ColumnHeaderTextId[ColumnId.Note]),
       id: ColumnId.Note,
@@ -366,9 +374,7 @@ export default function ReviewEntriesTable(props: {
 
     // Flag column
     columnHelper.accessor("flag", {
-      Cell: ({ row }: CellProps) => (
-        <Cell.Flag replace={replaceWord} word={row.original} />
-      ),
+      Cell: CellFactory(Cell.Flag),
       filterFn: ff.filterFnFlag,
       Header: <FlagIcon fontSize="small" sx={{ color: "error.main" }} />,
       header: t(ColumnHeaderTextId[ColumnId.Flag]),
@@ -389,9 +395,7 @@ export default function ReviewEntriesTable(props: {
 
     // Delete column
     columnHelper.display({
-      Cell: ({ row }: CellProps) => (
-        <Cell.Delete delete={deleteWord} word={row.original} />
-      ),
+      Cell: CellFactory(Cell.Delete),
       enableHiding: false,
       Header: "",
       header: t(ColumnHeaderTextId[ColumnId.Delete]),
