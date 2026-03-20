@@ -14,6 +14,7 @@ export enum EmailInviteTextId {
   ButtonSubmit = "buttons.invite",
   TextFieldEmail = "projectSettings.invite.emailLabel",
   TextFieldMessage = "projectSettings.invite.emailMessage",
+  ToastInvitationSent = "projectSettings.invite.invitationSent",
   ToastUserExists = "projectSettings.invite.userExists",
   TypographyTitle = "projectSettings.invite.inviteByEmailLabel",
 }
@@ -43,20 +44,24 @@ export default function EmailInvite(props: InviteProps): ReactElement {
     }
 
     setIsLoading(true);
-    if (await backend.isEmailOrUsernameAvailable(email)) {
-      await backend.emailInviteToProject(
-        getProjectId(),
-        Role.Harvester,
-        email,
-        message
-      );
-    } else {
-      props.addToProject(await backend.getUserIdByEmailOrUsername(email));
-      toast.info(t(EmailInviteTextId.ToastUserExists));
+    try {
+      if (await backend.isEmailOrUsernameAvailable(email)) {
+        await backend.emailInviteToProject(
+          getProjectId(),
+          Role.Harvester,
+          email,
+          message
+        );
+        toast.success(t(EmailInviteTextId.ToastInvitationSent));
+      } else {
+        props.addToProject(await backend.getUserIdByEmailOrUsername(email));
+        toast.info(t(EmailInviteTextId.ToastUserExists));
+      }
+      setIsDone(true);
+      props.close();
+    } finally {
+      setIsLoading(false);
     }
-    setIsDone(true);
-    setIsLoading(false);
-    props.close();
   };
 
   return (
