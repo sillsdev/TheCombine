@@ -40,11 +40,15 @@ export default function RequestEmailVerify(
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setEmail(normalizeEmail(e.target.value));
-    setIsTaken(false);
     setIsValid(e.target.checkValidity());
+    setIsTaken(false);
   };
 
   const onSubmit = async (): Promise<void> => {
+    if (!isValid || isTaken) {
+      return;
+    }
+
     if (!(await isEmailOkay(email))) {
       setIsTaken(true);
       return;
@@ -90,7 +94,11 @@ export default function RequestEmailVerify(
             {t(RequestEmailVerifyTextId.ButtonCancel)}
           </Button>
 
-          <Button disabled={!isValid} onClick={onSubmit} variant="contained">
+          <Button
+            disabled={!isValid || isTaken}
+            onClick={onSubmit}
+            variant="contained"
+          >
             {t(RequestEmailVerifyTextId.ButtonSubmit)}
           </Button>
         </Grid2>

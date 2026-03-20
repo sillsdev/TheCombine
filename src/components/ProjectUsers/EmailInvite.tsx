@@ -38,6 +38,10 @@ export default function EmailInvite(props: InviteProps): ReactElement {
   };
 
   const onSubmit = async (): Promise<void> => {
+    if (!isValid || isLoading || isDone) {
+      return;
+    }
+
     setIsLoading(true);
     if (await backend.isEmailOrUsernameAvailable(email)) {
       await backend.emailInviteToProject(
