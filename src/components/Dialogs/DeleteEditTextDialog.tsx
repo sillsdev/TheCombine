@@ -1,6 +1,5 @@
 import { Backspace, Close } from "@mui/icons-material";
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -22,7 +21,7 @@ interface DeleteEditTextDialogProps {
   titleId: string;
   close: () => void;
   updateText: (newText: string) => void | Promise<void>;
-  onDelete?: () => void;
+  onDelete?: () => void | Promise<void>;
   buttonIdCancel?: string;
   buttonIdClear?: string;
   buttonIdDelete?: string;
@@ -38,7 +37,8 @@ interface DeleteEditTextDialogProps {
 export default function DeleteEditTextDialog(
   props: DeleteEditTextDialogProps
 ): ReactElement {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [text, setText] = useState<string>(props.text);
   const { t } = useTranslation();
 
@@ -49,19 +49,25 @@ export default function DeleteEditTextDialog(
     props.close();
   }
 
-  function onDelete(): void {
-    setText(props.text);
-    if (props.onDelete) {
-      props.onDelete();
+  async function onDelete(): Promise<void> {
+    setIsDeleting(true);
+    try {
+      setText(props.text);
+      await props.onDelete?.();
+      props.close();
+    } finally {
+      setIsDeleting(false);
     }
-    props.close();
   }
 
   async function onSave(): Promise<void> {
-    setLoading(true);
-    await props.updateText(text);
-    setLoading(false);
-    props.close();
+    setIsSaving(true);
+    try {
+      await props.updateText(text);
+      props.close();
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   function escapeClose(
@@ -128,22 +134,26 @@ export default function DeleteEditTextDialog(
         />
       </DialogContent>
       <DialogActions>
-        <Button
-          onClick={onDelete}
-          variant="outlined"
-          color="primary"
-          data-testid={props.buttonIdDelete}
-          id={props.buttonIdDelete}
+        <LoadingButton
+          buttonProps={{
+            "data-testid": props.buttonIdDelete,
+            id: props.buttonIdDelete,
+            onClick: onDelete,
+            variant: "outlined",
+          }}
+          disabled={isSaving}
+          loading={isDeleting}
         >
           {t(props.buttonTextIdDelete ?? "buttons.delete")}
-        </Button>
+        </LoadingButton>
         <LoadingButton
           buttonProps={{
             "data-testid": props.buttonIdSave,
             id: props.buttonIdSave,
             onClick: onSave,
           }}
-          loading={loading}
+          disabled={isDeleting}
+          loading={isSaving}
         >
           {t(props.buttonTextIdSave ?? "buttons.save")}
         </LoadingButton>

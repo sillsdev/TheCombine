@@ -1,6 +1,6 @@
 import { type ReactElement } from "react";
 
-import { Flag } from "api/models";
+import { type Flag } from "api/models";
 import { updateWord } from "backend";
 import FlagButton from "components/Buttons/FlagButton";
 import { type CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";

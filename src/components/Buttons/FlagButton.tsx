@@ -9,7 +9,7 @@ interface FlagButtonProps {
   buttonId?: string;
   buttonLabel?: string;
   flag: Flag;
-  updateFlag?: (flag: Flag) => void;
+  updateFlag?: (flag: Flag) => void | Promise<void>;
 }
 
 /** A flag adding/editing/viewing button */
@@ -23,16 +23,16 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
     setText(props.flag.active ? props.flag.text : undefined);
   }, [props.flag]);
 
-  function updateFlag(text: string): void {
+  async function updateFlag(text: string): Promise<void> {
     setActive(true);
     setText(text);
-    props.updateFlag?.({ active: true, text });
+    await props.updateFlag?.({ active: true, text });
   }
 
-  function removeFlag(): void {
+  async function removeFlag(): Promise<void> {
     setActive(false);
     setText(undefined);
-    props.updateFlag?.({ active: false, text: "" });
+    await props.updateFlag?.({ active: false, text: "" });
   }
 
   return (
