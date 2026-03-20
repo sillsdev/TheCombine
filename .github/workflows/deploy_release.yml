@@ -75,18 +75,36 @@ jobs:
       - name: Deploy The Combine Update to QA
         uses: ./.github/actions/combine-deploy-update
         with:
-          image_registry: public.ecr.aws
-          image_registry_alias: "/thecombine"
+          image_registry: public.ecr.aws/thecombine
           image_tag: ${{ needs.build.outputs.image_tag }}
           kube_context: ${{ secrets.LTOPS_K8S_STAGING_CONTEXT }}
-          kubectl_version: ${{ vars.KUBECTL_VERSION }}
-          update_cert_proxy: false
+          target: qa
+          aws_account: ${{ secrets.AWS_ACCOUNT }}
+          aws_default_region: ${{ secrets.AWS_DEFAULT_REGION }}
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          combine_captcha_secret_key: ${{ secrets.COMBINE_CAPTCHA_SECRET_KEY }}
+          combine_jwt_secret_key: ${{ secrets.COMBINE_JWT_SECRET_KEY }}
+          combine_smtp_username: ${{ secrets.COMBINE_SMTP_USERNAME }}
+          combine_smtp_password: ${{ secrets.COMBINE_SMTP_PASSWORD }}
+          combine_admin_username: ${{ secrets.COMBINE_ADMIN_USERNAME }}
+          combine_admin_password: ${{ secrets.COMBINE_ADMIN_PASSWORD }}
+          combine_admin_email: ${{ secrets.COMBINE_ADMIN_EMAIL }}
       - name: Deploy The Combine Update to Production
         uses: ./.github/actions/combine-deploy-update
         with:
-          image_registry: public.ecr.aws
-          image_registry_alias: "/thecombine"
+          image_registry: public.ecr.aws/thecombine
           image_tag: ${{ needs.build.outputs.image_tag }}
           kube_context: ${{ secrets.LTOPS_K8S_PRODUCTION_CONTEXT }}
-          kubectl_version: ${{ vars.KUBECTL_VERSION }}
-          update_cert_proxy: true
+          target: prod
+          aws_account: ${{ secrets.AWS_ACCOUNT }}
+          aws_default_region: ${{ secrets.AWS_DEFAULT_REGION }}
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          combine_captcha_secret_key: ${{ secrets.COMBINE_CAPTCHA_SECRET_KEY }}
+          combine_jwt_secret_key: ${{ secrets.COMBINE_JWT_SECRET_KEY }}
+          combine_smtp_username: ${{ secrets.COMBINE_SMTP_USERNAME }}
+          combine_smtp_password: ${{ secrets.COMBINE_SMTP_PASSWORD }}
+          combine_admin_username: ${{ secrets.COMBINE_ADMIN_USERNAME }}
+          combine_admin_password: ${{ secrets.COMBINE_ADMIN_PASSWORD }}
+          combine_admin_email: ${{ secrets.COMBINE_ADMIN_EMAIL }}
