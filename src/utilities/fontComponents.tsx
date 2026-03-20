@@ -23,7 +23,7 @@ type NormalizedTextFieldProps = TextFieldProps & {
 
 /**
  * `TextField` that automatically normalizes the `onChange` text (default: with "NFC").
- * Defaults to `autoComplete="off"` to prevent browser autofill on app-specific fields;
+ * Defaults to `autoComplete="off"` to prevent browser autofill;
  * override with a semantic value (e.g. `"name"`, `"email"`) where appropriate.
  */
 export function NormalizedTextField(
@@ -36,13 +36,8 @@ export function NormalizedTextField(
       {...textFieldProps}
       onChange={(e) => {
         if (textFieldProps.onChange) {
-          textFieldProps.onChange({
-            ...e,
-            target: {
-              ...e.target,
-              value: e.target.value.normalize(form || "NFC"),
-            },
-          });
+          const value = e.target.value.normalize(form || "NFC");
+          textFieldProps.onChange({ ...e, target: { ...e.target, value } });
         }
       }}
     />
