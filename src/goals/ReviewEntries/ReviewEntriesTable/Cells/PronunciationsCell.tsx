@@ -11,9 +11,7 @@ export default function PronunciationsCell(props: CellProps): ReactElement {
 
   const deleteAudioHandle = async (fileName: string): Promise<void> => {
     const newId = await deleteAudio(wordId, fileName);
-    if (props.replace) {
-      await props.replace(wordId, newId);
-    }
+    await props.replace?.(wordId, newId);
   };
 
   const replaceAudioHandle = async (pro: Pronunciation): Promise<void> => {
@@ -21,17 +19,13 @@ export default function PronunciationsCell(props: CellProps): ReactElement {
     const audio = updateSpeakerInAudio(word.audio, pro);
     if (audio) {
       const newId = (await updateWord({ ...word, audio })).id;
-      if (props.replace) {
-        await props.replace(wordId, newId);
-      }
+      await props.replace?.(wordId, newId);
     }
   };
 
   const uploadAudioHandle = async (file: FileWithSpeakerId): Promise<void> => {
     const newId = await uploadAudio(wordId, file);
-    if (props.replace) {
-      await props.replace(wordId, newId);
-    }
+    await props.replace?.(wordId, newId);
   };
 
   return (

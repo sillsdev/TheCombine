@@ -14,8 +14,8 @@ interface FlagButtonProps {
 
 /** A flag adding/editing/viewing button */
 export default function FlagButton(props: FlagButtonProps): ReactElement {
-  const [open, setOpen] = useState<boolean>(false);
-  const [active, setActive] = useState<boolean>();
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(false);
   const [text, setText] = useState<string | undefined>();
 
   useEffect(() => {
@@ -26,17 +26,13 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
   function updateFlag(text: string): void {
     setActive(true);
     setText(text);
-    if (props.updateFlag) {
-      props.updateFlag({ active: true, text });
-    }
+    props.updateFlag?.({ active: true, text });
   }
 
   function removeFlag(): void {
     setActive(false);
     setText(undefined);
-    if (props.updateFlag) {
-      props.updateFlag({ active: false, text: "" });
-    }
+    props.updateFlag?.({ active: false, text: "" });
   }
 
   return (

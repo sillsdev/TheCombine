@@ -15,7 +15,13 @@ import {
   createMRTColumnHelper,
   useMaterialReactTable,
 } from "material-react-table";
-import { type ReactElement, useEffect, useRef, useState } from "react";
+import {
+  type ReactElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, type GrammaticalInfo, type Word } from "api/models";
@@ -180,27 +186,33 @@ export default function ReviewEntriesTable(props: {
   }, [i18n.resolvedLanguage]);
 
   /** Removes word with given `id` from the state. */
-  const deleteWord = async (id: string): Promise<void> => {
-    await dispatch(asyncUpdateEntry(id));
-    setData((prev) => {
-      // Prevent table from jumping back to first page
-      autoResetPageIndexRef.current = false;
-      return prev.filter((w) => w.id !== id);
-    });
-  };
+  const deleteWord = useCallback(
+    async (id: string): Promise<void> => {
+      await dispatch(asyncUpdateEntry(id));
+      setData((prev) => {
+        // Prevent table from jumping back to first page
+        autoResetPageIndexRef.current = false;
+        return prev.filter((w) => w.id !== id);
+      });
+    },
+    [dispatch]
+  );
 
   /** Adds the word update to the current Goal, then
    * replaces word (`.id === oldId`) in the state
    * with word (`.id === newId`) fetched from the backend. */
-  const replaceWord = async (oldId: string, newId: string): Promise<void> => {
-    await dispatch(asyncUpdateEntry(oldId, newId));
-    const newWord = await getWord(newId);
-    setData((prev) => {
-      // Prevent table from jumping back to first page
-      autoResetPageIndexRef.current = false;
-      return prev.map((w) => (w.id === oldId ? newWord : w));
-    });
-  };
+  const replaceWord = useCallback(
+    async (oldId: string, newId: string): Promise<void> => {
+      await dispatch(asyncUpdateEntry(oldId, newId));
+      const newWord = await getWord(newId);
+      setData((prev) => {
+        // Prevent table from jumping back to first page
+        autoResetPageIndexRef.current = false;
+        return prev.map((w) => (w.id === oldId ? newWord : w));
+      });
+    },
+    [dispatch]
+  );
 
   /** Checks if there are any entries and, if so, scrolls to the top of the current page. */
   const scrollToTop = (): void => {
@@ -354,7 +366,9 @@ export default function ReviewEntriesTable(props: {
 
     // Flag column
     columnHelper.accessor("flag", {
-      Cell: ({ row }: CellProps) => <Cell.Flag word={row.original} />,
+      Cell: ({ row }: CellProps) => (
+        <Cell.Flag replace={replaceWord} word={row.original} />
+      ),
       filterFn: ff.filterFnFlag,
       Header: <FlagIcon fontSize="small" sx={{ color: "error.main" }} />,
       header: t(ColumnHeaderTextId[ColumnId.Flag]),
