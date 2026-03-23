@@ -434,48 +434,6 @@ using `helm upgrade` via the `deploy/scripts/setup_combine.py` script.
 Both workflows run the deploy step on a `[self-hosted, thecombine]` runner that has network access to the Kubernetes
 clusters (e.g. via WireGuard). The runner must have its `~/.kube/config` pre-configured with the cluster contexts.
 
-### Required GitHub Repository Secrets
-
-The following secrets must be configured in the GitHub repository settings under
-_Settings → Secrets and variables → Actions_:
-
-**AWS Secrets** (already required for image builds):
-
-| Secret | Description |
-|---|---|
-| `AWS_ACCOUNT` | AWS Account ID |
-| `AWS_DEFAULT_REGION` | AWS default region (e.g. `us-east-1`) |
-| `AWS_ACCESS_KEY_ID` | AWS access key with ECR read/write access |
-| `AWS_SECRET_ACCESS_KEY` | AWS secret access key |
-
-**Kubernetes Cluster Secrets** (already required):
-
-| Secret | Description |
-|---|---|
-| `LTOPS_K8S_STAGING_CONTEXT` | kubectl context name for the QA cluster |
-| `LTOPS_K8S_PRODUCTION_CONTEXT` | kubectl context name for the Production cluster |
-
-**Combine Application Secrets** (required for helm deployment — add these):
-
-| Secret | Description |
-|---|---|
-| `COMBINE_CAPTCHA_SECRET_KEY` | Cloudflare Turnstile secret key |
-| `COMBINE_JWT_SECRET_KEY` | JWT secret key for user authentication |
-| `COMBINE_SMTP_USERNAME` | SMTP username for email notifications |
-| `COMBINE_SMTP_PASSWORD` | SMTP password for email notifications |
-
-If you need the values for these secrets, send a request to
-[admin@thecombine.app](mailto:admin@thecombine.app).
-
-### GitHub Actions Variables to Remove
-
-The following GitHub Actions variable is no longer used and can be removed from
-_Settings → Secrets and variables → Actions → Variables_:
-
-| Variable | Reason |
-|---|---|
-| `KUBECTL_VERSION` | The deployment now installs the latest stable kubectl version automatically. |
-
 ## Maintenance
 
 ### Maintenance Scripts for Kubernetes
