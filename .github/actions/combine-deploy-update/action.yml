@@ -1,6 +1,9 @@
 name: "Combine Deploy Updates"
 description: "Deploy updated Helm charts for The Combine to the Kubernetes cluster"
 inputs:
+  helm_version:
+    description: "Version of helm to install on the runner"
+    required: true
   image_registry:
     description: "Docker Image Registry (full path, e.g. public.ecr.aws/thecombine)"
     required: true
@@ -9,6 +12,9 @@ inputs:
     required: true
   kube_context:
     description: "Context for the kubectl/helm commands"
+    required: true
+  kubectl_version:
+    description: "Version of kubectl to install on the runner"
     required: true
   target:
     description: "Deployment target as defined in deploy/scripts/setup_files/combine_config.yaml (e.g. qa, prod)"
@@ -37,38 +43,30 @@ inputs:
   combine_smtp_password:
     description: "SMTP password for sending emails from The Combine"
     required: true
-  combine_admin_username:
-    description: "Username for The Combine admin user"
-    required: true
-  combine_admin_password:
-    description: "Password for The Combine admin user"
-    required: true
-  combine_admin_email:
-    description: "Email address for The Combine admin user"
-    required: true
+
 runs:
   using: "composite"
   steps:
+    - name: Install Helm
+      run: |
+        echo "Installing Helm version ${{ inputs.helm_version }}"
+        curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | DESIRED_VERSION=${{ inputs.helm_version }} bash
+        helm version
+      shell: bash
+
     - name: Install kubectl
       run: |
         cd
-        KUBECTL_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
-        echo "Installing kubectl ${KUBECTL_VERSION}"
-        curl -LO https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl
+        echo "Installing kubectl version ${{ inputs.kubectl_version }}"
+        curl -LO https://dl.k8s.io/release/${{ inputs.kubectl_version }}/bin/linux/amd64/kubectl
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
         kubectl version --output=yaml
       shell: bash
-    - name: Install helm
-      run: |
-        HELM_VERSION=$(curl -fsSL https://api.github.com/repos/helm/helm/releases/latest | grep '"tag_name"' | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
-        echo "Installing helm ${HELM_VERSION}"
-        curl -fsSL "https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz" | tar -xz -C /tmp
-        sudo mv /tmp/linux-amd64/helm /usr/local/bin/helm
-        helm version
-      shell: bash
+
     - name: Install Python requirements
       run: python3 -m pip install -r deploy/requirements.txt
       shell: bash
+
     - name: Deploy with Helm
       run: >
         deploy/scripts/setup_combine.py
@@ -86,6 +84,3 @@ runs:
         COMBINE_JWT_SECRET_KEY: ${{ inputs.combine_jwt_secret_key }}
         COMBINE_SMTP_USERNAME: ${{ inputs.combine_smtp_username }}
         COMBINE_SMTP_PASSWORD: ${{ inputs.combine_smtp_password }}
-        COMBINE_ADMIN_USERNAME: ${{ inputs.combine_admin_username }}
-        COMBINE_ADMIN_PASSWORD: ${{ inputs.combine_admin_password }}
-        COMBINE_ADMIN_EMAIL: ${{ inputs.combine_admin_email }}
