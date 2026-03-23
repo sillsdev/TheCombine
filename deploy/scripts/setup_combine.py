@@ -184,6 +184,10 @@ def main() -> None:
                 installed_charts = get_installed_charts(helm_cmd, chart_namespace)
             logging.debug(f"Installed charts: {installed_charts}")
 
+            # Set the dry-run option if desired
+            if args.dry_run:
+                helm_cmd.append("--dry-run")
+
             # Set helm_action based on whether chart is already installed
             if args.clean and chart in installed_charts:
                 # Delete existing chart if --clean specified
@@ -208,10 +212,6 @@ def main() -> None:
                 chart,
                 str(chart_dir),
             ]
-
-            # Set the dry-run option if desired
-            if args.dry_run:
-                helm_install_cmd.append("--dry-run")
 
             # Set wait and timeout options
             if args.wait or args.timeout is not None:
