@@ -28,7 +28,7 @@ from typing import Any, Dict, List
 from app_release import get_release
 from aws_env import init_aws_environment
 import combine_charts
-from enum_types import ExitStatus, HelmAction
+from enum_types import ExitStatus
 from helm_utils import (
     add_language_overrides,
     add_override_values,
@@ -185,14 +185,10 @@ def main() -> None:
             logging.debug(f"Installed charts: {installed_charts}")
 
             # Set helm_action based on whether chart is already installed
-            helm_action = HelmAction.INSTALL
-            if chart in installed_charts:
-                if args.clean:
-                    # Delete existing chart if --clean specified
-                    delete_cmd = helm_cmd + [f"--namespace={chart_namespace}", "delete", chart]
-                    run_cmd(delete_cmd, print_cmd=not args.quiet, print_output=True)
-                else:
-                    helm_action = HelmAction.UPGRADE
+            if args.clean and chart in installed_charts:
+                # Delete existing chart if --clean specified
+                delete_cmd = helm_cmd + [f"--namespace={chart_namespace}", "delete", chart]
+                run_cmd(delete_cmd, print_cmd=not args.quiet, print_output=True)
 
             # Build the secrets file
             secrets_file = Path(secrets_dir).resolve() / f"secrets_{chart}.yaml"
@@ -207,7 +203,8 @@ def main() -> None:
             helm_install_cmd = helm_cmd + [
                 "--dependency-update",
                 f"--namespace={chart_namespace}",
-                helm_action.value,
+                "upgrade",
+                "--install",
                 chart,
                 str(chart_dir),
             ]

@@ -11,7 +11,7 @@ import sys
 import tempfile
 from typing import Any, Dict, List
 
-from enum_types import ExitStatus, HelmAction
+from enum_types import ExitStatus
 from kube_env import KubernetesEnvironment, add_helm_opts, add_kube_opts
 from utils import init_logging, run_cmd
 import yaml
@@ -102,12 +102,6 @@ def main() -> None:
         # existing repos.
         run_cmd(["helm", "repo", "update"], print_cmd=not args.quiet, print_output=not args.quiet)
 
-    # List current charts
-    chart_list_results = run_cmd(["helm", "list", "-A", "-o", "yaml"])
-    curr_charts: List[str] = []
-    for chart in yaml.safe_load(chart_list_results.stdout):
-        curr_charts.append(chart["name"])
-
     # Add the current script directory to the OS Environment variables
     os.environ["SCRIPTS_DIR"] = str(scripts_dir)
     # Add an empty analytics key if not defined in the OS Environment variables
@@ -121,15 +115,13 @@ def main() -> None:
         chart_spec = config[chart_descr]["chart"]
         # install the chart
         helm_cmd = kube_env.get_helm_cmd()
-        if chart_spec["name"] in curr_charts:
-            helm_action = HelmAction.UPGRADE
-        else:
-            helm_action = HelmAction.INSTALL
         helm_cmd.extend(
             [
                 "-n",
                 chart_spec["namespace"],
-                helm_action.value,
+                "upgrade",
+                "--install",
+                "--create-namespace",
                 chart_spec["name"],
             ]
         )
@@ -146,16 +138,14 @@ def main() -> None:
             # chart is a *.tgz file
             chart_files = list((Path(args.chart_dir).resolve() / chart_spec["name"]).glob("*.tgz"))
             if not chart_files:
-                logging.error(f"No chart file for {chart['name']} in {args.chart_dir}.")
+                logging.error(f"No chart file for {chart_spec['name']} in {args.chart_dir}.")
                 sys.exit(1)
             if len(chart_files) > 1:
                 logging.warning(
-                    f"Expecting 1 chart file for {chart['name']}, found {len(chart_files)}"
+                    f"Expecting 1 chart file for {chart_spec['name']}, found {len(chart_files)}"
                 )
             helm_cmd.append(str(chart_files[0]))
 
-        if helm_action == HelmAction.INSTALL:
-            helm_cmd.append("--create-namespace")
         if ("wait" in chart_spec and chart_spec["wait"]) or args.timeout is not None:
             helm_cmd.append("--wait")
             if args.timeout is not None:
@@ -177,7 +167,7 @@ def main() -> None:
             # command is running
             exit_status = os.waitstatus_to_exitcode(os.system(helm_cmd_str))
             logging.info(
-                f'helm {helm_action.value} of {chart_spec["name"]} '
+                f'helm install/upgrade of {chart_spec["name"]} '
                 + f"returned exit status {hex(exit_status)}"
             )
             if exit_status != 0:
