@@ -207,8 +207,8 @@ def main() -> None:
             # Create the base helm install command
             chart_dir = helm_dir / chart
             helm_install_cmd = helm_cmd + [
-                "--dependency-update",
                 "upgrade",
+                "--dependency-update",
                 "--install",
                 chart,
                 str(chart_dir),
