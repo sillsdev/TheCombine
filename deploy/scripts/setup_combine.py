@@ -190,9 +190,8 @@ def main() -> None:
             if args.dry_run:
                 helm_cmd.append("--dry-run")
 
-            # Set helm_action based on whether chart is already installed
+            # Delete existing chart if --clean specified
             if args.clean and chart in installed_charts:
-                # Delete existing chart if --clean specified
                 delete_cmd = namespace_cmd + ["delete", chart]
                 run_cmd(delete_cmd, print_cmd=not args.quiet, print_output=True)
 
@@ -204,7 +203,7 @@ def main() -> None:
                 env_vars_req=this_config["env_vars_required"],
             )
 
-            # Create the base helm install command
+            # Create the base helm install/upgrade command
             chart_dir = helm_dir / chart
             helm_install_cmd = helm_cmd + [
                 "upgrade",

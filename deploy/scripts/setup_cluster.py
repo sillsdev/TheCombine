@@ -139,7 +139,7 @@ def main() -> None:
             chart_files = list((Path(args.chart_dir).resolve() / chart_spec["name"]).glob("*.tgz"))
             if not chart_files:
                 logging.error(f"No chart file for {chart_spec['name']} in {args.chart_dir}.")
-                sys.exit(1)
+                sys.exit(ExitStatus.FAILURE.value)
             if len(chart_files) > 1:
                 logging.warning(
                     f"Expecting 1 chart file for {chart_spec['name']}, found {len(chart_files)}"
