@@ -463,9 +463,6 @@ _Settings → Secrets and variables → Actions_:
 | `COMBINE_JWT_SECRET_KEY` | JWT secret key for user authentication |
 | `COMBINE_SMTP_USERNAME` | SMTP username for email notifications |
 | `COMBINE_SMTP_PASSWORD` | SMTP password for email notifications |
-| `COMBINE_ADMIN_USERNAME` | Username for the application admin user |
-| `COMBINE_ADMIN_PASSWORD` | Password for the application admin user |
-| `COMBINE_ADMIN_EMAIL` | Email address for the application admin user |
 
 If you need the values for these secrets, send a request to
 [admin@thecombine.app](mailto:admin@thecombine.app).
