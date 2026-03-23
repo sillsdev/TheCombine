@@ -146,6 +146,7 @@ def main() -> None:
     kube_env = KubernetesEnvironment(args)
     # Cache helm command used to alter the target cluster
     helm_cmd = kube_env.get_helm_cmd()
+
     # Check AWS Environment Variables
     init_aws_environment()
 
@@ -184,6 +185,7 @@ def main() -> None:
                 installed_charts = get_installed_charts(helm_cmd, chart_namespace)
             logging.debug(f"Installed charts: {installed_charts}")
 
+            namespace_cmd = helm_cmd + [f"--namespace={chart_namespace}"]
             # Set the dry-run option if desired
             if args.dry_run:
                 helm_cmd.append("--dry-run")
@@ -191,7 +193,7 @@ def main() -> None:
             # Set helm_action based on whether chart is already installed
             if args.clean and chart in installed_charts:
                 # Delete existing chart if --clean specified
-                delete_cmd = helm_cmd + [f"--namespace={chart_namespace}", "delete", chart]
+                delete_cmd = namespace_cmd + ["delete", chart]
                 run_cmd(delete_cmd, print_cmd=not args.quiet, print_output=True)
 
             # Build the secrets file
@@ -206,7 +208,6 @@ def main() -> None:
             chart_dir = helm_dir / chart
             helm_install_cmd = helm_cmd + [
                 "--dependency-update",
-                f"--namespace={chart_namespace}",
                 "upgrade",
                 "--install",
                 chart,
