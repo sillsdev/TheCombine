@@ -188,7 +188,7 @@ def main() -> None:
             namespace_cmd = helm_cmd + [f"--namespace={chart_namespace}"]
             # Set the dry-run option if desired
             if args.dry_run:
-                helm_cmd.append("--dry-run")
+                namespace_cmd.append("--dry-run")
 
             # Delete existing chart if --clean specified
             if args.clean and chart in installed_charts:
@@ -205,7 +205,7 @@ def main() -> None:
 
             # Create the base helm install/upgrade command
             chart_dir = helm_dir / chart
-            helm_install_cmd = helm_cmd + [
+            helm_install_cmd = namespace_cmd + [
                 "upgrade",
                 "--dependency-update",
                 "--install",
