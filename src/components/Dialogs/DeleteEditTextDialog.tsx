@@ -50,6 +50,10 @@ export default function DeleteEditTextDialog(
   }
 
   async function onDelete(): Promise<void> {
+    if (isDeleting || isSaving) {
+      return;
+    }
+
     setIsDeleting(true);
     try {
       setText(props.text);
@@ -61,6 +65,10 @@ export default function DeleteEditTextDialog(
   }
 
   async function onSave(): Promise<void> {
+    if (isDeleting || isSaving) {
+      return;
+    }
+
     setIsSaving(true);
     try {
       await props.updateText(text);

@@ -24,15 +24,15 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
   }, [props.flag]);
 
   async function updateFlag(text: string): Promise<void> {
+    await props.updateFlag?.({ active: true, text });
     setActive(true);
     setText(text);
-    await props.updateFlag?.({ active: true, text });
   }
 
   async function removeFlag(): Promise<void> {
+    await props.updateFlag?.({ active: false, text: "" });
     setActive(false);
     setText(undefined);
-    await props.updateFlag?.({ active: false, text: "" });
   }
 
   return (
