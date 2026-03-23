@@ -116,9 +116,11 @@ jobs:
       - name: Deploy The Combine Update
         uses: ./.github/actions/combine-deploy-update
         with:
+          helm_version: ${{ vars.HELM_VERSION }}
           image_registry: ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
           image_tag: ${{ needs.build.outputs.image_tag }}
           kube_context: ${{ secrets.LTOPS_K8S_STAGING_CONTEXT }}
+          kubectl_version: ${{ vars.KUBECTL_VERSION }}
           target: qa
           aws_account: ${{ secrets.AWS_ACCOUNT }}
           aws_default_region: ${{ secrets.AWS_DEFAULT_REGION }}
@@ -128,6 +130,3 @@ jobs:
           combine_jwt_secret_key: ${{ secrets.COMBINE_JWT_SECRET_KEY }}
           combine_smtp_username: ${{ secrets.COMBINE_SMTP_USERNAME }}
           combine_smtp_password: ${{ secrets.COMBINE_SMTP_PASSWORD }}
-          combine_admin_username: ${{ secrets.COMBINE_ADMIN_USERNAME }}
-          combine_admin_password: ${{ secrets.COMBINE_ADMIN_PASSWORD }}
-          combine_admin_email: ${{ secrets.COMBINE_ADMIN_EMAIL }}
