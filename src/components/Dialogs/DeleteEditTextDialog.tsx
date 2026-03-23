@@ -45,6 +45,10 @@ export default function DeleteEditTextDialog(
   const inlineStart = document.body.dir === "rtl" ? "right" : "left";
 
   function onCancel(): void {
+    if (isDeleting || isSaving) {
+      return;
+    }
+
     setText(props.text);
     props.close();
   }
