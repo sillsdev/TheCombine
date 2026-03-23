@@ -86,7 +86,6 @@ jobs:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           combine_captcha_secret_key: ${{ secrets.COMBINE_CAPTCHA_SECRET_KEY }}
-          combine_jwt_secret_key: ${{ secrets.COMBINE_JWT_SECRET_KEY }}
           combine_smtp_username: ${{ secrets.COMBINE_SMTP_USERNAME }}
           combine_smtp_password: ${{ secrets.COMBINE_SMTP_PASSWORD }}
       - name: Deploy The Combine Update to Production
@@ -103,6 +102,5 @@ jobs:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           combine_captcha_secret_key: ${{ secrets.COMBINE_CAPTCHA_SECRET_KEY }}
-          combine_jwt_secret_key: ${{ secrets.COMBINE_JWT_SECRET_KEY }}
           combine_smtp_username: ${{ secrets.COMBINE_SMTP_USERNAME }}
           combine_smtp_password: ${{ secrets.COMBINE_SMTP_PASSWORD }}
