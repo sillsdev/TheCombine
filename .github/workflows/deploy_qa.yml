@@ -59,7 +59,8 @@ jobs:
             security.ubuntu.com:80
             storage.googleapis.com:443
             sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - name: Checkout repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
       - name: Build The Combine
@@ -71,6 +72,7 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_default_region: ${{ secrets.AWS_DEFAULT_REGION }}
           build_component: ${{ matrix.component }}
+
   clean_ecr_repo:
     needs: build
     runs-on: ubuntu-latest
@@ -87,7 +89,8 @@ jobs:
             api.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
             github.com:443
             sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - name: Checkout repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
@@ -107,6 +110,7 @@ jobs:
               else REM="v$((VA - 1))\..*"; fi
               scripts/clean_aws_repo.py combine_frontend combine_backend combine_maint combine_database --remove "${REM}" --verbose
           fi
+
   deploy_update:
     needs: build
     if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.confirm_qa_deploy == 'QA')
@@ -116,8 +120,8 @@ jobs:
         uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
-
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - name: Checkout repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: Deploy The Combine Update
         uses: ./.github/actions/combine-deploy-update
         with:
