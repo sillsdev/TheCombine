@@ -28,7 +28,7 @@ from typing import Any, Dict, List
 from app_release import get_release
 from aws_env import init_aws_environment
 import combine_charts
-from enum_types import ExitStatus, HelmAction
+from enum_types import ExitStatus
 from helm_utils import (
     add_language_overrides,
     add_override_values,
@@ -146,6 +146,7 @@ def main() -> None:
     kube_env = KubernetesEnvironment(args)
     # Cache helm command used to alter the target cluster
     helm_cmd = kube_env.get_helm_cmd()
+
     # Check AWS Environment Variables
     init_aws_environment()
 
@@ -184,15 +185,20 @@ def main() -> None:
                 installed_charts = get_installed_charts(helm_cmd, chart_namespace)
             logging.debug(f"Installed charts: {installed_charts}")
 
-            # Set helm_action based on whether chart is already installed
-            helm_action = HelmAction.INSTALL
+            namespace_cmd = helm_cmd + ["--namespace", chart_namespace]
+
             if chart in installed_charts:
+                # Delete existing chart if --clean specified
                 if args.clean:
-                    # Delete existing chart if --clean specified
-                    delete_cmd = helm_cmd + [f"--namespace={chart_namespace}", "delete", chart]
+                    delete_cmd = namespace_cmd + ["delete", chart]
+                    if args.dry_run:
+                        delete_cmd.append("--dry-run")
                     run_cmd(delete_cmd, print_cmd=not args.quiet, print_output=True)
-                else:
-                    helm_action = HelmAction.UPGRADE
+
+                # Skip existing install-only chart unless --clean specified
+                elif config["charts"][chart].get("install_only", False):
+                    logging.info(f"Skipping install-only chart '{chart}' (already installed)")
+                    continue
 
             # Build the secrets file
             secrets_file = Path(secrets_dir).resolve() / f"secrets_{chart}.yaml"
@@ -202,17 +208,14 @@ def main() -> None:
                 env_vars_req=this_config["env_vars_required"],
             )
 
-            # Create the base helm install command
-            chart_dir = helm_dir / chart
-            helm_install_cmd = helm_cmd + [
+            # Create the base helm install/upgrade command
+            helm_install_cmd = namespace_cmd + [
+                "upgrade",
                 "--dependency-update",
-                f"--namespace={chart_namespace}",
-                helm_action.value,
+                "--install",
                 chart,
-                str(chart_dir),
+                str(helm_dir / chart),
             ]
-
-            # Set the dry-run option if desired
             if args.dry_run:
                 helm_install_cmd.append("--dry-run")
 

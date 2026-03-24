@@ -156,6 +156,7 @@ charts:
   create-admin-user:
     namespace: thecombine
     install_langs: false
+    install_only: true
     secrets:
       - config_item: awsAccount
         env_var: AWS_ACCOUNT
