@@ -185,15 +185,20 @@ def main() -> None:
                 installed_charts = get_installed_charts(helm_cmd, chart_namespace)
             logging.debug(f"Installed charts: {installed_charts}")
 
-            namespace_cmd = helm_cmd + [f"--namespace={chart_namespace}"]
-            # Set the dry-run option if desired
-            if args.dry_run:
-                namespace_cmd.append("--dry-run")
+            namespace_cmd = helm_cmd + ["--namespace", chart_namespace]
 
-            # Delete existing chart if --clean specified
-            if args.clean and chart in installed_charts:
-                delete_cmd = namespace_cmd + ["delete", chart]
-                run_cmd(delete_cmd, print_cmd=not args.quiet, print_output=True)
+            if chart in installed_charts:
+                # Delete existing chart if --clean specified
+                if args.clean:
+                    delete_cmd = namespace_cmd + ["delete", chart]
+                    if args.dry_run:
+                        delete_cmd.append("--dry-run")
+                    run_cmd(delete_cmd, print_cmd=not args.quiet, print_output=True)
+
+                # Skip existing install-only chart unless --clean specified
+                elif config["charts"][chart].get("install_only", False):
+                    logging.info(f"Skipping install-only chart '{chart}' (already installed)")
+                    continue
 
             # Build the secrets file
             secrets_file = Path(secrets_dir).resolve() / f"secrets_{chart}.yaml"
@@ -204,14 +209,15 @@ def main() -> None:
             )
 
             # Create the base helm install/upgrade command
-            chart_dir = helm_dir / chart
             helm_install_cmd = namespace_cmd + [
                 "upgrade",
                 "--dependency-update",
                 "--install",
                 chart,
-                str(chart_dir),
+                str(helm_dir / chart),
             ]
+            if args.dry_run:
+                helm_install_cmd.append("--dry-run")
 
             # Set wait and timeout options
             if args.wait or args.timeout is not None:
