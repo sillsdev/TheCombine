@@ -46,7 +46,8 @@ jobs:
             security.ubuntu.com:80
             storage.googleapis.com:443
             sts.us-east-1.amazonaws.com:443
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - name: Checkout repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: Build The Combine
         id: build_combine
         uses: ./.github/actions/combine-build
@@ -60,6 +61,7 @@ jobs:
           # https://docs.aws.amazon.com/AmazonECR/latest/public/public-registry-auth.html#public-registry-auth-token
           aws_default_region: us-east-1
           build_component: ${{ matrix.component }}
+
   deploy_update:
     needs: build
     runs-on: [self-hosted, thecombine]
@@ -68,8 +70,8 @@ jobs:
         uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
-
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - name: Checkout repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
       - name: Deploy The Combine Update to QA
