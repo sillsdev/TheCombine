@@ -1,6 +1,30 @@
 name: "Combine Deploy Updates"
 description: "Deploy updated Helm charts for The Combine to the Kubernetes cluster"
 inputs:
+  aws_access_key_id:
+    description: "AWS Access Key ID"
+    required: true
+  aws_account:
+    description: "AWS Account ID"
+    required: true
+  aws_default_region:
+    description: "AWS Default Region"
+    required: true
+  aws_secret_access_key:
+    description: "AWS Secret Access Key"
+    required: true
+  combine_captcha_secret_key:
+    description: "Cloudflare Turnstile secret key for The Combine"
+    required: true
+  combine_jwt_secret_key:
+    description: "JWT secret key for The Combine"
+    required: true
+  combine_smtp_password:
+    description: "SMTP password for sending emails from The Combine"
+    required: true
+  combine_smtp_username:
+    description: "SMTP username for sending emails from The Combine"
+    required: true
   helm_version:
     description: "Version of helm to install on the runner"
     required: true
@@ -18,27 +42,6 @@ inputs:
     required: true
   target:
     description: "Deployment target as defined in deploy/scripts/setup_files/combine_config.yaml (e.g. qa, prod)"
-    required: true
-  aws_account:
-    description: "AWS Account ID"
-    required: true
-  aws_default_region:
-    description: "AWS Default Region"
-    required: true
-  aws_access_key_id:
-    description: "AWS Access Key ID"
-    required: true
-  aws_secret_access_key:
-    description: "AWS Secret Access Key"
-    required: true
-  combine_captcha_secret_key:
-    description: "Cloudflare Turnstile secret key for The Combine"
-    required: true
-  combine_smtp_username:
-    description: "SMTP username for sending emails from The Combine"
-    required: true
-  combine_smtp_password:
-    description: "SMTP password for sending emails from The Combine"
     required: true
 
 runs:
@@ -64,13 +67,6 @@ runs:
       run: python3 -m pip install -r deploy/requirements.txt
       shell: bash
 
-    - name: Generate JWT secret key
-      id: generate_jwt_secret_key
-      run: |
-        jwt_secret_key=$(python3 -c "import base64, secrets; print(base64.b64encode(secrets.token_bytes(32)).decode('ascii'))")
-        echo "jwt_secret_key=$jwt_secret_key" >> "$GITHUB_OUTPUT"
-      shell: bash
-
     - name: Deploy with Helm
       run: >
         deploy/scripts/setup_combine.py
@@ -80,11 +76,11 @@ runs:
         --target ${{ inputs.target }}
       shell: bash
       env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
         AWS_ACCOUNT: ${{ inputs.aws_account }}
         AWS_DEFAULT_REGION: ${{ inputs.aws_default_region }}
-        AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}
         COMBINE_CAPTCHA_SECRET_KEY: ${{ inputs.combine_captcha_secret_key }}
-        COMBINE_JWT_SECRET_KEY: ${{ steps.generate_jwt_secret_key.outputs.jwt_secret_key }}
-        COMBINE_SMTP_USERNAME: ${{ inputs.combine_smtp_username }}
+        COMBINE_JWT_SECRET_KEY: ${{ inputs.combine_jwt_secret_key }}
         COMBINE_SMTP_PASSWORD: ${{ inputs.combine_smtp_password }}
+        COMBINE_SMTP_USERNAME: ${{ inputs.combine_smtp_username }}
