@@ -237,13 +237,9 @@ export default function ReviewEntriesTable(props: {
   const columnHelper = createMRTColumnHelper<Word>();
 
   const CellFactory = useCallback(
-    (Component: ComponentType<CellProps>) =>
+    (C: ComponentType<CellProps>) =>
       ({ row }: { row: MRT_Row<Word> }): ReactElement => (
-        <Component
-          delete={deleteWord}
-          replace={replaceWord}
-          word={row.original}
-        />
+        <C delete={deleteWord} replace={replaceWord} word={row.original} />
       ),
     [deleteWord, replaceWord]
   );
