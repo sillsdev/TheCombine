@@ -29,7 +29,7 @@ inputs:
     description: "Version of helm to install on the runner"
     required: true
   image_registry:
-    description: "Docker Image Registry (full path, e.g. public.ecr.aws/thecombine)"
+    description: "Docker Image Registry"
     required: true
   image_tag:
     description: "Image Tag for docker images"
@@ -41,7 +41,7 @@ inputs:
     description: "Version of kubectl to install on the runner"
     required: true
   target:
-    description: "Deployment target as defined in deploy/scripts/setup_files/combine_config.yaml (e.g. qa, prod)"
+    description: "Deployment target (qa or prod)"
     required: true
 
 runs:
@@ -69,6 +69,7 @@ runs:
 
     - name: Deploy with Helm
       run: >
+        python3
         deploy/scripts/setup_combine.py
         --context ${{ inputs.kube_context }}
         --repo ${{ inputs.image_registry }}
