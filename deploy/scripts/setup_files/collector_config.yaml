@@ -1,8 +1,8 @@
-mode: "deployment"
+mode: deployment
 namespaceOverride: "thecombine"
 image:
   repository: "otel/opentelemetry-collector-k8s"
-  tag: 0.123.0
+  tag: 0.147.0
 config:
   receivers:
     jaeger: null
@@ -23,16 +23,11 @@ config:
     telemetry:
       logs:
         level: "INFO"
-      metrics:
-        address: null
     pipelines:
       traces:
-        receivers:
-          - otlp
-        processors:
-          - batch
-        exporters:
-          - otlp
+        receivers: [otlp]
+        processors: [batch]
+        exporters: [otlp]
       metrics: null
       logs: null
 ports:
