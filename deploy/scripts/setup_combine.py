@@ -138,6 +138,9 @@ def main() -> None:
         sys.exit(ExitStatus.SUCCESS.value)
 
     target = args.target
+    if args.non_interactive and target not in config["targets"]:
+        logging.error(f"Target '{target}' not found in configuration")
+        sys.exit(ExitStatus.FAILURE.value)
     while target not in config["targets"]:
         target = get_target(config)
 
