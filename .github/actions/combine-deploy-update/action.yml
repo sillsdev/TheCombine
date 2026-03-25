@@ -50,7 +50,7 @@ runs:
     - name: Install Helm
       run: |
         echo "Installing Helm version ${{ inputs.helm_version }}"
-        curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | DESIRED_VERSION=${{ inputs.helm_version }} bash
+        curl https://raw.githubusercontent.com/helm/helm/${{ inputs.helm_version }}/scripts/get-helm-3 | DESIRED_VERSION=${{ inputs.helm_version }} bash
         helm version
       shell: bash
 
