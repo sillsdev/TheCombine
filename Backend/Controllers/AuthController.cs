@@ -70,7 +70,10 @@ namespace BackendFramework.Controllers
             using var activity = OtelService.StartActivityWithTag(otelTagName, "logging out");
 
             await HttpContext.SignOutAsync(LexboxCookieScheme);
-            await HttpContext.SignOutAsync(LexboxOidcScheme);
+
+            // TODO: Consider if we also need to sign out of the OIDC scheme here.
+            // await HttpContext.SignOutAsync(LexboxOidcScheme)
+            // is a no-op since it doesn't handle the redirect.
 
             return NoContent();
         }
