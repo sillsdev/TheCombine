@@ -355,12 +355,12 @@ export async function mergeWords(mergeWords: MergeWords[]): Promise<string[]> {
 }
 
 /** Restores words that were previously merged and deletes the merge result. */
-export async function undoMerge(wordIds: MergeUndoIds): Promise<boolean> {
+export async function undoMerge(wordIds: MergeUndoIds): Promise<void> {
   const params = {
     projectId: LocalStorage.getProjectId(),
     mergeUndoIds: wordIds,
   };
-  return (await mergeApi.undoMerge(params, defaultOptions())).data;
+  await mergeApi.undoMerge(params, defaultOptions());
 }
 
 /** Adds a list of wordIds to current project's merge blacklist. */
@@ -975,10 +975,9 @@ export async function isInFrontier(
 export async function restoreWord(
   wordId: string,
   projectId?: string
-): Promise<boolean> {
+): Promise<void> {
   projectId ||= LocalStorage.getProjectId();
-  const params = { projectId, wordId };
-  return (await wordApi.restoreWord(params, defaultOptions())).data;
+  await wordApi.restoreWord({ projectId, wordId }, defaultOptions());
 }
 
 /** Revert word updates given in dictionary of word ids:

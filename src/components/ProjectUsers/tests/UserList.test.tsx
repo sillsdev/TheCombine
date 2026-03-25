@@ -38,7 +38,7 @@ describe("UserList", () => {
   it("shows user when filter has a match", async () => {
     mockGetUsersByFilter.mockResolvedValue([userA]);
     await renderUserList();
-    await userEvent.type(screen.getByRole("textbox"), userA.name);
+    await userEvent.type(screen.getByRole("searchbox"), userA.name);
     expect(screen.queryAllByRole("listitem")).toHaveLength(1);
   });
 });

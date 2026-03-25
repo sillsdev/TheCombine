@@ -21,23 +21,23 @@ type NormalizedTextFieldProps = TextFieldProps & {
   form?: "NFC" | "NFD" | "NFKC" | "NFKD";
 };
 
-/** `TextField` that automatically normalizes the `onChange` text (default: with "NFC"). */
+/**
+ * `TextField` that automatically normalizes the `onChange` text (default: with "NFC").
+ * Defaults to `autoComplete="off"` to prevent browser autofill;
+ * override with a semantic value (e.g. `"name"`, `"email"`) where appropriate.
+ */
 export function NormalizedTextField(
   props: NormalizedTextFieldProps
 ): ReactElement {
   const { form, ...textFieldProps } = props;
   return (
     <TextField
+      autoComplete="off"
       {...textFieldProps}
       onChange={(e) => {
         if (textFieldProps.onChange) {
-          textFieldProps.onChange({
-            ...e,
-            target: {
-              ...e.target,
-              value: e.target.value.normalize(form || "NFC"),
-            },
-          });
+          const value = e.target.value.normalize(form || "NFC");
+          textFieldProps.onChange({ ...e, target: { ...e.target, value } });
         }
       }}
     />

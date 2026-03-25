@@ -9,13 +9,13 @@ interface FlagButtonProps {
   buttonId?: string;
   buttonLabel?: string;
   flag: Flag;
-  updateFlag?: (flag: Flag) => void;
+  updateFlag?: (flag: Flag) => void | Promise<void>;
 }
 
 /** A flag adding/editing/viewing button */
 export default function FlagButton(props: FlagButtonProps): ReactElement {
-  const [open, setOpen] = useState<boolean>(false);
-  const [active, setActive] = useState<boolean>();
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(false);
   const [text, setText] = useState<string | undefined>();
 
   useEffect(() => {
@@ -23,20 +23,16 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
     setText(props.flag.active ? props.flag.text : undefined);
   }, [props.flag]);
 
-  function updateFlag(text: string): void {
+  async function updateFlag(text: string): Promise<void> {
+    await props.updateFlag?.({ active: true, text });
     setActive(true);
     setText(text);
-    if (props.updateFlag) {
-      props.updateFlag({ active: true, text });
-    }
   }
 
-  function removeFlag(): void {
+  async function removeFlag(): Promise<void> {
+    await props.updateFlag?.({ active: false, text: "" });
     setActive(false);
     setText(undefined);
-    if (props.updateFlag) {
-      props.updateFlag({ active: false, text: "" });
-    }
   }
 
   return (

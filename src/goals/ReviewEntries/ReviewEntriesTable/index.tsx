@@ -15,7 +15,14 @@ import {
   createMRTColumnHelper,
   useMaterialReactTable,
 } from "material-react-table";
-import { type ReactElement, useEffect, useRef, useState } from "react";
+import {
+  type ComponentType,
+  type ReactElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, type GrammaticalInfo, type Word } from "api/models";
@@ -27,6 +34,7 @@ import {
 } from "components/Project/ProjectActions";
 import { asyncUpdateEntry } from "goals/Redux/GoalActions";
 import * as Cell from "goals/ReviewEntries/ReviewEntriesTable/Cells";
+import { type CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 import * as ff from "goals/ReviewEntries/ReviewEntriesTable/filterFn";
 import * as sf from "goals/ReviewEntries/ReviewEntriesTable/sortingFn";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
@@ -180,27 +188,33 @@ export default function ReviewEntriesTable(props: {
   }, [i18n.resolvedLanguage]);
 
   /** Removes word with given `id` from the state. */
-  const deleteWord = async (id: string): Promise<void> => {
-    await dispatch(asyncUpdateEntry(id));
-    setData((prev) => {
-      // Prevent table from jumping back to first page
-      autoResetPageIndexRef.current = false;
-      return prev.filter((w) => w.id !== id);
-    });
-  };
+  const deleteWord = useCallback(
+    async (id: string): Promise<void> => {
+      await dispatch(asyncUpdateEntry(id));
+      setData((prev) => {
+        // Prevent table from jumping back to first page
+        autoResetPageIndexRef.current = false;
+        return prev.filter((w) => w.id !== id);
+      });
+    },
+    [dispatch]
+  );
 
   /** Adds the word update to the current Goal, then
    * replaces word (`.id === oldId`) in the state
    * with word (`.id === newId`) fetched from the backend. */
-  const replaceWord = async (oldId: string, newId: string): Promise<void> => {
-    await dispatch(asyncUpdateEntry(oldId, newId));
-    const newWord = await getWord(newId);
-    setData((prev) => {
-      // Prevent table from jumping back to first page
-      autoResetPageIndexRef.current = false;
-      return prev.map((w) => (w.id === oldId ? newWord : w));
-    });
-  };
+  const replaceWord = useCallback(
+    async (oldId: string, newId: string): Promise<void> => {
+      await dispatch(asyncUpdateEntry(oldId, newId));
+      const newWord = await getWord(newId);
+      setData((prev) => {
+        // Prevent table from jumping back to first page
+        autoResetPageIndexRef.current = false;
+        return prev.map((w) => (w.id === oldId ? newWord : w));
+      });
+    },
+    [dispatch]
+  );
 
   /** Checks if there are any entries and, if so, scrolls to the top of the current page. */
   const scrollToTop = (): void => {
@@ -222,14 +236,18 @@ export default function ReviewEntriesTable(props: {
 
   const columnHelper = createMRTColumnHelper<Word>();
 
-  type CellProps = { row: MRT_Row<Word> };
+  const CellFactory = useCallback(
+    (C: ComponentType<CellProps>) =>
+      ({ row }: { row: MRT_Row<Word> }): ReactElement => (
+        <C delete={deleteWord} replace={replaceWord} word={row.original} />
+      ),
+    [deleteWord, replaceWord]
+  );
 
   const columns = [
     // Edit column
     columnHelper.display({
-      Cell: ({ row }: CellProps) => (
-        <Cell.Edit replace={replaceWord} word={row.original} />
-      ),
+      Cell: CellFactory(Cell.Edit),
       enableHiding: false,
       Header: "",
       header: t(ColumnHeaderTextId[ColumnId.Edit]),
@@ -240,7 +258,7 @@ export default function ReviewEntriesTable(props: {
 
     // Vernacular column
     columnHelper.accessor("vernacular", {
-      Cell: ({ row }: CellProps) => <Cell.Vernacular word={row.original} />,
+      Cell: CellFactory(Cell.Vernacular),
       enableColumnOrdering: false,
       enableHiding: false,
       filterFn: ff.filterFnString,
@@ -270,7 +288,7 @@ export default function ReviewEntriesTable(props: {
 
     // Definitions column
     columnHelper.accessor((w) => w.senses.flatMap((s) => s.definitions), {
-      Cell: ({ row }: CellProps) => <Cell.Definitions word={row.original} />,
+      Cell: CellFactory(Cell.Definitions),
       filterFn: ff.filterFnDefinitions,
       header: t(ColumnHeaderTextId[ColumnId.Definitions]),
       id: ColumnId.Definitions,
@@ -281,7 +299,7 @@ export default function ReviewEntriesTable(props: {
 
     // Glosses column
     columnHelper.accessor((w) => w.senses.flatMap((s) => s.glosses), {
-      Cell: ({ row }: CellProps) => <Cell.Glosses word={row.original} />,
+      Cell: CellFactory(Cell.Glosses),
       filterFn: ff.filterFnGlosses,
       header: t(ColumnHeaderTextId[ColumnId.Glosses]),
       id: ColumnId.Glosses,
@@ -290,7 +308,7 @@ export default function ReviewEntriesTable(props: {
 
     // Part of Speech column
     columnHelper.accessor((w) => w.senses.map((s) => s.grammaticalInfo), {
-      Cell: ({ row }: CellProps) => <Cell.PartOfSpeech word={row.original} />,
+      Cell: CellFactory(Cell.PartOfSpeech),
       filterFn: (row, id, filterValue: GramCatGroup) =>
         row
           .getValue<GrammaticalInfo[]>(id)
@@ -308,7 +326,7 @@ export default function ReviewEntriesTable(props: {
 
     // Domains column
     columnHelper.accessor((w) => w.senses.flatMap((s) => s.semanticDomains), {
-      Cell: ({ row }: CellProps) => <Cell.Domains word={row.original} />,
+      Cell: CellFactory(Cell.Domains),
       filterFn: ff.filterFnDomains,
       header: t(ColumnHeaderTextId[ColumnId.Domains]),
       id: ColumnId.Domains,
@@ -317,9 +335,7 @@ export default function ReviewEntriesTable(props: {
 
     // Pronunciations column
     columnHelper.accessor((w) => w.audio, {
-      Cell: ({ row }: CellProps) => (
-        <Cell.Pronunciations replace={replaceWord} word={row.original} />
-      ),
+      Cell: CellFactory(Cell.Pronunciations),
       filterFn: ff.filterFnPronunciations(speakers),
       Header: (
         <>
@@ -344,7 +360,7 @@ export default function ReviewEntriesTable(props: {
 
     // Note column
     columnHelper.accessor((w) => w.note.text || undefined, {
-      Cell: ({ row }: CellProps) => <Cell.Note word={row.original} />,
+      Cell: CellFactory(Cell.Note),
       filterFn: ff.filterFnString,
       header: t(ColumnHeaderTextId[ColumnId.Note]),
       id: ColumnId.Note,
@@ -354,7 +370,7 @@ export default function ReviewEntriesTable(props: {
 
     // Flag column
     columnHelper.accessor("flag", {
-      Cell: ({ row }: CellProps) => <Cell.Flag word={row.original} />,
+      Cell: CellFactory(Cell.Flag),
       filterFn: ff.filterFnFlag,
       Header: <FlagIcon fontSize="small" sx={{ color: "error.main" }} />,
       header: t(ColumnHeaderTextId[ColumnId.Flag]),
@@ -375,9 +391,7 @@ export default function ReviewEntriesTable(props: {
 
     // Delete column
     columnHelper.display({
-      Cell: ({ row }: CellProps) => (
-        <Cell.Delete delete={deleteWord} word={row.original} />
-      ),
+      Cell: CellFactory(Cell.Delete),
       enableHiding: false,
       Header: "",
       header: t(ColumnHeaderTextId[ColumnId.Delete]),

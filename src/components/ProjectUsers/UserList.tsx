@@ -110,6 +110,7 @@ export default function UserList(props: UserListProps): ReactElement {
       <NormalizedTextField
         onChange={(e) => updateUsers(e.target.value)}
         placeholder={t("projectSettings.invite.searchPlaceholder")}
+        type="search"
         value={filterInput}
       />
 

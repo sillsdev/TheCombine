@@ -314,6 +314,7 @@
     "invite": {
       "inviteByEmailLabel": "Invite by Email",
       "userExists": "This user is already registered.",
+      "invitationSent": "Invitation sent.",
       "or": "OR",
       "searchPlaceholder": "Search...",
       "searchTitle": "Find Users",

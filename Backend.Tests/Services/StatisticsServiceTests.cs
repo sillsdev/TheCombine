@@ -13,7 +13,7 @@ namespace Backend.Tests.Services
     {
         private ISemanticDomainRepository _domainRepo = null!;
         private IUserRepository _userRepo = null!;
-        private IWordRepository _wordRepo = null!;
+        private WordRepositoryMock _wordRepo = null!;
         private IStatisticsService _statsService = null!;
 
         private const string ProjId = "StatsServiceTestProjId";

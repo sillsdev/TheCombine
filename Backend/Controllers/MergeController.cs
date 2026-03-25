@@ -56,10 +56,11 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Undo merge </summary>
-        /// <returns> True if merge was successfully undone </returns>
+        /// <returns> Ok if merge was successfully undone </returns>
         [HttpPut("undo", Name = "UndoMerge")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UndoMerge(string projectId, [FromBody, BindRequired] MergeUndoIds merge)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "undoing merge");
@@ -71,8 +72,7 @@ namespace BackendFramework.Controllers
             }
             var userId = _permissionService.GetUserId(HttpContext);
 
-            var undo = await _mergeService.UndoMerge(projectId, userId, merge);
-            return Ok(undo);
+            return await _mergeService.UndoMerge(projectId, userId, merge) ? Ok() : NotFound();
         }
 
         /// <summary> Add List of <see cref="Word"/>Ids to merge blacklist </summary>

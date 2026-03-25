@@ -46,6 +46,41 @@ spec:
         - image: {{ include "database.containerImage" . }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           name: database
+          args:
+            - "--replSet"
+            - "rs0"
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    exec > /data/db/postStart.log 2>&1
+                    set -e
+                    echo "[postStart] Waiting for mongod to accept connections"
+                    attempts=0
+                    until mongosh --quiet --host 127.0.0.1 --eval "db.adminCommand({ ping: 1 }).ok" >/dev/null 2>&1; do
+                      attempts=$((attempts + 1))
+                      if [ "${attempts}" -ge 120 ]; then
+                        echo "[postStart] Failed to connect to mongod after ${attempts} attempts, exiting"
+                        exit 1
+                      fi
+                      sleep 1
+                    done
+                    echo "[postStart] Ensuring replica set host"
+                    mongosh --quiet --host 127.0.0.1 /opt/thecombine/00-replica-set.js || exit $?
+                    needs_semantic_import="$(mongosh --quiet --host 127.0.0.1 --eval "const combineDb = db.getSiblingDB('CombineDatabase'); const treeCount = combineDb.SemanticDomainTree.countDocuments({}); const domainCount = combineDb.SemanticDomains.countDocuments({}); print(treeCount === 0 || domainCount === 0 ? 'yes' : 'no');")"
+                    if [ "${needs_semantic_import}" = "yes" ]; then
+                      /bin/bash /opt/thecombine/update-semantic-domains.sh
+                    fi
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: MONGO_INITDB_REPLICA_HOST
+              value: "$(POD_IP):27017"
           ports:
             - containerPort: 27017
           resources:

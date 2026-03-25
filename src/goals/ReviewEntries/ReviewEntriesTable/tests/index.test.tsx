@@ -1,4 +1,10 @@
-import { act, render, screen, within } from "@testing-library/react";
+import {
+  act,
+  render,
+  screen,
+  waitForElementToBeRemoved,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
@@ -29,15 +35,29 @@ const setMockUseTranslation = (resolvedLanguage: string): void => {
 };
 
 jest.mock("backend", () => ({
+  deleteFrontierWord: (wordId: string) => mockDeleteFrontierWord(wordId),
   getAllSpeakers: () => Promise.resolve([]),
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
   getWord: (wordId: string) => mockGetWord(wordId),
+  updateWord: (word: { id: string }) => mockUpdateWord(word),
 }));
 jest.mock("components/Pronunciations/PronunciationsBackend");
+jest.mock("goals/Redux/GoalActions", () => ({
+  asyncUpdateEntry: (oldId: string, newId?: string) =>
+    mockAsyncUpdateEntry(oldId, newId),
+}));
 jest.mock("i18n", () => ({}));
+jest.mock("rootRedux/hooks", () => ({
+  ...jest.requireActual("rootRedux/hooks"),
+  useAppDispatch: () => jest.fn(),
+}));
 
+const mockAsyncUpdateEntry = jest.fn();
+const mockDeleteFrontierWord = jest.fn();
 const mockGetFrontierWords = jest.fn();
 const mockGetWord = jest.fn();
+const mockUpdateWord = jest.fn();
+
 const mockState = (
   definitionsEnabled = false,
   grammaticalInfoEnabled = false
@@ -71,7 +91,15 @@ const renderReviewEntriesTable = async (
 };
 
 function setMockFunctions(): void {
+  mockDeleteFrontierWord.mockResolvedValue(undefined);
   mockGetFrontierWords.mockResolvedValue(mockWords());
+  mockGetWord.mockImplementation((wordId: string) => {
+    const oldWord = mockWords().find((w) => wordId.startsWith(w.id));
+    return Promise.resolve(oldWord ? { ...oldWord, id: wordId } : undefined);
+  });
+  mockUpdateWord.mockImplementation((word: { id: string }) =>
+    Promise.resolve({ ...word, id: `${word.id}++` })
+  );
 }
 
 beforeEach(() => {
@@ -84,6 +112,55 @@ describe("ReviewEntriesTable", () => {
     expect(mockGetFrontierWords).toHaveBeenCalled();
     const rowCount = mockWords().length + 1; // +1 for header row
     expect(screen.getAllByRole("row")).toHaveLength(rowCount);
+  });
+
+  test("flag-remove updates the entry", async () => {
+    await renderReviewEntriesTable();
+    expect(screen.getByText(verns[0])).toBeTruthy();
+
+    // Verify the top entry has a flag to remove.
+    const startingFlag = mockWords()[0].flag;
+    expect(startingFlag.active && startingFlag.text).toBeTruthy();
+    expect(screen.getByLabelText(startingFlag.text)).toBeTruthy();
+
+    // Click the flag button to open the dialog.
+    await userEvent.click(screen.getByTestId("row-0-flag"));
+
+    // Verify no updates have been made yet.
+    expect(mockUpdateWord).not.toHaveBeenCalled();
+    expect(mockAsyncUpdateEntry).not.toHaveBeenCalled();
+
+    // Click the dialog button to remove the flag.
+    await userEvent.click(screen.getByTestId("flag-remove"));
+
+    // Verify the entry was updated.
+    expect(mockUpdateWord).toHaveBeenCalledWith(
+      expect.objectContaining({ flag: { active: false, text: "" }, id: "0" })
+    );
+    expect(mockAsyncUpdateEntry).toHaveBeenCalledWith("0", "0++");
+  });
+
+  test("delete-confirm deletes entry", async () => {
+    await renderReviewEntriesTable();
+    const initialRowCount = screen.getAllByRole("row").length;
+    expect(screen.getByText(verns[0])).toBeTruthy();
+
+    // Click the delete button to open the dialog.
+    await userEvent.click(screen.getByTestId("row-0-delete"));
+
+    // Verify no updates have been made yet.
+    expect(mockDeleteFrontierWord).not.toHaveBeenCalled();
+    expect(mockAsyncUpdateEntry).not.toHaveBeenCalled();
+
+    // Click the dialog button to confirm deletion.
+    await userEvent.click(screen.getByTestId("delete-confirm"));
+    await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
+
+    // Verify the entry was deleted.
+    expect(mockDeleteFrontierWord).toHaveBeenCalledWith("0");
+    expect(mockAsyncUpdateEntry).toHaveBeenCalledWith("0", undefined);
+    expect(screen.queryByText(verns[0])).toBeNull();
+    expect(screen.getAllByRole("row")).toHaveLength(initialRowCount - 1);
   });
 
   describe("table sort", () => {

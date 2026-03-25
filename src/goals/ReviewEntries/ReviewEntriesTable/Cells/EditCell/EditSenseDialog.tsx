@@ -20,6 +20,7 @@ import {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
+import { shallowEqual } from "react-redux";
 import { toast } from "react-toastify";
 
 import {
@@ -28,7 +29,6 @@ import {
   GramCatGroup,
   type SemanticDomain,
   type Sense,
-  type WritingSystem,
 } from "api/models";
 import PartOfSpeechButton from "components/Buttons/PartOfSpeechButton";
 import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
@@ -82,6 +82,27 @@ const defaultEditSenseFieldChanged: EditSenseFieldChanged = {
   [EditSenseField.SemanticDomains]: false,
 };
 
+function getOrderedLanguageItems<T extends { language: string }>(
+  /** Assumes array of items with distinct language tags. */
+  items: T[],
+  /** Assumes array of distinct language tags. */
+  analysisLangs: string[],
+  createEmptyObject: (language: string) => T
+): T[] {
+  const usedIndexes = new Set<number>();
+  const orderedItems = analysisLangs.map((lang) => {
+    const itemIndex = items.findIndex((item) => item.language === lang);
+    if (itemIndex >= 0) {
+      usedIndexes.add(itemIndex);
+      return items[itemIndex];
+    } else {
+      return createEmptyObject(lang);
+    }
+  });
+
+  return orderedItems.concat(items.filter((_, idx) => !usedIndexes.has(idx)));
+}
+
 interface EditSenseDialogProps {
   close: () => void;
   isOpen: boolean;
@@ -92,9 +113,12 @@ interface EditSenseDialogProps {
 export default function EditSenseDialog(
   props: EditSenseDialogProps
 ): ReactElement {
-  const analysisWritingSystems = useAppSelector(
+  const analysisLangs = useAppSelector(
     (state: StoreState) =>
-      state.currentProjectState.project.analysisWritingSystems
+      state.currentProjectState.project.analysisWritingSystems.map(
+        (ws) => ws.bcp47
+      ),
+    shallowEqual
   );
   const definitionsEnabled = useAppSelector(
     (state: StoreState) => state.currentProjectState.project.definitionsEnabled
@@ -226,7 +250,7 @@ export default function EditSenseDialog(
                 <CardHeader title={t(EditSenseDialogTextId.CardDefinitions)} />
                 <CardContent>
                   <DefinitionList
-                    defaultLang={analysisWritingSystems[0]}
+                    analysisLangs={analysisLangs}
                     definitions={newSense.definitions}
                     error={noDefinitionOrGloss}
                     onChange={updateDefinitions}
@@ -243,7 +267,7 @@ export default function EditSenseDialog(
               <CardHeader title={t(EditSenseDialogTextId.CardGlosses)} />
               <CardContent>
                 <GlossList
-                  defaultLang={analysisWritingSystems[0]}
+                  analysisLangs={analysisLangs}
                   error={noDefinitionOrGloss}
                   glosses={newSense.glosses}
                   onChange={updateGlosses}
@@ -296,7 +320,7 @@ export default function EditSenseDialog(
 }
 
 interface DefinitionListProps {
-  defaultLang: WritingSystem;
+  analysisLangs: string[];
   definitions: Definition[];
   error?: boolean;
   onChange: (definitions: Definition[]) => void;
@@ -304,11 +328,11 @@ interface DefinitionListProps {
 }
 
 function DefinitionList(props: DefinitionListProps): ReactElement {
-  const definitions = props.definitions.some(
-    (d) => d.language === props.defaultLang.bcp47
-  )
-    ? props.definitions
-    : [...props.definitions, newDefinition("", props.defaultLang.bcp47)];
+  const definitions = getOrderedLanguageItems(
+    props.definitions,
+    props.analysisLangs,
+    (lang) => newDefinition("", lang)
+  );
 
   return (
     <>
@@ -357,7 +381,7 @@ function DefinitionTextField(props: DefinitionTextFieldProps): ReactElement {
 }
 
 interface GlossListProps {
-  defaultLang: WritingSystem;
+  analysisLangs: string[];
   error?: boolean;
   glosses: Gloss[];
   onChange: (glosses: Gloss[]) => void;
@@ -365,11 +389,11 @@ interface GlossListProps {
 }
 
 function GlossList(props: GlossListProps): ReactElement {
-  const glosses = props.glosses.some(
-    (g) => g.language === props.defaultLang.bcp47
-  )
-    ? props.glosses
-    : [...props.glosses, newGloss("", props.defaultLang.bcp47)];
+  const glosses = getOrderedLanguageItems(
+    props.glosses,
+    props.analysisLangs,
+    (lang) => newGloss("", lang)
+  );
 
   return (
     <>

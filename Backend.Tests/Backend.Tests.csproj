@@ -13,6 +13,9 @@
     <NoWarn>$(NoWarn);CA1305;CA1859;CS1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="EphemeralMongo7.runtime.linux-x64" Version="2.0.0" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
+    <PackageReference Include="EphemeralMongo7.runtime.osx-arm64" Version="2.0.0" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
+    <PackageReference Include="EphemeralMongo7.runtime.win-x64" Version="2.0.0" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageReference Include="Moq.Contrib.HttpClient" Version="1.4.0" />
     <PackageReference Include="NUnit" Version="4.4.0" />
