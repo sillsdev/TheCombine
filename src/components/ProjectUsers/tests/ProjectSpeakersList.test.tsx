@@ -33,7 +33,6 @@ const renderProjectSpeakersList = async (): Promise<void> => {
 };
 
 beforeEach(() => {
-  jest.resetAllMocks();
   mockCreateSpeaker.mockResolvedValue("");
   mockGetAllSpeakers.mockResolvedValue(mockSpeakers);
   mockUpdateSpeakerName.mockResolvedValue("");

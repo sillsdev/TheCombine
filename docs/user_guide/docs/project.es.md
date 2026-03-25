@@ -11,7 +11,7 @@ Al crear un proyecto, tiene la opción de empezar con un proyecto vacío o de im
 ### Importar los datos existentes
 
 Si tiene datos léxicos en un archivo [LIFT](https://software.sil.org/lifttools) (probablemente exportado de The Combine,
-[WeSay](https://software.sil.org/wesay), [FLEx](https://software.sil.org/fieldworks) o
+[FieldWorks](https://software.sil.org/fieldworks), [WeSay](https://software.sil.org/wesay) o
 [Lexique Pro](https://software.sil.org/lexiquepro)), puede hacer clic en el botón Navegar junto a "¿Subir los datos
 existentes?" para importar los datos a su proyecto.
 

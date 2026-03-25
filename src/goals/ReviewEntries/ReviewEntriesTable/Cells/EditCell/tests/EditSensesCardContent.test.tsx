@@ -1,11 +1,14 @@
 import "@testing-library/jest-dom";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { Provider } from "react-redux";
+import configureMockStore from "redux-mock-store";
 
 import { GramCatGroup, Sense, Status } from "api/models";
 import EditSensesCardContent, {
   EditSensesId,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditSensesCardContent";
+import { defaultState } from "rootRedux/types";
 import { newSemanticDomain } from "types/semanticDomain";
 import { newDefinition, newSense } from "types/word";
 
@@ -48,20 +51,18 @@ const mockSenses = (): Sense[] => [
 const renderEditSensesCardContent = async (showSenses = true): Promise<void> =>
   await act(async () => {
     render(
-      <EditSensesCardContent
-        moveSense={(from: number, to: number) => mockMoveSense(from, to)}
-        newSenses={mockSenses()}
-        oldSenses={mockSenses()}
-        showSenses={showSenses}
-        toggleSenseDeleted={mockToggleSenseDeleted}
-        updateOrAddSense={mockUpdateOrAddSense}
-      />
+      <Provider store={configureMockStore()(defaultState)}>
+        <EditSensesCardContent
+          moveSense={(from: number, to: number) => mockMoveSense(from, to)}
+          newSenses={mockSenses()}
+          oldSenses={mockSenses()}
+          showSenses={showSenses}
+          toggleSenseDeleted={mockToggleSenseDeleted}
+          updateOrAddSense={mockUpdateOrAddSense}
+        />
+      </Provider>
     );
   });
-
-beforeEach(async () => {
-  jest.clearAllMocks();
-});
 
 describe("EditSensesCardContent", () => {
   it("renders sense summary", async () => {

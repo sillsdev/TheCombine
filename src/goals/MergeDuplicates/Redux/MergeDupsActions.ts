@@ -23,6 +23,7 @@ import {
   moveSenseAction,
   orderDuplicateAction,
   orderSenseAction,
+  resetTreeToInitialAction,
   setDataAction,
   setSidebarAction,
   setVernacularAction,
@@ -31,6 +32,7 @@ import {
 import {
   CombineSenseMergePayload,
   FlagWordPayload,
+  MergeTreeState,
   MoveSensePayload,
   OrderSensePayload,
   SetVernacularPayload,
@@ -81,6 +83,10 @@ export function orderSense(payload: OrderSensePayload): PayloadAction {
   } else {
     return orderDuplicateAction(payload);
   }
+}
+
+export function resetTreeToInitial(): Action {
+  return resetTreeToInitialAction();
 }
 
 export function setSidebar(sidebar?: Sidebar): PayloadAction {
@@ -151,6 +157,21 @@ export function mergeAll() {
       await backend.blacklistAdd(blacklistIds);
     }
   };
+}
+
+/** Helper function to check if the current state has changed from initial */
+export function hasStateChanged(state: MergeTreeState): boolean {
+  if (!state.initialTree) {
+    return false;
+  }
+
+  // Check if audio.moves has any entries
+  if (Object.keys(state.audio.moves).length > 0) {
+    return true;
+  }
+
+  // Compare current tree with initial state
+  return JSON.stringify(state.tree) !== state.initialTree;
 }
 
 // Used in MergeDups cases of GoalActions functions

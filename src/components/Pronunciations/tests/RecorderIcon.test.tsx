@@ -48,10 +48,6 @@ const renderRecorderIcon = async (wordId = ""): Promise<void> => {
   });
 };
 
-beforeEach(() => {
-  jest.resetAllMocks();
-});
-
 describe("RecorderIcon", () => {
   test("pointerDown records if no recording active", async () => {
     await renderRecorderIcon();
@@ -83,6 +79,23 @@ describe("RecorderIcon", () => {
     await renderRecorderIcon("different-id");
     await act(async () => {
       fireEvent.pointerUp(screen.getByTestId(recordButtonId));
+    });
+    expect(mockStopRecording).not.toHaveBeenCalled();
+  });
+
+  test("pointerCancel stops recording", async () => {
+    await renderRecorderIcon(mockWordId);
+    expect(mockStopRecording).not.toHaveBeenCalled();
+    await act(async () => {
+      fireEvent.pointerCancel(screen.getByTestId(recordButtonId));
+    });
+    expect(mockStopRecording).toHaveBeenCalled();
+  });
+
+  test("pointerCancel does nothing if no recording active", async () => {
+    await renderRecorderIcon();
+    await act(async () => {
+      fireEvent.pointerCancel(screen.getByTestId(recordButtonId));
     });
     expect(mockStopRecording).not.toHaveBeenCalled();
   });

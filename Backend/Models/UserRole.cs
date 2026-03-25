@@ -77,15 +77,15 @@ namespace BackendFramework.Models
                 // Project Owner by default should be given to the user who created the project.
                 // Owner role can be transferred, but there should never be more than one per project.
                 Role.Owner => new List<Permission> {
-                    Permission.Archive, Permission.Import, Permission.Statistics,
-                    Permission.CharacterInventory, Permission.DeleteEditSettingsAndUsers,
+                    Permission.Archive, Permission.Import,
+                    Permission.CharacterInventory, Permission.DeleteEditSettingsAndUsers, Permission.Statistics,
                     Permission.Export, Permission.MergeAndReviewEntries,
                     Permission.WordEntry
                 },
 
                 // Administrator can do Data Entry, all Data Cleanup, and most project settings.
                 Role.Administrator => new List<Permission> {
-                    Permission.CharacterInventory, Permission.DeleteEditSettingsAndUsers,
+                    Permission.CharacterInventory, Permission.DeleteEditSettingsAndUsers, Permission.Statistics,
                     Permission.Export, Permission.MergeAndReviewEntries,
                     Permission.WordEntry
                 },

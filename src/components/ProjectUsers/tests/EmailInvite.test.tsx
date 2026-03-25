@@ -23,7 +23,6 @@ const mockIsEmailOrUsernameAvailable = jest.fn();
 
 describe("EmailInvite", () => {
   beforeEach(() => {
-    jest.resetAllMocks();
     act(() => {
       render(<EmailInvite addToProject={mockAddToProject} close={mockClose} />);
     });
@@ -39,7 +38,7 @@ describe("EmailInvite", () => {
     const button = screen.getByText(EmailInviteTextId.ButtonSubmit);
     expect(button).toBeDisabled();
 
-    await typeEmail("not-valid@4");
+    await typeEmail("not-valid@");
     expect(button).toBeDisabled();
   });
 

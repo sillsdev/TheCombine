@@ -1,8 +1,15 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { Fragment, ReactElement } from "react";
+import {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import { User } from "api/models";
+import UserProjectsList from "components/SiteSettings/UserManagement/UserProjectsList";
 
 interface ConfirmDeletionProps {
   user?: User;
@@ -13,34 +20,48 @@ interface ConfirmDeletionProps {
 export default function ConfirmDeletion(
   props: ConfirmDeletionProps
 ): ReactElement {
+  const [loaded, setLoaded] = useState(false);
+
   const { t } = useTranslation();
 
-  if (!props.user) {
+  useEffect(() => {
+    setLoaded(false);
+  }, [props.user?.id]);
+
+  const handleOnLoaded = useCallback(() => setLoaded(true), []);
+
+  if (!props.user?.id) {
     return <Fragment />;
   }
+
+  const { email, id, name, username } = props.user;
+
   return (
     <Box sx={{ maxWidth: 500 }}>
       <Stack spacing={2}>
-        <Typography align="center" sx={{ color: "red" }} variant="h4">
-          {props.user.username}
+        <Typography align="center" sx={{ color: "error.main" }} variant="h4">
+          {name}
+        </Typography>
+
+        <Typography align="center" variant="h5">
+          {`(${username} | ${email})`}
         </Typography>
 
         <Typography align="center" variant="h6">
           {t("siteSettings.deleteUser.confirm")}
         </Typography>
 
+        <UserProjectsList onLoaded={handleOnLoaded} userId={id} />
+
         <Stack direction="row" justifyContent="space-evenly">
           <Button
             color="secondary"
+            disabled={!loaded}
             id="user-delete-confirm"
-            onClick={() => {
-              if (props.user) {
-                props.deleteUser(props.user.id);
-              }
-            }}
+            onClick={() => props.deleteUser(id)}
             variant="contained"
           >
-            <Typography align="center" sx={{ color: "red" }} variant="h6">
+            <Typography sx={{ color: "error.main" }}>
               {t("buttons.delete")}
             </Typography>
           </Button>
@@ -51,9 +72,7 @@ export default function ConfirmDeletion(
             onClick={() => props.handleCloseModal()}
             variant="contained"
           >
-            <Typography align="center" variant="h6">
-              {t("buttons.cancel")}
-            </Typography>
+            <Typography>{t("buttons.cancel")}</Typography>
           </Button>
         </Stack>
       </Stack>

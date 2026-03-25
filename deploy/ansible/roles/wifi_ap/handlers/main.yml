@@ -2,8 +2,8 @@
 - name: Start create_ap
   systemd:
     name: create_ap
-    daemon_reload: yes
-    enabled: yes
+    daemon_reload: True
+    enabled: True
     state: started
 
 - name: Restart create_ap

@@ -87,14 +87,21 @@ export default function SortOptions(props: SortOptionsProps): ReactElement {
   return (
     <>
       <FormControl variant="standard" style={{ minWidth: 100 }}>
-        <InputLabel id="sort-options-input">
+        <InputLabel id="sort-options-select">
           {t("charInventory.sortBy")}
         </InputLabel>
         <Select
-          variant="standard"
-          labelId="sort-options-select"
           defaultValue={UserOrder.Username}
+          inputProps={{
+            // This component can cause console errors with password managers
+            "data-1p-ignore": true, // 1Password ignore
+            "data-bwignore": true, // Bitwarden ignore
+            "data-form-type": "other", // Dashlane ignore
+            "data-lpignore": true, // LastPass ignore
+          }}
+          labelId="sort-options-select"
           onChange={props.onChange}
+          variant="standard"
         >
           {sortOptions}
         </Select>

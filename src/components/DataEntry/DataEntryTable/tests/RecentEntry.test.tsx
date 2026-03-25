@@ -5,7 +5,7 @@ import userEvent, { UserEvent } from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
-import { Word } from "api/models";
+import { Status, Word } from "api/models";
 import RecentEntry, {
   RecentEntryIdPrefix,
 } from "components/DataEntry/DataEntryTable/RecentEntry";
@@ -56,7 +56,6 @@ async function renderWithWord(word: Word): Promise<void> {
 let agent: UserEvent;
 
 beforeEach(() => {
-  jest.resetAllMocks();
   agent = userEvent.setup();
 });
 
@@ -131,6 +130,26 @@ describe("ExistingEntry", () => {
       await agent.type(vernField, mockText);
       await agent.click(glossField);
       expect(mockUpdateVern).toHaveBeenCalledWith(0, mockText);
+    });
+
+    it("disables vernacular if word is protected", async () => {
+      const protectedWord: Word = {
+        ...mockWord,
+        accessibility: Status.Protected,
+      };
+      await renderWithWord(protectedWord);
+      const { vernField } = getVernAndGlossFields();
+      expect(vernField).toBeDisabled();
+    });
+
+    it("disables vernacular if sense is protected", async () => {
+      const protectedSenseWord: Word = {
+        ...mockWord,
+        senses: [{ ...mockWord.senses[0], accessibility: Status.Protected }],
+      };
+      await renderWithWord(protectedSenseWord);
+      const { vernField } = getVernAndGlossFields();
+      expect(vernField).toBeDisabled();
     });
   });
 

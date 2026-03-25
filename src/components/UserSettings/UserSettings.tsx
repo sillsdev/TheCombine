@@ -63,6 +63,7 @@ export enum UserSettingsTextId {
   TooltipEmailVerified = "userSettings.verifyEmail.emailVerified",
   TooltipEmailVerifying = "userSettings.verifyEmail.emailVerifying",
   TooltipGlossSuggestion = "userSettings.glossSuggestionHint",
+  TooltipSaveButtonDisabled = "userSettings.noChanges",
   TypographyAnalyticsConsent = "userSettings.analyticsConsent.title",
   TypographyAnalyticsConsentNo = "userSettings.analyticsConsent.consentNo",
   TypographyAnalyticsConsentYes = "userSettings.analyticsConsent.consentYes",
@@ -179,6 +180,7 @@ export function UserSettings(props: {
 
                 <Grid2 size="grow">
                   <NormalizedTextField
+                    autoComplete="name"
                     id={UserSettingsIds.FieldName}
                     fullWidth
                     variant="outlined"
@@ -212,6 +214,7 @@ export function UserSettings(props: {
 
                   <Grid2 size="grow">
                     <NormalizedTextField
+                      autoComplete="tel"
                       id={UserSettingsIds.FieldPhone}
                       fullWidth
                       variant="outlined"
@@ -253,6 +256,7 @@ export function UserSettings(props: {
                     {/* Don't use NormalizedTextField for type="email".
                     At best, it doesn't normalize, because of the punycode. */}
                     <TextField
+                      autoComplete="email"
                       id={UserSettingsIds.FieldEmail}
                       required
                       fullWidth
@@ -369,14 +373,24 @@ export function UserSettings(props: {
 
               {/* Save button */}
               <Grid2 container justifyContent="flex-end">
-                <Button
-                  disabled={disabled}
-                  id={UserSettingsIds.ButtonSubmit}
-                  type="submit"
-                  variant="contained"
+                <Tooltip
+                  title={
+                    disabled
+                      ? t(UserSettingsTextId.TooltipSaveButtonDisabled)
+                      : ""
+                  }
                 >
-                  {t(UserSettingsTextId.ButtonSubmit)}
-                </Button>
+                  <span>
+                    <Button
+                      disabled={disabled}
+                      id={UserSettingsIds.ButtonSubmit}
+                      type="submit"
+                      variant="contained"
+                    >
+                      {t(UserSettingsTextId.ButtonSubmit)}
+                    </Button>
+                  </span>
+                </Tooltip>
               </Grid2>
             </Stack>
           </form>

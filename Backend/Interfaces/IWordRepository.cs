@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Models;
@@ -10,18 +11,23 @@ namespace BackendFramework.Interfaces
         Task<Word?> GetWord(string projectId, string wordId);
         Task<Word> Create(Word word);
         Task<List<Word>> Create(List<Word> words);
-        Task<Word> Add(Word word);
-        Task<bool> DeleteAllWords(string projectId);
         Task<bool> DeleteAllFrontierWords(string projectId);
         Task<bool> HasWords(string projectId);
         Task<bool> HasFrontierWords(string projectId);
         Task<bool> IsInFrontier(string projectId, string wordId);
         Task<bool> AreInFrontier(string projectId, List<string> wordIds, int count);
-        Task<List<Word>> GetFrontier(string projectId);
+        Task<int> GetFrontierCount(string projectId);
+        Task<List<Word>> GetAllFrontier(string projectId);
+        Task<Word?> GetFrontier(string projectId, string wordId, string? audioFileName = null);
         Task<List<Word>> GetFrontierWithVernacular(string projectId, string vernacular);
-        Task<Word> AddFrontier(Word word);
-        Task<List<Word>> AddFrontier(List<Word> words);
-        Task<bool> DeleteFrontier(string projectId, string wordId);
-        Task<long> DeleteFrontier(string projectId, List<string> wordIds);
+        Task<Word?> DeleteFrontier(string projectId, string wordId, Action<Word> modifyDeletedWord);
+        Task<bool> RestoreFrontier(string projectId, string wordId);
+        Task<Word?> UpdateFrontier(string projectId, string wordId, Action<Word> modifyUpdatedWord);
+        Task<Word?> UpdateFrontier(Word word, Action<Word, Word?> modifyUpdatedWord);
+        Task<List<Word>> ReplaceFrontier(string projectId, List<Word> newWords, List<string> idsToDelete,
+            Action<Word, Word?> modifyUpdatedWord, Action<Word> modifyDeletedWord);
+        Task<bool> RevertReplaceFrontier(string projectId, List<string> idsToRestore, List<string> idsToDelete,
+            Action<Word> modifyDeletedWord);
+        Task<int> CountFrontierWordsWithDomain(string projectId, string domainId);
     }
 }

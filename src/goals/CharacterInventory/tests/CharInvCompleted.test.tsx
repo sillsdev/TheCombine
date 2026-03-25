@@ -13,8 +13,7 @@ import {
   type FindAndReplaceChange,
   defaultCharInvChanges,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
-import { defaultState } from "goals/Redux/GoalReduxTypes";
-import { type StoreState } from "rootRedux/types";
+import { defaultState, type StoreState } from "rootRedux/types";
 import { newWord as mockWord } from "types/word";
 
 jest.mock("backend", () => ({
@@ -38,15 +37,12 @@ const mockWordChanges: FindAndReplaceChange = {
   replace: "q",
   words: { [mockWordKeys[0]]: "newA", [mockWordKeys[1]]: "newB" },
 };
-const mockState = (changes?: CharInvChanges): Partial<StoreState> => ({
+const mockState = (changes?: CharInvChanges): StoreState => ({
+  ...defaultState,
   goalsState: {
-    ...defaultState,
-    currentGoal: { ...defaultState.currentGoal, changes },
+    ...defaultState.goalsState,
+    currentGoal: { ...defaultState.goalsState.currentGoal, changes },
   },
-});
-
-beforeEach(() => {
-  jest.resetAllMocks();
 });
 
 describe("CharInvCompleted", () => {

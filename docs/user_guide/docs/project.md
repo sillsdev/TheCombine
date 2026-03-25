@@ -11,7 +11,7 @@ When creating a project, you have the option to start with an empty project or t
 ### Import Existing Data
 
 If you have lexical data in a [LIFT](https://software.sil.org/lifttools) file (likely exported from The Combine,
-[WeSay](https://software.sil.org/wesay), [FLEx](https://software.sil.org/fieldworks), or
+[FieldWorks](https://software.sil.org/fieldworks), [WeSay](https://software.sil.org/wesay), or
 [Lexique Pro](https://software.sil.org/lexiquepro)), you can click the Browse button next to "Upload existing data?" to
 import the data into your project.
 
@@ -175,7 +175,7 @@ No automatic deduplication, merging, or syncing will be performed.
 
 If you do a second import, all words in The Combine will be automatically deleted before the new words are imported. Do
 not do a second import unless you have already exported your project and imported it into FieldWorks. Then, if you want
-to do more word collection in The Combine, you can export from FieldWorks and import into the Combine. The previous
+to do more word collection in The Combine, you can export from FieldWorks and import into The Combine. The previous
 words will be deleted to allow for a clean start with the up-to-date data from FieldWorks.
 
 #### Export {#export}

@@ -9,19 +9,26 @@ import EditSenseDialog, {
   EditSenseDialogTextId,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditSenseDialog";
 import { type StoreState, defaultState } from "rootRedux/types";
-import { newSense } from "types/word";
+import { newDefinition, newGloss, newSense } from "types/word";
+import { newWritingSystem } from "types/writingSystem";
 
 const mockClose = jest.fn();
 const mockSave = jest.fn();
 
-const mockState = (
-  definitionsEnabled = false,
-  grammaticalInfoEnabled = false
-): StoreState => {
+type TextInput = HTMLInputElement | HTMLTextAreaElement;
+
+interface MockStateProps {
+  analysisLangs: string[];
+  definitionsEnabled: boolean;
+  grammaticalInfoEnabled: boolean;
+}
+
+const mockState = (props: MockStateProps): StoreState => {
+  const { analysisLangs, ...rest } = props;
   const project: Project = {
     ...defaultState.currentProjectState.project,
-    definitionsEnabled,
-    grammaticalInfoEnabled,
+    analysisWritingSystems: analysisLangs.map((l) => newWritingSystem(l, l)),
+    ...rest,
   };
   return {
     ...defaultState,
@@ -29,12 +36,18 @@ const mockState = (
   };
 };
 
-const renderEditSenseDialog = async (
+interface RenderEditSenseDialogOptions extends Partial<MockStateProps> {
+  sense?: Sense;
+}
+
+const renderEditSenseDialog = async ({
+  analysisLangs = ["en"],
   definitionsEnabled = false,
-  grammaticalInfoEnabled = false
-): Promise<void> => {
+  grammaticalInfoEnabled = false,
+  sense = newSense("gloss", analysisLangs[0]),
+}: RenderEditSenseDialogOptions = {}): Promise<void> => {
   const mockStore = configureMockStore()(
-    mockState(definitionsEnabled, grammaticalInfoEnabled)
+    mockState({ analysisLangs, definitionsEnabled, grammaticalInfoEnabled })
   );
   await act(async () => {
     render(
@@ -43,23 +56,30 @@ const renderEditSenseDialog = async (
           close={mockClose}
           isOpen
           save={mockSave}
-          sense={newSense("gloss")}
+          sense={sense}
         />
       </Provider>
     );
   });
 };
 
-const getGlossFields = (): HTMLElement[] => {
-  const region = screen
-    .getByText(EditSenseDialogTextId.CardGlosses)
-    .closest('[role="region"]') as HTMLElement;
-  return within(region).getAllByRole("textbox");
-};
+const getCardRegion = (titleId: EditSenseDialogTextId): HTMLElement =>
+  screen.getByText(titleId).closest('[role="region"]') as HTMLElement;
 
-beforeEach(async () => {
-  jest.clearAllMocks();
-});
+const getTextFields = (titleId: EditSenseDialogTextId): TextInput[] =>
+  within(getCardRegion(titleId)).getAllByRole("textbox") as TextInput[];
+
+const getTextFieldByLabel = (
+  titleId: EditSenseDialogTextId,
+  label: string
+): TextInput =>
+  within(getCardRegion(titleId)).getByLabelText(label) as TextInput;
+
+const getGlossFields = (): TextInput[] =>
+  getTextFields(EditSenseDialogTextId.CardGlosses);
+
+const getDefinitionFields = (): TextInput[] =>
+  getTextFields(EditSenseDialogTextId.CardDefinitions);
 
 describe("EditSenseDialog", () => {
   describe("cancel and save buttons", () => {
@@ -133,15 +153,79 @@ describe("EditSenseDialog", () => {
     const partOfSpeechTitle = EditSenseDialogTextId.CardPartOfSpeech;
 
     test("show definitions when definitionsEnabled is true", async () => {
-      await renderEditSenseDialog(true, false);
+      await renderEditSenseDialog({ definitionsEnabled: true });
       expect(screen.queryByText(definitionsTitle)).toBeTruthy();
       expect(screen.queryByText(partOfSpeechTitle)).toBeNull();
     });
 
     test("show part of speech when grammaticalInfoEnabled is true", async () => {
-      await renderEditSenseDialog(false, true);
+      await renderEditSenseDialog({ grammaticalInfoEnabled: true });
       expect(screen.queryByText(definitionsTitle)).toBeNull();
       expect(screen.queryByText(partOfSpeechTitle)).toBeTruthy();
+    });
+  });
+
+  describe("language ordering", () => {
+    test("show glosses in analysis language order before other languages", async () => {
+      await renderEditSenseDialog({
+        analysisLangs: ["es", "en"],
+        sense: {
+          ...newSense(),
+          glosses: [newGloss("sel", "fr"), newGloss("salt", "en")],
+        },
+      });
+
+      const glossRegion = getCardRegion(EditSenseDialogTextId.CardGlosses);
+      const glossFields = getGlossFields();
+
+      expect(glossFields).toHaveLength(3);
+      expect(glossFields[0]).toBe(within(glossRegion).getByLabelText("es"));
+      expect(glossFields[1]).toBe(within(glossRegion).getByLabelText("en"));
+      expect(glossFields[2]).toBe(within(glossRegion).getByLabelText("fr"));
+      expect(glossFields.map((f) => f.value)).toEqual(["", "salt", "sel"]);
+    });
+
+    test("show definitions in analysis language order before other languages", async () => {
+      await renderEditSenseDialog({
+        analysisLangs: ["es", "en"],
+        definitionsEnabled: true,
+        sense: {
+          ...newSense(),
+          definitions: [
+            newDefinition("sel", "fr"),
+            newDefinition("salt", "en"),
+          ],
+        },
+      });
+
+      const defRegion = getCardRegion(EditSenseDialogTextId.CardDefinitions);
+      const defFields = getDefinitionFields();
+      expect(defFields).toHaveLength(3);
+      expect(defFields[0]).toBe(within(defRegion).getByLabelText("es"));
+      expect(defFields[1]).toBe(within(defRegion).getByLabelText("en"));
+      expect(defFields[2]).toBe(within(defRegion).getByLabelText("fr"));
+      expect(defFields.map((f) => f.value)).toEqual(["", "salt", "sel"]);
+    });
+
+    test("save keeps other-language glosses when editing an inserted analysis field", async () => {
+      await renderEditSenseDialog({
+        analysisLangs: ["en", "es"],
+        sense: { ...newSense(), glosses: [newGloss("sel", "fr")] },
+      });
+      await userEvent.type(
+        getTextFieldByLabel(EditSenseDialogTextId.CardGlosses, "es"),
+        "sal"
+      );
+      expect(mockClose).not.toHaveBeenCalled();
+      expect(mockSave).not.toHaveBeenCalled();
+
+      await userEvent.click(screen.getByTestId(EditSenseDialogId.ButtonSave));
+
+      expect(mockClose).toHaveBeenCalledTimes(1);
+      expect(mockSave).toHaveBeenCalledTimes(1);
+      const updatedSense: Sense = mockSave.mock.calls[0][0];
+      const expectedGlosses = [newGloss("sal", "es"), newGloss("sel", "fr")];
+      expect(updatedSense.glosses).toEqual(expectedGlosses);
     });
   });
 });

@@ -114,7 +114,7 @@ namespace BackendFramework
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             // Add URL for React CLI using during development.
-                            .WithOrigins("http://localhost:3000")
+                            .WithOrigins("http://localhost:1234")
                             .AllowCredentials());
                 });
             }
@@ -235,6 +235,9 @@ namespace BackendFramework
             // Mongo context for use in repo contexts
             services.AddSingleton<IMongoDbContext, MongoDbContext>();
 
+            // Acknowledgment Service - Singleton for shared state across requests
+            services.AddSingleton<IAcknowledgmentService, AcknowledgmentService>();
+
             // Banner types
             services.AddTransient<IBannerRepository, BannerRepository>();
 
@@ -259,7 +262,7 @@ namespace BackendFramework
             // Merge types
             services.AddTransient<IMergeBlacklistRepository, MergeBlacklistRepository>();
             services.AddTransient<IMergeGraylistRepository, MergeGraylistRepository>();
-            services.AddSingleton<IMergeService, MergeService>();
+            services.AddTransient<IMergeService, MergeService>();
 
             // Permission types
             services.AddTransient<IPermissionService, PermissionService>();
@@ -274,7 +277,7 @@ namespace BackendFramework
             services.AddTransient<ISpeakerRepository, SpeakerRepository>();
 
             // Statistics types
-            services.AddSingleton<IStatisticsService, StatisticsService>();
+            services.AddTransient<IStatisticsService, StatisticsService>();
 
             // User types
             services.AddTransient<IUserRepository, UserRepository>();
@@ -347,7 +350,8 @@ namespace BackendFramework
 
             // If an admin user has been created via the command line, treat that as a single action and shut the
             // server down so the calling script knows it's been completed successfully or unsuccessfully.
-            var userRepo = app.ApplicationServices.GetService<IUserRepository>();
+            using var startupScope = app.ApplicationServices.CreateScope();
+            var userRepo = startupScope.ServiceProvider.GetService<IUserRepository>();
             if (userRepo is not null && CreateAdminUser(userRepo))
             {
                 _logger.LogInformation("Stopping application");

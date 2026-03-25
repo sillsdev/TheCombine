@@ -1,6 +1,7 @@
 import { Box, Button, Grid2, ImageList, ImageListItem } from "@mui/material";
 import { ReactElement } from "react";
 
+import DomainCountBadge from "components/TreeView/TreeDepiction/DomainCountBadge";
 import DomainTileButton, {
   DomainText,
 } from "components/TreeView/TreeDepiction/DomainTileButton";
@@ -34,6 +35,8 @@ function CurrentTile(props: TreeRowProps): ReactElement {
       variant="contained"
     >
       <DomainText domain={currentDomain} />
+
+      <DomainCountBadge domainId={currentDomain.id} showTooltip />
     </Button>
   );
 }

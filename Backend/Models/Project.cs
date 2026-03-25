@@ -19,6 +19,9 @@ namespace BackendFramework.Models
         [BsonElement("name")]
         public string Name { get; set; }
 
+        [BsonElement("created")]
+        public DateTime? Created { get; set; }
+
         [Required]
         [BsonElement("isActive")]
         public bool IsActive { get; set; }
@@ -120,6 +123,7 @@ namespace BackendFramework.Models
             {
                 Id = Id,
                 Name = Name,
+                Created = Created,
                 IsActive = IsActive,
                 LiftImported = LiftImported,
                 DefinitionsEnabled = DefinitionsEnabled,

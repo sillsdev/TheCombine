@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -8,34 +7,30 @@ using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Otel;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BackendFramework.Services
 {
     /// <summary> More complex functions and application logic for <see cref="Word"/>s </summary>
-    public class MergeService : IMergeService
+    public class MergeService(IMemoryCache cache, IMergeBlacklistRepository mergeBlacklistRepo,
+        IMergeGraylistRepository mergeGraylistRepo, IWordRepository wordRepo, IWordService wordService) : IMergeService
     {
-        private readonly IMergeBlacklistRepository _mergeBlacklistRepo;
-        private readonly IMergeGraylistRepository _mergeGraylistRepo;
-        private readonly IWordRepository _wordRepo;
-        private readonly IWordService _wordService;
+        private readonly IMemoryCache _cache = cache;
+        private readonly IMergeBlacklistRepository _mergeBlacklistRepo = mergeBlacklistRepo;
+        private readonly IMergeGraylistRepository _mergeGraylistRepo = mergeGraylistRepo;
+        private readonly IWordRepository _wordRepo = wordRepo;
+        private readonly IWordService _wordService = wordService;
 
-        /// <summary> Counter to uniquely id find-duplicates requests. </summary>
-        private ulong _mergeCounter;
-        /// <summary> A dictionary shared by all Projects for storing and retrieving potential duplicates. </summary>
-        private readonly ConcurrentDictionary<string, (ulong, List<List<Word>>?)> _potentialDups;
+        /// <summary> Counter to uniquely id find-duplicates requests across instances. </summary>
+        private static ulong _mergeCounter;
+
+        /// <summary> Lock object for thread-safe cache operations. </summary>
+        private static readonly object _cacheLock = new();
+
+        /// <summary> Cache key prefix for potential duplicates (userId will be appended). </summary>
+        private const string PotentialDupsCacheKeyPrefix = "MergeService_PotentialDups_";
 
         private const string otelTagName = "otel.MergeService";
-
-        public MergeService(IMergeBlacklistRepository mergeBlacklistRepo, IMergeGraylistRepository mergeGraylistRepo,
-            IWordRepository wordRepo, IWordService wordService)
-        {
-            _mergeBlacklistRepo = mergeBlacklistRepo;
-            _mergeGraylistRepo = mergeGraylistRepo;
-            _wordRepo = wordRepo;
-            _wordService = wordService;
-
-            _potentialDups = [];
-        }
 
         /// <summary> Store potential duplicates, but only for the user's most recent duplicates request. </summary>
         /// <param name="userId"> Id of user requesting duplicates. </param>
@@ -45,8 +40,21 @@ namespace BackendFramework.Services
         /// <returns> Counter of the newest request stored. </returns>
         private ulong StoreDups(string userId, ulong counter, List<List<Word>>? dups)
         {
-            return _potentialDups
-                .AddOrUpdate(userId, (counter, dups), (_, v) => counter >= v.Item1 ? (counter, dups) : v).Item1;
+            var cacheKey = PotentialDupsCacheKeyPrefix + userId;
+            var cacheOptions = new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1) };
+
+            // Thread-safe update using lock
+            lock (_cacheLock)
+            {
+                // Update if counter doesn't exceed the cached counter
+                var exists = _cache.TryGetValue(cacheKey, out (ulong, List<List<Word>>?) existingValue);
+                if (!exists || counter >= existingValue.Item1)
+                {
+                    _cache.Set(cacheKey, (counter, dups), cacheOptions);
+                    return counter;
+                }
+                return existingValue.Item1;
+            }
         }
 
         /// <summary> Retrieve potential duplicates for a user. </summary>
@@ -54,26 +62,43 @@ namespace BackendFramework.Services
         /// <returns> List of Lists of potential duplicate Words. </returns>
         public List<List<Word>>? RetrieveDups(string userId)
         {
-            _potentialDups.TryRemove(userId, out var dups);
-            return dups.Item2;
+            // Thread-safe update using lock
+            lock (_cacheLock)
+            {
+                var cacheKey = PotentialDupsCacheKeyPrefix + userId;
+                if (_cache.TryGetValue(cacheKey, out (ulong, List<List<Word>>?) value))
+                {
+                    _cache.Remove(cacheKey);
+                    return value.Item2;
+                }
+                return null;
+            }
         }
 
         /// <summary> Prepares a merge parent to be added to the database. </summary>
         /// <returns> Word to add. </returns>
+        /// <remarks>
+        /// If the parent has the same guid as a child:
+        /// * ensures their ids also match;
+        /// * changes UsingCitationForm to false if their Vernaculars differ.
+        /// </remarks>
         private async Task<Word> MergePrepParent(string projectId, MergeWords mergeWords)
         {
             var parent = mergeWords.Parent.Clone();
             parent.ProjectId = projectId;
-            parent.History = new List<string>();
+            parent.History = [];
 
             foreach (var childSource in mergeWords.Children)
             {
                 var child = await _wordRepo.GetWord(projectId, childSource.SrcWordId)
                     ?? throw new KeyNotFoundException($"Unable to locate word: ${childSource.SrcWordId}");
 
+                // We can assume only one child has the same guid as the parent. If that is somehow not the case,
+                // only one will be updated to the parent and the rest deleted, which is okay.
                 if (child.Guid == parent.Guid)
                 {
                     // Update parent's UsingCitationForm.
+                    parent.Id = child.Id;
                     parent.UsingCitationForm = child.UsingCitationForm && parent.Vernacular == child.Vernacular;
                 }
 
@@ -98,64 +123,46 @@ namespace BackendFramework.Services
             return parent;
         }
 
-        /// <summary> Deletes all the merge children from the frontier. </summary>
-        /// <returns> Number of words deleted. </returns>
-        private async Task<long> MergeDeleteChildren(string projectId, MergeWords mergeWords)
-        {
-            var childIds = mergeWords.Children.Select(c => c.SrcWordId).ToList();
-            return await _wordRepo.DeleteFrontier(projectId, childIds);
-        }
-
         /// <summary>
-        /// Given a list of MergeWords, preps the words to be added, removes the children
-        /// from the frontier, and adds the new words to the database.
+        /// Given a list of MergeWords: preps all the parents from their children;
+        /// then creates the parents (updating from a child if they have the same guid);
+        /// then removes from the frontier the children that weren't updated.
         /// </summary>
         /// <returns> List of new words added. </returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when a parent word has a different project id or a child id isn't in Frontier.
+        /// </exception>
         public async Task<List<Word>> Merge(string projectId, string userId, List<MergeWords> mergeWordsList)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "merging words");
 
-            var keptWords = mergeWordsList.Where(m => !m.DeleteOnly);
-            var newWords = keptWords.Select(m => MergePrepParent(projectId, m).Result).ToList();
-            await Task.WhenAll(mergeWordsList.Select(m => MergeDeleteChildren(projectId, m)));
-            return await _wordService.Create(userId, newWords);
+            // Prep parents
+            var parentsToPrep = mergeWordsList.Where(m => !m.DeleteOnly);
+            var parents = await Task.WhenAll(parentsToPrep.Select(m => MergePrepParent(projectId, m)));
+
+            // Consolidate children ids
+            var childrenIds = mergeWordsList.SelectMany(m => m.Children.Select(c => c.SrcWordId)).ToHashSet();
+            return await _wordService.MergeReplaceFrontier(projectId, userId, parents.ToList(), childrenIds.ToList());
         }
 
         /// <summary> Undo merge </summary>
-        /// <returns> True if merge was successfully undone </returns>
+        /// <returns> A bool: true if merge children were successfully restored </returns>
+        /// <exception cref="ArgumentException"> Thrown when ids to restore and delete are not disjoint. </exception>
         public async Task<bool> UndoMerge(string projectId, string userId, MergeUndoIds ids)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "undoing merge");
 
-            foreach (var parentId in ids.ParentIds)
-            {
-                var parentWord = (await _wordRepo.GetWord(projectId, parentId))?.Clone();
-                if (parentWord is null)
-                {
-                    return false;
-                }
-            }
-
-            // If children are not restorable, return without any undo.
-            if (!await _wordService.RestoreFrontierWords(projectId, ids.ChildIds))
-            {
-                return false;
-            }
-            foreach (var parentId in ids.ParentIds)
-            {
-                await _wordService.DeleteFrontierWord(projectId, userId, parentId);
-            }
-            return true;
+            return await _wordService.RevertMergeReplaceFrontier(projectId, userId, ids.ChildIds, ids.ParentIds);
         }
 
         /// <summary> Adds a List of wordIds to MergeBlacklist of specified <see cref="Project"/>. </summary>
         /// <exception cref="InvalidMergeWordSetException"> Throws when wordIds has count less than 2. </exception>
         /// <returns> The <see cref="MergeWordSet"/> created. </returns>
-        public async Task<MergeWordSet> AddToMergeBlacklist(
-            string projectId, string userId, List<string> wordIds)
+        public async Task<MergeWordSet> AddToMergeBlacklist(string projectId, string userId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "adding to merge blacklist");
 
+            wordIds = wordIds.Distinct().ToList();
             if (wordIds.Count < 2)
             {
                 throw new InvalidMergeWordSetException("Cannot blacklist a list of fewer than 2 wordIds.");
@@ -179,8 +186,7 @@ namespace BackendFramework.Services
         /// <summary> Adds a List of wordIds to MergeGraylist of specified <see cref="Project"/>. </summary>
         /// <exception cref="InvalidMergeWordSetException"> Throws when wordIds has count less than 2. </exception>
         /// <returns> The <see cref="MergeWordSet"/> created. </returns>
-        public async Task<MergeWordSet> AddToMergeGraylist(
-            string projectId, string userId, List<string> wordIds)
+        public async Task<MergeWordSet> AddToMergeGraylist(string projectId, string userId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "adding to merge graylist");
 
@@ -207,8 +213,7 @@ namespace BackendFramework.Services
         /// <summary> Remove a List of wordIds from MergeGraylist of specified <see cref="Project"/>. </summary>
         /// <exception cref="InvalidMergeWordSetException"> Throws when wordIds has count less than 2. </exception>
         /// <returns> Boolean indicating whether anything was removed. </returns>
-        public async Task<bool> RemoveFromMergeGraylist(
-            string projectId, string userId, List<string> wordIds)
+        public async Task<bool> RemoveFromMergeGraylist(string projectId, string userId, List<string> wordIds)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "removing from merge graylist");
 
@@ -290,11 +295,11 @@ namespace BackendFramework.Services
             {
                 return 0;
             }
-            var frontierWordIds = (await _wordRepo.GetFrontier(projectId)).Select(word => word.Id);
+            var frontierIds = (await _wordRepo.GetAllFrontier(projectId)).Select(word => word.Id).ToHashSet();
             var updateCount = 0;
             foreach (var entry in oldBlacklist)
             {
-                var newIds = entry.WordIds.Where(id => frontierWordIds.Contains(id)).ToList();
+                var newIds = entry.WordIds.Where(frontierIds.Contains).ToList();
                 if (newIds.Count == entry.WordIds.Count)
                 {
                     continue;
@@ -329,11 +334,11 @@ namespace BackendFramework.Services
             {
                 return 0;
             }
-            var frontierWordIds = (await _wordRepo.GetFrontier(projectId)).Select(word => word.Id);
+            var frontierIds = (await _wordRepo.GetAllFrontier(projectId)).Select(word => word.Id).ToHashSet();
             var updateCount = 0;
             foreach (var entry in oldGraylist)
             {
-                var newIds = entry.WordIds.Where(id => frontierWordIds.Contains(id)).ToList();
+                var newIds = entry.WordIds.Where(frontierIds.Contains).ToList();
                 if (newIds.Count == entry.WordIds.Count)
                 {
                     continue;
@@ -385,7 +390,7 @@ namespace BackendFramework.Services
             {
                 return [];
             }
-            var frontier = await _wordRepo.GetFrontier(projectId);
+            var frontier = await _wordRepo.GetAllFrontier(projectId);
             var wordLists = new List<List<Word>> { Capacity = maxLists };
             foreach (var entry in graylist)
             {
@@ -413,7 +418,7 @@ namespace BackendFramework.Services
             {
                 return false;
             }
-            var dups = await GetPotentialDuplicates(projectId, maxInList, maxLists, userId, ignoreProtected);
+            var dups = await GetPotentialDuplicates(projectId, maxInList, maxLists, false, userId, ignoreProtected);
             // Store the potential duplicates for user to retrieve later.
             return StoreDups(userId, counter, dups) == counter;
         }
@@ -421,27 +426,19 @@ namespace BackendFramework.Services
         /// <summary>
         /// Get Lists of potential duplicate <see cref="Word"/>s in specified <see cref="Project"/>'s frontier.
         /// </summary>
-        private async Task<List<List<Word>>> GetPotentialDuplicates(
-            string projectId, int maxInList, int maxLists, string? userId = null, bool ignoreProtected = false)
+        public async Task<List<List<Word>>> GetPotentialDuplicates(string projectId, int maxInList, int maxLists,
+            bool identicalVernacular, string? userId = null, bool ignoreProtected = false)
         {
             var dupFinder = new DuplicateFinder(maxInList, maxLists, 2);
 
-            var collection = await _wordRepo.GetFrontier(projectId);
+            var collection = await _wordRepo.GetAllFrontier(projectId);
             async Task<bool> isUnavailableSet(List<string> wordIds) =>
                 (await IsInMergeBlacklist(projectId, wordIds, userId)) ||
                 (await IsInMergeGraylist(projectId, wordIds, userId));
 
-            // First pass, only look for words with identical vernacular.
-            var wordLists = await dupFinder.GetIdenticalVernWords(collection, isUnavailableSet, ignoreProtected);
-
-            // If no such sets found, look for similar words.
-            if (wordLists.Count == 0)
-            {
-                collection = await _wordRepo.GetFrontier(projectId);
-                wordLists = await dupFinder.GetSimilarWords(collection, isUnavailableSet, ignoreProtected);
-            }
-
-            return wordLists;
+            return identicalVernacular
+                ? await dupFinder.GetIdenticalVernWords(collection, isUnavailableSet, ignoreProtected)
+                : await dupFinder.GetSimilarWords(collection, isUnavailableSet, ignoreProtected);
         }
 
         public sealed class InvalidMergeWordSetException : Exception

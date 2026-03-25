@@ -34,6 +34,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns all <see cref="Project"/>s </summary>
+        /// <remarks> Can only be used by a site admin. </remarks>
         [HttpGet(Name = "GetAllProjects")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Project>))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]

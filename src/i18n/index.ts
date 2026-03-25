@@ -4,6 +4,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import Backend, { type HttpBackendOptions } from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
 
+import { uiLanguage } from "backend";
 import { getCurrentUser } from "backend/localStorage";
 import { i18nFallbacks, i18nLangs } from "types/writingSystem";
 
@@ -32,23 +33,34 @@ i18n
       fallbackLng: i18nFallbacks,
       interpolation: { escapeValue: false },
     },
-    setDir // Callback function to set the direction ("ltr" vs "rtl") after i18n has initialized
+    setDir // Callback after i18n has initialized
   );
 
+/** Sets the text direction ("ltr" or "rtl") based on the current language. */
 function setDir(): void {
   document.body.dir = i18n.dir();
 }
 
-/** Updates `i18n`'s resolved language to the user-specified ui language (if different).
+/** Updates `i18n`'s resolved language to the user-specified UI language (if
+ * different) and logs the UI language.
  *
  * Returns `boolean` of whether the resolved language was updated. */
 export async function updateLangFromUser(): Promise<boolean> {
   const uiLang = getCurrentUser()?.uiLang;
+  let updated = false;
   if (uiLang && uiLang !== i18n.resolvedLanguage) {
     await i18n.changeLanguage(uiLang, setDir);
-    return true;
+    updated = true;
   }
-  return false;
+
+  // Log the UI language even if not changed, because we don't log it on i18n
+  // init or before login (to avoid having languages different from a user's
+  // preference cluttering the analytics).
+  uiLanguage(i18n.resolvedLanguage ?? "").catch((err) =>
+    console.warn("Failed to log UI language:", err)
+  );
+
+  return updated;
 }
 
 export default i18n;

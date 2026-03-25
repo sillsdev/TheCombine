@@ -16,21 +16,15 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/merge")]
-    public class MergeController : Controller
+    public class MergeController(IAcknowledgmentService ackService, IMergeService mergeService,
+        IHubContext<MergeHub> notifyService, IPermissionService permissionService) : Controller
     {
-        private readonly IMergeService _mergeService;
-        private readonly IHubContext<MergeHub> _notifyService;
-        private readonly IPermissionService _permissionService;
+        private readonly IAcknowledgmentService _ackService = ackService;
+        private readonly IMergeService _mergeService = mergeService;
+        private readonly IHubContext<MergeHub> _notifyService = notifyService;
+        private readonly IPermissionService _permissionService = permissionService;
 
         private const string otelTagName = "otel.MergeController";
-
-        public MergeController(
-            IMergeService mergeService, IHubContext<MergeHub> notifyService, IPermissionService permissionService)
-        {
-            _mergeService = mergeService;
-            _notifyService = notifyService;
-            _permissionService = permissionService;
-        }
 
         /// <summary> Merge children <see cref="Word"/>s with the parent </summary>
         /// <returns> List of ids of new words </returns>
@@ -62,10 +56,11 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Undo merge </summary>
-        /// <returns> True if merge was successfully undone </returns>
+        /// <returns> Ok if merge was successfully undone </returns>
         [HttpPut("undo", Name = "UndoMerge")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UndoMerge(string projectId, [FromBody, BindRequired] MergeUndoIds merge)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "undoing merge");
@@ -77,8 +72,7 @@ namespace BackendFramework.Controllers
             }
             var userId = _permissionService.GetUserId(HttpContext);
 
-            var undo = await _mergeService.UndoMerge(projectId, userId, merge);
-            return Ok(undo);
+            return await _mergeService.UndoMerge(projectId, userId, merge) ? Ok() : NotFound();
         }
 
         /// <summary> Add List of <see cref="Word"/>Ids to merge blacklist </summary>
@@ -121,6 +115,35 @@ namespace BackendFramework.Controllers
             return Ok(graylistEntry.WordIds);
         }
 
+        /// <summary> Find and return lists of potential duplicates with identical vernacular. </summary>
+        /// <param name="projectId"> Id of project in which to search the frontier for potential duplicates. </param>
+        /// <param name="maxInList"> Max number of words allowed within a list of potential duplicates. </param>
+        /// <param name="maxLists"> Max number of lists of potential duplicates. </param>
+        /// <param name="ignoreProtected"> Whether to require each set to have at least one unprotected word. </param>
+        /// <returns> List of Lists of <see cref="Word"/>s, each sublist a set of potential duplicates. </returns>
+        [HttpGet("findidenticaldups/{maxInList:int}/{maxLists:int}/{ignoreProtected:bool}", Name = "FindIdenticalPotentialDuplicates")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<List<Word>>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> FindIdenticalPotentialDuplicates(
+            string projectId, int maxInList, int maxLists, bool ignoreProtected)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "finding identical potential duplicates");
+
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.MergeAndReviewEntries, projectId))
+            {
+                return Forbid();
+            }
+
+            await _mergeService.UpdateMergeBlacklist(projectId);
+
+            var userId = _permissionService.GetUserId(HttpContext);
+            var dups = await _mergeService.GetPotentialDuplicates(
+                projectId, maxInList, maxLists, identicalVernacular: true, userId, ignoreProtected);
+
+            return Ok(dups);
+        }
+
         /// <summary> Start finding lists of potential duplicates for merging. </summary>
         /// <param name="projectId"> Id of project in which to search the frontier for potential duplicates. </param>
         /// <param name="maxInList"> Max number of words allowed within a list of potential duplicates. </param>
@@ -155,13 +178,14 @@ namespace BackendFramework.Controllers
         internal async Task<bool> GetDuplicatesThenSignal(
             string projectId, int maxInList, int maxLists, string userId, bool ignoreProtected = false)
         {
-            var success = await _mergeService.GetAndStorePotentialDuplicates(
+            var proceed = await _mergeService.GetAndStorePotentialDuplicates(
                 projectId, maxInList, maxLists, userId, ignoreProtected);
-            if (success)
+            if (proceed)
             {
-                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId);
+                await _ackService.SendWithRetry(userId,
+                    requestId => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId));
             }
-            return success;
+            return proceed;
         }
 
         /// <summary> Retrieve current user's potential duplicates for merging. </summary>

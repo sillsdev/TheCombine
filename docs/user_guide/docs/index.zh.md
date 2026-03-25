@@ -15,3 +15,9 @@ The Combine 是一个支持
 关于如何收集数据，请参阅我们的[词条输入](dataEntry.md)页面。
 
 关于编辑和整理所收集数据的工具，请参阅我们的[数据清理](goals.md)页面。
+
+## Need Help?
+
+- [Product page:](https://software.sil.org/thecombine/) Learn more and get support.
+- [Community forum:](https://community.software.sil.org/c/combine/46) Ask questions and see what's new.
+- [RWC videos:](https://vimeo.com/showcase/10203338) Look for "The Combine - " titles for 5-minute tutorials.

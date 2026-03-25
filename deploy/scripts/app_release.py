@@ -40,7 +40,7 @@ def get_release() -> str:
 def set_release(release_id: str, dest_file: Path) -> None:
     """Create a release.js file to hold the release name of The Combine."""
     if not dest_file.parent.exists():
-        dest_file.parent.mkdir()
+        dest_file.parent.mkdir(parents=True)
     dest_file.write_text(f'window["release"] = "{release_id}";\n')
 
 

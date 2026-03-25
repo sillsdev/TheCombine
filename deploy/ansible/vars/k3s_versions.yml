@@ -1,5 +1,7 @@
 ---
 k3s_version: "v1.30.1%2Bk3s1"
+# kubectl_version should match GitHub repo variable KUBECTL_VERSION found at:
+# Settings > Secrets and variables > Actions > Variables > Repository variables
 kubectl_version: "v1.30.2"
 helm_version: "v3.15.2"
 cpu_arch: "amd64"

@@ -1,6 +1,6 @@
 import { FiberManualRecord } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -30,56 +30,46 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   const recordingId = useAppSelector(
     (state: StoreState) => state.pronunciationsState.wordId
   );
-  const isRecordingThis = isRecording && recordingId === props.id;
 
   const dispatch = useAppDispatch();
   const [hasMic, setHasMic] = useState(false);
   const { t } = useTranslation();
 
-  useEffect(() => {
-    checkMicPermission().then(setHasMic);
-  }, []);
+  // Use refs to for the useEffect cleanup.
+  const stopRef = useRef<(() => void) | undefined>();
 
-  async function toggleIsRecordingToTrue(): Promise<void> {
-    if (!isRecording) {
-      // Only start a recording if there's not another on in progress.
-      if (await props.startRecording()) {
-        dispatch(recording(props.id));
-      }
-    } else {
-      // This triggers if user clicks-and-holds on one entry's record icon,
-      // drags the mouse outside that icon before releasing,
-      // then clicks-and-holds a different entry's record icon.
-      if (recordingId !== props.id) {
-        console.error(
-          "Tried to record for an entry before finishing a recording on another entry."
-        );
-      }
-    }
-  }
-  function toggleIsRecordingToFalse(): void {
+  const isRecordingThis = isRecording && recordingId === props.id;
+  const disabled =
+    props.disabled || !hasMic || (isRecording && !isRecordingThis);
+
+  const stop = (): void => {
     if (isRecordingThis) {
       props.stopRecording();
       dispatch(resetPronunciations());
     }
-  }
+  };
+  stopRef.current = stop;
 
-  function handleTouchStart(): void {
-    // Temporarily disable context menu since some browsers
-    // interpret a long-press touch as a right-click.
-    document.addEventListener("contextmenu", disableContextMenu, false);
-  }
-  function handleTouchEnd(): void {
-    enableContextMenu();
-  }
+  useEffect(() => {
+    checkMicPermission().then(setHasMic);
 
-  function disableContextMenu(event: any): void {
-    event.preventDefault();
-    enableContextMenu();
-  }
-  function enableContextMenu(): void {
-    document.removeEventListener("contextmenu", disableContextMenu, false);
-  }
+    return () => {
+      // Reset recording state if this component unmounts while recording
+      // (e.g., navigating away from the page mid-recording).
+      stopRef.current?.();
+    };
+  }, []);
+
+  const start = async (): Promise<void> => {
+    if (isRecording) {
+      return;
+    }
+
+    // Only start a recording if there's not another one in progress.
+    if (await props.startRecording()) {
+      dispatch(recording(props.id));
+    }
+  };
 
   const tooltipId = hasMic
     ? "pronunciations.recordTooltip"
@@ -89,26 +79,26 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
     <Tooltip
       disableTouchListener // Distracting when already recording with a long-press.
       placement="top"
-      title={!props.disabled && t(tooltipId)}
+      title={disabled ? undefined : t(tooltipId)}
     >
       <span>
         <IconButton
           aria-label="record"
           data-testid={recordButtonId}
-          disabled={props.disabled || !hasMic}
+          disabled={disabled}
           id={recordButtonId}
-          onBlur={toggleIsRecordingToFalse}
-          onPointerDown={toggleIsRecordingToTrue}
-          onPointerUp={toggleIsRecordingToFalse}
-          onTouchEnd={handleTouchEnd}
-          onTouchStart={handleTouchStart}
+          onBlur={stop}
+          onContextMenu={(e) => e.preventDefault()}
+          onPointerCancel={stop}
+          onPointerDown={start}
+          onPointerUp={stop}
           size="large"
           tabIndex={-1}
         >
           <FiberManualRecord
             sx={{
               color: (t) =>
-                props.disabled || !hasMic
+                disabled
                   ? t.palette.grey[400]
                   : isRecordingThis
                     ? themeColors.recordActive

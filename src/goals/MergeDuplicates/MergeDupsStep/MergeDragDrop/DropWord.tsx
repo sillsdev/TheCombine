@@ -1,5 +1,4 @@
 import { Droppable } from "@hello-pangea/dnd";
-import { WarningOutlined } from "@mui/icons-material";
 import {
   Card,
   CardContent,
@@ -13,12 +12,10 @@ import { useTranslation } from "react-i18next";
 
 import { type Flag } from "api/models";
 import FlagButton from "components/Buttons/FlagButton";
-import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import NoteButton from "components/Buttons/NoteButton";
-import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import { AudioSummary } from "components/WordCard";
 import DragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DragSense";
-import { protectReasonsText } from "goals/MergeDuplicates/MergeDupsStep/protectReasonUtils";
+import ProtectedWarningIcon from "goals/MergeDuplicates/MergeDupsStep/ProtectedWarningIcon";
 import { type MergeTreeWord } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import {
   flagWord,
@@ -26,7 +23,6 @@ import {
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
-import theme from "types/theme";
 import { TypographyWithFont } from "utilities/fontComponents";
 
 interface DropWordProps {
@@ -48,13 +44,9 @@ export default function DropWord(props: DropWordProps): ReactElement {
     treeWord?.protected && Object.keys(sensesGuids).length === 1;
 
   return (
-    <Card
-      style={{
-        backgroundColor: "lightgrey",
-        paddingBottom: theme.spacing(1),
-      }}
-    >
+    <Card sx={{ backgroundColor: "lightgrey", pb: 1 }}>
       <DropWordCardHeader treeWord={treeWord} wordId={props.wordId} />
+
       <CardContent>
         <Droppable
           key={props.wordId}
@@ -112,8 +104,6 @@ export function DropWordCardHeader(
     (state: StoreState) => state.mergeDuplicateGoal.audio
   );
 
-  const { t } = useTranslation();
-
   const dispatchFlagWord = (flag: Flag): void => {
     dispatch(flagWord({ wordId: props.wordId, flag }));
   };
@@ -161,22 +151,13 @@ export function DropWordCardHeader(
     <div />
   );
 
-  const tooltipTexts = [t("mergeDups.helpText.protectedWord")];
-  const reasons = words[props.wordId]?.protectReasons;
-  if (reasons?.length) {
-    tooltipTexts.push(protectReasonsText(t, { word: reasons }));
-  }
-  tooltipTexts.push(t("mergeDups.helpText.protectedWordInfo"));
-
   const headerAction = treeWord ? (
     <>
       {treeWord?.protected && (
-        <IconButtonWithTooltip
-          buttonId={`word-${props.wordId}-protected`}
-          icon={<WarningOutlined />}
-          side="top"
-          size="small"
-          text={<MultilineTooltipTitle lines={tooltipTexts} />}
+        <ProtectedWarningIcon
+          id={props.wordId}
+          protectReasons={words[props.wordId]?.protectReasons}
+          senseOrWord="word"
         />
       )}
       <AudioSummary count={audioCount} />
@@ -195,11 +176,11 @@ export function DropWordCardHeader(
     <CardHeader
       title={headerTitle}
       action={headerAction}
-      style={{
+      sx={{
         backgroundColor: treeWord?.protected ? "lightyellow" : "white",
         minHeight: 44,
         minWidth: 150,
-        padding: theme.spacing(1),
+        p: 1,
       }}
     />
   );

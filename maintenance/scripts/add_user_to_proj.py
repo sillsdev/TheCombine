@@ -83,7 +83,7 @@ def main() -> None:
             print(f"Could not update role for {args.user}, the project owner", file=sys.stderr)
             sys.exit(1)
         # Update the role
-        update_role = f'{{ $set: {{"role" : {args.role}}} }}'
+        update_role = f'{{ $set: {{"role" : "{args.role}"}} }}'
         upd_result = combine.db_cmd(
             f"db.UserRolesCollection.findOneAndUpdate({select_role}, {update_role})"
         )
@@ -96,7 +96,7 @@ def main() -> None:
         #  4. The user is not in the project
         #    a. create a document in the UserRolesCollection,
         #    b. set the role field in the user role to the requested role.
-        insert_doc = f'{{ "role" : {args.role}, "projectId" : "{proj_id}" }}'
+        insert_doc = f'{{ "role" : "{args.role}", "projectId" : "{proj_id}" }}'
         insert_result = combine.db_cmd(f"db.UserRolesCollection.insertOne({insert_doc})")
         if insert_result is not None:
             # c. add the new role to the user's document in the UsersCollection

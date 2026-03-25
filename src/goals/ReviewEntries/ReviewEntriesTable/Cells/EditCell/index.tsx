@@ -11,9 +11,7 @@ export default function EditCell(props: CellProps): ReactElement {
   const [open, setOpen] = useState(false);
 
   const handleConfirm = async (newId: string): Promise<void> => {
-    if (props.replace) {
-      await props.replace(props.word.id, newId);
-    }
+    await props.replace(props.word.id, newId);
   };
 
   return (

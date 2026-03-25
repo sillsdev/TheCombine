@@ -22,7 +22,6 @@ const mockUser = {
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
   jest.useFakeTimers();
 });
 

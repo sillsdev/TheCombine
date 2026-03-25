@@ -63,6 +63,7 @@ models/status.ts
 models/user-created-project.ts
 models/user-edit-step-wrapper.ts
 models/user-edit.ts
+models/user-project-info.ts
 models/user-role.ts
 models/user-stub.ts
 models/user.ts

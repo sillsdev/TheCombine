@@ -6,7 +6,6 @@ import CharacterInfo from "goals/CharacterInventory/CharInv/CharacterDetail/Char
 import CharacterStatusControl from "goals/CharacterInventory/CharInv/CharacterDetail/CharacterStatusControl";
 import CharacterWords from "goals/CharacterInventory/CharInv/CharacterDetail/CharacterWords";
 import FindAndReplace from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace";
-import theme from "types/theme";
 
 interface CharacterDetailProps {
   character: string;
@@ -24,7 +23,7 @@ export default function CharacterDetail(
       direction="row"
       justifyContent="flex-start"
       alignItems="center"
-      style={{ padding: theme.spacing(1) }}
+      sx={{ p: 1 }}
     >
       <Grid2 size={3}>
         <Typography variant="h1" align="center">

@@ -10,12 +10,13 @@
     "privacyPolicy": "Politique de confidentialité",
     "descriptionP1": "Les mots sont les fondements de la langue, essentiels à la communication de l’information et au partage de la culture. Un dictionnaire, rempli de mots et de significations, est une ressource linguistique fondamentale, aidant à documenter et à préserver la langue pour les générations futures au sein de la communauté et fournissant un pont pour la communication avec d'autres communautés. Malheureusement, de nombreuses communautés de langue minoritaire dans le monde ne disposent pas de telles ressources dans leur langue. Ceci les désavantage.",
     "descriptionP2": "The Combine est un outil facile à utiliser dans le processus Rapid Word Collection (RWC) — une méthode de rassembler des mots qui servira de base à un dictionnaire bilingue. Au cœur du processus du RWC se trouvent les locuteurs natifs d’une communauté linguistique particulière. Présenté avec un champ sémantique à la fois un groupe de 4-6 locuteurs natifs arrive avec autant de mots dans leur langue qu'ils peuvent le penser sont liés à ce domaine. The Combine facilite la saisie de ces mots dans une base de données, ainsi que les traductions, enregistrements audio, et notes, pour mieux saisir leur forme et leur signification.",
-    "descriptionP3": "Les personnes ayant peu de connaissances linguistiques préalables et une expérience informatique limitée peuvent être rapidement formées à l'utilisation des principales fonctions de récolte de mots de The Combine. Les mots obtenus peuvent ensuite être organisés et édités dans The Combine avant d'exporter les données pour les utiliser dans un autre outil tel que FLEx.",
+    "descriptionP3": "Les personnes ayant peu de connaissances linguistiques préalables et une expérience informatique limitée peuvent être rapidement formées à l'utilisation des principales fonctions de récolte de mots de The Combine. Les mots obtenus peuvent ensuite être organisés et édités dans The Combine avant d'exporter les données pour les utiliser dans un autre outil tel que FieldWorks.",
     "descriptionP4": "Inscrivez-vous pour commencer votre collection de mots !"
   },
   "treeView": {
     "findDomain": "Chercher un domaine",
-    "domainNotFound": "Champ sémantique introuvable"
+    "domainNotFound": "Champ sémantique introuvable",
+    "returnToTop": "Retourner en haut de l'arborescence des domaines."
   },
   "addWords": {
     "selectEntry": "Choisissez une entrée",
@@ -32,23 +33,35 @@
     "pressEnter": "Appuyez sur Entrée pour enregistrer le mot",
     "vernacular": "Vernaculaire"
   },
-  "analyticsConsent": { "consentModal": {} },
+  "analyticsConsent": {
+    "consentModal": {
+      "acceptAllBtn": "Oui, autoriser toutes les analyses",
+      "acceptNecessaryBtn": "Non, uniquement les analyses nécessaires",
+      "description": "The Combine stocke des informations de base sur votre session actuelle et votre utilisation à des fins de maintenance. Cette information est nécessaire et n'est partagée avec personne. La combinaison utilise également des analyses supplémentaires pour compiler des statistiques anonymes. Acceptez-vous notre utilisation d'analyses supplémentaires ?",
+      "title": "Analyses sur The Combine"
+    }
+  },
   "appBar": {
     "dataEntry": "Saisie de données",
     "dataCleanup": "Nettoyage des données",
     "statistics": "Données statistiques",
     "projectSettings": "Paramètres du projet"
   },
-  "invite": {},
+  "emailVerify": {},
+  "invite": {
+    "invalidInvitationURL": "Le lien d'invitation au projet n'est pas valide."
+  },
   "login": {
     "title": "Ouvrir une session",
     "name": "Votre nom",
     "username": "Nom d'utilisateur",
+    "usernameOrEmail": "Nom d'utilisateur ou adresse courriel",
     "password": "Mot de passe",
     "passwordRequirements": "Le mot de passe doit comporter 8 caractères ou plus.",
     "forgotPassword": "Mot de passe oublié ?",
     "login": "Connexion",
     "failed": "N'a pas réussi à se connecter. Veuillez vérifier votre nom d'utilisateur et votre mot de passe.",
+    "failedUnknownReason": "Échec de la connexion. Quelque chose n'a pas fonctionné avec The Combine.",
     "backToLogin": "Retour au login",
     "signUp": "S'inscrire",
     "signUpNew": "Inscrire un nouvel utilisateur",
@@ -63,16 +76,20 @@
     "email": "Email"
   },
   "passwordReset": {
+    "invalidURL": "Le lien de réinitialisation du mot de passe n'est pas valide.",
     "emailOrUsername": "Email ou nom d'utilisateur",
     "resetRequestTitle": "Demande de réinitialisation du mot de passe",
     "resetTitle": "Réinitialiser le mot de passe",
     "resetRequestInstructions": "Nous vous enverrons un lien de réinitialisation unique pour votre compte à votre email.",
     "submit": "Soumettre",
     "resetFail": "Erreur de réinitialisation du mot de passe",
+    "resetDone": "Si vous avez correctement saisi votre adresse électronique ou votre nom d'utilisateur, un lien de réinitialisation du mot de passe a été envoyé à votre adresse électronique.",
     "backToLogin": "Retour au login"
   },
-  "captcha": {},
-  "speakerMenu": {},
+  "captcha": {
+    "error": "La vérification de la page a échoué ou a expiré. Veuillez actualiser la page."
+  },
+  "speakerMenu": { "other": "[Aucun ci-dessus]" },
   "userMenu": {
     "siteSettings": "Paramètres du site",
     "userSettings": "Paramètres de l'utilisateur",
@@ -83,13 +100,18 @@
     "name": "Nom du projet",
     "nameTaken": "Nom pris",
     "upload?": "Télécharger des données existantes ?",
+    "uploadFormat": "Le fichier doit être un dossier zippé contenant un projet <1>Lexicon Interchange FormaT (LIFT)</1> .",
     "create": "Créer un projet",
     "fileSelected": "Fichier sélectionné : {{ val }}",
+    "language": "Les informations relatives à la langue du projet seront automatiquement extraites des données téléchargées.",
+    "languageOptionOther": "autre",
     "success": "Projet créé !"
   },
   "selectProject": { "title": "Sélectionner un projet" },
   "siteSettings": {
     "projectList": "Projets",
+    "projectRoles": "Rôles dans le projet",
+    "addProjectUsers": "Ajouter des utilisateurs de projet",
     "archiveProjectText": "Ce projet ne sera accessible à aucun utilisateur.",
     "restoreProjectText": "Quelqu'un avait probablement une bonne raison d'archiver ce projet. Voulez-vous vraiment le restaurer ?",
     "userList": "Utilisateurs",
@@ -104,17 +126,21 @@
     "banners": {
       "title": "Bannières",
       "loginBanner": "Bannière de connexion",
-      "announcementBanner": "Bannière d'annonce"
+      "announcementBanner": "Bannière d'annonce",
+      "bannerCloseButton": "Fermer le volet"
     }
   },
   "userSettings": {
     "analyticsConsent": {},
+    "verifyEmail": {},
     "contact": "Informations de contact",
     "phone": "Numéro de téléphone",
     "uiLanguageDefault": "(Utiliser la langue du navigateur)",
-    "updateSuccess": "Les paramètres ont été mis à jour avec succès."
+    "updateSuccess": "Les paramètres ont été mis à jour avec succès.",
+    "uploadAvatarTitle": "Définir l'avatar de l'utilisateur"
   },
   "projectExport": {
+    "cancelExport": "Annuler l'exportation",
     "cannotExportEmpty": "Le projet est vide. On ne peut pas exporter un projet sans mots."
   },
   "projectSettings": {
@@ -142,29 +168,45 @@
       "makeDefaultAnalysisLanguage": "Faire de cette langue la langue d'analyse par défaut",
       "deleteAnalysisLanguage": "Supprimer cette langue d'analyse",
       "getGlossLanguages": "Trouvez tous les codes de langue utilisés dans les données actuelles",
+      "updateVernacularLanguageNameFailed": "Échec de la mise à jour du nom de la langue vernaculaire",
+      "updateVernacularLanguageNameSuccess": "La langue vernaculaire à été mis à jour !",
       "addAnalysisLanguageFailed": "Échec de l'ajout d'une langue d'analyse",
       "makeDefaultAnalysisLanguageFailed": "Échec de créer la langue d'analyse par défaut",
       "deleteAnalysisLanguageFailed": "Échec de la suppression d'une langue d'analyse",
       "updateSemDomWritingSystemFailed": "Impossible de mettre à jour la langue des champs sémantiques"
     },
     "name": "Nom du projet",
+    "nameUpdateFailed": "Le nom du projet est déjà pris.",
     "user": {
       "currentUsers": "Utilisateurs actuels",
       "addUser": "Ajouter un utilisateur"
     },
-    "roles": {},
+    "roles": {
+      "harvester": "Récolteur",
+      "administrator": "Administrateur",
+      "owner": "Propriétaire"
+    },
     "userManagement": {
+      "removeFromProject": "Retirer du projet",
+      "changeProjectRole": "Changer le rôle dans le projet :",
       "removeUserWarning": "Retirer le droit d'accès à ce projet à cet utilisateur ?",
+      "makeHarvesterWarning": "Faire de cet utilisateur un Récolteur du projet ?",
       "makeAdminWarning": "Faire de cet utilisateur un administrateur de ce projet ?",
       "makeOwnerWarning": "Transférer la propriété de ce projet à cet utilisateur ?",
       "userRemovedToastSuccess": "Utilisateur supprimé du projet.",
       "userRemovedToastFailure": "Échec de retirer le droit d'accès à ce projet à cet utilisateur.",
+      "userRoleUpdateToastSuccess": "Rôle de l'utilisateur mis à jour avec succès.",
       "makeOwnerToastSuccess": "La propriété de ce projet a été transférée.",
       "makeOwnerToastFailure": "Échec de transférer la propriété de ce projet.",
       "manageUser": "Gérer l'utilisateur",
       "reverseOrder": "Ordre inverse"
     },
-    "speaker": { "consent": {} },
+    "speaker": {
+      "consent": {
+        "record": "Enregistrer le consentement audio",
+        "remove": "Supprimer le consentement de cet orateur"
+      }
+    },
     "import": {
       "header": "Importer des données",
       "body": "Les données importées seront ajoutées à ce projet. The Combine ne tentera pas de dédupliquer, d'écraser ou de synchroniser les données.",
@@ -192,7 +234,7 @@
       "on": "Allumé",
       "hint": "En mode « Saisie de données », proposer des mots vernaculaires existants qui se ressemblent au mot que l'on est en train de saisir."
     },
-    "protectedDataOverride": {},
+    "protectedData": { "avoidInMerge": {}, "override": {} },
     "invite": {
       "inviteByEmailLabel": "Inviter par email",
       "userExists": "Cet utilisateur est déjà enregistré.",
@@ -203,7 +245,17 @@
       "toastSuccess": "Utilisateur ajouté au projet.",
       "toastFail": "Échec de l'ajout de l'utilisateur au projet."
     },
-    "domains": { "name": "Nom : ", "addError": {} }
+    "domains": {
+      "subdomainName": "Nom du sous-domaine : ",
+      "name": "Nom : ",
+      "description": "Description : ",
+      "questions": "Questions : ",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce domaine personnalisé ?",
+      "addError": {
+        "name": "Veuillez saisir un nom pour le domaine personnalisé.",
+        "customParent": "Le domaine parent ne peut pas être un sous-domaine personnalisé. Veuillez choisir un autre domaine parent."
+      }
+    }
   },
   "goal": {
     "selector": {
@@ -216,14 +268,32 @@
     "progress": "Étape {{ val1 }} de {{ val2 }}",
     "progressMerge": "Candidats à la Fusion, Groupe {{ val1 }} de {{ val2 }}"
   },
-  "createStrWordInv": { "title": "Créer un inventaire des mots grammaticaux" },
-  "handleFlags": { "title": "Gérer les drapeaux" },
+  "createStrWordInv": {
+    "title": "Créer un inventaire des mots grammaticaux",
+    "description": "NON IMPLÉMENTÉ"
+  },
+  "handleFlags": {
+    "title": "Gérer les drapeaux",
+    "description": "NON IMPLÉMENTÉ"
+  },
   "reviewDeferredDups": { "title": "Examiner les doublons reportés" },
-  "spellCheckGloss": { "title": "Vérifier l'orthographe de glose" },
-  "validateChars": { "title": "Valider les caractères" },
-  "validateStrWords": { "title": "Valider les mots grammaticaux" },
+  "spellCheckGloss": {
+    "title": "Vérifier l'orthographe de glose",
+    "description": "NON IMPLÉMENTÉ"
+  },
+  "validateChars": {
+    "title": "Valider les caractères",
+    "description": "NON IMPLÉMENTÉ"
+  },
+  "validateStrWords": {
+    "title": "Valider les mots grammaticaux",
+    "description": "NON IMPLÉMENTÉ"
+  },
   "reviewEntries": {
     "title": "Examiner les entrées",
+    "allEntriesPerPageOption": "Tous",
+    "editSense": "Modifier le sens",
+    "discardChanges": "Abandonner les modifications ?",
     "noDomain": "Aucun champ sémantique sélectionné",
     "deleteWordWarning": "Ce mot sera définitivement supprimé !",
     "deleteDisabled": "Ceci a été importé avec des données que The Combine ne traite pas ; il ne peut donc pas être supprimé.",
@@ -243,8 +313,11 @@
       "senses": "Sens",
       "vernacular": "Vernaculaire"
     },
-    "completed": {},
-    "undo": { "undoDisabled": "Annuler indisponible" }
+    "completed": { "number": "Nombre d'entrées modifiées: " },
+    "undo": {
+      "undo": "Annuler l'édition",
+      "undoDisabled": "Annuler indisponible"
+    }
   },
   "charInventory": {
     "title": "Vérifier l'orthographe",
@@ -273,8 +346,14 @@
       "yes": "Oui",
       "no": "Non"
     },
-    "changes": { "more": "plus" },
-    "undo": { "undoDisabled": "Annuler indisponible" }
+    "changes": {
+      "noCharChanges": "Aucune modification n'a été apportée à l'inventaire des caractères.",
+      "more": "plus"
+    },
+    "undo": {
+      "undo": "Annuler Rechercher-Remplacer",
+      "undoDisabled": "Annuler indisponible"
+    }
   },
   "mergeDups": {
     "title": "Fusionner les doublons",
@@ -288,9 +367,11 @@
       "protectedSense": "Ce sens a été importé avec des données que The Combine ne gère pas.",
       "protectedSenseInfo": "Ce sens ne peut donc pas être supprimé ou déposé dans un autre sens en toute sécurité. Vous pouvez toujours déplacer ce sens vers un autre mot ou déposer d'autres sens dans celui-ci pour les fusionner.",
       "protectedWord": "Ce mot a été importé avec des données que The Combine ne traite pas.",
-      "protectedWordInfo": "Pour éviter qu'il ne soit supprimé, le sens final de ce mot ne peut être supprimé en toute sécurité."
+      "protectedWordInfo": "Pour éviter qu'il ne soit supprimé, le sens final de ce mot ne peut être supprimé en toute sécurité.",
+      "deleteProtectedSenseWarning": "Vous ne pouvez pas supprimer un sens protégé.",
+      "dropIntoSidebarWarning": "Vous ne pouvez pas déposer de sens dans la barre latérale."
     },
-    "protectReason": {},
+    "protectReason": { "etymologies": "étymologies" },
     "completed": { "number": "Nombre de fusions réalisées : " },
     "continueDialog": {
       "title": "Poursuivre la fusion ?",

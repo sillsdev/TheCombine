@@ -42,7 +42,6 @@ async function renderCharInvCreation(): Promise<void> {
 }
 
 beforeEach(async () => {
-  jest.resetAllMocks();
   await renderCharInvCreation();
 });
 

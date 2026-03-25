@@ -9,10 +9,6 @@ global.fetch = () =>
   } as any as Response);
 const mockFetchText = jest.fn();
 
-beforeEach(() => {
-  jest.resetAllMocks();
-});
-
 describe("fontCssUtilities", () => {
   describe("fetchCss", () => {
     it("handles sources", async () => {

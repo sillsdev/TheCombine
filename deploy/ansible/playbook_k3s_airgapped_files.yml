@@ -15,8 +15,8 @@
 
 - name: Build package for k3s airgap installation
   hosts: localhost
-  gather_facts: yes
-  become: no
+  gather_facts: True
+  become: False
 
   vars_files:
     - "vars/k3s_versions.yml"
@@ -40,7 +40,7 @@
       shell:
         cmd: sha256sum --check --ignore-missing sha256sum-{{ cpu_arch }}.txt
         chdir: "{{ package_dir }}"
-      changed_when: false
+      changed_when: False
 
     - name: Download k3s install script
       get_url:

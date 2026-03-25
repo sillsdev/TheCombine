@@ -17,7 +17,6 @@ export enum SenseCardLabel {
 
 interface SenseCardProps {
   bgColor?: string;
-  languages?: string[];
   minimal?: boolean;
   provenance?: boolean;
   sense: Sense;
@@ -43,11 +42,7 @@ export default function SenseCard(props: SenseCardProps): ReactElement {
         </div>
 
         {/* Glosses and (if any) definitions */}
-        <SenseCardText
-          hideDefs={props.minimal}
-          languages={props.languages}
-          sense={props.sense}
-        />
+        <SenseCardText hideDefs={props.minimal} sense={props.sense} />
 
         {/* Semantic domains */}
         <DomainChipsGrid provenance={props.provenance} semDoms={semDoms} />

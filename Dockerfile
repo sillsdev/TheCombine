@@ -7,7 +7,7 @@
 ############################################################
 
 # User guide build environment
-FROM python:3.12.10-slim-bookworm AS user_guide_builder
+FROM python:3.12.12-slim-bookworm@sha256:28cf028e5a544e92dbe11450debd93dd5eb70eaf3179a9e878cfaee426556b3b AS user_guide_builder
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -24,19 +24,20 @@ COPY docs/user_guide docs/user_guide
 RUN tox -e user-guide
 
 # Frontend build environment.
-FROM node:22.17.0-bookworm-slim AS frontend_builder
+FROM node:22.21.1-bookworm-slim@sha256:7378f5a4830ef48eb36d1abf4ef398391db562b5c41a0bded83192fbcea21cc8 AS frontend_builder
 WORKDIR /app
 
 # Install app dependencies.
+COPY .npmrc ./
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --ignore-scripts
 
 # Build application.
 COPY . ./
 RUN npm run build
 
 # Production environment.
-FROM nginx:1.28.0
+FROM nginx:1.29.4@sha256:ca871a86d45a3ec6864dc45f014b11fe626145569ef0e74deaffc95a3b15b430
 
 WORKDIR /app
 
@@ -51,8 +52,9 @@ RUN mkdir ${FRONTEND_HOST_DIR}/url_moved
 
 # Setup web content
 COPY --from=user_guide_builder /app/docs/user_guide/site ${HOST_DIR}/user_guide
-COPY --from=frontend_builder /app/build ${FRONTEND_HOST_DIR}
+COPY --from=frontend_builder /app/dist ${FRONTEND_HOST_DIR}
 COPY public/dictionaries ${HOST_DIR}/dictionaries
+COPY public/locales ${FRONTEND_HOST_DIR}/locales
 COPY nginx/pages/url_moved_home.html /etc/nginx/page_templates/url_moved_home.html
 COPY public/favicon.ico ${FRONTEND_HOST_DIR}/url_moved/favicon.ico
 COPY src/resources/tractor.png ${FRONTEND_HOST_DIR}/url_moved/tractor.png

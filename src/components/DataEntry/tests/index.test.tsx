@@ -41,7 +41,6 @@ const mockStore = createMockStore();
 const mdWidth = 900;
 
 beforeEach(() => {
-  jest.clearAllMocks();
   mockGetSemanticDomainFull.mockResolvedValue(undefined);
 });
 

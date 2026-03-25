@@ -22,6 +22,7 @@ import {
   Speaker,
   User,
   UserEdit,
+  UserProjectInfo,
   UserRole,
   UserStub,
   Word,
@@ -53,13 +54,14 @@ const authenticationUrls = [
 ];
 
 /** A list of URL patterns for which the frontend explicitly handles errors
- * and the blanket error pop ups should be suppressed.*/
+ * and the blanket error pop-ups should be suppressed.*/
 const whiteListedErrorUrls = [
   "/merge/retrievedups",
-  "/speakers/create/",
+  "/speakers/create",
   "/speakers/update/",
   "/users/authenticate",
   "/users/captcha/",
+  "/users/uilanguage",
 ];
 
 // Create an axios instance to allow for attaching interceptors to it.
@@ -152,7 +154,6 @@ export async function uploadAudio(
   wordId: string,
   file: FileWithSpeakerId
 ): Promise<string> {
-  console.info(file);
   const projectId = LocalStorage.getProjectId();
   const speakerId = file.speakerId ?? "";
   const params = { projectId, wordId, file };
@@ -338,12 +339,12 @@ export async function mergeWords(mergeWords: MergeWords[]): Promise<string[]> {
 }
 
 /** Restores words that were previously merged and deletes the merge result. */
-export async function undoMerge(wordIds: MergeUndoIds): Promise<boolean> {
+export async function undoMerge(wordIds: MergeUndoIds): Promise<void> {
   const params = {
     projectId: LocalStorage.getProjectId(),
     mergeUndoIds: wordIds,
   };
-  return (await mergeApi.undoMerge(params, defaultOptions())).data;
+  await mergeApi.undoMerge(params, defaultOptions());
 }
 
 /** Adds a list of wordIds to current project's merge blacklist. */
@@ -362,8 +363,22 @@ export async function graylistAdd(wordIds: string[]): Promise<void> {
   );
 }
 
-/** Start finding list of potential duplicates for merging. */
-export async function findDuplicates(
+/** Find and return lists of potential duplicates with identical vernacular. */
+export async function findIdenticalDuplicates(
+  maxInList: number,
+  maxLists: number,
+  ignoreProtected = false
+): Promise<Word[][]> {
+  const projectId = LocalStorage.getProjectId();
+  const resp = await mergeApi.findIdenticalPotentialDuplicates(
+    { ignoreProtected, maxInList, maxLists, projectId },
+    defaultOptions()
+  );
+  return resp.data;
+}
+
+/** Start finding list of potential duplicates with similar vernaculars. */
+export async function findSimilarDuplicates(
   maxInList: number,
   maxLists: number,
   ignoreProtected = false
@@ -375,7 +390,7 @@ export async function findDuplicates(
   );
 }
 
-/** Retrieve list of potential duplicates for merging. */
+/** Retrieve list of similar potential duplicates for merging. */
 export async function retrieveDuplicates(): Promise<Word[][]> {
   const resp = await mergeApi.retrievePotentialDuplicates(
     { projectId: LocalStorage.getProjectId() },
@@ -728,6 +743,10 @@ export async function authenticateUser(
   return user;
 }
 
+export async function uiLanguage(uilang: string): Promise<void> {
+  await userApi.uiLanguage({ body: uilang }, defaultOptions());
+}
+
 /** Note: Only usable by site admins. */
 export async function getAllUsers(): Promise<User[]> {
   return (await userApi.getAllUsers(defaultOptions())).data;
@@ -765,6 +784,13 @@ export async function updateUser(user: User): Promise<void> {
 /** Note: Only usable by site admins. */
 export async function deleteUser(userId: string): Promise<void> {
   await userApi.deleteUser({ userId }, defaultOptions());
+}
+
+/** Note: Only usable by site admins. */
+export async function getUserProjects(
+  userId: string
+): Promise<UserProjectInfo[]> {
+  return (await userApi.getUserProjects({ userId }, defaultOptions())).data;
 }
 
 /** Checks whether email address is okay: unchanged or not taken by a different user. */
@@ -900,6 +926,11 @@ export async function getDuplicateId(word: Word): Promise<string> {
   return (await wordApi.getDuplicateId(params, defaultOptions())).data;
 }
 
+export async function getFrontierCount(): Promise<number> {
+  const params = { projectId: LocalStorage.getProjectId() };
+  return (await wordApi.getFrontierCount(params, defaultOptions())).data;
+}
+
 export async function getFrontierWords(): Promise<Word[]> {
   const params = { projectId: LocalStorage.getProjectId() };
   return (await wordApi.getProjectFrontierWords(params, defaultOptions())).data;
@@ -928,10 +959,9 @@ export async function isInFrontier(
 export async function restoreWord(
   wordId: string,
   projectId?: string
-): Promise<boolean> {
+): Promise<void> {
   projectId ||= LocalStorage.getProjectId();
-  const params = { projectId, wordId };
-  return (await wordApi.restoreWord(params, defaultOptions())).data;
+  await wordApi.restoreWord({ projectId, wordId }, defaultOptions());
 }
 
 /** Revert word updates given in dictionary of word ids:
@@ -958,4 +988,12 @@ export async function updateWord(word: Word): Promise<Word> {
     defaultOptions()
   );
   return { ...word, id: resp.data };
+}
+
+export async function getDomainWordCount(domainId: string): Promise<number> {
+  const response = await wordApi.getDomainWordCount(
+    { projectId: LocalStorage.getProjectId(), domainId },
+    defaultOptions()
+  );
+  return response.data;
 }

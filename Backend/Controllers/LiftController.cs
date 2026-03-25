@@ -22,28 +22,24 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/lift")]
-    public class LiftController : Controller
+    public class LiftController(IProjectRepository projRepo, ISemanticDomainRepository semDomRepo,
+        ISpeakerRepository speakerRepo, IWordRepository wordRepo, IWordService wordService,
+        IAcknowledgmentService ackService,
+        ILiftService liftService, IHubContext<ExportHub> notifyService, IPermissionService permissionService,
+        ILogger<LiftController> logger) : Controller
     {
-        private readonly IProjectRepository _projRepo;
-        private readonly IWordRepository _wordRepo;
-        private readonly ILiftService _liftService;
-        private readonly IHubContext<ExportHub> _notifyService;
-        private readonly IPermissionService _permissionService;
-        private readonly ILogger<LiftController> _logger;
+        private readonly IProjectRepository _projRepo = projRepo;
+        private readonly ISemanticDomainRepository _semDomRepo = semDomRepo;
+        private readonly ISpeakerRepository _speakerRepo = speakerRepo;
+        private readonly IWordRepository _wordRepo = wordRepo;
+        private readonly IWordService _wordService = wordService;
+        private readonly IAcknowledgmentService _ackService = ackService;
+        private readonly ILiftService _liftService = liftService;
+        private readonly IHubContext<ExportHub> _notifyService = notifyService;
+        private readonly IPermissionService _permissionService = permissionService;
+        private readonly ILogger<LiftController> _logger = logger;
 
         private const string otelTagName = "otel.LiftController";
-
-        public LiftController(
-            IWordRepository wordRepo, IProjectRepository projRepo, IPermissionService permissionService,
-            ILiftService liftService, IHubContext<ExportHub> notifyService, ILogger<LiftController> logger)
-        {
-            _projRepo = projRepo;
-            _wordRepo = wordRepo;
-            _liftService = liftService;
-            _notifyService = notifyService;
-            _permissionService = permissionService;
-            _logger = logger;
-        }
 
         /// <summary>
         /// Extract a LIFT file to a temporary folder.
@@ -269,7 +265,7 @@ namespace BackendFramework.Controllers
             int countWordsImported;
             // Sets the projectId of our parser to add words to that project
             var liftMerger = _liftService.GetLiftImporterExporter(
-                projectId, proj.VernacularWritingSystem.Bcp47, _wordRepo);
+                projectId, proj.VernacularWritingSystem.Bcp47, _wordService);
             var importedAnalysisWritingSystems = new List<WritingSystem>();
             var doesImportHaveDefinitions = false;
             var doesImportHaveGrammaticalInfo = false;
@@ -296,16 +292,17 @@ namespace BackendFramework.Controllers
                 return BadRequest("Error processing the LIFT data. Contact support for help.");
             }
 
-            // Don't update project if no words were imported in the project's vernacular language.
-            if (countWordsImported == 0)
-            {
-                return Ok(0);
-            }
-
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
                 return NotFound($"projectId: {projectId}");
+            }
+
+            // Don't update existing project if no words were imported in the project's vernacular language.
+            var isNewProject = project.AnalysisWritingSystems.All(ws => string.IsNullOrEmpty(ws.Bcp47));
+            if (!isNewProject && countWordsImported == 0)
+            {
+                return Ok(0);
             }
 
             // Add analysis writing systems found in the data, avoiding duplicate and empty bcp47 codes.
@@ -425,14 +422,15 @@ namespace BackendFramework.Controllers
             var proceed = _liftService.StoreExport(userId, exportedFilepath, exportId);
             if (proceed)
             {
-                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId);
+                await _ackService.SendWithRetry(userId,
+                    requestId => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId));
             }
             return proceed;
         }
 
         internal async Task<string> CreateLiftExport(string projectId)
         {
-            return await _liftService.LiftExport(projectId, _wordRepo, _projRepo);
+            return await _liftService.LiftExport(projectId, _projRepo, _semDomRepo, _speakerRepo, _wordRepo);
         }
 
         /// <summary> Cancel project export </summary>

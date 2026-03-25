@@ -1,7 +1,4 @@
-import { DeleteForever, VpnKey } from "@mui/icons-material";
 import {
-  Avatar,
-  Button,
   List,
   ListItem,
   ListItemAvatar,
@@ -15,20 +12,20 @@ import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { User } from "api/models";
-import { avatarSrc } from "backend";
 import { getUserId } from "backend/localStorage";
 import SortOptions, {
   UserOrder,
   getUserCompare,
 } from "components/ProjectUsers/SortOptions";
-import { Hash } from "types/hash";
-import theme from "types/theme";
+import UserAvatar from "components/ProjectUsers/UserAvatar";
+import UserActionsMenu from "components/SiteSettings/UserManagement/UserActionsMenu";
 import { doesTextMatchUser } from "types/user";
 import { NormalizedTextField } from "utilities/fontComponents";
 
 interface UserListProps {
   allUsers: User[];
-  handleOpenModal: (user: User) => void;
+  handleOpenDeleteModal: (user: User) => void;
+  handleOpenProjectsModal: (user: User) => void;
 }
 
 export default function UserList(props: UserListProps): ReactElement {
@@ -37,7 +34,7 @@ export default function UserList(props: UserListProps): ReactElement {
   const [reverseSorting, setReverseSorting] = useState<boolean>(false);
   const [sortedUsers, setSortedUsers] = useState<User[]>([]);
   const [userOrder, setUserOrder] = useState(UserOrder.Username);
-  const [userAvatar, setUserAvatar] = useState<Hash<string>>({});
+
   const { t } = useTranslation();
 
   const compareUsers = useCallback(
@@ -51,16 +48,6 @@ export default function UserList(props: UserListProps): ReactElement {
   }, [compareUsers, filteredUsers]);
 
   useEffect(() => {
-    const newUserAvatar: Hash<string> = {};
-    const promises = props.allUsers.map(async (u) => {
-      if (u.hasAvatar) {
-        newUserAvatar[u.id] = await avatarSrc(u.id);
-      }
-    });
-    Promise.all(promises).then(() => setUserAvatar(newUserAvatar));
-  }, [props.allUsers]);
-
-  useEffect(() => {
     setFilteredUsers(
       filterInput.length
         ? props.allUsers.filter((u) => doesTextMatchUser(filterInput, u))
@@ -68,34 +55,23 @@ export default function UserList(props: UserListProps): ReactElement {
     );
   }, [filterInput, props.allUsers]);
 
-  const userListButton = (user: User): ReactElement => {
-    const disabled = user.isAdmin || user.id === getUserId();
-    return (
-      <Button
-        disabled={disabled}
-        id={`user-delete-${user.username}`}
-        onClick={disabled ? undefined : () => props.handleOpenModal(user)}
-        style={{ minWidth: 0 }}
-      >
-        {disabled ? <VpnKey /> : <DeleteForever />}
-      </Button>
-    );
-  };
-
   const userListItem = (user: User): ReactElement => {
     return (
       <ListItem key={user.id}>
-        <ListItemIcon>{userListButton(user)}</ListItemIcon>
-        <ListItemAvatar>
-          <Avatar
-            alt="User Avatar"
-            src={userAvatar[user.id]}
-            style={{ marginInlineEnd: theme.spacing(1) }}
+        <ListItemIcon>
+          <UserActionsMenu
+            disableDelete={user.isAdmin || user.id === getUserId()}
+            onDeleteClick={() => props.handleOpenDeleteModal(user)}
+            onProjectsClick={() => props.handleOpenProjectsModal(user)}
+            user={user}
           />
+        </ListItemIcon>
+
+        <ListItemAvatar>
+          <UserAvatar user={user} />
         </ListItemAvatar>
-        <ListItemText
-          primary={`${user.name} (${user.username} | ${user.email})`}
-        />
+
+        <ListItemText>{`${user.name} (${user.username} | ${user.email})`}</ListItemText>
       </ListItem>
     );
   };
@@ -107,6 +83,7 @@ export default function UserList(props: UserListProps): ReactElement {
         <NormalizedTextField
           onChange={(e) => setFilterInput(e.target.value)}
           placeholder={t("projectSettings.invite.searchPlaceholder")}
+          type="search"
           value={filterInput}
         />
         <SortOptions

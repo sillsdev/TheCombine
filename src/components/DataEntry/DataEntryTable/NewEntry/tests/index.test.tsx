@@ -1,4 +1,11 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createRef } from "react";
 import { Provider } from "react-redux";
@@ -11,13 +18,14 @@ import { newWritingSystem } from "types/writingSystem";
 
 jest.mock("components/DataEntry/utilities.ts", () => ({
   ...jest.requireActual("components/DataEntry/utilities.ts"),
-  focusInput: jest.fn(),
+  focusInput: () => mockFocusInput(),
 }));
 jest.mock("components/Pronunciations/PronunciationsFrontend", () => jest.fn());
 
 const mockAddNewAudio = jest.fn();
 const mockAddNewEntry = jest.fn();
 const mockDelNewAudio = jest.fn();
+const mockFocusInput = jest.fn();
 const mockSetNewGloss = jest.fn();
 const mockSetNewNote = jest.fn();
 const mockSetNewVern = jest.fn();
@@ -66,9 +74,10 @@ const renderNewEntry = async (
   });
 };
 
-/** Fire all Enter key events on the given element.
+/** Fire all Enter key events on document's active element, or body if none.
  * (For use with fake timers, since they don't play well with `userEvent`.) */
-const fireEnterOnElement = async (elem: Element): Promise<void> => {
+const fireEnterOnActiveElement = async (): Promise<void> => {
+  const elem = document.activeElement ?? document.body;
   const enterOptions = { charCode: 13, code: "Enter", key: "Enter" };
   await act(async () => {
     fireEvent.keyDown(elem, enterOptions);
@@ -76,10 +85,6 @@ const fireEnterOnElement = async (elem: Element): Promise<void> => {
     fireEvent.keyUp(elem, enterOptions);
   });
 };
-
-beforeEach(() => {
-  jest.resetAllMocks();
-});
 
 afterEach(() => {
   jest.clearAllTimers();
@@ -132,7 +137,8 @@ describe("NewEntry", () => {
     );
 
     // Submit a new entry
-    await fireEnterOnElement(getVernAndGlossFields().glossField);
+    fireEvent.click(getVernAndGlossFields().glossField);
+    await fireEnterOnActiveElement();
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
     expect(mockResetNewEntry).not.toHaveBeenCalled();
 
@@ -154,13 +160,13 @@ describe("NewEntry", () => {
     );
 
     // Submit a new entry
-    const { glossField } = getVernAndGlossFields();
-    await fireEnterOnElement(glossField);
+    fireEvent.click(getVernAndGlossFields().glossField);
+    await fireEnterOnActiveElement();
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
     expect(mockResetNewEntry).not.toHaveBeenCalled();
 
     // Attempt a second submission before the first one completes
-    await fireEnterOnElement(glossField);
+    await fireEnterOnActiveElement();
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
     expect(mockResetNewEntry).not.toHaveBeenCalled();
 
@@ -170,5 +176,32 @@ describe("NewEntry", () => {
     });
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
     expect(mockResetNewEntry).toHaveBeenCalledTimes(1);
+  });
+
+  it("returns focus to gloss after closing note dialog", async () => {
+    await renderNewEntry();
+    mockFocusInput.mockClear();
+
+    // Click the note button to open the dialog
+    await userEvent.click(screen.getByTestId(NewEntryId.ButtonNote));
+    expect(mockFocusInput).not.toHaveBeenCalled();
+
+    // Cancel and verify that focusInput was called after transition completes
+    await userEvent.click(screen.getByText(new RegExp("cancel")));
+    await waitFor(() => expect(mockFocusInput).toHaveBeenCalled());
+  });
+
+  it("returns focus to gloss after confirming note", async () => {
+    await renderNewEntry();
+    mockFocusInput.mockClear();
+
+    // Click the note button to open the dialog and type a note
+    await userEvent.click(screen.getByTestId(NewEntryId.ButtonNote));
+    await userEvent.type(document.activeElement!, "note text");
+    expect(mockFocusInput).not.toHaveBeenCalled();
+
+    // Confirm and verify that focusInput was called after transition completes
+    await userEvent.click(screen.getByText(new RegExp("confirm")));
+    await waitFor(() => expect(mockFocusInput).toHaveBeenCalled());
   });
 });

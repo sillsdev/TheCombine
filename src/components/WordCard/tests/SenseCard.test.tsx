@@ -26,10 +26,6 @@ const renderSenseCard = async (sense?: Sense): Promise<void> => {
   });
 };
 
-beforeEach(() => {
-  jest.clearAllMocks();
-});
-
 describe("SenseCard", () => {
   it("has an icon for part of speech (if not GramCatGroup.Unspecified)", async () => {
     const sense = newSense("gloss");

@@ -13,7 +13,7 @@ namespace Backend.Tests.Services
     {
         private ISemanticDomainRepository _domainRepo = null!;
         private IUserRepository _userRepo = null!;
-        private IWordRepository _wordRepo = null!;
+        private WordRepositoryMock _wordRepo = null!;
         private IStatisticsService _statsService = null!;
 
         private const string ProjId = "StatsServiceTestProjId";
@@ -188,6 +188,44 @@ namespace Backend.Tests.Services
 
             var result = _statsService.GetSemanticDomainUserCounts(ProjId).Result;
             Assert.That(result.Find(uc => uc.Id == user.Id)!.WordCount, Is.EqualTo(wordCount));
+        }
+
+        [Test]
+        public void GetSemanticDomainUserCountsTestRecentDomain()
+        {
+            var user = _userRepo.Create(GetUserWithProjId()).Result!;
+
+            var olderDomain = new SemanticDomain
+            {
+                Id = "1.1.1",
+                Name = "Older Domain",
+                Created = "2023-01-01T10:00:00Z",
+                UserId = user.Id
+            };
+            var newerDomain = new SemanticDomain
+            {
+                Id = "2.2.2",
+                Name = "Newer Domain",
+                Created = "2023-12-31T10:00:00Z",
+                UserId = user.Id
+            };
+            var anonDomain = new SemanticDomain
+            {
+                Id = "3.3.3",
+                Name = "Unknown Domain"
+            };
+
+            var word1 = GetWordWithDomain();
+            word1.Senses[0].SemanticDomains = [anonDomain, newerDomain];
+            _wordRepo.AddFrontier(word1);
+
+            var word2 = GetWordWithDomain();
+            word2.Senses[0].SemanticDomains = [olderDomain];
+            _wordRepo.AddFrontier(word2);
+
+            var result = _statsService.GetSemanticDomainUserCounts(ProjId).Result;
+            var userCount = result.Find(uc => uc.Id == user.Id);
+            Assert.That(userCount?.RecentDomain, Is.EqualTo(newerDomain).UsingPropertiesComparer());
         }
     }
 }

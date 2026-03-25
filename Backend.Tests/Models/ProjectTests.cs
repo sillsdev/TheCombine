@@ -1,4 +1,5 @@
-﻿using BackendFramework.Models;
+﻿using System;
+using BackendFramework.Models;
 using NUnit.Framework;
 
 namespace Backend.Tests.Models
@@ -12,6 +13,7 @@ namespace Backend.Tests.Models
             {
                 Id = "ProjectId",
                 Name = "ProjectName",
+                Created = DateTime.UtcNow,
                 IsActive = true,
                 LiftImported = true,
                 DefinitionsEnabled = true,

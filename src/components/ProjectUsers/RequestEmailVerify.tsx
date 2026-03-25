@@ -1,11 +1,17 @@
-import { Box, Button, Grid2, Stack, Typography } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Grid2,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
-import validator from "validator";
 
 import { isEmailOkay, requestEmailVerify, updateUser } from "backend";
 import { getCurrentUser } from "backend/localStorage";
-import { NormalizedTextField } from "utilities/fontComponents";
+import { normalizeEmail } from "utilities/userUtilities";
 
 export enum RequestEmailVerifyTextId {
   ButtonCancel = "buttons.cancel",
@@ -26,16 +32,24 @@ export default function RequestEmailVerify(
   const [currentUser] = useState(getCurrentUser()!);
   const [email, setEmail] = useState(currentUser.email);
   const [isTaken, setIsTaken] = useState(false);
-  const [isValid, setIsValid] = useState(false);
+  // Assume current email is valid to start,
+  // since it was created with a type="email" field,
+  // and TextField's defaultValue doesn't trigger onChange.
+  const [isValid, setIsValid] = useState(!!currentUser.email);
 
   const { t } = useTranslation();
 
-  useEffect(() => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setEmail(normalizeEmail(e.target.value));
+    setIsValid(e.target.checkValidity());
     setIsTaken(false);
-    setIsValid(validator.isEmail(email));
-  }, [email]);
+  };
 
   const onSubmit = async (): Promise<void> => {
+    if (!isValid || isTaken) {
+      return;
+    }
+
     if (!(await isEmailOkay(email))) {
       setIsTaken(true);
       return;
@@ -57,18 +71,22 @@ export default function RequestEmailVerify(
         </Typography>
 
         {/* Email address */}
-        <NormalizedTextField
+        {/* Don't use NormalizedTextField for type="email".
+        At best, it doesn't normalize, because of the punycode. */}
+        <TextField
+          autoComplete="email"
           autoFocus
+          defaultValue={currentUser.email}
           error={isTaken}
           fullWidth
           helperText={
             isTaken ? t(RequestEmailVerifyTextId.FieldEmailTaken) : undefined
           }
           label={t(RequestEmailVerifyTextId.FieldEmail)}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleEmailChange}
           required
           slotProps={{ htmlInput: { maxLength: 320 } }}
-          value={email}
+          type="email" // silently converts input to punycode
         />
 
         {/* Buttons: cancel, submit */}
@@ -77,7 +95,11 @@ export default function RequestEmailVerify(
             {t(RequestEmailVerifyTextId.ButtonCancel)}
           </Button>
 
-          <Button disabled={!isValid} onClick={onSubmit} variant="contained">
+          <Button
+            disabled={!isValid || isTaken}
+            onClick={onSubmit}
+            variant="contained"
+          >
             {t(RequestEmailVerifyTextId.ButtonSubmit)}
           </Button>
         </Grid2>

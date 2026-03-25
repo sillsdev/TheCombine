@@ -12,6 +12,8 @@
  * Do not edit the class manually.
  */
 
+import { SemanticDomain } from "./semantic-domain";
+
 /**
  *
  * @export
@@ -48,4 +50,10 @@ export interface SemanticDomainUserCount {
    * @memberof SemanticDomainUserCount
    */
   wordCount?: number;
+  /**
+   *
+   * @type {SemanticDomain}
+   * @memberof SemanticDomainUserCount
+   */
+  recentDomain?: SemanticDomain;
 }

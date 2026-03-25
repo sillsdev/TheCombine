@@ -9,7 +9,7 @@ const mockUserId = "mockUserId";
 const mockUser = newUser("mockName", "mockUsername", "mockPass");
 mockUser.id = mockUserId;
 
-const oldValues: { [key: string]: any } = {};
+const oldValues: { [key: string]: string | null } = {};
 
 beforeAll(() => {
   for (const keyString in LocalStorageKey) {

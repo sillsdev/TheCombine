@@ -12,6 +12,7 @@ import { SemanticDomainUserCount } from "api/models";
 import { getSemanticDomainUserCount } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { Cell, HeadCell } from "components/Statistics/TableCells";
+import DomainChip from "components/WordCard/DomainChip";
 
 export default function UserStatistics(): ReactElement {
   const [domainUserCountList, setDomainUserCountList] = useState<
@@ -40,16 +41,27 @@ export default function UserStatistics(): ReactElement {
         <TableHead>
           <TableRow>
             <HeadCell titleId={"statistics.column.username"} />
-            <HeadCell titleId={"statistics.column.domainCount"} />
             <HeadCell titleId={"statistics.column.senseCount"} />
+            <HeadCell titleId={"statistics.column.domainCount"} />
+            <HeadCell titleId={"statistics.column.recentDomain"} />
           </TableRow>
         </TableHead>
         <TableBody>
           {domainUserCountList.map((t) => (
             <TableRow key={t.id}>
               <Cell text={t.username} />
-              <Cell text={t.domainCount} />
               <Cell text={t.wordCount} />
+              <Cell text={t.domainCount} />
+              <Cell
+                body={
+                  t.recentDomain ? (
+                    <DomainChip
+                      domain={{ ...t.recentDomain, userId: undefined }}
+                      provenance
+                    />
+                  ) : null
+                }
+              />
             </TableRow>
           ))}
         </TableBody>
