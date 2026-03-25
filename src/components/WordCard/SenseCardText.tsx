@@ -8,8 +8,11 @@ import {
   Typography,
 } from "@mui/material";
 import { ReactElement } from "react";
+import { shallowEqual } from "react-redux";
 
 import { Sense } from "api/models";
+import { useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 import { TypographyWithFont } from "utilities/fontComponents";
 
 interface SenseInLanguage {
@@ -36,34 +39,49 @@ function getSenseInLanguage(
 
 function getSenseInLanguages(
   sense: Sense,
-  languages?: string[]
+  languages: string[]
 ): SenseInLanguage[] {
-  if (!languages) {
-    languages = sense.glosses.map((g) => g.language);
-    languages.push(...sense.definitions.map((d) => d.language));
-    languages = [...new Set(languages)];
-  }
   return languages.map((l) => getSenseInLanguage(sense, l));
 }
 
 interface SenseCardTextProps {
   sense: Sense;
   hideDefs?: boolean;
-  languages?: string[];
 }
 
 // Show glosses and (if not hideDefs) definitions.
 export default function SenseCardText(props: SenseCardTextProps): ReactElement {
-  const senseTextInLangs = getSenseInLanguages(props.sense, props.languages);
+  const analysisLangs = useAppSelector(
+    (state: StoreState) =>
+      state.currentProjectState.project.analysisWritingSystems.map(
+        (ws) => ws.bcp47
+      ),
+    shallowEqual
+  );
+
+  const senseLangs = Array.from(
+    new Set([
+      ...props.sense.glosses.filter((g) => g.def.trim()).map((g) => g.language),
+      ...props.sense.definitions
+        .filter((d) => d.text.trim())
+        .map((d) => d.language),
+    ])
+  );
+
+  // Display the sense in the analysis languages order first, followed by any other languages.
+  const senseInLangs = getSenseInLanguages(props.sense, [
+    ...analysisLangs,
+    ...senseLangs.filter((l) => !analysisLangs.includes(l)),
+  ]);
 
   return (
     <Table padding="none">
       <TableBody>
-        {senseTextInLangs.map((senseInLang, index) => (
+        {senseInLangs.map((sil) => (
           <SenseTextRows
             hideDefs={props.hideDefs}
-            key={index}
-            senseInLang={senseInLang}
+            key={sil.language}
+            senseInLang={sil}
           />
         ))}
       </TableBody>
