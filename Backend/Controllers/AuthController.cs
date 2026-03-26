@@ -55,8 +55,7 @@ namespace BackendFramework.Controllers
             using var activity = OtelService.StartActivityWithTag(otelTagName, "generating Lexbox login");
 
             var redirectUrl = NormalizeReturnUrl(_configuration[PostLoginRedirectConfigKey])
-                ?? NormalizeReturnUrl(Domain.FrontendDomain)
-                ?? "/";
+                ?? Domain.FrontendDomain + "/app/auth-success";
             var authProperties = new AuthenticationProperties { RedirectUri = redirectUrl };
 
             return await ChallengeLexboxAsync(authProperties);
@@ -95,12 +94,9 @@ namespace BackendFramework.Controllers
         private static string? NormalizeReturnUrl(string? url)
         {
             url = url?.Trim();
-            if (string.IsNullOrEmpty(url) || !Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var uri))
-            {
-                return null;
-            }
-
-            return uri.IsAbsoluteUri ? uri.PathAndQuery : uri.ToString();
+            return string.IsNullOrEmpty(url) || !Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var uri)
+                ? null
+                : uri.ToString();
         }
 
         private static LexboxAuthUser GetUserFromClaims(ClaimsPrincipal principal)

@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Net.Http;
 using System.Text.Json.Serialization;
 using BackendFramework.Contexts;
 using BackendFramework.Helper;
@@ -136,7 +138,7 @@ namespace BackendFramework
 
             var lexboxAuthConfig = Configuration.GetSection("LexboxAuth");
 
-            // Authorization endpoint needs to be defined before discovery happens with the metadata address.
+            // Authorization endpoint needs to be defined because discovery silently fails in dev.
             var lexboxAuthorizationEndpoint = lexboxAuthConfig["AuthorizationEndpoint"]?.Trim();
             var lexboxPrompt = lexboxAuthConfig["Prompt"]?.Trim();
 
@@ -170,6 +172,17 @@ namespace BackendFramework
                 .AddOpenIdConnect("LexboxOidc", options =>
                 {
                     lexboxAuthConfig.Bind(options);
+
+                    // Discovery isn't working in dev, so manually fetch the keys.
+                    options.TokenValidationParameters.IssuerSigningKeyResolver = (_, _, kid, _) =>
+                    {
+                        // Use a simple HttpClient to fetch the keys.
+                        // In a real app, you'd cache these for 24 hours.
+                        var client = new HttpClient();
+                        var response = client.GetStringAsync("https://lexbox.org/.well-known/jwks").Result;
+                        var keys = new JsonWebKeySet(response).GetSigningKeys();
+                        return keys.Where(x => x.KeyId == kid);
+                    };
 
                     options.Events.OnRedirectToIdentityProvider = context =>
                     {
