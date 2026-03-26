@@ -6,6 +6,7 @@ import { enqueueSnackbar } from "notistack";
 import * as Api from "api";
 import { BASE_PATH } from "api/base";
 import {
+  AuthStatus,
   BannerType,
   ChartRootData,
   EmailInviteStatus,
@@ -56,6 +57,7 @@ const authenticationUrls = [
 /** A list of URL patterns for which the frontend explicitly handles errors
  * and the blanket error pop-ups should be suppressed.*/
 const whiteListedErrorUrls = [
+  "/auth/status",
   "/merge/retrievedups",
   "/speakers/create",
   "/speakers/update/",
@@ -114,6 +116,7 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
 
 // Configured OpenAPI interfaces.
 const audioApi = new Api.AudioApi(config, BASE_PATH, axiosInstance);
+const authApi = new Api.AuthApi(config, BASE_PATH, axiosInstance);
 const avatarApi = new Api.AvatarApi(config, BASE_PATH, axiosInstance);
 const bannerApi = new Api.BannerApi(config, BASE_PATH, axiosInstance);
 const emailVerifyApi = new Api.EmailVerifyApi(config, BASE_PATH, axiosInstance);
@@ -177,6 +180,20 @@ export async function deleteAudio(
  * but it's still required in the url and helpful for analytics. */
 export function getAudioUrl(wordId: string, fileName: string): string {
   return `${apiBaseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/download/${fileName}`;
+}
+
+/* AuthController.cs */
+
+export async function getLexboxAuthStatus(): Promise<AuthStatus> {
+  return (await authApi.getAuthStatus(defaultOptions())).data;
+}
+
+export function getLexboxLoginUrl(): string {
+  return `${baseURL}/v1/auth/lexbox-login`;
+}
+
+export async function logoutLexboxUser(): Promise<void> {
+  await authApi.logOutLexbox(defaultOptions());
 }
 
 /* AvatarController.cs */

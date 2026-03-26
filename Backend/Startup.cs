@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Net.Http;
 using System.Text.Json.Serialization;
 using BackendFramework.Contexts;
 using BackendFramework.Helper;
@@ -133,6 +135,13 @@ namespace BackendFramework
             }
 
             var key = ASCII.GetBytes(secretKey);
+
+            var lexboxAuthConfig = Configuration.GetSection("LexboxAuth");
+
+            // Authorization endpoint needs to be defined because discovery silently fails in dev.
+            var lexboxAuthorizationEndpoint = lexboxAuthConfig["AuthorizationEndpoint"]?.Trim();
+            var lexboxPrompt = lexboxAuthConfig["Prompt"]?.Trim();
+
             services.AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -144,10 +153,51 @@ namespace BackendFramework
                     x.SaveToken = true;
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateAudience = false,
                         ValidateIssuer = false,
-                        ValidateAudience = false
+                        ValidateIssuerSigningKey = true
+                    };
+                })
+                .AddCookie("LexboxCookie", options =>
+                {
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.IsEssential = true;
+                    options.Cookie.Name = "lexbox_auth";
+                    options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax;
+                    options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.SameAsRequest;
+                    options.ExpireTimeSpan = TimeSpan.FromHours(1);
+                    options.SlidingExpiration = true;
+                })
+                .AddOpenIdConnect("LexboxOidc", options =>
+                {
+                    lexboxAuthConfig.Bind(options);
+
+                    // Discovery isn't working in dev, so manually fetch the keys.
+                    options.TokenValidationParameters.IssuerSigningKeyResolver = (_, _, kid, _) =>
+                    {
+                        // Use a simple HttpClient to fetch the keys.
+                        // In a real app, you'd cache these for 24 hours.
+                        var client = new HttpClient();
+                        var response = client.GetStringAsync("https://lexbox.org/.well-known/jwks").Result;
+                        var keys = new JsonWebKeySet(response).GetSigningKeys();
+                        return keys.Where(x => x.KeyId == kid);
+                    };
+
+                    options.Events.OnRedirectToIdentityProvider = context =>
+                    {
+                        if (string.IsNullOrWhiteSpace(context.ProtocolMessage.IssuerAddress)
+                            && !string.IsNullOrEmpty(lexboxAuthorizationEndpoint))
+                        {
+                            context.ProtocolMessage.IssuerAddress = lexboxAuthorizationEndpoint;
+                        }
+
+                        if (!string.IsNullOrEmpty(lexboxPrompt))
+                        {
+                            context.ProtocolMessage.Prompt = lexboxPrompt;
+                        }
+
+                        return System.Threading.Tasks.Task.CompletedTask;
                     };
                 });
 
