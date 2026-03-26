@@ -35,8 +35,6 @@ click==8.3.1
 colorama==0.4.6
     # via
     #   -r dev-requirements.in
-    #   click
-    #   mkdocs
     #   mkdocs-material
     #   tox
 cryptography==46.0.3
@@ -170,9 +168,7 @@ pyopenssl==25.3.0
 pyproject-api==1.10.0
     # via tox
 pyreadline3==3.5.4
-    # via
-    #   -r dev-requirements.in
-    #   humanfriendly
+    # via -r dev-requirements.in
 python-dateutil==2.9.0.post0
     # via
     #   ghp-import
@@ -191,7 +187,7 @@ pyyaml-env-tag==1.1
     # via mkdocs
 regex==2026.1.15
     # via -r dev-requirements.in
-requests==2.32.5
+requests==2.33.0
     # via
     #   kubernetes
     #   mkdocs-htmlproofer-plugin
