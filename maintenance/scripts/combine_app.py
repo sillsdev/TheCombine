@@ -79,9 +79,15 @@ class CombineApp:
             check_results=check_results,
         )
 
-    def kubectl(self, cmd: List[str]) -> subprocess.CompletedProcess[str]:
+    def kubectl(
+        self, cmd: List[str], *, check_results: bool = True
+    ) -> subprocess.CompletedProcess[str]:
         """Run kubectl command adding the configuration file and namespace."""
-        return run_cmd(["kubectl"] + self.kubectl_opts + cmd)
+        result = run_cmd(["kubectl"] + self.kubectl_opts + cmd, check_results=check_results)
+        if check_results and result.stderr.strip():
+            # Kubectl can return 0 even when there's an error (e.g., cp permission denied)
+            print(f"kubectl stderr: {result.stderr}", file=sys.stderr)
+        return result
 
     def get_pod_id(self, service: CombineApp.Component, *, instance: int = 0) -> str:
         """Look up the Kubernetes pod id for the specified service."""
