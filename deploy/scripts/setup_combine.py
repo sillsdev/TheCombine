@@ -200,6 +200,7 @@ def main() -> None:
             if chart in installed_charts:
                 # Delete existing chart if --clean specified
                 if args.clean:
+                    logging.debug(f"Deleting chart: {chart}")
                     delete_cmd = namespace_cmd + ["delete", chart]
                     if args.dry_run:
                         delete_cmd.append("--dry-run")
