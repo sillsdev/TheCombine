@@ -2,6 +2,11 @@ name: "Deploy Update to QA Server"
 
 on:
   workflow_dispatch:
+    inputs:
+      confirm_qa_deploy:
+        description: "Type QA to confirm QA deployment"
+        required: true
+        default: ""
   push:
     branches: [master]
 
@@ -108,8 +113,7 @@ jobs:
 
   deploy_update:
     needs: build
-    # Only push to the QA server when built on the master branch
-    #if: github.ref_name == 'master'
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.confirm_qa_deploy == 'QA')
     runs-on: [self-hosted, thecombine]
     steps:
       - name: Harden Runner
