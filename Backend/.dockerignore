@@ -2,3 +2,4 @@ Dockerfile
 bin
 obj
 build
+appsettings.Development.json
