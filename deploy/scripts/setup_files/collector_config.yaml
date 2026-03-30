@@ -1,13 +1,10 @@
-mode: "deployment"
+mode: deployment
 namespaceOverride: "thecombine"
 image:
   repository: "otel/opentelemetry-collector-k8s"
   tag: 0.123.0
 config:
   receivers:
-    jaeger: null
-    prometheus: null
-    zipkin: null
     otlp:
       protocols:
         grpc:
@@ -24,17 +21,12 @@ config:
       logs:
         level: "INFO"
       metrics:
-        address: null
+        address: ""
     pipelines:
       traces:
-        receivers:
-          - otlp
-        processors:
-          - batch
-        exporters:
-          - otlp
-      metrics: null
-      logs: null
+        receivers: [otlp]
+        processors: [batch]
+        exporters: [otlp]
 ports:
   otlp:
     enabled: false
@@ -61,3 +53,7 @@ resources:
     memory: 128Mi
   limits:
     memory: 128Mi
+prometheusRule:
+  defaultRules:
+    additionalRuleAnnotations: {}
+    additionalRuleLabels: {}
