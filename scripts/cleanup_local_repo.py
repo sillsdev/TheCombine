@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-"""Remove all temporary files and folders within the local Git repository.
+"""Remove temporary files and folders within the local Git repository.
 
-The purpose of this script is to get a developer back to a clean baseline in
+The purpose of this script is to get a developer back to a cleaner baseline in
 the event their repository state does not match other developers or CI.
 """
 
@@ -11,7 +11,19 @@ import shutil
 
 
 def main() -> None:
-    dirs_to_remove = (".mypy_cache", ".parcel-cache", ".tox", "dist", "node_modules", "venv")
+    dirs_to_remove = (
+        ".mypy_cache",
+        ".parcel-cache",
+        ".tox",
+        "Backend/bin",
+        "Backend/obj",
+        "Backend.Tests/bin",
+        "Backend.Tests/obj",
+        "dist",
+        "node_modules",
+        "parcel-bundle-reports",
+        "venv",
+    )
     files_to_delete = (".env.backend", ".env.certmgr", ".env.frontend", "docker-compose.yml")
 
     print(
