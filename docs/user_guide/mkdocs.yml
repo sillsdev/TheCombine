@@ -53,12 +53,6 @@ plugins:
             Admin: 管理
   - search:
       lang: [en, es, zh]
-  # This plugin is used to validate URLs (including some anchors).
-  # Uncomment to build the docs with this validation enabled.
-  # This is commented out by default because this requires network I/O to validate URLs, so it is
-  # inherently not exactly reproducible.
-#  - htmlproofer:
-#      raise_error: True
 markdown_extensions:
   - admonition
   - attr_list

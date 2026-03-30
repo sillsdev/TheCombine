@@ -21,7 +21,6 @@ isort
 
 # Documentation.
 mkdocs-material
-mkdocs-htmlproofer-plugin
 mkdocs-static-i18n
 
 # Templating/Docker.
