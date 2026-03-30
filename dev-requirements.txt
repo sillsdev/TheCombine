@@ -35,8 +35,6 @@ click==8.3.1
 colorama==0.4.6
     # via
     #   -r dev-requirements.in
-    #   click
-    #   mkdocs
     #   mkdocs-material
     #   tox
 cryptography==46.0.3
@@ -159,7 +157,7 @@ pycparser==2.23
     # via cffi
 pyflakes==3.4.0
     # via flake8
-pygments==2.19.2
+pygments==2.20.0
     # via mkdocs-material
 pymdown-extensions==10.20
     # via mkdocs-material
@@ -170,9 +168,7 @@ pyopenssl==25.3.0
 pyproject-api==1.10.0
     # via tox
 pyreadline3==3.5.4
-    # via
-    #   -r dev-requirements.in
-    #   humanfriendly
+    # via -r dev-requirements.in
 python-dateutil==2.9.0.post0
     # via
     #   ghp-import
