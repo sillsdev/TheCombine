@@ -78,6 +78,12 @@ def parse_args() -> argparse.Namespace:
         help="List the available targets and exit.",
     )
     parser.add_argument(
+        "--non-interactive",
+        "-n",
+        action="store_true",
+        help="Disable interactive prompts (for CI/CD use).",
+    )
+    parser.add_argument(
         "--profile",
         "-p",
         help="Profile name for the target. "
@@ -132,6 +138,9 @@ def main() -> None:
         sys.exit(ExitStatus.SUCCESS.value)
 
     target = args.target
+    if args.non_interactive and target not in config["targets"]:
+        logging.error(f"Target '{target}' not found in configuration")
+        sys.exit(ExitStatus.FAILURE.value)
     while target not in config["targets"]:
         target = get_target(config)
 
@@ -143,12 +152,13 @@ def main() -> None:
         profile = args.profile
 
     # Verify the Kubernetes/Helm environment
-    kube_env = KubernetesEnvironment(args)
+    kube_env = KubernetesEnvironment(args, prompt_for_context=not args.non_interactive)
     # Cache helm command used to alter the target cluster
     helm_cmd = kube_env.get_helm_cmd()
 
     # Check AWS Environment Variables
-    init_aws_environment()
+    if not args.non_interactive:
+        init_aws_environment()
 
     # Create list of target specific variable values
     target_vars = [f"global.imageTag={args.image_tag}"]
@@ -190,6 +200,7 @@ def main() -> None:
             if chart in installed_charts:
                 # Delete existing chart if --clean specified
                 if args.clean:
+                    logging.debug(f"Deleting chart: {chart}")
                     delete_cmd = namespace_cmd + ["delete", chart]
                     if args.dry_run:
                         delete_cmd.append("--dry-run")
