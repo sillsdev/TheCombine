@@ -41,9 +41,6 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("projects", nargs="*", help="Project(s) to be removed from The Combine.")
-    parser.add_argument(
-        "--verbose", action="store_true", help="Print intermediate values to aid in debugging"
-    )
     return parser.parse_args()
 
 
@@ -68,11 +65,10 @@ def main() -> None:
     combine = CombineApp()
 
     for project in args.projects:
+        print(f"Remove project {project}")
         project_id = combine.get_project_id(project)
         if project_id:
-            if args.verbose:
-                print(f"Remove project {project}")
-                print(f"Project ID: {project_id}")
+            print(f"Project ID: {project_id}")
             for collection in collections_with_project_id:
                 combine.db_cmd(db_delete_from_collection(project_id, collection))
             for field in user_fields_with_project_id:
