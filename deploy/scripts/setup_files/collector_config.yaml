@@ -2,7 +2,6 @@ mode: deployment
 namespaceOverride: "thecombine"
 image:
   repository: "otel/opentelemetry-collector-k8s"
-  tag: 0.147.0
 config:
   receivers:
     jaeger: null
