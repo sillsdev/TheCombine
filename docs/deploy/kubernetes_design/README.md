@@ -89,7 +89,6 @@ features:
   `sillsdev/aws-kubectl`)
 - _Python 3_ - the maintenance scripts included in `combine_maint` are written in _Python_
 - A collection of Maintenance Scripts:
-  - `add_user_to_proj.py` - add specified user to specified project (as harvester if role not specified)
   - `combine_backup.py` - create a compressed tarball of the backend files and database contents and push it to AWS S3
     storage
   - `combine_restore.py` - pull a backup from AWS S3 storage and replace the database and backend files with the

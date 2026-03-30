@@ -12,18 +12,6 @@ from typing import Any, Dict, List, Optional
 from maint_utils import run_cmd
 
 
-@unique
-class Role(Enum):
-    """Define enumerated type for Combine user roles."""
-
-    # Values here match names in the enum Role in Backend/Models/UserRoles.cs
-    Owner = "Owner"
-    Administrator = "Administrator"
-    Editor = "Editor"
-    Harvester = "Harvester"
-    NoRole = "None"
-
-
 class CombineApp:
     """Run commands on the Combine services."""
 
@@ -159,9 +147,3 @@ class CombineApp:
         if results is not None:
             return results["_id"]  # type: ignore
         return None
-
-    def get_project_roles(self, proj_id: str, role: Role) -> List[Dict[str, Any]]:
-        """Get the list of all user roles for a project that have the requested role."""
-        query = f"{{projectId: '{proj_id}', role: {{ $eq: {role.value}}}}}"
-        result_fields = "{projectId: 1, role: 1}"
-        return self.db_query("UserRolesCollection", query, result_fields)
