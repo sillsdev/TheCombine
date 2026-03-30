@@ -973,22 +973,6 @@ kubectl -n thecombine logs deployment/frontend
 
 If you want to monitor the logs while the system is running, add the `--follow` option to the command.
 
-#### Add a User to a Project
-
-Task: add an existing user to a project
-
-Run:
-
-```bash
-kubectl -n thecombine exec -it deployment/maintenance -- add_user_to_proj.py --project <PROJECT_NAME> --user <USER>
-```
-
-For additional options, run:
-
-```bash
-kubectl -n thecombine exec -it deployment/maintenance -- add_user_to_proj.py --help
-```
-
 #### Backup _TheCombine_
 
 Task: Backup the CombineDatabase and the Backend files to the Amazon Simple Storage Service (S3).
