@@ -2,6 +2,11 @@ name: installer_release
 
 on:
   workflow_dispatch:
+    inputs:
+      confirm_upload:
+        description: "Type UP to confirm installer upload"
+        required: true
+        default: ""
   workflow_run:
     workflows: ["Deploy Update to Live Server"]
     types:
@@ -13,7 +18,7 @@ permissions:
 jobs:
   make_installer:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     outputs:
       release_tag: ${{ steps.release.outputs.tag }}
     steps:
@@ -74,6 +79,7 @@ jobs:
 
   upload_installer:
     needs: make_installer
+    if: github.event_name == 'workflow_run' || (github.event_name == 'workflow_dispatch' && github.event.inputs.confirm_upload == 'UP')
     runs-on: ubuntu-latest
     steps:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
