@@ -60,7 +60,7 @@ runs:
         echo "Installing kubectl version ${{ inputs.kubectl_version }}"
         curl -LO https://dl.k8s.io/release/${{ inputs.kubectl_version }}/bin/linux/amd64/kubectl
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-        kubectl version --output=yaml
+        kubectl version --client --output=yaml
       shell: bash
 
     - name: Set up Python
@@ -76,7 +76,7 @@ runs:
 
     - name: Deploy with Helm
       run: >
-        python3
+        python3 -u
         deploy/scripts/setup_combine.py
         --context ${{ inputs.kube_context }}
         --non-interactive
