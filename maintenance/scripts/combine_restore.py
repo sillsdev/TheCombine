@@ -202,7 +202,7 @@ def main() -> None:
             )
 
         # Iterate through every item in the backend subdirectory
-        remote_subdir = f"{backend_pod}:/home/app/{backend_files_subdir}"
+        remote_subdir = f"{backend_pod}:/home/app/{backend_files_subdir}/"
         logging.info(f"Copying contents of {backend_files_subdir} to {remote_subdir} ...")
         for item in os.listdir(backend_files_subdir):
             if item.startswith(".") or item == "lost+found":
@@ -210,8 +210,7 @@ def main() -> None:
                 continue
             logging.info(f"Copying {item} ...")
             local_item = os.path.join(backend_files_subdir, item)
-            remote_item = f"{remote_subdir}/{item}"
-            combine.kubectl(["cp", local_item, remote_item, "--no-preserve"])
+            combine.kubectl(["cp", local_item, remote_subdir, "--no-preserve"])
 
 
 if __name__ == "__main__":
