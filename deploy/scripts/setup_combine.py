@@ -181,26 +181,26 @@ def main() -> None:
     # Open a temporary directory for creating the secrets YAML files
     with tempfile.TemporaryDirectory() as secrets_dir:
         for chart in config["profiles"][profile]["charts"]:
-            logging.debug(f"Chart: {chart}")
+            logging.info(f"Chart: {chart}")
 
             # Create the chart namespace if it does not exist
             chart_namespace = config["charts"][chart]["namespace"]
-            logging.debug(f"Namespace: {chart_namespace}")
+            logging.info(f"  Namespace: {chart_namespace}")
             if add_namespace(chart_namespace, kube_env.get_kubectl_cmd()):
-                logging.debug(f"Namespace '{chart_namespace}' created")
+                logging.info(f"    Namespace '{chart_namespace}' created")
                 installed_charts: List[str] = []
             else:
-                logging.debug(f"Namespace '{chart_namespace}' already exists")
+                logging.info(f"    Namespace '{chart_namespace}' already exists")
                 # Get list of charts in target namespace
                 installed_charts = get_installed_charts(helm_cmd, chart_namespace)
-            logging.debug(f"Installed charts: {installed_charts}")
+            logging.debug(f"  Installed charts: {installed_charts}")
 
             namespace_cmd = helm_cmd + ["--namespace", chart_namespace]
 
             if chart in installed_charts:
                 # Delete existing chart if --clean specified
                 if args.clean:
-                    logging.debug(f"Deleting chart: {chart}")
+                    logging.info(f"  Deleting chart: {chart}")
                     delete_cmd = namespace_cmd + ["delete", chart]
                     if args.dry_run:
                         delete_cmd.append("--dry-run")
@@ -208,7 +208,7 @@ def main() -> None:
 
                 # Skip existing install-only chart unless --clean specified
                 elif config["charts"][chart].get("install_only", False):
-                    logging.info(f"Skipping install-only chart '{chart}' (already installed)")
+                    logging.info(f"  Skipping install-only chart '{chart}' (already installed)")
                     continue
 
             # Build the secrets file
@@ -267,6 +267,7 @@ def main() -> None:
                 helm_install_cmd.extend(["--set", variable])
 
             # Install the chart
+            logging.info(f"  Installing chart: {chart}")
             run_cmd(helm_install_cmd, print_cmd=not args.quiet, print_output=True)
 
 
