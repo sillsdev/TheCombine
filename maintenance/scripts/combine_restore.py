@@ -120,7 +120,9 @@ def main() -> None:
 
         step.print(f"Fetch the selected backup, {backup}.")
 
-        aws.pull(backup, Path(restore_dir) / restore_file)
+        aws_proc = aws.pull(backup, Path(restore_dir) / restore_file)
+        logging.debug(f"stderr:\n{aws_proc.stderr.strip()}")
+        logging.debug(f"stdout:\n{aws_proc.stdout.strip()}")
 
         step.print("Unpack the backup.")
         os.chdir(restore_dir)
@@ -156,35 +158,23 @@ def main() -> None:
         if not db_pod:
             logging.error("Cannot find the database container.")
             sys.exit(1)
+
         logging.debug(f"Copying {db_files_subdir} to {db_pod} ...")
-        combine.kubectl(
-            [
-                "cp",
-                db_files_subdir,
-                f"{db_pod}:/",
-            ]
-        )
+        cp_proc = combine.kubectl(["cp", db_files_subdir, f"{db_pod}:/"])
+        logging.debug(f"stderr:\n{cp_proc.stderr.strip()}")
+        logging.debug(f"stdout:\n{cp_proc.stdout.strip()}")
 
         logging.debug(f"Running mongorestore on {db_pod} ...")
-        mongorestore_cmd = [
-            "mongorestore",
-            "--drop",
-            "--gzip",
-            f"--dir=/{db_files_subdir}",
-        ]
-        if not args.verbose:
-            mongorestore_cmd.append("--quiet")
-        combine.exec(db_pod, mongorestore_cmd)
+        mongorestore_proc = combine.exec(
+            db_pod, ["mongorestore", "--drop", "--gzip", f"--dir=/{db_files_subdir}"]
+        )
+        logging.debug(f"stderr:\n{mongorestore_proc.stderr.strip()}")
+        logging.debug(f"stdout:\n{mongorestore_proc.stdout.strip()}")
 
         logging.debug(f"Removing {db_files_subdir} from {db_pod} ...")
-        combine.exec(
-            db_pod,
-            [
-                "rm",
-                "-rf",
-                f"/{db_files_subdir}",
-            ],
-        )
+        rm_proc = combine.exec(db_pod, ["rm", "-rf", f"/{db_files_subdir}"])
+        logging.debug(f"stderr:\n{rm_proc.stderr.strip()}")
+        logging.debug(f"stdout:\n{rm_proc.stdout.strip()}")
 
         step.print("Copy the backend files.")
         backend_pod = combine.get_pod_id(CombineApp.Component.Backend)
