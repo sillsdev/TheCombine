@@ -76,14 +76,13 @@ runs:
 
     - name: Deploy with Helm
       run: >
-        python -u
+        python
         deploy/scripts/setup_combine.py
         --context ${{ inputs.kube_context }}
         --non-interactive
         --repo ${{ inputs.image_registry }}
         --tag ${{ inputs.image_tag }}
         --target ${{ inputs.target }}
-        2>&1
       shell: bash
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
