@@ -16,7 +16,7 @@
 #   - ARM 64-bit
 ############################################################
 
-FROM public.ecr.aws/thecombine/aws-kubectl:0.4.1-$TARGETARCH
+FROM public.ecr.aws/thecombine/aws-kubectl:0.4.2-$TARGETARCH
 
 USER root
 
