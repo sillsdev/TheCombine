@@ -187,14 +187,12 @@ def main() -> None:
             logging.info(f"Cleaning out backend files in {backend_pod} ...")
             # we run the rm command inside a bash shell so that the shell will do wildcard
             # expansion
-            combine.exec(
+            clean_proc = combine.exec(
                 backend_pod,
-                [
-                    "/bin/bash",
-                    "-c",
-                    f"rm -rf /home/app/{backend_files_subdir}/*",
-                ],
+                ["/bin/bash", "-c", f"rm -rf /home/app/{backend_files_subdir}/*"],
             )
+            logging.debug(f"stderr:\n{clean_proc.stderr.strip()}")
+            logging.debug(f"stdout:\n{clean_proc.stdout.strip()}")
 
         # Iterate through every item in the backend subdirectory
         remote_subdir = f"{backend_pod}:/home/app/{backend_files_subdir}/"
