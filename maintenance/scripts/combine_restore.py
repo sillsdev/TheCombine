@@ -82,7 +82,7 @@ def main() -> None:
             backup = args.file
         else:
             # Get the list of backups
-            backup_list_output = aws.list().stdout.strip().split("\n")
+            backup_list_output = [line for line in aws.list().stdout.strip().split("\n") if line]
 
             if len(backup_list_output) == 0:
                 logging.warning(f"No backups available from {aws_bucket}")
