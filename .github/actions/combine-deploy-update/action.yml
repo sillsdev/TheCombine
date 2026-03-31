@@ -50,7 +50,7 @@ runs:
     - name: Install Helm
       run: |
         echo "Installing Helm version ${{ inputs.helm_version }}"
-        curl https://raw.githubusercontent.com/helm/helm/${{ inputs.helm_version }}/scripts/get-helm-3 | DESIRED_VERSION=${{ inputs.helm_version }} bash
+        curl -fSL https://raw.githubusercontent.com/helm/helm/${{ inputs.helm_version }}/scripts/get-helm-3 | DESIRED_VERSION=${{ inputs.helm_version }} bash
         helm version
       shell: bash
 
@@ -58,7 +58,7 @@ runs:
       run: |
         cd
         echo "Installing kubectl version ${{ inputs.kubectl_version }}"
-        curl -LO https://dl.k8s.io/release/${{ inputs.kubectl_version }}/bin/linux/amd64/kubectl
+        curl -fLO https://dl.k8s.io/release/${{ inputs.kubectl_version }}/bin/linux/amd64/kubectl
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
         kubectl version --client --output=yaml
       shell: bash
