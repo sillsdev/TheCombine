@@ -59,3 +59,26 @@ jobs:
           context: "{{defaultContext}}:deploy"
           push: true
           tags: public.ecr.aws/thecombine/combine_deploy:latest
+      - name: Delete combine_deploy images older than 1 year
+        shell: bash
+        run: |
+          set -euo pipefail
+          CUTOFF=$(date -u -d '1 year ago' '+%Y-%m-%dT%H:%M:%SZ')
+          OLD_DIGESTS=$(aws ecr-public describe-images \
+            --region us-east-1 \
+            --repository-name combine_deploy \
+            --query "imageDetails[?imagePushedAt<'${CUTOFF}'].imageDigest" \
+            --output text)
+          OLD_COUNT=$(printf '%s' "${OLD_DIGESTS}" | awk '{print NF}')
+          if [ "${OLD_COUNT}" -eq 0 ] || [ "${OLD_DIGESTS}" = "None" ]; then
+            echo "No images older than 1 year found."
+            exit 0
+          fi
+          echo "Found ${OLD_COUNT} images older than 1 year. Deleting..."
+          for digest in ${OLD_DIGESTS}; do
+            echo "Deleting digest: ${digest}"
+            aws ecr-public batch-delete-image \
+              --region us-east-1 \
+              --repository-name combine_deploy \
+              --image-ids imageDigest=${digest}
+          done
