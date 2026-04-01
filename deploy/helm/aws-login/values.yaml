@@ -21,9 +21,8 @@ awsEcr:
   configName: aws-ecr-config
   cron: yes
   cronJobName: ecr-cred-helper-cron
-  dockerEmail: noreply@thecombine.app
   image: "public.ecr.aws/thecombine/aws-kubectl"
-  imageVersion: "0.4.1"
+  imageVersion: "0.4.2"
   jobName: ecr-cred-helper
   schedule: "0 */8 * * *"
   secretsName: aws-ecr-credentials

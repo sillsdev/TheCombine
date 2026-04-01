@@ -54,11 +54,6 @@ spec:
             configMapKeyRef:
               key: PULL_SECRET_NAME
               name: "{{ .Values.awsEcr.configName }}"
-        - name: DOCKER_EMAIL
-          valueFrom:
-            configMapKeyRef:
-              key: DOCKER_EMAIL
-              name: "{{ .Values.awsEcr.configName }}"
         resources:
           requests:
             memory: 128Mi
