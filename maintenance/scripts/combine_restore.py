@@ -63,9 +63,9 @@ def main() -> None:
     """Restore The Combine from a backup stored in the AWS S3 service."""
     args = parse_args()
     if args.verbose:
-        logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
+        logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.DEBUG)
     else:
-        logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
+        logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
     # Look up the required environment variables
     aws_bucket, db_files_subdir, backend_files_subdir = check_env_vars(
         ["aws_bucket", "db_files_subdir", "backend_files_subdir"]
@@ -82,10 +82,10 @@ def main() -> None:
             backup = args.file
         else:
             # Get the list of backups
-            backup_list_output = aws.list().stdout.strip().split("\n")
+            backup_list_output = [line for line in aws.list().stdout.strip().split("\n") if line]
 
             if len(backup_list_output) == 0:
-                print(f"No backups available from {aws_bucket}")
+                logging.warning(f"No backups available from {aws_bucket}")
                 sys.exit(0)
 
             # Convert the list of backups to a more useful structure
@@ -120,7 +120,9 @@ def main() -> None:
 
         step.print(f"Fetch the selected backup, {backup}.")
 
-        aws.pull(backup, Path(restore_dir) / restore_file)
+        aws_proc = aws.pull(backup, Path(restore_dir) / restore_file)
+        logging.debug(f"stderr:\n{aws_proc.stderr.strip()}")
+        logging.debug(f"stdout:\n{aws_proc.stdout.strip()}")
 
         step.print("Unpack the backup.")
         os.chdir(restore_dir)
@@ -154,54 +156,54 @@ def main() -> None:
         step.print("Restore the database.")
         db_pod = combine.get_pod_id(CombineApp.Component.Database)
         if not db_pod:
-            print("Cannot find the database container.", file=sys.stderr)
+            logging.error("Cannot find the database container.")
             sys.exit(1)
-        combine.kubectl(
-            [
-                "cp",
-                db_files_subdir,
-                f"{db_pod}:/",
-            ]
-        )
 
-        combine.exec(
-            db_pod,
-            [
-                "mongorestore",
-                "--drop",
-                "--gzip",
-                "--quiet",
-                f"--dir=/{db_files_subdir}",
-            ],
+        logging.debug(f"Copying {db_files_subdir} to {db_pod} ...")
+        cp_proc = combine.kubectl(["cp", db_files_subdir, f"{db_pod}:/"])
+        logging.debug(f"stderr:\n{cp_proc.stderr.strip()}")
+        logging.debug(f"stdout:\n{cp_proc.stdout.strip()}")
+
+        logging.debug(f"Running mongorestore on {db_pod} ...")
+        mongorestore_proc = combine.exec(
+            db_pod, ["mongorestore", "--drop", "--gzip", f"--dir=/{db_files_subdir}"]
         )
-        combine.exec(
-            db_pod,
-            [
-                "rm",
-                "-rf",
-                f"/{db_files_subdir}",
-            ],
-        )
+        logging.debug(f"stderr:\n{mongorestore_proc.stderr.strip()}")
+        logging.debug(f"stdout:\n{mongorestore_proc.stdout.strip()}")
+
+        logging.debug(f"Removing {db_files_subdir} from {db_pod} ...")
+        rm_proc = combine.exec(db_pod, ["rm", "-rf", f"/{db_files_subdir}"])
+        logging.debug(f"stderr:\n{rm_proc.stderr.strip()}")
+        logging.debug(f"stdout:\n{rm_proc.stdout.strip()}")
 
         step.print("Copy the backend files.")
         backend_pod = combine.get_pod_id(CombineApp.Component.Backend)
         if not backend_pod:
-            print("Cannot find the backend container.", file=sys.stderr)
+            logging.error("Cannot find the backend container.")
             sys.exit(1)
+
         # if --clean option was used, delete the existing backend files
         if args.clean:
+            logging.info(f"Cleaning out backend files in {backend_pod} ...")
             # we run the rm command inside a bash shell so that the shell will do wildcard
             # expansion
-            combine.exec(
+            clean_proc = combine.exec(
                 backend_pod,
-                [
-                    "/bin/bash",
-                    "-c",
-                    f"rm -rf /home/app/{backend_files_subdir}/*",
-                ],
+                ["/bin/bash", "-c", f"rm -rf /home/app/{backend_files_subdir}/*"],
             )
+            logging.debug(f"stderr:\n{clean_proc.stderr.strip()}")
+            logging.debug(f"stdout:\n{clean_proc.stdout.strip()}")
 
-        combine.kubectl(["cp", backend_files_subdir, f"{backend_pod}:/home/app", "--no-preserve"])
+        # Iterate through every item in the backend subdirectory
+        remote_subdir = f"{backend_pod}:/home/app/{backend_files_subdir}/"
+        logging.debug(f"Copying contents of {backend_files_subdir} to {remote_subdir} ...")
+        for item in os.listdir(backend_files_subdir):
+            if item.startswith(".") or item == "lost+found":
+                logging.debug(f"Skipping {item} ...")
+                continue
+            logging.debug(f"Copying {item} ...")
+            local_item = os.path.join(backend_files_subdir, item)
+            combine.kubectl(["cp", local_item, remote_subdir, "--no-preserve"])
 
 
 if __name__ == "__main__":
