@@ -37,7 +37,7 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: |
-          python -m pip install pip==24.2
-          pip install tox==4.26.0 tox-gh-actions==3.5.0
+          python -m pip install pip==26.0.1
+          pip install tox==4.51.0 tox-gh-actions==3.5.0
       - name: Test with tox
         run: tox
