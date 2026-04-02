@@ -183,7 +183,7 @@ def main() -> None:
     # Validate that --months-old is positive if specified
     if args.months_old is not None and args.months_old <= 0:
         print("'--months-old' must be greater than 0", file=sys.stderr)
-        exit(1)
+        sys.exit(1)
 
     # Determine if we should list images instead of removing them
     rm_images = bool(args.rm_pattern or args.untagged or args.months_old)
@@ -248,14 +248,14 @@ def main() -> None:
                 continue
 
             # Skip images with tags that match the --keep patterns
-            if kp_pattern and [True for tag in tag_list if re.match(kp_pattern, tag)]:
+            if kp_pattern and any(re.match(kp_pattern, tag) for tag in tag_list):
                 if args.verbose:
                     print(f"Skipping image {digest_id} because it has a --keep tag.")
                 continue
 
             # Check if image matches removal specification
             if (
-                (rm_pattern and [True for tag in tag_list if re.match(rm_pattern, tag)])
+                (rm_pattern and any(re.match(rm_pattern, tag) for tag in tag_list))
                 or (args.untagged and not tag_list)
                 or (cutoff_date and pushed_at and pushed_at < cutoff_date)
             ):
