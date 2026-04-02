@@ -14,16 +14,26 @@ Assumptions:
 from __future__ import annotations
 
 from argparse import ArgumentParser, HelpFormatter, Namespace
+from datetime import datetime, timezone
 import json
 import os
 import re
 import subprocess
 import sys
 import textwrap
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Set, TypedDict
 
-# Type definitions for results from AWS "describe-images"
-AwsJsonResult = Dict[str, List[Dict[str, Union[str, List[str]]]]]
+from dateutil.relativedelta import relativedelta
+
+
+# Type definition for results from AWS "describe-images"
+class ImageDetail(TypedDict, total=False):
+    imageDigest: str  # noqa: N815
+    imagePushedAt: str  # noqa: N815
+    imageTags: List[str]  # noqa: N815
+
+
+AwsJsonResult = Dict[str, List[ImageDetail]]
 
 
 class RawFormatter(HelpFormatter):
@@ -49,25 +59,34 @@ def parse_args() -> Namespace:
     parser = ArgumentParser(
         description="Clean an AWS ECR repository of specified images/tags",
         epilog=f"""
-        Example:
+        Examples:
 
         {os.path.basename(__file__)} repo_a repo_b --remove "0\\.1\\.\\d" --keep "0\\.1\\.20"
 
-        will remove all tags for the 0.1.* releases except 0.1.20 from repos
-        repo_a and repo_b.
+        will remove from repo_a and repo_b all images with a 0.1.* tag but no 0.1.20 tag.
+
+        {os.path.basename(__file__)} repo_a --months-old 6 --keep ".+" --list
+
+        will list all untagged images from repo_a that were created more than 6 months ago.
 
         Notes:
 
-         - The repo names must be specified BEFORE the --remove or --keep options.
-         - If neither --untagged nor --remove options is specified, then
-           {os.path.basename(__file__)} will list the images.  This is the same
-           behavior as specifying '--list'.
+         - The repo names must be specified BEFORE the --keep and --remove options.
+         - The removal options (--remove, --untagged, and --months-old) are mutually exclusive.
+         - If no removal option is specified, this is the same behavior as specifying '--list'.
+         - If '--list' is specified with a removal option,
+           relevant images will be listed and NOT removed.
+         - For safety, any image with the 'latest' tag will not be removed.
 
         """,
         formatter_class=RawFormatter,
     )
     parser.add_argument("--profile", help="AWS user profile to use to connect to AWS ECR")
-    parser.add_argument("--untagged", action="store_true", help="Delete untagged images.")
+    parser.add_argument(
+        "--public",
+        action="store_true",
+        help="Use Amazon ECR Public instead of private ECR",
+    )
     parser.add_argument(
         "repo_list",
         nargs="+",
@@ -77,18 +96,24 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--keep",
         nargs="+",
-        help="List of tags to keep that would otherwise be removed",
+        help="List of regular expressions for tags to keep (overriding removal specification)",
     )
     parser.add_argument(
-        "--list", action="store_true", help="List images in the repo.  No images are deleted."
+        "--list", action="store_true", help="List images in the repo. No images are removed."
     )
-    parser.add_argument(
+    removal_group = parser.add_mutually_exclusive_group()
+    removal_group.add_argument(
         "--remove",
         dest="rm_pattern",
         nargs="+",
         help="List of regular expressions that specify tags to remove",
     )
-    # Add some debugging options to see what's going on
+    removal_group.add_argument("--untagged", action="store_true", help="Remove untagged images")
+    removal_group.add_argument(
+        "--months-old",
+        type=int,
+        help="Remove images older than the specified number of months",
+    )
     parser.add_argument(
         "--dry-run",
         dest="dry_run",
@@ -131,10 +156,18 @@ def run_aws_cmd(aws_cmd: List[str], verbose: bool = False) -> subprocess.Complet
 
 
 def build_aws_cmd(
-    profile: Optional[str], repo: str, subcommand: str, aws_args: Optional[List[str]] = None
+    profile: Optional[str],
+    repo: str,
+    subcommand: str,
+    aws_args: Optional[List[str]] = None,
+    public: bool = False,
 ) -> List[str]:
     """Build up an AWS ECR command from a subcommand and optional parts."""
-    aws_cmd = ["aws", "ecr"]
+    aws_cmd = ["aws"]
+    if public:
+        aws_cmd.extend(["ecr-public", "--region=us-east-1"])
+    else:
+        aws_cmd.append("ecr")
     if profile:
         aws_cmd.append(f"--profile={profile}")
     aws_cmd.extend([f"--repository-name={repo}", "--output=json", subcommand])
@@ -147,61 +180,96 @@ def main() -> None:
     """Clean out old images in the AWS ECR repository."""
     args = parse_args()
 
-    # Verify that either '--untagged' or '--remove' or '--list' are specified
-    list_images = args.list or (
-        not args.untagged and (args.rm_pattern is None or len(args.rm_pattern) == 0)
-    )
+    # Validate that --months-old is positive if specified
+    if args.months_old is not None and args.months_old <= 0:
+        print("'--months-old' must be greater than 0", file=sys.stderr)
+        exit(1)
 
-    rm_pattern: Optional[str] = None
-    if args.rm_pattern is not None:
-        # Join patterns of tags to keep to a single regular expression
-        rm_pattern = "^(?:% s)$" % "|".join(args.rm_pattern)
+    # Determine if we should list images instead of removing them
+    rm_images = bool(args.rm_pattern or args.untagged or args.months_old)
+    list_images = args.list or not rm_images
+
+    # Convert --keep and --remove lists each into single regex
+    kp_pattern = "^(?:%s)$" % "|".join(args.keep) if args.keep else None
+    rm_pattern = "^(?:%s)$" % "|".join(args.rm_pattern) if args.rm_pattern else None
+    if args.verbose and kp_pattern:
+        print(f"Keep pattern: {kp_pattern}")
+    if args.verbose and rm_pattern:
+        print(f"Remove pattern: {rm_pattern}")
+
+    # Compute cutoff datetime from --months-old
+    cutoff_date: Optional[datetime] = None
+    if args.months_old is not None:
+        cutoff_date = datetime.now(timezone.utc) - relativedelta(months=args.months_old)
+        if args.verbose:
+            print(f"Cutoff date for removing images: {cutoff_date}")
 
     # Iterate over the list of repos
     for repo in args.repo_list:
         if args.verbose:
             print(f"Cleaning repo {repo}")
-        # Get a list of the current image tags for the specified repo
-        aws_cmd = build_aws_cmd(args.profile, repo, "describe-images")
+        # Get a list of the current images for the specified repo
+        aws_cmd = build_aws_cmd(args.profile, repo, "describe-images", public=args.public)
         aws_result = run_aws_cmd(aws_cmd, args.verbose)
 
-        # Load the JSON output of the describe-images command into a 'repo_images'
-        # dictionary
+        # Load the JSON output of the describe-images command into a 'repo_images' dictionary
         repo_images: AwsJsonResult = json.loads(aws_result.stdout)
 
-        # Create a list of image ids (tags or digest) to be deleted.
-        image_ids: List[str] = []
+        # Set of image ids for deletion
+        image_id_set: Set[str] = set()
 
         # Iterate over image descriptions returned by AWS
         for image_struct in repo_images["imageDetails"]:
-            # check to see if each tag should be kept
-            # untagged images are left alone.
-            if "imageTags" in image_struct:
-                for tag in image_struct["imageTags"]:
-                    # 'latest' is a special tag - always points to most recent
-                    # untagged image.  Delete this image by digest name but only
-                    # if untagged images are to be deleted
-                    if list_images:
-                        print(f"tag {tag}")
-                    if tag == "latest":
-                        if args.untagged:
-                            image_ids.append(f"imageDigest={image_struct['imageDigest']}")
-                    # if not "latest", check to see if there are patterns to test
-                    elif rm_pattern is not None and re.match(rm_pattern, tag):
-                        # now check to see if it matches any exact tags specified
-                        if not args.keep or tag not in args.keep:
-                            image_ids.append(f"imageTag={tag}")
-            else:
-                # No tags exist for this image
-                if args.untagged:
-                    image_ids.append(f'imageDigest={image_struct["imageDigest"]}')
-                if list_images:
-                    print(f'digest {image_struct["imageDigest"]}')
+            digest_id = f'imageDigest={image_struct["imageDigest"]}'
+            tag_list = image_struct.get("imageTags", [])
+            pushed_at: Optional[datetime] = None
+            if (list_images or args.months_old) and "imagePushedAt" in image_struct:
+                pushed_at_str = image_struct["imagePushedAt"].replace("Z", "+00:00")
+                pushed_at = datetime.fromisoformat(pushed_at_str)
+
+            # Create image info string for printing
+            list_str = ""
+            if list_images:
+                list_str = f"{digest_id}"
+                if pushed_at:
+                    list_str += f"\n  created: {pushed_at}"
+                if tag_list:
+                    list_str += f"\n  tags: {', '.join(tag_list)}"
+
+            # If there is no removal specification, then just print
+            if not rm_images:
+                print(list_str)
+                continue
+
+            # Always skip 'latest' tagged image
+            if "latest" in tag_list:
+                if args.verbose:
+                    print(f"Skipping image {digest_id} because it has the 'latest' tag.")
+                continue
+
+            # Skip images with tags that match the --keep patterns
+            if kp_pattern and [True for tag in tag_list if re.match(kp_pattern, tag)]:
+                if args.verbose:
+                    print(f"Skipping image {digest_id} because it has a --keep tag.")
+                continue
+
+            # Check if image matches removal specification
+            if (
+                (rm_pattern and [True for tag in tag_list if re.match(rm_pattern, tag)])
+                or (args.untagged and not tag_list)
+                or (cutoff_date and pushed_at and pushed_at < cutoff_date)
+            ):
+                if args.list:
+                    print(list_str)
+                else:
+                    image_id_set.add(digest_id)
+
         if not list_images:
             # Remove all the specified image(s) in blocks of 100 (AWS limit)
             # See:
             # https://docs.aws.amazon.com/AmazonECR/latest/APIReference/API_BatchDeleteImage.html
-            if len(image_ids) > 0:
+            if image_id_set:
+                image_ids = list(image_id_set)
                 aws_delete_limit = 100
                 for i in range(0, len(image_ids), aws_delete_limit):
                     aws_cmd = build_aws_cmd(
@@ -209,6 +277,7 @@ def main() -> None:
                         repo,
                         "batch-delete-image",
                         ["--image-ids"] + image_ids[i : i + aws_delete_limit],
+                        args.public,
                     )
                     if args.dry_run:
                         print(f"AWS Command: {aws_cmd}")
