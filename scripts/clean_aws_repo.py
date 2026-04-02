@@ -190,8 +190,8 @@ def main() -> None:
     list_images = args.list or not rm_images
 
     # Convert --keep and --remove lists each into single regex
-    kp_pattern = "^(?:%s)$" % "|".join(args.keep) if args.keep else None
-    rm_pattern = "^(?:%s)$" % "|".join(args.rm_pattern) if args.rm_pattern else None
+    kp_pattern = f"^(?:{'|'.join(args.keep)})$" if args.keep else None
+    rm_pattern = f"^(?:{'|'.join(args.rm_pattern)})$" if args.rm_pattern else None
     if args.verbose and kp_pattern:
         print(f"Keep pattern: {kp_pattern}")
     if args.verbose and rm_pattern:
