@@ -70,7 +70,7 @@ jobs:
             --query "imageDetails[?imagePushedAt<'${CUTOFF}'].imageDigest" \
             --output text)
           OLD_COUNT=$(printf '%s' "${OLD_DIGESTS}" | awk '{print NF}')
-          if [ "${OLD_COUNT}" -eq 0 ] || [ "${OLD_DIGESTS}" = "None" ]; then
+          if [ -z "${OLD_DIGESTS}" ] || [ "${OLD_DIGESTS}" = "None" ] || [ "${OLD_COUNT}" -eq 0 ]; then
             echo "No images older than 1 year found."
             exit 0
           fi
