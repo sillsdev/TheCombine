@@ -40,10 +40,8 @@ import { FileWithSpeakerId } from "types/word";
 import { Bcp47Code } from "types/writingSystem";
 import { convertGoalToEdit } from "utilities/goalUtilities";
 
-export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
-const apiBaseURL = `${baseURL}/v1`;
-const config_parameters: Api.ConfigurationParameters = { basePath: baseURL };
-const config = new Api.Configuration(config_parameters);
+const basePath = RuntimeConfig.getInstance().baseUrl();
+const config = new Api.Configuration({ basePath });
 
 /** A list of URL patterns for which user analytics should not be collected. */
 const authenticationUrls = [
@@ -67,7 +65,8 @@ const whiteListedErrorUrls = [
 ];
 
 // Create an axios instance to allow for attaching interceptors to it.
-const axiosInstance = axios.create({ baseURL: apiBaseURL });
+const baseURL = `${basePath}/v1`;
+const axiosInstance = axios.create({ baseURL, withCredentials: true });
 axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const consent = LocalStorage.getCurrentUser()?.analyticsOn;
   const url = config.url;
@@ -179,7 +178,7 @@ export async function deleteAudio(
  * Note: Backend doesn't need wordId to find the file,
  * but it's still required in the url and helpful for analytics. */
 export function getAudioUrl(wordId: string, fileName: string): string {
-  return `${apiBaseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/download/${fileName}`;
+  return `${baseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/download/${fileName}`;
 }
 
 /* AuthController.cs */
@@ -189,7 +188,7 @@ export async function getLexboxAuthStatus(): Promise<AuthStatus> {
 }
 
 export function getLexboxLoginUrl(): string {
-  return `${baseURL}/v1/auth/lexbox-login`;
+  return `${baseURL}/auth/lexbox-login`;
 }
 
 export async function logoutLexboxUser(): Promise<void> {
@@ -657,7 +656,7 @@ export async function uploadConsent(
 
 /** Use of the returned url acts as an HttpGet. */
 export function getConsentUrl(speaker: Speaker): string {
-  return `${apiBaseURL}/projects/${speaker.projectId}/speakers/consent/${speaker.id}`;
+  return `${baseURL}/projects/${speaker.projectId}/speakers/consent/${speaker.id}`;
 }
 
 /** Returns the string to display the image inline in Base64 <img src= */
