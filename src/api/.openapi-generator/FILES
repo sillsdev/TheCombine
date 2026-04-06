@@ -36,10 +36,13 @@ models/edit.ts
 models/email-invite-data.ts
 models/email-invite-status.ts
 models/flag.ts
+models/flex-project-metadata-dto.ts
+models/flex-ws-id-dto.ts
 models/gloss.ts
 models/gram-cat-group.ts
 models/grammatical-info.ts
 models/index.ts
+models/lexbox-project.ts
 models/merge-source-word.ts
 models/merge-undo-ids.ts
 models/merge-words.ts
@@ -48,6 +51,7 @@ models/off-on-setting.ts
 models/password-reset-data.ts
 models/permission.ts
 models/project-role.ts
+models/project-writing-systems-dto.ts
 models/project.ts
 models/pronunciation.ts
 models/protect-reason.ts

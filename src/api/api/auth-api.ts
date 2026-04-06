@@ -38,6 +38,8 @@ import {
 } from "../base";
 // @ts-ignore
 import { AuthStatus } from "../models";
+// @ts-ignore
+import { LexboxProject } from "../models";
 /**
  * AuthApi - axios parameter creator
  * @export
@@ -89,6 +91,42 @@ export const AuthApiAxiosParamCreator = function (
      */
     getAuthStatus: async (options: any = {}): Promise<RequestArgs> => {
       const localVarPath = `/v1/auth/status`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLexboxProjects: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/v1/auth/lexbox-projects`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -207,6 +245,28 @@ export const AuthApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
+    async getLexboxProjects(
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<LexboxProject>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getLexboxProjects(options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
     async logOutLexbox(
       options?: any
     ): Promise<
@@ -260,6 +320,16 @@ export const AuthApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
+    getLexboxProjects(options?: any): AxiosPromise<Array<LexboxProject>> {
+      return localVarFp
+        .getLexboxProjects(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
     logOutLexbox(options?: any): AxiosPromise<void> {
       return localVarFp
         .logOutLexbox(options)
@@ -296,6 +366,18 @@ export class AuthApi extends BaseAPI {
   public getAuthStatus(options?: any) {
     return AuthApiFp(this.configuration)
       .getAuthStatus(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AuthApi
+   */
+  public getLexboxProjects(options?: any) {
+    return AuthApiFp(this.configuration)
+      .getLexboxProjects(options)
       .then((request) => request(this.axios, this.basePath));
   }
 
