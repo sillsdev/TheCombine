@@ -143,10 +143,7 @@ def run_aws_cmd(aws_cmd: List[str], verbose: bool = False) -> subprocess.Complet
 
 
 def build_aws_cmd(
-    profile: Optional[str],
-    repo: str,
-    subcommand: str,
-    aws_args: Optional[List[str]] = None,
+    profile: Optional[str], repo: str, subcommand: str, aws_args: Optional[List[str]] = None
 ) -> List[str]:
     """Build up an AWS ECR command from a subcommand and optional parts."""
     aws_cmd = ["aws", "ecr"]
