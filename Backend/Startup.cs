@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using BackendFramework.Contexts;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -173,13 +174,17 @@ namespace BackendFramework
                 {
                     lexboxAuthConfig.Bind(options);
 
-                    // Discovery isn't working in dev, so manually fetch the keys.
+                    // Keep claim names (e.g. "sub", "name") as-is, rather than remapping to URI-based ClaimTypes.
+                    options.MapInboundClaims = false;
+
+                    // Discovery isn't working (at least in dev), so manually fetch the keys.
                     options.TokenValidationParameters.IssuerSigningKeyResolver = (_, _, kid, _) =>
                     {
-                        // Use a simple HttpClient to fetch the keys.
-                        // In a real app, you'd cache these for 24 hours.
-                        var client = new HttpClient();
-                        var response = client.GetStringAsync("https://lexbox.org/.well-known/jwks").Result;
+                        var jwksUrl = "https://lexbox.org/.well-known/jwks";
+                        // Task.Run avoids sync-over-async deadlock by running on a thread-pool thread with no
+                        // synchronization context.
+                        var response = Task.Run(() => new HttpClient().GetStringAsync(jwksUrl))
+                            .GetAwaiter().GetResult();
                         var keys = new JsonWebKeySet(response).GetSigningKeys();
                         return keys.Where(x => x.KeyId == kid);
                     };
@@ -197,7 +202,21 @@ namespace BackendFramework
                             context.ProtocolMessage.Prompt = lexboxPrompt;
                         }
 
-                        return System.Threading.Tasks.Task.CompletedTask;
+                        return Task.CompletedTask;
+                    };
+
+                    options.Events.OnRemoteFailure = ctx =>
+                    {
+                        _logger.LogError(ctx.Failure, "[OIDC] Remote failure: {Message}", ctx.Failure?.Message);
+                        ctx.HandleResponse();
+                        ctx.Response.Redirect("/error");
+                        return Task.CompletedTask;
+                    };
+
+                    options.Events.OnAuthenticationFailed = ctx =>
+                    {
+                        _logger.LogError(ctx.Exception, "[OIDC] Authentication failed: {Message}", ctx.Exception?.Message);
+                        return Task.CompletedTask;
                     };
                 });
 

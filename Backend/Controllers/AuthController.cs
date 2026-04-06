@@ -40,6 +40,11 @@ namespace BackendFramework.Controllers
             var result = await HttpContext.AuthenticateAsync(LexboxCookieScheme);
             if (!result.Succeeded || result.Principal is null)
             {
+                // Clear any stale or undecryptable cookie (e.g. after a server restart loses Data Protection keys)
+                if (HttpContext.Request.Cookies.ContainsKey("lexbox_auth"))
+                {
+                    await HttpContext.SignOutAsync(LexboxCookieScheme);
+                }
                 return Ok(AuthStatus.LoggedOut());
             }
 
