@@ -83,11 +83,6 @@ def parse_args() -> Namespace:
     )
     parser.add_argument("--profile", help="AWS user profile to use to connect to AWS ECR")
     parser.add_argument(
-        "--public",
-        action="store_true",
-        help="Use Amazon ECR Public instead of private ECR",
-    )
-    parser.add_argument(
         "repo_list",
         nargs="+",
         help="Docker image repository to be cleaned. (Multiple repos may be listed.)",
@@ -160,14 +155,9 @@ def build_aws_cmd(
     repo: str,
     subcommand: str,
     aws_args: Optional[List[str]] = None,
-    public: bool = False,
 ) -> List[str]:
     """Build up an AWS ECR command from a subcommand and optional parts."""
-    aws_cmd = ["aws"]
-    if public:
-        aws_cmd.extend(["ecr-public", "--region=us-east-1"])
-    else:
-        aws_cmd.append("ecr")
+    aws_cmd = ["aws", "ecr"]
     if profile:
         aws_cmd.append(f"--profile={profile}")
     aws_cmd.extend([f"--repository-name={repo}", "--output=json", subcommand])
@@ -209,7 +199,7 @@ def main() -> None:
         if args.verbose:
             print(f"Cleaning repo {repo}")
         # Get a list of the current images for the specified repo
-        aws_cmd = build_aws_cmd(args.profile, repo, "describe-images", public=args.public)
+        aws_cmd = build_aws_cmd(args.profile, repo, "describe-images")
         aws_result = run_aws_cmd(aws_cmd, args.verbose)
 
         # Load the JSON output of the describe-images command into a 'repo_images' dictionary
@@ -277,7 +267,6 @@ def main() -> None:
                         repo,
                         "batch-delete-image",
                         ["--image-ids"] + image_ids[i : i + aws_delete_limit],
-                        args.public,
                     )
                     if args.dry_run:
                         print(f"AWS Command: {aws_cmd}")
