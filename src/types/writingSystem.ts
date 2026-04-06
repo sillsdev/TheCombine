@@ -14,6 +14,7 @@ export enum Bcp47Code {
   Pt = "pt", // Portuguese
   Ru = "ru", // Russian
   Sw = "sw", // Swahili
+  Te = "te", // Telugu
   Zh = "zh", // Chinese
 }
 
@@ -29,6 +30,7 @@ const writingSystem = {
   [Bcp47Code.Pt]: newWritingSystem(Bcp47Code.Pt, "Português"), // Portuguese
   [Bcp47Code.Ru]: newWritingSystem(Bcp47Code.Ru, "русский язык"), // Russian
   [Bcp47Code.Sw]: newWritingSystem(Bcp47Code.Sw, "Kiswahili"), // Swahili
+  [Bcp47Code.Te]: newWritingSystem(Bcp47Code.Te, "తెలుగు"), // Telugu
   [Bcp47Code.Zh]: newWritingSystem(Bcp47Code.Zh, "中文"), // Chinese
 };
 
@@ -57,6 +59,7 @@ export const semDomWritingSystems = [
   writingSystem[Bcp47Code.Pt],
   writingSystem[Bcp47Code.Ru],
   writingSystem[Bcp47Code.Sw],
+  writingSystem[Bcp47Code.Te],
   writingSystem[Bcp47Code.Zh],
 ];
 

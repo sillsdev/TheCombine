@@ -78,6 +78,12 @@ def parse_args() -> argparse.Namespace:
         help="List the available targets and exit.",
     )
     parser.add_argument(
+        "--non-interactive",
+        "-n",
+        action="store_true",
+        help="Disable interactive prompts (for CI/CD use).",
+    )
+    parser.add_argument(
         "--profile",
         "-p",
         help="Profile name for the target. "
@@ -132,6 +138,9 @@ def main() -> None:
         sys.exit(ExitStatus.SUCCESS.value)
 
     target = args.target
+    if args.non_interactive and target not in config["targets"]:
+        logging.error(f"Target '{target}' not found in configuration")
+        sys.exit(ExitStatus.FAILURE.value)
     while target not in config["targets"]:
         target = get_target(config)
 
@@ -143,12 +152,13 @@ def main() -> None:
         profile = args.profile
 
     # Verify the Kubernetes/Helm environment
-    kube_env = KubernetesEnvironment(args)
+    kube_env = KubernetesEnvironment(args, prompt_for_context=not args.non_interactive)
     # Cache helm command used to alter the target cluster
     helm_cmd = kube_env.get_helm_cmd()
 
     # Check AWS Environment Variables
-    init_aws_environment()
+    if not args.non_interactive:
+        init_aws_environment()
 
     # Create list of target specific variable values
     target_vars = [f"global.imageTag={args.image_tag}"]
@@ -171,25 +181,26 @@ def main() -> None:
     # Open a temporary directory for creating the secrets YAML files
     with tempfile.TemporaryDirectory() as secrets_dir:
         for chart in config["profiles"][profile]["charts"]:
-            logging.debug(f"Chart: {chart}")
+            logging.info(f"Chart: {chart}")
 
             # Create the chart namespace if it does not exist
             chart_namespace = config["charts"][chart]["namespace"]
-            logging.debug(f"Namespace: {chart_namespace}")
+            logging.info(f"  Namespace: {chart_namespace}")
             if add_namespace(chart_namespace, kube_env.get_kubectl_cmd()):
-                logging.debug(f"Namespace '{chart_namespace}' created")
+                logging.info(f"    Namespace '{chart_namespace}' created")
                 installed_charts: List[str] = []
             else:
-                logging.debug(f"Namespace '{chart_namespace}' already exists")
+                logging.info(f"    Namespace '{chart_namespace}' already exists")
                 # Get list of charts in target namespace
                 installed_charts = get_installed_charts(helm_cmd, chart_namespace)
-            logging.debug(f"Installed charts: {installed_charts}")
+            logging.debug(f"  Installed charts: {installed_charts}")
 
             namespace_cmd = helm_cmd + ["--namespace", chart_namespace]
 
             if chart in installed_charts:
                 # Delete existing chart if --clean specified
                 if args.clean:
+                    logging.info(f"  Deleting chart: {chart}")
                     delete_cmd = namespace_cmd + ["delete", chart]
                     if args.dry_run:
                         delete_cmd.append("--dry-run")
@@ -197,7 +208,7 @@ def main() -> None:
 
                 # Skip existing install-only chart unless --clean specified
                 elif config["charts"][chart].get("install_only", False):
-                    logging.info(f"Skipping install-only chart '{chart}' (already installed)")
+                    logging.info(f"  Skipping install-only chart '{chart}' (already installed)")
                     continue
 
             # Build the secrets file
@@ -256,6 +267,7 @@ def main() -> None:
                 helm_install_cmd.extend(["--set", variable])
 
             # Install the chart
+            logging.info(f"  Installing chart: {chart}")
             run_cmd(helm_install_cmd, print_cmd=not args.quiet, print_output=True)
 
 

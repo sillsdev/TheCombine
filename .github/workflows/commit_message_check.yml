@@ -14,4 +14,4 @@ permissions: # added using https://github.com/step-security/secure-workflows
 
 jobs:
   commit-message-lint:
-    uses: sillsdev/FieldWorks/.github/workflows/CommitMessage.yml@673ca3760ac775af8c532bdd3a426cf0cd33e9c4
+    uses: sillsdev/FieldWorks/.github/workflows/CommitMessage.yml@28e9888c4c70a3af593b1b97b77954e04149059b

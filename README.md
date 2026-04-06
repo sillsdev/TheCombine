@@ -23,7 +23,7 @@
 [github-actions-frontend]: https://github.com/sillsdev/TheCombine/actions/workflows/frontend.yml
 [github-actions-backend]: https://github.com/sillsdev/TheCombine/actions/workflows/backend.yml
 [localization-sd-badge]:
-  https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Id%20Ml%20My%20Pt%20Ru%20Sw%20Zh-blue
+  https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Id%20Ml%20My%20Pt%20Ru%20Sw%20Te%20Zh-blue
 [localization-ug-badge]: https://img.shields.io/badge/User%20Guide-En%20Es%20Zh-blue
 [localization-crowdin-combine]: https://crowdin.com/project/the-combine
 [localization-crowdin-flex]: https://crowdin.com/project/fieldworks
@@ -746,6 +746,8 @@ Notes:
 
 - Run the script with the `--help` option to see possible options for the script.
 
+- Run the script with `--non-interactive` in CI/CD to avoid user prompts.
+
 - The setup assumes `amd64` architecture. If the target architecture is `arm64`, add `--set global.cpuArch=arm64`.
 
 When the script completes, the resources will be installed on the specified cluster. It may take a few moments before
@@ -970,22 +972,6 @@ kubectl -n thecombine logs deployment/frontend
 ```
 
 If you want to monitor the logs while the system is running, add the `--follow` option to the command.
-
-#### Add a User to a Project
-
-Task: add an existing user to a project
-
-Run:
-
-```bash
-kubectl -n thecombine exec -it deployment/maintenance -- add_user_to_proj.py --project <PROJECT_NAME> --user <USER>
-```
-
-For additional options, run:
-
-```bash
-kubectl -n thecombine exec -it deployment/maintenance -- add_user_to_proj.py --help
-```
 
 #### Backup _TheCombine_
 

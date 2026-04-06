@@ -19,7 +19,7 @@ jobs:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        uses: step-security/harden-runner@fe104658747b27e96e4f7e80cd0a94068e53901d # v2.16.1
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -46,7 +46,8 @@ jobs:
             security.ubuntu.com:80
             storage.googleapis.com:443
             sts.us-east-1.amazonaws.com:443
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Build The Combine
         id: build_combine
         uses: ./.github/actions/combine-build
@@ -60,33 +61,50 @@ jobs:
           # https://docs.aws.amazon.com/AmazonECR/latest/public/public-registry-auth.html#public-registry-auth-token
           aws_default_region: us-east-1
           build_component: ${{ matrix.component }}
+
   deploy_update:
     needs: build
     runs-on: [self-hosted, thecombine]
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        uses: step-security/harden-runner@fe104658747b27e96e4f7e80cd0a94068e53901d # v2.16.1
         with:
           egress-policy: audit
-
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
       - name: Deploy The Combine Update to QA
         uses: ./.github/actions/combine-deploy-update
         with:
-          image_registry: public.ecr.aws
-          image_registry_alias: "/thecombine"
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_account: ${{ secrets.AWS_ACCOUNT }}
+          aws_default_region: ${{ secrets.AWS_DEFAULT_REGION }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          combine_captcha_secret_key: ${{ secrets.COMBINE_CAPTCHA_SECRET_KEY }}
+          combine_jwt_secret_key: ${{ secrets.COMBINE_JWT_SECRET_KEY }}
+          combine_smtp_password: ${{ secrets.COMBINE_SMTP_PASSWORD }}
+          combine_smtp_username: ${{ secrets.COMBINE_SMTP_USERNAME }}
+          helm_version: ${{ vars.HELM_VERSION }}
+          image_registry: public.ecr.aws/thecombine
           image_tag: ${{ needs.build.outputs.image_tag }}
           kube_context: ${{ secrets.LTOPS_K8S_STAGING_CONTEXT }}
           kubectl_version: ${{ vars.KUBECTL_VERSION }}
-          update_cert_proxy: false
+          target: qa
       - name: Deploy The Combine Update to Production
         uses: ./.github/actions/combine-deploy-update
         with:
-          image_registry: public.ecr.aws
-          image_registry_alias: "/thecombine"
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_account: ${{ secrets.AWS_ACCOUNT }}
+          aws_default_region: ${{ secrets.AWS_DEFAULT_REGION }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          combine_captcha_secret_key: ${{ secrets.COMBINE_CAPTCHA_SECRET_KEY }}
+          combine_jwt_secret_key: ${{ secrets.COMBINE_JWT_SECRET_KEY }}
+          combine_smtp_password: ${{ secrets.COMBINE_SMTP_PASSWORD }}
+          combine_smtp_username: ${{ secrets.COMBINE_SMTP_USERNAME }}
+          helm_version: ${{ vars.HELM_VERSION }}
+          image_registry: public.ecr.aws/thecombine
           image_tag: ${{ needs.build.outputs.image_tag }}
           kube_context: ${{ secrets.LTOPS_K8S_PRODUCTION_CONTEXT }}
           kubectl_version: ${{ vars.KUBECTL_VERSION }}
-          update_cert_proxy: true
+          target: prod
