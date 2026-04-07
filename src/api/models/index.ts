@@ -1,4 +1,3 @@
-export * from "./auth-status";
 export * from "./banner-type";
 export * from "./chart-root-data";
 export * from "./consent-type";
@@ -15,6 +14,7 @@ export * from "./flex-project-metadata-dto";
 export * from "./gloss";
 export * from "./gram-cat-group";
 export * from "./grammatical-info";
+export * from "./lexbox-auth-status";
 export * from "./lexbox-project";
 export * from "./merge-source-word";
 export * from "./merge-undo-ids";

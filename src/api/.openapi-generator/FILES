@@ -24,7 +24,6 @@ common.ts
 configuration.ts
 git_push.sh
 index.ts
-models/auth-status.ts
 models/banner-type.ts
 models/chart-root-data.ts
 models/consent-type.ts
@@ -42,6 +41,7 @@ models/gloss.ts
 models/gram-cat-group.ts
 models/grammatical-info.ts
 models/index.ts
+models/lexbox-auth-status.ts
 models/lexbox-project.ts
 models/merge-source-word.ts
 models/merge-undo-ids.ts

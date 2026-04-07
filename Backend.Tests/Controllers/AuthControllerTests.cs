@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Backend.Tests.Mocks;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
@@ -32,8 +34,11 @@ namespace Backend.Tests.Controllers
         {
             var configValues = new Dictionary<string, string?> { { "LexboxAuth:PostLoginRedirect", "/" } };
             var configuration = new ConfigurationBuilder().AddInMemoryCollection(configValues).Build();
+            var httpClient = new HttpClient(new Mock<HttpMessageHandler>().Object);
+            var httpClientFactory = new Mock<IHttpClientFactory>();
+            httpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
             _permissionService = new PermissionServiceMock();
-            _controller = new AuthController(configuration, _permissionService);
+            _controller = new AuthController(configuration, httpClientFactory.Object, _permissionService);
         }
 
         [Test]
@@ -57,7 +62,7 @@ namespace Backend.Tests.Controllers
             var result = await _controller.GetAuthStatus() as OkObjectResult;
 
             Assert.That(result, Is.Not.Null);
-            var authStatus = result.Value as AuthStatus;
+            var authStatus = result.Value as LexboxAuthStatus;
             Assert.That(authStatus, Is.Not.Null);
             Assert.That(authStatus.IsLoggedIn, Is.True);
             Assert.That(authStatus.LoggedInAs, Is.EqualTo("Lex User"));
@@ -72,7 +77,7 @@ namespace Backend.Tests.Controllers
             var result = await _controller.GetAuthStatus() as OkObjectResult;
 
             Assert.That(result, Is.Not.Null);
-            var authStatus = result.Value as AuthStatus;
+            var authStatus = result.Value as LexboxAuthStatus;
             Assert.That(authStatus, Is.Not.Null);
             Assert.That(authStatus.IsLoggedIn, Is.False);
             Assert.That(authStatus.LoggedInAs, Is.Null);
@@ -101,7 +106,7 @@ namespace Backend.Tests.Controllers
             var result = await _controller.GetAuthStatus() as OkObjectResult;
 
             Assert.That(result, Is.Not.Null);
-            var authStatus = result.Value as AuthStatus;
+            var authStatus = result.Value as LexboxAuthStatus;
             Assert.That(authStatus, Is.Not.Null);
             Assert.That(authStatus.IsLoggedIn, Is.True);
             Assert.That(authStatus.LoggedInAs, Is.EqualTo("lex-1"));
@@ -119,7 +124,7 @@ namespace Backend.Tests.Controllers
             var result = await _controller.GetAuthStatus() as OkObjectResult;
 
             Assert.That(result, Is.Not.Null);
-            var authStatus = result.Value as AuthStatus;
+            var authStatus = result.Value as LexboxAuthStatus;
             Assert.That(authStatus, Is.Not.Null);
             Assert.That(authStatus.IsLoggedIn, Is.True);
             Assert.That(authStatus.LoggedInAs, Is.EqualTo("Lex Name"));
