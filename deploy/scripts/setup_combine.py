@@ -18,6 +18,7 @@ For each chart, the configuration file lists:
 
 The script also adds value definitions from a profile specific configuration file if it exists.
 """
+
 import argparse
 import logging
 from pathlib import Path

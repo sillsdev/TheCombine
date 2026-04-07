@@ -6,6 +6,7 @@ Requirements:
     - npm/node installed and in PATH
     - java 8+ installed and in PATH
 """
+
 import os
 from pathlib import Path
 import shutil

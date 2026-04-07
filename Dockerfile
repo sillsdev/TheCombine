@@ -15,8 +15,8 @@ ENV PIP_NO_CACHE_DIR=1
 
 WORKDIR /app
 
-RUN pip install --upgrade pip && \
-    pip install tox
+RUN pip install pip==26.0.1 && \
+    pip install tox==4.51.0
 
 COPY dev-requirements.txt tox.ini ./
 COPY docs/user_guide docs/user_guide
