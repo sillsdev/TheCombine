@@ -15,7 +15,7 @@ import { type LexboxAuthStatus } from "api/models";
 import {
   getLexboxAuthStatus,
   getLexboxLoginUrl,
-  getLexboxProjects,
+  //getLexboxProjects,
   logoutLexboxUser,
 } from "backend";
 import LoadingButton from "components/Buttons/LoadingButton";
@@ -57,7 +57,7 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
   const handleClickLoggedIn = async (
     e: MouseEvent<HTMLButtonElement>
   ): Promise<void> => {
-    console.info(await getLexboxProjects());
+    //console.info(await getLexboxProjects());
     setMenuAnchor(e.currentTarget);
   };
 
