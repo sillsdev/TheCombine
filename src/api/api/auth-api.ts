@@ -37,7 +37,7 @@ import {
   RequiredError,
 } from "../base";
 // @ts-ignore
-import { AuthStatus } from "../models";
+import { LexboxAuthStatus } from "../models";
 // @ts-ignore
 import { LexboxProject } from "../models";
 /**
@@ -229,7 +229,10 @@ export const AuthApiFp = function (configuration?: Configuration) {
     async getAuthStatus(
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuthStatus>
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<LexboxAuthStatus>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getAuthStatus(options);
@@ -310,7 +313,7 @@ export const AuthApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getAuthStatus(options?: any): AxiosPromise<AuthStatus> {
+    getAuthStatus(options?: any): AxiosPromise<LexboxAuthStatus> {
       return localVarFp
         .getAuthStatus(options)
         .then((request) => request(axios, basePath));

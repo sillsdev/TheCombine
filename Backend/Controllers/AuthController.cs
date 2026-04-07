@@ -20,12 +20,12 @@ namespace BackendFramework.Controllers
 {
     [Produces("application/json")]
     [Route("v1/auth")]
-    public class AuthController(IConfiguration configuration, IPermissionService permissionService,
-        IHttpClientFactory httpClientFactory) : Controller
+    public class AuthController(IConfiguration configuration, IHttpClientFactory httpClientFactory,
+        IPermissionService permissionService) : Controller
     {
         private readonly IConfiguration _configuration = configuration;
-        private readonly IPermissionService _permissionService = permissionService;
         private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
+        private readonly IPermissionService _permissionService = permissionService;
 
         private const string otelTagName = "otel.AuthController";
         private const string LexboxCookieScheme = "LexboxCookie";
@@ -69,7 +69,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Gets authentication status for the current request. </summary>
         [HttpGet("status", Name = "GetAuthStatus")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AuthStatus))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LexboxAuthStatus))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetAuthStatus()
         {
@@ -88,10 +88,10 @@ namespace BackendFramework.Controllers
                 {
                     await HttpContext.SignOutAsync(LexboxCookieScheme);
                 }
-                return Ok(AuthStatus.LoggedOut());
+                return Ok(LexboxAuthStatus.LoggedOut());
             }
 
-            return Ok(AuthStatus.LoggedIn(GetUserFromClaims(result.Principal)));
+            return Ok(LexboxAuthStatus.LoggedIn(GetUserFromClaims(result.Principal)));
         }
 
         /// <summary> Generates a redirect to Lexbox login for OIDC sign-in. </summary>

@@ -7,14 +7,15 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import { type MouseEvent, type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { type AuthStatus } from "api/models";
+import { type LexboxAuthStatus } from "api/models";
 import {
   getLexboxAuthStatus,
   getLexboxLoginUrl,
+  getLexboxProjects,
   logoutLexboxUser,
 } from "backend";
 import LoadingButton from "components/Buttons/LoadingButton";
@@ -26,7 +27,7 @@ interface LexboxLoginProps {
 
 export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
   const { t } = useTranslation();
-  const [status, setStatus] = useState<AuthStatus | undefined>();
+  const [status, setStatus] = useState<LexboxAuthStatus | undefined>();
   const [statusLoading, setStatusLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -51,6 +52,13 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
     if (!window.open(getLexboxLoginUrl())) {
       toast.error("Failed to open login window");
     }
+  };
+
+  const handleClickLoggedIn = async (
+    e: MouseEvent<HTMLButtonElement>
+  ): Promise<void> => {
+    console.info(await getLexboxProjects());
+    setMenuAnchor(e.currentTarget);
   };
 
   const handleLogout = async (): Promise<void> => {
@@ -79,7 +87,7 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
   return (
     <>
       <Button
-        onClick={(e) => setMenuAnchor(e.currentTarget)}
+        onClick={handleClickLoggedIn}
         startIcon={<AccountCircleIcon />}
         variant="outlined"
       >

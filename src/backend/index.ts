@@ -6,10 +6,11 @@ import { enqueueSnackbar } from "notistack";
 import * as Api from "api";
 import { BASE_PATH } from "api/base";
 import {
-  AuthStatus,
   BannerType,
   ChartRootData,
   EmailInviteStatus,
+  LexboxAuthStatus,
+  LexboxProject,
   MergeUndoIds,
   MergeWords,
   Permission,
@@ -183,12 +184,16 @@ export function getAudioUrl(wordId: string, fileName: string): string {
 
 /* AuthController.cs */
 
-export async function getLexboxAuthStatus(): Promise<AuthStatus> {
+export async function getLexboxAuthStatus(): Promise<LexboxAuthStatus> {
   return (await authApi.getAuthStatus(defaultOptions())).data;
 }
 
 export function getLexboxLoginUrl(): string {
   return `${baseURL}/auth/lexbox-login`;
+}
+
+export async function getLexboxProjects(): Promise<LexboxProject[]> {
+  return (await authApi.getLexboxProjects(defaultOptions())).data;
 }
 
 export async function logoutLexboxUser(): Promise<void> {

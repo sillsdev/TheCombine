@@ -15,25 +15,25 @@
 /**
  *
  * @export
- * @interface AuthStatus
+ * @interface LexboxAuthStatus
  */
-export interface AuthStatus {
+export interface LexboxAuthStatus {
   /**
    *
    * @type {boolean}
-   * @memberof AuthStatus
+   * @memberof LexboxAuthStatus
    */
   isLoggedIn?: boolean;
   /**
    *
    * @type {string}
-   * @memberof AuthStatus
+   * @memberof LexboxAuthStatus
    */
   loggedInAs?: string | null;
   /**
    *
    * @type {string}
-   * @memberof AuthStatus
+   * @memberof LexboxAuthStatus
    */
   userId?: string | null;
 }
