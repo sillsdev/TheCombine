@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -15,6 +14,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 
 namespace BackendFramework.Controllers
 {
@@ -31,41 +31,6 @@ namespace BackendFramework.Controllers
         private const string LexboxCookieScheme = "LexboxCookie";
         private const string LexboxOidcScheme = "LexboxOidc";
         private const string PostLoginRedirectConfigKey = "LexboxAuth:PostLoginRedirect";
-        private const string LexboxGraphQlUrl = "https://lexbox.org/api/graphql";
-        private const string LexboxMyProjectsQuery = @"query {
-    myProjects {
-        id
-        parentId
-        code
-        name
-        description
-        retentionPolicy
-        type
-        isConfidential
-        repoSizeInKb
-        resetStatus
-        projectOrigin
-        userCount
-        flexProjectMetadata {
-            projectId
-            lexEntryCount
-            langProjectId
-            flexModelVersion
-            writingSystems {
-                vernacularWss {
-                    tag
-                    isActive
-                    isDefault
-                }
-                analysisWss {
-                    tag
-                    isActive
-                    isDefault
-                }
-            }
-        }
-    }
-}";
 
         /// <summary> Gets authentication status for the current request. </summary>
         [HttpGet("status", Name = "GetAuthStatus")]
@@ -128,7 +93,7 @@ namespace BackendFramework.Controllers
         /// <summary> Gets Lexbox projects for the signed-in Lexbox user. </summary>
         [Authorize(AuthenticationSchemes = LexboxCookieScheme)]
         [HttpGet("lexbox-projects", Name = "GetLexboxProjects")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LexboxProject[]))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LexboxProject>))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status502BadGateway)]
         public async Task<IActionResult> GetLexboxProjects()
@@ -145,37 +110,35 @@ namespace BackendFramework.Controllers
             httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", accessToken);
 
-            var response = await httpClient.PostAsJsonAsync(LexboxGraphQlUrl,
-                new GraphQlQuery { Query = LexboxMyProjectsQuery });
+            var response = await httpClient.PostAsJsonAsync(LexboxQuery.QueryUrl,
+                new LexboxQuery { Query = LexboxQuery.MyProjectsQuery });
 
             if (!response.IsSuccessStatusCode)
             {
                 var responseBody = await response.Content.ReadAsStringAsync();
-                return Problem(
-                    title: "Lexbox GraphQL request failed",
+                return Problem(title: "Lexbox GraphQL request failed",
                     detail: $"Status: {(int)response.StatusCode} {response.ReasonPhrase}"
                         + (string.IsNullOrEmpty(responseBody) ? "" : $"\nBody: {responseBody}"),
                     statusCode: StatusCodes.Status502BadGateway);
             }
 
-            var graph = await response.Content.ReadFromJsonAsync<GraphQlResponse<LexboxMyProjectsData>>();
+            var graph = await response.Content.ReadFromJsonAsync<LexboxQueryResponse<MyProjectsData>>();
             if (graph is null)
             {
-                return Problem(
-                    title: "Lexbox GraphQL response was empty",
+                return Problem(title: "Lexbox GraphQL response was empty",
                     statusCode: StatusCodes.Status502BadGateway);
             }
 
             if (graph.Errors is { Length: > 0 })
             {
-                var errorText = string.Join("; ", graph.Errors.Select(e => e.Message).Where(m => !string.IsNullOrEmpty(m)));
-                return Problem(
-                    title: "Lexbox GraphQL returned errors",
-                    detail: errorText,
+                var errorText = string
+                    .Join("; ", graph.Errors.Select(e => e.Message).Where(m => !string.IsNullOrEmpty(m)));
+                return Problem(title: "Lexbox GraphQL returned errors", detail: errorText,
                     statusCode: StatusCodes.Status502BadGateway);
             }
 
-            return Ok(graph.Data?.MyProjects ?? []);
+            List<LexboxProject> projects = graph.Data?.MyProjects?.Select(p => new LexboxProject(p)).ToList() ?? [];
+            return Ok(projects);
         }
 
         private async Task<string?> TryGetLexboxAccessTokenAsync()
@@ -221,64 +184,5 @@ namespace BackendFramework.Controllers
             return new LexboxAuthUser { DisplayName = displayName ?? userId, UserId = userId };
         }
 
-        private sealed class GraphQlQuery
-        {
-            public required string Query { get; init; }
-        }
-
-        private sealed class GraphQlResponse<T>
-        {
-            public T? Data { get; init; }
-            public GraphQlError[]? Errors { get; init; }
-        }
-
-        private sealed class GraphQlError
-        {
-            public string? Message { get; init; }
-        }
-
-        private sealed class LexboxMyProjectsData
-        {
-            public List<LexboxProject> MyProjects { get; init; } = [];
-        }
-
-        public sealed class LexboxProject
-        {
-            public Guid Id { get; init; }
-            public Guid? ParentId { get; init; }
-            public string Code { get; init; } = "";
-            public string Name { get; init; } = "";
-            public string? Description { get; init; }
-            public string RetentionPolicy { get; init; } = "";
-            public string Type { get; init; } = "";
-            public bool? IsConfidential { get; init; }
-            public int? RepoSizeInKb { get; init; }
-            public string ResetStatus { get; init; } = "";
-            public string ProjectOrigin { get; init; } = "";
-            public int UserCount { get; init; }
-            public FlexProjectMetadataDto? FlexProjectMetadata { get; init; }
-        }
-
-        public sealed class FlexProjectMetadataDto
-        {
-            public Guid ProjectId { get; init; }
-            public int? LexEntryCount { get; init; }
-            public Guid? LangProjectId { get; init; }
-            public int? FlexModelVersion { get; init; }
-            public ProjectWritingSystemsDto? WritingSystems { get; init; }
-        }
-
-        public sealed class ProjectWritingSystemsDto
-        {
-            public List<FLExWsIdDto> VernacularWss { get; init; } = [];
-            public List<FLExWsIdDto> AnalysisWss { get; init; } = [];
-        }
-
-        public sealed class FLExWsIdDto
-        {
-            public string Tag { get; init; } = "";
-            public bool IsActive { get; init; }
-            public bool IsDefault { get; init; }
-        }
     }
 }

@@ -12,8 +12,6 @@
  * Do not edit the class manually.
  */
 
-import { FlexProjectMetadataDto } from "./flex-project-metadata-dto";
-
 /**
  *
  * @export
@@ -22,16 +20,10 @@ import { FlexProjectMetadataDto } from "./flex-project-metadata-dto";
 export interface LexboxProject {
   /**
    *
-   * @type {string}
+   * @type {Array<string>}
    * @memberof LexboxProject
    */
-  id?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof LexboxProject
-   */
-  parentId?: string | null;
+  analysisWsTags?: Array<string> | null;
   /**
    *
    * @type {string}
@@ -43,25 +35,13 @@ export interface LexboxProject {
    * @type {string}
    * @memberof LexboxProject
    */
-  name?: string | null;
-  /**
-   *
-   * @type {string}
-   * @memberof LexboxProject
-   */
   description?: string | null;
   /**
    *
    * @type {string}
    * @memberof LexboxProject
    */
-  retentionPolicy?: string | null;
-  /**
-   *
-   * @type {string}
-   * @memberof LexboxProject
-   */
-  type?: string | null;
+  id?: string;
   /**
    *
    * @type {boolean}
@@ -70,32 +50,14 @@ export interface LexboxProject {
   isConfidential?: boolean | null;
   /**
    *
-   * @type {number}
-   * @memberof LexboxProject
-   */
-  repoSizeInKb?: number | null;
-  /**
-   *
    * @type {string}
    * @memberof LexboxProject
    */
-  resetStatus?: string | null;
+  name?: string | null;
   /**
    *
-   * @type {string}
+   * @type {Array<string>}
    * @memberof LexboxProject
    */
-  projectOrigin?: string | null;
-  /**
-   *
-   * @type {number}
-   * @memberof LexboxProject
-   */
-  userCount?: number;
-  /**
-   *
-   * @type {FlexProjectMetadataDto}
-   * @memberof LexboxProject
-   */
-  flexProjectMetadata?: FlexProjectMetadataDto;
+  vernacularWsTags?: Array<string> | null;
 }
