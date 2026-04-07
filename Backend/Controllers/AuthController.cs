@@ -150,9 +150,11 @@ namespace BackendFramework.Controllers
 
             if (!response.IsSuccessStatusCode)
             {
+                var responseBody = await response.Content.ReadAsStringAsync();
                 return Problem(
                     title: "Lexbox GraphQL request failed",
-                    detail: $"Status: {(int)response.StatusCode} {response.ReasonPhrase}",
+                    detail: $"Status: {(int)response.StatusCode} {response.ReasonPhrase}"
+                        + (string.IsNullOrEmpty(responseBody) ? "" : $"\nBody: {responseBody}"),
                     statusCode: StatusCodes.Status502BadGateway);
             }
 
