@@ -1,6 +1,7 @@
 import { Cancel } from "@mui/icons-material";
 import {
   Box,
+  Button,
   Card,
   CardContent,
   Grid2,
@@ -20,18 +21,16 @@ import {
 } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
-import { type WritingSystem } from "api/models";
+import { LexboxProject, type WritingSystem } from "api/models";
 import { projectDuplicateCheck, uploadLiftAndGetWritingSystems } from "backend";
 import FileInputButton from "components/Buttons/FileInputButton";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import LanguagePicker from "components/LanguagePicker";
-import LexboxLogin from "components/Lexbox/LexboxLogin";
 import {
   asyncCreateProject,
   asyncFinishProject,
 } from "components/ProjectScreen/CreateProjectActions";
 import { useAppDispatch } from "rootRedux/hooks";
-import theme from "types/theme";
 import { newWritingSystem } from "types/writingSystem";
 import { NormalizedTextField } from "utilities/fontComponents";
 
@@ -63,6 +62,9 @@ export default function CreateProject(): ReactElement {
   const [analysisLang, setAnalysisLang] = useState(newWritingSystem(undBcp47));
   const [error, setError] = useState({ empty: false, nameTaken: false });
   const [languageData, setLanguageData] = useState<File | undefined>();
+  const [lexboxProject, setLexboxProject] = useState<
+    LexboxProject | undefined
+  >();
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [success, setSuccess] = useState(false);
@@ -128,6 +130,7 @@ export default function CreateProject(): ReactElement {
   };
 
   const updateLanguageData = async (langData?: File): Promise<void> => {
+    setLexboxProject(undefined);
     const langOptions = langData
       ? await uploadLiftAndGetWritingSystems(langData)
       : [];
@@ -135,6 +138,16 @@ export default function CreateProject(): ReactElement {
     setVernLangOptions(langOptions);
     if (langOptions.length) {
       setVernLang(newWritingSystem(undBcp47));
+    }
+  };
+
+  const updateLexboxProject = (project?: LexboxProject): void => {
+    setLanguageData(undefined);
+    setLexboxProject(project);
+    const vernLangs = project?.vernacularWsTags ?? [];
+    setVernLangOptions(vernLangs.map((lang) => newWritingSystem(lang)));
+    if (vernLangs.length) {
+      setVernLang(newWritingSystem(vernLangs[0]));
     }
   };
 
@@ -226,7 +239,7 @@ export default function CreateProject(): ReactElement {
             value={name}
             onChange={updateName}
             variant="outlined"
-            style={{ width: "100%", marginBottom: theme.spacing(2) }}
+            sx={{ mb: 2, width: "100%" }}
             margin="normal"
             error={error["empty"] || error["nameTaken"]}
             helperText={
@@ -237,11 +250,7 @@ export default function CreateProject(): ReactElement {
 
           {/* File upload */}
           <Box sx={{ mb: 2, mt: 1 }}>
-            <Typography
-              variant="body1"
-              style={{ marginTop: theme.spacing(2) }}
-              display="inline"
-            >
+            <Typography display="inline" sx={{ mt: 2 }} variant="body1">
               {t(CreateProjectTextId.Upload)}
             </Typography>
             <FileInputButton
@@ -262,7 +271,7 @@ export default function CreateProject(): ReactElement {
             </Typography>
             {/* Uploaded file name and remove button */}
             {languageData && (
-              <Typography variant="body2" style={{ margin: theme.spacing(1) }}>
+              <Typography sx={{ m: 1 }} variant="body2">
                 {t(CreateProjectTextId.UploadSelected, {
                   val: languageData.name,
                 })}
@@ -273,16 +282,29 @@ export default function CreateProject(): ReactElement {
             )}
           </Box>
 
-          {/* Login to Lexbox to select a project. */}
-          <Box sx={{ m: 2 }}>
-            <LexboxLogin />
+          {/* Lexbox import */}
+          <Box sx={{ mb: 2, mt: 1 }}>
+            <Typography display="inline" sx={{ mt: 2 }} variant="body1">
+              {t("Import from Lexbox?")}
+            </Typography>
+            <Button sx={{ m: 1 }}>{t("Import")}</Button>
+            {/* Uploaded file name and remove button */}
+            {lexboxProject && (
+              <Typography sx={{ m: 1 }} variant="body2">
+                {t(`Project selected: ${lexboxProject.name}`)}
+                <IconButton size="small" onClick={() => updateLexboxProject()}>
+                  <Cancel />
+                </IconButton>
+              </Typography>
+            )}
+            {/* Lexbox project dialog goes here */}
           </Box>
 
           {/* Don't render language pickers until project creation begins. */}
           {!!(name || languageData || vernLang.name || analysisLang.name) && (
             <>
               {/* Vernacular language picker */}
-              <Typography sx={{ marginTop: 1 }} variant="h6">
+              <Typography sx={{ mt: 1 }} variant="h6">
                 {t(CreateProjectTextId.LangVernacular)}
               </Typography>
               {vernLangSelect()}
@@ -299,7 +321,7 @@ export default function CreateProject(): ReactElement {
               )}
 
               {/* Analysis language picker */}
-              <Typography sx={{ marginTop: 1 }} variant="h6">
+              <Typography sx={{ mt: 1 }} variant="h6">
                 {t(CreateProjectTextId.LangAnalysis)}
               </Typography>
               {languageData ? (
@@ -321,11 +343,7 @@ export default function CreateProject(): ReactElement {
           )}
 
           {/* Form submission button */}
-          <Grid2
-            container
-            justifyContent="flex-end"
-            style={{ marginTop: theme.spacing(1) }}
-          >
+          <Grid2 container justifyContent="flex-end" sx={{ mt: 1 }}>
             <LoadingDoneButton
               disabled={
                 !name.trim() || !vernLang.bcp47 || vernLang.bcp47 === undBcp47
