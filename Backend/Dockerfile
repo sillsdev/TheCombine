@@ -7,7 +7,7 @@
 ############################################################
 
 # Docker multi-stage build
-FROM mcr.microsoft.com/dotnet/sdk:8.0.416-jammy@sha256:48a4798dec68044fff6592f4c6c5ceeff15b1bed428810814cf757a5b5f1068d AS builder
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0.416-jammy@sha256:48a4798dec68044fff6592f4c6c5ceeff15b1bed428810814cf757a5b5f1068d AS builder
 WORKDIR /app
 
 # Copy csproj and restore (fetch dependencies) as distinct layers.
@@ -46,7 +46,7 @@ RUN usermod  --uid 999 --gid app \
   --comment "Docker image user" \
   app
 
-## Set up application install directory.
+# Set up application install directory.
 RUN mkdir $APP_HOME && \
   mkdir $APP_FILES && \
   # Give access to the entire home folder so the backend can create files and folders there.
