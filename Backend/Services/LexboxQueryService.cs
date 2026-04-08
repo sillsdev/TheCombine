@@ -44,5 +44,25 @@ namespace BackendFramework.Services
 
             return graph.Data?.MyProjects?.Select(p => new LexboxProject(p)).ToList() ?? [];
         }
+
+        public async Task<List<LexboxEntry>> GetProjectEntriesAsync(string accessToken, string projectType, string projectCode)
+        {
+            var httpClient = _httpClientFactory.CreateClient();
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var url = $"{LexboxQuery.MiniLcmBaseUrl}/{projectType}/{projectCode}/entries";
+            var response = await httpClient.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
+                throw new LexboxQueryException("Lexbox MiniLcm entries request failed",
+                    $"Status: {(int)response.StatusCode} {response.ReasonPhrase}"
+                        + (string.IsNullOrEmpty(responseBody) ? "" : $"\nBody: {responseBody}"));
+            }
+
+            return await response.Content.ReadFromJsonAsync<List<LexboxEntry>>() ?? [];
+        }
     }
 }
