@@ -7,7 +7,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { type MouseEvent, type ReactElement, useEffect, useState } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -15,22 +15,23 @@ import { type LexboxAuthStatus } from "api/models";
 import {
   getLexboxAuthStatus,
   getLexboxLoginUrl,
-  getLexboxProjects,
   logoutLexboxUser,
 } from "backend";
 import LoadingButton from "components/Buttons/LoadingButton";
 
 interface LexboxLoginProps {
   text?: string;
-  onStatusChange?: (status: "logged-in" | "logged-out") => void;
+  onStatusChange?: (loggedIn: boolean) => void;
 }
 
 export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
-  const { t } = useTranslation();
+  const [actionLoading, setActionLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const [status, setStatus] = useState<LexboxAuthStatus | undefined>();
   const [statusLoading, setStatusLoading] = useState(true);
-  const [actionLoading, setActionLoading] = useState(false);
-  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+
+  const { t } = useTranslation();
 
   const loadStatus = async (): Promise<void> => {
     setStatusLoading(true);
@@ -48,21 +49,18 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
     loadStatus();
   }, []);
 
+  useEffect(() => {
+    setIsLoggedIn(status?.isLoggedIn ?? false);
+  }, [status?.isLoggedIn]);
+
+  useEffect(() => {
+    props.onStatusChange?.(isLoggedIn);
+  }, [props.onStatusChange, isLoggedIn]);
+
   const handleLogin = (): void => {
     if (!window.open(getLexboxLoginUrl())) {
       toast.error("Failed to open login window");
     }
-  };
-
-  const handleClickLoggedIn = async (
-    e: MouseEvent<HTMLButtonElement>
-  ): Promise<void> => {
-    try {
-      console.info(await getLexboxProjects());
-    } catch (err) {
-      console.error("Failed to get projects", err);
-    }
-    setMenuAnchor(e.currentTarget);
   };
 
   const handleLogout = async (): Promise<void> => {
@@ -70,7 +68,6 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
     try {
       await logoutLexboxUser();
       await loadStatus();
-      props.onStatusChange?.("logged-out");
     } finally {
       setActionLoading(false);
       setMenuAnchor(null);
@@ -91,7 +88,7 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
   return (
     <>
       <Button
-        onClick={handleClickLoggedIn}
+        onClick={(e) => setMenuAnchor(e.currentTarget)}
         startIcon={<AccountCircleIcon />}
         variant="outlined"
       >
