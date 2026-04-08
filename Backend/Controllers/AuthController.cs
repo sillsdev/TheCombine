@@ -1,30 +1,27 @@
 using System;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Otel;
+using BackendFramework.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
 
 namespace BackendFramework.Controllers
 {
     [Produces("application/json")]
     [Route("v1/auth")]
-    public class AuthController(IConfiguration configuration, IHttpClientFactory httpClientFactory,
+    public class AuthController(IConfiguration configuration, LexboxQueryService lexboxQueryService,
         IPermissionService permissionService) : Controller
     {
         private readonly IConfiguration _configuration = configuration;
-        private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
+        private readonly LexboxQueryService _lexboxQueryService = lexboxQueryService;
         private readonly IPermissionService _permissionService = permissionService;
 
         private const string otelTagName = "otel.AuthController";
@@ -106,39 +103,16 @@ namespace BackendFramework.Controllers
                 return Unauthorized();
             }
 
-            var httpClient = _httpClientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
-
-            var response = await httpClient.PostAsJsonAsync(LexboxQuery.QueryUrl,
-                new LexboxQuery { Query = LexboxQuery.MyProjectsQuery });
-
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                var responseBody = await response.Content.ReadAsStringAsync();
-                return Problem(title: "Lexbox GraphQL request failed",
-                    detail: $"Status: {(int)response.StatusCode} {response.ReasonPhrase}"
-                        + (string.IsNullOrEmpty(responseBody) ? "" : $"\nBody: {responseBody}"),
+                var projects = await _lexboxQueryService.GetMyProjectsAsync(accessToken);
+                return Ok(projects);
+            }
+            catch (LexboxQueryException ex)
+            {
+                return Problem(title: ex.Title, detail: ex.Message,
                     statusCode: StatusCodes.Status502BadGateway);
             }
-
-            var graph = await response.Content.ReadFromJsonAsync<LexboxQueryResponse<MyProjectsData>>();
-            if (graph is null)
-            {
-                return Problem(title: "Lexbox GraphQL response was empty",
-                    statusCode: StatusCodes.Status502BadGateway);
-            }
-
-            if (graph.Errors is { Length: > 0 })
-            {
-                var errorText = string
-                    .Join("; ", graph.Errors.Select(e => e.Message).Where(m => !string.IsNullOrEmpty(m)));
-                return Problem(title: "Lexbox GraphQL returned errors", detail: errorText,
-                    statusCode: StatusCodes.Status502BadGateway);
-            }
-
-            List<LexboxProject> projects = graph.Data?.MyProjects?.Select(p => new LexboxProject(p)).ToList() ?? [];
-            return Ok(projects);
         }
 
         private async Task<string?> TryGetLexboxAccessTokenAsync()

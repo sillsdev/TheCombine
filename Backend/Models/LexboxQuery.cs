@@ -118,5 +118,9 @@ namespace BackendFramework.Models
         }
     }
 
+    public sealed class LexboxQueryException(string title, string detail) : Exception(detail)
+    {
+        public string Title { get; } = title;
+    }
 
 }

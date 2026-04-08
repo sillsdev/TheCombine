@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Models;
+using BackendFramework.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +39,8 @@ namespace Backend.Tests.Controllers
             var httpClientFactory = new Mock<IHttpClientFactory>();
             httpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
             _permissionService = new PermissionServiceMock();
-            _controller = new AuthController(configuration, httpClientFactory.Object, _permissionService);
+            var lexboxQueryService = new LexboxQueryService(httpClientFactory.Object);
+            _controller = new AuthController(configuration, lexboxQueryService, _permissionService);
         }
 
         [Test]
