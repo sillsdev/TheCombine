@@ -39,6 +39,8 @@ import {
 // @ts-ignore
 import { LexboxAuthStatus } from "../models";
 // @ts-ignore
+import { LexboxEntry } from "../models";
+// @ts-ignore
 import { LexboxProject } from "../models";
 /**
  * AuthApi - axios parameter creator
@@ -91,6 +93,54 @@ export const AuthApiAxiosParamCreator = function (
      */
     getAuthStatus: async (options: any = {}): Promise<RequestArgs> => {
       const localVarPath = `/v1/auth/status`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectType
+     * @param {string} projectCode
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLexboxEntries: async (
+      projectType: string,
+      projectCode: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectType' is not null or undefined
+      assertParamExists("getLexboxEntries", "projectType", projectType);
+      // verify required parameter 'projectCode' is not null or undefined
+      assertParamExists("getLexboxEntries", "projectCode", projectCode);
+      const localVarPath = `/v1/auth/lexbox-entries/{projectType}/{projectCode}`
+        .replace(`{${"projectType"}}`, encodeURIComponent(String(projectType)))
+        .replace(`{${"projectCode"}}`, encodeURIComponent(String(projectCode)));
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -245,6 +295,36 @@ export const AuthApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {string} projectType
+     * @param {string} projectCode
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getLexboxEntries(
+      projectType: string,
+      projectCode: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<LexboxEntry>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getLexboxEntries(
+          projectType,
+          projectCode,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -320,6 +400,22 @@ export const AuthApiFactory = function (
     },
     /**
      *
+     * @param {string} projectType
+     * @param {string} projectCode
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLexboxEntries(
+      projectType: string,
+      projectCode: string,
+      options?: any
+    ): AxiosPromise<Array<LexboxEntry>> {
+      return localVarFp
+        .getLexboxEntries(projectType, projectCode, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -340,6 +436,27 @@ export const AuthApiFactory = function (
     },
   };
 };
+
+/**
+ * Request parameters for getLexboxEntries operation in AuthApi.
+ * @export
+ * @interface AuthApiGetLexboxEntriesRequest
+ */
+export interface AuthApiGetLexboxEntriesRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof AuthApiGetLexboxEntries
+   */
+  readonly projectType: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof AuthApiGetLexboxEntries
+   */
+  readonly projectCode: string;
+}
 
 /**
  * AuthApi - object-oriented interface
@@ -369,6 +486,26 @@ export class AuthApi extends BaseAPI {
   public getAuthStatus(options?: any) {
     return AuthApiFp(this.configuration)
       .getAuthStatus(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {AuthApiGetLexboxEntriesRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AuthApi
+   */
+  public getLexboxEntries(
+    requestParameters: AuthApiGetLexboxEntriesRequest,
+    options?: any
+  ) {
+    return AuthApiFp(this.configuration)
+      .getLexboxEntries(
+        requestParameters.projectType,
+        requestParameters.projectCode,
+        options
+      )
       .then((request) => request(this.axios, this.basePath));
   }
 

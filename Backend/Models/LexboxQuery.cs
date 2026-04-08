@@ -7,6 +7,7 @@ namespace BackendFramework.Models
     public sealed class LexboxQuery
     {
         public const string QueryUrl = "https://lexbox.org/api/graphql";
+        public const string MiniLcmBaseUrl = "https://lexbox.org/api/mini-lcm";
         public const string MyProjectsQuery = @"query {
     myProjects {
         code
@@ -65,6 +66,7 @@ namespace BackendFramework.Models
         public Guid Id { get; init; } = dto.Id;
         public bool? IsConfidential { get; init; } = dto.IsConfidential;
         public string Name { get; init; } = dto.Name;
+        public string Type { get; init; } = dto.Type;
         public List<string> VernacularWsTags { get; init; } =
             WsIdDto.GetActiveTags(dto.FlexProjectMetadata?.WritingSystems?.VernacularWss ?? []).ToList();
     }
@@ -121,6 +123,49 @@ namespace BackendFramework.Models
     public sealed class LexboxQueryException(string title, string detail) : Exception(detail)
     {
         public string Title { get; } = title;
+    }
+
+    public sealed class LexboxEntry
+    {
+        public Guid Id { get; init; }
+        public Dictionary<string, string> LexemeForm { get; init; } = [];
+        public Dictionary<string, string> CitationForm { get; init; } = [];
+        public Dictionary<string, LexboxRichString> Note { get; init; } = [];
+        public List<LexboxSense> Senses { get; init; } = [];
+    }
+
+    public sealed class LexboxSense
+    {
+        public Guid Id { get; init; }
+        public Guid EntryId { get; init; }
+        public Dictionary<string, string> Gloss { get; init; } = [];
+        public Dictionary<string, LexboxRichString> Definition { get; init; } = [];
+        public LexboxPartOfSpeech? PartOfSpeech { get; init; }
+        public List<LexboxSemanticDomain> SemanticDomains { get; init; } = [];
+    }
+
+    public sealed class LexboxPartOfSpeech
+    {
+        public Guid Id { get; init; }
+        public Dictionary<string, string> Name { get; init; } = [];
+    }
+
+    public sealed class LexboxSemanticDomain
+    {
+        public Guid Id { get; init; }
+        public Dictionary<string, string> Name { get; init; } = [];
+        public string Code { get; init; } = "";
+    }
+
+    public sealed class LexboxRichString
+    {
+        public List<LexboxRichSpan> Spans { get; init; } = [];
+        public string GetPlainText() => string.Concat(Spans.Select(s => s.Text));
+    }
+
+    public sealed class LexboxRichSpan
+    {
+        public string Text { get; init; } = "";
     }
 
 }

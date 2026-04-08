@@ -56,6 +56,12 @@ export interface LexboxProject {
   name?: string | null;
   /**
    *
+   * @type {string}
+   * @memberof LexboxProject
+   */
+  type?: string | null;
+  /**
+   *
    * @type {Array<string>}
    * @memberof LexboxProject
    */

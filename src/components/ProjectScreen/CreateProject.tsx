@@ -23,7 +23,11 @@ import { Trans, useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import { LexboxProject, type WritingSystem } from "api/models";
-import { projectDuplicateCheck, uploadLiftAndGetWritingSystems } from "backend";
+import {
+  getLexboxEntries,
+  projectDuplicateCheck,
+  uploadLiftAndGetWritingSystems,
+} from "backend";
 import FileInputButton from "components/Buttons/FileInputButton";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import LanguagePicker from "components/LanguagePicker";
@@ -220,7 +224,17 @@ export default function CreateProject(): ReactElement {
       await dispatch(asyncFinishProject(trimmedName, vernLang)).then(() =>
         setSuccess(true)
       );
-    } else if (lexboxProject) {
+    } else if (lexboxProject?.type && lexboxProject?.code) {
+      try {
+        console.info(
+          "Project entries:",
+          (
+            await getLexboxEntries(lexboxProject.type, lexboxProject.code)
+          ).slice(0, 5)
+        );
+      } catch (e) {
+        console.error("Error fetching Lexbox entries:", e);
+      }
       toast.error(
         "Creating project from Lexbox import is not yet implemented."
       );

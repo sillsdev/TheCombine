@@ -10,6 +10,7 @@ import {
   ChartRootData,
   EmailInviteStatus,
   LexboxAuthStatus,
+  LexboxEntry,
   LexboxProject,
   MergeUndoIds,
   MergeWords,
@@ -194,6 +195,18 @@ export function getLexboxLoginUrl(): string {
 
 export async function getLexboxProjects(): Promise<LexboxProject[]> {
   return (await authApi.getLexboxProjects(defaultOptions())).data;
+}
+
+export async function getLexboxEntries(
+  projectType: string,
+  projectCode: string
+): Promise<LexboxEntry[]> {
+  return (
+    await authApi.getLexboxEntries(
+      { projectType, projectCode },
+      defaultOptions()
+    )
+  ).data;
 }
 
 export async function logoutLexboxUser(): Promise<void> {

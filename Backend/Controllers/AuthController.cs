@@ -115,6 +115,34 @@ namespace BackendFramework.Controllers
             }
         }
 
+        /// <summary> Gets entries for a Lexbox project. </summary>
+        [Authorize(AuthenticationSchemes = LexboxCookieScheme)]
+        [HttpGet("lexbox-entries/{projectType}/{projectCode}", Name = "GetLexboxEntries")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LexboxEntry>))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status502BadGateway)]
+        public async Task<IActionResult> GetLexboxEntries(string projectType, string projectCode)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting Lexbox entries");
+
+            var accessToken = await TryGetLexboxAccessTokenAsync();
+            if (string.IsNullOrEmpty(accessToken))
+            {
+                return Unauthorized();
+            }
+
+            try
+            {
+                var entries = await _lexboxQueryService.GetProjectEntriesAsync(accessToken, projectType, projectCode);
+                return Ok(entries);
+            }
+            catch (LexboxQueryException ex)
+            {
+                return Problem(title: ex.Title, detail: ex.Message,
+                    statusCode: StatusCodes.Status502BadGateway);
+            }
+        }
+
         private async Task<string?> TryGetLexboxAccessTokenAsync()
         {
             var result = await HttpContext.AuthenticateAsync(LexboxCookieScheme);
