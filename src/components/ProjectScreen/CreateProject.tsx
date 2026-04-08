@@ -20,12 +20,14 @@ import {
   useState,
 } from "react";
 import { Trans, useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 import { LexboxProject, type WritingSystem } from "api/models";
 import { projectDuplicateCheck, uploadLiftAndGetWritingSystems } from "backend";
 import FileInputButton from "components/Buttons/FileInputButton";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import LanguagePicker from "components/LanguagePicker";
+import LexboxProjectsDialog from "components/Lexbox/LexboxProjectsDialog";
 import {
   asyncCreateProject,
   asyncFinishProject,
@@ -62,6 +64,7 @@ export default function CreateProject(): ReactElement {
   const [analysisLang, setAnalysisLang] = useState(newWritingSystem(undBcp47));
   const [error, setError] = useState({ empty: false, nameTaken: false });
   const [languageData, setLanguageData] = useState<File | undefined>();
+  const [lexboxDialogOpen, setLexboxDialogOpen] = useState(false);
   const [lexboxProject, setLexboxProject] = useState<
     LexboxProject | undefined
   >();
@@ -217,6 +220,11 @@ export default function CreateProject(): ReactElement {
       await dispatch(asyncFinishProject(trimmedName, vernLang)).then(() =>
         setSuccess(true)
       );
+    } else if (lexboxProject) {
+      toast.error(
+        "Creating project from Lexbox import is not yet implemented."
+      );
+      setLoading(false);
     } else {
       await dispatch(
         asyncCreateProject(trimmedName, vernLang, [analysisLang])
@@ -287,21 +295,42 @@ export default function CreateProject(): ReactElement {
             <Typography display="inline" sx={{ mt: 2 }} variant="body1">
               {t("Import from Lexbox?")}
             </Typography>
-            <Button sx={{ m: 1 }}>{t("Import")}</Button>
+            <Button
+              onClick={() => setLexboxDialogOpen(true)}
+              sx={{ m: 1 }}
+              variant="contained"
+            >
+              {t("Import")}
+            </Button>
             {/* Uploaded file name and remove button */}
             {lexboxProject && (
               <Typography sx={{ m: 1 }} variant="body2">
-                {t(`Project selected: ${lexboxProject.name}`)}
+                {t(
+                  `Project selected: ${lexboxProject.name} (${lexboxProject.code})`
+                )}
                 <IconButton size="small" onClick={() => updateLexboxProject()}>
                   <Cancel />
                 </IconButton>
               </Typography>
             )}
-            {/* Lexbox project dialog goes here */}
+            <LexboxProjectsDialog
+              chooseProject={(project) => {
+                updateLexboxProject(project);
+                setLexboxDialogOpen(false);
+              }}
+              onClose={() => setLexboxDialogOpen(false)}
+              open={lexboxDialogOpen}
+            />
           </Box>
 
           {/* Don't render language pickers until project creation begins. */}
-          {!!(name || languageData || vernLang.name || analysisLang.name) && (
+          {!!(
+            name ||
+            languageData ||
+            lexboxProject ||
+            vernLang.name ||
+            analysisLang.name
+          ) && (
             <>
               {/* Vernacular language picker */}
               <Typography sx={{ mt: 1 }} variant="h6">
@@ -324,7 +353,7 @@ export default function CreateProject(): ReactElement {
               <Typography sx={{ mt: 1 }} variant="h6">
                 {t(CreateProjectTextId.LangAnalysis)}
               </Typography>
-              {languageData ? (
+              {languageData || lexboxProject ? (
                 <Typography>
                   {t(CreateProjectTextId.LangAnalysisInfo)}
                 </Typography>

@@ -63,6 +63,6 @@ describe("LexboxLogin", () => {
 
     expect(mockGetLexboxLoginUrl).not.toHaveBeenCalled();
     expect(mockLogoutLexboxUser).toHaveBeenCalledTimes(1);
-    expect(onStatusChange).toHaveBeenCalledWith("logged-out");
+    expect(onStatusChange).toHaveBeenCalledWith(false);
   });
 });
