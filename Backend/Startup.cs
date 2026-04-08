@@ -301,6 +301,9 @@ namespace BackendFramework
 
             // Register concrete types for dependency injection
 
+            // HttpClientFactory for Lexbox and OpenTelemetry instrumentation
+            services.AddHttpClient();
+
             // Mongo context for use in repo contexts
             services.AddSingleton<IMongoDbContext, MongoDbContext>();
 
@@ -323,6 +326,9 @@ namespace BackendFramework
             services.AddTransient<IInviteService, InviteService>();
             services.AddTransient<IPasswordResetRepository, PasswordResetRepository>();
             services.AddTransient<IPasswordResetService, PasswordResetService>();
+
+            // Lexbox types
+            services.AddTransient<LexboxQueryService>();
 
             // Lift Service - Singleton to avoid initializing the Sldr multiple times,
             // also to avoid leaking LanguageTag data
@@ -363,7 +369,6 @@ namespace BackendFramework
             services.AddTransient<IWordService, WordService>();
 
             // OpenTelemetry
-            services.AddHttpClient();
             services.AddMemoryCache();
             services.AddHttpContextAccessor();
             services.AddTransient<ILocationProvider, LocationProvider>();
