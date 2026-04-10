@@ -21,8 +21,7 @@ FROM public.ecr.aws/thecombine/aws-kubectl:0.5.0-$TARGETARCH
 USER root
 
 RUN apt-get update && \
-  apt-get install -y python3 python3-pip nano && \
-  apt-get autoremove && \
+  apt-get install -y --no-install-recommends nano python3 python3-pip && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
@@ -43,7 +42,7 @@ ENV PATH=${PATH}:${SCRIPT_DIR}
 
 COPY --chown=user:user requirements.txt .
 
-RUN pip3 install -r requirements.txt
+RUN pip3 install --break-system-packages -r requirements.txt
 
 COPY --chown=user:user scripts/*.py ${SCRIPT_DIR}
 COPY --chown=user:user scripts/*.sh ${SCRIPT_DIR}
