@@ -23,6 +23,19 @@ class AwsBackup:
         s3_uri = f"{self.bucket}/{dest}"
         return run_cmd(["aws", "s3", "cp", "--no-progress", str(src), s3_uri])
 
+    def push_stream(self, dest: str) -> subprocess.Popen[bytes]:
+        """Start a streaming upload to the AWS S3 bucket.
+
+        Returns a Popen process whose stdin accepts the data to upload.
+        The caller must close stdin and call wait() to finalize the upload.
+        """
+        s3_uri = f"{self.bucket}/{dest}"
+        return subprocess.Popen(
+            ["aws", "s3", "cp", "--no-progress", "-", s3_uri],
+            stdin=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+
     def pull(self, src: str, dest: Path) -> subprocess.CompletedProcess[str]:
         """Pull a file from the AWS S3 bucket."""
         s3_uri = f"{self.bucket}/{src}"
