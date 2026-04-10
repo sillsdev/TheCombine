@@ -22,7 +22,7 @@ awsEcr:
   cron: yes
   cronJobName: ecr-cred-helper-cron
   image: "public.ecr.aws/thecombine/aws-kubectl"
-  imageVersion: "0.4.2"
+  imageVersion: "0.5.0"
   jobName: ecr-cred-helper
   schedule: "0 */8 * * *"
   secretsName: aws-ecr-credentials
