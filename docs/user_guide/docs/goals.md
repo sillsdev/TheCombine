@@ -43,11 +43,20 @@ include subdomains, add a final period to your filter. For example, "8111." incl
 You can record, play, or delete an entry's audio recordings by using the icons in the Pronunciations
 (![Review Entries pronunciations column header](images/reviewEntriesColumnPronunciations.png){width=28}) column.
 
+You can toggle the flag on an entry by clicking the
+![Review Entries flag column header](images/reviewEntriesColumnFlag.png){width=16} icon in the Flag column.
+
 To edit any other part of an entry, click the ![Review Entries row edit icon](images/reviewEntriesRowEdit.png){width=20}
 edit icon in the initial column.
 
 You can delete an entire entry by clicking the
 ![Review Entries row delete icon](images/reviewEntriesRowDelete.png){width=20} delete icon in the final column.
+
+!!! note "Harvesters"
+
+    If a project Administrator has enabled the
+    [Harvester Review Entries](project.md#harvester-review-entries) setting, Harvesters can also use Review Entries.
+    Harvesters can update audio recordings and flags, but the Edit and Delete columns are not available to them.
 
 ## Merge Duplicates {#merge-duplicates}
 

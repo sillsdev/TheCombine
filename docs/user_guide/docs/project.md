@@ -75,6 +75,12 @@ Turn on "Allow data protection override in Merge Duplicates" to allow project us
 override protection of words and senses. If anybody tries to merge or delete a protected entry or sense, The Combine
 warns them of the fields that will be lost.
 
+#### Harvester Review Entries {#harvester-review-entries}
+
+This Off/On setting (default Off) allows Harvesters to access [Review Entries](goals.md#review-entries). When enabled,
+Harvesters will see a Data Cleanup button in the navigation bar and can use Review Entries to update audio recordings
+and flags on entries. However, Harvesters cannot edit or delete entries from the Review Entries table.
+
 #### Archive Project
 
 This is only available to the project Owner. Archiving a project makes it inaccessible to all users. This can only be
@@ -120,7 +126,10 @@ click this to open a user management menu with the following options:
 </pre>
 
 A _Harvester_ can do [Data Entry](./dataEntry.md) but not [Data Cleanup](./goals.md). In project settings, they can see
-the project languages and workshop schedule, but cannot make any changes.
+the project languages and workshop schedule, but cannot make any changes. However, if a project Administrator enables the
+[Harvester Review Entries](#harvester-review-entries) setting, Harvesters can also access
+[Review Entries](./goals.md#review-entries) with limited functionality: they can update pronunciations and flags, but
+cannot edit or delete entries.
 
 An _Editor_ has permission to do everything that a _Harvester_ can do, as well as
 [Review Entries](./goals.md#review-entries), [Merge Duplicates](./goals.md#merge-duplicates), and [Export](#export).
