@@ -29,12 +29,13 @@ interface LexboxProjectsDialogProps {
 export default function LexboxProjectsDialog(
   props: LexboxProjectsDialogProps
 ): ReactElement {
-  const { t } = useTranslation();
   const [error, setError] = useState<string | undefined>();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const [projects, setProjects] = useState<LexboxProject[]>([]);
   const [selected, setSelected] = useState<LexboxProject | undefined>();
+
+  const { t } = useTranslation();
 
   const loadProjects = async (): Promise<void> => {
     setLoading(true);
@@ -133,7 +134,16 @@ export default function LexboxProjectsDialog(
   };
 
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={props.onClose} open={props.open}>
+    <Dialog
+      fullWidth
+      maxWidth="sm"
+      onClose={(_, reason) => {
+        if (reason !== "backdropClick") {
+          props.onClose();
+        }
+      }}
+      open={props.open}
+    >
       <DialogTitle>{t("Import from Lexbox")}</DialogTitle>
       <DialogContent>
         <LexboxLogin onStatusChange={setIsLoggedIn} />
