@@ -20,13 +20,13 @@ namespace Backend.Tests.Controllers
     internal sealed class LexboxControllerTests : IDisposable
     {
         private PermissionServiceMock _permissionService = null!;
-        private LexboxController _controller = null!;
+        private LexboxController _lexboxController = null!;
 
         private const string UserId = "LexboxControllerTestsUserId";
 
         public void Dispose()
         {
-            _controller?.Dispose();
+            _lexboxController?.Dispose();
             GC.SuppressFinalize(this);
         }
 
@@ -35,33 +35,34 @@ namespace Backend.Tests.Controllers
         {
             var configValues = new Dictionary<string, string?> { { "LexboxAuth:PostLoginRedirect", "/" } };
             var configuration = new ConfigurationBuilder().AddInMemoryCollection(configValues).Build();
+            var lexboxAuthService = new LexboxAuthService(configuration);
             var httpClient = new HttpClient(new Mock<HttpMessageHandler>().Object);
             var httpClientFactory = new Mock<IHttpClientFactory>();
             httpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
-            _permissionService = new PermissionServiceMock();
             var lexboxQueryService = new LexboxQueryService(httpClientFactory.Object);
-            _controller = new LexboxController(configuration, lexboxQueryService, _permissionService);
+            _permissionService = new PermissionServiceMock();
+            _lexboxController = new LexboxController(lexboxAuthService, lexboxQueryService, _permissionService);
         }
 
         [Test]
-        public async Task GetAuthStatusUnauthorizedReturnsForbid()
+        public async Task TestGetAuthStatusUnauthorizedReturnsForbid()
         {
-            _controller.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            _lexboxController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
-            var result = await _controller.GetAuthStatus();
+            var result = await _lexboxController.GetAuthStatus();
 
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
         [Test]
-        public async Task GetAuthStatusReturnsLexboxUserWhenLoggedIn()
+        public async Task TestGetAuthStatusReturnsLexboxUserWhenLoggedIn()
         {
             var claims = new List<Claim> { new("sub", "lex-1"), new("name", "Lex Name"), new("user", "Lex User") };
             var authResult = AuthenticateResult.Success(new AuthenticationTicket(
                 new ClaimsPrincipal(new ClaimsIdentity(claims, "LexboxCookie")), "LexboxCookie"));
-            _controller.ControllerContext.HttpContext = GetAuthContext(authResult);
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(authResult);
 
-            var result = await _controller.GetAuthStatus() as OkObjectResult;
+            var result = await _lexboxController.GetAuthStatus() as OkObjectResult;
 
             Assert.That(result, Is.Not.Null);
             var authStatus = result.Value as LexboxAuthStatus;
@@ -72,11 +73,11 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task GetAuthStatusReturnsLoggedOutWhenNotAuthenticatedByLexboxCookie()
+        public async Task TestGetAuthStatusReturnsLoggedOutWhenNotAuthenticatedByLexboxCookie()
         {
-            _controller.ControllerContext.HttpContext = GetAuthContext(AuthenticateResult.NoResult());
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(AuthenticateResult.NoResult());
 
-            var result = await _controller.GetAuthStatus() as OkObjectResult;
+            var result = await _lexboxController.GetAuthStatus() as OkObjectResult;
 
             Assert.That(result, Is.Not.Null);
             var authStatus = result.Value as LexboxAuthStatus;
@@ -87,25 +88,25 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void GetAuthStatusThrowsWhenSubClaimMissing()
+        public void TestGetAuthStatusThrowsWhenSubClaimMissing()
         {
             var claims = new List<Claim> { new("user", "Lex User") };
             var authResult = AuthenticateResult.Success(new AuthenticationTicket(
                 new ClaimsPrincipal(new ClaimsIdentity(claims, "LexboxCookie")), "LexboxCookie"));
-            _controller.ControllerContext.HttpContext = GetAuthContext(authResult);
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(authResult);
 
-            Assert.ThrowsAsync<InvalidOperationException>(_controller.GetAuthStatus);
+            Assert.ThrowsAsync<InvalidOperationException>(_lexboxController.GetAuthStatus);
         }
 
         [Test]
-        public async Task GetAuthStatusFallsBackToUserIdWhenDisplayNameClaimsMissing()
+        public async Task TestGetAuthStatusFallsBackToUserIdWhenDisplayNameClaimsMissing()
         {
             var claims = new List<Claim> { new("sub", "lex-1") };
             var authResult = AuthenticateResult.Success(new AuthenticationTicket(
                 new ClaimsPrincipal(new ClaimsIdentity(claims, "LexboxCookie")), "LexboxCookie"));
-            _controller.ControllerContext.HttpContext = GetAuthContext(authResult);
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(authResult);
 
-            var result = await _controller.GetAuthStatus() as OkObjectResult;
+            var result = await _lexboxController.GetAuthStatus() as OkObjectResult;
 
             Assert.That(result, Is.Not.Null);
             var authStatus = result.Value as LexboxAuthStatus;
@@ -116,14 +117,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task GetAuthStatusUsesNameClaimWhenUserClaimMissing()
+        public async Task TestGetAuthStatusUsesNameClaimWhenUserClaimMissing()
         {
             var claims = new List<Claim> { new("sub", "lex-1"), new("name", "Lex Name") };
             var authResult = AuthenticateResult.Success(new AuthenticationTicket(
                 new ClaimsPrincipal(new ClaimsIdentity(claims, "LexboxCookie")), "LexboxCookie"));
-            _controller.ControllerContext.HttpContext = GetAuthContext(authResult);
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(authResult);
 
-            var result = await _controller.GetAuthStatus() as OkObjectResult;
+            var result = await _lexboxController.GetAuthStatus() as OkObjectResult;
 
             Assert.That(result, Is.Not.Null);
             var authStatus = result.Value as LexboxAuthStatus;
@@ -134,27 +135,27 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task GenerateLexboxLoginChallengesAndReturnsEmpty()
+        public async Task TestGenerateLoginChallengesAndReturnsEmpty()
         {
             var authService = new AuthenticationServiceMock(AuthenticateResult.NoResult());
-            _controller.ControllerContext.HttpContext = GetAuthContext(authService);
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(authService);
             Assert.That(authService.ChallengeCallCount, Is.Zero);
 
-            var result = await _controller.GenerateLexboxLogin();
+            var result = await _lexboxController.GenerateLogin();
 
             Assert.That(result, Is.InstanceOf<EmptyResult>());
             Assert.That(authService.ChallengeCallCount, Is.EqualTo(1));
         }
 
         [Test]
-        public async Task LogOutLexboxReturnsNoContent()
+        public async Task TestLogOutReturnsNoContent()
         {
             var claims = new List<Claim> { new("sub", "lex-1"), new("user", "Lex User") };
             var authResult = AuthenticateResult.Success(new AuthenticationTicket(
                 new ClaimsPrincipal(new ClaimsIdentity(claims, "LexboxCookie")), "LexboxCookie"));
-            _controller.ControllerContext.HttpContext = GetAuthContext(authResult);
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(authResult);
 
-            var result = await _controller.LogOutLexbox();
+            var result = await _lexboxController.LogOut();
 
             Assert.That(result, Is.InstanceOf<NoContentResult>());
         }

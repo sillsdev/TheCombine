@@ -277,7 +277,7 @@ export function getLexboxLoginUrl(): string {
 }
 
 export async function getLexboxProjects(): Promise<LexboxProject[]> {
-  return (await lexboxApi.getLexboxProjects(defaultOptions())).data;
+  return (await lexboxApi.getProjects(defaultOptions())).data;
 }
 
 export async function getLexboxEntries(
@@ -285,11 +285,11 @@ export async function getLexboxEntries(
   vernacularLang: string
 ): Promise<Word[]> {
   const params = { projectCode, vernacularLang };
-  return (await lexboxApi.getLexboxEntries(params, defaultOptions())).data;
+  return (await lexboxApi.getEntries(params, defaultOptions())).data;
 }
 
 export async function logoutLexboxUser(): Promise<void> {
-  await lexboxApi.logOutLexbox(defaultOptions());
+  await lexboxApi.logOut(defaultOptions());
 }
 
 /* LiftController.cs */

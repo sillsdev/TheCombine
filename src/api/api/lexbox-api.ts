@@ -55,8 +55,8 @@ export const LexboxApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    generateLexboxLogin: async (options: any = {}): Promise<RequestArgs> => {
-      const localVarPath = `/v1/auth/lexbox-login`;
+    generateLogin: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/v1/lexbox/login`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -92,7 +92,7 @@ export const LexboxApiAxiosParamCreator = function (
      * @throws {RequiredError}
      */
     getAuthStatus: async (options: any = {}): Promise<RequestArgs> => {
-      const localVarPath = `/v1/auth/status`;
+      const localVarPath = `/v1/lexbox/auth-status`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -129,25 +129,21 @@ export const LexboxApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getLexboxEntries: async (
+    getEntries: async (
       projectCode: string,
       vernacularLang: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectCode' is not null or undefined
-      assertParamExists("getLexboxEntries", "projectCode", projectCode);
+      assertParamExists("getEntries", "projectCode", projectCode);
       // verify required parameter 'vernacularLang' is not null or undefined
-      assertParamExists("getLexboxEntries", "vernacularLang", vernacularLang);
-      const localVarPath =
-        `/v1/auth/lexbox-entries/{projectCode}/{vernacularLang}`
-          .replace(
-            `{${"projectCode"}}`,
-            encodeURIComponent(String(projectCode))
-          )
-          .replace(
-            `{${"vernacularLang"}}`,
-            encodeURIComponent(String(vernacularLang))
-          );
+      assertParamExists("getEntries", "vernacularLang", vernacularLang);
+      const localVarPath = `/v1/lexbox/entries/{projectCode}/{vernacularLang}`
+        .replace(`{${"projectCode"}}`, encodeURIComponent(String(projectCode)))
+        .replace(
+          `{${"vernacularLang"}}`,
+          encodeURIComponent(String(vernacularLang))
+        );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -182,8 +178,8 @@ export const LexboxApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getLexboxProjects: async (options: any = {}): Promise<RequestArgs> => {
-      const localVarPath = `/v1/auth/lexbox-projects`;
+    getProjects: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/v1/lexbox/projects`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -218,8 +214,8 @@ export const LexboxApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    logOutLexbox: async (options: any = {}): Promise<RequestArgs> => {
-      const localVarPath = `/v1/auth/lexbox-logout`;
+    logOut: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/v1/lexbox/logout`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -264,13 +260,13 @@ export const LexboxApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async generateLexboxLogin(
+    async generateLogin(
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.generateLexboxLogin(options);
+        await localVarAxiosParamCreator.generateLogin(options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -307,19 +303,18 @@ export const LexboxApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async getLexboxEntries(
+    async getEntries(
       projectCode: string,
       vernacularLang: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Word>>
     > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.getLexboxEntries(
-          projectCode,
-          vernacularLang,
-          options
-        );
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getEntries(
+        projectCode,
+        vernacularLang,
+        options
+      );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -332,7 +327,7 @@ export const LexboxApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async getLexboxProjects(
+    async getProjects(
       options?: any
     ): Promise<
       (
@@ -341,7 +336,7 @@ export const LexboxApiFp = function (configuration?: Configuration) {
       ) => AxiosPromise<Array<LexboxProject>>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.getLexboxProjects(options);
+        await localVarAxiosParamCreator.getProjects(options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -354,13 +349,12 @@ export const LexboxApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async logOutLexbox(
+    async logOut(
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.logOutLexbox(options);
+      const localVarAxiosArgs = await localVarAxiosParamCreator.logOut(options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -387,9 +381,9 @@ export const LexboxApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    generateLexboxLogin(options?: any): AxiosPromise<void> {
+    generateLogin(options?: any): AxiosPromise<void> {
       return localVarFp
-        .generateLexboxLogin(options)
+        .generateLogin(options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -409,13 +403,13 @@ export const LexboxApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getLexboxEntries(
+    getEntries(
       projectCode: string,
       vernacularLang: string,
       options?: any
     ): AxiosPromise<Array<Word>> {
       return localVarFp
-        .getLexboxEntries(projectCode, vernacularLang, options)
+        .getEntries(projectCode, vernacularLang, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -423,9 +417,9 @@ export const LexboxApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getLexboxProjects(options?: any): AxiosPromise<Array<LexboxProject>> {
+    getProjects(options?: any): AxiosPromise<Array<LexboxProject>> {
       return localVarFp
-        .getLexboxProjects(options)
+        .getProjects(options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -433,31 +427,31 @@ export const LexboxApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    logOutLexbox(options?: any): AxiosPromise<void> {
+    logOut(options?: any): AxiosPromise<void> {
       return localVarFp
-        .logOutLexbox(options)
+        .logOut(options)
         .then((request) => request(axios, basePath));
     },
   };
 };
 
 /**
- * Request parameters for getLexboxEntries operation in LexboxApi.
+ * Request parameters for getEntries operation in LexboxApi.
  * @export
- * @interface LexboxApiGetLexboxEntriesRequest
+ * @interface LexboxApiGetEntriesRequest
  */
-export interface LexboxApiGetLexboxEntriesRequest {
+export interface LexboxApiGetEntriesRequest {
   /**
    *
    * @type {string}
-   * @memberof LexboxApiGetLexboxEntries
+   * @memberof LexboxApiGetEntries
    */
   readonly projectCode: string;
 
   /**
    *
    * @type {string}
-   * @memberof LexboxApiGetLexboxEntries
+   * @memberof LexboxApiGetEntries
    */
   readonly vernacularLang: string;
 }
@@ -475,9 +469,9 @@ export class LexboxApi extends BaseAPI {
    * @throws {RequiredError}
    * @memberof LexboxApi
    */
-  public generateLexboxLogin(options?: any) {
+  public generateLogin(options?: any) {
     return LexboxApiFp(this.configuration)
-      .generateLexboxLogin(options)
+      .generateLogin(options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -495,17 +489,17 @@ export class LexboxApi extends BaseAPI {
 
   /**
    *
-   * @param {LexboxApiGetLexboxEntriesRequest} requestParameters Request parameters.
+   * @param {LexboxApiGetEntriesRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof LexboxApi
    */
-  public getLexboxEntries(
-    requestParameters: LexboxApiGetLexboxEntriesRequest,
+  public getEntries(
+    requestParameters: LexboxApiGetEntriesRequest,
     options?: any
   ) {
     return LexboxApiFp(this.configuration)
-      .getLexboxEntries(
+      .getEntries(
         requestParameters.projectCode,
         requestParameters.vernacularLang,
         options
@@ -519,9 +513,9 @@ export class LexboxApi extends BaseAPI {
    * @throws {RequiredError}
    * @memberof LexboxApi
    */
-  public getLexboxProjects(options?: any) {
+  public getProjects(options?: any) {
     return LexboxApiFp(this.configuration)
-      .getLexboxProjects(options)
+      .getProjects(options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -531,9 +525,9 @@ export class LexboxApi extends BaseAPI {
    * @throws {RequiredError}
    * @memberof LexboxApi
    */
-  public logOutLexbox(options?: any) {
+  public logOut(options?: any) {
     return LexboxApiFp(this.configuration)
-      .logOutLexbox(options)
+      .logOut(options)
       .then((request) => request(this.axios, this.basePath));
   }
 }
