@@ -76,6 +76,12 @@ export interface Project {
    * @type {OffOnSetting}
    * @memberof Project
    */
+  harvesterReviewEntriesEnabled: OffOnSetting;
+  /**
+   *
+   * @type {OffOnSetting}
+   * @memberof Project
+   */
   protectedDataMergeAvoidEnabled: OffOnSetting;
   /**
    *

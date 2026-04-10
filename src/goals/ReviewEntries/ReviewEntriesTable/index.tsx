@@ -25,8 +25,8 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { GramCatGroup, type GrammaticalInfo, type Word } from "api/models";
-import { getAllSpeakers, getFrontierWords, getWord } from "backend";
+import { GramCatGroup, type GrammaticalInfo, Permission, type Word } from "api/models";
+import { getAllSpeakers, getCurrentPermissions, getFrontierWords, getWord } from "backend";
 import { topBarHeight } from "components/LandingPage/TopBar";
 import {
   setReviewEntriesColumnOrder,
@@ -156,6 +156,7 @@ export default function ReviewEntriesTable(props: {
 
   const [data, setData] = useState<Word[]>([]);
   const [enablePagination, setEnablePagination] = useState(false);
+  const [isHarvester, setIsHarvester] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [localization, setLocalization] = useState<
     MRT_Localization | undefined
@@ -171,6 +172,12 @@ export default function ReviewEntriesTable(props: {
   });
 
   useEffect(() => {
+    getCurrentPermissions().then((perms) => {
+      setIsHarvester(
+        perms.includes(Permission.WordEntry) &&
+          !perms.includes(Permission.MergeAndReviewEntries)
+      );
+    });
     getAllSpeakers().then((list) =>
       setSpeakers(
         Object.fromEntries(list.map((s) => [s.id, s.name.toLocaleLowerCase()]))
@@ -245,16 +252,20 @@ export default function ReviewEntriesTable(props: {
   );
 
   const columns = [
-    // Edit column
-    columnHelper.display({
-      Cell: CellFactory(Cell.Edit),
-      enableHiding: false,
-      Header: "",
-      header: t(ColumnHeaderTextId[ColumnId.Edit]),
-      id: ColumnId.Edit,
-      size: IconColumnSize,
-      visibleInShowHideMenu: false,
-    }),
+    // Edit column (not shown to Harvesters)
+    ...(!isHarvester
+      ? [
+          columnHelper.display({
+            Cell: CellFactory(Cell.Edit),
+            enableHiding: false,
+            Header: "",
+            header: t(ColumnHeaderTextId[ColumnId.Edit]),
+            id: ColumnId.Edit,
+            size: IconColumnSize,
+            visibleInShowHideMenu: false,
+          }),
+        ]
+      : []),
 
     // Vernacular column
     columnHelper.accessor("vernacular", {
@@ -389,16 +400,20 @@ export default function ReviewEntriesTable(props: {
       sortingFn: sf.sortingFnFlag,
     }),
 
-    // Delete column
-    columnHelper.display({
-      Cell: CellFactory(Cell.Delete),
-      enableHiding: false,
-      Header: "",
-      header: t(ColumnHeaderTextId[ColumnId.Delete]),
-      id: ColumnId.Delete,
-      size: IconColumnSize,
-      visibleInShowHideMenu: false,
-    }),
+    // Delete column (not shown to Harvesters)
+    ...(!isHarvester
+      ? [
+          columnHelper.display({
+            Cell: CellFactory(Cell.Delete),
+            enableHiding: false,
+            Header: "",
+            header: t(ColumnHeaderTextId[ColumnId.Delete]),
+            id: ColumnId.Delete,
+            size: IconColumnSize,
+            visibleInShowHideMenu: false,
+          }),
+        ]
+      : []),
   ];
 
   const table = useMaterialReactTable({
