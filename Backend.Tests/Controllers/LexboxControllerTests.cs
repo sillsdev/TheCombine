@@ -17,12 +17,12 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    internal sealed class AuthControllerTests : IDisposable
+    internal sealed class LexboxControllerTests : IDisposable
     {
         private PermissionServiceMock _permissionService = null!;
-        private AuthController _controller = null!;
+        private LexboxController _controller = null!;
 
-        private const string UserId = "AuthControllerTestsUserId";
+        private const string UserId = "LexboxControllerTestsUserId";
 
         public void Dispose()
         {
@@ -40,7 +40,7 @@ namespace Backend.Tests.Controllers
             httpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
             _permissionService = new PermissionServiceMock();
             var lexboxQueryService = new LexboxQueryService(httpClientFactory.Object);
-            _controller = new AuthController(configuration, lexboxQueryService, _permissionService);
+            _controller = new LexboxController(configuration, lexboxQueryService, _permissionService);
         }
 
         [Test]

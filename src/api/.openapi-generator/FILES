@@ -3,11 +3,11 @@
 .openapi-generator-ignore
 api.ts
 api/audio-api.ts
-api/auth-api.ts
 api/avatar-api.ts
 api/banner-api.ts
 api/email-verify-api.ts
 api/invite-api.ts
+api/lexbox-api.ts
 api/lift-api.ts
 api/merge-api.ts
 api/password-reset-api.ts
@@ -40,13 +40,7 @@ models/gram-cat-group.ts
 models/grammatical-info.ts
 models/index.ts
 models/lexbox-auth-status.ts
-models/lexbox-entry.ts
-models/lexbox-part-of-speech.ts
 models/lexbox-project.ts
-models/lexbox-rich-span.ts
-models/lexbox-rich-string.ts
-models/lexbox-semantic-domain.ts
-models/lexbox-sense.ts
 models/merge-source-word.ts
 models/merge-undo-ids.ts
 models/merge-words.ts

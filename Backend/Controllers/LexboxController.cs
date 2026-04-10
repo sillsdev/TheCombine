@@ -6,7 +6,6 @@ using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Otel;
-using BackendFramework.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -17,14 +16,14 @@ namespace BackendFramework.Controllers
 {
     [Produces("application/json")]
     [Route("v1/auth")]
-    public class AuthController(IConfiguration configuration, LexboxQueryService lexboxQueryService,
+    public class LexboxController(IConfiguration configuration, ILexboxQueryService lexboxQueryService,
         IPermissionService permissionService) : Controller
     {
         private readonly IConfiguration _configuration = configuration;
-        private readonly LexboxQueryService _lexboxQueryService = lexboxQueryService;
+        private readonly ILexboxQueryService _lexboxQueryService = lexboxQueryService;
         private readonly IPermissionService _permissionService = permissionService;
 
-        private const string otelTagName = "otel.AuthController";
+        private const string otelTagName = "otel.LexboxController";
         private const string LexboxCookieScheme = "LexboxCookie";
         private const string LexboxOidcScheme = "LexboxOidc";
         private const string PostLoginRedirectConfigKey = "LexboxAuth:PostLoginRedirect";
@@ -105,7 +104,7 @@ namespace BackendFramework.Controllers
 
             try
             {
-                var projects = await _lexboxQueryService.GetMyProjectsAsync(accessToken);
+                List<LexboxProject> projects = await _lexboxQueryService.GetMyProjectsAsync(accessToken);
                 return Ok(projects);
             }
             catch (LexboxQueryException ex)
@@ -115,13 +114,13 @@ namespace BackendFramework.Controllers
             }
         }
 
-        /// <summary> Gets entries for a Lexbox project. </summary>
+        /// <summary> Gets entries from a Lexbox project. </summary>
         [Authorize(AuthenticationSchemes = LexboxCookieScheme)]
-        [HttpGet("lexbox-entries/{projectType}/{projectCode}", Name = "GetLexboxEntries")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LexboxEntry>))]
+        [HttpGet("lexbox-entries/{projectCode}/{vernacularLang}", Name = "GetLexboxEntries")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Word>))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status502BadGateway)]
-        public async Task<IActionResult> GetLexboxEntries(string projectType, string projectCode)
+        public async Task<IActionResult> GetLexboxEntries(string projectCode, string vernacularLang)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting Lexbox entries");
 
@@ -133,7 +132,8 @@ namespace BackendFramework.Controllers
 
             try
             {
-                var entries = await _lexboxQueryService.GetProjectEntriesAsync(accessToken, projectType, projectCode);
+                List<Word> entries =
+                    await _lexboxQueryService.GetProjectEntriesAsync(accessToken, projectCode, vernacularLang);
                 return Ok(entries);
             }
             catch (LexboxQueryException ex)
