@@ -37,7 +37,7 @@ serviceAccount:
 
 awsEcr:
   image: "public.ecr.aws/thecombine/aws-kubectl"
-  imageVersion: "0.4.2"
+  imageVersion: "0.5.0"
 
 #######################################
 # Variables controlling backups
