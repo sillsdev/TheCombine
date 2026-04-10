@@ -31,9 +31,6 @@ kubernetes
 pyopenssl
 pymongo
 
-# Kubernetes Installation.
-pyyaml
-
 # Scripts.
 regex
 
