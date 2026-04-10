@@ -328,7 +328,7 @@ namespace BackendFramework
             services.AddTransient<IPasswordResetService, PasswordResetService>();
 
             // Lexbox types
-            services.AddTransient<LexboxQueryService>();
+            services.AddTransient<ILexboxQueryService, LexboxQueryService>();
 
             // Lift Service - Singleton to avoid initializing the Sldr multiple times,
             // also to avoid leaking LanguageTag data

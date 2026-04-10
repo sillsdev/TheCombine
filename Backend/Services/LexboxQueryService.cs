@@ -4,11 +4,12 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using BackendFramework.Interfaces;
 using BackendFramework.Models;
 
 namespace BackendFramework.Services
 {
-    public sealed class LexboxQueryService(IHttpClientFactory httpClientFactory)
+    public sealed class LexboxQueryService(IHttpClientFactory httpClientFactory) : ILexboxQueryService
     {
         private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
 
@@ -29,11 +30,8 @@ namespace BackendFramework.Services
                         + (string.IsNullOrEmpty(responseBody) ? "" : $"\nBody: {responseBody}"));
             }
 
-            var graph = await response.Content.ReadFromJsonAsync<LexboxQueryResponse<MyProjectsData>>();
-            if (graph is null)
-            {
-                throw new LexboxQueryException("Lexbox GraphQL response was empty", "");
-            }
+            var graph = await response.Content.ReadFromJsonAsync<LexboxQueryResponse<MyProjectsData>>()
+                ?? throw new LexboxQueryException("Lexbox GraphQL response was empty", "");
 
             if (graph.Errors is { Length: > 0 })
             {
@@ -45,24 +43,36 @@ namespace BackendFramework.Services
             return graph.Data?.MyProjects?.Select(p => new LexboxProject(p)).ToList() ?? [];
         }
 
-        public async Task<List<LexboxEntry>> GetProjectEntriesAsync(string accessToken, string projectType, string projectCode)
+        public async Task<List<Word>> GetProjectEntriesAsync(
+            string accessToken, string projectCode, string vernacularLang)
         {
             var httpClient = _httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", accessToken);
 
-            var url = $"{LexboxQuery.MiniLcmBaseUrl}/{projectType}/{projectCode}/entries";
+            var url = $"{LexboxQuery.LfClassicBaseUrl}/{projectCode}/entries";
             var response = await httpClient.GetAsync(url);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                throw new LexboxQueryException("Language Forge project not found",
+                    $"Project '{projectCode}' was not found in Language Forge.");
+            }
 
             if (!response.IsSuccessStatusCode)
             {
                 var responseBody = await response.Content.ReadAsStringAsync();
-                throw new LexboxQueryException("Lexbox MiniLcm entries request failed",
+                throw new LexboxQueryException("Project entries request failed",
                     $"Status: {(int)response.StatusCode} {response.ReasonPhrase}"
                         + (string.IsNullOrEmpty(responseBody) ? "" : $"\nBody: {responseBody}"));
             }
 
-            return await response.Content.ReadFromJsonAsync<List<LexboxEntry>>() ?? [];
+            var lexboxEntries = await response.Content.ReadFromJsonAsync<List<LexboxEntry>>() ?? [];
+            return lexboxEntries
+                .Where(e => e.DeletedAt is null)
+                .Select(e => e.ToWord(vernacularLang))
+                .OfType<Word>()
+                .ToList();
         }
     }
 }

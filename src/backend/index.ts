@@ -10,7 +10,6 @@ import {
   ChartRootData,
   EmailInviteStatus,
   LexboxAuthStatus,
-  LexboxEntry,
   LexboxProject,
   MergeUndoIds,
   MergeWords,
@@ -117,11 +116,11 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
 
 // Configured OpenAPI interfaces.
 const audioApi = new Api.AudioApi(config, BASE_PATH, axiosInstance);
-const authApi = new Api.AuthApi(config, BASE_PATH, axiosInstance);
 const avatarApi = new Api.AvatarApi(config, BASE_PATH, axiosInstance);
 const bannerApi = new Api.BannerApi(config, BASE_PATH, axiosInstance);
 const emailVerifyApi = new Api.EmailVerifyApi(config, BASE_PATH, axiosInstance);
 const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
+const lexboxApi = new Api.LexboxApi(config, BASE_PATH, axiosInstance);
 const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
 const mergeApi = new Api.MergeApi(config, BASE_PATH, axiosInstance);
 const passwordResetApi = new Api.PasswordResetApi(
@@ -181,36 +180,6 @@ export async function deleteAudio(
  * but it's still required in the url and helpful for analytics. */
 export function getAudioUrl(wordId: string, fileName: string): string {
   return `${baseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/download/${fileName}`;
-}
-
-/* AuthController.cs */
-
-export async function getLexboxAuthStatus(): Promise<LexboxAuthStatus> {
-  return (await authApi.getAuthStatus(defaultOptions())).data;
-}
-
-export function getLexboxLoginUrl(): string {
-  return `${baseURL}/auth/lexbox-login`;
-}
-
-export async function getLexboxProjects(): Promise<LexboxProject[]> {
-  return (await authApi.getLexboxProjects(defaultOptions())).data;
-}
-
-export async function getLexboxEntries(
-  projectType: string,
-  projectCode: string
-): Promise<LexboxEntry[]> {
-  return (
-    await authApi.getLexboxEntries(
-      { projectType, projectCode },
-      defaultOptions()
-    )
-  ).data;
-}
-
-export async function logoutLexboxUser(): Promise<void> {
-  await authApi.logOutLexbox(defaultOptions());
 }
 
 /* AvatarController.cs */
@@ -295,6 +264,32 @@ export async function validateInviteToken(
   return (
     await inviteApi.validateInviteToken({ projectId, token }, defaultOptions())
   ).data;
+}
+
+/* LexboxController.cs */
+
+export async function getLexboxAuthStatus(): Promise<LexboxAuthStatus> {
+  return (await lexboxApi.getAuthStatus(defaultOptions())).data;
+}
+
+export function getLexboxLoginUrl(): string {
+  return `${baseURL}/auth/lexbox-login`;
+}
+
+export async function getLexboxProjects(): Promise<LexboxProject[]> {
+  return (await lexboxApi.getLexboxProjects(defaultOptions())).data;
+}
+
+export async function getLexboxEntries(
+  projectCode: string,
+  vernacularLang: string
+): Promise<Word[]> {
+  const params = { projectCode, vernacularLang };
+  return (await lexboxApi.getLexboxEntries(params, defaultOptions())).data;
+}
+
+export async function logoutLexboxUser(): Promise<void> {
+  await lexboxApi.logOutLexbox(defaultOptions());
 }
 
 /* LiftController.cs */

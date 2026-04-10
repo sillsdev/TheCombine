@@ -13,11 +13,11 @@
  */
 
 export * from "./api/audio-api";
-export * from "./api/auth-api";
 export * from "./api/avatar-api";
 export * from "./api/banner-api";
 export * from "./api/email-verify-api";
 export * from "./api/invite-api";
+export * from "./api/lexbox-api";
 export * from "./api/lift-api";
 export * from "./api/merge-api";
 export * from "./api/password-reset-api";

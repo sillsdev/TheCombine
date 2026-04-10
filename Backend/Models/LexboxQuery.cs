@@ -8,6 +8,7 @@ namespace BackendFramework.Models
     {
         public const string QueryUrl = "https://lexbox.org/api/graphql";
         public const string MiniLcmBaseUrl = "https://lexbox.org/api/mini-lcm";
+        public const string LfClassicBaseUrl = "https://lexbox.org/api/lfclassic";
         public const string MyProjectsQuery = @"query {
     myProjects {
         code
@@ -127,39 +128,107 @@ namespace BackendFramework.Models
 
     public sealed class LexboxEntry
     {
+        public Dictionary<string, string> CitationForm { get; init; } = [];
+        public DateTime? DeletedAt { get; init; }
         public Guid Id { get; init; }
         public Dictionary<string, string> LexemeForm { get; init; } = [];
-        public Dictionary<string, string> CitationForm { get; init; } = [];
         public Dictionary<string, LexboxRichString> Note { get; init; } = [];
         public List<LexboxSense> Senses { get; init; } = [];
+
+        public Word? ToWord(string vernacularLang, IEnumerable<string>? analysisLangs = null)
+        {
+            if (DeletedAt is not null)
+            {
+                // Ignore any entry that was deleted.
+                return null;
+            }
+
+            CitationForm.TryGetValue(vernacularLang, out var vernacular);
+            var usingCitationForm = !string.IsNullOrWhiteSpace(vernacular);
+            if (!usingCitationForm)
+            {
+                LexemeForm.TryGetValue(vernacularLang, out vernacular);
+            }
+            vernacular = vernacular?.Trim();
+            if (string.IsNullOrEmpty(vernacular))
+            {
+                // Ignore any entry with no citation/lexeme form in specified vernacular language.
+                return null;
+            }
+
+            var noteLang = (analysisLangs ?? []).FirstOrDefault(Note.ContainsKey) ?? Note.Keys.FirstOrDefault() ?? "";
+            var noteText = noteLang.Length > 0 && Note.TryGetValue(noteLang, out var noteRich)
+                ? noteRich.GetPlainText()
+                : "";
+
+            return new Word
+            {
+                Guid = Id,
+                Id = Guid.NewGuid().ToString(),
+                Note = new Note(noteLang, noteText),
+                Senses = Senses
+                    .Select(s => s.ToSense(analysisLangs)).Where(s => s is not null).OfType<Sense>().ToList(),
+                UsingCitationForm = usingCitationForm,
+                Vernacular = vernacular,
+            };
+        }
     }
 
     public sealed class LexboxSense
     {
-        public Guid Id { get; init; }
-        public Guid EntryId { get; init; }
-        public Dictionary<string, string> Gloss { get; init; } = [];
         public Dictionary<string, LexboxRichString> Definition { get; init; } = [];
+        public DateTime? DeletedAt { get; init; }
+        public Dictionary<string, string> Gloss { get; init; } = [];
+        public Guid Id { get; init; }
         public LexboxPartOfSpeech? PartOfSpeech { get; init; }
         public List<LexboxSemanticDomain> SemanticDomains { get; init; } = [];
+
+        public Sense? ToSense(IEnumerable<string>? langs = null)
+        {
+            // Ignore any sense that was deleted.
+            return DeletedAt is null ? null : new()
+            {
+                Definitions = Definition
+                    .Select(kvp => new Definition { Language = kvp.Key, Text = kvp.Value.GetPlainText() }).ToList(),
+                Glosses = Gloss.Select(kvp => new Gloss { Def = kvp.Value, Language = kvp.Key }).ToList(),
+                GrammaticalInfo = PartOfSpeech?.ToGrammaticalInfo(langs) ?? new GrammaticalInfo(),
+                Guid = Id,
+                SemanticDomains = SemanticDomains.Select(sd => sd.ToSemanticDomain(langs)).ToList(),
+            };
+        }
     }
 
     public sealed class LexboxPartOfSpeech
     {
         public Guid Id { get; init; }
         public Dictionary<string, string> Name { get; init; } = [];
+
+        public GrammaticalInfo ToGrammaticalInfo(IEnumerable<string>? langs = null)
+        {
+            var resolvedLang = (langs ?? []).FirstOrDefault(Name.ContainsKey) ?? Name.Keys.FirstOrDefault() ?? "";
+            var name = resolvedLang.Length > 0 && Name.TryGetValue(resolvedLang, out var langName) ? langName : "";
+            return new GrammaticalInfo(name);
+        }
     }
 
     public sealed class LexboxSemanticDomain
     {
+        public string Code { get; init; } = "";
         public Guid Id { get; init; }
         public Dictionary<string, string> Name { get; init; } = [];
-        public string Code { get; init; } = "";
+
+        public SemanticDomain ToSemanticDomain(IEnumerable<string>? langs = null)
+        {
+            var resolvedLang = (langs ?? []).FirstOrDefault(Name.ContainsKey) ?? Name.Keys.FirstOrDefault() ?? "";
+            var name = resolvedLang.Length > 0 && Name.TryGetValue(resolvedLang, out var langName) ? langName : "";
+            return new SemanticDomain { Guid = Id.ToString(), Id = Code, Lang = resolvedLang, Name = name };
+        }
     }
 
     public sealed class LexboxRichString
     {
         public List<LexboxRichSpan> Spans { get; init; } = [];
+
         public string GetPlainText() => string.Concat(Spans.Select(s => s.Text));
     }
 

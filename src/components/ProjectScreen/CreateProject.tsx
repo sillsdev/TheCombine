@@ -224,13 +224,11 @@ export default function CreateProject(): ReactElement {
       await dispatch(asyncFinishProject(trimmedName, vernLang)).then(() =>
         setSuccess(true)
       );
-    } else if (lexboxProject?.type && lexboxProject?.code) {
+    } else if (lexboxProject?.code) {
       try {
         console.info(
           "Project entries:",
-          (
-            await getLexboxEntries(lexboxProject.type, lexboxProject.code)
-          ).slice(0, 5)
+          await getLexboxEntries(lexboxProject.code, vernLang.bcp47)
         );
       } catch (e) {
         console.error("Error fetching Lexbox entries:", e);
