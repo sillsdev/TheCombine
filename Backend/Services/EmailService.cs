@@ -23,7 +23,13 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "sending email");
 
-            if (!_emailContext.EmailEnabled)
+            if (!_emailContext.EmailEnabled ||
+                string.IsNullOrEmpty(_emailContext.SmtpAddress) ||
+                string.IsNullOrEmpty(_emailContext.SmtpFrom) ||
+                string.IsNullOrEmpty(_emailContext.SmtpPassword) ||
+                _emailContext.SmtpPort == IEmailContext.InvalidPort ||
+                string.IsNullOrEmpty(_emailContext.SmtpServer) ||
+                string.IsNullOrEmpty(_emailContext.SmtpUsername))
             {
                 throw new EmailNotEnabledException();
             }
