@@ -32,6 +32,7 @@ def main() -> None:
     execute(
         [
             "npx",
+            "--ignore-scripts",
             "@openapitools/openapi-generator-cli",
             "generate",
             "--input-spec=http://localhost:5000/openapi/v1/openapi.json",
