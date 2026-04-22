@@ -32,7 +32,7 @@ ENV SCRIPT_DIR=${HOME}/.local/bin
 ENV FONT_DIR=/var/local/fonts
 
 RUN mkdir -p ${FONT_DIR}
-RUN chown user:user ${FONT_DIR}
+RUN chown user:group ${FONT_DIR}
 
 # switch to non-root user
 USER user
@@ -40,10 +40,10 @@ WORKDIR ${HOME}
 
 ENV PATH=${PATH}:${SCRIPT_DIR}
 
-COPY --chown=user:user requirements.txt .
+COPY --chown=user:group requirements.txt .
 
 RUN pip3 install --break-system-packages -r requirements.txt
 
-COPY --chown=user:user scripts/*.py ${SCRIPT_DIR}
-COPY --chown=user:user scripts/*.sh ${SCRIPT_DIR}
-COPY --chown=user:user scripts/mui_language_picker_fonts.txt ${SCRIPT_DIR}
+COPY --chown=user:group scripts/*.py ${SCRIPT_DIR}
+COPY --chown=user:group scripts/*.sh ${SCRIPT_DIR}
+COPY --chown=user:group scripts/mui_language_picker_fonts.txt ${SCRIPT_DIR}
