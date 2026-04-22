@@ -12,9 +12,9 @@ import {
   useState,
 } from "react";
 
-import { baseURL } from "backend";
 import { getUserId } from "backend/localStorage";
 import { useAppDispatch } from "rootRedux/hooks";
+import { RuntimeConfig } from "types/runtimeConfig";
 
 type MethodAction = Action | PayloadAction | ThunkAction<any, any, any, any>;
 
@@ -35,6 +35,8 @@ const acknowledgeMethodName = "AcknowledgeMessage";
 const failureMethodName = "Failure";
 /** Matches `CombineHub.MethodSuccess` in Backend/Helper/CombineHub.cs */
 const successMethodName = "Success";
+
+const baseUrl = RuntimeConfig.getInstance().baseUrl();
 
 /** A central hub for monitoring export status on SignalR */
 export default function SignalRHub(props: SignalRHubProps): ReactElement {
@@ -66,7 +68,7 @@ export default function SignalRHub(props: SignalRHubProps): ReactElement {
   useEffect(() => {
     if (!disconnect && reconnect) {
       const newConnection = new HubConnectionBuilder()
-        .withUrl(`${baseURL}/${url}`)
+        .withUrl(`${baseUrl}/${url}`)
         .withAutomaticReconnect()
         .build();
       setReconnect(false);

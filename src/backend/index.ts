@@ -9,6 +9,8 @@ import {
   BannerType,
   ChartRootData,
   EmailInviteStatus,
+  LexboxAuthStatus,
+  LexboxProject,
   MergeUndoIds,
   MergeWords,
   Permission,
@@ -39,10 +41,8 @@ import { FileWithSpeakerId } from "types/word";
 import { Bcp47Code } from "types/writingSystem";
 import { convertGoalToEdit } from "utilities/goalUtilities";
 
-export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
-const apiBaseURL = `${baseURL}/v1`;
-const config_parameters: Api.ConfigurationParameters = { basePath: baseURL };
-const config = new Api.Configuration(config_parameters);
+const basePath = RuntimeConfig.getInstance().baseUrl();
+const config = new Api.Configuration({ basePath });
 
 /** A list of URL patterns for which user analytics should not be collected. */
 const authenticationUrls = [
@@ -56,6 +56,7 @@ const authenticationUrls = [
 /** A list of URL patterns for which the frontend explicitly handles errors
  * and the blanket error pop-ups should be suppressed.*/
 const whiteListedErrorUrls = [
+  "/auth/status",
   "/merge/retrievedups",
   "/speakers/create",
   "/speakers/update/",
@@ -65,7 +66,8 @@ const whiteListedErrorUrls = [
 ];
 
 // Create an axios instance to allow for attaching interceptors to it.
-const axiosInstance = axios.create({ baseURL: apiBaseURL });
+const baseURL = `${basePath}/v1`;
+const axiosInstance = axios.create({ baseURL, withCredentials: true });
 axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const consent = LocalStorage.getCurrentUser()?.analyticsOn;
   const url = config.url;
@@ -118,6 +120,7 @@ const avatarApi = new Api.AvatarApi(config, BASE_PATH, axiosInstance);
 const bannerApi = new Api.BannerApi(config, BASE_PATH, axiosInstance);
 const emailVerifyApi = new Api.EmailVerifyApi(config, BASE_PATH, axiosInstance);
 const inviteApi = new Api.InviteApi(config, BASE_PATH, axiosInstance);
+const lexboxApi = new Api.LexboxApi(config, BASE_PATH, axiosInstance);
 const liftApi = new Api.LiftApi(config, BASE_PATH, axiosInstance);
 const mergeApi = new Api.MergeApi(config, BASE_PATH, axiosInstance);
 const passwordResetApi = new Api.PasswordResetApi(
@@ -176,7 +179,7 @@ export async function deleteAudio(
  * Note: Backend doesn't need wordId to find the file,
  * but it's still required in the url and helpful for analytics. */
 export function getAudioUrl(wordId: string, fileName: string): string {
-  return `${apiBaseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/download/${fileName}`;
+  return `${baseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/download/${fileName}`;
 }
 
 /* AvatarController.cs */
@@ -261,6 +264,32 @@ export async function validateInviteToken(
   return (
     await inviteApi.validateInviteToken({ projectId, token }, defaultOptions())
   ).data;
+}
+
+/* LexboxController.cs */
+
+export async function getLexboxAuthStatus(): Promise<LexboxAuthStatus> {
+  return (await lexboxApi.getAuthStatus(defaultOptions())).data;
+}
+
+export function getLexboxLoginUrl(): string {
+  return `${baseURL}/auth/lexbox-login`;
+}
+
+export async function getLexboxProjects(): Promise<LexboxProject[]> {
+  return (await lexboxApi.getProjects(defaultOptions())).data;
+}
+
+export async function getLexboxEntries(
+  projectCode: string,
+  vernacularLang: string
+): Promise<Word[]> {
+  const params = { projectCode, vernacularLang };
+  return (await lexboxApi.getEntries(params, defaultOptions())).data;
+}
+
+export async function logoutLexboxUser(): Promise<void> {
+  await lexboxApi.logOut(defaultOptions());
 }
 
 /* LiftController.cs */
@@ -640,7 +669,7 @@ export async function uploadConsent(
 
 /** Use of the returned url acts as an HttpGet. */
 export function getConsentUrl(speaker: Speaker): string {
-  return `${apiBaseURL}/projects/${speaker.projectId}/speakers/consent/${speaker.id}`;
+  return `${baseURL}/projects/${speaker.projectId}/speakers/consent/${speaker.id}`;
 }
 
 /** Returns the string to display the image inline in Base64 <img src= */
