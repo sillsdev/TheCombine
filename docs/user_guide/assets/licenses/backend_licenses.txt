@@ -1,6 +1,6 @@
 ###############################################################
 PackageId: BouncyCastle.Cryptography
-PackageVersion: 2.5.1
+PackageVersion: 2.6.2
 PackageProjectUrl: https://www.bouncycastle.org/stable/nuget/csharp/website
 Authors: Legion of the Bouncy Castle Inc.
 License: MIT
@@ -34,7 +34,7 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: MailKit
-PackageVersion: 4.13.0
+PackageVersion: 4.16.0
 PackageProjectUrl: http://www.mimekit.net/
 Authors: Jeffrey Stedfast
 License: MIT
@@ -258,7 +258,7 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: MimeKit
-PackageVersion: 4.13.0
+PackageVersion: 4.16.0
 PackageProjectUrl: https://www.mimekit.net/
 Authors: Jeffrey Stedfast
 License: MIT
