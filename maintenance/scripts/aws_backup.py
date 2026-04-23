@@ -41,6 +41,14 @@ class AwsBackup:
         s3_uri = f"{self.bucket}/{src}"
         return run_cmd(["aws", "s3", "cp", "--no-progress", s3_uri, str(dest)])
 
+    def delete(self, dest: str) -> subprocess.CompletedProcess[str]:
+        """Delete an object from the AWS S3 bucket.
+
+        Uses check_results=False so that a missing object does not raise an error.
+        """
+        s3_uri = f"{self.bucket}/{dest}"
+        return run_cmd(["aws", "s3", "rm", s3_uri], check_results=False)
+
     def list(self) -> subprocess.CompletedProcess[str]:
         """List the objects in the S3 bucket."""
         return run_cmd(["aws", "s3", "ls", f"{self.bucket}", "--recursive"])

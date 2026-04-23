@@ -118,6 +118,16 @@ def main() -> None:
                 )
                 tar.add(backend_files_subdir)
                 rmtree(backend_files_subdir)
+        except (Exception, SystemExit):
+            # Kill the upload to prevent a partial object from being finalized in S3,
+            # then remove any partial object that may already have been written.
+            upload_proc.kill()
+            upload_proc.wait()
+            print(f"Cleaning up partial S3 backup {aws_file}.", file=sys.stderr)
+            delete_result = aws.delete(aws_file)
+            if delete_result.returncode != 0:
+                print(f"Warning: failed to delete partial S3 backup {aws_file}.", file=sys.stderr)
+            raise
         finally:
             if upload_proc.stdin:
                 upload_proc.stdin.close()
@@ -127,6 +137,9 @@ def main() -> None:
                 f"Failed to push backup to AWS S3:\n{upload_stderr.decode() if upload_stderr else ''}",
                 file=sys.stderr,
             )
+            delete_result = aws.delete(aws_file)
+            if delete_result.returncode != 0:
+                print(f"Warning: failed to delete partial S3 backup {aws_file}.", file=sys.stderr)
             sys.exit(upload_proc.returncode)
 
 
