@@ -1,40 +1,28 @@
 import { HelpOutline } from "@mui/icons-material";
-import { MenuItem, Select, Stack, Tooltip, Typography } from "@mui/material";
+import { MenuItem, Select, Stack, Tooltip } from "@mui/material";
 import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { OffOnSetting } from "api/models";
 import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 
-export default function ProjectHarvesterReviewEntries({
-  project,
-  setProject,
-}: ProjectSettingProps): ReactElement {
+export default function ProjectHarvesterReviewEntries(
+  props: ProjectSettingProps
+): ReactElement {
   const { t } = useTranslation();
 
   const updateSetting = async (
     harvesterReviewEntriesEnabled: OffOnSetting
   ): Promise<void> => {
-    await setProject({ ...project, harvesterReviewEntriesEnabled });
+    await props.setProject({ ...props.project, harvesterReviewEntriesEnabled });
   };
 
   return (
-    <div>
-      <Stack direction="row" spacing={1}>
-        <Typography>
-          {t("projectSettings.harvesterReviewEntries.label")}
-        </Typography>
-        <Tooltip
-          title={t("projectSettings.harvesterReviewEntries.hint")}
-          placement={document.body.dir === "rtl" ? "left" : "right"}
-        >
-          <HelpOutline fontSize="small" />
-        </Tooltip>
-      </Stack>
+    <Stack direction="row">
       <Select
-        variant="standard"
-        value={project.harvesterReviewEntriesEnabled}
         onChange={(e) => updateSetting(e.target.value as OffOnSetting)}
+        value={props.project.harvesterReviewEntriesEnabled}
+        variant="standard"
       >
         <MenuItem value={OffOnSetting.Off}>
           {t("projectSettings.autocomplete.off")}
@@ -43,6 +31,13 @@ export default function ProjectHarvesterReviewEntries({
           {t("projectSettings.autocomplete.on")}
         </MenuItem>
       </Select>
-    </div>
+
+      <Tooltip
+        title={t("projectSettings.harvesterReviewEntries.hint")}
+        placement={document.body.dir === "rtl" ? "left" : "right"}
+      >
+        <HelpOutline fontSize="small" />
+      </Tooltip>
+    </Stack>
   );
 }
