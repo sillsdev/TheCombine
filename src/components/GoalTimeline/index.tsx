@@ -10,7 +10,7 @@ import {
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { OffOnSetting, Permission } from "api/models";
+import { Permission } from "api/models";
 import { getCurrentPermissions, hasGraylistEntries } from "backend";
 import GoalHistoryButton from "components/GoalTimeline/GoalHistoryButton";
 import GoalNameButton from "components/GoalTimeline/GoalNameButton";
@@ -18,11 +18,7 @@ import { asyncAddGoal, asyncGetUserEdits } from "goals/Redux/GoalActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { StoreState } from "rootRedux/types";
 import { GoalName } from "types/goals";
-import {
-  goalNameToGoal,
-  hasChanges,
-  requiredPermission,
-} from "utilities/goalUtilities";
+import { goalNameToGoal, hasChanges } from "utilities/goalUtilities";
 
 /** List of goals, followed by goal history. */
 export default function GoalTimeline(): ReactElement {
@@ -31,22 +27,21 @@ export default function GoalTimeline(): ReactElement {
   const { allGoals, history } = useAppSelector(
     (state: StoreState) => state.goalsState
   );
-  const harvesterReviewEntriesEnabled = useAppSelector(
-    (state: StoreState) =>
-      state.currentProjectState.project.harvesterReviewEntriesEnabled
-  );
 
   const small = useMediaQuery((th) => th.breakpoints.down("md"));
 
   const [goalOptions, setGoalOptions] = useState<GoalName[]>([]);
   const [hasGraylist, setHasGraylist] = useState(false);
-  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const [hasFullPermission, setHasFullPermission] = useState(false);
 
   const { t } = useTranslation();
 
   useEffect(() => {
-    hasGraylistEntries().then(setHasGraylist);
-    getCurrentPermissions().then(setPermissions);
+    getCurrentPermissions().then((permissions) => {
+      setHasFullPermission(
+        permissions.includes(Permission.MergeAndReviewEntries)
+      );
+    });
   }, []);
 
   useEffect(() => {
@@ -54,20 +49,20 @@ export default function GoalTimeline(): ReactElement {
   }, [dispatch]);
 
   useEffect(() => {
-    const isHarvester =
-      permissions.includes(Permission.WordEntry) &&
-      !permissions.includes(Permission.MergeAndReviewEntries);
-    const harvesterCanReviewEntries =
-      isHarvester && harvesterReviewEntriesEnabled === OffOnSetting.On;
+    if (hasFullPermission) {
+      hasGraylistEntries().then(setHasGraylist);
+    }
+  }, [hasFullPermission]);
+
+  useEffect(() => {
     setGoalOptions(
       allGoals.filter(
         (g) =>
           (g !== GoalName.ReviewDeferredDups || hasGraylist) &&
-          (permissions.includes(requiredPermission(g)) ||
-            (harvesterCanReviewEntries && g === GoalName.ReviewEntries))
+          (g === GoalName.ReviewEntries || hasFullPermission)
       )
     );
-  }, [allGoals, harvesterReviewEntriesEnabled, hasGraylist, permissions]);
+  }, [allGoals, hasGraylist, hasFullPermission]);
 
   const thinScrollX: SxProps = {
     overflowX: "auto",

@@ -196,9 +196,7 @@ export default function ProjectSettingsComponent(): ReactElement {
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <BaseSettings
               icon={
-                <ManageSearch
-                  data-testid={Setting.HarvesterReviewEntries}
-                />
+                <ManageSearch data-testid={Setting.HarvesterReviewEntries} />
               }
               title={t("projectSettings.harvesterReviewEntries.label")}
               body={

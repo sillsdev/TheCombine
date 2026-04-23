@@ -126,8 +126,8 @@ click this to open a user management menu with the following options:
 </pre>
 
 A _Harvester_ can do [Data Entry](./dataEntry.md) but not [Data Cleanup](./goals.md). In project settings, they can see
-the project languages and workshop schedule, but cannot make any changes. However, if a project Administrator enables the
-[Harvester Review Entries](#harvester-review-entries) setting, Harvesters can also access
+the project languages and workshop schedule, but cannot make any changes. However, if a project Administrator enables
+the [Harvester Review Entries](#harvester-review-entries) setting, Harvesters can also access
 [Review Entries](./goals.md#review-entries) with limited functionality: they can update pronunciations and flags, but
 cannot edit or delete entries.
 

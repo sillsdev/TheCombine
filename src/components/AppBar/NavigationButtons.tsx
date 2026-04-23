@@ -37,14 +37,12 @@ export default function NavigationButtons(props: TabProps): ReactElement {
 
   useEffect(() => {
     getCurrentPermissions().then((perms) => {
-      const hasFullPermission =
+      setHasGoalPermission(
         perms.includes(Permission.CharacterInventory) ||
-        perms.includes(Permission.MergeAndReviewEntries);
-      const isHarvesterWithAccess =
-        harvesterReviewEntriesEnabled === OffOnSetting.On &&
-        perms.includes(Permission.WordEntry) &&
-        !perms.includes(Permission.MergeAndReviewEntries);
-      setHasGoalPermission(hasFullPermission || isHarvesterWithAccess);
+          perms.includes(Permission.MergeAndReviewEntries) ||
+          (harvesterReviewEntriesEnabled === OffOnSetting.On &&
+            perms.includes(Permission.WordEntry))
+      );
     });
   }, [harvesterReviewEntriesEnabled, projectId]);
 
