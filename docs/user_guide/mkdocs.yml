@@ -87,7 +87,7 @@ extra:
     - icon: fontawesome/brands/youtube
       link: https://www.youtube.com/channel/UC6ojqR9jOPHuPN7XP92Zj9Q
     - icon: fontawesome/brands/linkedin
-      link: https://www.linkedin.com/company/silglobal
+      link: https://www.linkedin.com/showcase/sil-language-technology/
 nav:
   - Overview: index.md
   - Account: account.md
