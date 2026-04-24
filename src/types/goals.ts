@@ -1,5 +1,3 @@
-import { v4 } from "uuid";
-
 import {
   type CharInvChanges,
   type CharInvData,
@@ -73,7 +71,7 @@ export class Goal {
     steps: GoalStep[] = [{}],
     data?: GoalData
   ) {
-    this.guid = v4();
+    this.guid = crypto.randomUUID();
     this.goalType = type;
     this.name = name;
     this.steps = steps;

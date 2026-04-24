@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { v4 } from "uuid";
 
 import { Status, type Word } from "api/models";
 import {
@@ -238,7 +237,10 @@ const mergeDuplicatesSlice = createSlice({
 
         // Update the destWord.
         const sensesPairs = Object.entries(words[destWordId].sensesGuids);
-        sensesPairs.splice(action.payload.destOrder, 0, [v4(), [guid]]);
+        sensesPairs.splice(action.payload.destOrder, 0, [
+          crypto.randomUUID(),
+          [guid],
+        ]);
         words[destWordId].sensesGuids = Object.fromEntries(sensesPairs);
       }
     },

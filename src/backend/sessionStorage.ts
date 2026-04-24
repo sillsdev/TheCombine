@@ -1,5 +1,3 @@
-import { v4 } from "uuid";
-
 export enum SessionStorageKey {
   SessionId = "sessionId",
 }
@@ -8,7 +6,7 @@ export enum SessionStorageKey {
 export function getSessionId(): string {
   let id = sessionStorage.getItem(SessionStorageKey.SessionId);
   if (!id) {
-    id = v4();
+    id = crypto.randomUUID();
     sessionStorage.setItem(SessionStorageKey.SessionId, id);
   }
   return id;

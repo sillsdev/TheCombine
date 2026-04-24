@@ -3,7 +3,6 @@ import {
   type PayloadAction,
   type UnknownAction,
 } from "@reduxjs/toolkit";
-import * as uuid from "uuid";
 
 import { Status } from "api/models";
 import {
@@ -42,23 +41,28 @@ import { setupStore } from "rootRedux/store";
 import { type Hash } from "types/hash";
 import { newFlag, testWordList } from "types/word";
 
-jest.mock("uuid");
-
-const mockUuidV4 = uuid.v4 as jest.MockedFunction<() => string>;
+let mockRandomUuid: jest.SpiedFunction<typeof crypto.randomUUID>;
 
 let uuidIndex = 0;
 /** When `increment` (default `true`) is set to `false`,
- * returns the next uuid to be assigned by our mocked `v4`. */
-function getMockUuid(increment = true): string {
-  const uuid = `mockUuid${uuidIndex}`;
+ * returns the next uuid to be assigned by our mocked `randomUUID`. */
+function getMockUuid(increment = true): ReturnType<typeof crypto.randomUUID> {
+  const suffix = `${uuidIndex}`.padStart(12, "0");
   if (increment) {
     uuidIndex++;
   }
-  return uuid;
+  return `00000000-0000-4000-8000-${suffix}`;
 }
 
 beforeEach(() => {
-  mockUuidV4.mockImplementation(getMockUuid);
+  uuidIndex = 0;
+  mockRandomUuid = jest
+    .spyOn(crypto, "randomUUID")
+    .mockImplementation(() => getMockUuid());
+});
+
+afterEach(() => {
+  mockRandomUuid.mockRestore();
 });
 
 describe("MergeDupsReducer", () => {
