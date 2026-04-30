@@ -7,10 +7,9 @@ import {
   ImageListItem,
   Tooltip,
 } from "@mui/material";
-import { CSSProperties, ReactElement, useState } from "react";
+import { CSSProperties, ReactElement, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { v4 } from "uuid";
 
 import { appBarHeight } from "components/AppBar/AppBarTypes";
 import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
@@ -257,7 +256,8 @@ export default function MergeDragDrop(): ReactElement {
     );
   }
 
-  const newId = v4();
+  // Create a stable id for the extra empty word each time words changes.
+  const newId = useMemo(() => crypto.randomUUID(), [words]);
   const colCount = Object.keys(words).length + 1; // +1 for extra empty word.
 
   // This prevents things from moving when a draggable is dragged over the trash.

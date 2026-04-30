@@ -1,5 +1,3 @@
-import { v4 } from "uuid";
-
 import {
   Definition,
   Flag,
@@ -57,7 +55,7 @@ export function newSense(
   semDom?: SemanticDomain
 ): Sense {
   const sense: Sense = {
-    guid: v4(),
+    guid: crypto.randomUUID(),
     definitions: [],
     glosses: [],
     semanticDomains: [],
@@ -88,7 +86,7 @@ export function newGrammaticalInfo(): GrammaticalInfo {
 export function newWord(vernacular = "", lang?: string): Word {
   return {
     id: "",
-    guid: v4(),
+    guid: crypto.randomUUID(),
     vernacular,
     senses: [],
     audio: [],
