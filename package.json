@@ -47,7 +47,7 @@
     "@microsoft/signalr": "~9.0.6",
     "@mui/icons-material": "~6.4.6",
     "@mui/material": "~6.5.0",
-    "@mui/x-date-pickers": "~7.29.4",
+    "@mui/x-date-pickers": "~7.27.3",
     "@redux-devtools/extension": "~3.3.0",
     "@reduxjs/toolkit": "~2.11.2",
     "axios": "~1.15.2",
