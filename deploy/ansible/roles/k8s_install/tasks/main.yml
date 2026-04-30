@@ -75,7 +75,6 @@
     path: "{{ k8s_user_home.stdout }}/.profile"
     line: "export KUBECONFIG=${HOME}/.kube/config"
     mode: 0600
-  when: ansible_connection == "local"
 
 - name: Setup remote access to cluster
   include_tasks:
