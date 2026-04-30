@@ -55,7 +55,7 @@ def parse_args() -> argparse.Namespace:
         "--update",
         "-U",
         action="store_true",
-        help="Updates the list of fonts from mui-language-picker. (Must have run `npm i`.)",
+        help="Updates the list of fonts from mui-language-picker. (Must have run `npm run i`.)",
     )
     parser.add_argument(
         "--verbose",
