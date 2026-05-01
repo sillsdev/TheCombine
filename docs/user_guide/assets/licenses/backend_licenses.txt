@@ -76,35 +76,35 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.Extensions.Configuration
-PackageVersion: 9.0.0
+PackageVersion: 8.0.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.Extensions.Configuration.Abstractions
-PackageVersion: 9.0.0
+PackageVersion: 8.0.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.Extensions.Configuration.Binder
-PackageVersion: 9.0.0
+PackageVersion: 8.0.2
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.Extensions.DependencyInjection
-PackageVersion: 9.0.0
+PackageVersion: 8.0.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.Extensions.DependencyInjection.Abstractions
-PackageVersion: 9.0.0
+PackageVersion: 8.0.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
@@ -118,63 +118,63 @@ License: https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT
 LicenseUrl: https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT
 ###############################################################
 PackageId: Microsoft.Extensions.Diagnostics.Abstractions
-PackageVersion: 9.0.0
+PackageVersion: 8.0.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.Extensions.FileProviders.Abstractions
-PackageVersion: 9.0.0
+PackageVersion: 8.0.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.Extensions.Hosting.Abstractions
-PackageVersion: 9.0.0
+PackageVersion: 8.0.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.Extensions.Logging
-PackageVersion: 9.0.0
+PackageVersion: 8.0.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.Extensions.Logging.Abstractions
-PackageVersion: 9.0.0
+PackageVersion: 8.0.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.Extensions.Logging.Configuration
-PackageVersion: 9.0.0
+PackageVersion: 8.0.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.Extensions.Options
-PackageVersion: 9.0.0
+PackageVersion: 8.0.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.Extensions.Options.ConfigurationExtensions
-PackageVersion: 9.0.0
+PackageVersion: 8.0.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.Extensions.Primitives
-PackageVersion: 9.0.0
+PackageVersion: 8.0.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
@@ -293,56 +293,56 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: OpenTelemetry
-PackageVersion: 1.12.0
+PackageVersion: 1.15.3
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Api
-PackageVersion: 1.12.0
+PackageVersion: 1.15.3
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Api.ProviderBuilderExtensions
-PackageVersion: 1.12.0
+PackageVersion: 1.15.3
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Exporter.Console
-PackageVersion: 1.12.0
+PackageVersion: 1.15.3
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Exporter.OpenTelemetryProtocol
-PackageVersion: 1.12.0
+PackageVersion: 1.15.3
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Extensions.Hosting
-PackageVersion: 1.12.0
+PackageVersion: 1.15.3
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Instrumentation.AspNetCore
-PackageVersion: 1.12.0
+PackageVersion: 1.15.2
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Instrumentation.Http
-PackageVersion: 1.12.0
+PackageVersion: 1.15.1
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
@@ -588,7 +588,7 @@ License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.Diagnostics.DiagnosticSource
-PackageVersion: 9.0.0
+PackageVersion: 10.0.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
@@ -915,13 +915,6 @@ PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
-PackageId: System.Text.Json
-PackageVersion: 8.0.5
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: MIT
-LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: System.Threading
 PackageVersion: 4.3.0
