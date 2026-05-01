@@ -50,4 +50,4 @@
         src: "{{ kubecfg }}"
         dest: "{{ lookup('env', 'HOME') }}/.kube/config"
         mode: 0600
-      when: link_kubeconfig | default(false)
+      when: (link_kubeconfig | default(false)) | bool
