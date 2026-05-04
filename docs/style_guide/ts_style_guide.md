@@ -530,6 +530,7 @@ interface MyComponentProps {
 > Reason: Consistent ordering makes props easier to find and reduces merge conflicts.
 
 This convention applies to:
+
 - Interface/type definitions for component props
 - Prop destructuring in function parameters
 - Props passed to components in JSX
