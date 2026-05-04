@@ -18,23 +18,7 @@ OpenAPI specification.
 
 ### Prerequisites
 
-1. Set up a Python virtual environment per the README instructions (see the "Python" section under "Getting Started with
-   Development"):
-
-   ```bash
-   # Create virtual environment (if not already created)
-   python3 -m venv venv
-
-   # Activate the virtual environment
-   # On Windows:
-   venv\Scripts\activate
-   # On Linux/macOS:
-   source venv/bin/activate
-
-   # Install required packages
-   python -m pip -q install pip==24.2 pip-tools==7.5.1
-   python -m piptools sync -q dev-requirements.txt
-   ```
+1. Set up a Python virtual environment per the README instructions in [`README.md#python`](../README.md#python)
 
 2. Start the backend server:
 
@@ -90,5 +74,6 @@ npm run license-report-backend
 This command:
 
 1. Runs `nuget-license` to analyze all backend dependencies (including transitive dependencies)
-2. Outputs the results to `docs/user_guide/assets/licenses/backend_licenses.json`
-3. Runs a post-processing script to create formatted license documentation
+2. Outputs the results to intermediate file `docs/user_guide/assets/licenses/backend_licenses.json`
+3. Runs a post-processing script to create formatted license documentation in
+   `docs/user_guide/assets/licenses/backend_licenses.txt`
