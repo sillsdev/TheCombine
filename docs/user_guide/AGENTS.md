@@ -1,6 +1,6 @@
 # `docs/user_guide/mkdocs.yml`
 
-The user guids languages should match `localization-ug-badge` of `README.md`.
+The user guide languages should match `localization-ug-badge` of `README.md`.
 
 ---
 

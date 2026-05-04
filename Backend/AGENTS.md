@@ -1,6 +1,6 @@
 # C# Code Style
 
-- Refer to [`docs/style_guide/c_sharp_style_guide.md`](docs/style_guide/c_sharp_style_guide.md) for C# conventions
+- Refer to [`docs/style_guide/c_sharp_style_guide.md`](../docs/style_guide/c_sharp_style_guide.md) for C# conventions
 - Key points include:
   - Follow Microsoft C# Coding Guidelines with project-specific exceptions
   - Use type inference (`var`) wherever possible
