@@ -44,6 +44,11 @@ namespace BackendFramework.Models
         public OffOnSetting AutocompleteSetting { get; set; }
 
         [Required]
+        [BsonElement("harvesterReviewEntriesEnabled")]
+        [BsonRepresentation(BsonType.String)]
+        public OffOnSetting HarvesterReviewEntriesEnabled { get; set; }
+
+        [Required]
         [BsonElement("protectedDataMergeAvoidEnabled")]
         [BsonRepresentation(BsonType.String)]
         public OffOnSetting ProtectedDataMergeAvoidEnabled { get; set; }
@@ -102,6 +107,7 @@ namespace BackendFramework.Models
             DefinitionsEnabled = false;
             GrammaticalInfoEnabled = false;
             AutocompleteSetting = OffOnSetting.On;
+            HarvesterReviewEntriesEnabled = OffOnSetting.Off;
             ProtectedDataMergeAvoidEnabled = OffOnSetting.Off;
             ProtectedDataOverrideEnabled = OffOnSetting.Off;
             SemDomWritingSystem = new();
@@ -129,6 +135,7 @@ namespace BackendFramework.Models
                 DefinitionsEnabled = DefinitionsEnabled,
                 GrammaticalInfoEnabled = GrammaticalInfoEnabled,
                 AutocompleteSetting = AutocompleteSetting,
+                HarvesterReviewEntriesEnabled = HarvesterReviewEntriesEnabled,
                 ProtectedDataMergeAvoidEnabled = ProtectedDataMergeAvoidEnabled,
                 ProtectedDataOverrideEnabled = ProtectedDataOverrideEnabled,
                 SemDomWritingSystem = SemDomWritingSystem.Clone(),

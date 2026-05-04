@@ -10,7 +10,7 @@ import { type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
-import { Permission } from "api/models";
+import { OffOnSetting, Permission } from "api/models";
 import { getCurrentPermissions } from "backend";
 import {
   TabProps,
@@ -30,8 +30,8 @@ const navButtonMaxWidthProportion = 0.2;
 
 /** Buttons for navigating to Data Entry and Data Cleanup */
 export default function NavigationButtons(props: TabProps): ReactElement {
-  const projectId = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project.id
+  const { id: projectId, harvesterReviewEntriesEnabled } = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project
   );
   const [hasGoalPermission, setHasGoalPermission] = useState(false);
 
@@ -39,10 +39,12 @@ export default function NavigationButtons(props: TabProps): ReactElement {
     getCurrentPermissions().then((perms) => {
       setHasGoalPermission(
         perms.includes(Permission.CharacterInventory) ||
-          perms.includes(Permission.MergeAndReviewEntries)
+          perms.includes(Permission.MergeAndReviewEntries) ||
+          (harvesterReviewEntriesEnabled === OffOnSetting.On &&
+            perms.includes(Permission.WordEntry))
       );
     });
-  }, [projectId]);
+  }, [harvesterReviewEntriesEnabled, projectId]);
 
   return (
     <>

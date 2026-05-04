@@ -112,6 +112,7 @@ namespace BackendFramework.Repositories
                 .Set(x => x.DefinitionsEnabled, project.DefinitionsEnabled)
                 .Set(x => x.GrammaticalInfoEnabled, project.GrammaticalInfoEnabled)
                 .Set(x => x.AutocompleteSetting, project.AutocompleteSetting)
+                .Set(x => x.HarvesterReviewEntriesEnabled, project.HarvesterReviewEntriesEnabled)
                 .Set(x => x.ProtectedDataMergeAvoidEnabled, project.ProtectedDataMergeAvoidEnabled)
                 .Set(x => x.ProtectedDataOverrideEnabled, project.ProtectedDataOverrideEnabled)
                 .Set(x => x.SemDomWritingSystem, project.SemDomWritingSystem)

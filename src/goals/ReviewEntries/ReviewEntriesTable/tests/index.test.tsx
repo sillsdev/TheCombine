@@ -37,6 +37,7 @@ const setMockUseTranslation = (resolvedLanguage: string): void => {
 jest.mock("backend", () => ({
   deleteFrontierWord: (wordId: string) => mockDeleteFrontierWord(wordId),
   getAllSpeakers: () => Promise.resolve([]),
+  getCurrentPermissions: () => Promise.resolve([]),
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
   getWord: (wordId: string) => mockGetWord(wordId),
   updateWord: (word: { id: string }) => mockUpdateWord(word),

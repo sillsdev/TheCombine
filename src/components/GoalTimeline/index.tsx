@@ -18,11 +18,7 @@ import { asyncAddGoal, asyncGetUserEdits } from "goals/Redux/GoalActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { StoreState } from "rootRedux/types";
 import { GoalName } from "types/goals";
-import {
-  goalNameToGoal,
-  hasChanges,
-  requiredPermission,
-} from "utilities/goalUtilities";
+import { goalNameToGoal, hasChanges } from "utilities/goalUtilities";
 
 /** List of goals, followed by goal history. */
 export default function GoalTimeline(): ReactElement {
@@ -36,13 +32,16 @@ export default function GoalTimeline(): ReactElement {
 
   const [goalOptions, setGoalOptions] = useState<GoalName[]>([]);
   const [hasGraylist, setHasGraylist] = useState(false);
-  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const [hasFullPermission, setHasFullPermission] = useState(false);
 
   const { t } = useTranslation();
 
   useEffect(() => {
-    hasGraylistEntries().then(setHasGraylist);
-    getCurrentPermissions().then(setPermissions);
+    getCurrentPermissions().then((permissions) => {
+      setHasFullPermission(
+        permissions.includes(Permission.MergeAndReviewEntries)
+      );
+    });
   }, []);
 
   useEffect(() => {
@@ -50,14 +49,20 @@ export default function GoalTimeline(): ReactElement {
   }, [dispatch]);
 
   useEffect(() => {
+    if (hasFullPermission) {
+      hasGraylistEntries().then(setHasGraylist);
+    }
+  }, [hasFullPermission]);
+
+  useEffect(() => {
     setGoalOptions(
       allGoals.filter(
         (g) =>
           (g !== GoalName.ReviewDeferredDups || hasGraylist) &&
-          permissions.includes(requiredPermission(g))
+          (g === GoalName.ReviewEntries || hasFullPermission)
       )
     );
-  }, [allGoals, hasGraylist, permissions]);
+  }, [allGoals, hasGraylist, hasFullPermission]);
 
   const thinScrollX: SxProps = {
     overflowX: "auto",

@@ -25,8 +25,18 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { GramCatGroup, type GrammaticalInfo, type Word } from "api/models";
-import { getAllSpeakers, getFrontierWords, getWord } from "backend";
+import {
+  GramCatGroup,
+  type GrammaticalInfo,
+  Permission,
+  type Word,
+} from "api/models";
+import {
+  getAllSpeakers,
+  getCurrentPermissions,
+  getFrontierWords,
+  getWord,
+} from "backend";
 import { topBarHeight } from "components/LandingPage/TopBar";
 import {
   setReviewEntriesColumnOrder,
@@ -138,8 +148,10 @@ export default function ReviewEntriesTable(props: {
       ],
       (colVis, def, pos) => ({
         ...colVis,
+        [ColumnId.Edit]: colVis[ColumnId.Edit] && hasFullPermission,
         [ColumnId.Definitions]: (colVis[ColumnId.Definitions] ?? def) && def,
         [ColumnId.PartOfSpeech]: (colVis[ColumnId.PartOfSpeech] ?? pos) && pos,
+        [ColumnId.Delete]: colVis[ColumnId.Delete] && hasFullPermission,
       })
     )
   );
@@ -156,6 +168,7 @@ export default function ReviewEntriesTable(props: {
 
   const [data, setData] = useState<Word[]>([]);
   const [enablePagination, setEnablePagination] = useState(false);
+  const [hasFullPermission, setHasFullPermission] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [localization, setLocalization] = useState<
     MRT_Localization | undefined
@@ -171,6 +184,9 @@ export default function ReviewEntriesTable(props: {
   });
 
   useEffect(() => {
+    getCurrentPermissions().then((perms) => {
+      setHasFullPermission(perms.includes(Permission.MergeAndReviewEntries));
+    });
     getAllSpeakers().then((list) =>
       setSpeakers(
         Object.fromEntries(list.map((s) => [s.id, s.name.toLocaleLowerCase()]))

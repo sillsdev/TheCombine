@@ -300,6 +300,10 @@
       "on": "On",
       "hint": "In Data Entry, suggest existing Vernaculars similar to the Vernacular being typed."
     },
+    "harvesterReviewEntries": {
+      "label": "Harvester Review Entries",
+      "hint": "Allow Harvesters to use Review Entries. They can update pronunciations and flags, but cannot edit or delete entries."
+    },
     "protectedData": {
       "label": "Protected Data Management",
       "avoidInMerge": {
