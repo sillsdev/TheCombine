@@ -22,7 +22,7 @@ All commit messages must satisfy the defaults of [gitlint](https://jorisroovers.
 
 **Example:**
 
-```
+```text
 Add user authentication endpoint
 
 Implements JWT-based authentication for user login.

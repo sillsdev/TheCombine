@@ -13,7 +13,7 @@
   - Use `PascalCase` for components, classes, and interfaces
   - Prefer `const` over `let`, avoid `var`
   - Use semicolons
-  - Use single quotes for strings
+  - Use double quotes for strings
 
 ---
 
