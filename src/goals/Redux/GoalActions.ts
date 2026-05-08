@@ -101,7 +101,7 @@ export function asyncAdvanceStep() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const initialStep = getState().goalsState.currentGoal.currentStep;
     dispatch(incrementGoalStep());
-    if (initialStep != getState().goalsState.currentGoal.currentStep) {
+    if (initialStep !== getState().goalsState.currentGoal.currentStep) {
       // Update data.
       dispatch(updateStepFromData());
       // Dispatch to state.

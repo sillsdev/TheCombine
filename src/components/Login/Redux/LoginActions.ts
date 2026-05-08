@@ -97,7 +97,7 @@ export function asyncSignUp(
       .then(() => {
         dispatch(signupSuccess());
         onSignupSuccess?.();
-        setTimeout(async () => {
+        setTimeout(() => {
           dispatch(asyncLogIn(username, password, onLoginSuccess));
         }, 1000);
       })

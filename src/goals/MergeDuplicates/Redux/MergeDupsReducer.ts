@@ -308,7 +308,7 @@ const mergeDuplicatesSlice = createSlice({
 
     setDataAction: (state, action) => {
       if (action.payload.length === 0) {
-        state = defaultState;
+        return defaultState;
       } else {
         const words: Hash<Word> = {};
         const senses: Hash<MergeTreeSense> = {};
