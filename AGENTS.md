@@ -38,11 +38,6 @@ Relevant for [`Backend/`](./Backend/) and [`Backend.Tests/`](./Backend.Tests/).
 ### C# Code Style
 
 - Refer to [`docs/style_guide/c_sharp_style_guide.md`](./docs/style_guide/c_sharp_style_guide.md) for C# conventions
-- Key points include:
-  - Follow Microsoft C# Coding Guidelines with project-specific exceptions
-  - Use type inference (`var`) wherever possible
-  - Add braces to one-line `if` statements
-  - Prefer `Range` for simple loop iteration
 
 ---
 

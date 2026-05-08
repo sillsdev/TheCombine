@@ -8,13 +8,6 @@
 
 - Refer to [`docs/style_guide/ts_style_guide.md`](../docs/style_guide/ts_style_guide.md) for comprehensive TypeScript
   and JavaScript conventions
-- Key points include:
-  - Use `camelCase` for variables and functions
-  - Use `PascalCase` for components, classes, and interfaces
-  - Prefer `const` over `let`, avoid `var`
-  - Use semicolons
-  - Use double quotes for strings
-  - Alphabetize component props in interfaces and JSX
 
 ---
 
