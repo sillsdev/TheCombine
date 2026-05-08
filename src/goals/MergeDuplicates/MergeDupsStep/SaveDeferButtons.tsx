@@ -23,7 +23,7 @@ export default function SaveDeferButtons(): ReactElement {
   const hasProtected = useAppSelector(
     (state: StoreState) =>
       state.mergeDuplicateGoal.hasProtected &&
-      state.currentProjectState.project.protectedDataOverrideEnabled ==
+      state.currentProjectState.project.protectedDataOverrideEnabled ===
         OffOnSetting.On
   );
   const overrideProtection = useAppSelector(

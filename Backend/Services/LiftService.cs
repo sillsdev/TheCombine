@@ -894,7 +894,7 @@ namespace BackendFramework.Services
                             {
                                 Id = splitSemDom[0],
                                 MongoId = ObjectId.GenerateNewId().ToString(),
-                                Name = splitSemDom[1].Trim().Normalize(FormC)
+                                Name = splitSemDom.Length > 1 ? splitSemDom[1].Trim().Normalize(FormC) : ""
                             });
                     }
 
