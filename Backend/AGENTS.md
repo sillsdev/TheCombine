@@ -1,20 +1,9 @@
-# C# Code Style
-
-- Refer to [`docs/style_guide/c_sharp_style_guide.md`](../docs/style_guide/c_sharp_style_guide.md) for C# conventions
-- Key points include:
-  - Follow Microsoft C# Coding Guidelines with project-specific exceptions
-  - Use type inference (`var`) wherever possible
-  - Add braces to one-line `if` statements
-  - Prefer `Range` for simple loop iteration
-
----
-
 # OpenAPI
 
 ## Backend Controllers
 
-**When there are changes in `Backend/Controllers/` (or relevant changes in `Backend/Models/`),** you must regenerate the
-OpenAPI specification.
+**When there are changes in [`Backend/Controllers/`](./Controllers/) (or relevant changes in
+[`Backend/Models/`](./Models/)),** you must regenerate the OpenAPI specification.
 
 ### Prerequisites
 
@@ -28,7 +17,7 @@ OpenAPI specification.
 
 ### Generate OpenAPI Specification
 
-With the backend running and the virtual environment activated:
+With the backend running and the virtual environment activated, run from the repo root folder:
 
 ```bash
 python ./scripts/generate_openapi.py
@@ -40,26 +29,6 @@ This script:
 - Extracts the OpenAPI specification
 - Generates TypeScript client bindings for the frontend
 - Updates the API documentation
-
----
-
-# Backend Formatting
-
-**After any backend changes,** run the backend formatter from the root repo directory:
-
-```bash
-npm run fmt-backend
-```
-
-This command runs `dotnet format` on both the main Backend project and Backend.Tests.
-
-## Check Formatting
-
-**To check formatting without making changes:**
-
-```bash
-npm run fmt-backend-check
-```
 
 ---
 

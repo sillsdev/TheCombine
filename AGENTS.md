@@ -31,6 +31,41 @@ Includes validation and error handling.
 
 ---
 
+## C# Code
+
+Relevant for [`Backend/`](./Backend/) and [`Backend.Tests/`](./Backend.Tests/).
+
+### C# Code Style
+
+- Refer to [`docs/style_guide/c_sharp_style_guide.md`](./docs/style_guide/c_sharp_style_guide.md) for C# conventions
+- Key points include:
+  - Follow Microsoft C# Coding Guidelines with project-specific exceptions
+  - Use type inference (`var`) wherever possible
+  - Add braces to one-line `if` statements
+  - Prefer `Range` for simple loop iteration
+
+---
+
+### C# Formatting
+
+**After any backend changes,** run the backend formatter:
+
+```bash
+npm run fmt-backend
+```
+
+This command runs `dotnet format` on both the main Backend project and Backend.Tests.
+
+## Check Formatting
+
+**To check formatting without making changes:**
+
+```bash
+npm run fmt-backend-check
+```
+
+---
+
 ## Frontend Dependencies
 
 Use `npm run i` (not `npm install`, nor `npm i`, nor `npm ci`) to install frontend dependencies.
