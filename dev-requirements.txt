@@ -31,8 +31,6 @@ click==8.3.2
 colorama==0.4.6
     # via
     #   -r dev-requirements.in
-    #   click
-    #   mkdocs
     #   mkdocs-material
     #   tox
 cryptography==46.0.7
@@ -164,9 +162,7 @@ pyopenssl==26.0.0
 pyproject-api==1.10.0
     # via tox
 pyreadline3==3.5.4
-    # via
-    #   -r dev-requirements.in
-    #   humanfriendly
+    # via -r dev-requirements.in
 python-dateutil==2.9.0.post0
     # via
     #   ghp-import
@@ -219,7 +215,7 @@ typing-extensions==4.15.0
     # via
     #   mypy
     #   pyopenssl
-urllib3==2.6.3
+urllib3==2.7.0
     # via
     #   kubernetes
     #   requests
