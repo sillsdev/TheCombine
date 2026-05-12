@@ -18,21 +18,20 @@
     <PackageReference Include="RelaxNG" Version="3.2.3">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.17" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.12.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.26" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.18.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
     <PackageReference Include="MailKit" Version="4.16.0" />
     <PackageReference Include="MongoDB.Driver" Version="3.4.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.1" />
-    <PackageReference Include="Xabe.FFmpeg" Version="6.0.1"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
+    <PackageReference Include="Xabe.FFmpeg" Version="6.0.2"/>
 
     <!-- SIL Maintained Dependencies. -->
     <PackageReference Include="icu.net" Version="3.0.1" />
     <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.2.3-beta" />
-    <PackageReference Include="SIL.Core" Version="16.0.0" />
-    <PackageReference Include="SIL.Core.Desktop" Version="16.0.0"/>
-    <PackageReference Include="SIL.DictionaryServices" Version="16.0.0"/>
-    <PackageReference Include="SIL.Lift" Version="16.0.0"/>
-    <PackageReference Include="SIL.WritingSystems" Version="16.0.0" />
+    <PackageReference Include="SIL.Core" Version="18.0.0-beta0012" />
+    <PackageReference Include="SIL.DictionaryServices" Version="18.0.0-beta0012"/>
+    <PackageReference Include="SIL.Lift" Version="18.0.0-beta0012"/>
+    <PackageReference Include="SIL.WritingSystems" Version="18.0.0-beta0012" />
   </ItemGroup>
 </Project>
