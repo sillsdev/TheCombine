@@ -167,7 +167,6 @@ async function renderTimeline(
   history: Goal[] = [],
   harvesterReviewEntriesEnabled = OffOnSetting.Off
 ): Promise<void> {
-  const goalsState: GoalsState = { ...defaultState.goalsState, history };
   const currentProjectState = {
     ...defaultState.currentProjectState,
     project: {
@@ -175,11 +174,16 @@ async function renderTimeline(
       harvesterReviewEntriesEnabled,
     },
   };
+  const goalsState: GoalsState = { ...defaultState.goalsState, history };
   await act(async () => {
     render(
       <ThemeProvider theme={theme}>
         <Provider
-          store={createMockStore()({ ...defaultState, currentProjectState, goalsState })}
+          store={createMockStore()({
+            ...defaultState,
+            currentProjectState,
+            goalsState,
+          })}
         >
           <GoalTimeline />
         </Provider>
