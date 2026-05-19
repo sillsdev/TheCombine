@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import createMockStore from "redux-mock-store";
 
-import { Permission } from "api/models";
+import { OffOnSetting, Permission } from "api/models";
 import GoalTimeline from "components/GoalTimeline";
 import {
   CharacterStatus,
@@ -92,18 +92,27 @@ describe("GoalTimeline", () => {
       Permission.CharacterInventory,
       Permission.WordEntry,
     ]);
-    await renderTimeline();
+    await renderTimeline([], OffOnSetting.On);
     const buttons = screen.queryAllByRole("button");
     // 2 goals (CreateCharInv + ReviewEntries) + 1 disabled history button
     expect(buttons).toHaveLength(3);
   });
 
-  it("shows only ReviewEntries to a user without MergeAndReviewEntries", async () => {
+  it("shows only ReviewEntries to a Harvester when setting is On", async () => {
     mockGetCurrentPermissions.mockResolvedValue([Permission.WordEntry]);
-    await renderTimeline();
+    await renderTimeline([], OffOnSetting.On);
     const buttons = screen.queryAllByRole("button");
     // 1 goal (ReviewEntries only) + 1 disabled history button
     expect(buttons).toHaveLength(2);
+    expect(mockHasGraylistEntries).not.toHaveBeenCalled();
+  });
+
+  it("shows no goals to a Harvester when setting is Off", async () => {
+    mockGetCurrentPermissions.mockResolvedValue([Permission.WordEntry]);
+    await renderTimeline([], OffOnSetting.Off);
+    const buttons = screen.queryAllByRole("button");
+    // 0 goals + 1 disabled history button
+    expect(buttons).toHaveLength(1);
     expect(mockHasGraylistEntries).not.toHaveBeenCalled();
   });
 
@@ -154,12 +163,24 @@ describe("GoalTimeline", () => {
   });
 });
 
-async function renderTimeline(history: Goal[] = []): Promise<void> {
+async function renderTimeline(
+  history: Goal[] = [],
+  harvesterReviewEntriesEnabled = OffOnSetting.Off
+): Promise<void> {
   const goalsState: GoalsState = { ...defaultState.goalsState, history };
+  const currentProjectState = {
+    ...defaultState.currentProjectState,
+    project: {
+      ...defaultState.currentProjectState.project,
+      harvesterReviewEntriesEnabled,
+    },
+  };
   await act(async () => {
     render(
       <ThemeProvider theme={theme}>
-        <Provider store={createMockStore()({ ...defaultState, goalsState })}>
+        <Provider
+          store={createMockStore()({ ...defaultState, currentProjectState, goalsState })}
+        >
           <GoalTimeline />
         </Provider>
       </ThemeProvider>
