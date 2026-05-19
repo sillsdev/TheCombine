@@ -32,13 +32,17 @@ export default function GoalTimeline(): ReactElement {
 
   const [goalOptions, setGoalOptions] = useState<GoalName[]>([]);
   const [hasGraylist, setHasGraylist] = useState(false);
-  const [hasFullPermission, setHasFullPermission] = useState(false);
+  const [hasCharInvPermission, setHasCharInvPermission] = useState(false);
+  const [hasMergePermission, setHasMergePermission] = useState(false);
 
   const { t } = useTranslation();
 
   useEffect(() => {
     getCurrentPermissions().then((permissions) => {
-      setHasFullPermission(
+      setHasCharInvPermission(
+        permissions.includes(Permission.CharacterInventory)
+      );
+      setHasMergePermission(
         permissions.includes(Permission.MergeAndReviewEntries)
       );
     });
@@ -49,20 +53,21 @@ export default function GoalTimeline(): ReactElement {
   }, [dispatch]);
 
   useEffect(() => {
-    if (hasFullPermission) {
+    if (hasMergePermission) {
       hasGraylistEntries().then(setHasGraylist);
     }
-  }, [hasFullPermission]);
+  }, [hasMergePermission]);
 
   useEffect(() => {
     setGoalOptions(
       allGoals.filter(
         (g) =>
           (g !== GoalName.ReviewDeferredDups || hasGraylist) &&
-          (g === GoalName.ReviewEntries || hasFullPermission)
+          (g !== GoalName.CreateCharInv || hasCharInvPermission) &&
+          (g === GoalName.ReviewEntries || hasMergePermission)
       )
     );
-  }, [allGoals, hasGraylist, hasFullPermission]);
+  }, [allGoals, hasCharInvPermission, hasGraylist, hasMergePermission]);
 
   const thinScrollX: SxProps = {
     overflowX: "auto",
