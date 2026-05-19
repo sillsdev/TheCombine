@@ -58,6 +58,7 @@ beforeEach(() => {
   mockGetCurrentPermissions.mockResolvedValue([
     Permission.CharacterInventory,
     Permission.MergeAndReviewEntries,
+    Permission.WordEntry,
   ]);
   mockHasGraylistEntries.mockResolvedValue(true);
 });
@@ -79,10 +80,22 @@ describe("GoalTimeline", () => {
   it("has one fewer button if no CharInv permission", async () => {
     mockGetCurrentPermissions.mockResolvedValue([
       Permission.MergeAndReviewEntries,
+      Permission.WordEntry,
     ]);
     await renderTimeline();
     const buttons = screen.queryAllByRole("button");
     expect(buttons).toHaveLength(noHistoryCount - 1);
+  });
+
+  it("shows CreateCharInv and ReviewEntries to a user with only CharInv permission", async () => {
+    mockGetCurrentPermissions.mockResolvedValue([
+      Permission.CharacterInventory,
+      Permission.WordEntry,
+    ]);
+    await renderTimeline();
+    const buttons = screen.queryAllByRole("button");
+    // 2 goals (CreateCharInv + ReviewEntries) + 1 disabled history button
+    expect(buttons).toHaveLength(3);
   });
 
   it("shows only ReviewEntries to a user without MergeAndReviewEntries", async () => {
