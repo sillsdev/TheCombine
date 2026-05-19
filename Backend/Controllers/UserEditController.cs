@@ -79,7 +79,7 @@ namespace BackendFramework.Controllers
             using var activity = OtelService.StartActivityWithTag(otelTagName, "creating a user edit");
 
             if (!await _permissionService.HasProjectPermission(
-                HttpContext, Permission.MergeAndReviewEntries, projectId))
+                HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
             }
@@ -122,7 +122,7 @@ namespace BackendFramework.Controllers
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating user edit goal");
 
             if (!await _permissionService.HasProjectPermission(
-                HttpContext, Permission.MergeAndReviewEntries, projectId))
+                HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
             }
@@ -156,7 +156,7 @@ namespace BackendFramework.Controllers
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating user edit step");
 
             if (!await _permissionService.HasProjectPermission(
-                HttpContext, Permission.MergeAndReviewEntries, projectId))
+                HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
             }

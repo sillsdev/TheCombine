@@ -85,6 +85,15 @@ describe("GoalTimeline", () => {
     expect(buttons).toHaveLength(noHistoryCount - 1);
   });
 
+  it("shows only ReviewEntries to a user without MergeAndReviewEntries", async () => {
+    mockGetCurrentPermissions.mockResolvedValue([Permission.WordEntry]);
+    await renderTimeline();
+    const buttons = screen.queryAllByRole("button");
+    // 1 goal (ReviewEntries only) + 1 disabled history button
+    expect(buttons).toHaveLength(2);
+    expect(mockHasGraylistEntries).not.toHaveBeenCalled();
+  });
+
   it("has the last button disabled for no history", async () => {
     await renderTimeline();
     const buttons = screen.queryAllByRole("button");
