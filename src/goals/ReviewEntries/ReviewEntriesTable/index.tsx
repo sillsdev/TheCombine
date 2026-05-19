@@ -20,6 +20,7 @@ import {
   type ReactElement,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -135,24 +136,32 @@ export default function ReviewEntriesTable(props: {
     (state: StoreState) =>
       state.currentProjectState.reviewEntriesColumns.columnOrder
   );
+  const [hasFullPermission, setHasFullPermission] = useState(false);
   const columnVisibility: MRT_VisibilityState = useAppSelector(
-    // Memoized selector that ensures correct column visibility.
-    createSelector(
-      [
-        (state: StoreState) =>
-          state.currentProjectState.reviewEntriesColumns.columnVisibility,
-        (state: StoreState) =>
-          state.currentProjectState.project.definitionsEnabled,
-        (state: StoreState) =>
-          state.currentProjectState.project.grammaticalInfoEnabled,
-      ],
-      (colVis, def, pos) => ({
-        ...colVis,
-        [ColumnId.Edit]: colVis[ColumnId.Edit] && hasFullPermission,
-        [ColumnId.Definitions]: (colVis[ColumnId.Definitions] ?? def) && def,
-        [ColumnId.PartOfSpeech]: (colVis[ColumnId.PartOfSpeech] ?? pos) && pos,
-        [ColumnId.Delete]: colVis[ColumnId.Delete] && hasFullPermission,
-      })
+    // Memoized selector instance, recreated only when hasFullPermission changes.
+    useMemo(
+      () =>
+        // Custom selector to ensure correct column visibility.
+        createSelector(
+          [
+            (state: StoreState) =>
+              state.currentProjectState.reviewEntriesColumns.columnVisibility,
+            (state: StoreState) =>
+              state.currentProjectState.project.definitionsEnabled,
+            (state: StoreState) =>
+              state.currentProjectState.project.grammaticalInfoEnabled,
+          ],
+          (colVis, def, pos) => ({
+            ...colVis,
+            [ColumnId.Edit]: colVis[ColumnId.Edit] && hasFullPermission,
+            [ColumnId.Definitions]:
+              (colVis[ColumnId.Definitions] ?? def) && def,
+            [ColumnId.PartOfSpeech]:
+              (colVis[ColumnId.PartOfSpeech] ?? pos) && pos,
+            [ColumnId.Delete]: colVis[ColumnId.Delete] && hasFullPermission,
+          })
+        ),
+      [hasFullPermission]
     )
   );
   const { definitionsEnabled, grammaticalInfoEnabled } = useAppSelector(
@@ -168,7 +177,6 @@ export default function ReviewEntriesTable(props: {
 
   const [data, setData] = useState<Word[]>([]);
   const [enablePagination, setEnablePagination] = useState(false);
-  const [hasFullPermission, setHasFullPermission] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [localization, setLocalization] = useState<
     MRT_Localization | undefined
