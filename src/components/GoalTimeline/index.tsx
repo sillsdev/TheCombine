@@ -18,7 +18,11 @@ import { asyncAddGoal, asyncGetUserEdits } from "goals/Redux/GoalActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { StoreState } from "rootRedux/types";
 import { GoalName } from "types/goals";
-import { goalNameToGoal, hasChanges } from "utilities/goalUtilities";
+import {
+  goalNameToGoal,
+  hasChanges,
+  requiredPermission,
+} from "utilities/goalUtilities";
 
 /** List of goals, followed by goal history. */
 export default function GoalTimeline(): ReactElement {
@@ -32,20 +36,12 @@ export default function GoalTimeline(): ReactElement {
 
   const [goalOptions, setGoalOptions] = useState<GoalName[]>([]);
   const [hasGraylist, setHasGraylist] = useState(false);
-  const [hasCharInvPermission, setHasCharInvPermission] = useState(false);
-  const [hasMergePermission, setHasMergePermission] = useState(false);
+  const [permissions, setPermissions] = useState<Permission[]>([]);
 
   const { t } = useTranslation();
 
   useEffect(() => {
-    getCurrentPermissions().then((permissions) => {
-      setHasCharInvPermission(
-        permissions.includes(Permission.CharacterInventory)
-      );
-      setHasMergePermission(
-        permissions.includes(Permission.MergeAndReviewEntries)
-      );
-    });
+    getCurrentPermissions().then(setPermissions);
   }, []);
 
   useEffect(() => {
@@ -53,21 +49,20 @@ export default function GoalTimeline(): ReactElement {
   }, [dispatch]);
 
   useEffect(() => {
-    if (hasMergePermission) {
+    if (permissions.includes(Permission.MergeAndReviewEntries)) {
       hasGraylistEntries().then(setHasGraylist);
     }
-  }, [hasMergePermission]);
+  }, [permissions]);
 
   useEffect(() => {
     setGoalOptions(
       allGoals.filter(
         (g) =>
           (g !== GoalName.ReviewDeferredDups || hasGraylist) &&
-          (g !== GoalName.CreateCharInv || hasCharInvPermission) &&
-          (g === GoalName.ReviewEntries || hasMergePermission)
+          permissions.includes(requiredPermission(g))
       )
     );
-  }, [allGoals, hasCharInvPermission, hasGraylist, hasMergePermission]);
+  }, [allGoals, hasGraylist, permissions]);
 
   const thinScrollX: SxProps = {
     overflowX: "auto",
