@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import createMockStore from "redux-mock-store";
 
-import { Permission } from "api/models";
+import { OffOnSetting, Permission } from "api/models";
 import GoalTimeline from "components/GoalTimeline";
 import {
   CharacterStatus,
@@ -58,6 +58,7 @@ beforeEach(() => {
   mockGetCurrentPermissions.mockResolvedValue([
     Permission.CharacterInventory,
     Permission.MergeAndReviewEntries,
+    Permission.WordEntry,
   ]);
   mockHasGraylistEntries.mockResolvedValue(true);
 });
@@ -79,10 +80,40 @@ describe("GoalTimeline", () => {
   it("has one fewer button if no CharInv permission", async () => {
     mockGetCurrentPermissions.mockResolvedValue([
       Permission.MergeAndReviewEntries,
+      Permission.WordEntry,
     ]);
     await renderTimeline();
     const buttons = screen.queryAllByRole("button");
     expect(buttons).toHaveLength(noHistoryCount - 1);
+  });
+
+  it("shows CreateCharInv and ReviewEntries to a user with only CharInv permission", async () => {
+    mockGetCurrentPermissions.mockResolvedValue([
+      Permission.CharacterInventory,
+      Permission.WordEntry,
+    ]);
+    await renderTimeline([], OffOnSetting.On);
+    const buttons = screen.queryAllByRole("button");
+    // 2 goals (CreateCharInv + ReviewEntries) + 1 disabled history button
+    expect(buttons).toHaveLength(3);
+  });
+
+  it("shows only ReviewEntries to a Harvester when setting is On", async () => {
+    mockGetCurrentPermissions.mockResolvedValue([Permission.WordEntry]);
+    await renderTimeline([], OffOnSetting.On);
+    const buttons = screen.queryAllByRole("button");
+    // 1 goal (ReviewEntries only) + 1 disabled history button
+    expect(buttons).toHaveLength(2);
+    expect(mockHasGraylistEntries).not.toHaveBeenCalled();
+  });
+
+  it("shows no goals to a Harvester when setting is Off", async () => {
+    mockGetCurrentPermissions.mockResolvedValue([Permission.WordEntry]);
+    await renderTimeline([], OffOnSetting.Off);
+    const buttons = screen.queryAllByRole("button");
+    // 0 goals + 1 disabled history button
+    expect(buttons).toHaveLength(1);
+    expect(mockHasGraylistEntries).not.toHaveBeenCalled();
   });
 
   it("has the last button disabled for no history", async () => {
@@ -132,12 +163,28 @@ describe("GoalTimeline", () => {
   });
 });
 
-async function renderTimeline(history: Goal[] = []): Promise<void> {
+async function renderTimeline(
+  history: Goal[] = [],
+  harvesterReviewEntriesEnabled = OffOnSetting.Off
+): Promise<void> {
+  const currentProjectState = {
+    ...defaultState.currentProjectState,
+    project: {
+      ...defaultState.currentProjectState.project,
+      harvesterReviewEntriesEnabled,
+    },
+  };
   const goalsState: GoalsState = { ...defaultState.goalsState, history };
   await act(async () => {
     render(
       <ThemeProvider theme={theme}>
-        <Provider store={createMockStore()({ ...defaultState, goalsState })}>
+        <Provider
+          store={createMockStore()({
+            ...defaultState,
+            currentProjectState,
+            goalsState,
+          })}
+        >
           <GoalTimeline />
         </Provider>
       </ThemeProvider>

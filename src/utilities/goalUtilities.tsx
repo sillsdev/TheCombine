@@ -41,8 +41,9 @@ export function requiredPermission(type: GoalName): Permission {
   switch (type) {
     case GoalName.MergeDups:
     case GoalName.ReviewDeferredDups:
-    case GoalName.ReviewEntries:
       return Permission.MergeAndReviewEntries;
+    case GoalName.ReviewEntries:
+      return Permission.WordEntry; // can access, but won't have full functionality
     case GoalName.CreateCharInv:
       return Permission.CharacterInventory;
     default:
