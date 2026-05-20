@@ -153,12 +153,13 @@ export default function ReviewEntriesTable(props: {
           ],
           (colVis, def, pos) => ({
             ...colVis,
-            [ColumnId.Edit]: colVis[ColumnId.Edit] && hasFullPermission,
+            [ColumnId.Edit]: (colVis[ColumnId.Edit] ?? true) && hasFullPermission,
             [ColumnId.Definitions]:
               (colVis[ColumnId.Definitions] ?? def) && def,
             [ColumnId.PartOfSpeech]:
               (colVis[ColumnId.PartOfSpeech] ?? pos) && pos,
-            [ColumnId.Delete]: colVis[ColumnId.Delete] && hasFullPermission,
+            [ColumnId.Delete]:
+              (colVis[ColumnId.Delete] ?? true) && hasFullPermission,
           })
         ),
       [hasFullPermission]
