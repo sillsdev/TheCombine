@@ -9,6 +9,7 @@ import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
+import { Permission } from "api/models";
 import { defaultState } from "components/Project/ProjectReduxTypes";
 import ReviewEntriesTable, {
   ColumnHeaderTextId,
@@ -37,6 +38,7 @@ const setMockUseTranslation = (resolvedLanguage: string): void => {
 jest.mock("backend", () => ({
   deleteFrontierWord: (wordId: string) => mockDeleteFrontierWord(wordId),
   getAllSpeakers: () => Promise.resolve([]),
+  getCurrentPermissions: (...args: any[]) => mockGetCurrentPermissions(...args),
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
   getWord: (wordId: string) => mockGetWord(wordId),
   updateWord: (word: { id: string }) => mockUpdateWord(word),
@@ -54,6 +56,7 @@ jest.mock("rootRedux/hooks", () => ({
 
 const mockAsyncUpdateEntry = jest.fn();
 const mockDeleteFrontierWord = jest.fn();
+const mockGetCurrentPermissions = jest.fn();
 const mockGetFrontierWords = jest.fn();
 const mockGetWord = jest.fn();
 const mockUpdateWord = jest.fn();
@@ -92,6 +95,9 @@ const renderReviewEntriesTable = async (
 
 function setMockFunctions(): void {
   mockDeleteFrontierWord.mockResolvedValue(undefined);
+  mockGetCurrentPermissions.mockResolvedValue([
+    Permission.MergeAndReviewEntries,
+  ]);
   mockGetFrontierWords.mockResolvedValue(mockWords());
   mockGetWord.mockImplementation((wordId: string) => {
     const oldWord = mockWords().find((w) => wordId.startsWith(w.id));
@@ -225,6 +231,21 @@ describe("ReviewEntriesTable", () => {
       await renderReviewEntriesTable(false, true);
       expect(screen.queryByText(defTextId)).toBeNull();
       expect(screen.queryByText(posTextId)).toBeTruthy();
+    });
+  });
+
+  describe("hasFullPermission", () => {
+    test("shows Edit and Delete buttons when permission granted", async () => {
+      await renderReviewEntriesTable();
+      expect(screen.queryByTestId("row-0-edit")).toBeTruthy();
+      expect(screen.queryByTestId("row-0-delete")).toBeTruthy();
+    });
+
+    test("hides Edit and Delete buttons when permission missing", async () => {
+      mockGetCurrentPermissions.mockResolvedValue([]);
+      await renderReviewEntriesTable();
+      expect(screen.queryByTestId("row-0-edit")).toBeNull();
+      expect(screen.queryByTestId("row-0-delete")).toBeNull();
     });
   });
 
