@@ -106,7 +106,12 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 
    After installation:
    - Add mongo's `/bin` directory to your PATH environment variable.
-   - Disable automatically start of the `mongod` service on your development host.
+   - On Windows, the installer creates a `MongoDB` service that starts automatically and does not use replica sets,
+     which will conflict with `npm run database`. Remove it (in an elevated PowerShell):
+     ```powershell
+     Stop-Service -Name MongoDB
+     sc.exe delete MongoDB
+     ```
    - If `mongosh` is not a recognized command, you may have to separately install the
      [MongoDB Shell](https://www.mongodb.com/try/download/shell) and add its `/bin` to your PATH.
    - If `mongoimport` is not a recognized command, you may have to separately install the
