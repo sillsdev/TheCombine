@@ -37,6 +37,7 @@ export default function NavigationButtons(props: TabProps): ReactElement {
 
   useEffect(() => {
     if (!projectId) {
+      setHasGoalPermission(false);
       return;
     }
 
