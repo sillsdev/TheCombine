@@ -41,16 +41,26 @@ export default function NavigationButtons(props: TabProps): ReactElement {
       return;
     }
 
+    let isCancelled = false;
     getCurrentPermissions()
       .then((perms) => {
-        setHasGoalPermission(
-          perms.includes(Permission.CharacterInventory) ||
-            perms.includes(Permission.MergeAndReviewEntries) ||
-            (harvesterReviewEntriesEnabled === OffOnSetting.On &&
-              perms.includes(Permission.WordEntry))
-        );
+        if (!isCancelled) {
+          setHasGoalPermission(
+            perms.includes(Permission.CharacterInventory) ||
+              perms.includes(Permission.MergeAndReviewEntries) ||
+              (harvesterReviewEntriesEnabled === OffOnSetting.On &&
+                perms.includes(Permission.WordEntry))
+          );
+        }
       })
-      .catch(() => setHasGoalPermission(false));
+      .catch(() => {
+        if (!isCancelled) {
+          setHasGoalPermission(false);
+        }
+      });
+    return () => {
+      isCancelled = true;
+    };
   }, [harvesterReviewEntriesEnabled, projectId]);
 
   return (
