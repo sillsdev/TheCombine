@@ -77,6 +77,18 @@ The host tools required to install _The Combine_ on a QA or Production server ar
 [Install Kubernetes Tools](https://github.com/sillsdev/TheCombine#install-kubernetes-tools) in the project README.md
 file.
 
+The table below summarizes the key differences between the QA and Production deployments.
+
+| Aspect | QA | Production |
+| --- | --- | --- |
+| Kubernetes cluster | `LTOPS_K8S_STAGING_CONTEXT` | `LTOPS_K8S_PRODUCTION_CONTEXT` |
+| Server name | `qa-kube.thecombine.app` | `thecombine.app` |
+| Image registry | Private ECR (with IAM refresh CronJob) | Public ECR (`public.ecr.aws/thecombine`), no pull secret |
+| `aws-login` subchart | Enabled | Disabled |
+| `cert-proxy-server` chart | Not deployed | Deployed in `combine-cert-proxy` namespace |
+| Daily backup CronJob | Not scheduled | Daily at 03:15 UTC |
+| Weekly font-update CronJob | Not scheduled | Weekly on Sundays at 02:15 UTC |
+
 #### Steps to Install on a QA/Production Server
 
 To install _The Combine_ on one of these systems, follow the steps in
