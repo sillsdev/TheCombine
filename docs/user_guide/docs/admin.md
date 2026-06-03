@@ -6,9 +6,10 @@ Site administrators have one more option in the User Menu: "Site Settings".
 
 ## Project Management
 
-Administrators can export or archive/restore any project. Archiving a project makes it invisible and inaccessible to all
-users, even the project creator, but any admin can restore the project. There is at present no way to permanently delete
-a project.
+Administrators can export, archive/restore, or manage users for any project. Archiving a project makes it invisible and
+inaccessible to all users, even the project creator, but any admin can restore the project. There is at present no way
+to permanently delete a project. The "Manage project users" button for each project opens a view where the administrator
+can manage that project's user roles.
 
 ## User Management
 

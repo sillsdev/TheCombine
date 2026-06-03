@@ -26,7 +26,8 @@ will be sent to the email address associated with your account.
 ## Settings
 
 After login, there is a blue App Bar along the top of The Combine. Click on the avatar icon at the right end of the App
-Bar to open the User Menu. Select "User Settings" to change account/profile settings.
+Bar to open the User Menu. The User Menu contains links to "User Settings" and the "User Guide", and displays the
+current version number at the bottom. Select "User Settings" to change account/profile settings.
 
 ![User Menu](images/userMenu.png){.center}
 
@@ -37,6 +38,7 @@ You can add or update your:
 - phone number;
 - email address;
 - user-interface language;
+- gloss spelling suggestions (On/Off toggle that controls spelling suggestions in the Data Entry gloss field);
 - analytics consent.
 
 !!! note "Note"
