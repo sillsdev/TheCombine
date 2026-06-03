@@ -32,12 +32,7 @@ import {
   Permission,
   type Word,
 } from "api/models";
-import {
-  getAllSpeakers,
-  getCurrentPermissions,
-  getFrontierWords,
-  getWord,
-} from "backend";
+import { getAllSpeakers, getFrontierWords, getWord } from "backend";
 import { topBarHeight } from "components/LandingPage/TopBar";
 import {
   setReviewEntriesColumnOrder,
@@ -51,6 +46,7 @@ import * as sf from "goals/ReviewEntries/ReviewEntriesTable/sortingFn";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { type Hash } from "types/hash";
+import { useCurrentPermissions } from "utilities/useCurrentPermissions";
 
 /** Import `material-react-table` localization for given `lang`.
  * (See https://www.material-react-table.com/docs/guides/localization.) */
@@ -136,7 +132,9 @@ export default function ReviewEntriesTable(props: {
     (state: StoreState) =>
       state.currentProjectState.reviewEntriesColumns.columnOrder
   );
-  const [hasFullPermission, setHasFullPermission] = useState(false);
+  const hasFullPermission = useCurrentPermissions().includes(
+    Permission.MergeAndReviewEntries
+  );
   const columnVisibility: MRT_VisibilityState = useAppSelector(
     // Memoized selector instance, recreated only when hasFullPermission changes.
     useMemo(
@@ -194,9 +192,6 @@ export default function ReviewEntriesTable(props: {
   });
 
   useEffect(() => {
-    getCurrentPermissions().then((perms) => {
-      setHasFullPermission(perms.includes(Permission.MergeAndReviewEntries));
-    });
     getAllSpeakers().then((list) =>
       setSpeakers(
         Object.fromEntries(list.map((s) => [s.id, s.name.toLocaleLowerCase()]))

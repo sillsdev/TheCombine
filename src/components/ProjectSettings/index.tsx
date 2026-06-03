@@ -39,7 +39,7 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
 import { Permission, type Project } from "api/models";
-import { getCurrentPermissions } from "backend";
+import { useCurrentPermissions } from "utilities/useCurrentPermissions";
 import {
   asyncRefreshProjectUsers,
   asyncSetNewCurrentProject,
@@ -101,13 +101,12 @@ export default function ProjectSettingsComponent(): ReactElement {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const permissions = useCurrentPermissions();
   const [tab, setTab] = useState(ProjectSettingsTab.Languages);
 
   useEffect(() => {
     // Default to Languages tab as it's available for any permissions.
     setTab(ProjectSettingsTab.Languages);
-    getCurrentPermissions().then(setPermissions);
   }, [project.id]);
 
   useEffect(() => {

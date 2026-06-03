@@ -171,6 +171,7 @@ async function renderTimeline(
     ...defaultState.currentProjectState,
     project: {
       ...defaultState.currentProjectState.project,
+      id: "mock-project-id",
       harvesterReviewEntriesEnabled,
     },
   };

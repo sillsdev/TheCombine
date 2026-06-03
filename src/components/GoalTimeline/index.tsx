@@ -11,13 +11,14 @@ import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { OffOnSetting, Permission } from "api/models";
-import { getCurrentPermissions, hasGraylistEntries } from "backend";
+import { hasGraylistEntries } from "backend";
 import GoalHistoryButton from "components/GoalTimeline/GoalHistoryButton";
 import GoalNameButton from "components/GoalTimeline/GoalNameButton";
 import { asyncAddGoal, asyncGetUserEdits } from "goals/Redux/GoalActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { StoreState } from "rootRedux/types";
 import { GoalName } from "types/goals";
+import { useCurrentPermissions } from "utilities/useCurrentPermissions";
 import {
   goalNameToGoal,
   hasChanges,
@@ -40,13 +41,9 @@ export default function GoalTimeline(): ReactElement {
 
   const [goalOptions, setGoalOptions] = useState<GoalName[]>([]);
   const [hasGraylist, setHasGraylist] = useState(false);
-  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const permissions = useCurrentPermissions();
 
   const { t } = useTranslation();
-
-  useEffect(() => {
-    getCurrentPermissions().then(setPermissions);
-  }, []);
 
   useEffect(() => {
     dispatch(asyncGetUserEdits());
