@@ -36,6 +36,10 @@ export default function NavigationButtons(props: TabProps): ReactElement {
   const [hasGoalPermission, setHasGoalPermission] = useState(false);
 
   useEffect(() => {
+    if (!projectId) {
+      return;
+    }
+
     getCurrentPermissions().then((perms) => {
       setHasGoalPermission(
         perms.includes(Permission.CharacterInventory) ||
