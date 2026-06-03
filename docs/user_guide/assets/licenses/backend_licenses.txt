@@ -14,7 +14,7 @@ License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: icu.net
-PackageVersion: 3.0.1
+PackageVersion: 3.0.2
 PackageProjectUrl: https://github.com/sillsdev/icu-dotnet
 Authors: SIL International
 License: MIT
