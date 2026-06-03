@@ -128,7 +128,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      - If manually installing from the FFmpeg website, install both `ffmpeg` and `ffprobe`
 
 9. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
-   `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
+   `dotnet tool update --global dotnet-reportgenerator-globaltool`
 10. [nuget-license](https://github.com/sensslen/nuget-license) `dotnet tool update --global nuget-license`
 11. Tools for generating the self installer (Linux only):
     - [makeself](https://makeself.io/) - a tool to make self-extracting archives in Unix
@@ -155,6 +155,8 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    - `COMBINE_SMTP_FROM`
 
 2. Run `npm start` from the project directory to install dependencies and start the project.
+
+   > Note: To install frontend dependencies separately, use `npm run i` — not `npm install` or `npm i`.
 
 3. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
    guides for best coding practices in this project.
@@ -279,7 +281,7 @@ In the project directory, you can run:
 #### `npm start`
 
 > Note: To avoid browser tabs from being opened automatically every time the frontend is launched, set
-> [`BROWSER=none`](https://create-react-app.dev/docs/advanced-configuration/) environment variable.
+> the `BROWSER=none` environment variable (Parcel's `--open` flag controls browser opening).
 
 Installs the necessary packages and runs the app in the development mode.
 
@@ -307,7 +309,7 @@ The build is minified and the filenames include the hashes.
 
 Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The project uses Parcel and outputs to the `dist/` folder.
 
 #### `npm run build:analyze`
 
@@ -326,7 +328,7 @@ First, you must install the Java Runtime Environment (JRE) 8 or newer as mention
 
 - For Windows: Install [OpenJDK](https://www.microsoft.com/openjdk)
 - For Ubuntu: `sudo apt install default-jre`
-- For macOS: `brew install adoptopenjdk`
+- For macOS: `brew install --cask temurin`
 
 After that, run the following script in your Python virtual environment to regenerate the frontend OpenAPI bindings in
 place:
@@ -355,8 +357,7 @@ npm run test-backend -- --filter FullyQualifiedName~Backend.Tests.Models.Project
 
 #### `npm run test-frontend`
 
-Launches the test runners in the interactive watch mode. See the section about
-[running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Launches the test runners in the interactive watch mode. Tests run via Jest (`scripts/jestTest.js`).
 
 To run a subset of tests, pass in the name of a partial file path to filter:
 
@@ -485,7 +486,7 @@ The dictionary files for spell-check functionality in _The Combine_ are split in
 sake of devices with limited bandwidth. There are scripts for generating these files in `public/dictionaries/` and
 `src/resources/dictionaries/`; files in this directory should _not_ be manually edited.
 
-The bash script `scripts/fetch_wordlists.sh` is used to fetch dictionary files for a given language (e.g., `es`) from
+The bash script `scripts/fetch_wordlist.sh` is used to fetch dictionary files for a given language (e.g., `es`) from
 the [LibreOffice dictionaries](https://github.com/LibreOffice/dictionaries) and convert them to raw wordlists (e.g.,
 `src/resources/dictionaries/es.txt`). Execute the script with no arguments for its usage details. Any language not
 currently supported can be manually added as a case in this script.
@@ -706,7 +707,7 @@ Notes:
 ### Set Up Environment Variables
 
 Before installing _The Combine_ in Kubernetes, you need to set the following environment variables:
-`COMBINE_CAPTCHA_SECRET_KEY`, `COMBINE_JWT_SECRET_KEY`. For development environments, you can use the values defined in
+`COMBINE_CAPTCHA_SECRET_KEY`, `COMBINE_CAPTCHA_VERIFY_URL`, `COMBINE_JWT_SECRET_KEY`. For development environments, you can use the values defined in
 `Backend/Properties/launchSettings.json`. Set them in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac
 10.15+), or the _System_ app (Windows).
 
@@ -931,7 +932,7 @@ Combine_ is set up as five deployments:
 - backend
 - database
 - maintenance
-- otel/opentelemetry-collector
+- otel-opentelemetry-collector
 
 Each deployment definition is used to create a _pod_ that runs the docker image.
 
@@ -944,7 +945,7 @@ database                          1/1     1            1           3h41m
 maintenance                       1/1     1            1           3h41m
 backend                           1/1     1            1           3h41m
 frontend                          1/1     1            1           3h41m
-otel/opentelemetry-collector      1/1     1            1           3h46m
+otel-opentelemetry-collector      1/1     1            1           3h46m
 ```
 
 Similarly, you can view the state of the pods:
@@ -957,7 +958,7 @@ install-fonts-fvrb4                                 0/1     Completed   0       
 maintenance-85644b9c76-55pz8                        1/1     Running     0               130m
 backend-69b77c46c5-8dqlv                            1/1     Running     0               130m
 frontend-c94c5747c-pz6cc                            1/1     Running     0               60m
-otel/opentelemetry-collector-5cd6b9c867-6j5zb       1/1     Running     0               4h03m
+otel-opentelemetry-collector-5cd6b9c867-6j5zb       1/1     Running     0               4h03m
 ```
 
 Use the `logs` command to view the log file of a pod; you can specify the pod name listed in the output of the

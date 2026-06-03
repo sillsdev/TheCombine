@@ -9,8 +9,6 @@ The release process has the following assumptions:
 - release versions follow [semantic versioning](https://semver.org/); that is, they have the form major.minor.patch
   version numbers where `major`, `minor`, and `patch` are all integer values. See the page on semantic versioning for
   instructions on when the major, minor, and patch version number should be incremented when a new version is released.
-- the user has setup his/her Python environment according to the directions in the project
-  [README](https://github.com/sillsdev/TheCombine/blob/master/README.md#python) file.
 - the user has write permissions for _The Combine_ project on _GitHub_.
 
 ## Using the GitHub Interface to Create a Release
@@ -37,5 +35,6 @@ You can create the release on _GitHub_ as follows:
 
    !['Publish release' button](images/publish_release.png "'Publish release' button")
 
-When the release is published, the Continuous Deployment process will build the software for the new release and install
-it on the Live server.
+When the release is published, the Continuous Deployment process will build the software for the new release and deploy
+it to both the QA server (`qa-kube.thecombine.app`) and the Production server (`thecombine.app`) in sequence. Publishing
+the release also triggers the `installer_release.yml` workflow to build the installer for the new release.

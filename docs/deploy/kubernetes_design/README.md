@@ -49,7 +49,7 @@ repository.
 | Resource           | Kind                  | Description                                                                                                                                                                   |
 | ------------------ | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | env-backend        | ConfigMap             | `env-backend` defines the runtime configuration for backend services.                                                                                                         |
-| env-backend-secret | Secret                | `env-backend-secret` defines the sensitive runtime configuration items for the backend services                                                                               |
+| env-backend-secrets | Secret                | `env-backend-secrets` defines the sensitive runtime configuration items for the backend services                                                                               |
 | backend-data       | PersistentVolumeClaim | `backend-data` defines the persistent storage requirements for the backend services. The persistent storage is used for the backend files stored in `/home/app/.CombineFiles` |
 
 ### Database Deployment
@@ -81,7 +81,7 @@ backup/restore _The Combine_ data, remove projects, add a user to a project, and
 #### `combine_maint` Image
 
 The `combine_maint` container image is stored in AWS ECR. It provides a number of utility and administrative functions
-and is used in multiple scenarios. `combine_maint` is built off of `sillsdev/aws-kubectl` and has the following
+and is used in multiple scenarios. `combine_maint` is built off of `public.ecr.aws/thecombine/aws-kubectl` and has the following
 features:
 
 - _aws-cli ver. 2_ - version 2 of the AWS Command Line Interface (from `sillsdev/aws-kubectl`)
@@ -100,6 +100,8 @@ features:
   - `update_cert.py` - a script to be used by the cert proxy clients on the NUCs. `update_cert.py` will update a TLS
     certificate if the NUC is connected to the internet and if the certificate is ready for renewal. If these conditions
     are met, it will update the certificate from AWS S3 storage.
+  - `get_fonts.py` - generates font support data for SIL fonts used in the language picker. Runs weekly via the
+    `update-fonts` CronJob.
 
 ### Daily Backup CronJob
 
@@ -157,7 +159,7 @@ server. To solve this problem, there are two additional functions that are added
   will generate the TLS Secrets for each of the configured NUCs and then push the secrets to an AWS S3 bucket where they
   can be retrieved by the NUCs
 - _Cert Proxy Client_ runs on each NUC in the `thecombine` namespace. Like the _AWS Login_, there is a one-time job,
-  `update-cert-oneshot`, and a cron job, `update-cert-cron` that keep the TLS secret up to date when the NUC has
+  `update-cert-oneshot`, and a cron job, `update-cert-cronjob` that keep the TLS secret up to date when the NUC has
   internet access.
 
 ### Cert Proxy Server
@@ -197,10 +199,10 @@ The _Cert Proxy Client_ uses the following resources to update the NUCs SSL Cert
 | Resource                | Kind      | Description                                                                                                                                                                                                                                                     |
 | ----------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | update-cert-oneshot     | Job       | A one-time job to create/update the TLS secret when the Cluster is created or updated. The job uses the `combine_maint` image and runs the `update_cert.py` script. (see the [combine_maint Image](#combine_maint-image) section)                               |
-| update-cert-cron        | CronJob   | Performs the same task as `update-cert-oneshot` on a regular schedule.                                                                                                                                                                                          |
-| env-cert-proxy          | ConfigMap | `env-cert-proxy` defines the configuration environment variables for the `update-cert-oneshot` and `update-cert-cron`. They include the location of the AWS S3 bucket where the certificates are stored as well as details about the certificate to be checked. |
+| update-cert-cronjob        | CronJob   | Performs the same task as `update-cert-oneshot` on a regular schedule.                                                                                                                                                                                          |
+| env-cert-proxy          | ConfigMap | `env-cert-proxy` defines the configuration environment variables for the `update-cert-oneshot` and `update-cert-cronjob`. They include the location of the AWS S3 bucket where the certificates are stored as well as details about the certificate to be checked. |
 | aws-s3-credentials      | Secret    | `aws-s3-credentials` defines the access accounts and credentials to access the configures AWS S3 resources.                                                                                                                                                     |
-| nuc1-thecombine-app-tls | Secret    | `nuc1-thecombine-app-tls` is a `kubernetes.io/tls` secret that is created by `update-cert-oneshot` and `update-cert-cron` from the data stored in the AWS S3 bucket.                                                                                            |
+| nuc1-thecombine-app-tls | Secret    | `nuc1-thecombine-app-tls` is a `kubernetes.io/tls` secret that is created by `update-cert-oneshot` and `update-cert-cronjob` from the data stored in the AWS S3 bucket.                                                                                            |
 
 ## Service Accounts
 
@@ -212,18 +214,16 @@ listed here use the default service account for the namespace where they run.
 The `account-ecr-login` account is used by the `ecr-cred-helper` and `ecr-cred-helper-cron` resources. The
 `account-ecr-login` has the following access to Kubernetes resources:
 
-| Resources                             | Abilities                                       |
-| ------------------------------------- | ----------------------------------------------- |
-| pods, pods/attach                     | list, get, watch, create, update, patch         |
-| secrets, jobs, cronjobs, namespaces\* | list, get, watch, create, update, patch, delete |
-| serviceaccounts                       | list, get, update, patch                        |
-
-[*] - abilities to access `namespaces` are not allowed on the Production server.
+| Resources                   | Abilities                                       |
+| --------------------------- | ----------------------------------------------- |
+| pods, pods/attach           | list, get, watch, create, update, patch         |
+| secrets, jobs, cronjobs     | list, get, watch, create, update, patch, delete |
+| serviceaccounts             | list, get, update, patch                        |
 
 ### Service Account: `account-maintenance`
 
 The `account-maintenance` account is used by the `maintenance`, `daily-backup`, `update-cert-oneshot`,
-`update-cert-cron` resources. The `account-maintenance` has the following access to Kubernetes resources:
+`update-cert-cronjob` resources. The `account-maintenance` has the following access to Kubernetes resources:
 
 | Resource        | Permissions                                     |
 | --------------- | ----------------------------------------------- |
