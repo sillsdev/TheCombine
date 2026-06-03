@@ -39,7 +39,6 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
 import { Permission, type Project } from "api/models";
-import { useCurrentPermissions } from "utilities/useCurrentPermissions";
 import {
   asyncRefreshProjectUsers,
   asyncSetNewCurrentProject,
@@ -65,6 +64,7 @@ import ProjectSpeakersList from "components/ProjectUsers/ProjectSpeakersList";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { Path } from "types/path";
+import { useCurrentPermissions } from "utilities/useCurrentPermissions";
 
 export enum ProjectSettingsTab {
   Basic = "TabBasic",

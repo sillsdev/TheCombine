@@ -18,12 +18,12 @@ import { asyncAddGoal, asyncGetUserEdits } from "goals/Redux/GoalActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { StoreState } from "rootRedux/types";
 import { GoalName } from "types/goals";
-import { useCurrentPermissions } from "utilities/useCurrentPermissions";
 import {
   goalNameToGoal,
   hasChanges,
   requiredPermission,
 } from "utilities/goalUtilities";
+import { useCurrentPermissions } from "utilities/useCurrentPermissions";
 
 /** List of goals, followed by goal history. */
 export default function GoalTimeline(): ReactElement {
