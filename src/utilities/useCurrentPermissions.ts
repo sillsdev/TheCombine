@@ -15,8 +15,8 @@ export function useCurrentPermissions(): Permission[] {
   const [permissions, setPermissions] = useState<Permission[]>([]);
 
   useEffect(() => {
+    setPermissions([]);
     if (!projectId) {
-      setPermissions([]);
       return;
     }
 
