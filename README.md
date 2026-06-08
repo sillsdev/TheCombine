@@ -280,8 +280,8 @@ In the project directory, you can run:
 
 #### `npm start`
 
-> Note: To avoid browser tabs from being opened automatically every time the frontend is launched, set
-> the `BROWSER=none` environment variable (Parcel's `--open` flag controls browser opening).
+> Note: To avoid browser tabs from being opened automatically every time the frontend is launched, set the
+> `BROWSER=none` environment variable (Parcel's `--open` flag controls browser opening).
 
 Installs the necessary packages and runs the app in the development mode.
 
@@ -486,8 +486,8 @@ The dictionary files for spell-check functionality in _The Combine_ are split in
 sake of devices with limited bandwidth. There are scripts for generating these files in `public/dictionaries/` and
 `src/resources/dictionaries/`; files in this directory should _not_ be manually edited.
 
-The bash script `scripts/fetch_wordlist.sh` is used to fetch dictionary files for a given language (e.g., `es`) from
-the [LibreOffice dictionaries](https://github.com/LibreOffice/dictionaries) and convert them to raw wordlists (e.g.,
+The bash script `scripts/fetch_wordlist.sh` is used to fetch dictionary files for a given language (e.g., `es`) from the
+[LibreOffice dictionaries](https://github.com/LibreOffice/dictionaries) and convert them to raw wordlists (e.g.,
 `src/resources/dictionaries/es.txt`). Execute the script with no arguments for its usage details. Any language not
 currently supported can be manually added as a case in this script.
 
@@ -707,7 +707,7 @@ Notes:
 ### Set Up Environment Variables
 
 Before installing _The Combine_ in Kubernetes, you need to set the following environment variables:
-`COMBINE_CAPTCHA_SECRET_KEY`, `COMBINE_CAPTCHA_VERIFY_URL`, `COMBINE_JWT_SECRET_KEY`. For development environments, you can use the values defined in
+`COMBINE_CAPTCHA_SECRET_KEY`, `COMBINE_JWT_SECRET_KEY`. For development environments, you can use the values defined in
 `Backend/Properties/launchSettings.json`. Set them in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac
 10.15+), or the _System_ app (Windows).
 

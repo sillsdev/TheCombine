@@ -46,11 +46,11 @@ repository.
 
 #### Additional Backend Resources
 
-| Resource           | Kind                  | Description                                                                                                                                                                   |
-| ------------------ | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| env-backend        | ConfigMap             | `env-backend` defines the runtime configuration for backend services.                                                                                                         |
-| env-backend-secrets | Secret                | `env-backend-secrets` defines the sensitive runtime configuration items for the backend services                                                                               |
-| backend-data       | PersistentVolumeClaim | `backend-data` defines the persistent storage requirements for the backend services. The persistent storage is used for the backend files stored in `/home/app/.CombineFiles` |
+| Resource            | Kind                  | Description                                                                                                                                                                   |
+| ------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| env-backend         | ConfigMap             | `env-backend` defines the runtime configuration for backend services.                                                                                                         |
+| env-backend-secrets | Secret                | `env-backend-secrets` defines the sensitive runtime configuration items for the backend services                                                                              |
+| backend-data        | PersistentVolumeClaim | `backend-data` defines the persistent storage requirements for the backend services. The persistent storage is used for the backend files stored in `/home/app/.CombineFiles` |
 
 ### Database Deployment
 
@@ -81,8 +81,8 @@ backup/restore _The Combine_ data, remove projects, add a user to a project, and
 #### `combine_maint` Image
 
 The `combine_maint` container image is stored in AWS ECR. It provides a number of utility and administrative functions
-and is used in multiple scenarios. `combine_maint` is built off of `public.ecr.aws/thecombine/aws-kubectl` and has the following
-features:
+and is used in multiple scenarios. `combine_maint` is built off of `public.ecr.aws/thecombine/aws-kubectl` and has the
+following features:
 
 - _aws-cli ver. 2_ - version 2 of the AWS Command Line Interface (from `sillsdev/aws-kubectl`)
 - _kubectl_ - a command line tool used by maintenance scripts to manage Kubernetes resources (from
@@ -196,12 +196,12 @@ The design of the _Cert Proxy Client_ is shown in the following diagram:
 
 The _Cert Proxy Client_ uses the following resources to update the NUCs SSL Certificate from AWS S3 storage:
 
-| Resource                | Kind      | Description                                                                                                                                                                                                                                                     |
-| ----------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| update-cert-oneshot     | Job       | A one-time job to create/update the TLS secret when the Cluster is created or updated. The job uses the `combine_maint` image and runs the `update_cert.py` script. (see the [combine_maint Image](#combine_maint-image) section)                               |
-| update-cert-cronjob        | CronJob   | Performs the same task as `update-cert-oneshot` on a regular schedule.                                                                                                                                                                                          |
+| Resource                | Kind      | Description                                                                                                                                                                                                                                                        |
+| ----------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| update-cert-oneshot     | Job       | A one-time job to create/update the TLS secret when the Cluster is created or updated. The job uses the `combine_maint` image and runs the `update_cert.py` script. (see the [combine_maint Image](#combine_maint-image) section)                                  |
+| update-cert-cronjob     | CronJob   | Performs the same task as `update-cert-oneshot` on a regular schedule.                                                                                                                                                                                             |
 | env-cert-proxy          | ConfigMap | `env-cert-proxy` defines the configuration environment variables for the `update-cert-oneshot` and `update-cert-cronjob`. They include the location of the AWS S3 bucket where the certificates are stored as well as details about the certificate to be checked. |
-| aws-s3-credentials      | Secret    | `aws-s3-credentials` defines the access accounts and credentials to access the configures AWS S3 resources.                                                                                                                                                     |
+| aws-s3-credentials      | Secret    | `aws-s3-credentials` defines the access accounts and credentials to access the configures AWS S3 resources.                                                                                                                                                        |
 | nuc1-thecombine-app-tls | Secret    | `nuc1-thecombine-app-tls` is a `kubernetes.io/tls` secret that is created by `update-cert-oneshot` and `update-cert-cronjob` from the data stored in the AWS S3 bucket.                                                                                            |
 
 ## Service Accounts
@@ -214,11 +214,11 @@ listed here use the default service account for the namespace where they run.
 The `account-ecr-login` account is used by the `ecr-cred-helper` and `ecr-cred-helper-cron` resources. The
 `account-ecr-login` has the following access to Kubernetes resources:
 
-| Resources                   | Abilities                                       |
-| --------------------------- | ----------------------------------------------- |
-| pods, pods/attach           | list, get, watch, create, update, patch         |
-| secrets, jobs, cronjobs     | list, get, watch, create, update, patch, delete |
-| serviceaccounts             | list, get, update, patch                        |
+| Resources               | Abilities                                       |
+| ----------------------- | ----------------------------------------------- |
+| pods, pods/attach       | list, get, watch, create, update, patch         |
+| secrets, jobs, cronjobs | list, get, watch, create, update, patch, delete |
+| serviceaccounts         | list, get, update, patch                        |
 
 ### Service Account: `account-maintenance`
 

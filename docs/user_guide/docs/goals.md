@@ -12,8 +12,8 @@ The columns are: Edit (no header), Vernacular, Number of Senses (#), Glosses, Do
 
 ![Review Entries column headers](images/reviewEntriesColumns.png)
 
-To show/hide columns or rearrange their order, click the
-![Review Entries columns edit icon](images/reviewEntriesColumnsEdit.png){width=25} show/hide columns icon in the table toolbar.
+To show/hide columns or rearrange their order, click on the
+![Review Entries columns edit icon](images/reviewEntriesColumnsEdit.png){width=25} icon in the top corner.
 
 Due to the nature of Rapid Word Collection, [Data Entry](dataEntry.md) in The Combine does not support the addition of
 definitions or parts of speech. However, if the project has imported data in which definitions or parts of speech were
@@ -162,8 +162,7 @@ via Review Deferred Duplicates.
 #### Revert Set
 
 The "Revert Set" button resets all changes made to the current duplicate set (moved, merged, or deleted senses) without
-deferring it. It is only active when changes have been made to the current set. Unlike "Defer", the set will appear
-again in the normal Merge Duplicates flow.
+deferring it. It is only active when changes have been made to the current set.
 
 ### Merging with Imported Data
 
@@ -193,9 +192,8 @@ moved.
 
 ## Review Deferred Duplicates {#review-deferred-duplicates}
 
-This goal lets users revisit sets of potential duplicates that were previously deferred during
-[Merge Duplicates](#merge-duplicates). Deferred sets are presented in the same interface as Merge Duplicates, allowing
-users to merge, move, or delete senses, or to defer the set again.
+This opens the [Merge Duplicates](#merge-duplicates) with all sets of potential duplicates that were previously deferred
+with _Merge Duplicates_. It is only available if there is at least one deferred set.
 
 ## Check Orthography
 
