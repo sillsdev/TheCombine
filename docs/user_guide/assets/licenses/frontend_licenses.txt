@@ -1632,7 +1632,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-axios 1.15.2
+axios 1.16.0
 MIT
 # Copyright (c) 2014-present Matt Zabriskie & Collaborators
 
