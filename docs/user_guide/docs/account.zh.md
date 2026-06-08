@@ -2,11 +2,11 @@
 
 如何注册、登录并编辑用户账号
 
-![登陆](../images/login.png){.center}
+![登陆](../images/login.zh.png){.center}
 
 ## 注册
 
-要创建新账户，请点击登录页面上的[注册](../signup)按钮。
+要创建新账户，请点击登录页面上的[注册](../../signup)按钮。
 
 !!! note "笔记"
 
@@ -14,7 +14,7 @@
 
 ## 登录
 
-[登录](../login)到 The Combine 请键入注册时提供的用户名和密码，
+[登录](../../login)到 The Combine 请键入注册时提供的用户名和密码，
 
 如果用户想换密码，点击“忘记密码？”链接即可 按照指示去操作，系统会将一套密码重新设置流程发送到与用户账号有关的电子邮件地址上。
 
@@ -27,7 +27,7 @@
 登陆后，沿着 The Combine 的顶部有一个蓝色应用框（App
 Bar）。 点击应用框右端的头像图标，以打开用户菜单 选“用户设置”就可更改账号或简况设置
 
-![用户菜单](../images/userMenu.png){.center}
+![用户菜单](../images/userMenu.zh.png){.center}
 
 用户可添加或更新
 
@@ -36,8 +36,7 @@ Bar）。 点击应用框右端的头像图标，以打开用户菜单 选“用
 - 电话号码；
 - 电子邮件地址；
 - 用户界面语言；
-- gloss spelling suggestions (On/Off toggle that controls spelling suggestions in the Data Entry gloss field);
-- 分析授权。
+- analytics consent.
 
 !!! note "笔记"
 

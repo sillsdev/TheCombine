@@ -2,14 +2,11 @@
 
 网站管理员在用户菜单中还有一个选项：“网站设置”。
 
-![用户菜单 - 管理](../images/userMenuAdmin.png){.center}
+![用户菜单 - 管理](../images/userMenuAdmin.zh.png){.center}
 
 ## 项目管理
 
-Administrators can export, archive/restore, or manage users for any
-project. 项目一旦归档，所有用户都将无法再访问，甚至对项目创建者也不例外；但任何管理员都可以重新恢复该项目。 目前还没有一种方法可以永久删除一个项目。 The
-"Manage project users" button for each project opens a view where the administrator can manage that project's user
-roles.
+管理员可以输出、归档及存储任何项目。 项目一旦归档，所有用户都将无法再访问，甚至对项目创建者也不例外；但任何管理员都可以重新恢复该项目。 目前还没有一种方法可以永久删除一个项目。
 
 ## 用户管理
 

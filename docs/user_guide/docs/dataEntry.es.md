@@ -23,7 +23,7 @@ vez.
 
 ### Nota
 
-Puede tener una nota en cada entrada. Se puede añadir cualquier anotación para las acepciones de una entrada, glosas,
+Puede tener una nota en cada entrada. Se puede añadir cualquier anotación para los acepciones de una entrada, glosas,
 dominios semánticos, etc a la nota de la entrada.
 
 ### Grabación
@@ -69,7 +69,7 @@ palabra en la lista de sugerencias, en lugar de tener que escribir el resto de l
 desactivada, la palabra vernácula debe escribirse en su totalidad; no se sugerirá ninguna coincidencia potencial
 existente.
 
-![Entrada de datos duplicados de formularios vernáculos](../images/data-entry-dup-vern.png){.center}
+![Entrada de datos duplicados de formularios vernáculos](../images/data-entry-dup-vern.es.png){.center}
 
 Ya sea que escriba una forma que coincide con una entrada existente en el proyecto o seleccione una de las sugerencias
 que ofrece The Combine, aparecerá un cuadro con opciones. (Este cuadro no aparecerá si la configuración de Autocompletar
@@ -77,7 +77,7 @@ está desactivada o si escribe una forma vernáculo que aún no existe en el pro
 mostrarán todas las entradas existentes con esa forma vernácula y puede elegir si actualizar una de esas entradas o
 crear una nueva entrada.
 
-![Entrada de datos entradas vernáculas duplicadas](../images/data-entry-dup-vern-select-entry.png){.center}
+![Entrada de datos entradas vernáculas duplicadas](../images/data-entry-dup-vern-select-entry.es.png){.center}
 
 Si elige crear una nueva entrada, se cerrará el cuadro emergente y entonces podrá escribir la glosa de su nueva entrada.
 

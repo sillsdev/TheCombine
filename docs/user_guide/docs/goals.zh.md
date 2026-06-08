@@ -10,7 +10,7 @@ The columns are: Edit (no header), Vernacular, Number of Senses (#), Glosses, Do
 (![Review Entries pronunciations column header](../images/reviewEntriesColumnPronunciations.png){width=28}), Note, Flag
 (![Review Entries flag column header](../images/reviewEntriesColumnFlag.png){width=16}), and Delete (no header).
 
-![审查词条列标题](../images/reviewEntriesColumns.png)
+![审查词条列标题](../images/reviewEntriesColumns.zh.png)
 
 To show/hide columns or rearrange their order, click on the
 ![Review Entries columns edit icon](../images/reviewEntriesColumnsEdit.png){width=25} icon in the top corner.
@@ -19,7 +19,7 @@ To show/hide columns or rearrange their order, click on the
 Combine 中的[词条输入](dataEntry.md)不支持添加定义或词性的功能。 However, if the project has imported data in which
 definitions or parts of speech were already present, additional columns will be available in the Review Entries table.
 
-#### 排序和筛选
+#### Sorting and Filtering
 
 There are icons at the top of each column to
 ![Review Entries column filter icon](../images/reviewEntriesColumnFilter.png){width=20} filter and
@@ -27,8 +27,7 @@ There are icons at the top of each column to
 
 In a column with predominantly text content (Vernacular, Glosses, Note, or Flag), you can sort alphabetically or filter
 with a text search. By default, the text search is a fuzzy match: it is not case sensitive and it allows for one or two
-typos. If you want exact text matches, use quotes around your filter. To show all entries with non-empty text in the
-column, type a space for your filter.
+typos. If you want exact text matches, use quotes around your filter.
 
 In the Number of Senses column or Pronunciations column, you can sort or filter by the number of senses or recordings
 that entries have. In the Pronunciations column, you can also filter by speaker name.
@@ -43,26 +42,17 @@ include subdomains, add a final period to your filter. For example, "8111." incl
 用户可以使用“发音”
 (![Review Entries pronunciations column header](../images/reviewEntriesColumnPronunciations.png){width=28}) 列中的图标来录制、播放或删除词条的录音。
 
-You can modify the flag on an entry by clicking the
-![Review Entries flag column header](../images/reviewEntriesColumnFlag.png){width=16} icon in the Flag column.
-
 To edit any other part of an entry, click the
 ![Review Entries row edit icon](../images/reviewEntriesRowEdit.png){width=20} edit icon in the initial column.
 
 You can delete an entire entry by clicking the
 ![Review Entries row delete icon](../images/reviewEntriesRowDelete.png){width=20} delete icon in the final column.
 
-!!! note "笔记"
-
-    If a project Administrator has enabled the
-    [Harvester Review Entries](project.md#harvester-review-entries) setting, Harvesters can also use Review Entries.
-    Harvesters can update audio recordings and flags, but the Edit and Delete columns are not available to them.
-
 ## 合并重复项 {#merge-duplicates}
 
 该工具会自动查找可能重复的词条(每组最多 5 个词条，每次最多 12 组)。 首先，该工具会找出有相同形式的土语。 接着，它会找出类似土语形式或有相同注释(或定义) 的土语。
 
-![合并两个重复的词条](../images/mergeTwo.png)
+![合并两个重复的词条](../images/mergeTwo.zh.png)
 
 每个词条都显示在一列中，并且该词条的每种词义都以卡片的形式展现，这样可方便用户点击并拖动。 用户可对每一个词义采取三种基本的处理方式：移除、将其与另一个词义合并，或者删除。
 
@@ -70,7 +60,7 @@ You can delete an entire entry by clicking the
 
 当用户点击并按住词义卡时，它会变成绿色。 用户可将词义卡拖放至同一列中的不同位置，以重新排列该词条的各项词义。 或者，也可将此卡拖放至不同列，以将该词义移至另一词条。
 
-![Merge Duplicates moving a sense](../images/mergeMove.png)
+![Merge Duplicates moving a sense](../images/mergeMove.zh.png)
 
 如果用户想将含有多种词义的词条拆分为多个词条，可将其中一张词义卡拖至右侧空的附加列中。
 
@@ -78,15 +68,15 @@ You can delete an entire entry by clicking the
 
 如果将一张词义卡拖至另一张词义卡上，另一张词义卡也会变成绿色。
 
-![Merge Duplicates merging a sense](../images/mergeMerge.png)
+![Merge Duplicates merging a sense](../images/mergeMerge.zh.png)
 
 将一张词义卡拖放到另一张词义卡上(当它们同时显为绿色时)，它们的词义就合并。 这会导致在右侧出现一个蓝色侧边栏，显示出哪些词义被合并。
 
-![合并重复的词条和合并其词义](../images/mergeSidebar.png)
+![合并重复的词条和合并其词义](../images/mergeSidebar.zh.png)
 
 用户可将词义卡拖放至侧栏，或者从侧栏拖放至词义卡，来决定哪个词义被合并。 或者在侧栏内，用户可将不同的词义移至顶部(以保留其注释)。
 
-![Merge Duplicates moving a sidebar sense](../images/mergeSidebarMove.png)
+![Merge Duplicates moving a sidebar sense](../images/mergeSidebarMove.zh.png)
 
 点击右角括号(>) 可关闭或打开蓝色侧边栏。
 
@@ -94,25 +84,25 @@ You can delete an entire entry by clicking the
 
 要完全删除一个词义，请将其卡片拖至左下角垃圾桶的图标内。 当词义卡变为红色时，松开鼠标。
 
-![合并重复，删除一个词义](../images/mergeDelete.png)
+![合并重复，删除一个词义](../images/mergeDelete.zh.png)
 
 如果用户删除列中仅剩的一条词义，则整个列将消失，并且在保存& 时，整个词条将被删除。
 
-![合并重复的词条，删除词义内容](../images/mergeDeleted.png)
+![合并重复的词条，删除词义内容](../images/mergeDeleted.zh.png)
 
 ### 标记词条
 
 每列的右上角(位于土语形式右侧) 都有一个旗标图标。
 
-![合并重复，标记该词条](../images/mergeFlag.png){.center}
+![合并重复，标记该词条](../images/mergeFlag.zh.png){.center}
 
 用户可点击旗标来标记该词条，以用于将来检查或编辑。 (用户可以在[检阅词条](#review-entries)中对标记的词条进行排序)。 当用户标记词条时，可选择添加文本。
 
-![Merge Duplicates adding or editing a flag](../images/mergeEditFlag.png){.center}
+![Merge Duplicates adding or editing a flag](../images/mergeEditFlag.zh.png){.center}
 
 无论是否有任何文本被键入，用户会知晓该词条已被标记，因旗标图标会变为红色。 如果用户添加了文本，可将鼠标悬停在旗标图标上方来查看文本。
 
-![Merge Duplicates a flagged entry](../images/mergeFlagged.png){.center}
+![Merge Duplicates a flagged entry](../images/mergeFlagged.zh.png){.center}
 
 点击红色旗标图标来编辑文本，或者移除标记。
 
@@ -122,7 +112,7 @@ You can delete an entire entry by clicking the
 
 #### 保存 & 继续
 
-![合并重复保存并继续按钮](../images/mergeSaveAndContinue.png)
+![合并重复保存并继续按钮](../images/mergeSaveAndContinue.zh.png)
 
 蓝色的“保存与继续”键有两个功能。 第一，它将所有更改都保存下来(例如，所有已被移除、合并或被删除的词义)，并更新数据库中的词。 Second,
 it saves the resulting set of words as non-duplicates.
@@ -141,14 +131,9 @@ it saves the resulting set of words as non-duplicates.
 
 #### 推迟
 
-![合并重复推迟按钮](../images/mergeDefer.png)
+![合并重复推迟按钮](../images/mergeDefer.zh.png)
 
 灰色”推迟”键会重置潜在重复词组所做的任何修改 可通过 "审查被推迟的重复词组 "重新访问被推迟的词组。 。
-
-#### Revert Set
-
-The "Revert Set" button resets all changes made to the current duplicate set (moved, merged, or deleted senses) without
-deferring it. It is only active when changes have been made to the current set.
 
 ### 与输入的数据合并
 
@@ -170,11 +155,6 @@ deferring it. It is only active when changes have been made to the current set.
 如果导入的词条或词义项包含 The
 Combine 不支持的资料(例如词源或词义反转)，它将被保护以防止删除。 受保护的词义卡会有一个黄色背景。它无法被删除，也无法(被合并)放入另一张词义卡。 如果整个词条受保护，其列将具有黄色标题(位于土语和旗标位置)。 当受保护的词条只有一个词义时，该词义卡就无法被移动。
 
-## Review Deferred Duplicates {#review-deferred-duplicates}
-
-This opens the [Merge Duplicates](#merge-duplicates) with all sets of potential duplicates that were previously deferred
-with _Merge Duplicates_. It is only available if there is at least one deferred set.
-
 ## 检查整形图
 
 具仅供项目管理员使用。
@@ -186,7 +166,7 @@ with _Merge Duplicates_. It is only available if there is at least one deferred 
 土语词条中的每个统一编码标准的的字符都有一个图块。 每个图块显示字符、其编码 Unicode
 "U+" 值，以及它在词条土语形中出现的次数并其指定名称(默认：有待决定)。
 
-![字符库字符图标](../images/characterInventoryTiles.png)
+![字符库字符图标](../images/characterInventoryTiles.zh.png)
 
 ### 管理单个字符
 
@@ -196,7 +176,7 @@ with _Merge Duplicates_. It is only available if there is at least one deferred 
 
     用户可能需要滚动才能看到面板。 如果用户电脑可视窗户足够宽，窗的右边会有空白边距；而面板将位于其顶部。 如果电脑可视窗户狭窄，图块就会一直填充到窗户右侧；该面板将位于底部，即所有图块的下方。
 
-![字符库字符面板](../images/characterInventoryPanel.png){.center}
+![字符库字符面板](../images/characterInventoryPanel.zh.png){.center}
 
 面板中间最多会显示该字符总共出现的5个土语形示例，并突出显示每次出现时的字符。
 
