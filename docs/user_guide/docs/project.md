@@ -210,9 +210,9 @@ not be imported into FieldWorks.
 
 ![Schedule](images/projectSettings5Sched.png)
 
-This is only available for editing by the project Owner, allowing a schedule to be set for a Rapid Word Collection
-workshop. Click the first button to select a date range for the workshop. Click the middle button to add or remove
-specific dates. Click the last button to clear the schedule.
+This is only available for editing by a project Owner or Administrator, allowing a schedule to be set for a Rapid Word
+Collection workshop. Click the first button to select a date range for the workshop. Click the middle button to add or
+remove specific dates. Click the last button to clear the schedule.
 
 ![Workshop Schedule](images/projectSchedule.png){.center}
 
@@ -253,8 +253,8 @@ Custom semantic domains will be available to all project users doing Data Entry.
 
 ## Project Statistics
 
-If you are the project Owner, there will be another icon alongside the gear icon in App Bar at the top of The Combine.
-This opens statistics about words in the project.
+If you are a project Owner or Administrator, there will be another icon alongside the gear icon in App Bar at the top of
+The Combine. This opens statistics about words in the project.
 
 ![Project Statistics Button](images/projectStatsButton.png){.center}
 
@@ -263,8 +263,9 @@ semantic domains, will be counted as 6 words.
 
 ### Words per User
 
-A table listing number of words and distinct semantic domains for each project user. Imported words have no associated
-user and will be counted in an "unknownUser" row.
+A table listing the following for each project user: the number of words collected, the number of distinct semantic
+domains, and the most recent semantic domain used. Imported words have no associated user and will be counted in an
+"unknownUser" row.
 
 ### Words per Domain
 

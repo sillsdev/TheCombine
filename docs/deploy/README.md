@@ -77,6 +77,18 @@ The host tools required to install _The Combine_ on a QA or Production server ar
 [Install Kubernetes Tools](https://github.com/sillsdev/TheCombine#install-kubernetes-tools) in the project README.md
 file.
 
+The table below summarizes the key differences between the QA and Production deployments.
+
+| Aspect                    | QA                                    | Production                                               |
+| ------------------------- | ------------------------------------- | -------------------------------------------------------- |
+| Kubernetes cluster        | `LTOPS_K8S_STAGING_CONTEXT`           | `LTOPS_K8S_PRODUCTION_CONTEXT`                           |
+| Server name               | `qa-kube.thecombine.app`              | `thecombine.app`                                         |
+| Image registry            | Private ECR, with IAM refresh CronJob | Public ECR (`public.ecr.aws/thecombine`), no pull secret |
+| `aws-login` subchart      | Enabled                               | Disabled                                                 |
+| `cert-proxy-server` chart | Not deployed                          | Deployed in `combine-cert-proxy` namespace               |
+| Backup CronJob            | Not scheduled                         | Daily                                                    |
+| Font-update CronJob       | Not scheduled                         | Weekly                                                   |
+
 #### Steps to Install on a QA/Production Server
 
 To install _The Combine_ on one of these systems, follow the steps in
@@ -250,7 +262,7 @@ The `setup_target.py` script will do the following:
 - Copy your SSH public key to the NUC
 
 Note that if an SSH key exists, you will have the option to overwrite it or skip the key generation. When your SSH key
-is copied to the NUC, it will copy the default key, `${HOME}/.ssh/id_rsa.pub`.
+is copied to the NUC, `ssh-copy-id` is used to copy the default SSH public key.
 
 ## Install Kubernetes Engine on Target
 
@@ -409,10 +421,9 @@ Notes:
 - When the `./setup_combine.py` script is used to install _The Combine_ on a NUC, it will install the fonts required for
   Arabic, English, French, Portuguese, and Spanish. If additional fonts will be required, call the `setup_combine.py`
   commands with the `--langs` option. Use the `--help` option to see the argument syntax.
-- The database image contains a script that will initialize the `SemanticDomains` and the `SemanticDomainTree`
-  collections on _first use_ of the database. The script will not be run automatically when the database is restarted or
-  updated. If the Semantic Domain data are updated, for example, adding a new language, then the script needs to be
-  rerun manually:
+- The database pod has a `postStart` lifecycle hook that runs `update-semantic-domains.sh` automatically on every pod
+  start, but only imports data if the `SemanticDomainTree` or `SemanticDomains` collections are empty. If the Semantic
+  Domain data are updated, for example, adding a new language, then the script needs to be rerun manually:
 
   ```console
   kubectl -n thecombine exec deployment/database -- /opt/thecombine/update-semantic-domains.sh
@@ -461,19 +472,19 @@ Notes:
 
 ### Checking Certificate Expiration
 
-The `check_cert.py` will print the expiration timestamp for _The Combine's_ TLS certificate.
+The `check_certs.py` will print the expiration timestamp for _The Combine's_ TLS certificate.
 
 If using the Docker image, [open the Docker image terminal](#open-docker-image-terminal) and run:
 
 ```console
-python3 ~/scripts/check_cert.py -n thecombine
+python3 ~/scripts/check_certs.py -n thecombine
 ```
 
 If using local tools, open a terminal window and run:
 
 ```console
 cd <COMBINE>/deploy/scripts
-./check_cert.py -n thecombine
+./check_certs.py -n thecombine
 ```
 
 The `-n thecombine` option may be omitted if the default namespace for the kubeconfig file has been set to `thecombine`

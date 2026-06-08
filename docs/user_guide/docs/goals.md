@@ -159,6 +159,11 @@ senses), updating the words in the database. Second, it saves the resulting set 
 The grey "Defer" button resets any changes made to the set of potential duplicates. The deferred set can be re-visited
 via Review Deferred Duplicates.
 
+#### Revert Set
+
+The "Revert Set" button resets all changes made to the current duplicate set (moved, merged, or deleted senses) without
+deferring it. It is only active when changes have been made to the current set.
+
 ### Merging with Imported Data
 
 #### Definitions and Part of Speech
@@ -184,6 +189,11 @@ protected to prevent its deletion. If a sense is protected, its card will have a
 or dropped into (i.e., merged into) another sense card. If an entire entry is protected, its column will have a yellow
 header (where the vernacular and flag are located). When a protected entry has only one sense, that sense card cannot be
 moved.
+
+## Review Deferred Duplicates {#review-deferred-duplicates}
+
+This opens the [Merge Duplicates](#merge-duplicates) with all sets of potential duplicates that were previously deferred
+with _Merge Duplicates_. It is only available if there is at least one deferred set.
 
 ## Check Orthography
 
