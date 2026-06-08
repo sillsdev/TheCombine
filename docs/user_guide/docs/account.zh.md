@@ -36,7 +36,8 @@ Bar）。 点击应用框右端的头像图标，以打开用户菜单 选“用
 - 电话号码；
 - 电子邮件地址；
 - 用户界面语言；
-- analytics consent.
+- gloss spelling suggestions (On/Off toggle that controls spelling suggestions in the Data Entry gloss field);
+- 分析授权。
 
 !!! note "笔记"
 

@@ -13,8 +13,8 @@ encabezado).
 
 ![Revisar los encabezados de columna de las entradas](../images/reviewEntriesColumns.es.png)
 
-To show/hide columns or rearrange their order, click on the
-![Review Entries columns edit icon](../images/reviewEntriesColumnsEdit.png){width=25} icon in the top corner.
+Para mostrar/ocultar columnas o reorganizar su orden, haga clic en el icono
+![Review Entries columns edit icon](../images/reviewEntriesColumnsEdit.png){width=25} de la esquina superior.
 
 Debido a la naturaleza de la recopilación rápida de palabras, la [entrada de datos](dataEntry.md) en The Combine no
 permite añadir definiciones o partes de la oración. Sin embargo, si el proyecto tiene datos importados en los que hay
@@ -22,32 +22,43 @@ definiciones o partes de discurso, habrá columnas adicionales disponibles en la
 
 #### Ordenar y filtrar
 
-There are icons at the top of each column to
-![Review Entries column filter icon](../images/reviewEntriesColumnFilter.png){width=20} filter and
-![Review Entries column sort icon](../images/reviewEntriesColumnSort.png){width=20} sort the data.
+Hay iconos en la parte superior de cada columna para
+![Review Entries column filter icon](../images/reviewEntriesColumnFilter.png){width=20} filtrar y
+![Review Entries column sort icon](../images/reviewEntriesColumnSort.png){width=20} ordenar los datos.
 
 En una columna con contenido predominantemente textual (Vernáculo, Glosas, Nota o Bandera), puede ordenar
-alfabéticamente o filtrar con una búsqueda de texto. By default, the text search is a fuzzy match: it is not case
-sensitive and it allows for one or two typos. If you want exact text matches, use quotes around your filter.
+alfabéticamente o filtrar con una búsqueda de texto. Por defecto, la búsqueda de texto es una coincidencia difusa: no
+distingue entre mayúsculas y minúsculas y permite uno o dos errores tipográficos. Si desea coincidencias de texto
+exactas, utilice comillas alrededor del filtro. Para mostrar todas las entradas con texto no vacío en la columna,
+escriba un espacio para su filtro.
 
-In the Number of Senses column or Pronunciations column, you can sort or filter by the number of senses or recordings
-that entries have. In the Pronunciations column, you can also filter by speaker name.
+En la columna Número de acepciones o Pronunciaciones, puede ordenar o filtrar por el número de sentidos o
+pronunciaciones que tienen las entradas. En la columna Pronunciaciones, también puede filtrar por nombre de locutor.
 
-En la columna Dominios, la ordenación es numérica por el id de dominio menor de cada entrada. To filter by domain, type
-a domain id with or without periods. For example, "8111" and "8.1.1.1" both show all entries with a sense in domain
-8.1.1.1. To also include subdomains, add a final period to your filter. For example, "8111." includes domains "8.1.1.1",
-"8.1.1.1.1", and "8.1.1.1.2". Filter with just a period (".") to show all entries with any semantic domain.
+En la columna Dominios, la ordenación es numérica por el id de dominio menor de cada entrada. Para filtrar por dominio,
+escriba un identificador de dominio con o sin puntos. Por ejemplo, "8111" y "8.1.1.1" muestran ambas todas las entradas
+con acepción en el dominio 8.1.1.1. Para incluir subdominios, añada un punto final a su filtro. Por ejemplo, "8111."
+incluye los dominios "8.1.1.1", "8.1.1.1.1" y "8.1.1.1.2". Filtrar sólo con un punto (".") para mostrar todas las
+entradas con cualquier dominio semántico.
 
 ### Edición de filas de entrada
 
 Puede grabar, reproducir o borrar las grabaciones de audio de una entrada con los iconos de la columna Pronunciaciones
 (![Review Entries pronunciations column header](../images/reviewEntriesColumnPronunciations.png){width=28}).
 
-To edit any other part of an entry, click the
-![Review Entries row edit icon](../images/reviewEntriesRowEdit.png){width=20} edit icon in the initial column.
+Puedes modificar la bandera en una entrada haciendo clic en el ícono
+![Review Entries flag column header](../images/reviewEntriesColumnFlag.png){width=16} en la columna de bandera.
 
-You can delete an entire entry by clicking the
-![Review Entries row delete icon](../images/reviewEntriesRowDelete.png){width=20} delete icon in the final column.
+Para editar cualquier otra parte de una entrada, haga clic en el icono
+![Review Entries row edit icon](../images/reviewEntriesRowEdit.png){width=20} en la columna inicial.
+
+Puede borrar una entrada entera haciendo clic en el icono
+![Review Entries row delete icon](../images/reviewEntriesRowDelete.png){width=20} en la última columna.
+
+!!! note "Nota"
+
+    Si un administrador de proyecto ha activado el ajuste [Revisar entradas para cosechadores](project.md#harvester-review-entries), las cosechadoras también pueden utilizar Revisar entradas.
+    Los cosechadores pueden actualizar grabaciones de audio y banderas, pero las columnas Editar y Eliminar no están a su disposición.
 
 ## Combinar duplicados {#merge-duplicates}
 
@@ -55,7 +66,7 @@ Esta herramienta encuentra automáticamente conjuntos de entradas potencialmente
 conjunto, y hasta 12 conjuntos en cada pasa). Primero presenta conjuntos de palabras con idénticas formas vernáculas. A
 continuación, presenta conjuntos con formas vernáculas similares o glosas (o definiciones) idénticas.
 
-![Fusionar duplicados entradas](../images/mergeTwo.es.png)
+![Combinar duplicados dos entradas](../images/mergeTwo.es.png)
 
 Cada entrada se muestra en una columna, y cada acepción de esa entrada se muestra como una tarjeta que puede hacer clic
 y arrastrar. Hay tres cosas básicas que puede hacer con una acepción: moverlo, combinarlo con otra acepción o
@@ -67,19 +78,19 @@ Cuando hace clic y mantiene pulsada una tarjeta de acepción, ésta se vuelve ve
 de acepción a un lugar diferente de la misma columna para reordenar las acepciones de esa entrada. O puede arrastrar y
 soltar la tarjeta de acepción a una columna diferente para mover la acepción a esa otra entrada.
 
-![Fusionar duplicados moviendo una acepción](../images/mergeMove.es.png)
+![Combinar duplicados moviendo una acepción](../images/mergeMove.es.png)
 
 Si desea dividir una entrada con varias acepciones en varias entradas, puede arrastrar una de las tarjetas de acepción a
 la columna extra vacía de la derecha.
 
-### Fusionar una acepción
+### Combinar una acepción
 
 Si arrastra una tarjeta de acepción sobre otra tarjeta de acepción, la otra tarjeta de acepción también se vuelve verde.
 
 ![Combinar duplicados combinar una acepción](../images/mergeMerge.es.png)
 
-Soltar una carta de acepción sobre otra carta de acepción (cuando ambas están verdes) fusiona las acepciones. Esto hace
-que aparezca una barra lateral azul aparezca a la derecha, mostrando cuales acepciones se están fusionando.
+Soltar una carta de acepción sobre otra carta de acepción (cuando ambas están verdes) combina las acepciones. Esto hace
+que aparezca una barra lateral azul aparezca a la derecha, mostrando cuales acepciones se están combinadas.
 
 ![Combinar duplicados acepciones combinadas](../images/mergeSidebar.es.png)
 
@@ -99,7 +110,7 @@ inferior izquierda. Cuando la tarjeta de acepción se ponga roja, suéltela.
 ![Combinar duplicados eliminar una acepción](../images/mergeDelete.es.png)
 
 Si borra la única acepción que queda de una columna, toda la columna desaparecerá, y esa entrada entera se borrada
-cuando pulse Guardar y Continuar.
+cuando pulse Guardar & Continuar.
 
 ![Combinar duplicados acepción borrada](../images/mergeDeleted.es.png)
 
@@ -125,19 +136,19 @@ Haga clic en el icono de la bandera roja para editar el texto o eliminar la band
 ### Terminar un conjunto
 
 Hay dos botones en la parte inferior para terminar el trabajo en el conjunto actual de duplicados potenciales y pasar al
-siguiente conjunto: "Guardar y Continuar" y "Aplazar".
+siguiente conjunto: "Guardar & Continuar" y "Aplazar".
 
 #### Guardar y Continuar
 
-![Combinar duplicados botón Guardar y Continuar](../images/mergeSaveAndContinue.es.png)
+![Combinar duplicados botón Guardar & Continuar](../images/mergeSaveAndContinue.es.png)
 
-El botón azul "Guardar y continuar" hace dos cosas. En primer lugar, guarda todos los cambios realizados (es decir,
-todas las acepciones movidas, combinadas o eliminadas), actualizando las palabras en la base de datos. Second, it saves
-the resulting set of words as non-duplicates.
+El botón azul "Guardar & continuar" hace dos cosas. En primer lugar, guarda todos los cambios realizados (es decir,
+todas las acepciones movidas, combinadas o eliminadas), actualizando las palabras en la base de datos. En segundo lugar,
+guarda el conjunto de palabras resultante como no duplicadas.
 
 !!! tip "Consejo"
 
-    ¿Los duplicados potenciales no son duplicados? Sólo tiene que hacer clic en Guardar y Continuar para decirle a The Combine que no le vuelva a mostrar ese conjunto.
+    ¿Los duplicados potenciales no son duplicados? Sólo tiene que hacer clic en Guardar & Continuar para decirle a The Combine que no le vuelva a mostrar ese conjunto.
 
 !!! note "Nota"
 
@@ -145,7 +156,7 @@ the resulting set of words as non-duplicates.
 
 !!! warning "Importante"
 
-    Avoid having multiple users merge duplicates in the same project at the same time. If different users simultaneously merge the same set of duplicates, it will results in the creation of new duplicates (even if the users are making the same merge decisions).
+    Evite que varios usuarios fusionen duplicados en el mismo proyecto al mismo tiempo. Si diferentes usuarios fusionan simultáneamente el mismo conjunto de duplicados, se crearán nuevos duplicados (aunque los usuarios tomen las mismas decisiones de fusión).
 
 #### Aplazar
 
@@ -153,6 +164,11 @@ the resulting set of words as non-duplicates.
 
 El botón gris "Aplazar" restablece cualquier cambio realizado en el conjunto de duplicados potenciales. El conjunto
 aplazado se puede revisar por Revisar duplicados aplazados.
+
+#### Revertir conjunto
+
+El botón "Revertir conjunto" restablece todos los cambios realizados en el conjunto de duplicadas actual (acepciones
+movidas, combinadas o borradas) sin que lo aplace. Sólo se activa cuando se han realizado cambios en el conjunto actual.
 
 ### Fusión con datos importados
 
@@ -171,7 +187,7 @@ la siguiente manera:
 
 !!! note "Nota"
 
-    A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different general categories, only the first one is preserved.
+    Una acepción sólo puede tener una parte de la oración. Si se fusionan dos acepciones que tienen diferentes partes de la oración en la misma categoría general, las partes de la oración se combinarán, separadas por un punto y coma (;). Sin embargo, si tienen categorías generales diferentes, sólo se conserva la primera.
 
 #### Entradas y acepciones protegidas {#protected-entries-and-senses}
 
@@ -180,6 +196,11 @@ de sentido), se protege para evitar su eliminación. Si una acepción está prot
 amarillo—no se puede borrar ni colocar en (es decir, se combina en) otra tarjeta de acepción. Si una entrada completa
 está protegida, su columna tendrá una cabecera amarilla (donde se encuentran la lengua vernácula y la bandera). Cuando
 una entrada protegida sólo tiene una acepción, esa tarjeta de acepción no se puede mover.
+
+## Revisar duplicados aplazados {#review-deferred-duplicates}
+
+Esto abre [Combinar duplicados](#merge-duplicates) con todos los conjuntos de duplicados potenciales que previamente
+fueron aplazados con _Combinar duplicados_. Sólo está disponible si hay al menos un conjunto aplazado.
 
 ## Comprobar ortografía
 

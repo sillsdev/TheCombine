@@ -19,7 +19,7 @@ To show/hide columns or rearrange their order, click on the
 Combine 中的[词条输入](dataEntry.md)不支持添加定义或词性的功能。 However, if the project has imported data in which
 definitions or parts of speech were already present, additional columns will be available in the Review Entries table.
 
-#### Sorting and Filtering
+#### 排序和筛选
 
 There are icons at the top of each column to
 ![Review Entries column filter icon](../images/reviewEntriesColumnFilter.png){width=20} filter and
@@ -27,7 +27,8 @@ There are icons at the top of each column to
 
 In a column with predominantly text content (Vernacular, Glosses, Note, or Flag), you can sort alphabetically or filter
 with a text search. By default, the text search is a fuzzy match: it is not case sensitive and it allows for one or two
-typos. If you want exact text matches, use quotes around your filter.
+typos. If you want exact text matches, use quotes around your filter. To show all entries with non-empty text in the
+column, type a space for your filter.
 
 In the Number of Senses column or Pronunciations column, you can sort or filter by the number of senses or recordings
 that entries have. In the Pronunciations column, you can also filter by speaker name.
@@ -42,11 +43,20 @@ include subdomains, add a final period to your filter. For example, "8111." incl
 用户可以使用“发音”
 (![Review Entries pronunciations column header](../images/reviewEntriesColumnPronunciations.png){width=28}) 列中的图标来录制、播放或删除词条的录音。
 
+You can modify the flag on an entry by clicking the
+![Review Entries flag column header](../images/reviewEntriesColumnFlag.png){width=16} icon in the Flag column.
+
 To edit any other part of an entry, click the
 ![Review Entries row edit icon](../images/reviewEntriesRowEdit.png){width=20} edit icon in the initial column.
 
 You can delete an entire entry by clicking the
 ![Review Entries row delete icon](../images/reviewEntriesRowDelete.png){width=20} delete icon in the final column.
+
+!!! note "笔记"
+
+    If a project Administrator has enabled the
+    [Harvester Review Entries](project.md#harvester-review-entries) setting, Harvesters can also use Review Entries.
+    Harvesters can update audio recordings and flags, but the Edit and Delete columns are not available to them.
 
 ## 合并重复项 {#merge-duplicates}
 
@@ -135,6 +145,11 @@ it saves the resulting set of words as non-duplicates.
 
 灰色”推迟”键会重置潜在重复词组所做的任何修改 可通过 "审查被推迟的重复词组 "重新访问被推迟的词组。 。
 
+#### Revert Set
+
+The "Revert Set" button resets all changes made to the current duplicate set (moved, merged, or deleted senses) without
+deferring it. It is only active when changes have been made to the current set.
+
 ### 与输入的数据合并
 
 #### 定义和词性
@@ -154,6 +169,11 @@ it saves the resulting set of words as non-duplicates.
 
 如果导入的词条或词义项包含 The
 Combine 不支持的资料(例如词源或词义反转)，它将被保护以防止删除。 受保护的词义卡会有一个黄色背景。它无法被删除，也无法(被合并)放入另一张词义卡。 如果整个词条受保护，其列将具有黄色标题(位于土语和旗标位置)。 当受保护的词条只有一个词义时，该词义卡就无法被移动。
+
+## Review Deferred Duplicates {#review-deferred-duplicates}
+
+This opens the [Merge Duplicates](#merge-duplicates) with all sets of potential duplicates that were previously deferred
+with _Merge Duplicates_. It is only available if there is at least one deferred set.
 
 ## 检查整形图
 

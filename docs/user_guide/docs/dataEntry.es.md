@@ -23,7 +23,7 @@ vez.
 
 ### Nota
 
-Puede tener una nota en cada entrada. Se puede añadir cualquier anotación para los acepciones de una entrada, glosas,
+Puede tener una nota en cada entrada. Se puede añadir cualquier anotación para las acepciones de una entrada, glosas,
 dominios semánticos, etc a la nota de la entrada.
 
 ### Grabación
