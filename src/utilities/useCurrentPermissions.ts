@@ -15,7 +15,7 @@ export function useCurrentPermissions(): Permission[] {
   const [permissions, setPermissions] = useState<Permission[]>([]);
 
   useEffect(() => {
-    setPermissions([]);
+    setPermissions((prev) => (prev.length ? [] : prev)); // clear non-empty permissions
     if (!projectId) {
       return;
     }
@@ -23,10 +23,14 @@ export function useCurrentPermissions(): Permission[] {
     let isCancelled = false;
     getCurrentPermissions()
       .then((perms) => {
-        if (!isCancelled) setPermissions(perms);
+        if (!isCancelled) {
+          setPermissions(perms);
+        }
       })
       .catch(() => {
-        if (!isCancelled) setPermissions([]);
+        if (!isCancelled) {
+          setPermissions((prev) => (prev.length ? [] : prev));
+        }
       });
 
     return () => {
