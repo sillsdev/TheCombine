@@ -192,6 +192,7 @@
       "on": "على",
       "hint": "عند إدخال البيانات، اقترح أن تكتب اللهجات العامية الحالية بطريقة مشابهة للغة العامية."
     },
+    "harvesterReviewEntries": {},
     "protectedData": { "avoidInMerge": {}, "override": {} },
     "invite": {
       "inviteByEmailLabel": "دعوة بواسطة البريد الإلكتروني",
@@ -295,6 +296,7 @@
     "protectReason": {},
     "completed": { "number": "عدد عمليات الدمج المكتملة: " },
     "continueDialog": { "title": "مواصلة الدمج؟", "yes": "نعم", "no": "لا" },
+    "identicalCompleted": {},
     "undo": {
       "undo": "التراجع عن الدمج",
       "undoDialog": "هل تريد التراجع عن هذا الدمج؟",

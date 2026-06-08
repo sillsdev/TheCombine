@@ -6,7 +6,7 @@ Un proyecto es para un solo idioma vernáculo.
 
 Al crear un proyecto, tiene la opción de empezar con un proyecto vacío o de importar los datos léxicos existentes.
 
-![Crear proyecto - Tzotzil](../images/projectCreateTzotzil.es.png){.center}
+![Crear proyecto - Tzotzil](../images/projectCreateTzotzil.png){.center}
 
 ### Importar los datos existentes
 
@@ -46,7 +46,7 @@ siguientes ajustes están disponibles para los usuarios del proyecto con permiso
 
 ### Configuración básica
 
-![Configuración básico](../images/projectSettings1Basic.es.png)
+![Configuración básico](../images/projectSettings1Basic.png)
 
 #### Nombre del proyecto
 
@@ -78,6 +78,13 @@ Active "Permitir la anulación de la protección de datos en Combinar duplicados
 proyecto en Combinar duplicados anular manualmente la protección de palabras y acepciones. Si alguien intenta fusionar o
 eliminar una entrada o acepción protegida, The Combine le advierte de los campos que se perderán.
 
+#### Revisar entradas para cosechadores {#harvester-review-entries}
+
+Esta configuración de activado/desactivado (por defecto desactivado) permite a los cosechadores acceder
+[Revisar entradas](goals.md#review-entries). Cuando esté activado, los cosechadores verán un botón Limpieza de datos en
+la barra de navegación y podrán usar Revisar entradas para actualizar las grabaciones de audio y las banderas de las
+entradas. Sin embargo, los cosechadores no pueden editar ni eliminar entradas de la tabla de Revisar entradas.
+
 #### Archivar el proyecto
 
 Sólo está disponible para el Propietario del proyecto. Archivar un proyecto lo hace inaccesible para todos los usuarios.
@@ -86,9 +93,9 @@ que el proyecto se elimine por completo de los servidores.
 
 ### Idiomas del proyecto {#project-languages}
 
-![Idiomas](../images/projectSettings2Langs.es.png)
+![Idiomas](../images/projectSettings2Langs.png)
 
-![Idiomas del proyecto - Tzotzil](../images/projectLanguagesTzotzil.es.png){.center}
+![Idiomas del proyecto - Tzotzil](../images/projectLanguagesTzotzil.png){.center}
 
 El _idioma vernáculo_ especificado en la creación del proyecto es fijo.
 
@@ -105,7 +112,7 @@ dominios semánticos en [Entrada de datos](./dataEntry.md).
 
 ### Usuarios del proyecto
 
-![Usuarios](../images/projectSettings3Users.es.png)
+![Usuarios](../images/projectSettings3Users.png)
 
 #### Usuarios actuales
 
@@ -122,8 +129,12 @@ un Administrador, puede hacer clic aquí para abrir un menú de gestión de usua
         [sólo disponible para el Propietario que modifica un Administrador]
 </pre>
 
-Una _cosechadora_ puede hacer [entrada de datos](./dataEntry.md) pero no [limpieza de datos](./goals.md). En los ajustes
-del proyecto, pueden ver los idiomas del proyecto y el calendario del taller, pero no pueden realizar ningún cambio.
+Una _Cosechadora_ puede hacer [entrada de datos](./dataEntry.md) pero no [limpieza de datos](./goals.md). En los ajustes
+del proyecto, pueden ver los idiomas del proyecto y el calendario del taller, pero no pueden realizar ningún cambio. Sin
+embargo, si un administrador del proyecto activa la configuración
+[Revisar entradas para cosechadores](#harvester-review-entries), los cosechadores también podrán acceder
+[Revisar entradas](./goals.md#review-entries) con una funcionalidad limitada: podrán actualizar las pronunciaciones y
+las banderas, pero no podrán editar ni eliminar entradas.
 
 Un _Editor_ tiene permiso para hacer todo lo que puede hacer un _Recolector_, además de
 [Revisar entradas](./goals.md#review-entries), [Combinar duplicados](./goals.md#merge-duplicates) y [Exportar](#export).
@@ -165,7 +176,7 @@ archivos).
 
 ### Importar/Exportar
 
-![Importar/Exportar](../images/projectSettings4Port.es.png)
+![Importar/Exportar](../images/projectSettings4Port.png)
 
 #### Importar {#import}
 
@@ -207,18 +218,18 @@ encontrar en la exportación comprimida, pero no se importarán en FieldWorks no
 
 ### Calendario {#schedule}
 
-![Calendario](../images/projectSettings5Sched.es.png)
+![Calendario](../images/projectSettings5Sched.png)
 
-Sólo está disponible para editar para el Propietario del proyecto, lo que permite fijar un calendario para un taller de
-recopilación rápida de palabras. Haga clic en el primer botón para seleccionar un intervalo de fechas para el taller.
-Haga clic en el botón central para añadir o eliminar fechas concretas. Haga clic en el último botón para borrar la
-programación.
+Sólo está disponible para editar para un Propietario o Administrador del proyecto, lo que permite fijar un calendario
+para un taller de recopilación rápida de palabras. Haga clic en el primer botón para seleccionar un intervalo de fechas
+para el taller. Haga clic en el botón central para añadir o eliminar fechas concretas. Haga clic en el último botón para
+borrar la programación.
 
-![Calendario de talleres](../images/projectSchedule.es.png){.center}
+![Calendario de talleres](../images/projectSchedule.png){.center}
 
 ### Dominios semánticos {#semantic-domains}
 
-![Dominios semánticos](../images/projectSettings6Doms.es.png)
+![Dominios semánticos](../images/projectSettings6Doms.png)
 
 En esta pestaña de configuración, puede cambiar el idioma del dominio semántico y gestionar dominios semánticos
 personalizados.
@@ -256,8 +267,8 @@ Introducción de datos.
 
 ## Estadísticas del proyecto
 
-Si usted es el Propietario del proyecto, habrá otro icono junto al icono del engranaje en la App Bar, en la parte
-superior de The Combine. Esto abre las estadísticas sobre las palabras en el proyecto.
+Si usted es un Propietario o Administrador del proyecto, habrá otro icono junto al icono del engranaje en la App Bar, en
+la parte superior de The Combine. Esto abre las estadísticas sobre las palabras en el proyecto.
 
 ![Botón de estadísticas del proyecto](../images/projectStatsButton.png){.center}
 
@@ -266,8 +277,9 @@ acepciones, cada uno con 2 dominios semánticos, se contará como 6 palabras.
 
 ### Palabras por usuario
 
-Una tabla con el número de palabras y dominios semánticos distintos para cada usuario del proyecto. Las palabras
-importadas no tienen un usuario y se contabilizarán en una fila "unknownUser".
+Una tabla que muestra lo siguiente para cada usuario del proyecto: el número de palabras recogidas, el número de
+dominios semánticos distintos y el dominio semántico utilizado más recientemente. Las palabras importadas no tienen un
+usuario y se contabilizarán en una fila "unknownUser".
 
 ### Palabras por dominio
 

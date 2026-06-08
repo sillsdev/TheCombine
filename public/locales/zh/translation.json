@@ -116,7 +116,11 @@
     }
   },
   "userSettings": {
-    "analyticsConsent": {},
+    "analyticsConsent": {
+      "consentNo": "您尚未同意我们使用分析 Cookie。",
+      "consentYes": "您已同意我们使用分析 Cookie。",
+      "title": "分析 Cookie"
+    },
     "verifyEmail": {},
     "contact": "联系信息",
     "phone": "电话号码",
@@ -210,6 +214,7 @@
       "on": "开启",
       "hint": "在数据输入中，程序将建议与正在输入的土语词条相似的现有词条。"
     },
+    "harvesterReviewEntries": {},
     "protectedData": { "avoidInMerge": {}, "override": {} },
     "invite": {
       "inviteByEmailLabel": "通过电子邮件邀请",
@@ -313,6 +318,7 @@
     "protectReason": {},
     "completed": { "number": "已完成的合并次数：" },
     "continueDialog": { "title": "是否继续合并？", "yes": "是", "no": "否" },
+    "identicalCompleted": {},
     "undo": {
       "undo": "撤消合并",
       "undoDialog": "是否撤销此合并？",

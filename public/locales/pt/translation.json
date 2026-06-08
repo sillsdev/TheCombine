@@ -11,34 +11,35 @@
     "descriptionP1": "As palavras são os blocos de construção da língua, essenciais tanto para a comunicação de informações como para compartilhar a cultura. Um dicionário, cheio de palavras e seus significados, é um recurso linguístico fundamental, ajudando a documentar e preservar o idioma para as futuras gerações dentro da comunidade e fornecendo uma ponte para a comunicação com outras comunidades. Entretanto, muitas comunidades linguísticas minoritárias em todo o mundo carecem deste recurso no seu idioma, o que as coloca em desvantagem.",
     "descriptionP2": "The Combine é uma ferramenta fácil de usar no processo de Coleta Rápida de Palavras (RWC), um método para reunir as palavras que servirão de base para um dicionário bilíngüe. No centro do processo de RWC estão os falantes nativos de uma determinada comunidade linguística. Um grupo de 4 a 6 falantes nativos, ao qual é apresentado um domínio semântico de cada vez, fala o máximo de palavras de sua língua que possam pensar relacionadas a esse domínio. The Combine facilita a inserção destas palavras num banco de dados, juntamente com traduções, gravações de áudio e notas, para captar melhor sua forma e significado.",
     "descriptionP3": "As pessoas que possuem pouco conhecimento lingüístico prévio e experiência limitada com computadores podem aprender rapidamente a usar as principais funções de coleta de palavras de The Combine. As palavras resultantes podem então ser organizadas e editadas dentro de The Combine antes de exportar os dados para uso em outras ferramentas como o FieldWorks.",
-    "descriptionP4": "Cadastre-se para começar com sua coleção de palavras!"
+    "descriptionP4": "Cadastre-se para começar a criar sua coleção de palavras!"
   },
   "treeView": {
     "findDomain": "Encontrar um domínio",
     "domainNotFound": "Domínio não encontrado",
-    "returnToTop": "Volte ao topo da árvore de domínio."
+    "returnToTop": "Volte ao topo da árvore de domínio.",
+    "wordCountTooltip": "Número de palavras reunidas neste domínio"
   },
   "addWords": {
-    "selectEntry": "Selecione uma entrada",
-    "selectSense": "Selecione um significado",
+    "selectEntry": "Selecionar uma entrada",
+    "selectSense": "Selecionar um significado",
     "newEntryFor": "Nova entrada para: ",
     "newSense": "Novo significado",
     "senseInWord": "A palavra já tem este significado neste domínio semântico: {{ val1 }}, {{ val2 }}",
     "deleteRow": "Excluir esta linha",
-    "deleteRowWarning": "Esta linha será permanentemente apagada!",
+    "deleteRowWarning": "Essa linha será excluída permanentemente!",
     "addNote": "Adicionar uma nota",
     "domain": "Domínio",
     "domainTitle": "Domínio: {{ val1 }} ({{ val2 }})",
     "glosses": "Glosas",
     "pressEnter": "Pressione Enter para salvar a palavra",
-    "vernacular": "Vernáculo"
+    "vernacular": "Palavra vernácula"
   },
   "analyticsConsent": {
     "consentModal": {
-      "acceptAllBtn": "Sim, permitir análises",
+      "acceptAllBtn": "Sim, permitir estatísticas",
       "acceptNecessaryBtn": "Não, somente as estatísticas necessárias",
       "description": "The Combine armazena informações básicas sobre sua sessão e uso para fins de manutenção. Esta informação é necessária e não é compartilhada com ninguém. The Combine também usa análises adicionais para compilar estatísticas anônimas. Você concorda com nosso uso de análises adicionais?",
-      "title": "Análises em The Combine"
+      "title": "Estatísticas do The Combine"
     }
   },
   "appBar": {
@@ -51,8 +52,8 @@
     "invalidText": "O link pode ter expirado ou já foi usado.",
     "invalidTitle": "Verificação de e-mail falhou",
     "returnButton": "Retorne a The Combine",
-    "success": "Endereço de e-mail verificado!",
-    "verifying": "Verificando endereço de e-mail..."
+    "success": "E-mail verificado!",
+    "verifying": "Verificando e-mail..."
   },
   "invite": {
     "invalidInvitationURL": "O link de convite ao projeto é inválido."
@@ -61,11 +62,11 @@
     "title": "Entrar",
     "name": "Seu Nome",
     "username": "Nome de usuário",
-    "usernameOrEmail": "Nome de usuário ou endereço de e-mail",
+    "usernameOrEmail": "Nome de usuário ou e-mail",
     "password": "Senha",
     "passwordRequirements": "A senha deve conter 8 caracteres ou mais.",
     "forgotPassword": "Esqueceu a senha?",
-    "login": "Login",
+    "login": "Entrar",
     "failed": "Falha ao fazer o login. Por favor, verifique seu nome de usuário e a senha.",
     "failedUnknownReason": "Falha ao logar. Algo deu errado com The Combine.",
     "backToLogin": "Voltar para o login",
@@ -98,7 +99,7 @@
   },
   "speakerMenu": {
     "none": "Nenhum falante no projeto. Para anexar um falante às gravações de áudio, por favor, fale com um administrador do projeto.",
-    "other": "[Nenhuma das anteriores]"
+    "other": "[Nenhum dos itens acima]"
   },
   "userMenu": {
     "siteSettings": "Configurações do site",
@@ -125,7 +126,7 @@
     "archivedProjects": "Projetos arquivados: {{ val }}",
     "manageProject": "Gerenciar este projeto",
     "projectRoles": "Papéis de projeto",
-    "addProjectUsers": "Adicionar usuários do projeto",
+    "addProjectUsers": "Adicionar usuários ao projeto",
     "archiveProjectText": "Este projeto não será acessível a nenhum utilizador.",
     "restoreProjectText": "Alguém provavelmente tinha uma boa razão para arquivar este projeto. Tens a certeza que o queres restaurar?",
     "userList": "Usuários",
@@ -158,7 +159,7 @@
     "verifyEmail": {
       "button": "Verificar e-mail",
       "description": "Para adicionar usuários ao seu projeto, você deve verificar seu endereço de e-mail.",
-      "emailUnverified": "Verifique o e-mail para adicionar usuários aos projetos",
+      "emailUnverified": "Verifique seu e-mail para adicionar usuários aos projetos",
       "emailVerified": "Verificação de e-mail concluída",
       "emailVerifying": "Verifique seu e-mail",
       "title": "Verificar endereço de e-mail",
@@ -167,6 +168,7 @@
     "contact": "Informação de contato",
     "glossSuggestion": "Sugestões de ortografia de glosa",
     "glossSuggestionHint": "No Registro de Dados, dê sugestões de ortografia para o Glosa ser digitado.",
+    "noChanges": "Nenhuma alteração para salvar",
     "phone": "Número de telefone",
     "uiLanguage": "Idioma da interface",
     "uiLanguageDefault": "(Definir o idioma do navegador como padrão)",
@@ -192,8 +194,8 @@
       "users": "Usuários"
     },
     "language": {
-      "vernacular": "Vernáculo",
-      "vernacularLanguage": "Língua Vernacular",
+      "vernacular": "Palavra vernácula",
+      "vernacularLanguage": "Língua Vernácula",
       "analysis": "Análise",
       "analysisLanguage": "Língua de Análise",
       "semanticDomains": "Domínios Semânticos",
@@ -265,9 +267,9 @@
     "import": {
       "header": "Importar Dados",
       "body": "Os dados importados serão adicionados a este projeto. The Combine não tentará deduplicar, sobrescrever ou sincronizar.",
-      "chooseFile": "Escolha Arquivo",
+      "chooseFile": "Escolher Arquivo",
       "notAllowed": "Você já importou um arquivo LIFT para este projeto.",
-      "reuploadWarning": "Você pode fazer upload de um novo arquivo LIFT, mas ele irá sobrescrever todas as palavras deste projeto.",
+      "reuploadWarning": "Você pode fazer upload de um novo arquivo LIFT, mas ele substituirá todas as palavras deste projeto.",
       "reuploadConfirm": "Todas as palavras deste projeto serão excluídas e substituídas com as palavras do novo arquivo LIFT. Tem certeza de que deseja continuar?",
       "wordsUploaded": "Palavras enviadas: {{ val }}",
       "noWordsUploaded": "O arquivo LIFT não tem palavras na língua vernácula deste projeto.",
@@ -289,10 +291,14 @@
     },
     "exportProject": { "label": "Exportar Projeto" },
     "autocomplete": {
-      "label": "Autocomplemento",
+      "label": "Preenchimento automático",
       "off": "Desativado",
       "on": "Ativado",
-      "hint": "Na Entrada de Dados, o programa irá sugerir verbetes existentes que são similares ao verbete no vernáculo que está sendo digitado."
+      "hint": "Na Entrada de Dados, o programa irá sugerir palavras existentes da língua vernácula que são similares à palavra que está sendo digitado."
+    },
+    "harvesterReviewEntries": {
+      "label": "Revisar Verbetes para Colheitadeiras",
+      "hint": "Permitir que as colheitadeiras usem Revisar Verbetes. Eles podem atualizar pronúncias e bandeiras, mas não podem editar ou excluir entradas."
     },
     "protectedData": {
       "label": "Gerenciamento de Dados Protegido",
@@ -308,12 +314,13 @@
     "invite": {
       "inviteByEmailLabel": "Convidar por e-mail",
       "userExists": "Esse usuário já está registrado.",
+      "invitationSent": "Convite enviado.",
       "or": "OU",
       "searchPlaceholder": "Procurar...",
       "searchTitle": "Encontrar usuários",
       "emailLabel": "E-mail",
       "emailMessage": "Mensagem (opcional)",
-      "toastSuccess": "Adicionado usuário do projeto.",
+      "toastSuccess": "Usuário adicionado ao projeto.",
       "toastFail": "Falha ao adicionar usuário ao projeto."
     },
     "domains": {
@@ -353,11 +360,11 @@
     "description": "NÃO IMPLEMENTADO"
   },
   "reviewDeferredDups": {
-    "title": "Revisar Duplicações Atrasadas",
+    "title": "Revisar Duplicações Adiadas",
     "description": "Revisitar duplicatas em potencial que foram adiadas durante a mesclagem de duplicações."
   },
   "spellCheckGloss": {
-    "title": "Verificar Ortografia da Glosa",
+    "title": "Verificar a Ortografia da Glosa",
     "description": "NÃO IMPLEMENTADO"
   },
   "validateChars": {
@@ -376,14 +383,14 @@
     "discardChanges": "Descartar alterações?",
     "noDomain": "Nenhum domínio selecionado",
     "duplicateDomain": "Este significado já tem o domínio {{ val }}.",
-    "deleteWordWarning": "Esta palavra será apagada permanentemente!",
+    "deleteWordWarning": "Essa linha será excluída permanentemente!",
     "deleteDisabled": "Isto foi importado com dados que o Combine não lida, então pode não ser excluído.",
     "error": {
-      "gloss": "As glosas não podem ser deixadas em branco",
+      "gloss": "Não pode deixar a glosa em branco",
       "glossAndDefinition": "Glosas e definições não podem ser deixadas em branco",
       "sense": "Não pode salvar um significado vazio",
       "senses": "Não é possível salvar uma entrada sem significados",
-      "vernacular": "O vernáculo não pode ser deixado em branco"
+      "vernacular": "A palavra vernácula não pode ser deixado em branco"
     },
     "columns": {
       "definitions": "Definições",
@@ -397,7 +404,7 @@
       "pronunciations": "Pronúncias",
       "senses": "Significados",
       "sensesCount": "Número de significados",
-      "vernacular": "Vernáculo"
+      "vernacular": "Palavra vernácula"
     },
     "completed": { "number": "Número de postagens editadas: " },
     "undo": {
@@ -408,14 +415,14 @@
   },
   "charInventory": {
     "title": "Verificar ortografia",
-    "description": "Revise os caracteres usados na ortografia de palavras vernaculares e verifique os tipos.",
+    "description": "Revise os caracteres usados na ortografia de palavras vernáculas e verifique os tipos.",
     "characters": "caracteres",
     "examples": "Exemplos",
     "occurrences": "ocorrências",
     "status": "status",
     "sortBy": "Ordenar por",
     "characterSet": {
-      "title": "Conjunto de Caracteres do Vernáculo:",
+      "title": "Conjunto de Caracteres da Língua Vernácula:",
       "help": "Definir os caracteres que são válidos para este idioma",
       "acceptedCharacters": "Caracteres Aceitos",
       "rejectedCharacters": "Caracteres Rejeitados",
@@ -507,6 +514,16 @@
       "title": "Continuar a mesclagem?",
       "yes": "Sim",
       "no": "Não"
+    },
+    "identicalCompleted": {
+      "title": "Todas as duplicatas idênticas processadas",
+      "congratulations": "Parabéns! Você processou todos os conjuntos de palavras com formas vernáculas idênticas.",
+      "hasDeferred": "Você tem conjuntos de duplicados adiados que podem ser revisados.",
+      "findingSimilar": "The Combine está agora procurando duplicatas em potencial com formas vernáculas semelhantes (não idênticas).",
+      "foundSimilar": "The Combine encontrou duplicatas em potencial com formas vernáculas semelhantes (não idênticas).",
+      "warning": "Encontrar duplicatas semelhantes pode levar vários minutos.",
+      "reviewDeferred": "Revisar as adiadas",
+      "continue": "Continuar"
     },
     "undo": {
       "undo": "Desfazer Mesclar",
