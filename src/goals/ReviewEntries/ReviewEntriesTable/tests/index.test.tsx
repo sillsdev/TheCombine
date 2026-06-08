@@ -69,6 +69,7 @@ const mockState = (
     ...defaultState,
     project: {
       ...defaultState.project,
+      id: "mock-project-id",
       definitionsEnabled,
       grammaticalInfoEnabled,
     },

@@ -6,12 +6,11 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { type ReactElement, useEffect, useState } from "react";
+import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
 import { OffOnSetting, Permission } from "api/models";
-import { getCurrentPermissions } from "backend";
 import {
   TabProps,
   appBarHeight,
@@ -21,6 +20,7 @@ import {
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { Path } from "types/path";
+import { useCurrentPermissions } from "utilities/useCurrentPermissions";
 import { useWindowSize } from "utilities/useWindowSize";
 
 export const dataEntryButtonId = "data-entry";
@@ -30,21 +30,15 @@ const navButtonMaxWidthProportion = 0.2;
 
 /** Buttons for navigating to Data Entry and Data Cleanup */
 export default function NavigationButtons(props: TabProps): ReactElement {
-  const { id: projectId, harvesterReviewEntriesEnabled } = useAppSelector(
+  const { harvesterReviewEntriesEnabled } = useAppSelector(
     (state: StoreState) => state.currentProjectState.project
   );
-  const [hasGoalPermission, setHasGoalPermission] = useState(false);
-
-  useEffect(() => {
-    getCurrentPermissions().then((perms) => {
-      setHasGoalPermission(
-        perms.includes(Permission.CharacterInventory) ||
-          perms.includes(Permission.MergeAndReviewEntries) ||
-          (harvesterReviewEntriesEnabled === OffOnSetting.On &&
-            perms.includes(Permission.WordEntry))
-      );
-    });
-  }, [harvesterReviewEntriesEnabled, projectId]);
+  const permissions = useCurrentPermissions();
+  const hasGoalPermission =
+    permissions.includes(Permission.CharacterInventory) ||
+    permissions.includes(Permission.MergeAndReviewEntries) ||
+    (harvesterReviewEntriesEnabled === OffOnSetting.On &&
+      permissions.includes(Permission.WordEntry));
 
   return (
     <>
