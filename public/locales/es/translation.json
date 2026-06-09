@@ -16,7 +16,8 @@
   "treeView": {
     "findDomain": "Buscar un dominio",
     "domainNotFound": "Dominio no encontrado",
-    "returnToTop": "Volver a la parte superior del árbol de dominios."
+    "returnToTop": "Volver a la parte superior del árbol de dominios.",
+    "wordCountTooltip": "Número de palabras recopiladas en este dominio"
   },
   "addWords": {
     "selectEntry": "Seleccionar una entrada",
@@ -167,6 +168,7 @@
     "contact": "Información de contacto",
     "glossSuggestion": "Sugerencias de ortografía de las glosas",
     "glossSuggestionHint": "En Introducción de datos, ofrece sugerencias ortográficas para la glosa que se está escribiendo.",
+    "noChanges": "No hay cambios para guardar",
     "phone": "Número de teléfono",
     "uiLanguage": "Idioma de la interfaz de usuario",
     "uiLanguageDefault": "(Por defecto, el idioma del navegador)",
@@ -294,6 +296,10 @@
       "on": "Encendido",
       "hint": "En la entrada de datos, sugiera las lenguas vernáculas existentes similares a la lengua vernácula que se está escribiendo."
     },
+    "harvesterReviewEntries": {
+      "label": "Revisar entradas para cosechadores",
+      "hint": "Permitir a los cosechadores usar Revisar entradas. Pueden actualizar las pronunciaciones y las banderas, pero no pueden editar ni eliminar entradas."
+    },
     "protectedData": {
       "label": "Administración de datos protegidos",
       "avoidInMerge": {
@@ -308,6 +314,7 @@
     "invite": {
       "inviteByEmailLabel": "Invitar por correo electrónico",
       "userExists": "Este usuario ya está registrado.",
+      "invitationSent": "Invitación enviada.",
       "or": "O",
       "searchPlaceholder": "Buscar...",
       "searchTitle": "Buscar usuarios",
@@ -507,6 +514,16 @@
       "title": "¿Continuar con la combinación?",
       "yes": "Si",
       "no": "No"
+    },
+    "identicalCompleted": {
+      "title": "Se procesaron todos los duplicados idénticos",
+      "congratulations": "¡Felicidades! Usted ha procesado todos los conjuntos de palabras con formas vernáculas idénticas.",
+      "hasDeferred": "Usted tiene conjuntos de duplicados aplazados que se pueden revisar.",
+      "findingSimilar": "The Combine busca ahora duplicados potenciales con formas vernáculas similares (no idénticas).",
+      "foundSimilar": "The Combine encontró duplicados potenciales con formas vernáculas similares (no idénticas).",
+      "warning": "Encontrar duplicados similares puede tardar varios minutos.",
+      "reviewDeferred": "Revisar los aplazados",
+      "continue": "Continuar"
     },
     "undo": {
       "undo": "Deshacer la combinación",

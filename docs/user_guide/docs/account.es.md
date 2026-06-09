@@ -39,6 +39,8 @@ Puede añadir o actualizar su:
 - número de teléfono;
 - dirección de correo electrónico;
 - idioma de la interfaz de usuario;
+- sugerencias de ortografía de las glosas (activación/desactivación de las sugerencias de ortografía en el campo de
+  glosa en Entrada de datos);
 - consentimiento de análisis.
 
 !!! note "Nota"

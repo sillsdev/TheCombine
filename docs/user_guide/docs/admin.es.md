@@ -6,9 +6,11 @@ Los administradores del sitio disponen de una opción más en el menú de usuari
 
 ## Administración de proyectos
 
-Los administradores pueden exportar o archivar/restaurar cualquier proyecto. Archivar un proyecto lo hace invisible e
-inaccesible para todos los usuarios, incluso el creador del proyecto, pero cualquier administrador puede restaurar el
-proyecto. Actualmente no hay forma de eliminar permanentemente un proyecto.
+Los administradores pueden exportar, archivar/restaurar o administrar usuarios para cualquier proyecto. Archivar un
+proyecto lo hace invisible e inaccesible para todos los usuarios, incluso el creador del proyecto, pero cualquier
+administrador puede restaurar el proyecto. Actualmente no hay forma de eliminar permanentemente un proyecto. El botón
+"Roles del proyecto" para cada proyecto abre una vista en la que el administrador puede administrar los roles de usuario
+de ese proyecto.
 
 ## Administración de usuarios
 

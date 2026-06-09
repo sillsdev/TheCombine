@@ -63,6 +63,12 @@ Turn on "Allow data protection override in Merge Duplicates" to allow project us
 override protection of words and senses. If anybody tries to merge or delete a protected entry or sense, The Combine
 warns them of the fields that will be lost.
 
+#### Harvester Review Entries {#harvester-review-entries}
+
+This Off/On setting (default Off) allows Harvesters to access [Review Entries](goals.md#review-entries). When enabled,
+Harvesters will see a Data Cleanup button in the navigation bar and can use Review Entries to update audio recordings
+and flags on entries. However, Harvesters cannot edit or delete entries from the Review Entries table.
+
 #### 存档项目
 
 这只有项目所有者才能获取。 将项目存档后，所有用户都无法访问该项目。 只有网站管理员才能取消这一操作。 如果用户希望从服务器上完全清除该项目，请与网站管理员联系。
@@ -101,7 +107,10 @@ warns them of the fields that will be lost.
 [仅对项目所有者改项目管理员时用]
 </pre>
 
-*收集者*可以进行[词条输入](./dataEntry.md)，但不能进行[数据清理](./goals.md)。 在项目设置中，其他人可以看到 项目语言和工作坊时间表，但不能做任何更改。
+*收集者*可以进行[词条输入](./dataEntry.md)，但不能进行[数据清理](./goals.md)。 在项目设置中，其他人可以看到 项目语言和工作坊时间表，但不能做任何更改。 However,
+if a project Administrator enables the [Harvester Review Entries](#harvester-review-entries) setting, Harvesters can
+also access [Review Entries](./goals.md#review-entries) with limited functionality: they can update pronunciations and
+flags, but cannot edit or delete entries.
 
 *编辑*具有与*收集者*相同的权限，还可以[审阅词条](./goals.md#review-entries)、[合并重复词条](./goals.md#merge-duplicates)和[导出](#export)。
 
@@ -144,9 +153,16 @@ used for the file names).
 
     目前，可导入的 LIFT 文件不可超过 100MB。
 
-!!! note "笔记"
+When you import a LIFT file into The Combine, it will import every entry with lexeme form or citation form that matches
+the project's vernacular language.
 
-    目前，每个项目只能导入一个 LIFT 文件。
+The first time you import into a project, the imported words will be added alongside any words collected in The Combine.
+No automatic deduplication, merging, or syncing will be performed.
+
+If you do a second import, all words in The Combine will be automatically deleted before the new words are imported. Do
+not do a second import unless you have already exported your project and imported it into FieldWorks. Then, if you want
+to do more word collection in The Combine, you can export from FieldWorks and import into The Combine. The previous
+words will be deleted to allow for a clean start with the up-to-date data from FieldWorks.
 
 #### 导出 {#export}
 
@@ -171,7 +187,9 @@ not be imported into FieldWorks.
 
 ![日程](../images/projectSettings5Sched.zh.png)
 
-只有项目所有人可以使用该功能，以便为快速文字工作坊设定时间。 点击第一个键可选择工作坊日期范围。 点击中间键可添加或移除具体日期。 点击最后的键可清除日程表。
+This is only available for editing by a project Owner or Administrator, allowing a schedule to be set for a Rapid Word
+Collection workshop. 点击第一个键可选择工作坊日期范围。 Click the middle button to add or remove specific
+dates. 点击最后的键可清除日程表。
 
 ![工作坊日程](../images/projectSchedule.zh.png){.center}
 
@@ -211,7 +229,7 @@ Custom semantic domains will be available to all project users doing Data Entry.
 
 ## 项目统计数据
 
-如果用户是项目所有者，在 The Combine 顶部应用栏齿轮图标的旁边会有另一个图标。 这将打开项目中关于字词的统计数据。
+如果您是项目所有者或管理员，在 The Combine 顶部应用栏齿轮图标的旁边会有另一个图标。 这将打开项目中关于字词的统计数据。
 
 ![项目统计数据](../images/projectStatsButton.png){.center}
 
@@ -219,7 +237,8 @@ Custom semantic domains will be available to all project users doing Data Entry.
 
 ### 每个用户的单词词数
 
-一张表格列出了每个项目用户的词数和独特的语义域。 导入的单词没有相关的用户，将计入 "unknownUser" 行。
+A table listing the following for each project user: the number of words collected, the number of distinct semantic
+domains, and the most recent semantic domain used. 导入的单词没有相关的用户，将计入 "unknownUser" 行。
 
 ### 每个语义域的单词
 
