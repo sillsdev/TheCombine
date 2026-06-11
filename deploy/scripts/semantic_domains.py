@@ -9,8 +9,6 @@ from uuid import UUID
 @dataclass
 class DomainQuestion:
     question: str
-    example_words: str
-    example_sentences: str
 
 
 class SemanticDomain:
@@ -59,13 +57,7 @@ class SemanticDomainFull(SemanticDomain):
             if SemanticDomainFull.flatten_questions:
                 flat_question_list.append(item.question)
             else:
-                full_question_list.append(
-                    {
-                        "question": item.question,
-                        "example_words": item.example_words,
-                        "example_sentences": item.example_sentences,
-                    }
-                )
+                full_question_list.append({"question": item.question})
         data = {
             "guid": "" if self.guid is None else str(self.guid),
             "lang": self.lang,

@@ -269,7 +269,7 @@ python -m piptools compile --upgrade requirements.in
 ### Load Semantic Domains
 
 Data Entry will not work in The Combine unless the semantic domains have been loaded into the database. Follow the
-instuctions in [Import Semantic Domains](#import-semantic-domains) below to import the domains from at least one of the
+instructions in [Import Semantic Domains](#import-semantic-domains) below to import the domains from at least one of the
 semantic domains XML files (which each contain domain data in English and one other language.)
 
 ## Available Scripts
@@ -420,7 +420,14 @@ Auto-format frontend code in the `src` folder.
 
 ### Import Semantic Domains
 
-To import Semantic Domains from the XML files in `./deploy/scripts/semantic_domains/xml`. Run from within a Python
+The raw semantic domain XML files are in `./deploy/scripts/semantic_domains/xml/`. If you update them, remove the
+`<Example*>` blocks before committing to the repo:
+
+```bash
+python .\scripts\remove_sem_dom_examples.py
+```
+
+Use the following steps to import semantic domains from the XML files into the database. Run from within a Python
 virtual environment.
 
 1. Generate the files for import into the Mongo database:
