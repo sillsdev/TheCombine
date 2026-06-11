@@ -424,7 +424,7 @@ The raw semantic domain XML files are in `./deploy/scripts/semantic_domains/xml/
 `<Example*>` blocks before committing to the repo:
 
 ```bash
-python .\scripts\remove_sem_dom_examples.py
+python scripts/remove_sem_dom_examples.py
 ```
 
 Use the following steps to import semantic domains from the XML files into the database. Run from within a Python
