@@ -7,14 +7,15 @@ A broad manual smoke/regression test to run on any deployment of a new release o
 - Covers core functionality across all deployment targets.
 - Not a substitute for automated tests or for testing release-specific changes.
 
-## General Information and Assumptions
+## General Info
 
-Assumptions and notes that apply throughout:
+### Assumptions
 
 - The deployment itself is already verified: no pod/deployment/job errors, db migrations applied.
   - See [How To Deploy _The Combine_](./README.md).
 - Only a browser is needed; no WireGuard or cluster access.
 - You have (or will create in step 2A) two user accounts, at least one a site admin.
+- Steps assume the project Owner (the user who created the project) unless stated otherwise.
 - 🟨 `master` is auto-deployed to QA, so fixes can be retested shortly after merge.
 
 ### Flags
@@ -25,14 +26,14 @@ Steps and sub-steps are tagged with the narrowest applicable flags. Untagged ite
 | ------------------- | --------------------------------------------------- |
 | 🟧 `[ONLINE]`       | Both online deployments (QA and Prod)               |
 | &emsp;🟥 `[PROD]`   | &emsp;<https://thecombine.app> only                 |
-| &emsp;🟨 `[QA]`     | &emsp;<https://qa.thecombine.app> only              |
+| &emsp;🟨 `[QA]`     | &emsp;<https://qa-kube.thecombine.app> only         |
 | 🔵 `[OFFLINE]`      | Both offline deployments (Laptop and NUC)           |
 | &emsp;🟢 `[LAPTOP]` | &emsp;Laptop install (Ubuntu installer script) only |
 | &emsp;🟣 `[NUC]`    | &emsp;NUC install only                              |
 
 ### Sample text
 
-Paste these for font and RTL testing as needed.
+Copy-paste these for font and RTL testing as needed.
 
 | Script       | Text          |
 | ------------ | ------------- |
@@ -79,7 +80,7 @@ Log in.
 From the login page, request a password reset; open the email, follow the link, set a new password, and log in.
 
 - This confirms the email service.
-- Alternates that also test the email service: email verify, project invite (step 10).
+- Alternates that also test the email service: email verification (in user settings), project invite (step 5).
 
 ### 4. Create projects
 
@@ -97,8 +98,13 @@ Create two projects: one with LIFT import and one without.
 Open project settings and click through the tabs.
 
 - Change the semantic domain language; confirm the domain tree updates.
-  - Include any language new in this release (e.g., Telugu in v3.0.0).
-- Change the vernacular font if available; confirm it applies.
+  - Include any language new in this release.
+- In the Users tab, add a second user to the project:
+  - 🟧 Via email invite or username search.
+  - 🔵 Via username search.
+  - Change the user's role; verify permissions match (e.g., Harvester sees only Data Entry).
+- In the Users tab, add a speaker; select it in the top bar when recording in [Data entry](#6-data-entry).
+- In the Schedule tab, set a workshop schedule that includes today (used in the [Statistics](#8-statistics) step).
 
 ### 6. Data entry
 
@@ -110,19 +116,37 @@ Enter several words across multiple semantic domains.
 - Add a gloss and a note to at least one entry.
 - On one entry, add a recording before submitting it and another after submitting it.
 
-### 7. Review entries
+### 7. Data Cleanup
+
+#### 7.1 Review entries
 
 Open Data Cleanup > Review Entries and make edits.
 
 - Edit a word; record and play audio; add a flag.
-- Verify the changes were captured in Data Cleanup under "You've completed:".
 
-### 8. Merge duplicates
+#### 7.2 .Merge duplicates
 
 Open Data Cleanup > Merge Duplicates in the LIFT-imported project.
 
 - Complete at least one merge and one defer.
-- Verify the changes were captured in Data Cleanup under "You've completed:".
+- Verify the defer makes Review Deferred Duplicates available in Data Cleanup.
+
+#### 7.3. Character inventory
+
+Open Data Cleanup > Create Character Inventory in the LIFT-imported project.
+
+- Mark one character Accepted and one Rejected; save.
+
+#### 7.4. Completed
+
+Open Data Cleanup > "You've Completed:" and verify all cleanup was captured.
+
+### 8. Statistics
+
+Open the project Statistics page (chart button in the top bar) and click through its views.
+
+- Confirm the per-user, per-domain, and per-day counts reflect the entries you made.
+- Confirm the workshop progress estimate appears (requires the schedule from step 5).
 
 ### 9. Export and verify
 
@@ -131,15 +155,7 @@ Export the LIFT-imported project and spot-check the zip contents:
 - entries present in the `.lift` file;
 - audio files included.
 
-### 10. Second user and project roles
-
-Add a second user to a project.
-
-- 🟧 Via email invite or username search.
-- 🔵 Via username search.
-- Change the user's role; verify permissions match (e.g., Harvester sees only Data Entry).
-
-### 11. User interface localization
+### 10. User interface localization
 
 In user settings, switch the UI language and confirm the UI updates.
 
@@ -147,16 +163,16 @@ In user settings, switch the UI language and confirm the UI updates.
 - Test RTL UI: set browser language to Arabic, set user setting to detect browser, refresh.
   - Confirm layout mirrors (menus, navigation, dialogs).
 
-### 12. User Guide
+### 11. User Guide
 
 Open the User Guide from the app.
 
 - Switch the guide to a non-English language; confirm pages render.
 
-### 13. Site admin checks
+### 12. Site Settings
 
-Log in as a site admin and confirm Site Settings loads.
+Log in as a site admin and open Site Settings.
 
-- Add a banner; confirm it displays for users.
-- Remove test banners when done.
-- 🟥 Release announcement banners are managed separately (see release plan).
+- Confirm the project list and user list load.
+- Archive any test project that you're done with.
+- Add a banner; refresh to confirm it display; remove banner.
