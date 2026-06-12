@@ -88,8 +88,10 @@ Create two projects: one with LIFT import and one without.
 
 - 🟥 Include "test" in project names to distinguish them from real projects.
 - With LIFT import:
-  - Test LIFT files (zipped): [`Backend.Tests/Assets/`](../../Backend.Tests/Assets/), e.g., `Resembli.zip` (small
-    project with definitions and parts of speech), `SingleEntryLiftWithSound.zip` (tiny project with audio).
+  - Test LIFT files (zipped): [`Backend.Tests/Assets/`](../../Backend.Tests/Assets/) or
+    https://github.com/sillsdev/TheCombine/tree/master/Backend.Tests/Assets/, e.g.:
+    - `Resembli.zip` (small project with definitions and parts of speech).
+    - `SingleEntryLiftWithSound.zip` (tiny project with audio).
   - Confirm imported entries appear.
 - Without LIFT: use an RTL vernacular, e.g. Arabic `ar` or Hebrew `he`.
 
