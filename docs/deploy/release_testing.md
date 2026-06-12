@@ -51,14 +51,14 @@ Open the site and confirm the page loads without error.
 - This confirms the frontend, backend, and database are all running and communicating.
 - 🟧 Confirms the Turnstile (captcha) widget loads.
 
-| Flag | Login                                | Sign-up                               |
-| ---- | ------------------------------------ | ------------------------------------- |
-| 🟥   | <https://thecombine.app/login>       | <https://thecombine.app/signup>       |
-| 🟨   | <https://qa.thecombine.app/login>    | <https://qa.thecombine.app/signup>    |
-| 🟢   | <https://local.thecombine.app/login> | <https://local.thecombine.app/signup> |
-| 🟣1  | <https://nuc1.thecombine.app/login>  | <https://nuc1.thecombine.app/signup>  |
-| 🟣2  | <https://nuc2.thecombine.app/login>  | <https://nuc2.thecombine.app/signup>  |
-| 🟣3  | <https://nuc3.thecombine.app/login>  | <https://nuc3.thecombine.app/signup>  |
+| Flag | Login                                  | Sign-up                                 |
+| ---- | -------------------------------------- | --------------------------------------- |
+| 🟥   | <https://thecombine.app/login>         | <https://thecombine.app/signup>         |
+| 🟨   | <https://qa-kube.thecombine.app/login> | <https://qa-kube.thecombine.app/signup> |
+| 🟢   | <https://local.thecombine.app/login>   | <https://local.thecombine.app/signup>   |
+| 🟣1  | <https://nuc1.thecombine.app/login>    | <https://nuc1.thecombine.app/signup>    |
+| 🟣2  | <https://nuc2.thecombine.app/login>    | <https://nuc2.thecombine.app/signup>    |
+| 🟣3  | <https://nuc3.thecombine.app/login>    | <https://nuc3.thecombine.app/signup>    |
 
 ### 2A. Sign up
 
@@ -87,8 +87,8 @@ Create two projects: one with LIFT import and one without.
 
 - 🟥 Include "test" in project names to distinguish them from real projects.
 - With LIFT import:
-  - Test LIFT files (zipped): [`Backend.Tests/Assets/`](../../Backend.Tests/Assets/), e.g. `Lotud.zip`, `Natqgu.zip`,
-    `Sena.zip`.
+  - Test LIFT files (zipped): [`Backend.Tests/Assets/`](../../Backend.Tests/Assets/), e.g., `Resembli.zip` (small
+    project with definitions and parts of speech), `SingleEntryLiftWithSound.zip` (tiny project with audio).
   - Confirm imported entries appear.
 - Without LIFT: use an RTL vernacular, e.g. Arabic `ar` or Hebrew `he`.
 
