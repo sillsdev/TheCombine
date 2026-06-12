@@ -2,6 +2,8 @@
 
 This document describes how to deploy _The Combine_ to a target Kubernetes cluster.
 
+After deploying a new release, test it with the [Release Testing Procedure](./release_testing.md).
+
 ## Conventions
 
 - the _host_ machine is the machine that is used to perform the installation. It may be a Linux, Windows, or MacOS
