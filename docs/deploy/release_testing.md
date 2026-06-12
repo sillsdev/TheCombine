@@ -118,13 +118,13 @@ Enter several words across multiple semantic domains.
 
 ### 7. Data Cleanup
 
-#### 7.1 Review entries
+#### 7.1. Review entries
 
 Open Data Cleanup > Review Entries and make edits.
 
 - Edit a word; record and play audio; add a flag.
 
-#### 7.2 .Merge duplicates
+#### 7.2. Merge duplicates
 
 Open Data Cleanup > Merge Duplicates in the LIFT-imported project.
 
@@ -175,4 +175,4 @@ Log in as a site admin and open Site Settings.
 
 - Confirm the project list and user list load.
 - Archive any test project that you're done with.
-- Add a banner; refresh to confirm it display; remove banner.
+- Add a banner; refresh to confirm it displays; remove banner.
