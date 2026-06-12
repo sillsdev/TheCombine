@@ -65,7 +65,7 @@ Open the site and confirm the page loads without error.
 
 Create a user via the sign-up form and confirm you land in the app.
 
-- 🟧 Skip if you already have 2 users, unless a sign-up code change is being tested.
+- 🟧 Skip if you already have 2 users, unless a sign-up change is being tested.
 - 🟧 If signing up, use a valid email you control, e.g. `<last>_<first>+combine@sil.org`.
 
 ### 2B. Log in
@@ -80,7 +80,8 @@ Log in.
 From the login page, request a password reset; open the email, follow the link, set a new password, and log in.
 
 - This confirms the email service.
-- Alternates that also test the email service: email verification (in user settings), project invite (step 5).
+- Alternates that also test the email service: email verification (in user settings), project invite via email (in
+  [Project settings](#5-project-settings)).
 
 ### 4. Create projects
 
