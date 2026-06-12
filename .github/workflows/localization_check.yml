@@ -1,0 +1,101 @@
+# Verify that the language lists in the README localization badges agree with
+# the languages available for the user interface, semantic domains, and user guide.
+name: localization-check
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - README.md
+      - src/types/writingSystem.ts
+      - deploy/scripts/semantic_domains/xml/**
+      - docs/user_guide/mkdocs.yml
+  pull_request:
+    branches: [master]
+    paths:
+      - README.md
+      - src/types/writingSystem.ts
+      - deploy/scripts/semantic_domains/xml/**
+      - docs/user_guide/mkdocs.yml
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+permissions: # added using https://github.com/step-security/secure-workflows
+  contents: read
+
+jobs:
+  localization-check:
+    runs-on: ubuntu-latest
+    steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
+      - name: Harden Runner
+        uses: step-security/harden-runner@fe104658747b27e96e4f7e80cd0a94068e53901d # v2.16.1
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            github.com:443
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Verify localization language lists agree
+        run: |
+          fail=0
+          ts=src/types/writingSystem.ts
+
+          # Sorted bcp47 codes of a writing-system list in writingSystem.ts.
+          ts_langs() {
+            sed -n "/const $1 = \[/,/\];/p" "$ts" |
+              grep -oP 'writingSystem\[Bcp47Code\.\K\w+' |
+              while read -r key; do
+                grep -oP "^\s+$key = \"\K[^\"]+" "$ts" || echo "$key-not-in-enum"
+              done | sort -u
+          }
+
+          # Sorted, lowercased language codes of a localization badge url in README.md.
+          badge_langs() {
+            grep -oP "img\.shields\.io/badge/$1-\K[^-]+" README.md |
+              sed 's/%20/\n/g' | tr '[:upper:]' '[:lower:]' | sort -u
+          }
+
+          # compare <label-a> <langs-a> <label-b> <langs-b>
+          compare() {
+            if [ "$2" != "$4" ]; then
+              echo "::error::Language lists differ between $1 and $3:"
+              diff -u --label "$1" --label "$3" <(echo "$2") <(echo "$4") || true
+              fail=1
+            fi
+          }
+
+          # Semantic domains: xml files <-> semDomWritingSystems <-> sd badge.
+          # English is implicit: its base data is in deploy/scripts/semantic_domains/json/,
+          # so there is no SemanticDomains-en.xml.
+          xml_langs=$({ echo en; ls deploy/scripts/semantic_domains/xml/ |
+            grep -oP '^SemanticDomains-\K[^.]+'; } | sort -u)
+          sd_ts=$(ts_langs semDomWritingSystems)
+          sd_badge=$(badge_langs 'Semantic%20Domains')
+          compare "semantic_domains/xml/ files (with en implicit)" "$xml_langs" \
+            "semDomWritingSystems" "$sd_ts"
+          compare "semDomWritingSystems" "$sd_ts" "localization-sd-badge" "$sd_badge"
+
+          # User interface: uiWritingSystems <-> ui badge <-> public/locales/ subdirectories.
+          ui_ts=$(ts_langs uiWritingSystems)
+          ui_badge=$(badge_langs 'User%20Interface')
+          locales=$(find public/locales -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort -u)
+          compare "uiWritingSystems" "$ui_ts" "localization-ui-badge" "$ui_badge"
+          compare "localization-ui-badge" "$ui_badge" "public/locales/ subdirectories" "$locales"
+
+          # User guide: mkdocs.yml locales <-> ug badge.
+          ug_mkdocs=$(grep -oP '^\s*- locale: \K\S+' docs/user_guide/mkdocs.yml | sort -u)
+          ug_badge=$(badge_langs 'User%20Guide')
+          compare "mkdocs.yml locales" "$ug_mkdocs" "localization-ug-badge" "$ug_badge"
+
+          exit $fail
+      - name: Verify semantic domain xml files have no examples
+        run: |
+          if grep -rln '<Example' deploy/scripts/semantic_domains/xml/; then
+            echo "::error::Found <Example> elements in the semantic domain xml files listed above."
+            exit 1
+          fi
