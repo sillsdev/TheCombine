@@ -83,7 +83,7 @@
     "ts-key-enum": "~2.0.13"
   },
   "devDependencies": {
-    "@babel/core": "~7.29.0",
+    "@babel/core": "~7.29.6",
     "@babel/plugin-transform-private-property-in-object": "~7.28.6",
     "@babel/preset-env": "~7.29.2",
     "@babel/preset-react": "~7.28.5",
