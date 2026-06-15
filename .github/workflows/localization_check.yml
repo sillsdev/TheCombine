@@ -1,11 +1,13 @@
 # Verify that the language lists in the README localization badges agree with
 # the languages available for the user interface, semantic domains, and user guide.
+# Also verify that the semantic domain xml files contain no <Example*> elements.
 name: localization-check
 
 on:
   push:
     branches: [master]
     paths:
+      - .github/workflows/localization_check.yml
       - README.md
       - src/types/writingSystem.ts
       - deploy/scripts/semantic_domains/xml/**
@@ -13,6 +15,7 @@ on:
   pull_request:
     branches: [master]
     paths:
+      - .github/workflows/localization_check.yml
       - README.md
       - src/types/writingSystem.ts
       - deploy/scripts/semantic_domains/xml/**
