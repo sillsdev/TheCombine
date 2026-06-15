@@ -72,27 +72,46 @@ jobs:
             fi
           }
 
+          # show <label> <langs>
+          show() {
+            echo "$1 ($(echo "$2" | wc -w)): $(echo "$2" | tr '\n' ' ')"
+          }
+
           # Semantic domains: xml files <-> semDomWritingSystems <-> sd badge.
           # English is implicit: its base data is in deploy/scripts/semantic_domains/json/,
           # so there is no SemanticDomains-en.xml.
+          echo "::group::Semantic domains"
           xml_langs=$({ echo en; ls deploy/scripts/semantic_domains/xml/ |
             grep -oP '^SemanticDomains-\K[^.]+'; } | sort -u)
           sd_ts=$(ts_langs semDomWritingSystems)
           sd_badge=$(badge_langs 'Semantic%20Domains')
+          show "semantic_domains/xml/ files (with en implicit)" "$xml_langs"
+          show "semDomWritingSystems" "$sd_ts"
+          show "localization-sd-badge" "$sd_badge"
+          echo "::endgroup::"
           compare "semantic_domains/xml/ files (with en implicit)" "$xml_langs" \
             "semDomWritingSystems" "$sd_ts"
           compare "semDomWritingSystems" "$sd_ts" "localization-sd-badge" "$sd_badge"
 
           # User interface: uiWritingSystems <-> ui badge <-> public/locales/ subdirectories.
+          echo "::group::User interface"
           ui_ts=$(ts_langs uiWritingSystems)
           ui_badge=$(badge_langs 'User%20Interface')
           locales=$(find public/locales -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort -u)
+          show "uiWritingSystems" "$ui_ts"
+          show "localization-ui-badge" "$ui_badge"
+          show "public/locales/ subdirectories" "$locales"
+          echo "::endgroup::"
           compare "uiWritingSystems" "$ui_ts" "localization-ui-badge" "$ui_badge"
           compare "localization-ui-badge" "$ui_badge" "public/locales/ subdirectories" "$locales"
 
           # User guide: mkdocs.yml locales <-> ug badge.
+          echo "::group::User guide"
           ug_mkdocs=$(grep -oP '^\s*- locale: \K\S+' docs/user_guide/mkdocs.yml | sort -u)
           ug_badge=$(badge_langs 'User%20Guide')
+          show "mkdocs.yml locales" "$ug_mkdocs"
+          show "localization-ug-badge" "$ug_badge"
+          echo "::endgroup::"
           compare "mkdocs.yml locales" "$ug_mkdocs" "localization-ug-badge" "$ug_badge"
 
           exit $fail
