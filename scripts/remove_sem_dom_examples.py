@@ -11,7 +11,9 @@ TAGS = ["ExampleWords", "ExampleSentences"]
 
 def strip_examples(text: str) -> str:
     for tag in TAGS:
-        text = re.sub(rf"\s*<{tag}>.*?</{tag}>", "", text, flags=re.DOTALL)
+        # Match the tag with optional attributes, in either self-closing (<Tag/>) or
+        # block (<Tag>...</Tag>) form.
+        text = re.sub(rf"\s*<{tag}(\s[^>]*)?(/>|>.*?</{tag}>)", "", text, flags=re.DOTALL)
     return text
 
 
