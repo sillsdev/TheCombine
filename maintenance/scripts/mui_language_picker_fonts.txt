@@ -1,21 +1,43 @@
+Aboriginal Sans
 Abyssinica SIL
+Akatab
+Alkalami
+Andika
 Annapurna SIL
-BJCree UNI
+Annapurna SIL Nepal
+Awami Nastaliq
+BJCree
 Badami
-Charis SIL
+Charis
+Charis SIL Compact
 Dai Banna SIL
 Dukor
+Eeyek
 Ezra SIL
-Gentium Plus
+Galatia SIL
+Gentium
+Gentium Book
+Harmattan
+Idiqlat
 Japa Sans Oriya
+Jomolhari
 Kanchenjunga
 Kay Pho Du
+Khmer Busra
 Khmer Mondulkiri
+Lateef
 Lisu Bosa
 Mingzat
 Namdhinggo
 Narnoor
+Nokyung
+Noto Naskh Arabic
+Noto Nastaliq Urdu
+Noto Sans
+Noto Sans Adlam
 Noto Sans Anatolian Hieroglyphs
+Noto Sans Arabic
+Noto Sans Armenian
 Noto Sans Avestan
 Noto Sans Balinese
 Noto Sans Bamum
@@ -26,6 +48,7 @@ Noto Sans Bhaiksuki
 Noto Sans Brahmi
 Noto Sans Buginese
 Noto Sans Buhid
+Noto Sans Canadian Aboriginal
 Noto Sans Carian
 Noto Sans Caucasian Albanian
 Noto Sans Chakma
@@ -36,10 +59,12 @@ Noto Sans Coptic
 Noto Sans Cuneiform
 Noto Sans Cypriot
 Noto Sans Deseret
+Noto Sans Devanagari
 Noto Sans Duployan
 Noto Sans Egyptian Hieroglyphs
 Noto Sans Elbasan
 Noto Sans Elymaic
+Noto Sans Ethiopic
 Noto Sans Georgian
 Noto Sans Glagolitic
 Noto Sans Gothic
@@ -49,6 +74,7 @@ Noto Sans Gurmukhi
 Noto Sans Hanifi Rohingya
 Noto Sans Hanunoo
 Noto Sans Hatran
+Noto Sans Hebrew
 Noto Sans Imperial Aramaic
 Noto Sans Inscriptional Pahlavi
 Noto Sans Inscriptional Parthian
@@ -56,14 +82,22 @@ Noto Sans JP
 Noto Sans Javanese
 Noto Sans KR
 Noto Sans Kaithi
+Noto Sans Kannada
+Noto Sans Kayah Li
 Noto Sans Kharoshthi
+Noto Sans Khmer
 Noto Sans Khojki
 Noto Sans Khudawadi
+Noto Sans Lao
+Noto Sans Lepcha
+Noto Sans Limbu
 Noto Sans Linear A
 Noto Sans Linear B
+Noto Sans Lisu
 Noto Sans Lycian
 Noto Sans Lydian
 Noto Sans Mahajani
+Noto Sans Malayalam
 Noto Sans Mandaic
 Noto Sans Manichaean
 Noto Sans Marchen
@@ -72,14 +106,17 @@ Noto Sans Medefaidrin
 Noto Sans Meetei Mayek
 Noto Sans Mende Kikakui
 Noto Sans Meroitic
+Noto Sans Miao
 Noto Sans Modi
 Noto Sans Mongolian
 Noto Sans Mro
 Noto Sans Multani
+Noto Sans Myanmar
 Noto Sans NKo
 Noto Sans Nabataean
 Noto Sans Nag Mundari
 Noto Sans Nandinagari
+Noto Sans New Tai Lue
 Noto Sans Newa
 Noto Sans Ogham
 Noto Sans Ol Chiki
@@ -91,6 +128,7 @@ Noto Sans Old Persian
 Noto Sans Old Sogdian
 Noto Sans Old South Arabian
 Noto Sans Old Turkic
+Noto Sans Oriya
 Noto Sans Osage
 Noto Sans Osmanya
 Noto Sans Pahawh Hmong
@@ -107,49 +145,84 @@ Noto Sans Saurashtra
 Noto Sans Sharada
 Noto Sans Shavian
 Noto Sans Siddham
-Noto Sans SignWriting
+Noto Sans Sign Writing
 Noto Sans Sinhala
 Noto Sans Sogdian
 Noto Sans Sora Sompeng
 Noto Sans Soyombo
 Noto Sans Sundanese
+Noto Sans Syloti Nagri
+Noto Sans Symbols2
 Noto Sans Syriac
+Noto Sans Syriac Eastern
 Noto Sans TC
 Noto Sans Tagalog
+Noto Sans Tagbanwa
 Noto Sans Tai Le
 Noto Sans Tai Tham
+Noto Sans Tai Viet
 Noto Sans Takri
 Noto Sans Tamil
 Noto Sans Tangsa
+Noto Sans Telugu
 Noto Sans Thaana
 Noto Sans Thai
 Noto Sans Tifinagh
 Noto Sans Tirhuta
 Noto Sans Ugaritic
-Noto Sans Vithkuqi
+Noto Sans Vai
 Noto Sans Wancho
 Noto Sans Warang Citi
+Noto Sans Yi
 Noto Sans Zanabazar Square
+Noto Serif
 Noto Serif Ahom
 Noto Serif Armenian
+Noto Serif Bengali
+Noto Serif Devanagari
 Noto Serif Dogra
+Noto Serif Ethiopic
+Noto Serif Georgian
+Noto Serif Gujarati
+Noto Serif Gurmukhi
+Noto Serif Hebrew
 Noto Serif JP
 Noto Serif KR
+Noto Serif Kannada
 Noto Serif Khitan Small Script
+Noto Serif Khmer
+Noto Serif Lao
 Noto Serif Makasar
 Noto Serif Malayalam
-Noto Serif NP Hmong
+Noto Serif Myanmar
+Noto Serif NPHmong
 Noto Serif Old Uyghur
 Noto Serif SC
+Noto Serif Sinhala
+Noto Serif TC
+Noto Serif Tamil
 Noto Serif Tangut
 Noto Serif Telugu
+Noto Serif Thai
 Noto Serif Tibetan
 Noto Serif Toto
 Noto Serif Yezidi
+Noto Traditional Nushu
 Nuosu SIL
 Padauk
+Payap Lanna
+Ramsina
+Ruwudu
+SEI Sunuwar
 Sapushan
+Sarabun
 Saysettha
+Saysettha MX
 Scheherazade New
+Shimenkan
+Sophia Nubian
 Surma
+Tagmukay
 Tai Heritage Pro
+ThiruValluvar
+annapurnanepal

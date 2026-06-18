@@ -6,6 +6,7 @@ Run this script with -U/--update whenever the mui-language-picker version is upd
 """
 
 import argparse
+import json
 from pathlib import Path
 import platform
 import re
@@ -15,9 +16,9 @@ project_dir = Path(__file__).resolve().parent.parent
 dev_output_dir = project_dir / "public" / "fonts"
 maintenance_scripts_dir = project_dir / "maintenance" / "scripts"
 mlp_font_list = maintenance_scripts_dir / "mui_language_picker_fonts.txt"
-mlp_font_families = (
-    project_dir / "node_modules" / "mui-language-picker" / "dist" / "data" / "scriptFontIndex.js"
-)
+mlp_data_dir = project_dir / "node_modules" / "mui-language-picker" / "dist" / "data"
+mlp_font_families = mlp_data_dir / "scriptFontIndex.js"
+mlp_families_json = mlp_data_dir / "families.json"
 
 
 def parse_args() -> argparse.Namespace:
@@ -72,12 +73,22 @@ def main() -> None:
     args = parse_args()
 
     if args.update:
-        # Font families are in the file as: \"family\":\"Font Family Name\"
-        family_pattern = re.compile(r'\\"family\\"\:\\"([^\\]+)\\"')
-        with open(mlp_font_families, "r") as families_file:
-            matches = re.findall(family_pattern, families_file.read())
-        font_lines = [match + "\n" for match in set(matches)]
-        font_lines.sort()
+        with open(mlp_font_families, "r") as f:
+            content = f.read()
+        array_match = re.search(r"exports\.default = (\[.*\]);", content, re.DOTALL)
+        if not array_match:
+            raise ValueError(f"Could not parse font index from {mlp_font_families}")
+
+        data = json.loads(array_match.group(1))
+        all_slugs = {slug for entry in data if len(entry) >= 2 for slug in entry[1]}
+
+        with open(mlp_families_json, "r") as f:
+            families = json.load(f)
+        font_lines = sorted(
+            families[slug]["family"] + "\n" if slug in families else slug + "\n"
+            for slug in all_slugs
+        )
+
         with open(mlp_font_list, "w") as fonts_file:
             fonts_file.writelines(font_lines)
 

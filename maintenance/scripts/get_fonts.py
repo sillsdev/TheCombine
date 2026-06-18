@@ -113,6 +113,12 @@ def check_font_info(font_info: dict[str, Any]) -> bool:
         logging.debug(f"{family}: No file list")
         return False
 
+    file_name = get_font_default(font_info["defaults"])
+    file_info = font_info["files"].get(file_name, {})
+    if "flourl" not in file_info and "url" not in file_info:
+        logging.debug(f"{family}: Default file has no download URL")
+        return False
+
     return True
 
 
