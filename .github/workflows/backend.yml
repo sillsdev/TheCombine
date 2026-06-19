@@ -39,10 +39,9 @@ jobs:
             api.nuget.org:443
             builds.dotnet.microsoft.com:443
             dc.services.visualstudio.com:443
-            deb.debian.org:80
             github.com:443
-            md-hdd-t032zjxllntc.z26.blob.storage.azure.net:443
             objects.githubusercontent.com:443
+            release-assets.githubusercontent.com:443
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Setup dotnet
@@ -50,7 +49,18 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet }}
       - name: Install ffmpeg
-        uses: FedericoCarboni/setup-ffmpeg@36c6454b5a2348e7794ba2d82a21506605921e3d # v3
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # RELEASE, ARCHIVE, and EXPECTED_SHA256 must be updated together.
+          RELEASE="autobuild-2026-06-18-14-21"
+          ARCHIVE="ffmpeg-N-125095-g364d309af8-linux64-gpl.tar.xz"
+          EXPECTED_SHA256="8488ebd139b86b8bb7707f1cf2fd76576ce5e7f53d0722da3dd4fcb2c84bf93b"
+          gh release download "$RELEASE" --repo BtbN/FFmpeg-Builds --pattern "$ARCHIVE"
+          echo "${EXPECTED_SHA256}  ${ARCHIVE}" | sha256sum --check
+          tar -xJf "$ARCHIVE"
+          echo "${PWD}/${ARCHIVE%.tar.xz}/bin" >> "$GITHUB_PATH"
       - name: Run coverage tests
         run: dotnet test Backend.Tests/Backend.Tests.csproj
         shell: bash
