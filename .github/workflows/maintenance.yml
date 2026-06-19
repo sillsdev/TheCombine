@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
   group: ${{ github.workflow }}-${{ github.ref_protected && github.run_id || github.event.pull_request.number }}
 
-permissions: # added using https://github.com/step-security/secure-workflows
+permissions:
   contents: read
 
 jobs:

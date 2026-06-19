@@ -11,11 +11,13 @@ concurrency:
   cancel-in-progress: true
   group: ${{ github.workflow }}-${{ github.ref }}
 
-permissions: # added using https://github.com/step-security/secure-workflows
-  contents: write
+permissions:
+  contents: read
 
 jobs:
   deploy:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
