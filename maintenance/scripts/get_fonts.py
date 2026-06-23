@@ -325,7 +325,7 @@ def main() -> None:
 
         # Finish the css info for this font and write to file.
         css_lines.append("}\n")
-        css_file_path = args.output / f"{font}.css"
+        css_file_path = args.output / f"{font.replace(' ', '')}.css"
         logging.debug(f"Writing {css_file_path}")
         with open(css_file_path, "w") as css_file:
             css_file.writelines(css_lines)

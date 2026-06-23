@@ -76,7 +76,7 @@ def main() -> None:
     if args.update:
         with open(mlp_font_families, "r") as f:
             content = f.read()
-        array_match = re.search(r"exports\.default = (\[.*\]);", content, re.DOTALL)
+        array_match = re.search(r"exports\.default = (\[.*?\]);", content, re.DOTALL)
         if not array_match:
             raise ValueError(f"Could not parse font index from {mlp_font_families}")
 
