@@ -103,7 +103,7 @@ def main() -> None:
     if args.clean:
         command.append("-c")
     if args.local_font_url:
-        command.append("-f")
+        command.append("-u")
         command.append(args.local_font_url)
     if args.langs:
         command.append("-l")
