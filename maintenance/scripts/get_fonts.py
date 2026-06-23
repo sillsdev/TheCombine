@@ -155,7 +155,7 @@ def fetch_fonts_for_scripts(scripts: List[str]) -> List[str]:
     scripts = list({script.capitalize() for script in scripts})
 
     # Always have the Mui-Language-Picker default/safe fonts.
-    fonts = ["Annapurna SIL", "Charis SIL", "Noto Sans TC", "Scheherazade New"]
+    fonts = ["Annapurna SIL", "Charis", "Noto Sans TC", "Scheherazade New"]
 
     logging.debug(f"Downloading script font table from {url_script_font_table}")
     req = requests.get(url_script_font_table)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Runs maintenance/scripts/get_fonts.py with dev arguments for -f and -o.
+Runs maintenance/scripts/get_fonts.py with dev arguments for -u and -o.
 Run this script with -U/--update whenever the mui-language-picker version is updated.
 """
 
