@@ -251,6 +251,7 @@ def main() -> None:
         font_id: str = font.replace(" ", "").lower()
 
         # Get font family info from font families info, using fallback font if necessary.
+        family = ""
         while font_id != "" and font_id in families.keys():
             font_info = families[font_id]
             family: str = font_info["family"]
