@@ -7,6 +7,7 @@ Run this script with -U/--update whenever the mui-language-picker version is upd
 
 import argparse
 import json
+import logging
 from pathlib import Path
 import platform
 import re
@@ -84,10 +85,13 @@ def main() -> None:
 
         with open(mlp_families_json, "r") as f:
             families = json.load(f)
-        font_lines = sorted(
-            families[slug]["family"] + "\n" if slug in families else slug + "\n"
-            for slug in all_slugs
-        )
+        font_lines = []
+        for slug in all_slugs:
+            if slug in families:
+                font_lines.append(families[slug]["family"] + "\n")
+            else:
+                logging.warning("Slug '%s' not found in families.json, skipping", slug)
+        font_lines.sort()
 
         with open(mlp_font_list, "w") as fonts_file:
             fonts_file.writelines(font_lines)

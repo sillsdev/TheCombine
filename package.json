@@ -64,7 +64,7 @@
     "levenshtein-search": "~0.1.2",
     "material-react-table": "~3.2.1",
     "motion": "~12.38.0",
-    "mui-language-picker": "~2.7.4",
+    "mui-language-picker": "~2.7.5",
     "notistack": "~3.0.2",
     "nspell": "~2.1.5",
     "punycode": "~2.3.1",
