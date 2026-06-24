@@ -54,7 +54,6 @@ def main() -> None:
 
     step.print("Prepare the backup directory.")
     with tempfile.TemporaryDirectory() as backup_dir:
-        backup_file = Path("combine-backup.tar.gz")
         date_str = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         aws_file = f"{combine_host}-{date_str}.tar.gz"
 
@@ -90,35 +89,58 @@ def main() -> None:
             print("Cannot find the backend container.", file=sys.stderr)
             sys.exit(1)
 
-        step.print("Create the tarball for the backup.")
+        step.print("Create the tarball and push to AWS S3 storage.")
         # cd to backup_dir so that files in the tarball are relative to the backup_dir
         os.chdir(backup_dir)
 
-        with tarfile.open(backup_file, "x:gz") as tar:
-            # cp, tar, and rm the db subdir
-            combine.kubectl(
-                [
-                    "cp",
-                    f"{db_pod}:/{db_files_subdir}",
-                    str(Path(backup_dir) / db_files_subdir),
-                ]
-            )
-            tar.add(db_files_subdir)
-            rmtree(db_files_subdir)
+        # Stream the tar.gz directly to S3 to avoid writing the archive to local disk.
+        upload_proc = aws.push_stream(aws_file)
+        try:
+            with tarfile.open(fileobj=upload_proc.stdin, mode="w:gz") as tar:
+                # cp, tar, and rm the db subdir
+                combine.kubectl(
+                    [
+                        "cp",
+                        f"{db_pod}:/{db_files_subdir}",
+                        str(Path(backup_dir) / db_files_subdir),
+                    ]
+                )
+                tar.add(db_files_subdir)
+                rmtree(db_files_subdir)
 
-            # cp, tar, and rm the backend subdir
-            combine.kubectl(
-                [
-                    "cp",
-                    f"{backend_pod}:/home/app/{backend_files_subdir}/",
-                    str(Path(backup_dir) / backend_files_subdir),
-                ]
+                # cp, tar, and rm the backend subdir
+                combine.kubectl(
+                    [
+                        "cp",
+                        f"{backend_pod}:/home/app/{backend_files_subdir}/",
+                        str(Path(backup_dir) / backend_files_subdir),
+                    ]
+                )
+                tar.add(backend_files_subdir)
+                rmtree(backend_files_subdir)
+        except (Exception, SystemExit):
+            # Kill the upload to prevent a partial object from being finalized in S3,
+            # then remove any partial object that may already have been written.
+            upload_proc.kill()
+            upload_proc.wait()
+            print(f"Cleaning up partial S3 backup {aws_file}.", file=sys.stderr)
+            delete_result = aws.delete(aws_file)
+            if delete_result.returncode != 0:
+                print(f"Warning: failed to delete partial S3 backup {aws_file}.", file=sys.stderr)
+            raise
+        finally:
+            if upload_proc.stdin:
+                upload_proc.stdin.close()
+        _, upload_stderr = upload_proc.communicate()
+        if upload_proc.returncode != 0:
+            print(
+                f"Failed to push backup to AWS S3:\n{upload_stderr.decode() if upload_stderr else ''}",
+                file=sys.stderr,
             )
-            tar.add(backend_files_subdir)
-            rmtree(backend_files_subdir)
-
-        step.print("Push backup to AWS S3 storage.")
-        aws.push(backup_file, aws_file)
+            delete_result = aws.delete(aws_file)
+            if delete_result.returncode != 0:
+                print(f"Warning: failed to delete partial S3 backup {aws_file}.", file=sys.stderr)
+            sys.exit(upload_proc.returncode)
 
 
 if __name__ == "__main__":
