@@ -251,10 +251,10 @@ def main() -> None:
         font_id: str = font.replace(" ", "").lower()
 
         # Get font family info from font families info, using fallback font if necessary.
-        family = ""
+        family: str = ""
         while font_id != "" and font_id in families.keys():
             font_info = families[font_id]
-            family: str = font_info["family"]
+            family = font_info["family"]
             source_is_google = "source" in font_info.keys() and font_info["source"] == "Google"
             get_from_google = source_is_google and not is_for_offline
             if check_font_info(font_info) or get_from_google:
