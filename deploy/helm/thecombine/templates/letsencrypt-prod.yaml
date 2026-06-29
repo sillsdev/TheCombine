@@ -1,4 +1,4 @@
-{{- if .Values.certManager.enabled }}
+{{- if and .Values.certManager.enabled (eq .Values.certManager.certIssuer "letsencrypt-prod") }}
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:

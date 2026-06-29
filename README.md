@@ -746,6 +746,8 @@ Notes:
 
 - Run the script with the `--help` option to see possible options for the script.
 
+- Run the script with `--non-interactive` in CI/CD to avoid user prompts.
+
 - The setup assumes `amd64` architecture. If the target architecture is `arm64`, add `--set global.cpuArch=arm64`.
 
 When the script completes, the resources will be installed on the specified cluster. It may take a few moments before
