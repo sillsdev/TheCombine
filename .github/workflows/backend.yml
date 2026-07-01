@@ -50,7 +50,7 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet }}
       - name: Install ffmpeg
-        uses: FedericoCarboni/setup-ffmpeg@36c6454b5a2348e7794ba2d82a21506605921e3d # v3
+        uses: FedericoCarboni/setup-ffmpeg@37062fbf7149fc5578d6c57e08aed62458b375d6 # v3.1
       - name: Run coverage tests
         run: dotnet test Backend.Tests/Backend.Tests.csproj
         shell: bash
