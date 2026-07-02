@@ -289,7 +289,7 @@
       "replaceAll": "替换所有出现的：{{ val }}",
       "replaceAllWith": "替换为 {{ val }}",
       "findAndReplace": "查找和替换",
-      "findAndReplaceError": "处理错误：查找 ( {{ val1 }} )，替换 ( {{  val2 }})",
+      "findAndReplaceError": "处理错误：查找 ( {{ val1 }} )，替换 ( {{ val2 }})",
       "apply": "实施"
     },
     "dialog": {

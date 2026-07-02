@@ -439,7 +439,7 @@
       "replaceAll": "Replace all occurrences of: {{ val }}",
       "replaceAllWith": "Replace with: {{ val }}",
       "findAndReplace": "Find & Replace",
-      "findAndReplaceError": "Error processing: find ( {{ val1 }} ), replace ( {{  val2 }} )",
+      "findAndReplaceError": "Error processing: find ( {{ val1 }} ), replace ( {{ val2 }} )",
       "apply": "Apply"
     },
     "dialog": {

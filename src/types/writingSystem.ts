@@ -42,6 +42,7 @@ export const uiWritingSystems = [
   writingSystem[Bcp47Code.En],
   writingSystem[Bcp47Code.Es],
   writingSystem[Bcp47Code.Fr],
+  writingSystem[Bcp47Code.Id],
   writingSystem[Bcp47Code.Pt],
   writingSystem[Bcp47Code.Zh],
 ];
