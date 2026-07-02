@@ -6,7 +6,7 @@ Cara mendaftar, masuk, dan menyunting akun Anda.
 
 ## Mendaftar
 
-Untuk membuat akun baru, klik tombol [Daftar](../signup) pada halaman Masuk.
+Untuk membuat akun baru, klik tombol [Daftar](../../signup) pada halaman Masuk.
 
 !!! note "Catatan"
 
@@ -14,7 +14,7 @@ Untuk membuat akun baru, klik tombol [Daftar](../signup) pada halaman Masuk.
 
 ## Masuk
 
-[Masuk](../login) ke The Combine dengan nama pengguna dan kata sandi yang diberikan saat pendaftaran.
+[Masuk](../../login) ke The Combine dengan nama pengguna dan kata sandi yang diberikan saat pendaftaran.
 
 Jika Anda ingin mengubah kata sandi Anda, klik tautan "Lupa kata sandi?". Ikuti petunjuknya dan tautan pengaturan ulang
 kata sandi akan dikirim ke alamat email yang terkait dengan akun Anda.
