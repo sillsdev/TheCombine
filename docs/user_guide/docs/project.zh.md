@@ -6,7 +6,7 @@
 
 创建项目时，用户可选项启动一个空项目，或者输入已有的词典数据。
 
-![创建项目 - Tzotzil](../images/projectCreateTzotzil.zh.png){.center}
+![创建项目 - Tzotzil](images/projectCreateTzotzil.zh.png){.center}
 
 ### 输入已有数据
 
@@ -34,11 +34,11 @@ Combine、[FieldWorks](https://software.sil.org/fieldworks)、[WeSay](https://so
 一旦创建或选择了一个项目，它就变成活动项目。用户可在 The
 Combine 顶部应用框的中间位置看到一个齿轮图标或该项目名。 点击齿轮图标或项目名，拉出“项目设置”以管理该项目。 具有足够权限的项目用户可以使用以下设置。
 
-![设置](../images/projectSettings123456.png)
+![设置](images/projectSettings123456.png)
 
 ### 基本设置
 
-![基本设置](../images/projectSettings1Basic.zh.png)
+![基本设置](images/projectSettings1Basic.zh.png)
 
 #### 项目名称
 
@@ -75,9 +75,9 @@ and flags on entries. However, Harvesters cannot edit or delete entries from the
 
 ### 项目语言 {#project-languages}
 
-![语言](../images/projectSettings2Langs.zh.png)
+![语言](images/projectSettings2Langs.zh.png)
 
-![项目语言 - Tzotzil](../images/projectLanguagesTzotzil.zh.png){.center}
+![项目语言 - Tzotzil](images/projectLanguagesTzotzil.zh.png){.center}
 
 创建项目时指定的*土语*是固定的。
 
@@ -91,7 +91,7 @@ and flags on entries. However, Harvesters cannot edit or delete entries from the
 
 ### 项目用户
 
-![用户](../images/projectSettings3Users.zh.png)
+![用户](images/projectSettings3Users.zh.png)
 
 #### 当前用户
 
@@ -145,7 +145,7 @@ used for the file names).
 
 ### 导入/导出
 
-![导入/导出](../images/projectSettings4Port.zh.png)
+![导入/导出](images/projectSettings4Port.zh.png)
 
 #### 导入 {#import}
 
@@ -185,17 +185,17 @@ not be imported into FieldWorks.
 
 ### 日程 {#schedule}
 
-![日程](../images/projectSettings5Sched.zh.png)
+![日程](images/projectSettings5Sched.zh.png)
 
 This is only available for editing by a project Owner or Administrator, allowing a schedule to be set for a Rapid Word
 Collection workshop. 点击第一个键可选择工作坊日期范围。 Click the middle button to add or remove specific
 dates. 点击最后的键可清除日程表。
 
-![工作坊日程](../images/projectSchedule.zh.png){.center}
+![工作坊日程](images/projectSchedule.zh.png){.center}
 
 ### 语义域 {#semantic-domains}
 
-![语义域](../images/projectSettings6Doms.zh.png)
+![语义域](images/projectSettings6Doms.zh.png)
 
 In this settings tab, you can change the semantic domain language and manage custom semantic domains.
 
@@ -207,11 +207,11 @@ have `.0` added to the end of the domain id. For example, domain _6.2.1.1: Growi
 for Rice, Wheat, and Maize. If another grain, such as Barley, is dominant among the people group gathering words, it can
 be added as domain _6.2.1.1.0_.
 
-![Add Custom Domain](../images/projectSettingsDomsCustomAdd.png){.center}
+![Add Custom Domain](images/projectSettingsDomsCustomAdd.png){.center}
 
 For each custom domain, you can add a description and questions to help with word collection in that domain.
 
-![Edit Custom Domain](../images/projectSettingsDomsCustomEdit.png){.center}
+![Edit Custom Domain](images/projectSettingsDomsCustomEdit.png){.center}
 
 !!! note "笔记"
 
@@ -220,7 +220,7 @@ For each custom domain, you can add a description and questions to help with wor
 
 Custom semantic domains will be available to all project users doing Data Entry.
 
-![See Custom Domain](../images/projectSettingsDomsCustomSee.png){.center}
+![See Custom Domain](images/projectSettingsDomsCustomSee.png){.center}
 
 !!! note "笔记"
 
@@ -231,7 +231,7 @@ Custom semantic domains will be available to all project users doing Data Entry.
 
 如果您是项目所有者或管理员，在 The Combine 顶部应用栏齿轮图标的旁边会有另一个图标。 这将打开项目中关于字词的统计数据。
 
-![项目统计数据](../images/projectStatsButton.png){.center}
+![项目统计数据](images/projectStatsButton.png){.center}
 
 在这些统计数据中，*词*指的是一对词义-词域：例如，一个词条有 3 个词义，每个词义属于2 个语义域，则该词条将被算作 6 个词。
 

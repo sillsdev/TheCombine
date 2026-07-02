@@ -2,7 +2,7 @@
 
 网站管理员在用户菜单中还有一个选项：“网站设置”。
 
-![用户菜单 - 管理](../images/userMenuAdmin.zh.png){.center}
+![用户菜单 - 管理](images/userMenuAdmin.zh.png){.center}
 
 ## 项目管理
 
@@ -23,11 +23,11 @@ project. 项目一旦归档，所有用户都将无法再访问，甚至对项�
 当用户访问 The Combine 时，通知横幅将一条醒目的横幅摊开在页面顶部。 这些横幅旨在向用户显示那些跟 The
 Combine 实例有关的重要、简短的信息。 信息可能包括定时升级、计划的停机时间，或即将发生的服务器更改。
 
-![通知横幅](../images/announcementBanner.png){.center}
+![通知横幅](images/announcementBanner.png){.center}
 
 ### 登录横幅
 
 登陆横幅将一条信息置于登陆页面底部。 该横幅旨在告诉用户需要了解 The
 Combine 的实例特定信息，例如有关支持、版本升级、数据库备份策略的联系人是谁。
 
-![登录横幅](../images/loginBanner.png){width=400 .center}
+![登录横幅](images/loginBanner.png){width=400 .center}

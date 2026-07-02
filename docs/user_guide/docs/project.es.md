@@ -6,7 +6,7 @@ Un proyecto es para un solo idioma vernáculo.
 
 Al crear un proyecto, tiene la opción de empezar con un proyecto vacío o de importar los datos léxicos existentes.
 
-![Crear proyecto - Tzotzil](../images/projectCreateTzotzil.es.png){.center}
+![Crear proyecto - Tzotzil](images/projectCreateTzotzil.es.png){.center}
 
 ### Importar los datos existentes
 
@@ -42,11 +42,11 @@ y/o el nombre del proyecto en el centro de la barra de aplicaciones, en la parte
 en el icono de engranaje o en el nombre del proyecto, aparece Proyecto Ajustes para gestionar el proyecto. Los
 siguientes ajustes están disponibles para los usuarios del proyecto con permisos suficientes.
 
-![Configuración](../images/projectSettings123456.png)
+![Configuración](images/projectSettings123456.png)
 
 ### Configuración básica
 
-![Configuración básico](../images/projectSettings1Basic.es.png)
+![Configuración básico](images/projectSettings1Basic.es.png)
 
 #### Nombre del proyecto
 
@@ -93,9 +93,9 @@ que el proyecto se elimine por completo de los servidores.
 
 ### Idiomas del proyecto {#project-languages}
 
-![Idiomas](../images/projectSettings2Langs.es.png)
+![Idiomas](images/projectSettings2Langs.es.png)
 
-![Idiomas del proyecto - Tzotzil](../images/projectLanguagesTzotzil.es.png){.center}
+![Idiomas del proyecto - Tzotzil](images/projectLanguagesTzotzil.es.png){.center}
 
 El _idioma vernáculo_ especificado en la creación del proyecto es fijo.
 
@@ -112,7 +112,7 @@ dominios semánticos en [Entrada de datos](./dataEntry.md).
 
 ### Usuarios del proyecto
 
-![Usuarios](../images/projectSettings3Users.es.png)
+![Usuarios](images/projectSettings3Users.es.png)
 
 #### Usuarios actuales
 
@@ -176,7 +176,7 @@ archivos).
 
 ### Importar/Exportar
 
-![Importar/Exportar](../images/projectSettings4Port.es.png)
+![Importar/Exportar](images/projectSettings4Port.es.png)
 
 #### Importar {#import}
 
@@ -218,18 +218,18 @@ encontrar en la exportación comprimida, pero no se importarán en FieldWorks no
 
 ### Calendario {#schedule}
 
-![Calendario](../images/projectSettings5Sched.es.png)
+![Calendario](images/projectSettings5Sched.es.png)
 
 Sólo está disponible para editar para un Propietario o Administrador del proyecto, lo que permite fijar un calendario
 para un taller de recopilación rápida de palabras. Haga clic en el primer botón para seleccionar un intervalo de fechas
 para el taller. Haga clic en el botón central para añadir o eliminar fechas concretas. Haga clic en el último botón para
 borrar la programación.
 
-![Calendario de talleres](../images/projectSchedule.es.png){.center}
+![Calendario de talleres](images/projectSchedule.es.png){.center}
 
 ### Dominios semánticos {#semantic-domains}
 
-![Dominios semánticos](../images/projectSettings6Doms.es.png)
+![Dominios semánticos](images/projectSettings6Doms.es.png)
 
 En esta pestaña de configuración, puede cambiar el idioma del dominio semántico y gestionar dominios semánticos
 personalizados.
@@ -243,12 +243,12 @@ que tendrá `.0` al final del identificador del dominio. Por ejemplo, el dominio
 tres subdominios estándar, para el arroz, el trigo y el maíz. Si otro grano, como la Cebada, es dominante entre el grupo
 de personas que recogen palabras, puede añadirse como dominio _6.2.1.1.0_.
 
-![Añadir dominio personalizado](../images/projectSettingsDomsCustomAdd.png){.center}
+![Añadir dominio personalizado](images/projectSettingsDomsCustomAdd.png){.center}
 
 Para cada dominio personalizado, puede añadir una descripción y preguntas que le ayuden con la recopilación de palabras
 en ese dominio.
 
-![Editar dominio personalizado](../images/projectSettingsDomsCustomEdit.png){.center}
+![Editar dominio personalizado](images/projectSettingsDomsCustomEdit.png){.center}
 
 !!! note "Nota"
 
@@ -258,7 +258,7 @@ en ese dominio.
 Los dominios semánticos personalizados estarán disponibles para todos los usuarios del proyecto que realicen
 Introducción de datos.
 
-![Ver dominio personalizado](../images/projectSettingsDomsCustomSee.png){.center}
+![Ver dominio personalizado](images/projectSettingsDomsCustomSee.png){.center}
 
 !!! note "Nota"
 
@@ -270,7 +270,7 @@ Introducción de datos.
 Si usted es un Propietario o Administrador del proyecto, habrá otro icono junto al icono del engranaje en la App Bar, en
 la parte superior de The Combine. Esto abre las estadísticas sobre las palabras en el proyecto.
 
-![Botón de estadísticas del proyecto](../images/projectStatsButton.png){.center}
+![Botón de estadísticas del proyecto](images/projectStatsButton.png){.center}
 
 En el contexto de estas estadísticas, _palabra_ se refiere a un par acepción-dominio: por ejemplo, una entrada con 3
 acepciones, cada uno con 2 dominios semánticos, se contará como 6 palabras.

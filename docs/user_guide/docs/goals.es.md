@@ -7,14 +7,13 @@ La tabla Revisar entradas muestra todas las entradas del proyecto seleccionado.
 ### Columnas
 
 Las columnas son: Editar (sin encabezado), Vernáculo, Número de acepciones (#), Glosas, Dominios, Pronunciaciones
-(![Review Entries pronunciations column header](../images/reviewEntriesColumnPronunciations.png){width=28}), Nota,
-Bandera (![Review Entries flag column header](../images/reviewEntriesColumnFlag.png){width=16}), y Eliminar (sin
-encabezado).
+(![Review Entries pronunciations column header](images/reviewEntriesColumnPronunciations.png){width=28}), Nota, Bandera
+(![Review Entries flag column header](images/reviewEntriesColumnFlag.png){width=16}), y Eliminar (sin encabezado).
 
-![Revisar los encabezados de columna de las entradas](../images/reviewEntriesColumns.es.png)
+![Revisar los encabezados de columna de las entradas](images/reviewEntriesColumns.es.png)
 
 Para mostrar/ocultar columnas o reorganizar su orden, haga clic en el icono
-![Review Entries columns edit icon](../images/reviewEntriesColumnsEdit.png){width=25} de la esquina superior.
+![Review Entries columns edit icon](images/reviewEntriesColumnsEdit.png){width=25} de la esquina superior.
 
 Debido a la naturaleza de la recopilación rápida de palabras, la [entrada de datos](dataEntry.md) en The Combine no
 permite añadir definiciones o partes de la oración. Sin embargo, si el proyecto tiene datos importados en los que hay
@@ -23,8 +22,8 @@ definiciones o partes de discurso, habrá columnas adicionales disponibles en la
 #### Ordenar y filtrar
 
 Hay iconos en la parte superior de cada columna para
-![Review Entries column filter icon](../images/reviewEntriesColumnFilter.png){width=20} filtrar y
-![Review Entries column sort icon](../images/reviewEntriesColumnSort.png){width=20} ordenar los datos.
+![Review Entries column filter icon](images/reviewEntriesColumnFilter.png){width=20} filtrar y
+![Review Entries column sort icon](images/reviewEntriesColumnSort.png){width=20} ordenar los datos.
 
 En una columna con contenido predominantemente textual (Vernáculo, Glosas, Nota o Bandera), puede ordenar
 alfabéticamente o filtrar con una búsqueda de texto. Por defecto, la búsqueda de texto es una coincidencia difusa: no
@@ -44,16 +43,16 @@ entradas con cualquier dominio semántico.
 ### Edición de filas de entrada
 
 Puede grabar, reproducir o borrar las grabaciones de audio de una entrada con los iconos de la columna Pronunciaciones
-(![Review Entries pronunciations column header](../images/reviewEntriesColumnPronunciations.png){width=28}).
+(![Review Entries pronunciations column header](images/reviewEntriesColumnPronunciations.png){width=28}).
 
 Puedes modificar la bandera en una entrada haciendo clic en el ícono
-![Review Entries flag column header](../images/reviewEntriesColumnFlag.png){width=16} en la columna de bandera.
+![Review Entries flag column header](images/reviewEntriesColumnFlag.png){width=16} en la columna de bandera.
 
 Para editar cualquier otra parte de una entrada, haga clic en el icono
-![Review Entries row edit icon](../images/reviewEntriesRowEdit.png){width=20} en la columna inicial.
+![Review Entries row edit icon](images/reviewEntriesRowEdit.png){width=20} en la columna inicial.
 
 Puede borrar una entrada entera haciendo clic en el icono
-![Review Entries row delete icon](../images/reviewEntriesRowDelete.png){width=20} en la última columna.
+![Review Entries row delete icon](images/reviewEntriesRowDelete.png){width=20} en la última columna.
 
 !!! note "Nota"
 
@@ -66,7 +65,7 @@ Esta herramienta encuentra automáticamente conjuntos de entradas potencialmente
 conjunto, y hasta 12 conjuntos en cada pasa). Primero presenta conjuntos de palabras con idénticas formas vernáculas. A
 continuación, presenta conjuntos con formas vernáculas similares o glosas (o definiciones) idénticas.
 
-![Combinar duplicados dos entradas](../images/mergeTwo.es.png)
+![Combinar duplicados dos entradas](images/mergeTwo.es.png)
 
 Cada entrada se muestra en una columna, y cada acepción de esa entrada se muestra como una tarjeta que puede hacer clic
 y arrastrar. Hay tres cosas básicas que puede hacer con una acepción: moverlo, combinarlo con otra acepción o
@@ -78,7 +77,7 @@ Cuando hace clic y mantiene pulsada una tarjeta de acepción, ésta se vuelve ve
 de acepción a un lugar diferente de la misma columna para reordenar las acepciones de esa entrada. O puede arrastrar y
 soltar la tarjeta de acepción a una columna diferente para mover la acepción a esa otra entrada.
 
-![Combinar duplicados moviendo una acepción](../images/mergeMove.es.png)
+![Combinar duplicados moviendo una acepción](images/mergeMove.es.png)
 
 Si desea dividir una entrada con varias acepciones en varias entradas, puede arrastrar una de las tarjetas de acepción a
 la columna extra vacía de la derecha.
@@ -87,18 +86,18 @@ la columna extra vacía de la derecha.
 
 Si arrastra una tarjeta de acepción sobre otra tarjeta de acepción, la otra tarjeta de acepción también se vuelve verde.
 
-![Combinar duplicados combinar una acepción](../images/mergeMerge.es.png)
+![Combinar duplicados combinar una acepción](images/mergeMerge.es.png)
 
 Soltar una carta de acepción sobre otra carta de acepción (cuando ambas están verdes) combina las acepciones. Esto hace
 que aparezca una barra lateral azul aparezca a la derecha, mostrando cuales acepciones se están combinadas.
 
-![Combinar duplicados acepciones combinadas](../images/mergeSidebar.es.png)
+![Combinar duplicados acepciones combinadas](images/mergeSidebar.es.png)
 
 Puede arrastrar y soltar tarjetas de acepción hacia o desde la barra lateral para cambiar las acepciones que se están
 combinando. O dentro de la barra lateral, puede desplazar una acepción diferente a la parte superior (para conservar sus
 glosas).
 
-![Combinar duplicados moviendo una acepción de la barra lateral](../images/mergeSidebarMove.es.png)
+![Combinar duplicados moviendo una acepción de la barra lateral](images/mergeSidebarMove.es.png)
 
 Haga clic en el corchete angular derecho (>) para cerrar o abrir la barra lateral azul.
 
@@ -107,29 +106,29 @@ Haga clic en el corchete angular derecho (>) para cerrar o abrir la barra latera
 Para eliminar una acepción por completo, arrastre su tarjeta hasta el icono del cubo de basura situado en la esquina
 inferior izquierda. Cuando la tarjeta de acepción se ponga roja, suéltela.
 
-![Combinar duplicados eliminar una acepción](../images/mergeDelete.es.png)
+![Combinar duplicados eliminar una acepción](images/mergeDelete.es.png)
 
 Si borra la única acepción que queda de una columna, toda la columna desaparecerá, y esa entrada entera se borrada
 cuando pulse Guardar & Continuar.
 
-![Combinar duplicados acepción borrada](../images/mergeDeleted.es.png)
+![Combinar duplicados acepción borrada](images/mergeDeleted.es.png)
 
 ### Marcar una entrada
 
 Hay un icono de bandera en la esquina superior derecha de cada columna (a la derecha del formulario vernáculo).
 
-![Combinar duplicados marcar una entrada](../images/mergeFlag.es.png){.center}
+![Combinar duplicados marcar una entrada](images/mergeFlag.es.png){.center}
 
 Puede hacer clic en el icono de la bandera para marcar la entrada para una futura inspección o edición. (Puede
 clasificar las entradas marcadas en [Revisar entradas](#review-entries)) Cuando marque una entrada, se le dará la opción
 de añadir texto a la bandera.
 
-![Combinar duplicados añadiendo o editando una bandera](../images/mergeEditFlag.es.png){.center}
+![Combinar duplicados añadiendo o editando una bandera](images/mergeEditFlag.es.png){.center}
 
 Tanto si se escribe texto como si no, sabrá que la entrada está marcada porque el icono de la bandera aparecerá en rojo
 sólido. Si ha añadido texto, puede pasar el cursor por encima de la bandera para ver el texto.
 
-![Combinar duplicados una entrada marcada](../images/mergeFlagged.es.png){.center}
+![Combinar duplicados una entrada marcada](images/mergeFlagged.es.png){.center}
 
 Haga clic en el icono de la bandera roja para editar el texto o eliminar la bandera.
 
@@ -140,7 +139,7 @@ siguiente conjunto: "Guardar & Continuar" y "Aplazar".
 
 #### Guardar y Continuar
 
-![Combinar duplicados botón Guardar & Continuar](../images/mergeSaveAndContinue.es.png)
+![Combinar duplicados botón Guardar & Continuar](images/mergeSaveAndContinue.es.png)
 
 El botón azul "Guardar & continuar" hace dos cosas. En primer lugar, guarda todos los cambios realizados (es decir,
 todas las acepciones movidas, combinadas o eliminadas), actualizando las palabras en la base de datos. En segundo lugar,
@@ -160,7 +159,7 @@ guarda el conjunto de palabras resultante como no duplicadas.
 
 #### Aplazar
 
-![Combinar duplicados botón Aplazar](../images/mergeDefer.es.png)
+![Combinar duplicados botón Aplazar](images/mergeDefer.es.png)
 
 El botón gris "Aplazar" restablece cualquier cambio realizado en el conjunto de duplicados potenciales. El conjunto
 aplazado se puede revisar por Revisar duplicados aplazados.
@@ -183,7 +182,7 @@ la siguiente manera:
   corresponde a su categoría (por ejemplo, sustantivo o verbo). Pase el cursor por encima del hexágono para ver la
   categoría gramatical específica (p. ej., nombre propio o verbo transitivo).
 
-![Combinar duplicados acepción con definiciones y parte de la oración](../images/mergeSenseDefinitionsPartOfSpeech.png){.center}
+![Combinar duplicados acepción con definiciones y parte de la oración](images/mergeSenseDefinitionsPartOfSpeech.png){.center}
 
 !!! note "Nota"
 
@@ -220,7 +219,7 @@ Hay una ficha para cada carácter unicode que aparece en la forma vernácula de 
 carácter, su valor Unicode "U+", el número de veces que aparece en las formas vernáculas de entrada y su designación
 (por defecto: Indeciso).
 
-![Inventario de caracteres fichas de caracteres](../images/characterInventoryTiles.es.png)
+![Inventario de caracteres fichas de caracteres](images/characterInventoryTiles.es.png)
 
 ### Gestionar un solo carácter
 
@@ -232,7 +231,7 @@ Haga clic en una ficha de carácter para abrir un panel para ese carácter.
     derecha; el panel estará en la parte superior de éste. Si su ventana es estrecha, los azulejos llenarán todo el lado derecho de la
     ventana; el panel estará en la parte inferior, debajo de todos los fichas.
 
-![Inventario de caracteres panel de caracteres](../images/characterInventoryPanel.es.png){.center}
+![Inventario de caracteres panel de caracteres](images/characterInventoryPanel.es.png){.center}
 
 El centro del panel muestra hasta 5 ejemplos de formas vernáculas en las que aparece el carácter, resaltando el carácter
 en cada ocurrencia.
