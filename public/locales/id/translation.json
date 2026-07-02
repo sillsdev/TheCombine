@@ -332,7 +332,7 @@
       "name": "Nama: ",
       "description": "Deskripsi: ",
       "questions": "Pertanyaan: ",
-      "deleteConfirm": "Apakah Anda yakin ingin menghapus medan buatan sendiriini?",
+      "deleteConfirm": "Apakah Anda yakin ingin menghapus medan buatan sendiri ini?",
       "addError": {
         "name": "Mohon masukkan nama untuk medan buatan sendiri.",
         "customParent": "Medan induk tidak boleh berupa submedan buatan sendiri. Mohon pilih medan induk yang berbeda.",
