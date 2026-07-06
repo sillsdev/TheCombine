@@ -10,32 +10,29 @@
 
 ### 输入已有数据
 
-如果用户已经有词典数据在 [LIFT](https://software.sil.org/lifttools) 文档(很可能是从 The Combine、[FieldWorks](https://software.sil.org/fieldworks)、[WeSay](https://software.sil.org/wesay)、或 [Lexique Pro](https://software.sil.org/lexiquepro) 导出的)，只要点击“下载已有数据？”旁的“浏览”键, 就可将数据输入自己的项目。
+如果用户已经有词典数据在 [LIFT](https://software.sil.org/lifttools) 文档(很可能是从 The
+Combine、[FieldWorks](https://software.sil.org/fieldworks)、[WeSay](https://software.sil.org/wesay)、或
+[Lexique Pro](https://software.sil.org/lexiquepro)
+导出的)，只要点击“下载已有数据？”旁的“浏览”键, 就可将数据输入自己的项目。
 
 如果用户选择在创建项目时不输入数据，可留待以后再操作(参见[下面](#import))。
 
 ### 土语语言
 
-*土语*指的是字词被收集的语言。
-这种语言通常是指具有地方性的、本土性的、少数民族的、传统的及面临濒危的一种语言或方言。
-项目一旦被创建，该土语就无法被更改。
+*土语*指的是字词被收集的语言。这种语言通常是指具有地方性的、本土性的、少数民族的、传统的及面临濒危的一种语言或方言。项目一旦被创建，该土语就无法被更改。
 
 如果用户在创建项目时选用LIFT 文档来输入，则会出现一个下拉菜单，用户可以从导入的 LDML 文档所有语言中选择项目的土语。
 
 ### 分析语言
 
-*分析语言*是该土语被译成的语言。
-这通常是指使用该土语所在地的一种地区性的、国家性的、官方的或主要的语言。
-可在创建项目后添加其他分析语言(参[以下](#project-languages))。
+*分析语言*是该土语被译成的语言。这通常是指使用该土语所在地的一种地区性的、国家性的、官方的或主要的语言。可在创建项目后添加其他分析语言(参[以下](#project-languages))。
 
 如果用户在创建项目的过程中选用LIFT文档来输入，定义或注释中使用的语将会自动添加到项目中作为分析语言
 
 ## 管理项目
 
-一旦创建或选择了一个项目，它就变成活动项目。
-用户可在 The Combine 顶部应用框的中间位置看到一个齿轮图标或该项目名。
-点击齿轮图标或项目名，拉出“项目设置”以管理该项目。
-具有足够权限的项目用户可以使用以下设置。
+一旦创建或选择了一个项目，它就变成活动项目。用户可在 The
+Combine 顶部应用框的中间位置看到一个齿轮图标或该项目名。点击齿轮图标或项目名，拉出“项目设置”以管理该项目。具有足够权限的项目用户可以使用以下设置。
 
 ![设置](images/projectSettings123456.png)
 
@@ -45,39 +42,36 @@
 
 #### 项目名称
 
-建议使用一个区别性和描述性的名称。
-[导出](#export)项目时，项目名称是文件名的一部分。
+建议使用一个区别性和描述性的名称。 [导出](#export)项目时，项目名称是文件名的一部分。
 
 #### 自动完成 {#autocomplete}
 
-设置默认为开启：当用户用土语输入新词条，此设置会提供现有的类似的词条作为建议，允许用户选择现有词条并为该词条添加新词义，而不是创建一个(可能是) 重复的词条。
-详情请参阅[词条输入](dataEntry.md#new-entry-with-duplicate-vernacular-form)。
+设置默认为开启：当用户用土语输入新词条，此设置会提供现有的类似的词条作为建议，允许用户选择现有词条并为该词条添加新词义，而不是创建一个(可能是) 重复的词条。详情请参阅[词条输入](dataEntry.md#new-entry-with-duplicate-vernacular-form)。
 
 (这不影响对注释的拼写建议，因为这些建议是基于独立于现有项目数据的字典的)。
 
 #### Protected Data Management
 
-This section has two Off/On setting toggles related to the [protection](goals.md#protected-entries-and-senses) of words and senses that were imported with data not handled by The Combine.
-Both settings are off by default.
+This section has two Off/On setting toggles related to the [protection](goals.md#protected-entries-and-senses) of words
+and senses that were imported with data not handled by The Combine. Both settings are off by default.
 
-Turn on "Avoid protected sets in Merge Duplicates" to make the Merge Duplicates tool only show sets of potential duplicates with at least one word that isn't protected.
-This will avoid sets of mature entries imported from FieldWorks and promote merging entries collected in The Combine.
+Turn on "Avoid protected sets in Merge Duplicates" to make the Merge Duplicates tool only show sets of potential
+duplicates with at least one word that isn't protected. This will avoid sets of mature entries imported from FieldWorks
+and promote merging entries collected in The Combine.
 
-Turn on "Allow data protection override in Merge Duplicates" to allow project users in Merge Duplicates to manually override protection of words and senses.
-If anybody tries to merge or delete a protected entry or sense, The Combine warns them of the fields that will be lost.
+Turn on "Allow data protection override in Merge Duplicates" to allow project users in Merge Duplicates to manually
+override protection of words and senses. If anybody tries to merge or delete a protected entry or sense, The Combine
+warns them of the fields that will be lost.
 
 #### Harvester Review Entries {#harvester-review-entries}
 
-This Off/On setting (default Off) allows Harvesters to access [Review Entries](goals.md#review-entries).
-When enabled, Harvesters will see a Data Cleanup button in the navigation bar and can use Review Entries to update audio recordings and flags on entries.
-However, Harvesters cannot edit or delete entries from the Review Entries table.
+This Off/On setting (default Off) allows Harvesters to access [Review Entries](goals.md#review-entries). When enabled,
+Harvesters will see a Data Cleanup button in the navigation bar and can use Review Entries to update audio recordings
+and flags on entries. However, Harvesters cannot edit or delete entries from the Review Entries table.
 
 #### 存档项目
 
-这只有项目所有者才能获取。
-将项目存档后，所有用户都无法访问该项目。
-只有网站管理员才能取消这一操作。
-如果用户希望从服务器上完全清除该项目，请与网站管理员联系。
+这只有项目所有者才能获取。将项目存档后，所有用户都无法访问该项目。只有网站管理员才能取消这一操作。如果用户希望从服务器上完全清除该项目，请与网站管理员联系。
 
 ### 项目语言 {#project-languages}
 
@@ -102,8 +96,7 @@ However, Harvesters cannot edit or delete entries from the Review Entries table.
 
 #### 当前用户
 
-在每位项目用户的旁边都有一个带三个垂直点的图标。
-如果用户是项目所有者，可点击此处，打开一个用户管理菜单，它里面含有以下选项:
+在每位项目用户的旁边都有一个带三个垂直点的图标。如果用户是项目所有者，可点击此处，打开一个用户管理菜单，它里面含有以下选项:
 
 <pre>
     从项目中移除
@@ -115,9 +108,10 @@ However, Harvesters cannot edit or delete entries from the Review Entries table.
 [仅对项目所有者改项目管理员时用]
 </pre>
 
-*收集者*可以进行[词条输入](./dataEntry.md)，但不能进行[数据清理](./goals.md)。
-在项目设置中，其他人可以看到 项目语言和工作坊时间表，但不能做任何更改。
-However, if a project Administrator enables the [Harvester Review Entries](#harvester-review-entries) setting, Harvesters can also access [Review Entries](./goals.md#review-entries) with limited functionality: they can update pronunciations and flags, but cannot edit or delete entries.
+*收集者*可以进行[词条输入](./dataEntry.md)，但不能进行[数据清理](./goals.md)。在项目设置中，其他人可以看到 项目语言和工作坊时间表，但不能做任何更改。However,
+if a project Administrator enables the [Harvester Review Entries](#harvester-review-entries) setting, Harvesters can
+also access [Review Entries](./goals.md#review-entries) with limited functionality: they can update pronunciations and
+flags, but cannot edit or delete entries.
 
 *编辑*具有与*收集者*相同的权限，还可以[审阅词条](./goals.md#review-entries)、[合并重复词条](./goals.md#merge-duplicates)和[导出](#export)。
 
@@ -134,20 +128,21 @@ However, if a project Administrator enables the [Harvester Review Entries](#harv
 
 #### Manage Speakers
 
-Speakers are distinct from users.
-A speaker can be associate with audio recording of words.
-Use the + icon at the bottom of this section to add a speaker.
-Beside each added speaker are buttons to delete them, edit their name, and add a consent for use of their recorded voice.
-The supported methods for adding consent are to (1) record an audio file or (2) upload an image file.
+Speakers are distinct from users. A speaker can be associate with audio recording of words. Use the + icon at the bottom
+of this section to add a speaker. Beside each added speaker are buttons to delete them, edit their name, and add a
+consent for use of their recorded voice. The supported methods for adding consent are to (1) record an audio file or (2)
+upload an image file.
 
-When project users are in Data Entry or Review Entries, a speaker icon will be available in the top bar.
-Users can click that button to see a list of all available speakers and select the current speaker, this speaker will be automatically associated with every audio recording made by the user until they log out or select a different speaker.
+When project users are in Data Entry or Review Entries, a speaker icon will be available in the top bar. Users can click
+that button to see a list of all available speakers and select the current speaker, this speaker will be automatically
+associated with every audio recording made by the user until they log out or select a different speaker.
 
-The speaker associated with a recording can be seen by hovering over its play icon.
-To change a recording's speaker, right click the play icon (or press and hold on a touch screen to bring up a menu).
+The speaker associated with a recording can be seen by hovering over its play icon. To change a recording's speaker,
+right click the play icon (or press and hold on a touch screen to bring up a menu).
 
-When the project is exported from The Combine, speaker names (and ids) will be added as a pronunciation labels in the LIFT file.
-All consent files for project speakers will be added to a "consent" subfolder of the export (with speaker ids used for the file names).
+When the project is exported from The Combine, speaker names (and ids) will be added as a pronunciation labels in the
+LIFT file. All consent files for project speakers will be added to a "consent" subfolder of the export (with speaker ids
+used for the file names).
 
 ### 导入/导出
 
@@ -159,21 +154,21 @@ All consent files for project speakers will be added to a "consent" subfolder of
 
     目前，可导入的 LIFT 文件不可超过 100MB。
 
-When you import a LIFT file into The Combine, it will import every entry with lexeme form or citation form that matches the project's vernacular language.
+When you import a LIFT file into The Combine, it will import every entry with lexeme form or citation form that matches
+the project's vernacular language.
 
 The first time you import into a project, the imported words will be added alongside any words collected in The Combine.
 No automatic deduplication, merging, or syncing will be performed.
 
-If you do a second import, all words in The Combine will be automatically deleted before the new words are imported.
-Do not do a second import unless you have already exported your project and imported it into FieldWorks.
-Then, if you want to do more word collection in The Combine, you can export from FieldWorks and import into The Combine.
-The previous words will be deleted to allow for a clean start with the up-to-date data from FieldWorks.
+If you do a second import, all words in The Combine will be automatically deleted before the new words are imported. Do
+not do a second import unless you have already exported your project and imported it into FieldWorks. Then, if you want
+to do more word collection in The Combine, you can export from FieldWorks and import into The Combine. The previous
+words will be deleted to allow for a clean start with the up-to-date data from FieldWorks.
 
 #### 导出 {#export}
 
-单击 "导出 "按钮后，在数据准备下载时，用户可以到网站的其他部分浏览。
-When the data is gathered, the download will begin automatically.
-The filename is the project id.
+单击 "导出 "按钮后，在数据准备下载时，用户可以到网站的其他部分浏览。When the data is gathered, the download will begin
+automatically. The filename is the project id.
 
 !!! warning "重要警告"
 
@@ -185,17 +180,17 @@ The filename is the project id.
 
 #### Export pronunciation speakers
 
-When a project is exported from The Combine and imported into FieldWorks, if a pronunciation has an associated speaker, the speaker name will be added as a pronunciation label.
-The consent files can be found in the zipped export, but will not be imported into FieldWorks.
+When a project is exported from The Combine and imported into FieldWorks, if a pronunciation has an associated speaker,
+the speaker name will be added as a pronunciation label. The consent files can be found in the zipped export, but will
+not be imported into FieldWorks.
 
 ### 日程 {#schedule}
 
 ![日程](images/projectSettings5Sched.zh.png)
 
-This is only available for editing by a project Owner or Administrator, allowing a schedule to be set for a Rapid Word Collection workshop.
-点击第一个键可选择工作坊日期范围。
-Click the middle button to add or remove specific dates.
-点击最后的键可清除日程表。
+This is only available for editing by a project Owner or Administrator, allowing a schedule to be set for a Rapid Word
+Collection workshop. 点击第一个键可选择工作坊日期范围。Click the middle button to add or remove specific
+dates. 点击最后的键可清除日程表。
 
 ![工作坊日程](images/projectSchedule.zh.png){.center}
 
@@ -207,10 +202,11 @@ In this settings tab, you can change the semantic domain language and manage cus
 
 *语义领域语言*决定[词条输入](./dataEntry.md)中表达语义领域标题和描述的语言。
 
-At this time, The Combine only supports _custom semantic domains_ that extend the [established domains](https://semdom.org/).
-For each established domain, one custom subdomain can be created, which will have `.0` added to the end of the domain id.
-For example, domain _6.2.1.1: Growing Grain_ has three standard subdomains, for Rice, Wheat, and Maize.
-If another grain, such as Barley, is dominant among the people group gathering words, it can be added as domain _6.2.1.1.0_.
+At this time, The Combine only supports _custom semantic domains_ that extend the
+[established domains](https://semdom.org/). For each established domain, one custom subdomain can be created, which will
+have `.0` added to the end of the domain id. For example, domain _6.2.1.1: Growing Grain_ has three standard subdomains,
+for Rice, Wheat, and Maize. If another grain, such as Barley, is dominant among the people group gathering words, it can
+be added as domain _6.2.1.1.0_.
 
 ![Add Custom Domain](images/projectSettingsDomsCustomAdd.png){.center}
 
@@ -234,8 +230,7 @@ Custom semantic domains will be available to all project users doing Data Entry.
 
 ## 项目统计数据
 
-如果您是项目所有者或管理员，在 The Combine 顶部应用栏齿轮图标的旁边会有另一个图标。
-这将打开项目中关于字词的统计数据。
+如果您是项目所有者或管理员，在 The Combine 顶部应用栏齿轮图标的旁边会有另一个图标。这将打开项目中关于字词的统计数据。
 
 ![项目统计数据](images/projectStatsButton.png){.center}
 
@@ -243,8 +238,8 @@ Custom semantic domains will be available to all project users doing Data Entry.
 
 ### 每个用户的单词词数
 
-A table listing the following for each project user: the number of words collected, the number of distinct semantic domains, and the most recent semantic domain used.
-导入的单词没有相关的用户，将计入 "unknownUser" 行。
+A table listing the following for each project user: the number of words collected, the number of distinct semantic
+domains, and the most recent semantic domain used. 导入的单词没有相关的用户，将计入 "unknownUser" 行。
 
 ### 每个语义域的单词
 

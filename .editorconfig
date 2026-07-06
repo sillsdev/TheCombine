@@ -24,8 +24,3 @@ max_line_length = 99
 
 [*.md]
 max_line_length = 120
-
-# User guide docs are uploaded to Crowdin for translation; hard-wrapping breaks
-# importing translations obtained outside Crowdin.
-[docs/user_guide/docs/**.md]
-max_line_length = off
