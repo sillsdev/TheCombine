@@ -16,7 +16,8 @@
 
 ### 土语语言
 
-*土语*指的是字词被收集的语言 这种语言通常是指具有地方性的、本土性的、少数民族的、传统的及面临濒危的一种语言或方言。
+*土语*指的是字词被收集的语言。
+这种语言通常是指具有地方性的、本土性的、少数民族的、传统的及面临濒危的一种语言或方言。
 项目一旦被创建，该土语就无法被更改。
 
 如果用户在创建项目时选用LIFT 文档来输入，则会出现一个下拉菜单，用户可以从导入的 LDML 文档所有语言中选择项目的土语。
@@ -90,7 +91,8 @@ However, Harvesters cannot edit or delete entries from the Review Entries table.
 
 !!! note "笔记"
 
-    如果项目有多种语言的注释，则那些语言必须被添加至此处，这样所有注释就可以显示在[数据清理](goals.md). 点击放大镜图标，就能看到呈现在项目中的所有语言代码。
+    如果项目有多种语言的注释，则那些语言必须被添加至此处，这样所有注释就可以显示在[数据清理](goals.md).
+    点击放大镜图标，就能看到呈现在项目中的所有语言代码。
 
 *语义领域语言*决定[词条输入](./dataEntry.md)中表达语义领域标题和描述的语言。
 
@@ -190,8 +192,10 @@ The consent files can be found in the zipped export, but will not be imported in
 
 ![日程](images/projectSettings5Sched.zh.png)
 
-This is only available for editing by a project Owner or Administrator, allowing a schedule to be set for a Rapid Word Collection workshop. 点击第一个键可选择工作坊日期范围。
-Click the middle button to add or remove specific dates. 点击最后的键可清除日程表。
+This is only available for editing by a project Owner or Administrator, allowing a schedule to be set for a Rapid Word Collection workshop.
+点击第一个键可选择工作坊日期范围。
+Click the middle button to add or remove specific dates.
+点击最后的键可清除日程表。
 
 ![工作坊日程](images/projectSchedule.zh.png){.center}
 
@@ -239,7 +243,8 @@ Custom semantic domains will be available to all project users doing Data Entry.
 
 ### 每个用户的单词词数
 
-A table listing the following for each project user: the number of words collected, the number of distinct semantic domains, and the most recent semantic domain used. 导入的单词没有相关的用户，将计入 "unknownUser" 行。
+A table listing the following for each project user: the number of words collected, the number of distinct semantic domains, and the most recent semantic domain used.
+导入的单词没有相关的用户，将计入 "unknownUser" 行。
 
 ### 每个语义域的单词
 

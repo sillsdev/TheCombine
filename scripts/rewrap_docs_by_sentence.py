@@ -104,7 +104,9 @@ def _join_wrapped(parts: list[str]) -> str:
 
 
 def _starts_sentence(ch: str) -> bool:
-    return ch.isupper() or ch.isdigit() or ch in _ASCII_STARTERS
+    # A CJK character after an ASCII period ends the (untranslated) English sentence, e.g.
+    # "... for any project. 项目一旦归档，..." in an otherwise-Chinese file.
+    return ch.isupper() or ch.isdigit() or ch in _ASCII_STARTERS or _is_cjk(ch)
 
 
 def _is_abbreviation(text: str, dot_index: int) -> bool:

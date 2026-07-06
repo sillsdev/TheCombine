@@ -164,7 +164,8 @@ It is only active when changes have been made to the current set.
 出现在“合并重复项”词义卡上的内容：
 
 - 分析语言内的任何定义都将被显示在该语言的注释下方。
-- 左上角的彩色六边形表示词性 颜色对应其一般类别(例如名词或动词)。
+- 左上角的彩色六边形表示词性。
+  颜色对应其一般类别(例如名词或动词)。
   用户将鼠标悬停在六边形上可查看该词的具体语法类别(例如，专有名词或及物动词)。
 
 ![将重复词义与定义和语性合并](images/mergeSenseDefinitionsPartOfSpeech.png){.center}
