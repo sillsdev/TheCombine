@@ -39,6 +39,7 @@ class CombineApp:
         *,
         exec_opts: Optional[List[str]] = None,
         check_results: bool = True,
+        timeout: Optional[float] = None,
     ) -> subprocess.CompletedProcess[str]:
         """
         Run a kubectl 'exec' command in a Combine Kubernetes cluster.
@@ -52,6 +53,8 @@ class CombineApp:
                      command, for example, to specify a working directory or a
                      specific user to run the command.
             check_results: Indicate if subprocess should not check for failure.
+            timeout: If set, kill the command and raise subprocess.TimeoutExpired
+                     when it runs longer than this many seconds.
         Returns a subprocess.CompletedProcess.
         """
         exec_opts = exec_opts or []
@@ -65,11 +68,25 @@ class CombineApp:
             + [pod_id, "--"]
             + cmd,
             check_results=check_results,
+            timeout=timeout,
         )
 
-    def kubectl(self, cmd: List[str]) -> subprocess.CompletedProcess[str]:
-        """Run kubectl command adding the configuration file and namespace."""
-        return run_cmd(["kubectl"] + self.kubectl_opts + cmd)
+    def kubectl(
+        self, cmd: List[str], *, check_results: bool = True, timeout: Optional[float] = None
+    ) -> subprocess.CompletedProcess[str]:
+        """Run kubectl command adding the configuration file and namespace.
+
+        Args:
+            cmd: The kubectl subcommand and its arguments.
+            check_results: Indicate if subprocess should not check for failure.
+            timeout: If set, kill the command and raise subprocess.TimeoutExpired
+                     when it runs longer than this many seconds.
+        """
+        return run_cmd(
+            ["kubectl"] + self.kubectl_opts + cmd,
+            check_results=check_results,
+            timeout=timeout,
+        )
 
     def get_pod_id(self, service: CombineApp.Component, *, instance: int = 0) -> str:
         """Look up the Kubernetes pod id for the specified service."""
