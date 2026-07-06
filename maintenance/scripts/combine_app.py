@@ -4,12 +4,21 @@ from __future__ import annotations
 
 from enum import Enum, unique
 import json
+import logging
+import os
 from pathlib import Path
 import subprocess
 import sys
 from typing import Any, Dict, List, Optional
 
 from maint_utils import run_cmd
+
+# A `kubectl cp` streams a tar over the exec channel and can stall intermittently,
+# which would otherwise hang forever (issue #4322).  Bound each copy with a timeout
+# so a stalled stream gets killed, and retry a few times so a transient stall is
+# recovered.  Both defaults are overridable via environment variables.
+CP_TIMEOUT = float(os.getenv("kubectl_cp_timeout", "300"))
+CP_RETRIES = int(os.getenv("kubectl_cp_retries", "3"))
 
 
 class CombineApp:
@@ -87,6 +96,47 @@ class CombineApp:
             check_results=check_results,
             timeout=timeout,
         )
+
+    def cp_with_retry(
+        self,
+        cp_args: List[str],
+        *,
+        label: str,
+        timeout: float = CP_TIMEOUT,
+        retries: int = CP_RETRIES,
+    ) -> None:
+        """Run a `kubectl cp`, bounding it with a timeout and retrying transient stalls.
+
+        `kubectl cp` streams a tar over the exec channel and can stall intermittently
+        with no output.  Each attempt is killed after `timeout` seconds and retried up
+        to `retries` times.  If every attempt fails, the failing copy is logged and the
+        process exits non-zero so the failure surfaces instead of hanging silently.
+
+        Args:
+            cp_args: Arguments to `kubectl cp` (source and destination, plus any flags).
+            label: Human-readable description of what is being copied, for logging.
+            timeout: Per-attempt timeout in seconds.
+            retries: Number of attempts before giving up.
+        """
+        for attempt in range(1, retries + 1):
+            try:
+                proc = self.kubectl(["cp"] + cp_args, check_results=False, timeout=timeout)
+            except subprocess.TimeoutExpired:
+                logging.warning(
+                    f"Copy of {label} timed out after {timeout:g}s "
+                    f"(attempt {attempt}/{retries})."
+                )
+                continue
+            if proc.returncode == 0:
+                logging.debug(f"stderr:\n{proc.stderr.strip()}")
+                logging.debug(f"stdout:\n{proc.stdout.strip()}")
+                return
+            logging.warning(
+                f"Copy of {label} failed with return code {proc.returncode} "
+                f"(attempt {attempt}/{retries}).\n{proc.stderr.strip()}"
+            )
+        logging.error(f"Failed to copy {label} after {retries} attempts; aborting.")
+        sys.exit(1)
 
     def get_pod_id(self, service: CombineApp.Component, *, instance: int = 0) -> str:
         """Look up the Kubernetes pod id for the specified service."""

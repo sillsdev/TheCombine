@@ -23,7 +23,6 @@ import logging
 import os
 from pathlib import Path
 import re
-import subprocess
 import sys
 import tarfile
 import tempfile
@@ -34,13 +33,6 @@ from combine_app import CombineApp
 import humanfriendly
 from maint_utils import check_env_vars
 from script_step import ScriptStep
-
-# A stalled `kubectl cp` stream would otherwise hang forever (issue #4322).  Bound
-# each copy with a timeout so a stalled stream gets killed, and retry a few times
-# so a transient stall is recovered instead of aborting the whole restore.  Both
-# values are overridable via environment variables.
-CP_TIMEOUT = float(os.getenv("kubectl_cp_timeout", "300"))
-CP_RETRIES = int(os.getenv("kubectl_cp_retries", "3"))
 
 
 def parse_args() -> argparse.Namespace:
@@ -65,35 +57,6 @@ def aws_strip_bucket(obj_name: str) -> str:
     if match is not None:
         return match.group(1)
     return obj_name
-
-
-def kubectl_cp(combine: CombineApp, cp_args: List[str], *, label: str) -> None:
-    """Run a `kubectl cp`, bounding it with a timeout and retrying transient stalls.
-
-    `kubectl cp` streams a tar over the exec channel and can stall intermittently
-    with no output.  Each attempt is killed after CP_TIMEOUT seconds and retried up
-    to CP_RETRIES times.  If every attempt fails, the failing copy is logged and the
-    restore exits non-zero so the failure surfaces instead of hanging silently.
-    """
-    for attempt in range(1, CP_RETRIES + 1):
-        try:
-            proc = combine.kubectl(["cp"] + cp_args, check_results=False, timeout=CP_TIMEOUT)
-        except subprocess.TimeoutExpired:
-            logging.warning(
-                f"Copy of {label} timed out after {CP_TIMEOUT:g}s "
-                f"(attempt {attempt}/{CP_RETRIES})."
-            )
-            continue
-        if proc.returncode == 0:
-            logging.debug(f"stderr:\n{proc.stderr.strip()}")
-            logging.debug(f"stdout:\n{proc.stdout.strip()}")
-            return
-        logging.warning(
-            f"Copy of {label} failed with return code {proc.returncode} "
-            f"(attempt {attempt}/{CP_RETRIES}).\n{proc.stderr.strip()}"
-        )
-    logging.error(f"Failed to copy {label} after {CP_RETRIES} attempts; aborting restore.")
-    sys.exit(1)
 
 
 def main() -> None:
@@ -197,8 +160,8 @@ def main() -> None:
             sys.exit(1)
 
         logging.debug(f"Copying {db_files_subdir} to {db_pod} ...")
-        kubectl_cp(
-            combine, [db_files_subdir, f"{db_pod}:/"], label=f"database dump ({db_files_subdir})"
+        combine.cp_with_retry(
+            [db_files_subdir, f"{db_pod}:/"], label=f"database dump ({db_files_subdir})"
         )
 
         logging.debug(f"Running mongorestore on {db_pod} ...")
@@ -240,8 +203,7 @@ def main() -> None:
                 continue
             logging.debug(f"Copying {item} ...")
             local_item = os.path.join(backend_files_subdir, item)
-            kubectl_cp(
-                combine,
+            combine.cp_with_retry(
                 [local_item, remote_subdir, "--no-preserve"],
                 label=f"backend files for {item}",
             )
