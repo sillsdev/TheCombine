@@ -1,8 +1,6 @@
 # Ikhtisar
 
-The Combine adalah alat untuk mendukung lokakarya
-[Pengumpulan Kata Cepat](https://www.sil.org/enterprise-news/rapid-word-collection-updated-approach-dictionary-creation)
-(Rapid Word Collection/RWC) dan pembersihan data setelah lokakarya.
+The Combine adalah alat untuk mendukung lokakarya [Pengumpulan Kata Cepat](https://www.sil.org/enterprise-news/rapid-word-collection-updated-approach-dictionary-creation) (Rapid Word Collection/RWC) dan pembersihan data setelah lokakarya.
 
 ## Memulai
 
@@ -14,8 +12,7 @@ Lihat halaman [Proyek](project.md) kami untuk mengetahui cara membuat dan mengel
 
 Lihat halaman [Pemasukan Data](dataEntry.md) kami untuk mengetahui cara mengumpulkan data.
 
-Lihat halaman [Pembersihan Data](goals.md) kami untuk alat-alat guna menyunting dan mengatur data yang telah
-dikumpulkan.
+Lihat halaman [Pembersihan Data](goals.md) kami untuk alat-alat guna menyunting dan mengatur data yang telah dikumpulkan.
 
 ## Butuh Bantuan?
 

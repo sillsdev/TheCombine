@@ -6,13 +6,14 @@
 
 ## 项目管理
 
-Administrators can export, archive/restore, or manage users for any
-project. 项目一旦归档，所有用户都将无法再访问，甚至对项目创建者也不例外；但任何管理员都可以重新恢复该项目。 目前还没有一种方法可以永久删除一个项目。 The
-"项目角色" button for each project opens a view where the administrator can manage that project's user roles.
+Administrators can export, archive/restore, or manage users for any project. 项目一旦归档，所有用户都将无法再访问，甚至对项目创建者也不例外；但任何管理员都可以重新恢复该项目。
+目前还没有一种方法可以永久删除一个项目。
+The "项目角色" button for each project opens a view where the administrator can manage that project's user roles.
 
 ## 用户管理
 
-管理员可以删除任何非管理员用户账户。 需添加或移除管理员用户，请与网站所有者联系。
+管理员可以删除任何非管理员用户账户。
+需添加或移除管理员用户，请与网站所有者联系。
 
 ## 横幅
 
@@ -20,14 +21,15 @@ project. 项目一旦归档，所有用户都将无法再访问，甚至对项�
 
 ### 通知横幅
 
-当用户访问 The Combine 时，通知横幅将一条醒目的横幅摊开在页面顶部。 这些横幅旨在向用户显示那些跟 The
-Combine 实例有关的重要、简短的信息。 信息可能包括定时升级、计划的停机时间，或即将发生的服务器更改。
+当用户访问 The Combine 时，通知横幅将一条醒目的横幅摊开在页面顶部。
+这些横幅旨在向用户显示那些跟 The Combine 实例有关的重要、简短的信息。
+信息可能包括定时升级、计划的停机时间，或即将发生的服务器更改。
 
 ![通知横幅](images/announcementBanner.png){.center}
 
 ### 登录横幅
 
-登陆横幅将一条信息置于登陆页面底部。 该横幅旨在告诉用户需要了解 The
-Combine 的实例特定信息，例如有关支持、版本升级、数据库备份策略的联系人是谁。
+登陆横幅将一条信息置于登陆页面底部。
+该横幅旨在告诉用户需要了解 The Combine 的实例特定信息，例如有关支持、版本升级、数据库备份策略的联系人是谁。
 
 ![登录横幅](images/loginBanner.png){width=400 .center}

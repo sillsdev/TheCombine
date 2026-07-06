@@ -16,17 +16,19 @@ To create a new account, click the [Sign Up](../signup) button on the Login page
 
 [Log in](../login) to The Combine with the username and password given at registration.
 
-If you want to change your password, click the "Forgot password?" link. Follow the instructions and a password-reset
-will be sent to the email address associated with your account.
+If you want to change your password, click the "Forgot password?" link.
+Follow the instructions and a password-reset will be sent to the email address associated with your account.
 
 !!! warning "Important"
 
-    The username and email address are **not** case-sensitive. The password **is** case-sensitive.
+    The username and email address are **not** case-sensitive.
+    The password **is** case-sensitive.
 
 ## Settings
 
-After login, there is a blue App Bar along the top of The Combine. Click on the avatar icon at the right end of the App
-Bar to open the User Menu. Select "User Settings" to change account/profile settings.
+After login, there is a blue App Bar along the top of The Combine.
+Click on the avatar icon at the right end of the App Bar to open the User Menu.
+Select "User Settings" to change account/profile settings.
 
 ![User Menu](images/userMenu.png){.center}
 
