@@ -235,9 +235,9 @@ _Bahasa medan makna_ mengendalikan bahasa yang digunakan untuk menampilkan judul
 
 Saat ini, The Combine hanya mendukung _medan makna buatan sendiri_ yang memperluas
 [medan yang telah ada](https://semdom.org/). Untuk setiap medan yang telah ada, satu submedan buatan sendiri dapat
-dibuat, yang akan memiliki tambahan `.0` di akhir id medan. Sebagai contoh, medan _6.2.1.1: Growing Grain_ memiliki tiga
-submedan standar, untuk Padi, Gandum, dan Jagung. Jika biji-bijian lain, seperti Jelai, dominan di antara kelompok orang
-yang mengumpulkan kata-kata, biji-bijian tersebut dapat ditambahkan sebagai medan _6.2.1.1.0_.
+dibuat, yang akan memiliki tambahan `.0` di akhir id medan. Sebagai contoh, medan _6.2.1.1: Menanam biji-bijian_
+memiliki tiga submedan standar, untuk Padi, Gandum, dan Jagung. Jika biji-bijian lain, seperti Jelai, dominan di antara
+kelompok orang yang mengumpulkan kata-kata, biji-bijian tersebut dapat ditambahkan sebagai medan _6.2.1.1.0_.
 
 ![Tambahkan Medan Buatan Sendiri](images/projectSettingsDomsCustomAdd.png){.center}
 
