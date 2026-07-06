@@ -50,7 +50,7 @@ runs:
     - name: Install Helm
       run: |
         echo "Installing Helm version ${{ inputs.helm_version }}"
-        curl https://raw.githubusercontent.com/helm/helm/${{ inputs.helm_version }}/scripts/get-helm-3 | DESIRED_VERSION=${{ inputs.helm_version }} bash
+        curl -fSL https://raw.githubusercontent.com/helm/helm/${{ inputs.helm_version }}/scripts/get-helm-3 | DESIRED_VERSION=${{ inputs.helm_version }} bash
         helm version
       shell: bash
 
@@ -58,18 +58,25 @@ runs:
       run: |
         cd
         echo "Installing kubectl version ${{ inputs.kubectl_version }}"
-        curl -LO https://dl.k8s.io/release/${{ inputs.kubectl_version }}/bin/linux/amd64/kubectl
+        curl -fLO https://dl.k8s.io/release/${{ inputs.kubectl_version }}/bin/linux/amd64/kubectl
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-        kubectl version --output=yaml
+        kubectl version --client --output=yaml
       shell: bash
 
+    - name: Set up Python
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+      with:
+        python-version: "3.12"
+
     - name: Install Python requirements
-      run: python3 -m pip install -r deploy/requirements.txt
+      run: |
+        python -m pip install pip==26.0.1
+        python -m pip install -r deploy/requirements.txt
       shell: bash
 
     - name: Deploy with Helm
       run: >
-        python3
+        python
         deploy/scripts/setup_combine.py
         --context ${{ inputs.kube_context }}
         --non-interactive
