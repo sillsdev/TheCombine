@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import time
 from typing import Any, Dict, List, Optional
 
 from maint_utils import run_cmd
@@ -19,6 +20,9 @@ from maint_utils import run_cmd
 # recovered.  Both defaults are overridable via environment variables.
 CP_TIMEOUT = float(os.getenv("kubectl_cp_timeout", "300"))
 CP_ATTEMPTS = int(os.getenv("kubectl_cp_attempts", "3"))
+# A fast-failing copy can exhaust all attempts within the same second, giving a
+# transient failure no time to clear; pause between attempts so the retries span time.
+CP_RETRY_DELAY = 5.0
 
 
 class CombineApp:
@@ -109,9 +113,9 @@ class CombineApp:
 
         `kubectl cp` streams a tar over the exec channel and can stall intermittently
         with no output.  Each attempt is killed after `timeout` seconds and the copy is
-        tried up to `attempts` times.  If every attempt fails, the failing copy is
-        logged and the process exits non-zero so the failure surfaces instead of
-        hanging silently.
+        tried up to `attempts` times, pausing briefly between attempts.  If every
+        attempt fails, the failing copy is logged and the process exits non-zero so
+        the failure surfaces instead of hanging silently.
 
         Args:
             cp_args: Arguments to `kubectl cp` (source and destination, plus any flags).
@@ -127,15 +131,17 @@ class CombineApp:
                     f"Copy of {label} timed out after {timeout:g}s "
                     f"(attempt {attempt}/{attempts})."
                 )
-                continue
-            if proc.returncode == 0:
-                logging.debug(f"stderr:\n{proc.stderr.strip()}")
-                logging.debug(f"stdout:\n{proc.stdout.strip()}")
-                return
-            logging.warning(
-                f"Copy of {label} failed with return code {proc.returncode} "
-                f"(attempt {attempt}/{attempts}).\n{proc.stderr.strip()}"
-            )
+            else:
+                if proc.returncode == 0:
+                    logging.debug(f"stderr:\n{proc.stderr.strip()}")
+                    logging.debug(f"stdout:\n{proc.stdout.strip()}")
+                    return
+                logging.warning(
+                    f"Copy of {label} failed with return code {proc.returncode} "
+                    f"(attempt {attempt}/{attempts}).\n{proc.stderr.strip()}"
+                )
+            if attempt < attempts:
+                time.sleep(CP_RETRY_DELAY)
         logging.error(f"Failed to copy {label} after {attempts} attempts; aborting.")
         sys.exit(1)
 
