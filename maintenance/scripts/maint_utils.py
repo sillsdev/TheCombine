@@ -6,7 +6,7 @@ import logging
 import os
 import subprocess
 import sys
-from typing import List
+from typing import List, Optional
 
 
 def check_env_vars(var_names: List[str]) -> tuple[str, ...]:
@@ -26,8 +26,18 @@ def check_env_vars(var_names: List[str]) -> tuple[str, ...]:
     return tuple(value_list)
 
 
-def run_cmd(cmd: List[str], *, check_results: bool = True) -> subprocess.CompletedProcess[str]:
-    """Run a command with subprocess and catch any CalledProcessErrors."""
+def run_cmd(
+    cmd: List[str], *, check_results: bool = True, timeout: Optional[float] = None
+) -> subprocess.CompletedProcess[str]:
+    """Run a command with subprocess and catch any CalledProcessErrors.
+
+    Args:
+        cmd: the command, as an argument list, to run.
+        check_results: if true, exit when the command returns a non-zero code.
+        timeout: if set, the command is killed and subprocess.TimeoutExpired is
+                 raised when it runs longer than this many seconds.  Callers that
+                 pass a timeout are responsible for handling TimeoutExpired.
+    """
     try:
         return subprocess.run(
             cmd,
@@ -35,6 +45,7 @@ def run_cmd(cmd: List[str], *, check_results: bool = True) -> subprocess.Complet
             stderr=subprocess.PIPE,
             universal_newlines=True,
             check=check_results,
+            timeout=timeout,
         )
     except subprocess.CalledProcessError as err:
         print("CalledProcessError")

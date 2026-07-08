@@ -96,23 +96,23 @@ def main() -> None:
 
         with tarfile.open(backup_file, "x:gz") as tar:
             # cp, tar, and rm the db subdir
-            combine.kubectl(
+            combine.cp_with_retry(
                 [
-                    "cp",
                     f"{db_pod}:/{db_files_subdir}",
                     str(Path(backup_dir) / db_files_subdir),
-                ]
+                ],
+                label=f"database dump ({db_files_subdir})",
             )
             tar.add(db_files_subdir)
             rmtree(db_files_subdir)
 
             # cp, tar, and rm the backend subdir
-            combine.kubectl(
+            combine.cp_with_retry(
                 [
-                    "cp",
                     f"{backend_pod}:/home/app/{backend_files_subdir}/",
                     str(Path(backup_dir) / backend_files_subdir),
-                ]
+                ],
+                label=f"backend files ({backend_files_subdir})",
             )
             tar.add(backend_files_subdir)
             rmtree(backend_files_subdir)

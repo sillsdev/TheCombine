@@ -160,9 +160,9 @@ def main() -> None:
             sys.exit(1)
 
         logging.debug(f"Copying {db_files_subdir} to {db_pod} ...")
-        cp_proc = combine.kubectl(["cp", db_files_subdir, f"{db_pod}:/"])
-        logging.debug(f"stderr:\n{cp_proc.stderr.strip()}")
-        logging.debug(f"stdout:\n{cp_proc.stdout.strip()}")
+        combine.cp_with_retry(
+            [db_files_subdir, f"{db_pod}:/"], label=f"database dump ({db_files_subdir})"
+        )
 
         logging.debug(f"Running mongorestore on {db_pod} ...")
         mongorestore_proc = combine.exec(
@@ -203,7 +203,10 @@ def main() -> None:
                 continue
             logging.debug(f"Copying {item} ...")
             local_item = os.path.join(backend_files_subdir, item)
-            combine.kubectl(["cp", local_item, remote_subdir, "--no-preserve"])
+            combine.cp_with_retry(
+                [local_item, remote_subdir, "--no-preserve"],
+                label=f"backend files for {item}",
+            )
 
 
 if __name__ == "__main__":
