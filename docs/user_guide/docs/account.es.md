@@ -2,7 +2,7 @@
 
 Cómo registrarse, iniciar sesión y editar su cuenta.
 
-![Inicio de sesión](../images/login.es.png){.center}
+![Inicio de sesión](images/login.es.png){.center}
 
 ## Registrarse
 
@@ -22,7 +22,8 @@ restablecimiento de contraseña será enviada a la dirección de correo electró
 
 !!! warning "Importante"
 
-    El nombre de usuario y la dirección de correo electrónico **no** distinguen entre mayúsculas y minúsculas. La contraseña **es** sensible a mayúsculas y minúsculas.
+    El nombre de usuario y la dirección de correo electrónico **no** distinguen entre mayúsculas y minúsculas.
+    La contraseña **es** sensible a mayúsculas y minúsculas.
 
 ## Configuración
 
@@ -30,7 +31,7 @@ Tras iniciar sesión, aparecerá una barra de aplicaciones azul en la parte supe
 del avatar en el extremo derecho de la App Barra para abrir el Menú de Usuario. Seleccione "Configuración de usuario"
 para cambiar los ajustes de cuenta/perfil.
 
-![Menú de usuario](../images/userMenu.es.png){.center}
+![Menú de usuario](images/userMenu.es.png){.center}
 
 Puede añadir o actualizar su:
 

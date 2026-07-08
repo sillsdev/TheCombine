@@ -21,7 +21,8 @@ will be sent to the email address associated with your account.
 
 !!! warning "Important"
 
-    The username and email address are **not** case-sensitive. The password **is** case-sensitive.
+    The username and email address are **not** case-sensitive.
+    The password **is** case-sensitive.
 
 ## Settings
 

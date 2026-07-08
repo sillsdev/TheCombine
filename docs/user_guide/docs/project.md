@@ -100,8 +100,8 @@ with new data entries.
 
 !!! note "Note"
 
-    If the project has glosses in multiple languages, those languages must be added here for all the glosses to show up
-    in [Data Cleanup](goals.md). Click the magnifying glass icon to see all language codes present in the project.
+    If the project has glosses in multiple languages, those languages must be added here for all the glosses to show up in [Data Cleanup](goals.md).
+    Click the magnifying glass icon to see all language codes present in the project.
 
 The _semantic domains language_ controls the language in which semantic domain titles and descriptions are displayed in
 [Data Entry](./dataEntry.md).
@@ -139,8 +139,8 @@ users.
 
 !!! warning "Important"
 
-    There is only one Owner per project. If you "Make project Owner" another user, you will automatically change from Owner to
-    Administrator for the project, and you will no longer be able to archive the project or make/remove Administrator on other users.
+    There is only one Owner per project.
+    If you "Make project Owner" another user, you will automatically change from Owner to Administrator for the project, and you will no longer be able to archive the project or make/remove Administrator on other users.
 
 #### Add Users
 
@@ -239,8 +239,8 @@ For each custom domain, you can add a description and questions to help with wor
 
 !!! note "Note"
 
-    Custom semantic domains are included in the project export and can be imported into FieldWorks. However, the
-    questions are not included.
+    Custom semantic domains are included in the project export and can be imported into FieldWorks.
+    However, the questions are not included.
 
 Custom semantic domains will be available to all project users doing Data Entry.
 
@@ -248,8 +248,8 @@ Custom semantic domains will be available to all project users doing Data Entry.
 
 !!! note "Note"
 
-    Custom semantic domains are language-specific. If you add a custom domain in one language then change the semantic
-    domains language, that domain will not be visible unless you change back to its language.
+    Custom semantic domains are language-specific.
+    If you add a custom domain in one language then change the semantic domains language, that domain will not be visible unless you change back to its language.
 
 ## Project Statistics
 

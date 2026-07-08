@@ -6,7 +6,7 @@
 
 创建项目时，用户可选项启动一个空项目，或者输入已有的词典数据。
 
-![创建项目 - Tzotzil](../images/projectCreateTzotzil.zh.png){.center}
+![创建项目 - Tzotzil](images/projectCreateTzotzil.zh.png){.center}
 
 ### 输入已有数据
 
@@ -19,26 +19,26 @@ Combine、[FieldWorks](https://software.sil.org/fieldworks)、[WeSay](https://so
 
 ### 土语语言
 
-*土语*指的是字词被收集的语言 这种语言通常是指具有地方性的、本土性的、少数民族的、传统的及面临濒危的一种语言或方言。 项目一旦被创建，该土语就无法被更改。
+*土语*指的是字词被收集的语言。这种语言通常是指具有地方性的、本土性的、少数民族的、传统的及面临濒危的一种语言或方言。项目一旦被创建，该土语就无法被更改。
 
 如果用户在创建项目时选用LIFT 文档来输入，则会出现一个下拉菜单，用户可以从导入的 LDML 文档所有语言中选择项目的土语。
 
 ### 分析语言
 
-*分析语言*是该土语被译成的语言。 这通常是指使用该土语所在地的一种地区性的、国家性的、官方的或主要的语言。 可在创建项目后添加其他分析语言(参[以下](#project-languages))。
+*分析语言*是该土语被译成的语言。这通常是指使用该土语所在地的一种地区性的、国家性的、官方的或主要的语言。可在创建项目后添加其他分析语言(参[以下](#project-languages))。
 
 如果用户在创建项目的过程中选用LIFT文档来输入，定义或注释中使用的语将会自动添加到项目中作为分析语言
 
 ## 管理项目
 
 一旦创建或选择了一个项目，它就变成活动项目。用户可在 The
-Combine 顶部应用框的中间位置看到一个齿轮图标或该项目名。 点击齿轮图标或项目名，拉出“项目设置”以管理该项目。 具有足够权限的项目用户可以使用以下设置。
+Combine 顶部应用框的中间位置看到一个齿轮图标或该项目名。点击齿轮图标或项目名，拉出“项目设置”以管理该项目。具有足够权限的项目用户可以使用以下设置。
 
-![设置](../images/projectSettings123456.png)
+![设置](images/projectSettings123456.png)
 
 ### 基本设置
 
-![基本设置](../images/projectSettings1Basic.zh.png)
+![基本设置](images/projectSettings1Basic.zh.png)
 
 #### 项目名称
 
@@ -46,7 +46,7 @@ Combine 顶部应用框的中间位置看到一个齿轮图标或该项目名。
 
 #### 自动完成 {#autocomplete}
 
-设置默认为开启：当用户用土语输入新词条，此设置会提供现有的类似的词条作为建议，允许用户选择现有词条并为该词条添加新词义，而不是创建一个(可能是) 重复的词条。 详情请参阅[词条输入](dataEntry.md#new-entry-with-duplicate-vernacular-form)。
+设置默认为开启：当用户用土语输入新词条，此设置会提供现有的类似的词条作为建议，允许用户选择现有词条并为该词条添加新词义，而不是创建一个(可能是) 重复的词条。详情请参阅[词条输入](dataEntry.md#new-entry-with-duplicate-vernacular-form)。
 
 (这不影响对注释的拼写建议，因为这些建议是基于独立于现有项目数据的字典的)。
 
@@ -71,13 +71,13 @@ and flags on entries. However, Harvesters cannot edit or delete entries from the
 
 #### 存档项目
 
-这只有项目所有者才能获取。 将项目存档后，所有用户都无法访问该项目。 只有网站管理员才能取消这一操作。 如果用户希望从服务器上完全清除该项目，请与网站管理员联系。
+这只有项目所有者才能获取。将项目存档后，所有用户都无法访问该项目。只有网站管理员才能取消这一操作。如果用户希望从服务器上完全清除该项目，请与网站管理员联系。
 
 ### 项目语言 {#project-languages}
 
-![语言](../images/projectSettings2Langs.zh.png)
+![语言](images/projectSettings2Langs.zh.png)
 
-![项目语言 - Tzotzil](../images/projectLanguagesTzotzil.zh.png){.center}
+![项目语言 - Tzotzil](images/projectLanguagesTzotzil.zh.png){.center}
 
 创建项目时指定的*土语*是固定的。
 
@@ -85,17 +85,18 @@ and flags on entries. However, Harvesters cannot edit or delete entries from the
 
 !!! note "笔记"
 
-    如果项目有多种语言的注释，则那些语言必须被添加至此处，这样所有注释就可以显示在[数据清理](goals.md). 点击放大镜图标，就能看到呈现在项目中的所有语言代码。
+    如果项目有多种语言的注释，则那些语言必须被添加至此处，这样所有注释就可以显示在[数据清理](goals.md).
+    点击放大镜图标，就能看到呈现在项目中的所有语言代码。
 
 *语义领域语言*决定[词条输入](./dataEntry.md)中表达语义领域标题和描述的语言。
 
 ### 项目用户
 
-![用户](../images/projectSettings3Users.zh.png)
+![用户](images/projectSettings3Users.zh.png)
 
 #### 当前用户
 
-在每位项目用户的旁边都有一个带三个垂直点的图标。 如果用户是项目所有者，可点击此处，打开一个用户管理菜单，它里面含有以下选项:
+在每位项目用户的旁边都有一个带三个垂直点的图标。如果用户是项目所有者，可点击此处，打开一个用户管理菜单，它里面含有以下选项:
 
 <pre>
     从项目中移除
@@ -107,7 +108,7 @@ and flags on entries. However, Harvesters cannot edit or delete entries from the
 [仅对项目所有者改项目管理员时用]
 </pre>
 
-*收集者*可以进行[词条输入](./dataEntry.md)，但不能进行[数据清理](./goals.md)。 在项目设置中，其他人可以看到 项目语言和工作坊时间表，但不能做任何更改。 However,
+*收集者*可以进行[词条输入](./dataEntry.md)，但不能进行[数据清理](./goals.md)。在项目设置中，其他人可以看到 项目语言和工作坊时间表，但不能做任何更改。However,
 if a project Administrator enables the [Harvester Review Entries](#harvester-review-entries) setting, Harvesters can
 also access [Review Entries](./goals.md#review-entries) with limited functionality: they can update pronunciations and
 flags, but cannot edit or delete entries.
@@ -118,8 +119,8 @@ flags, but cannot edit or delete entries.
 
 !!! warning "重要警告"
 
-    每个项目只有一个所有者。 如果您将另一个用户成为项目所有者，您将自动从项目所有者变为
-    管理员，而且您将无法再存档项目或为其他用户设置/删除管理员。
+    每个项目只有一个所有者。
+    如果您将另一个用户成为项目所有者，您将自动从项目所有者变为管理员，而且您将无法再存档项目或为其他用户设置/删除管理员。
 
 #### 添加用户
 
@@ -145,7 +146,7 @@ used for the file names).
 
 ### 导入/导出
 
-![导入/导出](../images/projectSettings4Port.zh.png)
+![导入/导出](images/projectSettings4Port.zh.png)
 
 #### 导入 {#import}
 
@@ -166,7 +167,7 @@ words will be deleted to allow for a clean start with the up-to-date data from F
 
 #### 导出 {#export}
 
-单击 "导出 "按钮后，在数据准备下载时，用户可以到网站的其他部分浏览。 When the data is gathered, the download will begin
+单击 "导出 "按钮后，在数据准备下载时，用户可以到网站的其他部分浏览。When the data is gathered, the download will begin
 automatically. The filename is the project id.
 
 !!! warning "重要警告"
@@ -185,17 +186,17 @@ not be imported into FieldWorks.
 
 ### 日程 {#schedule}
 
-![日程](../images/projectSettings5Sched.zh.png)
+![日程](images/projectSettings5Sched.zh.png)
 
 This is only available for editing by a project Owner or Administrator, allowing a schedule to be set for a Rapid Word
-Collection workshop. 点击第一个键可选择工作坊日期范围。 Click the middle button to add or remove specific
+Collection workshop. 点击第一个键可选择工作坊日期范围。Click the middle button to add or remove specific
 dates. 点击最后的键可清除日程表。
 
-![工作坊日程](../images/projectSchedule.zh.png){.center}
+![工作坊日程](images/projectSchedule.zh.png){.center}
 
 ### 语义域 {#semantic-domains}
 
-![语义域](../images/projectSettings6Doms.zh.png)
+![语义域](images/projectSettings6Doms.zh.png)
 
 In this settings tab, you can change the semantic domain language and manage custom semantic domains.
 
@@ -207,31 +208,31 @@ have `.0` added to the end of the domain id. For example, domain _6.2.1.1: Growi
 for Rice, Wheat, and Maize. If another grain, such as Barley, is dominant among the people group gathering words, it can
 be added as domain _6.2.1.1.0_.
 
-![Add Custom Domain](../images/projectSettingsDomsCustomAdd.png){.center}
+![Add Custom Domain](images/projectSettingsDomsCustomAdd.png){.center}
 
 For each custom domain, you can add a description and questions to help with word collection in that domain.
 
-![Edit Custom Domain](../images/projectSettingsDomsCustomEdit.png){.center}
+![Edit Custom Domain](images/projectSettingsDomsCustomEdit.png){.center}
 
 !!! note "笔记"
 
-    Custom semantic domains are included in the project export and can be imported into FieldWorks. However, the
-    questions are not included.
+    Custom semantic domains are included in the project export and can be imported into FieldWorks.
+    However, the questions are not included.
 
 Custom semantic domains will be available to all project users doing Data Entry.
 
-![See Custom Domain](../images/projectSettingsDomsCustomSee.png){.center}
+![See Custom Domain](images/projectSettingsDomsCustomSee.png){.center}
 
 !!! note "笔记"
 
-    Custom semantic domains are language-specific. If you add a custom domain in one language then change the semantic
-    domains language, that domain will not be visible unless you change back to its language.
+    Custom semantic domains are language-specific.
+    If you add a custom domain in one language then change the semantic domains language, that domain will not be visible unless you change back to its language.
 
 ## 项目统计数据
 
-如果您是项目所有者或管理员，在 The Combine 顶部应用栏齿轮图标的旁边会有另一个图标。 这将打开项目中关于字词的统计数据。
+如果您是项目所有者或管理员，在 The Combine 顶部应用栏齿轮图标的旁边会有另一个图标。这将打开项目中关于字词的统计数据。
 
-![项目统计数据](../images/projectStatsButton.png){.center}
+![项目统计数据](images/projectStatsButton.png){.center}
 
 在这些统计数据中，*词*指的是一对词义-词域：例如，一个词条有 3 个词义，每个词义属于2 个语义域，则该词条将被算作 6 个词。
 

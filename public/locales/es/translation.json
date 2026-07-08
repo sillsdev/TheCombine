@@ -433,7 +433,7 @@
       "replaceAll": "Reemplazar todas las ocurrencias de: {{ val }}",
       "replaceAllWith": "Reemplazar con: {{ val }}",
       "findAndReplace": "Buscar y Reemplazar",
-      "findAndReplaceError": "Error al procesar: encontrar ( {{ val1 }} ), reemplazar ( {{  val2 }})",
+      "findAndReplaceError": "Error al procesar: encontrar ( {{ val1 }} ), reemplazar ( {{ val2 }})",
       "apply": "Aplicar"
     },
     "dialog": {

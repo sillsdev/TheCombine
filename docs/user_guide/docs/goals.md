@@ -54,8 +54,7 @@ You can delete an entire entry by clicking the
 
 !!! note "Note"
 
-    If a project Administrator has enabled the
-    [Harvester Review Entries](project.md#harvester-review-entries) setting, Harvesters can also use Review Entries.
+    If a project Administrator has enabled the [Harvester Review Entries](project.md#harvester-review-entries) setting, Harvesters can also use Review Entries.
     Harvesters can update audio recordings and flags, but the Edit and Delete columns are not available to them.
 
 ## Merge Duplicates {#merge-duplicates}
@@ -142,7 +141,8 @@ senses), updating the words in the database. Second, it saves the resulting set 
 
 !!! tip "Tip"
 
-    Are the potential duplicates not duplicates? Just click Save & Continue to tell The Combine not to show you that set again.
+    Are the potential duplicates not duplicates?
+    Just click Save & Continue to tell The Combine not to show you that set again.
 
 !!! note "Note"
 
@@ -150,7 +150,8 @@ senses), updating the words in the database. Second, it saves the resulting set 
 
 !!! warning "Important"
 
-    Avoid having multiple users merge duplicates in the same project at the same time. If different users simultaneously merge the same set of duplicates, it will results in the creation of new duplicates (even if the users are making the same merge decisions).
+    Avoid having multiple users merge duplicates in the same project at the same time.
+    If different users simultaneously merge the same set of duplicates, it will results in the creation of new duplicates (even if the users are making the same merge decisions).
 
 #### Defer
 
@@ -180,7 +181,9 @@ information will appear in the Merge Duplicate sense cards as follows:
 
 !!! note "Note"
 
-    A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different general categories, only the first one is preserved.
+    A sense can only have one part of speech.
+    If two senses are merged that have different parts of speech in the same general category, the parts of speech will be combined, separated by a semicolon (;).
+    However, if they have different general categories, only the first one is preserved.
 
 #### Protected Entries and Senses {#protected-entries-and-senses}
 
@@ -220,9 +223,9 @@ Click on a character tile to open a panel for that character.
 
 !!! tip "Tip"
 
-    You may have to scroll to see the panel. If your window is wide enough, there will be a blank margin on the
-    right; the panel will be at the top of this. If your window is narrow, tiles fill all the way to the right side of the
-    window; the panel will be at the bottom, below all the tiles.
+    You may have to scroll to see the panel.
+    If your window is wide enough, there will be a blank margin on the right; the panel will be at the top of this.
+    If your window is narrow, tiles fill all the way to the right side of the window; the panel will be at the bottom, below all the tiles.
 
 ![Character Inventory character panel](images/characterInventoryPanel.png){.center}
 

@@ -41,6 +41,16 @@ plugins:
             Data Entry: Entrada de datos
             Data Cleanup: Limpieza de datos
             Admin: Administración
+        - locale: id
+          name: Bahasa Indonesia
+          build: true
+          nav_translations:
+            Overview: Ikhtisar
+            Account: Akun
+            Projects: Proyek
+            Data Entry: Pemasukan Data
+            Data Cleanup: Pembersihan Data
+            Admin: Administrasi
         - locale: zh
           name: 中文
           build: true
@@ -52,7 +62,7 @@ plugins:
             Data Cleanup: 清理数据
             Admin: 管理
   - search:
-      lang: [en, es, zh]
+      lang: [en, es, id, zh]
 markdown_extensions:
   - admonition
   - attr_list
@@ -66,6 +76,9 @@ extra:
     - name: Español
       link: /es/
       lang: es
+    - name: Bahasa Indonesia
+      link: /id/
+      lang: id
     - name: 中文
       link: /zh/
       lang: zh

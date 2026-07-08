@@ -19,12 +19,12 @@
 [codecov-backend]: https://app.codecov.io/gh/sillsdev/TheCombine/tree/master/Backend
 [github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
 [backend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=backend
-[localization-ui-badge]: https://img.shields.io/badge/User%20Interface-Ar%20En%20Es%20Fr%20Pt%20Zh-blue
+[localization-ui-badge]: https://img.shields.io/badge/User%20Interface-Ar%20En%20Es%20Fr%20Id%20Pt%20Zh-blue
 [github-actions-frontend]: https://github.com/sillsdev/TheCombine/actions/workflows/frontend.yml
 [github-actions-backend]: https://github.com/sillsdev/TheCombine/actions/workflows/backend.yml
 [localization-sd-badge]:
   https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Id%20Ml%20My%20Pt%20Ru%20Sw%20Te%20Zh-blue
-[localization-ug-badge]: https://img.shields.io/badge/User%20Guide-En%20Es%20Zh-blue
+[localization-ug-badge]: https://img.shields.io/badge/User%20Guide-En%20Es%20Id%20Zh-blue
 [localization-crowdin-combine]: https://crowdin.com/project/the-combine
 [localization-crowdin-flex]: https://crowdin.com/project/fieldworks
 [github-version-badge]: https://img.shields.io/github/package-json/v/sillsdev/TheCombine

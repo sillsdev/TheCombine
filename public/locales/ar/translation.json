@@ -267,7 +267,7 @@
       "replaceAll": "استبدال جميع الحوادث: {{ val }}",
       "replaceAllWith": "استبدل بـ: {{ val }}",
       "findAndReplace": "بحث و استبدال&",
-      "findAndReplaceError": "خطأ في المعالجة: العثور على ( {{ val1 }} )، استبدال ( {{  val2 }} )",
+      "findAndReplaceError": "خطأ في المعالجة: العثور على ( {{ val1 }} )، استبدال ( {{ val2 }} )",
       "apply": "تطبيق"
     },
     "dialog": {

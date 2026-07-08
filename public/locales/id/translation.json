@@ -1,0 +1,644 @@
+{
+  "generic": {
+    "404Title": "404: Halaman tidak ditemukan",
+    "404Text": "Klik pada gambar orang-orang untuk kembali ke beranda.",
+    "loadingTitle": "Memuat...",
+    "loadingText": "Mohon tunggu sementara The Combine memproses data Anda."
+  },
+  "landingPage": {
+    "subtitle": "Aplikasi Web untuk Mengumpulkan Kata-Kata Bersama",
+    "privacyPolicy": "Kebijakan Privasi",
+    "descriptionP1": "Kata-kata adalah blok pembangun bahasa, penting untuk berkomunikasi informasi maupun berbagi budaya. Kamus, yang berisi kata-kata dan maknanya, adalah sumber bahasa yang mendasar, membantu mendokumentasikan dan melestarikan bahasa untuk generasi mendatang di dalam masyarakat serta menyediakan jembatan komunikasi dengan masyarakat lain. Namun, banyak komunitas bahasa minoritas di seluruh dunia yang tidak memiliki sumber daya semacam itu dalam bahasa mereka, sehingga menempatkan mereka pada posisi yang kurang menguntungkan.",
+    "descriptionP2": "The Combine adalah alat yang mudah digunakan dalam proses Pengumpulan Kata Cepat (Rapid Word Collection/RWC)—sebuah metode untuk mengumpulkan kata-kata yang akan menjadi dasar bagi kamus dwibahasa. Inti dari proses RWC adalah para penutur asli dari suatu komunitas bahasa tertentu. Dengan disajikan satu medan makna pada satu waktu, sekelompok 4-6 penutur asli menghasilkan sebanyak mungkin kata dalam bahasa mereka yang dapat mereka pikirkan terkait medan tersebut. The Combine memudahkan pemasukan kata-kata ini ke dalam basis data, beserta terjemahan, rekaman audio, dan catatan, untuk lebih lengkap menangkap bentuk dan maknanya.",
+    "descriptionP3": "Orang dengan sedikit pengetahuan linguistik sebelumnya dan pengalaman komputer yang terbatas dapat dengan cepat dilatih untuk menggunakan kemampuan utama The Combine dalam pengumpulan kata. Kemudian kata-kata yang dihasilkan dapat diatur dan disunting di dalam The Combine sebelum mengekspor data untuk digunakan dalam alat lain seperti FieldWorks.",
+    "descriptionP4": "Daftarlah untuk memulai pengumpulan kata Anda!"
+  },
+  "treeView": {
+    "findDomain": "Cari medan",
+    "domainNotFound": "Medan tidak ditemukan",
+    "returnToTop": "Kembali ke puncak diagram pohon medan.",
+    "wordCountTooltip": "Jumlah kata yang dikumpulkan dalam medan ini"
+  },
+  "addWords": {
+    "selectEntry": "Pilih entri",
+    "selectSense": "Pilih pengertian",
+    "newEntryFor": "Entri baru untuk: ",
+    "newSense": "Pengertian baru",
+    "senseInWord": "Kata ini sudah memiliki pengertian ini dalam medan makna ini: {{ val1 }}, {{ val2 }}",
+    "deleteRow": "Hapus baris ini",
+    "deleteRowWarning": "Baris ini akan dihapus secara permanen!",
+    "addNote": "Tambahkan catatan",
+    "domain": "Medan",
+    "domainTitle": "Medan: {{ val1 }} ({{ val2 }})",
+    "glosses": "Arti Singkat",
+    "pressEnter": "Tekan Enter untuk menyimpan kata",
+    "vernacular": "Kata"
+  },
+  "analyticsConsent": {
+    "consentModal": {
+      "acceptAllBtn": "Ya, izinkan semua proses analisis",
+      "acceptNecessaryBtn": "Tidak, hanya proses analisis yang diperlukan",
+      "description": "The Combine menyimpan informasi dasar tentang sesi dan penggunaan Anda saat ini untuk tujuan pemeliharaan. Informasi ini diperlukan dan tidak dibagikan kepada siapa pun. The Combine juga menggunakan tambahan proses analisis untuk menyusun statistik anonim. Apakah Anda menyetujui penggunaan  tambahan proses analisis?",
+      "title": "Proses analisis di The Combine"
+    }
+  },
+  "appBar": {
+    "dataEntry": "Pemasukan Data",
+    "dataCleanup": "Pembersihan Data",
+    "statistics": "Statistik Data",
+    "projectSettings": "Pengaturan Proyek"
+  },
+  "emailVerify": {
+    "invalidText": "Tautan mungkin sudah kedaluwarsa atau telah digunakan.",
+    "invalidTitle": "Verifikasi email gagal",
+    "returnButton": "Kembali ke The Combine",
+    "success": "Alamat email terverifikasi!",
+    "verifying": "Memverifikasi alamat email..."
+  },
+  "invite": {
+    "invalidInvitationURL": "Tautan Undangan Proyek tidak valid."
+  },
+  "login": {
+    "title": "Log Masuk",
+    "name": "Nama Anda",
+    "username": "Nama Pengguna",
+    "usernameOrEmail": "Nama pengguna atau alamat email",
+    "password": "Kata Sandi",
+    "passwordRequirements": "Kata sandi harus 8 karakter atau lebih.",
+    "forgotPassword": "Lupa kata sandi?",
+    "login": "Log masuk",
+    "failed": "Gagal log masuk. Mohon periksa nama pengguna dan kata sandi Anda.",
+    "failedUnknownReason": "Gagal log masuk. Terjadi kesalahan pada The Combine.",
+    "backToLogin": "Kembali ke halaman log masuk",
+    "signUp": "Mendaftar",
+    "signUpNew": "Mendaftar Pengguna Baru",
+    "signUpSuccess": "Pengguna Dibuat",
+    "signUpFailed": "Gagal mendaftar",
+    "usernameRequirements": "Nama pengguna harus 3 karakter atau lebih.",
+    "usernameTaken": "Nama pengguna tidak tersedia.",
+    "emailTaken": "Alamat email tidak tersedia.",
+    "required": "Wajib",
+    "confirmPassword": "Konfirmasi Kata Sandi",
+    "confirmPasswordError": "Kata sandi tidak cocok.",
+    "email": "Email"
+  },
+  "passwordReset": {
+    "invalidURL": "Tautan Atur Ulang Kata Sandi tidak valid.",
+    "emailOrUsername": "Email ATAU Nama Pengguna",
+    "resetRequestTitle": "Permintaan Atur Ulang Kata Sandi",
+    "resetTitle": "Atur Ulang Kata Sandi",
+    "resetRequestInstructions": "Kami akan mengirim tautan atur ulang sekali pakai untuk akun Anda ke email Anda.",
+    "submit": "Kirim",
+    "resetFail": "Galat atur ulang kata sandi",
+    "resetSuccess": "Atur ulang kata sandi berhasil",
+    "resetDone": "Jika Anda telah memasukkan email atau nama pengguna Anda dengan benar, tautan atur ulang kata sandi telah dikirim ke alamat email Anda.",
+    "backToLogin": "Kembali Ke Halaman Log Masuk"
+  },
+  "captcha": {
+    "error": "Verifikasi halaman gagal atau kedaluwarsa. Mohon segarkan halaman."
+  },
+  "speakerMenu": {
+    "none": "Tidak ada penutur dalam proyek. Untuk menyambungkan penutur pada rekaman audio, silakan hubungi administrator proyek.",
+    "other": "[Bukan satu pun dari atas]"
+  },
+  "userMenu": {
+    "siteSettings": "Pengaturan Situs",
+    "userSettings": "Pengaturan Pengguna",
+    "logout": "Log Keluar",
+    "userGuide": "Panduan Pengguna"
+  },
+  "createProject": {
+    "name": "Nama Proyek",
+    "nameTaken": "Nama sudah dipakai",
+    "upload?": "Unggah data yang ada?",
+    "uploadFormat": "Berkas harus berupa folder terkompresi (zip) yang berisi proyek <1>Lexicon Interchange FormaT (LIFT)</1>.",
+    "create": "Membuat Proyek",
+    "fileSelected": "Berkas terpilih: {{ val }}",
+    "language": "Informasi bahasa proyek akan diekstrak secara otomatis dari data yang diunggah.",
+    "languageOptionOther": "lainnya",
+    "languageSelect": "Pilih dari bahasa dalam berkas:",
+    "success": "Proyek Dibuat!"
+  },
+  "selectProject": {
+    "title": "Pilih Proyek"
+  },
+  "siteSettings": {
+    "projectList": "Proyek",
+    "activeProjects": "Proyek Aktif: {{ val }}",
+    "archivedProjects": "Proyek Diarsipkan: {{ val }}",
+    "manageProject": "Kelola proyek ini",
+    "projectRoles": "Peran proyek",
+    "addProjectUsers": "Tambahkan pengguna proyek",
+    "archiveProjectText": "Proyek ini tidak akan dapat diakses oleh pengguna mana pun.",
+    "restoreProjectText": "Seseorang mungkin memiliki alasan yang baik untuk mengarsipkan proyek ini. Apakah Anda yakin ingin memulihkannya?",
+    "userList": "Pengguna",
+    "deleteUser": {
+      "confirm": "Konfirmasi penghapusan pengguna dari basis data The Combine.",
+      "loadingProjects": "Memuat proyek pengguna...",
+      "projectsTitle": "Pengguna ini memiliki peran dalam proyek berikut:",
+      "noProjects": "Pengguna ini tidak memiliki peran proyek.",
+      "projectsLoadError": "Gagal memuat proyek pengguna.",
+      "toastSuccess": "Pengguna berhasil dihapus dari The Combine.",
+      "toastFailure": "Gagal menghapus pengguna dari The Combine."
+    },
+    "populateUsers": {
+      "toastFailure": "Gagal mengisi daftar semua pengguna."
+    },
+    "banners": {
+      "title": "Banner",
+      "loginBanner": "Banner Halaman Log Masuk",
+      "announcementBanner": "Banner Pengumuman",
+      "bannerCloseButton": "Tutup banner"
+    }
+  },
+  "userSettings": {
+    "analyticsConsent": {
+      "button": "Ubah persetujuan",
+      "consentNo": "Anda belum menyetujui penggunaan cookie proses analisis oleh kami.",
+      "consentYes": "Anda telah menyetujui penggunaan cookie proses analisis oleh kami.",
+      "title": "Cookie proses analisis"
+    },
+    "verifyEmail": {
+      "button": "Verifikasi email",
+      "description": "Untuk menambahkan pengguna ke proyek Anda, Anda harus memverifikasi alamat email Anda.",
+      "emailUnverified": "Verifikasi email untuk menambahkan pengguna ke proyek",
+      "emailVerified": "Verifikasi email selesai",
+      "emailVerifying": "Periksa email Anda",
+      "title": "Verifikasi alamat email",
+      "verificationSent": "Email verifikasi terkirim. Mohon periksa email Anda."
+    },
+    "contact": "Informasi kontak",
+    "glossSuggestion": "Saran ejaan arti singkat",
+    "glossSuggestionHint": "Pada Pemasukan Data, berikan saran ejaan untuk Arti Singkat yang sedang diketik.",
+    "noChanges": "Tidak ada perubahan untuk disimpan",
+    "phone": "Nomor telepon",
+    "uiLanguage": "Bahasa antarmuka pengguna",
+    "uiLanguageDefault": "(Mengikuti bahasa peramban secara bawaan)",
+    "updateSuccess": "Pengaturan berhasil diperbarui.",
+    "uploadAvatarTitle": "Atur avatar pengguna"
+  },
+  "projectExport": {
+    "cancelExport": "Batalkan ekspor",
+    "cannotExportEmpty": "Proyek kosong. Anda tidak dapat mengekspor proyek tanpa kata.",
+    "downloadInProgress": "Mengunduh proyek: {{ val }}",
+    "exportFailed": "Gagal mengekspor proyek {{ val }}. Klik untuk menghapus pesan ini.",
+    "exportInProgress": "Mengekspor proyek: {{ val }}"
+  },
+  "projectSettings": {
+    "project": "Proyek:",
+    "tab": {
+      "basic": "Pengaturan Dasar",
+      "domains": "Medan Makna",
+      "export": "Ekspor",
+      "importExport": "Impor/Ekspor",
+      "languages": "Bahasa",
+      "schedule": "Jadwal",
+      "users": "Pengguna"
+    },
+    "language": {
+      "vernacular": "Bahasa Daerah",
+      "vernacularLanguage": "Bahasa Daerah",
+      "analysis": "Bahasa Analisis",
+      "analysisLanguage": "Bahasa Analisis",
+      "semanticDomains": "Medan Makna",
+      "semanticDomainsDefault": "(Mengikuti bahasa antarmuka pengguna secara bawaan)",
+      "languages": "Bahasa Proyek",
+      "bcp47": "Kode BCP 47",
+      "name": "Nama",
+      "font": "Fon",
+      "changeName": "Ubah Nama",
+      "addAnalysisLanguage": "Tambahkan bahasa analisis alternatif",
+      "makeDefaultAnalysisLanguage": "Jadikan ini sebagai bahasa analisis bawaan",
+      "deleteAnalysisLanguage": "Hapus bahasa analisis ini",
+      "getGlossLanguages": "Temukan semua kode bahasa yang digunakan pada data saat ini",
+      "updateVernacularLanguageNameFailed": "Gagal memperbarui nama bahasa daerah",
+      "updateVernacularLanguageNameSuccess": "Bahasa daerah diperbarui!",
+      "addAnalysisLanguageFailed": "Gagal menambahkan bahasa analisis",
+      "makeDefaultAnalysisLanguageFailed": "Gagal menjadikan bahasa analisis bawaan",
+      "deleteAnalysisLanguageFailed": "Gagal menghapus bahasa analisis",
+      "updateSemDomWritingSystemFailed": "Gagal memperbarui bahasa medan makna"
+    },
+    "name": "Nama Proyek",
+    "nameUpdateFailed": "Nama proyek sudah dipakai.",
+    "user": {
+      "currentUsers": "Pengguna Saat Ini",
+      "addUser": "Tambahkan Pengguna"
+    },
+    "roles": {
+      "harvester": "Pengumpul",
+      "editor": "Editor",
+      "administrator": "Administrator",
+      "owner": "Pemilik"
+    },
+    "userManagement": {
+      "removeFromProject": "Keluarkan dari proyek",
+      "changeProjectRole": "Ubah peran proyek:",
+      "makeOwner": "Jadikan Pemilik proyek",
+      "removeUserWarning": "Keluarkan pengguna ini dari proyek?",
+      "makeHarvesterWarning": "Jadikan pengguna ini Pengumpul proyek?",
+      "makeEditorWarning": "Jadikan pengguna ini Editor proyek?",
+      "makeAdminWarning": "Jadikan pengguna ini Administrator proyek?",
+      "makeOwnerWarning": "Alihkan kepemilikan proyek kepada pengguna ini?",
+      "userRemovedToastSuccess": "Pengguna dikeluarkan dari proyek.",
+      "userRemovedToastFailure": "Gagal mengeluarkan pengguna dari proyek.",
+      "userRoleUpdateToastSuccess": "Peran pengguna berhasil diperbarui.",
+      "userRoleUpdateToastFailure": "Gagal memperbarui peran pengguna.",
+      "makeOwnerToastSuccess": "Kepemilikan proyek dialihkan.",
+      "makeOwnerToastFailure": "Gagal mengalihkan kepemilikan proyek.",
+      "manageUser": "Kelola Pengguna",
+      "reverseOrder": "Balik Urutan"
+    },
+    "speaker": {
+      "label": "Kelola penutur",
+      "add": "Tambahkan penutur",
+      "enterName": "Masukkan nama penutur baru",
+      "nameEmpty": "Nama penutur kosong",
+      "nameTaken": "Nama penutur sudah dipakai dalam proyek ini",
+      "delete": "Hapus penutur ini",
+      "edit": "Sunting nama penutur",
+      "consent": {
+        "add": "Tambahkan persetujuan bagi penutur ini",
+        "record": "Rekam audio persetujuan",
+        "view": "Lihat gambar persetujuan penutur ini",
+        "viewTitle": "Persetujuan bagi penutur: {{ val }}",
+        "upload": "Unggah gambar persetujuan",
+        "remove": "Hapus persetujuan penutur ini",
+        "warning": "Peringatan: persetujuan penutur saat ini akan dihapus—tindakan ini tidak dapat dibatalkan."
+      }
+    },
+    "import": {
+      "header": "Impor Data",
+      "body": "Data yang diimpor akan ditambahkan ke proyek ini. The Combine tidak akan mencoba menghapus duplikat, menimpa, atau menyinkronkan.",
+      "chooseFile": "Pilih Berkas",
+      "notAllowed": "Anda telah mengimpor berkas LIFT ke proyek ini.",
+      "reuploadWarning": "Anda dapat mengunggah berkas LIFT baru, tetapi akan menimpa semua kata pada proyek ini.",
+      "reuploadConfirm": "Semua kata pada proyek ini akan dihapus dan diganti dengan kata-kata dari berkas LIFT yang baru. Apakah Anda yakin ingin melanjutkan?",
+      "wordsUploaded": "Kata yang diunggah: {{ val }}",
+      "noWordsUploaded": "Berkas LIFT tidak memiliki kata dalam bahasa daerah di proyek ini.",
+      "liftLanguageMismatch": "Bahasa dalam berkas LIFT ini ({{ val1 }}) tidak mencakup bahasa daerah di proyek ini ({{ val2 }}). Kemungkinan tidak ada kata yang akan diimpor. Apakah Anda yakin ingin melanjutkan?"
+    },
+    "archive": {
+      "archive": "Arsipkan Proyek",
+      "archiveToastSuccess": "Proyek Diarsipkan!"
+    },
+    "schedule": {
+      "workshopSchedule": "Jadwal Lokakarya",
+      "startDate": "Tanggal Mulai",
+      "endDate": "Tanggal Selesai",
+      "selectedDateAlert": "Tanggal mulai harus sebelum tanggal selesai.",
+      "setDays": "Tetapkan rentang hari untuk lokakarya.",
+      "editDays": "Sesuaikan jadwal lokakarya.",
+      "removeDays": "Hapus semua hari dari lokakarya.",
+      "removeAll": "Apakah Anda yakin ingin menghapus semua tanggal?"
+    },
+    "exportProject": {
+      "label": "Ekspor Proyek"
+    },
+    "autocomplete": {
+      "label": "Lengkapi otomatis",
+      "off": "Mati",
+      "on": "Aktif",
+      "hint": "Pada Pemasukan Data, sarankan kata bahasa daerah yang sudah ada yang mirip dengan kata yang sedang diketik."
+    },
+    "protectedData": {
+      "label": "Manajemen Data Terlindungi",
+      "avoidInMerge": {
+        "hint": "Pada Gabungkan Duplikat, lewati kumpulan yang hanya berisi kata-kata terlindungi. Ini akan menghindari kumpulan entri matang yang diimpor dari FieldWorks dan mendorong penggabungan entri yang dikumpulkan di The Combine.",
+        "label": "Hindari kumpulan terlindungi pada Gabungkan Duplikat"
+      },
+      "override": {
+        "hint": "Pada Gabungkan Duplikat, izinkan untuk menimpa perlindungan kata dan pengertian yang terlindungi.",
+        "label": "Izinkan penimpaan perlindungan data pada Gabungkan Duplikat"
+      }
+    },
+    "invite": {
+      "inviteByEmailLabel": "Undang melalui Email",
+      "userExists": "Pengguna ini sudah terdaftar.",
+      "invitationSent": "Undangan terkirim.",
+      "or": "ATAU",
+      "searchPlaceholder": "Cari...",
+      "searchTitle": "Temukan Pengguna",
+      "emailLabel": "Email",
+      "emailMessage": "Pesan (opsional)",
+      "toastSuccess": "Pengguna ditambahkan ke proyek.",
+      "toastFail": "Gagal menambahkan pengguna ke proyek."
+    },
+    "domains": {
+      "semDomLanguage": "Bahasa Medan Makna",
+      "label": "Medan Makna Buatan sendiri",
+      "add": "Tambahkan submedan buatan sendiri",
+      "parent": "Medan induk: ",
+      "subdomainName": "Nama submedan: ",
+      "name": "Nama: ",
+      "description": "Deskripsi: ",
+      "questions": "Pertanyaan: ",
+      "deleteConfirm": "Apakah Anda yakin ingin menghapus medan buatan sendiri ini?",
+      "addError": {
+        "name": "Mohon masukkan nama untuk medan buatan sendiri.",
+        "customParent": "Medan induk tidak boleh berupa submedan buatan sendiri. Mohon pilih medan induk yang berbeda.",
+        "takenParent": "Medan induk yang dipilih sudah memiliki submedan buatan sendiri."
+      }
+    }
+  },
+  "goal": {
+    "selector": {
+      "past": "Anda telah menyelesaikan:",
+      "present": "Rekomendasi kami:",
+      "other": "Pilihan lain:",
+      "noHistory": "Belum ada",
+      "done": "Semua selesai"
+    },
+    "progress": "Langkah {{ val1 }} dari {{ val2 }}",
+    "progressMerge": "Kumpulan Penggabungan {{ val1 }} dari {{ val2 }}"
+  },
+  "createStrWordInv": {
+    "title": "Membuat Daftar Kata Struktural",
+    "description": "BELUM DIIMPLEMENTASIKAN"
+  },
+  "handleFlags": {
+    "title": "Tangani Tanda",
+    "description": "BELUM DIIMPLEMENTASIKAN"
+  },
+  "reviewDeferredDups": {
+    "title": "Tinjau Duplikat yang Ditangguhkan",
+    "description": "Tinjau ulang potensi duplikat yang ditangguhkan saat Gabungkan Duplikat."
+  },
+  "spellCheckGloss": {
+    "title": "Periksa Ejaan Arti Singkat",
+    "description": "BELUM DIIMPLEMENTASIKAN"
+  },
+  "validateChars": {
+    "title": "Validasi Karakter",
+    "description": "BELUM DIIMPLEMENTASIKAN"
+  },
+  "validateStrWords": {
+    "title": "Validasi Kata Struktural",
+    "description": "BELUM DIIMPLEMENTASIKAN"
+  },
+  "reviewEntries": {
+    "title": "Tinjau Entri",
+    "description": "Lihat, urutkan, saring, dan sunting entri dalam proyek.",
+    "allEntriesPerPageOption": "Semua",
+    "editSense": "Sunting pengertian",
+    "discardChanges": "Buang perubahan?",
+    "noDomain": "Tidak ada medan terpilih",
+    "duplicateDomain": "Pengertian ini sudah memiliki medan {{ val }}.",
+    "deleteWordWarning": "Kata ini akan dihapus secara permanen!",
+    "deleteDisabled": "Ini diimpor dengan data yang tidak ditangani oleh The Combine, sehingga tidak dapat dihapus.",
+    "error": {
+      "gloss": "Arti Singkat tidak boleh dikosongkan",
+      "glossAndDefinition": "Arti Singkat dan definisi tidak boleh keduanya dikosongkan",
+      "sense": "Tidak dapat menyimpan pengertian yang kosong",
+      "senses": "Tidak dapat menyimpan entri tanpa pengertian",
+      "vernacular": "Kata tidak boleh dikosongkan"
+    },
+    "columns": {
+      "definitions": "Definisi",
+      "delete": "Hapus",
+      "domains": "Medan",
+      "edit": "Sunting",
+      "flag": "Tanda",
+      "glosses": "Arti Singkat",
+      "note": "Catatan",
+      "partOfSpeech": "Jenis Kata",
+      "pronunciations": "Ucapan",
+      "senses": "Pengertian",
+      "sensesCount": "Jumlah Pengertian",
+      "vernacular": "Kata"
+    },
+    "completed": {
+      "number": "Jumlah entri yang disunting: "
+    },
+    "undo": {
+      "undo": "Batalkan Suntingan",
+      "undoDialog": "Batalkan suntingan ini?",
+      "undoDisabled": "Pembatalan tidak tersedia"
+    }
+  },
+  "charInventory": {
+    "title": "Periksa Ortografi",
+    "description": "Tinjau karakter yang digunakan dalam ejaan kata bahasa daerah dan periksa kesalahan ketik.",
+    "characters": "karakter",
+    "examples": "Contoh",
+    "occurrences": "kemunculan",
+    "status": "status",
+    "sortBy": "Urutkan menurut",
+    "characterSet": {
+      "title": "Himpunan Karakter Bahasa Daerah:",
+      "help": "Tentukan karakter yang valid untuk bahasa ini",
+      "acceptedCharacters": "Karakter Diterima",
+      "rejectedCharacters": "Karakter Ditolak",
+      "advanced": "Lanjutan",
+      "occurrences": "{{ val }} kemunculan",
+      "find": "Cari",
+      "replaceWith": "Ganti dengan",
+      "replaceAll": "Ganti semua kemunculan: {{ val }}",
+      "replaceAllWith": "Ganti dengan: {{ val }}",
+      "findAndReplace": "Cari & Ganti",
+      "findAndReplaceError": "Galat memproses: cari ( {{ val1 }} ), ganti ( {{ val2 }} )",
+      "apply": "Terapkan"
+    },
+    "dialog": {
+      "title": "Perubahan belum disimpan",
+      "content": "Buang perubahan dari Anda pada himpunan karakter?",
+      "yes": "Ya",
+      "no": "Tidak"
+    },
+    "changes": {
+      "noCharChanges": "Tidak ada perubahan pada inventaris karakter.",
+      "more": "lebih",
+      "noWordChangesFindReplace": "Tidak ada kata yang diubah oleh cari-dan-ganti.",
+      "wordChanges": "Kata yang diubah:",
+      "wordChangesWithStrings": "Kata yang diubah ({{ val1 }} → {{ val2 }}):"
+    },
+    "undo": {
+      "undo": "Batalkan cari-dan-ganti",
+      "undoDialog": "Batalkan perubahan kata oleh cari-dan-ganti?",
+      "undoDisabled": "Pembatalan tidak tersedia",
+      "undoWords": "Pembatalan tersedia untuk {{ val1 }} dari {{ val2 }} kata yang diubah."
+    }
+  },
+  "mergeDups": {
+    "title": "Gabungkan Duplikat",
+    "description": "Tinjau potensi duplikat yang diidentifikasi oleh The Combine dan gabungkan atau hilangkan duplikat sejati.",
+    "helpText": {
+      "dragCard": "Seret kartu ke sini untuk menggabungkan",
+      "saveAndContinue": "Simpan perubahan dan muat kumpulan kata baru",
+      "defer": "Buang perubahan dan muat kumpulan kata baru",
+      "revertSet": "Kembalikan semua perubahan yang dibuat pada kumpulan kata ini",
+      "revertSetDialog": "Apakah Anda yakin ingin membuang semua perubahan dan memulai ulang dengan kumpulan kata ini?",
+      "noDups": "Tidak ada yang perlu digabungkan.",
+      "delete": "Hapus pengertian",
+      "deleteDialog": "Hapus pengertian ini?",
+      "protectedSense": "Pengertian ini diimpor dengan data yang tidak ditangani oleh The Combine.",
+      "protectedSenseInfo": "Pengertian ini tidak dapat dihapus atau dilepaskan ke pengertian lain dengan aman. Anda tetap dapat memindahkannya ke kata lain atau melepaskan pengertian lain ke dalamnya untuk menggabungkannya.",
+      "protectedWord": "Kata ini diimpor dengan data yang tidak ditangani oleh The Combine.",
+      "protectedWordInfo": "Untuk mencegah penghapusan, pengertian terakhir dari kata ini tidak dapat dihilangkan dengan aman.",
+      "protectedData": "Data terlindungi: {{ val }}",
+      "protectedOverride": "Izinkan penghapusan kata atau pengertian terlindungi?",
+      "protectedOverrideWarning": "Data berikut akan hilang: {{ val }}",
+      "deleteProtectedSenseWarning": "Anda tidak dapat menghapus pengertian terlindungi.",
+      "dropIntoSidebarWarning": "Anda tidak dapat melepaskan pengertian ke bilah sisi.",
+      "dropProtectedSenseWarning": "Anda tidak dapat menggabungkan pengertian terlindungi menjadi pengertian lain.",
+      "orderProtectedSidebarWarning": "Pengertian terlindungi di bilah sisi tidak dapat dipindahkan dari posisi teratas."
+    },
+    "protectReason": {
+      "annotations": "catatan",
+      "etymologies": "etimologi",
+      "examples": "contoh",
+      "field": "Bidang \"{{ val }}\"",
+      "gramInfoTrait": "informasi tatabahasa \"{{ val }}\"",
+      "illustrations": "ilustrasi",
+      "noteWithType": "catatan dengan jenis \"{{ val }}\"",
+      "notesSense": "catatan",
+      "notesWord": "lebih dari 1 catatan",
+      "pronunciationWithoutUrl": "ucapan tanpa berkas media",
+      "relations": "hubungan",
+      "reversal": "Pembalikan \"{{ val }}\"",
+      "subsenses": "subpengertian",
+      "traitAnthroCode": "kode anthro \"{{ val }}\"",
+      "traitDialectLabels": "label dialek \"{{ val }}\"",
+      "traitDomainType": "jenis medan \"{{ val }}\"",
+      "traitDoNotPublishIn": "jangan terbitkan di \"{{ val }}\"",
+      "traitDoNotUseForParsing": "jangan gunakan untuk penguraian \"{{ val }}\"",
+      "traitEntryType": "jenis entri \"{{ val }}\"",
+      "traitExcludeAsHeadword": "kecualikan sebagai lema",
+      "traitMinorEntryCondition": "kondisi entri minor \"{{ val }}\"",
+      "traitMorphType": "jenis morf \"{{ val }}\" (alih-alih \"stem\" bawaan)",
+      "traitPublishIn": "terbitkan di \"{{ val }}\"",
+      "traitSenseType": "jenis pengertian \"{{ val }}\"",
+      "traitStatus": "status \"{{ val }}\"",
+      "traitUsageType": "jenis penggunaan \"{{ val }}\"",
+      "variants": "varian"
+    },
+    "completed": {
+      "number": "Jumlah penggabungan yang diselesaikan: "
+    },
+    "continueDialog": {
+      "title": "Lanjutkan menggabungkan?",
+      "yes": "Ya",
+      "no": "Tidak"
+    },
+    "identicalCompleted": {
+      "title": "Semua Duplikat Identik Telah Diproses",
+      "congratulations": "Selamat! Anda telah memproses semua kumpulan kata dengan bentuk bahasa daerah yang identik.",
+      "hasDeferred": "Anda memiliki kumpulan duplikat yang ditangguhkan yang dapat ditinjau.",
+      "findingSimilar": "The Combine kini sedang mencari potensi duplikat dengan bentuk bahasa daerah yang mirip (tidak identik).",
+      "foundSimilar": "The Combine telah menemukan potensi duplikat dengan bentuk bahasa daerah yang mirip (tidak identik).",
+      "warning": "Menemukan duplikat yang mirip mungkin memakan waktu beberapa menit.",
+      "reviewDeferred": "Tinjau yang Ditangguhkan",
+      "continue": "Lanjutkan"
+    },
+    "undo": {
+      "undo": "Batalkan Penggabungan",
+      "undoDialog": "Batalkan penggabungan ini?",
+      "deleted": "Dihapus:",
+      "undoDelete": "Batalkan Penghapusan",
+      "undoDeleteDialog": "Batalkan penghapusan ini?",
+      "undoDisabled": "Pembatalan tidak tersedia"
+    }
+  },
+  "flags": {
+    "add": "Tambahkan tanda",
+    "edit": "Sunting tanda",
+    "remove": "Hapus tanda",
+    "save": "Simpan tanda"
+  },
+  "buttons": {
+    "accept": "Terima",
+    "accepted": "Diterima",
+    "add": "Tambahkan",
+    "archive": "Arsipkan",
+    "browse": "Meramban",
+    "cancel": "Batal",
+    "clearText": "Bersihkan teks",
+    "confirm": "Konfirmasi",
+    "defer": "Tangguhkan",
+    "delete": "Hapus",
+    "deletePermanently": "Hapus permanen?",
+    "done": "Selesai",
+    "exit": "Keluar",
+    "export": "Ekspor",
+    "invite": "Undang",
+    "proceedWithCaution": "Lanjutkan dengan Hati-hati!",
+    "reject": "Tolak",
+    "revertSet": "Kembalikan kumpulan",
+    "rejected": "Ditolak",
+    "reset": "Atur ulang",
+    "restore": "Pulihkan",
+    "save": "Simpan",
+    "saveAndContinue": "Simpan & Lanjutkan",
+    "undecided": "Belum diputuskan",
+    "upload": "Unggah"
+  },
+  "pronunciations": {
+    "enableMicTooltip": "Aktifkan akses mikrofon untuk merekam.",
+    "recordTooltip": "Tekan dan tahan untuk merekam.",
+    "playTooltip": "Klik untuk memutar.",
+    "deleteTooltip": "Shift klik untuk menghapus.",
+    "protectedTooltip": "Audio yang diimpor tidak dapat dihapus atau diubah.",
+    "speaker": "Penutur: {{ val }}.",
+    "speakerAdd": "Klik kanan untuk menambahkan penutur.",
+    "speakerChange": "Klik kanan untuk mengubah penutur.",
+    "speakerSelect": "Pilih penuturnya rekaman audio ini",
+    "recordingError": "Galat perekaman.",
+    "recordingPermission": "Mohon periksa apakah izin mikrofon sudah aktif di peramban Anda.",
+    "deleteRecording": "Hapus Rekaman",
+    "audioStreamError": "Galat mendapatkan aliran audio!",
+    "noMicAccess": "Tidak ada akses mikrofon. Perekaman audio dinonaktifkan."
+  },
+  "statistics": {
+    "title": "Statistik Data: {{ val }}",
+    "domainProgress": "Kemajuan Medan",
+    "domainsCollected": "Medan yang Dikumpulkan: {{ val }}",
+    "wordsCollected": "Kata yang Dikumpulkan: {{ val }}",
+    "percent": "{{ val }}%",
+    "view": {
+      "user": "Kata per Pengguna",
+      "domain": "Kata per Medan",
+      "day": "Kata per Hari",
+      "workshop": "Kemajuan Lokakarya"
+    },
+    "column": {
+      "domainNumber": "Nomor Medan:",
+      "domainName": "Nama Medan:",
+      "username": "Nama Pengguna:",
+      "domainCount": "Medan:",
+      "recentDomain": "Medan Terbaru:",
+      "senseCount": "Kata:"
+    },
+    "axisLabel": {
+      "date": "Tanggal",
+      "words": "Kata yang Dikumpulkan"
+    }
+  },
+  "grammaticalCategory": {
+    "group": {
+      "Adjective": "Adjektiva",
+      "Adposition": "Adposisi",
+      "Adverb": "Adverbia",
+      "Classifier": "Penggolong",
+      "Connective": "Konektif",
+      "Determiner": "Penentu",
+      "ExistentialMarker": "Penanda eksistensial",
+      "Expletive": "Ekspletif",
+      "Interjection": "Interjeksi",
+      "Noun": "Nomina",
+      "Participle": "Partisipel",
+      "Particle": "Partikel",
+      "Prenoun": "Pranomina",
+      "Preverb": "Praverba",
+      "ProForm": "Kata ganti",
+      "Verb": "Verba",
+      "Other": "Lainnya",
+      "Unspecified": "Tidak ditentukan"
+    }
+  },
+  "wordCard": {
+    "senseCount": "Pengertian: {{ val }}",
+    "wordId": "Id: {{ val }}",
+    "wordModified": "Diubah: {{ val }}",
+    "domainAdded": "Ditambahkan: {{ val }}",
+    "user": "Oleh pengguna: {{ val }}"
+  }
+}
