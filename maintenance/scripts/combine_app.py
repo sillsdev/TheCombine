@@ -15,14 +15,13 @@ from typing import Any, Dict, List, Optional
 from maint_utils import run_cmd
 
 # A `kubectl cp` streams a tar over the exec channel and can stall intermittently,
-# which would otherwise hang forever (issue #4322).  Bound each copy with a timeout
-# so a stalled stream gets killed, and retry a few times so a transient stall is
-# recovered.  Both defaults are overridable via environment variables.
-CP_TIMEOUT = float(os.getenv("kubectl_cp_timeout", "300"))
+# which would otherwise hang forever.  Bound each copy with a timeout so a stalled
+# stream gets killed, and retry a few times so a transient stall is recovered.
 CP_ATTEMPTS = int(os.getenv("kubectl_cp_attempts", "3"))
+CP_TIMEOUT = float(os.getenv("kubectl_cp_timeout", "300"))
 # A fast-failing copy can exhaust all attempts within the same second, giving a
 # transient failure no time to clear; pause between attempts so the retries span time.
-CP_RETRY_DELAY = 5.0
+CP_RETRY_DELAY = 3.0
 
 
 class CombineApp:
