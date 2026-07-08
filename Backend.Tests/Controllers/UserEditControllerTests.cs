@@ -166,6 +166,28 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestAddGoalToUserEditTrimsToMaxEdits()
+        {
+            var userEdit = new UserEdit { ProjectId = ProjId };
+            foreach (var _ in Range(0, UserEdit.MaxEdits))
+            {
+                userEdit.Edits.Add(new Edit());
+            }
+            userEdit = await _userEditRepo.Create(userEdit);
+            var oldestEditGuid = userEdit.Edits.First().Guid;
+
+            var newEdit = new Edit();
+            var result = await _userEditController.UpdateUserEditGoal(ProjId, userEdit.Id, newEdit);
+            Assert.That(result, Is.InstanceOf<OkResult>());
+
+            var repoUserEdit = await _userEditRepo.GetUserEdit(ProjId, userEdit.Id);
+            Assert.That(repoUserEdit, Is.Not.Null);
+            Assert.That(repoUserEdit.Edits, Has.Count.EqualTo(UserEdit.MaxEdits));
+            Assert.That(repoUserEdit.Edits.Last().Guid, Is.EqualTo(newEdit.Guid));
+            Assert.That(repoUserEdit.Edits.Select(e => e.Guid), Does.Not.Contain(oldestEditGuid));
+        }
+
+        [Test]
         public async Task TestAddStepToGoal()
         {
             // Generate db entry to test.

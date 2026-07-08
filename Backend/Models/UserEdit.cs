@@ -10,6 +10,13 @@ namespace BackendFramework.Models
     /// <summary> The changes a user has made on a particular project </summary>
     public class UserEdit
     {
+        /// <summary> Max length of <see cref="Edits"/>, capped to keep the document under MongoDB's 16 MB limit. </summary>
+        /// <remarks>
+        /// Production data showed edits averaging up to ~40 kB, so 250 keeps worst-case documents near 10 MB.
+        /// Keep in sync with the cap in database/trim-user-edits.js.
+        /// </remarks>
+        public const int MaxEdits = 250;
+
         [Required]
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
