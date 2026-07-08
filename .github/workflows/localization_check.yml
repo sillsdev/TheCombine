@@ -107,14 +107,22 @@ jobs:
           compare "uiWritingSystems" "$ui_ts" "localization-ui-badge" "$ui_badge"
           compare "localization-ui-badge" "$ui_badge" "public/locales/ subdirectories" "$locales"
 
-          # User guide: mkdocs.yml locales <-> ug badge.
+          # User guide: mkdocs.yml (i18n locales <-> search langs <-> alternate langs) <-> ug badge.
           echo "::group::User guide"
-          ug_mkdocs=$(grep -oP '^\s*- locale: \K\S+' docs/user_guide/mkdocs.yml | sort -u)
+          ug_mkdocs_i18n=$(grep -oP '^\s*- locale: \K\S+' docs/user_guide/mkdocs.yml | sort -u)
+          ug_mkdocs_search=$(grep -oP '^\s*lang: \[\K[^\]]+' docs/user_guide/mkdocs.yml | tr ',' '\n' |
+            sed 's/^ *//;s/ *$//' | sort -u)
+          ug_mkdocs_alternate=$(grep -oP '^\s*lang: \K[a-zA-Z0-9_-]+$' docs/user_guide/mkdocs.yml | sort -u)
           ug_badge=$(badge_langs 'User%20Guide')
-          show "mkdocs.yml locales" "$ug_mkdocs"
+          show "mkdocs.yml i18n locales" "$ug_mkdocs_i18n"
+          show "mkdocs.yml search langs" "$ug_mkdocs_search"
+          show "mkdocs.yml alternate langs" "$ug_mkdocs_alternate"
           show "localization-ug-badge" "$ug_badge"
           echo "::endgroup::"
-          compare "mkdocs.yml locales" "$ug_mkdocs" "localization-ug-badge" "$ug_badge"
+          compare "mkdocs.yml i18n locales" "$ug_mkdocs_i18n" "mkdocs.yml search langs" "$ug_mkdocs_search"
+          compare "mkdocs.yml i18n locales" "$ug_mkdocs_i18n" \
+            "mkdocs.yml alternate langs" "$ug_mkdocs_alternate"
+          compare "mkdocs.yml i18n locales" "$ug_mkdocs_i18n" "localization-ug-badge" "$ug_badge"
 
           exit $fail
       - name: Verify semantic domain xml files have no examples
