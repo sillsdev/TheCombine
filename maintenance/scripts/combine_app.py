@@ -19,7 +19,7 @@ from maint_utils import run_cmd
 # stream gets killed, and retry a few times so a transient stall is recovered.
 # Clamp to a sane floor so a misconfigured env var can't skip the copy entirely.
 CP_ATTEMPTS = max(1, int(os.getenv("kubectl_cp_attempts", "3")))
-CP_TIMEOUT = max(10.0, float(os.getenv("kubectl_cp_timeout", "300")))
+CP_TIMEOUT_S = max(10.0, float(os.getenv("kubectl_cp_timeout_s", "300")))
 # A fast-failing copy can exhaust all attempts within the same second, giving a
 # transient failure no time to clear; pause between attempts so the retries span time.
 CP_RETRY_DELAY = 3.0
@@ -106,7 +106,7 @@ class CombineApp:
         cp_args: List[str],
         *,
         label: str,
-        timeout: float = CP_TIMEOUT,
+        timeout: float = CP_TIMEOUT_S,
         attempts: int = CP_ATTEMPTS,
     ) -> None:
         """Run a `kubectl cp`, bounding it with a timeout and retrying transient stalls.
