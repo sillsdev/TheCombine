@@ -911,11 +911,11 @@ To delete a chart, first list all of the existing charts:
 
 ```console
 $ helm list -A
-NAME                NAMESPACE       REVISION    UPDATED                                 STATUS      CHART                   APP VERSION
-cert-manager        cert-manager    3           2022-02-28 11:27:12.141797222 -0500 EST deployed    cert-manager-v1.7.1     v1.7.1
-ingress-controller  ingress-nginx   3           2022-02-28 11:27:15.729203306 -0500 EST deployed    ingress-nginx-4.0.17    1.1.1
-rancher             cattle-system   1           2022-03-11 12:46:06.962438027 -0500 EST deployed    rancher-2.6.3           v2.6.3
-thecombine          thecombine      2           2022-03-11 11:41:38.304404635 -0500 EST deployed    thecombine-0.7.14       2.0.0
+NAME                NAMESPACE      REVISION  UPDATED                                STATUS    CHART                            APP VERSION
+cert-manager        cert-manager   1         2026-07-08 16:05:41.4513815 -0400 EDT  deployed  cert-manager-v1.17.1             v1.17.1
+ingress-controller  ingress-nginx  1         2026-07-08 16:07:07.0383646 -0400 EDT  deployed  ingress-nginx-4.15.1             1.15.1
+otel                thecombine     1         2026-07-08 16:07:40.6896911 -0400 EDT  deployed  opentelemetry-collector-0.147.1  0.147.0
+thecombine          thecombine     1         2026-07-08 16:17:10.4547471 -0400 EDT  deployed  thecombine-v2.9.0-v3.70          3.0.0
 ```
 
 Using the chart name and namespace, you can then delete the chart:
