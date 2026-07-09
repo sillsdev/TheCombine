@@ -69,7 +69,7 @@ namespace Backend.Tests.Mocks
         public Task<bool> ReplaceEdit(string projectId, string userEditId, Edit edit)
         {
             var userEdit = _userEdits.Find(ue => ue.ProjectId == projectId && ue.Id == userEditId);
-            var editIndex = userEdit?.Edits.FindIndex(e => e.Guid == edit.Guid) ?? -1;
+            var editIndex = userEdit?.Edits.FindLastIndex(e => e.Guid == edit.Guid) ?? -1;
             if (userEdit is null || editIndex == -1)
             {
                 return Task.FromResult(false);

@@ -24,28 +24,21 @@ namespace BackendFramework.Services
         /// </summary>
         /// <returns>
         /// Tuple of
-        ///     bool: true if Edit added/updated, false if nothing modified
-        ///     Guid?: guid of added/updated Edit, or null if UserEdit not found
+        ///     bool: true if the Edit was added or updated, false if the UserEdit was not found
+        ///     Guid?: guid of the added/updated Edit, or null if the UserEdit was not found
         /// </returns>
         public async Task<Tuple<bool, Guid?>> AddGoalToUserEdit(string projectId, string userEditId, Edit edit)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "adding goal to user edit");
 
-            // Get userEdit to change
-            var userEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
-            if (userEdit is null)
-            {
-                return new Tuple<bool, Guid?>(false, null);
-            }
-
             edit.Modified = DateTime.UtcNow;
 
-            // Update existing Edit if guid exists, otherwise add new one at end of List.
-            var isSuccess = userEdit.Edits.FindLastIndex(e => e.Guid == edit.Guid) > -1
-                ? await _userEditRepo.ReplaceEdit(projectId, userEditId, edit)
-                : await _userEditRepo.AddEdit(projectId, userEditId, edit);
+            // Replace an existing Edit with the same guid if present, otherwise add a new one. Letting the
+            // atomic ReplaceEdit report whether the guid existed avoids deciding from a separate stale read.
+            var isSuccess = await _userEditRepo.ReplaceEdit(projectId, userEditId, edit)
+                || await _userEditRepo.AddEdit(projectId, userEditId, edit);
 
-            return new Tuple<bool, Guid?>(isSuccess, edit.Guid);
+            return new Tuple<bool, Guid?>(isSuccess, isSuccess ? edit.Guid : null);
         }
 
         /// <summary> Adds a string representation of a step to a specified <see cref="Edit"/> </summary>
