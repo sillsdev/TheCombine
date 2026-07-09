@@ -33,8 +33,10 @@ namespace BackendFramework.Services
 
             edit.Modified = DateTime.UtcNow;
 
-            // Replace an existing Edit with the same guid if present, otherwise add a new one. Letting the
-            // atomic ReplaceEdit report whether the guid existed avoids deciding from a separate stale read.
+            // Replace the Edit with this guid if present, otherwise add it. Each repo call is atomic on its
+            // own; taking the branch from ReplaceEdit's result rather than a prior read closes the stale-read
+            // race. Two concurrent first-time writes of the same new guid could still both add it, but guids
+            // are client-generated and unique per goal, so that window is tolerated rather than locked.
             var isSuccess = await _userEditRepo.ReplaceEdit(projectId, userEditId, edit)
                 || await _userEditRepo.AddEdit(projectId, userEditId, edit);
 
