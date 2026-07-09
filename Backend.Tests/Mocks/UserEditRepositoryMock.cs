@@ -26,7 +26,7 @@ namespace Backend.Tests.Mocks
         {
             try
             {
-                var foundUserEdit = _userEdits.Single(ue => ue.Id == userEditId);
+                var foundUserEdit = _userEdits.Single(ue => ue.ProjectId == projectId && ue.Id == userEditId);
                 return Task.FromResult<UserEdit?>(foundUserEdit.Clone());
             }
             catch (InvalidOperationException)
@@ -44,13 +44,14 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> DeleteAllUserEdits(string projectId)
         {
-            _userEdits.Clear();
-            return Task.FromResult(true);
+            var rmCount = _userEdits.RemoveAll(userEdit => userEdit.ProjectId == projectId);
+            return Task.FromResult(rmCount > 0);
         }
 
         public Task<bool> Delete(string projectId, string userEditId)
         {
-            var rmCount = _userEdits.RemoveAll(userEdit => userEdit.Id == userEditId);
+            var rmCount = _userEdits.RemoveAll(
+                userEdit => userEdit.ProjectId == projectId && userEdit.Id == userEditId);
             return Task.FromResult(rmCount > 0);
         }
 
@@ -95,7 +96,7 @@ namespace Backend.Tests.Mocks
         {
             var userEdit = _userEdits.Find(ue => ue.ProjectId == projectId && ue.Id == userEditId);
             var edit = userEdit?.Edits.Find(e => e.Guid == editGuid);
-            if (edit is null)
+            if (edit is null || stepIndex < 0 || stepIndex >= edit.StepData.Count)
             {
                 return Task.FromResult(false);
             }

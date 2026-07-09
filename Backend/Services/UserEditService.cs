@@ -69,18 +69,7 @@ namespace BackendFramework.Services
                 return false;
             }
 
-            // Read first to bounds-check stepIndex: a $set beyond the array's end
-            // would pad the array with nulls instead of failing.
-            var userEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
-            if (userEdit is null)
-            {
-                return false;
-            }
-            var edit = userEdit.Edits.FindLast(e => e.Guid == editGuid);
-            if (edit is null || stepIndex >= edit.StepData.Count)
-            {
-                return false;
-            }
+            // The repository bounds-checks stepIndex atomically with the write.
             return await _userEditRepo.UpdateStepInEdit(projectId, userEditId, editGuid, stepIndex, stepString);
         }
     }
