@@ -89,9 +89,11 @@ idsToMigrate.forEach(function (id) {
 });
 print("Moved " + totalEditsMoved + " edit(s) from " + idsToMigrate.length + " document(s).");
 
-// All backend queries on EditsCollection filter by projectId (+ userEditId).
-edits.createIndex({ projectId: 1, userEditId: 1 });
-print("Ensured index { projectId: 1, userEditId: 1 } on EditsCollection.");
+// Backend queries filter by projectId + userEditId (list a user edit's edits) and by
+// projectId + userEditId + guid (replace/update a single edit). One compound index serves
+// both: the leading fields cover the former, the full key covers the latter.
+edits.createIndex({ projectId: 1, userEditId: 1, guid: 1 });
+print("Ensured index { projectId: 1, userEditId: 1, guid: 1 } on EditsCollection.");
 
 // Verify: no old-format documents remain, and every ref resolves.
 var failures = 0;
