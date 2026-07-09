@@ -41,41 +41,20 @@ namespace BackendFramework.Services
             edit.Modified = DateTime.UtcNow;
 
             // Update existing Edit if guid exists, otherwise add new one at end of List.
-            var editIndex = userEdit.Edits.FindLastIndex(e => e.Guid == edit.Guid);
-            if (editIndex > -1)
-            {
-                userEdit.Edits[editIndex] = edit;
-            }
-            else
-            {
-                userEdit.Edits.Add(edit);
-            }
+            var isSuccess = userEdit.Edits.FindLastIndex(e => e.Guid == edit.Guid) > -1
+                ? await _userEditRepo.ReplaceEdit(projectId, userEditId, edit)
+                : await _userEditRepo.AddEdit(projectId, userEditId, edit);
 
-            // Replace the old UserEdit object with the new one that contains the new/updated edit
-            var editReplaced = await _userEditRepo.Replace(projectId, userEditId, userEdit);
-
-            return new Tuple<bool, Guid?>(editReplaced, edit.Guid);
+            return new Tuple<bool, Guid?>(isSuccess, edit.Guid);
         }
 
         /// <summary> Adds a string representation of a step to a specified <see cref="Edit"/> </summary>
-        /// <returns> A bool: success of operation </returns>
+        /// <returns> A bool: success of operation (false if userEdit or edit not found) </returns>
         public async Task<bool> AddStepToGoal(string projectId, string userEditId, Guid editGuid, string stepString)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "adding step to goal");
 
-            var userEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
-            if (userEdit is null)
-            {
-                return false;
-            }
-            var edit = userEdit.Edits.FindLast(e => e.Guid == editGuid);
-            if (edit is null)
-            {
-                return false;
-            }
-            edit.Modified = DateTime.UtcNow;
-            edit.StepData.Add(stepString);
-            return await _userEditRepo.Replace(projectId, userEditId, userEdit);
+            return await _userEditRepo.AddStepToEdit(projectId, userEditId, editGuid, stepString);
         }
 
         /// <summary> Updates a specified step in a specified <see cref="Edit"/> </summary>
@@ -89,6 +68,9 @@ namespace BackendFramework.Services
             {
                 return false;
             }
+
+            // Read first to bounds-check stepIndex: a $set beyond the array's end
+            // would pad the array with nulls instead of failing.
             var userEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
             if (userEdit is null)
             {
@@ -99,9 +81,7 @@ namespace BackendFramework.Services
             {
                 return false;
             }
-            edit.Modified = DateTime.UtcNow;
-            edit.StepData[stepIndex] = stepString;
-            return await _userEditRepo.Replace(projectId, userEditId, userEdit);
+            return await _userEditRepo.UpdateStepInEdit(projectId, userEditId, editGuid, stepIndex, stepString);
         }
     }
 }
