@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Models;
 
@@ -11,6 +12,9 @@ namespace BackendFramework.Interfaces
         Task<UserEdit> Create(UserEdit userEdit);
         Task<bool> Delete(string projectId, string userEditId);
         Task<bool> DeleteAllUserEdits(string projectId);
-        Task<bool> Replace(string projectId, string userEditId, UserEdit userEdit);
+        Task<bool> AddEdit(string projectId, string userEditId, Edit edit);
+        Task<bool> ReplaceEdit(string projectId, string userEditId, Edit edit);
+        Task<bool> AddStepToEdit(string projectId, string userEditId, Guid editGuid, string stepData);
+        Task<bool> UpdateStepInEdit(string projectId, string userEditId, Guid editGuid, int stepIndex, string stepData);
     }
 }
