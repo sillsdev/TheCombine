@@ -220,17 +220,22 @@ namespace BackendFramework.Repositories
         /// Overwrites the step at the given index of the <see cref="Edit"/> with matching guid
         /// in the <see cref="UserEdit"/> with specified userEditId and projectId.
         /// </summary>
-        /// <remarks> The caller is responsible for ensuring that stepIndex is within bounds. </remarks>
-        /// <returns> A bool: success of operation </returns>
+        /// <returns> A bool: success of operation (false if the step doesn't exist) </returns>
         public async Task<bool> UpdateStepInEdit(
             string projectId, string userEditId, Guid editGuid, int stepIndex, string stepData)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "updating a step in an edit");
 
+            // Requiring the step to exist makes the bounds check atomic with the write;
+            // a $set beyond the array's end would pad the array with nulls instead of failing.
+            var filterDef = new FilterDefinitionBuilder<StoredEdit>();
+            var filter = filterDef.And(
+                GetEditFilter(projectId, userEditId, editGuid), filterDef.Exists($"stepData.{stepIndex}"));
+
             var update = Builders<StoredEdit>.Update
                 .Set($"stepData.{stepIndex}", stepData)
                 .Set(e => e.Modified, DateTime.UtcNow);
-            var result = await _edits.UpdateOneAsync(GetEditFilter(projectId, userEditId, editGuid), update);
+            var result = await _edits.UpdateOneAsync(filter, update);
             return result.IsAcknowledged && result.MatchedCount == 1;
         }
     }

@@ -17,22 +17,8 @@ namespace Backend.Tests.Repositories
     [Category("IntegrationTest")]
     public sealed class WordRepositoryTests
     {
-        private static MongoDbTestRunner _runner = null!;
         private WordRepository _repo = null!;
         private string _projectId = null!;
-
-        [OneTimeSetUp]
-        public static void StartMongo()
-        {
-            _runner?.Dispose();
-            _runner = MongoDbTestRunner.Start();
-        }
-
-        [OneTimeTearDown]
-        public static void StopMongo()
-        {
-            _runner?.Dispose();
-        }
 
         [SetUp]
         public void SetUp()
@@ -40,7 +26,7 @@ namespace Backend.Tests.Repositories
             _projectId = Guid.NewGuid().ToString();
             var options = Options.Create(new BackendFramework.Startup.Settings
             {
-                ConnectionString = _runner.ConnectionString,
+                ConnectionString = MongoDbSetUpFixture.Runner.ConnectionString,
                 CombineDatabase = "WordRepositoryTests",
             });
             _repo = new WordRepository(new MongoDbContext(options));

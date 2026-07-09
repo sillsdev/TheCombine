@@ -19,24 +19,10 @@ namespace Backend.Tests.Repositories
     [Category("IntegrationTest")]
     public sealed class UserEditRepositoryTests
     {
-        private static MongoDbTestRunner _runner = null!;
         private MongoDbContext _dbContext = null!;
         private UserEditRepository _repo = null!;
         private IMongoCollection<StoredEdit> _editsCollection = null!;
         private string _projectId = null!;
-
-        [OneTimeSetUp]
-        public static void StartMongo()
-        {
-            _runner?.Dispose();
-            _runner = MongoDbTestRunner.Start();
-        }
-
-        [OneTimeTearDown]
-        public static void StopMongo()
-        {
-            _runner?.Dispose();
-        }
 
         [SetUp]
         public void SetUp()
@@ -44,7 +30,7 @@ namespace Backend.Tests.Repositories
             _projectId = Guid.NewGuid().ToString();
             var options = Options.Create(new BackendFramework.Startup.Settings
             {
-                ConnectionString = _runner.ConnectionString,
+                ConnectionString = MongoDbSetUpFixture.Runner.ConnectionString,
                 CombineDatabase = "UserEditRepositoryTests",
             });
             _dbContext = new MongoDbContext(options);
@@ -295,6 +281,22 @@ namespace Backend.Tests.Repositories
             var userEdit = await CreateUserEdit(new Edit { StepData = ["a"] });
             var result = await _repo.UpdateStepInEdit(_projectId, userEdit.Id, Guid.NewGuid(), 0, "A");
             Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public async Task TestUpdateStepInEditOutOfBoundsReturnsFalseWithoutPadding()
+        {
+            var edit = new Edit { StepData = ["a"] };
+            var userEdit = await CreateUserEdit(edit);
+
+            var result = await _repo.UpdateStepInEdit(_projectId, userEdit.Id, edit.Guid, 2, "C");
+
+            Assert.That(result, Is.False);
+            var retrieved = await _repo.GetUserEdit(_projectId, userEdit.Id);
+            Assert.That(retrieved, Is.Not.Null);
+            var retrievedEdit = retrieved.Edits.Find(e => e.Guid == edit.Guid);
+            Assert.That(retrievedEdit, Is.Not.Null);
+            Assert.That(retrievedEdit.StepData, Is.EqualTo(["a"]));
         }
 
         [Test]
