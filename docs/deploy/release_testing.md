@@ -134,9 +134,9 @@ Open Data Cleanup > Merge Duplicates in the LIFT-imported project.
 - Complete at least one merge and one defer.
 - Verify the defer makes Review Deferred Duplicates available in Data Cleanup.
 
-#### 7.3. Character inventory
+#### 7.3. Check Orthography
 
-Open Data Cleanup > Create Character Inventory in the LIFT-imported project.
+Open Data Cleanup > Check Orthography in the LIFT-imported project.
 
 - Mark one character Accepted and one Rejected; save.
 
