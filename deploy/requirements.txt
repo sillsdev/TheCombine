@@ -6,7 +6,7 @@
 #
 ansible==13.5.0
     # via -r requirements.in
-ansible-core==2.20.4
+ansible-core==2.20.7rc1
     # via ansible
 certifi==2026.2.25
     # via
