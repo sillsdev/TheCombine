@@ -16,10 +16,10 @@ namespace BackendFramework.Repositories
     public class UserEditRepository(IMongoDbContext dbContext) : IUserEditRepository
     {
         private readonly IMongoDbContext _dbContext = dbContext;
-        private readonly IMongoCollection<StoredUserEdit> _userEdits =
-            dbContext.Db.GetCollection<StoredUserEdit>("UserEditsCollection");
         private readonly IMongoCollection<StoredEdit> _edits =
             dbContext.Db.GetCollection<StoredEdit>("EditsCollection");
+        private readonly IMongoCollection<StoredUserEdit> _userEdits =
+            dbContext.Db.GetCollection<StoredUserEdit>("UserEditsCollection");
 
         private const string otelTagName = "otel.UserEditRepository";
 

@@ -90,7 +90,7 @@ namespace BackendFramework.Models
 
     /// <summary>
     /// The persisted form of a <see cref="UserEdit"/> in the UserEditsCollection, with each edit stored as a
-    /// reference to a <see cref="StoredEdit"/> document so the document cannot grow toward MongoDB's 16 MB limit.
+    /// reference to a <see cref="StoredEdit"/> document.
     /// </summary>
     public class StoredUserEdit
     {
