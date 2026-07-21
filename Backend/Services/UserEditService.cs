@@ -34,8 +34,7 @@ namespace BackendFramework.Services
             edit.Modified = DateTime.UtcNow;
 
             // Replace the Edit with this guid if present, otherwise add it. Each repo call is atomic on its
-            // own; taking the branch from ReplaceEdit's result rather than a prior read closes the stale-read
-            // race. Two concurrent first-time writes of the same new guid could still both add it, but guids
+            // own. Two concurrent first-time writes of the same new guid could still both add it, but guids
             // are client-generated and unique per goal, so that window is tolerated rather than locked.
             var isSuccess = await _userEditRepo.ReplaceEdit(projectId, userEditId, edit)
                 || await _userEditRepo.AddEdit(projectId, userEditId, edit);
@@ -64,7 +63,6 @@ namespace BackendFramework.Services
                 return false;
             }
 
-            // The repository bounds-checks stepIndex atomically with the write.
             return await _userEditRepo.UpdateStepInEdit(projectId, userEditId, editGuid, stepIndex, stepString);
         }
     }
