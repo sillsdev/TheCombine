@@ -272,6 +272,9 @@ namespace BackendFramework
 
             // Semantic Domain types
             services.AddSingleton<ISemanticDomainRepository, SemanticDomainRepository>();
+            // Singleton so the repository's unique-index creation runs once per process rather than on
+            // every word edit (it is a dependency of the per-word-operation WordRepository).
+            services.AddSingleton<ISemanticDomainCountRepository, SemanticDomainCountRepository>();
 
             // Speaker types
             services.AddTransient<ISpeakerRepository, SpeakerRepository>();
