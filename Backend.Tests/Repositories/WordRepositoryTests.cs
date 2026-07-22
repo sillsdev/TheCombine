@@ -17,23 +17,9 @@ namespace Backend.Tests.Repositories
     [Category("IntegrationTest")]
     public sealed class WordRepositoryTests
     {
-        private static MongoDbTestRunner _runner = null!;
         private WordRepository _repo = null!;
         private SemanticDomainCountRepository _semDomCountRepo = null!;
         private string _projectId = null!;
-
-        [OneTimeSetUp]
-        public static void StartMongo()
-        {
-            _runner?.Dispose();
-            _runner = MongoDbTestRunner.Start();
-        }
-
-        [OneTimeTearDown]
-        public static void StopMongo()
-        {
-            _runner?.Dispose();
-        }
 
         [SetUp]
         public void SetUp()
@@ -41,7 +27,7 @@ namespace Backend.Tests.Repositories
             _projectId = Guid.NewGuid().ToString();
             var options = Options.Create(new BackendFramework.Startup.Settings
             {
-                ConnectionString = _runner.ConnectionString,
+                ConnectionString = MongoDbSetUpFixture.Runner.ConnectionString,
                 CombineDatabase = "WordRepositoryTests",
             });
             var dbContext = new MongoDbContext(options);
@@ -704,26 +690,6 @@ namespace Backend.Tests.Repositories
             var word = await CreateWord();
             Assert.ThrowsAsync<ArgumentException>(() =>
                 _repo.RevertReplaceFrontier(_projectId, [word.Id], [word.Id], _ => { }));
-        }
-
-        [Test]
-        public async Task TestCountFrontierWordsWithDomainReturnsCorrectCount()
-        {
-            const string domainId = "1.1";
-            await CreateWord(domainId: domainId);
-            await CreateWord(domainId: domainId);
-            await CreateWord();
-
-            var count = await _repo.CountFrontierWordsWithDomain(_projectId, domainId);
-            Assert.That(count, Is.EqualTo(2));
-        }
-
-        [Test]
-        public async Task TestCountFrontierWordsWithDomainNoneMatchReturnsZero()
-        {
-            await CreateWord();
-            var count = await _repo.CountFrontierWordsWithDomain(_projectId, "99.99");
-            Assert.That(count, Is.Zero);
         }
 
         [Test]
