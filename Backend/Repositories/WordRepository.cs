@@ -364,24 +364,6 @@ namespace BackendFramework.Repositories
                     s, projectId, idsToRestore, idsToDelete, modifyDeletedWord)) ?? false;
         }
 
-        /// <summary>
-        /// Counts the number of Frontier words that have the specified semantic domain.
-        /// </summary>
-        /// <param name="projectId">The project id</param>
-        /// <param name="domainId">The semantic domain id</param>
-        /// <returns>The count of words containing at least one sense with the specified domain.</returns>
-        public async Task<int> CountFrontierWordsWithDomain(string projectId, string domainId)
-        {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "counting frontier words with domain");
-
-            var filterDef = new FilterDefinitionBuilder<Word>();
-            var filter = filterDef.And(
-                filterDef.Eq(w => w.ProjectId, projectId),
-                filterDef.ElemMatch(w => w.Senses, s => s.SemanticDomains.Any(sd => sd.Id == domainId)));
-
-            return (int)await _frontier.CountDocumentsAsync(filter);
-        }
-
         #endregion
 
         #region Private with-session helper methods

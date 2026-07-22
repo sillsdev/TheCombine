@@ -727,26 +727,6 @@ namespace Backend.Tests.Repositories
         }
 
         [Test]
-        public async Task TestCountFrontierWordsWithDomainReturnsCorrectCount()
-        {
-            const string domainId = "1.1";
-            await CreateWord(domainId: domainId);
-            await CreateWord(domainId: domainId);
-            await CreateWord();
-
-            var count = await _repo.CountFrontierWordsWithDomain(_projectId, domainId);
-            Assert.That(count, Is.EqualTo(2));
-        }
-
-        [Test]
-        public async Task TestCountFrontierWordsWithDomainNoneMatchReturnsZero()
-        {
-            await CreateWord();
-            var count = await _repo.CountFrontierWordsWithDomain(_projectId, "99.99");
-            Assert.That(count, Is.Zero);
-        }
-
-        [Test]
         public async Task TestCreateIncrementsDomainCount()
         {
             const string domainId = "1.1";

@@ -15,6 +15,7 @@ namespace Backend.Tests.Controllers
     internal sealed class WordControllerTests : IDisposable
     {
         private WordRepositoryMock _wordRepo = null!;
+        private SemanticDomainCountRepositoryMock _semDomCountRepo = null!;
         private IPermissionService _permissionService = null!;
         private IWordService _wordService = null!;
         private WordController _wordController = null!;
@@ -32,9 +33,10 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _wordRepo = new WordRepositoryMock();
+            _semDomCountRepo = new SemanticDomainCountRepositoryMock();
             _wordService = new WordService(_wordRepo);
             _permissionService = new PermissionServiceMock();
-            _wordController = new WordController(_wordRepo, _wordService, _permissionService);
+            _wordController = new WordController(_wordRepo, _wordService, _semDomCountRepo, _permissionService);
         }
 
         [Test]
@@ -464,8 +466,11 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestGetDomainWordCount()
         {
+            _semDomCountRepo.SetCount(ProjId, "1", 3);
+
             var result = await _wordController.GetDomainWordCount(ProjId, "1");
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)result).Value, Is.EqualTo(3));
         }
     }
 }
