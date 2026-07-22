@@ -10,9 +10,11 @@ using MongoDB.Driver;
 namespace BackendFramework.Repositories
 {
     /// <summary> Atomic database functions for <see cref="Word"/>s. </summary>
-    public class WordRepository(IMongoDbContext dbContext) : IWordRepository
+    public class WordRepository(IMongoDbContext dbContext, ISemanticDomainCountRepository semDomCountRepo)
+        : IWordRepository
     {
         private readonly IMongoDbContext _dbContext = dbContext;
+        private readonly ISemanticDomainCountRepository _semDomCountRepo = semDomCountRepo;
         private readonly IMongoCollection<Word> _frontier = dbContext.Db.GetCollection<Word>("FrontierCollection");
         private readonly IMongoCollection<Word> _words = dbContext.Db.GetCollection<Word>("WordsCollection");
 
@@ -135,11 +137,8 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting all words from Frontier");
 
-            var filterDef = new FilterDefinitionBuilder<Word>();
-            var filter = filterDef.Eq(x => x.ProjectId, projectId);
-
-            var deleted = await _frontier.DeleteManyAsync(filter);
-            return deleted.DeletedCount != 0;
+            return await _dbContext.ExecuteInTransaction(
+                async s => await DeleteAllFrontierWordsWithSession(s, projectId));
         }
 
         /// <summary> Checks if Words collection for specified <see cref="Project"/> has any words. </summary>
@@ -406,6 +405,7 @@ namespace BackendFramework.Repositories
             // The first collection insert will generate the id, which should match in the second collection.
             await _words.InsertManyAsync(session, words);
             await _frontier.InsertManyAsync(session, words);
+            await ApplyDomainDeltas(session, words, 1);
             return words;
         }
 
@@ -427,6 +427,8 @@ namespace BackendFramework.Repositories
             {
                 return null;
             }
+
+            await ApplyDomainDeltas(session, [deletedWord], -1);
 
             var modifiedWord = deletedWord.Clone();
             modifyDeletedWord(modifiedWord);
@@ -462,6 +464,7 @@ namespace BackendFramework.Repositories
             }
 
             await _frontier.InsertOneAsync(session, word);
+            await ApplyDomainDeltas(session, [word], 1);
             return true;
         }
 
@@ -481,6 +484,8 @@ namespace BackendFramework.Repositories
             {
                 return null;
             }
+
+            await ApplyDomainDeltas(session, [deletedWord], -1);
 
             var word = deletedWord.Clone();
             modifyUpdatedWord(word);
@@ -510,6 +515,11 @@ namespace BackendFramework.Repositories
             if (deletedWord is null && !createIfNotFound)
             {
                 return null;
+            }
+
+            if (deletedWord is not null)
+            {
+                await ApplyDomainDeltas(session, [deletedWord], -1);
             }
 
             modifyUpdatedWord(word, deletedWord?.Clone());
@@ -597,6 +607,43 @@ namespace BackendFramework.Repositories
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Deletes all Frontier words for a project and clears its cached semantic domain counts in one transaction.
+        /// </summary>
+        /// <param name="session">Mongo transaction session.</param>
+        /// <param name="projectId">Id of the project whose Frontier words are removed.</param>
+        /// <returns>True if at least one Frontier word was deleted; otherwise false.</returns>
+        private async Task<bool> DeleteAllFrontierWordsWithSession(IClientSessionHandle session, string projectId)
+        {
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.Eq(x => x.ProjectId, projectId);
+
+            var deleted = await _frontier.DeleteManyAsync(session, filter);
+            await _semDomCountRepo.DeleteAllCounts(session, projectId);
+            return deleted.DeletedCount != 0;
+        }
+
+        /// <summary>
+        /// Applies semantic domain sense-count deltas for the given words within the transaction session, one
+        /// call per distinct project. <paramref name="sign"/> is +1 when the words enter the Frontier and -1
+        /// when they leave it, so the cached counts commit or roll back with the same transaction as the word write.
+        /// </summary>
+        /// <param name="session">Mongo transaction session.</param>
+        /// <param name="words">Words whose semantic domain occurrences changed in the Frontier.</param>
+        /// <param name="sign">+1 to add the words' domain occurrences, -1 to remove them.</param>
+        private async Task ApplyDomainDeltas(IClientSessionHandle session, IEnumerable<Word> words, int sign)
+        {
+            foreach (var wordsByProject in words.GroupBy(w => w.ProjectId))
+            {
+                var deltas = SemanticDomainCountRepository.CountDomains(wordsByProject);
+                if (sign < 0)
+                {
+                    deltas = deltas.ToDictionary(kv => kv.Key, kv => -kv.Value);
+                }
+                await _semDomCountRepo.ApplyDeltas(session, wordsByProject.Key, deltas);
+            }
         }
 
         #endregion
