@@ -12,27 +12,33 @@ namespace BackendFramework
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            using var startupLoggerFactory = CreateStartupLoggerFactory(builder.Services);
-            var startup = new Startup(startupLoggerFactory.CreateLogger<Startup>(), builder.Configuration);
-            startup.ConfigureServices(builder.Services);
+            WebApplication app;
+            using (var startupServices = CreateStartupServiceProvider(builder.Services))
+            {
+                var startup = new Startup(
+                    startupServices.GetRequiredService<ILoggerFactory>().CreateLogger<Startup>(),
+                    builder.Configuration);
+                startup.ConfigureServices(builder.Services);
 
-            var app = builder.Build();
-            startup.Configure(app, app.Environment, app.Lifetime);
+                app = builder.Build();
+                startup.Configure(app, app.Environment, app.Lifetime);
+            }
+
             app.Run();
         }
 
         /// <summary>
-        /// Build a logger factory from a copy of <paramref name="services"/>, so that <see cref="Startup"/> logs
-        /// through the same providers as the app, before the real provider is built.
+        /// Build a service provider from a copy of <paramref name="services"/>, so that <see cref="Startup"/>'s
+        /// bootstrap logger shares the same providers as the app. The caller must dispose the returned provider.
         /// </summary>
-        private static ILoggerFactory CreateStartupLoggerFactory(IServiceCollection services)
+        private static ServiceProvider CreateStartupServiceProvider(IServiceCollection services)
         {
-            IServiceCollection startupLoggingServices = new ServiceCollection();
+            IServiceCollection startupServices = new ServiceCollection();
             foreach (ServiceDescriptor service in services)
             {
-                startupLoggingServices.Add(service);
+                startupServices.Add(service);
             }
-            return startupLoggingServices.BuildServiceProvider().GetRequiredService<ILoggerFactory>();
+            return startupServices.BuildServiceProvider();
         }
     }
 }
