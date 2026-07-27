@@ -97,8 +97,8 @@ export function cleanSense(
   newSense.glosses = trimGlosses(newSense.glosses);
   const domainIds = [...new Set(newSense.semanticDomains.map((dom) => dom.id))];
   domainIds.sort();
-  newSense.semanticDomains = domainIds.map(
-    (id) => newSense.semanticDomains.find((dom) => dom.id === id)!
+  newSense.semanticDomains = domainIds.map((id) =>
+    newSense.semanticDomains.find((dom) => dom.id === id)!
   );
 
   // Bypass the following checks on protected senses.

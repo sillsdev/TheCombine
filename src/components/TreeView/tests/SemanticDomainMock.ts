@@ -6,17 +6,17 @@ import {
 
 /* eslint-disable @typescript-eslint/no-duplicate-enum-values */
 export enum mapIds {
-  "head" = "Sem",
-  "parent" = "1",
-  "firstKid" = "1.0",
-  "middleKid" = "1.1",
-  "lastKid" = "1.2",
-  "evenKid" = "1.0",
-  "oddKid" = "1.1",
-  "longKid" = "1.2",
-  "depth3" = "1.2.1",
-  "depth4" = "1.2.1.1",
-  "depth5" = "1.2.1.1.1",
+  head = "Sem",
+  parent = "1",
+  firstKid = "1.0",
+  middleKid = "1.1",
+  lastKid = "1.2",
+  evenKid = "1.0",
+  oddKid = "1.1",
+  longKid = "1.2",
+  depth3 = "1.2.1",
+  depth4 = "1.2.1.1",
+  depth5 = "1.2.1.1.1",
 }
 /* eslint-enable @typescript-eslint/no-duplicate-enum-values */
 

@@ -116,3 +116,6 @@ dev_*.yaml
 
 # JetBrains Rider
 .idea
+
+# AI files
+.claude/
