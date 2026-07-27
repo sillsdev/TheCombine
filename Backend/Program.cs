@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Logging;
 
 namespace BackendFramework
 {
@@ -9,11 +9,16 @@ namespace BackendFramework
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
-        }
+            var builder = WebApplication.CreateBuilder(args);
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+            using var startupLoggerFactory = LoggerFactory.Create(logging =>
+                logging.AddConfiguration(builder.Configuration.GetSection("Logging")).AddConsole());
+            var startup = new Startup(startupLoggerFactory.CreateLogger<Startup>(), builder.Configuration);
+            startup.ConfigureServices(builder.Services);
+
+            var app = builder.Build();
+            startup.Configure(app, app.Environment, app.Lifetime);
+            app.Run();
+        }
     }
 }
