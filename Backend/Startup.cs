@@ -22,11 +22,9 @@ using static System.Text.Encoding;
 namespace BackendFramework
 {
     [ExcludeFromCodeCoverage]
-    public class Startup(ILogger<Startup> logger, IConfiguration configuration)
+    public class Startup(IConfiguration configuration)
     {
         private const string LocalhostCorsPolicy = "LocalhostCorsPolicy";
-
-        private readonly ILogger<Startup> _logger = logger;
 
         private IConfiguration Configuration { get; } = configuration;
 
@@ -58,8 +56,8 @@ namespace BackendFramework
 
         private sealed class EnvironmentNotConfiguredException : Exception { }
 
-        private string? CheckedEnvironmentVariable(
-            string name, string? defaultValue, string error = "", bool info = false)
+        private static string? CheckedEnvironmentVariable(
+            ILogger<Startup> logger, string name, string? defaultValue, string error = "", bool info = false)
         {
             var contents = Environment.GetEnvironmentVariable(name);
             if (contents is not null)
@@ -69,22 +67,23 @@ namespace BackendFramework
 
             if (info)
             {
-                _logger.LogInformation("Environment variable: {Name} is not defined. {Error}", name, error);
+                logger.LogInformation("Environment variable: {Name} is not defined. {Error}", name, error);
             }
             else
             {
-                _logger.LogError("Environment variable: {Name} is not defined. {Error}", name, error);
+                logger.LogError("Environment variable: {Name} is not defined. {Error}", name, error);
             }
             return defaultValue;
         }
 
-        private int CheckedEnvironmentVariablePositiveInt(string name, int defaultValue)
+        private static int CheckedEnvironmentVariablePositiveInt(
+            ILogger<Startup> logger, string name, int defaultValue)
         {
             var info = $"Using default value: {defaultValue}";
-            var strContents = CheckedEnvironmentVariable(name, defaultValue.ToString(), info, true);
+            var strContents = CheckedEnvironmentVariable(logger, name, defaultValue.ToString(), info, true);
             if (!int.TryParse(strContents, out var intContents) || intContents <= 0)
             {
-                _logger.LogInformation(
+                logger.LogInformation(
                     "Environment variable: {Name} failed to parse as a positive int. {Info}", name, info);
                 return defaultValue;
             }
@@ -127,8 +126,9 @@ namespace BackendFramework
             const int minKeyLength = 256 / 8;
             if (secretKey is null || secretKey.Length < minKeyLength)
             {
-                _logger.LogError("Must set {EnvName} environment variable to string of length {MinLength} or longer.",
-                    secretKeyEnvName, minKeyLength);
+                // The logging pipeline isn't available until the app is built, so write straight to stderr.
+                Console.Error.WriteLine(
+                    $"Must set {secretKeyEnvName} environment variable to string of length {minKeyLength} or longer.");
                 throw new EnvironmentNotConfiguredException();
             }
 
@@ -164,8 +164,8 @@ namespace BackendFramework
             // https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle
             services.AddSwaggerGen();
 
-            services.Configure<Settings>(
-                options =>
+            services.AddOptions<Settings>().Configure<ILogger<Startup>>(
+                (options, logger) =>
                 {
                     var connectionStringKey = IsInContainer() ? "ContainerConnectionString" : "ConnectionString";
                     options.ConnectionString = Configuration[$"MongoDB:{connectionStringKey}"]
@@ -174,16 +174,19 @@ namespace BackendFramework
                         ?? throw new EnvironmentNotConfiguredException();
 
                     options.CaptchaEnabled = bool.Parse(CheckedEnvironmentVariable(
+                        logger,
                         "COMBINE_CAPTCHA_REQUIRED",
                         "true",
                         "CAPTCHA should be explicitly required or not required.")!);
                     if (options.CaptchaEnabled)
                     {
                         options.CaptchaSecretKey = CheckedEnvironmentVariable(
+                            logger,
                             "COMBINE_CAPTCHA_SECRET_KEY",
                             null,
                             "CAPTCHA secret key required.");
                         options.CaptchaVerifyUrl = CheckedEnvironmentVariable(
+                            logger,
                             "COMBINE_CAPTCHA_VERIFY_URL",
                             null,
                             "CAPTCHA verification URL required.");
@@ -191,6 +194,7 @@ namespace BackendFramework
 
                     const string emailServiceFailureMessage = "Email services will not work.";
                     options.EmailEnabled = bool.Parse(CheckedEnvironmentVariable(
+                        logger,
                         "COMBINE_EMAIL_ENABLED",
                         "false",
                         emailServiceFailureMessage,
@@ -198,32 +202,44 @@ namespace BackendFramework
                     if (options.EmailEnabled)
                     {
                         options.ExpireTimeEmailVerify = TimeSpan.FromMinutes(CheckedEnvironmentVariablePositiveInt(
-                            "COMBINE_EXPIRE_EMAIL_VERIFY_MINUTES", Settings.DefaultExpireEmailVerifyMinutes));
+                            logger,
+                            "COMBINE_EXPIRE_EMAIL_VERIFY_MINUTES",
+                            Settings.DefaultExpireEmailVerifyMinutes));
                         options.ExpireTimePasswordReset = TimeSpan.FromMinutes(CheckedEnvironmentVariablePositiveInt(
-                            "COMBINE_EXPIRE_PASSWORD_RESET_MINUTES", Settings.DefaultExpirePasswordResetMinutes));
+                            logger,
+                            "COMBINE_EXPIRE_PASSWORD_RESET_MINUTES",
+                            Settings.DefaultExpirePasswordResetMinutes));
                         options.ExpireTimeProjectInvite = TimeSpan.FromDays(CheckedEnvironmentVariablePositiveInt(
-                            "COMBINE_EXPIRE_PROJECT_INVITE_DAYS", Settings.DefaultExpireProjectInviteDays));
+                            logger,
+                            "COMBINE_EXPIRE_PROJECT_INVITE_DAYS",
+                            Settings.DefaultExpireProjectInviteDays));
                         options.SmtpServer = CheckedEnvironmentVariable(
+                            logger,
                             "COMBINE_SMTP_SERVER",
                             null,
                             emailServiceFailureMessage);
                         options.SmtpPort = int.Parse(CheckedEnvironmentVariable(
+                            logger,
                             "COMBINE_SMTP_PORT",
                             IEmailContext.InvalidPort.ToString(),
                             emailServiceFailureMessage)!);
                         options.SmtpUsername = CheckedEnvironmentVariable(
+                            logger,
                             "COMBINE_SMTP_USERNAME",
                             null,
                             emailServiceFailureMessage);
                         options.SmtpPassword = CheckedEnvironmentVariable(
+                            logger,
                             "COMBINE_SMTP_PASSWORD",
                             null,
                             emailServiceFailureMessage);
                         options.SmtpAddress = CheckedEnvironmentVariable(
+                            logger,
                             "COMBINE_SMTP_ADDRESS",
                             null,
                             emailServiceFailureMessage);
                         options.SmtpFrom = CheckedEnvironmentVariable(
+                            logger,
                             "COMBINE_SMTP_FROM",
                             null,
                             emailServiceFailureMessage);
@@ -350,11 +366,12 @@ namespace BackendFramework
 
             // If an admin user has been created via the command line, treat that as a single action and shut the
             // server down so the calling script knows it's been completed successfully or unsuccessfully.
+            var logger = app.ApplicationServices.GetRequiredService<ILogger<Startup>>();
             using var startupScope = app.ApplicationServices.CreateScope();
             var userRepo = startupScope.ServiceProvider.GetService<IUserRepository>();
-            if (userRepo is not null && CreateAdminUser(userRepo))
+            if (userRepo is not null && CreateAdminUser(userRepo, logger))
             {
-                _logger.LogInformation("Stopping application");
+                logger.LogInformation("Stopping application");
                 appLifetime.StopApplication();
             }
         }
@@ -370,7 +387,7 @@ namespace BackendFramework
         /// <exception cref="AdminUserCreationException">
         /// If the requested admin user could not be created or updated.
         /// </exception>
-        private bool CreateAdminUser(IUserRepository userRepo)
+        private bool CreateAdminUser(IUserRepository userRepo, ILogger<Startup> logger)
         {
             const string createAdminUsernameArg = "create-admin-username";
             const string createAdminPasswordEnv = "COMBINE_ADMIN_PASSWORD";
@@ -379,53 +396,53 @@ namespace BackendFramework
             var username = Configuration.GetValue<string>(createAdminUsernameArg);
             if (username is null)
             {
-                _logger.LogInformation("No admin user name provided, skipped admin creation");
+                logger.LogInformation("No admin user name provided, skipped admin creation");
                 return false;
             }
 
             var password = Environment.GetEnvironmentVariable(createAdminPasswordEnv);
             if (password is null)
             {
-                _logger.LogError($"Must set {createAdminPasswordEnv} environment variable " +
-                                 $"when using {createAdminUsernameArg} command line option.");
+                logger.LogError($"Must set {createAdminPasswordEnv} environment variable " +
+                                $"when using {createAdminUsernameArg} command line option.");
                 throw new EnvironmentNotConfiguredException();
             }
 
             var adminEmail = Environment.GetEnvironmentVariable(createAdminEmailEnv);
             if (adminEmail is null)
             {
-                _logger.LogError($"Must set {createAdminEmailEnv} environment variable " +
-                                 $"when using {createAdminUsernameArg} command line option.");
+                logger.LogError($"Must set {createAdminEmailEnv} environment variable " +
+                                $"when using {createAdminUsernameArg} command line option.");
                 throw new EnvironmentNotConfiguredException();
             }
 
             var existingUser = userRepo.GetAllUsers().Result.Find(x => x.Username == username);
             if (existingUser is not null)
             {
-                _logger.LogInformation(
+                logger.LogInformation(
                     "User {User} already exists. Updating password and granting admin permissions.", username);
                 if (userRepo.ChangePassword(existingUser.Id, password).Result == ResultOfUpdate.NotFound)
                 {
-                    _logger.LogError("Failed to find user {User}.", username);
+                    logger.LogError("Failed to find user {User}.", username);
                     throw new AdminUserCreationException();
                 }
 
                 existingUser.IsAdmin = true;
                 if (userRepo.Update(existingUser.Id, existingUser, true).Result == ResultOfUpdate.NotFound)
                 {
-                    _logger.LogError("Failed to find user {User}.", username);
+                    logger.LogError("Failed to find user {User}.", username);
                     throw new AdminUserCreationException();
                 }
 
                 return true;
             }
 
-            _logger.LogInformation("Creating admin user: {User} ({Email}).", username, adminEmail);
+            logger.LogInformation("Creating admin user: {User} ({Email}).", username, adminEmail);
             var user = new User { Username = username, Password = password, Email = adminEmail, IsAdmin = true };
             var returnedUser = userRepo.Create(user).Result;
             if (returnedUser is null)
             {
-                _logger.LogError("Failed to create admin user {User} ({Email}).", username, adminEmail);
+                logger.LogError("Failed to create admin user {User} ({Email}).", username, adminEmail);
                 throw new AdminUserCreationException();
             }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Security.Cryptography;
+using System.Text;
 using static System.Linq.Enumerable;
 
 namespace BackendFramework.Helper
@@ -65,8 +66,8 @@ namespace BackendFramework.Helper
         private static byte[] HashPassword(string password, byte[] salt)
         {
             // SHA256 is the recommended PBKDF2 hash algorithm.
-            using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, HashIterations, HashAlgorithmName.SHA256);
-            return pbkdf2.GetBytes(HashLength);
+            return Rfc2898DeriveBytes.Pbkdf2(
+                Encoding.UTF8.GetBytes(password), salt, HashIterations, HashAlgorithmName.SHA256, HashLength);
         }
 
         /// <summary> Create cryptographically-secure randomized salt. </summary>
