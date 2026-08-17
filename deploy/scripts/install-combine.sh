@@ -124,11 +124,6 @@ install-base-charts () {
   cd ${DEPLOY_DIR}
   . venv/bin/activate
   cd ${DEPLOY_DIR}/scripts
-  if [ -z "${HELM_TIMEOUT}" ] ; then
-    SETUP_OPTS=""
-  else
-    SETUP_OPTS="--timeout ${HELM_TIMEOUT}"
-  fi
   if [ -d "${DEPLOY_DIR}/airgap-charts" ] ; then
     ./setup_cluster.py ${SETUP_OPTS} --chart-dir ${DEPLOY_DIR}/airgap-charts
   else
@@ -269,6 +264,13 @@ done
 # Check that we have a COMBINE_VERSION (not needed for uninstall)
 if [[ "${STATE}" != "Uninstall-combine" && -z "${COMBINE_VERSION}" ]] ; then
   error "Combine version is not specified."
+fi
+
+# Set the Helm options here to apply for both a fresh and resumed install.
+if [ -z "${HELM_TIMEOUT}" ] ; then
+  SETUP_OPTS=""
+else
+  SETUP_OPTS="--timeout ${HELM_TIMEOUT}"
 fi
 
 create-python-venv
