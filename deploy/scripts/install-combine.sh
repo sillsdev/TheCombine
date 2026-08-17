@@ -176,10 +176,11 @@ wait-for-combine () {
 next-state () {
   STATE=$1
   if [[ "${STATE}" == "Done" ]] ; then
-    # The recorded timeout lasts as long as the state does: reaching "Done", by
-    # finishing either an install or an uninstall, discards both. "restart"
-    # keeps the timeout, since it resets how far the install got, while "clean"
-    # discards saved settings.
+    # Reaching "Done", by finishing either an install or an uninstall, discards
+    # the recorded timeout along with the state. Only "clean" discards it
+    # otherwise: it deliberately survives an install that failed or was
+    # interrupted, including one restarted with "restart", so that the value
+    # does not have to be entered again.
     rm -f ${STATE_FILE} ${TIMEOUT_FILE}
   else
     echo -n ${STATE} > ${STATE_FILE}
