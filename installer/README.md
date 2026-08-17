@@ -13,11 +13,15 @@ This README describes how to install _The Combine_ Rapid Word Collection tool on
 
 _The Combine_ can be installed on a PC that meets the following requirements:
 
-- Debian-based Linux Operating system
-- 8 GB of memory;
+- Debian-based Linux Operating system (Ubuntu 24.04 recommended);
+- x86-64 processor (ARM not supported);
+- 8 GB of memory (12+ GB recommended);
 - WiFi interface that supports creating a WiFi Hotspot;
-- a wired-ethernet connection to the Internet
-- User account that can run as `root` with `sudo`.
+  - specifically AP mode on a virtual interface at 2.4 GHz;
+  - run `iw list | grep -A10 "Supported interface modes"` and confirm that `* AP` is listed;
+- wired-ethernet connection to the Internet;
+  - USB ethernet adapter works, but with additional complication;
+- user account that can run as `root` with `sudo`.
 
 The installation script has been tested on _Ubuntu 24.04_.
 
@@ -45,19 +49,19 @@ The installation script has been tested on _Ubuntu 24.04_.
    ```
 
 4. Download the installation script from
-   [https://s3.amazonaws.com/software.thecombine.app/combine-installer.run](https://s3.amazonaws.com/software.thecombine.app/combine-installer.run)
+   [https://s3.amazonaws.com/software.thecombine.app/combine-net-installer.run](https://s3.amazonaws.com/software.thecombine.app/combine-net-installer.run)
 5. Open a terminal window (Ctrl-Alt-T) and make the script executable:
 
    ```console
    cd [path where installer was downloaded]
-   chmod +x combine-installer.run
+   chmod +x combine-net-installer.run
    ```
 
 6. Run the script:
 
    ```console
    cd [path where installer was downloaded]
-   ./combine-installer.run
+   ./combine-net-installer.run
    ```
 
    Notes:
@@ -74,7 +78,7 @@ The installation script has been tested on _Ubuntu 24.04_.
    - The first time you run the installation script, it will prompt you for an `AWS_ACCESS_KEY_ID` and an
      `AWS_SECRET_ACCESS_KEY`. To get the values to enter here, send a request to the team at
      [The Combine](https://software.sil.org/thecombine/#contact)
-   - When run with no options, ./combine-installer.run will install the current version of _The Combine_.
+   - When run with no options, `./combine-net-installer.run` will install the current version of _The Combine_.
    - If the previous installation did not run to completion, it will resume where the previous installation left off.
    - If you get the error `Job for k3s.service failed because the control process exited with error code.`, make sure no
      other instance of k3s is running. For example, if Docker Desktop is active on the current user, run:
@@ -159,7 +163,7 @@ Web certificate expires at Jul  8 08:54:11 2024 GMT
 
 ## Advanced Installation Options
 
-To run `combine-installer.run` with options, the option list must be started with `--` . The following options are supported:
+To run `combine-net-installer.run` with options, the option list must be started with `--` . The following options are supported:
 
 | option          | description |
 | ---------------- | ---------------------------------------------------------------------------- |
@@ -175,6 +179,6 @@ To run `combine-installer.run` with options, the option list must be started wit
 
 | Command                                                                              | Effect                                     |
 | ------------------------------------------------------------------------------------ | -------------------------------------------|
-| `./combine-installer.run -- v2.0.1`                                                  | Install version `v2.0.1` of _The Combine_. |
-| `./combine-installer.run -- update v2.2.0`                                           | Update installation to version `v2.2.0`    |
-| `./combine-installer.run -- restart`                                                 | Restart process from the beginning.        |
+| `./combine-net-installer.run -- v2.0.1`                                              | Install version `v2.0.1` of _The Combine_. |
+| `./combine-net-installer.run -- update v2.2.0`                                       | Update installation to version `v2.2.0`    |
+| `./combine-net-installer.run -- restart`                                             | Restart process from the beginning.        |
