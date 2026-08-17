@@ -9,6 +9,10 @@ metadata:
     "helm.sh/hook": post-install, post-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation
 spec:
+  # A failure of this hook aborts the install, and Helm reports it as a timeout
+  # rather than a failure for as long as the Job keeps retrying. Keep the
+  # retries few so that the real error is what the installer shows.
+  backoffLimit: 3
   ttlSecondsAfterFinished: 300
   template:
     metadata:
@@ -74,9 +78,9 @@ spec:
               name: {{ .Values.envName  | quote }}
         resources:
           requests:
-            memory: 128Mi
+            memory: {{ .Values.memoryRequest }}
           limits:
-            memory: 128Mi
+            memory: {{ .Values.memoryLimit }}
         securityContext:
           capabilities: {}
         terminationMessagePath: /dev/termination-log

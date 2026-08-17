@@ -57,3 +57,8 @@ awsS3CertLoc: certs
 certIssuer: letsencrypt-prod
 # Renew before there are 1440 hours left (60 days)
 certRenewBefore: 1440h
+
+# monitor.py loads the Kubernetes client library and then invokes the AWS CLI
+# as a subprocess.
+memoryRequest: 256Mi
+memoryLimit: 1Gi
