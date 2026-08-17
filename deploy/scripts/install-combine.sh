@@ -176,9 +176,10 @@ wait-for-combine () {
 next-state () {
   STATE=$1
   if [[ "${STATE}" == "Done" ]] ; then
-    # A finished install has no more helm commands to run, so the recorded
-    # timeout is discarded along with the state. "restart" keeps it, since it
-    # resets how far the install got, while "clean" discards saved settings.
+    # The recorded timeout lasts as long as the state does: reaching "Done", by
+    # finishing either an install or an uninstall, discards both. "restart"
+    # keeps the timeout, since it resets how far the install got, while "clean"
+    # discards saved settings.
     rm -f ${STATE_FILE} ${TIMEOUT_FILE}
   else
     echo -n ${STATE} > ${STATE_FILE}
@@ -295,7 +296,7 @@ fi
 if [ -z "${HELM_TIMEOUT}" ] ; then
   SETUP_OPTS=""
 else
-  echo "Using helm timeout: ${HELM_TIMEOUT}"
+  echo "Helm timeout: ${HELM_TIMEOUT}"
   SETUP_OPTS="--timeout ${HELM_TIMEOUT}"
 fi
 
