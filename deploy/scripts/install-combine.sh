@@ -175,8 +175,10 @@ wait-for-combine () {
 # Set the next value for STATE and record it in the STATE_FILE
 next-state () {
   STATE=$1
-  if [[ "${STATE}" == "Done" && -f "${STATE_FILE}" ]] ; then
-    rm ${STATE_FILE}
+  if [[ "${STATE}" == "Done" ]] ; then
+    # The recorded timeout applies to the install in progress, so it is
+    # discarded along with the state once that install is finished.
+    rm -f ${STATE_FILE} ${TIMEOUT_FILE}
   else
     echo -n ${STATE} > ${STATE_FILE}
   fi
@@ -205,6 +207,7 @@ DEBUG=0
 
 # See if we need to continue from a previous install
 STATE_FILE=${CONFIG_DIR}/install-state
+TIMEOUT_FILE=${CONFIG_DIR}/install-timeout
 if [ -f ${STATE_FILE} ] ; then
   STATE=`cat ${STATE_FILE}`
 else
@@ -220,6 +223,7 @@ while (( "$#" )) ; do
       if [ -f ${CONFIG_DIR}/env ] ; then
         rm ${CONFIG_DIR}/env
       fi
+      rm -f ${TIMEOUT_FILE}
       ;;
     debug)
       DEBUG=1
@@ -273,9 +277,21 @@ if [[ "${STATE}" != "Uninstall-combine" && -z "${COMBINE_VERSION}" ]] ; then
 fi
 
 # Set the Helm options here to apply for both a fresh and resumed install.
+# An install can span several invocations of this script, since every helm
+# command runs after the restart that the Pre-reqs step usually requires, so
+# record a timeout given on the command line and reuse it until the install
+# finishes. A timeout on the command line overrides one that was recorded.
+if [ -z "${HELM_TIMEOUT}" ] ; then
+  if [ -f ${TIMEOUT_FILE} ] ; then
+    HELM_TIMEOUT=`cat ${TIMEOUT_FILE}`
+  fi
+else
+  echo -n ${HELM_TIMEOUT} > ${TIMEOUT_FILE}
+fi
 if [ -z "${HELM_TIMEOUT}" ] ; then
   SETUP_OPTS=""
 else
+  echo "Using helm timeout: ${HELM_TIMEOUT}"
   SETUP_OPTS="--timeout ${HELM_TIMEOUT}"
 fi
 
