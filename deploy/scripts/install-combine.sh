@@ -186,6 +186,25 @@ next-state () {
   fi
 }
 
+# Check the value that an option was given, where $1 is the option and $2 is the
+# argument that follows it. Options are applied as they are parsed, and applying
+# one can record a new state for the install, so every value is checked first;
+# otherwise a typo would leave the install recorded as further along than it is.
+check-opt-value () {
+  case $1 in
+    timeout)
+      if [[ ! $2 =~ ^([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$ ]] ; then
+        error "Invalid timeout, '$2'; see https://pkg.go.dev/time#ParseDuration for the format."
+      fi
+      ;;
+    v*)
+      if [[ ! $1 =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9-]+\.[0-9]+)?$ ]] ; then
+        error "Invalid version number, $1"
+      fi
+      ;;
+  esac
+}
+
 # Verify that the required network devices have been setup for Kubernetes cluster
 wait-for-k8s-interfaces () {
   echo "Waiting for k8s interfaces: $@"
@@ -219,6 +238,12 @@ else
   STATE=Pre-reqs
 fi
 
+# Check every option value before any option is applied
+OPT_LIST=("$@")
+for OPT_INDEX in "${!OPT_LIST[@]}" ; do
+  check-opt-value "${OPT_LIST[OPT_INDEX]}" "${OPT_LIST[OPT_INDEX+1]}"
+done
+
 # Parse arguments to customize installation
 while (( "$#" )) ; do
   OPT=$1
@@ -247,12 +272,6 @@ while (( "$#" )) ; do
       shift
       ;;
     timeout)
-      # Without this check, a missing value shifts past the end of the argument
-      # list, which aborts the script with no explanation, and a non-duration
-      # value is not caught until helm rejects it several steps later.
-      if [[ ! $2 =~ ^([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$ ]] ; then
-        error "Invalid timeout, '$2'; see https://pkg.go.dev/time#ParseDuration for the format."
-      fi
       HELM_TIMEOUT=$2
       shift
       ;;
@@ -263,11 +282,7 @@ while (( "$#" )) ; do
       next-state "Install-combine"
       ;;
     v*)
-      if [[ $OPT =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9-]+\.[0-9]+)?$ ]] ; then
-        COMBINE_VERSION="$OPT"
-      else
-        error "Invalid version number, $OPT"
-      fi
+      COMBINE_VERSION="$OPT"
       ;;
     *)
       warning "Unrecognized option: $OPT"
