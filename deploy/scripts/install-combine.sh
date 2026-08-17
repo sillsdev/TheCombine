@@ -238,6 +238,12 @@ while (( "$#" )) ; do
       shift
       ;;
     timeout)
+      # Without this check, a missing value shifts past the end of the argument
+      # list, which aborts the script with no explanation, and a non-duration
+      # value is not caught until helm rejects it several steps later.
+      if [[ ! $2 =~ ^([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$ ]] ; then
+        error "Invalid timeout, '$2'; see https://pkg.go.dev/time#ParseDuration for the format."
+      fi
       HELM_TIMEOUT=$2
       shift
       ;;
