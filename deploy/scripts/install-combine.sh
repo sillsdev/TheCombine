@@ -176,8 +176,9 @@ wait-for-combine () {
 next-state () {
   STATE=$1
   if [[ "${STATE}" == "Done" ]] ; then
-    # The recorded timeout applies to the install in progress, so it is
-    # discarded along with the state once that install is finished.
+    # A finished install has no more helm commands to run, so the recorded
+    # timeout is discarded along with the state. "restart" keeps it, since it
+    # resets how far the install got, while "clean" discards saved settings.
     rm -f ${STATE_FILE} ${TIMEOUT_FILE}
   else
     echo -n ${STATE} > ${STATE_FILE}
@@ -204,6 +205,9 @@ mkdir -p ${CONFIG_DIR}
 SINGLE_STEP=0
 IS_SERVER=0
 DEBUG=0
+# Only a timeout given as an option is checked for a valid format, so ignore any
+# value that happens to be set in the environment.
+HELM_TIMEOUT=""
 
 # See if we need to continue from a previous install
 STATE_FILE=${CONFIG_DIR}/install-state

@@ -159,7 +159,7 @@ To run `combine-installer.run` with options, the option list must be started wit
 
 | option          | description |
 | ---------------- | ---------------------------------------------------------------------------- |
-| clean           | Remove the previously saved environment (AWS Access Key, admin user info) before performing the installation. |
+| clean           | Remove the previously saved environment (AWS Access Key, admin user info) and any saved timeout before performing the installation. |
 | restart         | Run the installation from the beginning; do not resume a previous installation. |
 | server          | Install _The Combine_ in a server environment so that _The Combine_ is always running by default. |
 | timeout TIMEOUT | Use a different timeout when installing. (Default: 5 minutes.) With slow internet, it is helpful to extend the timeout. See <https://pkg.go.dev/time#ParseDuration> for timeout formats. The value is used for the rest of the installation, including after a restart, so it does not need to be entered again. |
