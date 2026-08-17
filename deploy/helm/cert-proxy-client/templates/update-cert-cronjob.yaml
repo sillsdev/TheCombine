@@ -75,9 +75,9 @@ spec:
                       name: {{ .Values.envName | quote }}
               resources:
                 requests:
-                  memory: 128Mi
+                  memory: {{ .Values.memoryRequest }}
                 limits:
-                  memory: 128Mi
+                  memory: {{ .Values.memoryLimit }}
               securityContext:
                 capabilities: {}
               terminationMessagePath: /dev/termination-log
