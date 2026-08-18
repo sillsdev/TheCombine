@@ -21,6 +21,10 @@ warning () {
 }
 error () {
   echo "ERROR: $1" >&2
+  # Set ERROR_HINT where an error has a remedy that the message cannot assume
+  if [ -n "${ERROR_HINT}" ] ; then
+    echo "  ${ERROR_HINT}" >&2
+  fi
   exit 1
 }
 
@@ -184,17 +188,16 @@ next-state () {
   fi
 }
 
-# Check the value ($2) given to an option ($1); $3 names where the value came
-# from when it was not typed on the command line. Every value is checked before
-# any option is applied, since applying one can record a new state.
+# Check the value ($2) given to an option ($1). Every value is checked before any
+# option is applied, since applying one can record a new state.
 check-opt-value () {
   case $1 in
     timeout)
       if [[ ! $2 =~ ^([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$ ]] ; then
-        error "Invalid timeout, '$2'$3; see https://pkg.go.dev/time#ParseDuration for the format."
+        error "Invalid timeout, '$2'; see https://pkg.go.dev/time#ParseDuration for the format."
       fi
       if [[ $2 =~ ^(0+(\.0+)?(ns|us|µs|ms|s|m|h))+$ ]] ; then
-        error "Invalid timeout, '$2'$3; the timeout must be greater than zero."
+        error "Invalid timeout, '$2'; the timeout must be greater than zero."
       fi
       ;;
     v*)
@@ -225,6 +228,7 @@ mkdir -p ${CONFIG_DIR}
 SINGLE_STEP=0
 IS_SERVER=0
 DEBUG=0
+ERROR_HINT=""
 # Only a timeout given as an option is checked for a valid format, so ignore any
 # value that happens to be set in the environment.
 HELM_TIMEOUT=""
@@ -302,11 +306,12 @@ if [ "${STATE}" != "Uninstall-combine" ] ; then
   # requires, so record a timeout and reuse it until the install finishes.
   if [ -z "${HELM_TIMEOUT}" ] ; then
     if [ -f ${TIMEOUT_FILE} ] ; then
+      ERROR_HINT="Delete ${TIMEOUT_FILE} or install with the clean option."
       HELM_TIMEOUT=`cat ${TIMEOUT_FILE}` || error "Cannot read ${TIMEOUT_FILE}."
       if [ -n "${HELM_TIMEOUT}" ] ; then
-        # The file may have been edited or damaged since this script wrote it.
-        check-opt-value timeout "${HELM_TIMEOUT}" " recorded in ${TIMEOUT_FILE}"
+        check-opt-value timeout "${HELM_TIMEOUT}"
       fi
+      ERROR_HINT=""
     fi
   else
     echo -n ${HELM_TIMEOUT} > ${TIMEOUT_FILE}
