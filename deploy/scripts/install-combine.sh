@@ -21,6 +21,10 @@ warning () {
 }
 error () {
   echo "ERROR: $1" >&2
+  # Set ERROR_HINT where an error has a remedy that the message cannot assume
+  if [ -n "${ERROR_HINT}" ] ; then
+    echo "  ${ERROR_HINT}" >&2
+  fi
   exit 1
 }
 
@@ -124,11 +128,6 @@ install-base-charts () {
   cd ${DEPLOY_DIR}
   . venv/bin/activate
   cd ${DEPLOY_DIR}/scripts
-  if [ -z "${HELM_TIMEOUT}" ] ; then
-    SETUP_OPTS=""
-  else
-    SETUP_OPTS="--timeout ${HELM_TIMEOUT}"
-  fi
   if [ -d "${DEPLOY_DIR}/airgap-charts" ] ; then
     ./setup_cluster.py ${SETUP_OPTS} --chart-dir ${DEPLOY_DIR}/airgap-charts
   else
@@ -180,11 +179,40 @@ wait-for-combine () {
 # Set the next value for STATE and record it in the STATE_FILE
 next-state () {
   STATE=$1
-  if [[ "${STATE}" == "Done" && -f "${STATE_FILE}" ]] ; then
-    rm ${STATE_FILE}
+  if [[ "${STATE}" == "Done" ]] ; then
+    # A recorded timeout is discarded here and by "clean", but deliberately
+    # survives an install that failed or was restarted.
+    rm -f ${STATE_FILE} ${TIMEOUT_FILE}
   else
     echo -n ${STATE} > ${STATE_FILE}
   fi
+}
+
+# Check the value ($2) given to an option ($1). Every value is checked before any
+# option is applied, since applying one can record a new state.
+check-opt-value () {
+  case $1 in
+    start-at)
+      if [ -z "$2" ] ; then
+        error "The start-at option requires a step name."
+      fi
+      ;;
+    timeout)
+      if [[ ! $2 =~ ^([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$ ]] ; then
+        error "Invalid timeout, '$2'; see https://pkg.go.dev/time#ParseDuration for the format."
+      fi
+      if [[ $2 =~ ^(0+(\.0+)?(ns|us|µs|ms|s|m|h))+$ ]] ; then
+        error "Invalid timeout, '$2'; the timeout must be greater than zero."
+      fi
+      ;;
+    v*)
+      if [[ ! $1 =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9-]+\.[0-9]+)?$ ]] ; then
+        error "Invalid version number, $1"
+      fi
+      ;;
+  esac
+  # A failed test at the end would stop the script, so succeed explicitly
+  return 0
 }
 
 # Verify that the required network devices have been setup for Kubernetes cluster
@@ -207,14 +235,25 @@ mkdir -p ${CONFIG_DIR}
 SINGLE_STEP=0
 IS_SERVER=0
 DEBUG=0
+ERROR_HINT=""
+# Only a timeout given as an option is checked for a valid format, so ignore any
+# value that happens to be set in the environment.
+HELM_TIMEOUT=""
 
 # See if we need to continue from a previous install
 STATE_FILE=${CONFIG_DIR}/install-state
+TIMEOUT_FILE=${CONFIG_DIR}/install-timeout
 if [ -f ${STATE_FILE} ] ; then
   STATE=`cat ${STATE_FILE}`
 else
   STATE=Pre-reqs
 fi
+
+# Check every option value before any option is applied
+OPT_LIST=("$@")
+for OPT_INDEX in "${!OPT_LIST[@]}" ; do
+  check-opt-value "${OPT_LIST[OPT_INDEX]}" "${OPT_LIST[OPT_INDEX+1]}"
+done
 
 # Parse arguments to customize installation
 while (( "$#" )) ; do
@@ -225,6 +264,7 @@ while (( "$#" )) ; do
       if [ -f ${CONFIG_DIR}/env ] ; then
         rm ${CONFIG_DIR}/env
       fi
+      rm -f ${TIMEOUT_FILE}
       ;;
     debug)
       DEBUG=1
@@ -253,11 +293,7 @@ while (( "$#" )) ; do
       next-state "Install-combine"
       ;;
     v*)
-      if [[ $OPT =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9-]+\.[0-9]+)?$ ]] ; then
-        COMBINE_VERSION="$OPT"
-      else
-        error "Invalid version number, $OPT"
-      fi
+      COMBINE_VERSION="$OPT"
       ;;
     *)
       warning "Unrecognized option: $OPT"
@@ -269,6 +305,26 @@ done
 # Check that we have a COMBINE_VERSION (not needed for uninstall)
 if [[ "${STATE}" != "Uninstall-combine" && -z "${COMBINE_VERSION}" ]] ; then
   error "Combine version is not specified."
+fi
+
+SETUP_OPTS=""
+if [ "${STATE}" != "Uninstall-combine" ] ; then
+  # Every helm command runs after the restart that the Pre-reqs step usually
+  # requires, so record a timeout and reuse it until the install finishes.
+  if [ -z "${HELM_TIMEOUT}" ] ; then
+    if [ -f ${TIMEOUT_FILE} ] ; then
+      ERROR_HINT="Delete ${TIMEOUT_FILE} or install with the clean option."
+      HELM_TIMEOUT=`cat ${TIMEOUT_FILE}` || error "Cannot read ${TIMEOUT_FILE}."
+      check-opt-value timeout "${HELM_TIMEOUT}"
+      ERROR_HINT=""
+    fi
+  else
+    echo -n ${HELM_TIMEOUT} > ${TIMEOUT_FILE}
+  fi
+  if [ -n "${HELM_TIMEOUT}" ] ; then
+    echo "Helm timeout: ${HELM_TIMEOUT}"
+    SETUP_OPTS="--timeout ${HELM_TIMEOUT}"
+  fi
 fi
 
 create-python-venv
