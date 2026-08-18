@@ -296,24 +296,25 @@ if [[ "${STATE}" != "Uninstall-combine" && -z "${COMBINE_VERSION}" ]] ; then
   error "Combine version is not specified."
 fi
 
-# Every helm command runs after the restart that the Pre-reqs step usually
-# requires, so record a timeout and reuse it until the install finishes.
-if [ -z "${HELM_TIMEOUT}" ] ; then
-  if [ -f ${TIMEOUT_FILE} ] ; then
-    HELM_TIMEOUT=`cat ${TIMEOUT_FILE}`
-    if [ -n "${HELM_TIMEOUT}" ] ; then
-      # The file may have been edited or damaged since this script wrote it.
-      check-opt-value timeout "${HELM_TIMEOUT}" " recorded in ${TIMEOUT_FILE}"
+SETUP_OPTS=""
+if [ "${STATE}" != "Uninstall-combine" ] ; then
+  # Every helm command runs after the restart that the Pre-reqs step usually
+  # requires, so record a timeout and reuse it until the install finishes.
+  if [ -z "${HELM_TIMEOUT}" ] ; then
+    if [ -f ${TIMEOUT_FILE} ] ; then
+      HELM_TIMEOUT=`cat ${TIMEOUT_FILE}`
+      if [ -n "${HELM_TIMEOUT}" ] ; then
+        # The file may have been edited or damaged since this script wrote it.
+        check-opt-value timeout "${HELM_TIMEOUT}" " recorded in ${TIMEOUT_FILE}"
+      fi
     fi
+  else
+    echo -n ${HELM_TIMEOUT} > ${TIMEOUT_FILE}
   fi
-else
-  echo -n ${HELM_TIMEOUT} > ${TIMEOUT_FILE}
-fi
-if [ -z "${HELM_TIMEOUT}" ] ; then
-  SETUP_OPTS=""
-else
-  echo "Helm timeout: ${HELM_TIMEOUT}"
-  SETUP_OPTS="--timeout ${HELM_TIMEOUT}"
+  if [ -n "${HELM_TIMEOUT}" ] ; then
+    echo "Helm timeout: ${HELM_TIMEOUT}"
+    SETUP_OPTS="--timeout ${HELM_TIMEOUT}"
+  fi
 fi
 
 create-python-venv
