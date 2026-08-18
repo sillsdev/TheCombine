@@ -192,6 +192,11 @@ next-state () {
 # option is applied, since applying one can record a new state.
 check-opt-value () {
   case $1 in
+    start-at)
+      if [ -z "$2" ] ; then
+        error "The start-at option requires a step name."
+      fi
+      ;;
     timeout)
       if [[ ! $2 =~ ^([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$ ]] ; then
         error "Invalid timeout, '$2'; see https://pkg.go.dev/time#ParseDuration for the format."
@@ -206,6 +211,8 @@ check-opt-value () {
       fi
       ;;
   esac
+  # A failed test at the end would stop the script, so succeed explicitly
+  return 0
 }
 
 # Verify that the required network devices have been setup for Kubernetes cluster
