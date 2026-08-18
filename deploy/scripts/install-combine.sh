@@ -176,26 +176,25 @@ wait-for-combine () {
 next-state () {
   STATE=$1
   if [[ "${STATE}" == "Done" ]] ; then
-    # Reaching "Done", by finishing either an install or an uninstall, discards
-    # the recorded timeout along with the state. Only "clean" discards it
-    # otherwise: it deliberately survives an install that failed or was
-    # interrupted, including one restarted with "restart", so that the value
-    # does not have to be entered again.
+    # A recorded timeout is discarded here and by "clean", but deliberately
+    # survives an install that failed or was restarted.
     rm -f ${STATE_FILE} ${TIMEOUT_FILE}
   else
     echo -n ${STATE} > ${STATE_FILE}
   fi
 }
 
-# Check the value that an option was given, where $1 is the option and $2 is the
-# argument that follows it. Options are applied as they are parsed, and applying
-# one can record a new state for the install, so every value is checked first;
-# otherwise a typo would leave the install recorded as further along than it is.
+# Check the value ($2) given to an option ($1); $3 names where the value came
+# from when it was not typed on the command line. Every value is checked before
+# any option is applied, since applying one can record a new state.
 check-opt-value () {
   case $1 in
     timeout)
       if [[ ! $2 =~ ^([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$ ]] ; then
-        error "Invalid timeout, '$2'; see https://pkg.go.dev/time#ParseDuration for the format."
+        error "Invalid timeout, '$2'$3; see https://pkg.go.dev/time#ParseDuration for the format."
+      fi
+      if [[ $2 =~ ^(0+(\.0+)?(ns|us|µs|ms|s|m|h))+$ ]] ; then
+        error "Invalid timeout, '$2'$3; the timeout must be greater than zero."
       fi
       ;;
     v*)
@@ -297,14 +296,15 @@ if [[ "${STATE}" != "Uninstall-combine" && -z "${COMBINE_VERSION}" ]] ; then
   error "Combine version is not specified."
 fi
 
-# Set the Helm options here to apply for both a fresh and resumed install.
-# An install can span several invocations of this script, since every helm
-# command runs after the restart that the Pre-reqs step usually requires, so
-# record a timeout given on the command line and reuse it until the install
-# finishes. A timeout on the command line overrides one that was recorded.
+# Every helm command runs after the restart that the Pre-reqs step usually
+# requires, so record a timeout and reuse it until the install finishes.
 if [ -z "${HELM_TIMEOUT}" ] ; then
   if [ -f ${TIMEOUT_FILE} ] ; then
     HELM_TIMEOUT=`cat ${TIMEOUT_FILE}`
+    if [ -n "${HELM_TIMEOUT}" ] ; then
+      # The file may have been edited or damaged since this script wrote it.
+      check-opt-value timeout "${HELM_TIMEOUT}" " recorded in ${TIMEOUT_FILE}"
+    fi
   fi
 else
   echo -n ${HELM_TIMEOUT} > ${TIMEOUT_FILE}
