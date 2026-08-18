@@ -315,9 +315,7 @@ if [ "${STATE}" != "Uninstall-combine" ] ; then
     if [ -f ${TIMEOUT_FILE} ] ; then
       ERROR_HINT="Delete ${TIMEOUT_FILE} or install with the clean option."
       HELM_TIMEOUT=`cat ${TIMEOUT_FILE}` || error "Cannot read ${TIMEOUT_FILE}."
-      if [ -n "${HELM_TIMEOUT}" ] ; then
-        check-opt-value timeout "${HELM_TIMEOUT}"
-      fi
+      check-opt-value timeout "${HELM_TIMEOUT}"
       ERROR_HINT=""
     fi
   else
