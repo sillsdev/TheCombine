@@ -421,8 +421,11 @@ while [ "$STATE" != "Done" ] ; do
     Shutdown-combine)
       # If not being installed as a server,
       if [[ $IS_SERVER != 1 ]] ; then
-        # Shut down The Combine services
-        combinectl stop
+        # Shut down The Combine services.  combinectl leaves them running rather
+        # than kill them mid-shutdown, so stop here if it could not stop them.
+        ERROR_HINT="Rerun the installer to finish shutting down; nothing needs to be undone."
+        combinectl stop || error "Could not stop The Combine."
+        ERROR_HINT=""
         # Disable The Combine services from starting at boot time
         sudo systemctl disable create_ap
         sudo systemctl disable k3s

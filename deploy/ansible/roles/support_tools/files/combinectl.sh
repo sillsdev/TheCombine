@@ -155,10 +155,21 @@ start-combine-deployments () {
 # Scale The Combine deployments to zero and wait for their pods to exit.  The
 # k3s service is patched to KillMode=mixed, so stopping it SIGKILLs whatever is
 # still running, which can be the database part way through its startup setup.
+#
+# Returns non-zero when the deployments were not stopped, so that the caller can
+# leave k3s running rather than SIGKILL them.
 stop-combine-deployments () {
+  # An unreachable Kubernetes API looks exactly like an empty namespace, so wait
+  # for it: a stop issued while the cluster is still coming up must not be read
+  # as "nothing is running here."
+  if ! wait-for-cluster ; then
+    echo "The cluster is not responding, so The Combine was not stopped." >&2
+    echo "Wait a minute, then run \"combinectl stop\" again." >&2
+    return 1
+  fi
   DEPLOY_STATUS=$(combine-deployments)
   if [[ -z ${DEPLOY_STATUS} ]] ; then
-    return
+    return 0
   fi
   # Only record the deployments that are running, so that stopping The Combine
   # when it's already stopped doesn't lose the counts.
@@ -176,6 +187,7 @@ stop-combine-deployments () {
       echo "The Combine did not stop within 2 minutes; stopping anyway." >&2
     fi
   fi
+  return 0
 }
 
 # Start The Combine services
@@ -193,11 +205,15 @@ combine-start () {
 }
 
 # Stop The Combine services and restore the WiFI
-# connection if needed.
+# connection if needed.  Returns non-zero if The Combine is still running.
 combine-stop () {
   echo "Stopping The Combine."
   if systemctl is-active --quiet k3s ; then
-    stop-combine-deployments
+    # Stopping k3s SIGKILLs the containers, so only do it once the deployments
+    # have shut down; leave everything running otherwise.
+    if ! stop-combine-deployments ; then
+      return 1
+    fi
     sudo systemctl stop k3s
   fi
   if systemctl is-active --quiet create_ap ; then
@@ -205,6 +221,7 @@ combine-stop () {
     restore-wifi-connection
     sudo systemctl restart systemd-resolved
   fi
+  return 0
 }
 
 # Print the status of The Combine services.  When the cluster is up, also
