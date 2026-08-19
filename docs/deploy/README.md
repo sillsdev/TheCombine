@@ -424,24 +424,24 @@ Notes:
   Arabic, English, French, Portuguese, and Spanish. If additional fonts will be required, call the `setup_combine.py`
   commands with the `--langs` option. Use the `--help` option to see the argument syntax.
 - The database pod has a `postStart` lifecycle hook that initializes the `rs0` replica set on every pod start and, if
-  the import has not already been recorded as complete, runs `update-semantic-domains.sh`. The hook records completion
-  in `CombineDatabase.SemanticDomainImportStatus`; a count of the imported collections is not used, because an import
-  that is interrupted part way through leaves them non-empty but incomplete. If the import is interrupted, the next pod
-  start redoes it.
+  the import has not already been recorded as complete, runs `update-semantic-domains.sh`. That script records its own
+  completion in `CombineDatabase.SemanticDomainImportStatus`, and only on success; a count of the imported collections
+  is not used, because an import that is interrupted part way through leaves them non-empty but incomplete. If the
+  import is interrupted, the next pod start redoes it.
 
   The hook also writes `/tmp/replica-set-ready` once the replica set is aligned, which is what the pod's readiness probe
   checks. Until then the pod is kept out of the `database` Service endpoints, since the replica set advertises the pod's
   IP and the backend connects with `?replicaSet=rs0`.
 
   If the Semantic Domain data are updated, for example, adding a new language, then the import needs to be rerun
-  manually:
+  manually. This also refreshes the completion record, so a manual import is not redone on the next pod start:
 
   ```console
   kubectl -n thecombine exec deployment/database -- /opt/thecombine/update-semantic-domains.sh
   ```
 
   The `postStart` hook appends its output to `/data/db/postStart.log`, which is on the database's persistent volume and
-  so survives restarts:
+  so survives restarts. Only the most recent starts are kept:
 
   ```console
   kubectl -n thecombine exec deployment/database -- cat /data/db/postStart.log
