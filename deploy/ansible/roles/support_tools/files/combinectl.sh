@@ -113,12 +113,26 @@ start-combine-deployments () {
     return
   fi
   if [ -f "${CACHED_REPLICAS}" ] ; then
-    REPLICA_LIST=$(cat "${CACHED_REPLICAS}")
+    CACHE_FILE="${CACHED_REPLICAS}"
   else
-    REPLICA_LIST=$(awk '$2 == 0 { print $1, 1 }' <<< "${DEPLOY_STATUS}")
-    if [[ -z ${REPLICA_LIST} ]] ; then
-      return
-    fi
+    CACHE_FILE=/dev/null
+  fi
+  # List every deployment that is scaled down, with its saved count.  The saved
+  # counts are reconciled with the cluster rather than replayed as they are: a
+  # cached deployment that no longer exists, for example one renamed by a chart
+  # update, would otherwise fail to scale on every start, and its failure would
+  # keep the stale file, and any deployment the file omits, forever.
+  REPLICA_LIST=$(awk '
+    NR == FNR { if ($2 == 0) { stopped[$1] = 1 } ; next }
+    $1 in stopped && $2 > 0 { print $1, $2 ; delete stopped[$1] }
+    END { for (name in stopped) { print name, 1 } }
+    ' <(printf '%s\n' "${DEPLOY_STATUS}") "${CACHE_FILE}")
+  if [[ -z ${REPLICA_LIST} ]] ; then
+    # Nothing is scaled down, so any saved counts no longer apply.
+    rm -f "${CACHED_REPLICAS}"
+    return
+  fi
+  if [[ ${CACHE_FILE} == /dev/null ]] ; then
     echo "No saved replica counts; starting one replica of each deployment."
   fi
   echo "Starting The Combine deployments."
