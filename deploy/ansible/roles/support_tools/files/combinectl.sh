@@ -226,8 +226,8 @@ combine-stop () {
 
 # Print the status of The Combine services.  When the cluster is up, also
 # distinguish between The Combine being uninstalled, incompletely installed,
-# scaled down, still starting, and fully running, then print the status of the
-# deployments in the "thecombine" namespace.
+# scaled down, partly scaled down, still starting, and fully running, then print
+# the status of the deployments in the "thecombine" namespace.
 #
 # Always exits 0; install-combine.sh calls this under "set -e".
 combine-status () {
@@ -264,15 +264,20 @@ combine-status () {
   done
 
   # Total requested replicas, to tell a scaled down Combine from a running one,
-  # and the deployments that do not have all of the replicas they asked for.
+  # the deployments that ask for no replicas at all, and the ones that do not
+  # have all of the replicas they asked for.  A deployment scaled to zero has
+  # every replica it asked for, so it has to be counted separately from those.
   REQUESTED=0
+  STOPPED=()
   PENDING=()
   while read -r NAME WANT HAVE ; do
     if [[ -z ${NAME} ]] ; then
       continue
     fi
     REQUESTED=$(( REQUESTED + ${WANT:-0} ))
-    if [[ ${HAVE:-0} -lt ${WANT:-0} ]] ; then
+    if [[ ${WANT:-0} -eq 0 ]] ; then
+      STOPPED+=( "${NAME}" )
+    elif [[ ${HAVE:-0} -lt ${WANT:-0} ]] ; then
       PENDING+=( "${NAME}" )
     fi
   done <<< "${DEPLOY_STATUS}"
@@ -283,6 +288,9 @@ combine-status () {
   elif [[ ${REQUESTED} -eq 0 ]] ; then
     echo "The Combine is Stopped; the cluster is up but its services are"
     echo "scaled down.  Run \"combinectl start\" to start them."
+  elif [[ ${#STOPPED[@]} -gt 0 ]] ; then
+    echo "The Combine is Partly Stopped; scaled down deployment(s): ${STOPPED[*]}."
+    echo "Run \"combinectl start\" to start them."
   elif [[ ${#PENDING[@]} -gt 0 ]] ; then
     echo "The Combine is Starting; waiting for: ${PENDING[*]}."
   else
