@@ -386,6 +386,9 @@ while [ "$STATE" != "Done" ] ; do
       wait-for-semantic-domains
       echo "The Combine was successfully setup!"
       next-state "Shutdown-combine"
+      if [ "$SINGLE_STEP" == "1" ] ; then
+        STATE=Done
+      fi
       ;;
     Shutdown-combine)
       # If not being installed as a server,
