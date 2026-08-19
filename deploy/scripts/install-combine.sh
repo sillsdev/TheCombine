@@ -154,25 +154,34 @@ install-the-combine () {
   deactivate
 }
 
-# Wait until all The Combine deployments are "Running"
+# Wait until all The Combine deployments are available. There is no timeout;
+# the caller tells the user how to interrupt.
 wait-for-combine () {
-  # Wait for all The Combine deployments to be up
-  while true ; do
-    combine_status=`kubectl -n thecombine get deployments`
-    # Assert The Combine is up; if any components are not up, set it to false
-    combine_up=true
-    for deployment in frontend backend database maintenance ; do
-      deployment_status=$(echo ${combine_status} | grep "${deployment}" | sed "s/^.*\([0-9]\)\/1.*/\1/")
-      if [ "$deployment_status" == "0" ] ; then
-        combine_up=false
-        break
-      fi
-    done
-    if [ ${combine_up} != true ] ; then
+  set-k3s-env
+  # The database is checked first because everything else depends on it and it
+  # is the slowest to come up on a first install.
+  for deployment in database backend frontend maintenance ; do
+    echo "Waiting for deployment/${deployment}."
+    until kubectl -n thecombine get deployment/${deployment} > /dev/null 2>&1 ; do
       sleep 5
-    else
-      break
-    fi
+    done
+    until kubectl -n thecombine wait --for=condition=Available \
+        --timeout=1m deployment/${deployment} > /dev/null 2>&1 ; do
+      echo "  still waiting for deployment/${deployment}."
+    done
+  done
+}
+
+# Wait until the database has recorded a completed semantic domain import. The
+# import runs from the database's postStart hook and takes several minutes on a
+# first install. It is redone on the next start if it is interrupted, so waiting
+# here keeps the shutdown below from silently costing the user another import.
+wait-for-semantic-domains () {
+  echo "Waiting for the semantic domain import."
+  import_done="quit(db.getSiblingDB('CombineDatabase').SemanticDomainImportStatus.countDocuments({ _id: 'semantic-domains', completed: true }) === 1 ? 0 : 1)"
+  until kubectl -n thecombine exec deployment/database -- \
+      mongosh --quiet --host 127.0.0.1 --eval "${import_done}" > /dev/null 2>&1 ; do
+    sleep 10
   done
 }
 
@@ -374,6 +383,7 @@ while [ "$STATE" != "Done" ] ; do
       echo "This may take some time depending on your Internet connection."
       echo "Press Ctrl-C to interrupt."
       wait-for-combine
+      wait-for-semantic-domains
       echo "The Combine was successfully setup!"
       next-state "Shutdown-combine"
       ;;
