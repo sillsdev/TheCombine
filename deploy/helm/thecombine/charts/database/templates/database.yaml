@@ -77,15 +77,22 @@ spec:
                     done
                     echo "[postStart] Ensuring replica set host"
                     mongosh --quiet --host 127.0.0.1 /opt/thecombine/00-replica-set.js || exit $?
-                    # mongod can serve the backend from here on, so let the readiness
-                    # probe pass while the semantic domain import runs.
-                    touch /tmp/replica-set-ready
                     # Only a finished import is recorded, so an interrupted one is redone.
                     import_state="$(mongosh --quiet --host 127.0.0.1 --eval "print(db.getSiblingDB('CombineDatabase').SemanticDomainImportStatus.countDocuments({ _id: 'semantic-domains', completed: true }) === 1 ? 'done' : 'needed');")"
                     if [ "${import_state}" = "needed" ]; then
                       echo "[postStart] Importing semantic domains"
-                      /bin/bash /opt/thecombine/update-semantic-domains.sh
+                      # The Combine cannot be used without the semantic domains, so a
+                      # failed import fails the hook, which restarts the container to
+                      # retry, rather than leaving a database that looks healthy.
+                      if ! /bin/bash /opt/thecombine/update-semantic-domains.sh; then
+                        echo "[postStart] Semantic domain import failed; restarting the container"
+                        exit 1
+                      fi
                     fi
+                    # The kubelet does not probe a container until its postStart hook
+                    # returns, so this marker is written last: it cannot make the pod
+                    # ready any sooner, and everything above it has to succeed first.
+                    touch /tmp/replica-set-ready
                     echo "[postStart] $(date -Is) done"
           env:
             - name: POD_IP
@@ -97,10 +104,12 @@ spec:
           ports:
             - containerPort: 27017
           readinessProbe:
-            # /tmp/replica-set-ready is written by the postStart hook once mongod is
-            # a writable primary advertising this pod's IP.  The pod IP is part of
-            # the replica set config and changes on every restart, so without this
-            # the Service can route the backend to a mongod it cannot use.
+            # /tmp/replica-set-ready is written at the end of the postStart hook,
+            # once mongod is a writable primary advertising this pod's IP and the
+            # semantic domains are in place.  The pod IP is part of the replica set
+            # config and changes on every restart, so without this the Service can
+            # route the backend to a mongod it cannot use.  A hook that fails, and
+            # so restarts the container, never writes the marker at all.
             exec:
               command:
                 - /bin/sh
