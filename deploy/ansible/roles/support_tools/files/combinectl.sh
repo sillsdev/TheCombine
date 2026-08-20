@@ -78,7 +78,9 @@ cluster-ready () {
   kubectl get --raw='/readyz' --request-timeout=10s > /dev/null 2>&1
 }
 
-# Wait up to two minutes for the Kubernetes API to serve requests.
+# Wait for the Kubernetes API to serve requests: sixty attempts, two seconds
+# apart. About two minutes while the API refuses connections, as it does while
+# k3s starts, and up to twelve if it accepts them and then hangs.
 wait-for-cluster () {
   ATTEMPTS=0
   until cluster-ready ; do
