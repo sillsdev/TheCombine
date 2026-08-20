@@ -31,9 +31,8 @@ usage () {
 .EOM
 }
 
-# Get the name of the first wifi interface.  In general,
-# this script assumes that there is a single WiFi interface
-# installed.
+# Get the name of the first wifi interface. In general, this script assumes
+# that there is a single WiFi interface installed.
 get-wifi-if () {
   IFS=$'\n' WIFI_DEVICES=( $(nmcli d | grep "^wl") )
   if [[ ${#WIFI_DEVICES[@]} -gt 0 ]] ; then
@@ -73,7 +72,7 @@ combine-cert () {
   echo $CERT_DATA | base64 -d | openssl x509 -enddate -noout| sed -e "s/^notAfter=/Web certificate expires at /"
 }
 
-# Report whether the Kubernetes API is serving requests.  The k3s unit becomes
+# Report whether the Kubernetes API is serving requests. The k3s unit becomes
 # active before the API is up, so an active unit alone is not enough.
 cluster-ready () {
   kubectl get --raw='/readyz' --request-timeout=10s > /dev/null 2>&1
@@ -99,25 +98,30 @@ combine-deployments () {
     -o 'jsonpath={range .items[*]}{.metadata.name} {.spec.replicas} {.status.availableReplicas}{"\n"}{end}'
 }
 
-# Restore the deployment replica counts saved by stop-combine-deployments.  The
+# Restore the deployment replica counts saved by stop-combine-deployments. The
 # counts live in a local file, so fall back to one replica each when it is
 # missing: k3s can be started without combinectl, which would otherwise leave
 # the deployments scaled to zero with nothing to bring them back.
+#
+# Returns non-zero when a deployment that should be running is not, so that a
+# failed start is not reported as a successful one.
 start-combine-deployments () {
   if ! wait-for-cluster ; then
     echo "The cluster is not responding; run \"combinectl start\" again." >&2
-    return
+    return 1
   fi
   DEPLOY_STATUS=$(combine-deployments)
   if [[ -z ${DEPLOY_STATUS} ]] ; then
-    return
+    # Nothing is installed, so there is nothing to start; combine-status is
+    # where an empty namespace is reported.
+    return 0
   fi
   if [ -f "${CACHED_REPLICAS}" ] ; then
     CACHE_FILE="${CACHED_REPLICAS}"
   else
     CACHE_FILE=/dev/null
   fi
-  # List every deployment that is scaled down, with its saved count.  The saved
+  # List every deployment that is scaled down, with its saved count. The saved
   # counts are reconciled with the cluster rather than replayed as they are: a
   # cached deployment that no longer exists, for example one renamed by a chart
   # update, would otherwise fail to scale on every start, and its failure would
@@ -130,7 +134,7 @@ start-combine-deployments () {
   if [[ -z ${REPLICA_LIST} ]] ; then
     # Nothing is scaled down, so any saved counts no longer apply.
     rm -f "${CACHED_REPLICAS}"
-    return
+    return 0
   fi
   if [[ ${CACHE_FILE} == /dev/null ]] ; then
     echo "No saved replica counts; starting one replica of each deployment."
@@ -150,9 +154,10 @@ start-combine-deployments () {
   if [[ ${RESTORE_FAILED} -eq 0 ]] ; then
     rm -f "${CACHED_REPLICAS}"
   fi
+  return ${RESTORE_FAILED}
 }
 
-# Scale The Combine deployments to zero and wait for their pods to exit.  The
+# Scale The Combine deployments to zero and wait for their pods to exit. The
 # k3s service is patched to KillMode=mixed, so stopping it SIGKILLs whatever is
 # still running, which can be the database part way through its startup setup.
 #
@@ -190,7 +195,9 @@ stop-combine-deployments () {
   return 0
 }
 
-# Start The Combine services
+# Start The Combine services. The status of the last command is the status of
+# the function, so this returns non-zero if the deployments were not started,
+# which matches combine-stop.
 combine-start () {
   echo "Starting The Combine."
   if ! systemctl is-active --quiet create_ap ; then
@@ -204,8 +211,8 @@ combine-start () {
   start-combine-deployments
 }
 
-# Stop The Combine services and restore the WiFI
-# connection if needed.  Returns non-zero if The Combine is still running.
+# Stop The Combine services and restore the WiFi connection if needed. Returns
+# non-zero if The Combine is still running.
 combine-stop () {
   echo "Stopping The Combine."
   if systemctl is-active --quiet k3s ; then
@@ -224,7 +231,7 @@ combine-stop () {
   return 0
 }
 
-# Print the status of The Combine services.  When the cluster is up, also
+# Print the status of The Combine services. When the cluster is up, also
 # distinguish between The Combine being uninstalled, incompletely installed,
 # scaled down, partly scaled down, still starting, and fully running, then print
 # the status of the deployments in the "thecombine" namespace.
@@ -265,7 +272,7 @@ combine-status () {
 
   # Total requested replicas, to tell a scaled down Combine from a running one,
   # the deployments that ask for no replicas at all, and the ones that do not
-  # have all of the replicas they asked for.  A deployment scaled to zero has
+  # have all of the replicas they asked for. A deployment scaled to zero has
   # every replica it asked for, so it has to be counted separately from those.
   REQUESTED=0
   STOPPED=()
@@ -287,7 +294,7 @@ combine-status () {
     echo "Download and run the install package to repair the installation."
   elif [[ ${REQUESTED} -eq 0 ]] ; then
     echo "The Combine is Stopped; the cluster is up but its services are"
-    echo "scaled down.  Run \"combinectl start\" to start them."
+    echo "scaled down. Run \"combinectl start\" to start them."
   elif [[ ${#STOPPED[@]} -gt 0 ]] ; then
     echo "The Combine is Partly Stopped; scaled down deployment(s): ${STOPPED[*]}."
     echo "Run \"combinectl start\" to start them."
@@ -300,9 +307,9 @@ combine-status () {
   return 0
 }
 
-# Update the image used in each of the deployments in The Combine.  This
-# is akin to our current update process for Production and QA servers.  It
-# does *not* update any configuration files or secrets.
+# Update the image used in each of the deployments in The Combine. This is akin
+# to our current update process for Production and QA servers. It does *not*
+# update any configuration files or secrets.
 combine-update () {
   echo "Updating The Combine to $1"
   IMAGE_TAG=$1
@@ -339,7 +346,7 @@ combine-wifi-set-password () {
 
 # Main script entrypoint
 # The deployments that make up The Combine, used to detect an installation that
-# is missing components.  Matches the list in install-combine.sh.
+# is missing components. Matches the list in install-combine.sh.
 COMBINE_DEPLOYMENTS=(backend database frontend maintenance)
 WIFI_IF=$(get-wifi-if)
 WIFI_CONFIG=/etc/create_ap/create_ap.conf
