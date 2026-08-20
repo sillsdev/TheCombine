@@ -159,24 +159,32 @@ start-combine-deployments () {
   return ${RESTORE_FAILED}
 }
 
+# Explain a stop that did not happen, given $1 as the reason. The Combine is
+# left running either way, so the way out is the same: stop k3s directly, which
+# kills the containers, and then stop again for the WiFi connection that a
+# refusal skips along with everything else.
+report-stop-refused () {
+  echo "$1" >&2
+  echo "Wait a minute, then run \"combinectl stop\" again." >&2
+  echo "If it keeps failing, stop the cluster with \"sudo systemctl stop k3s\"," >&2
+  echo "which kills the containers instead of shutting them down, then run" >&2
+  echo "\"combinectl stop\" again to restore the WiFi connection." >&2
+}
+
 # Scale The Combine deployments to zero and wait for their pods to exit. The
 # k3s service is patched to KillMode=mixed, so stopping it SIGKILLs whatever is
 # still running, which can be the database part way through its startup setup.
 #
-# Returns non-zero if the cluster could not be reached, so that the caller leaves
-# k3s running. A pod still terminating after two minutes only warns, so that one
-# stuck pod cannot leave The Combine with no way to stop.
+# Returns non-zero if the cluster could not be reached, or if the deployments
+# could not be scaled down, so that the caller leaves k3s running rather than
+# SIGKILL them. A pod still terminating after two minutes only warns, so that
+# one stuck pod cannot leave The Combine with no way to stop.
 stop-combine-deployments () {
   # An unreachable Kubernetes API looks exactly like an empty namespace, so wait
   # for it: a stop issued while the cluster is still coming up must not be read
   # as "nothing is running here."
   if ! wait-for-cluster ; then
-    echo "The cluster is not responding, so nothing was stopped." >&2
-    echo "Wait a minute, then run \"combinectl stop\" again." >&2
-    echo "If it keeps failing, the cluster is broken rather than slow. Stop it" >&2
-    echo "with \"sudo systemctl stop k3s\", which kills the containers instead of" >&2
-    echo "shutting them down, then run \"combinectl stop\" again to restore the" >&2
-    echo "WiFi connection." >&2
+    report-stop-refused "The cluster is not responding, so nothing was stopped."
     return 1
   fi
   DEPLOY_STATUS=$(combine-deployments)
@@ -190,7 +198,14 @@ stop-combine-deployments () {
     echo "${REPLICA_LIST}" > "${CACHED_REPLICAS}"
   fi
   echo "Stopping The Combine deployments."
-  kubectl -n thecombine scale deployment --all --replicas=0 > /dev/null
+  # Nothing was asked to stop if this fails, so refuse here rather than fall
+  # through to the wait below, which would time out, warn, and let the caller
+  # SIGKILL the containers. That warning is for a pod that is slow to stop,
+  # which is not this.
+  if ! kubectl -n thecombine scale deployment --all --replicas=0 > /dev/null ; then
+    report-stop-refused "The deployments could not be scaled down, so The Combine was not stopped."
+    return 1
+  fi
   # A selector-based "kubectl wait" fails immediately when nothing matches it,
   # so only wait when there are pods left to wait for.
   if [[ -n $(kubectl -n thecombine get pods -l combine-component --no-headers 2> /dev/null) ]] ; then
