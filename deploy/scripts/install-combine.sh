@@ -380,7 +380,7 @@ while [ "$STATE" != "Done" ] ; do
     Shutdown-combine)
       # If not being installed as a server,
       if [[ $IS_SERVER != 1 ]] ; then
-        # Shut down The Combine services.  combinectl leaves them running rather
+        # Shut down The Combine services. combinectl leaves them running rather
         # than kill them mid-shutdown, so stop here if it could not stop them.
         ERROR_HINT="Rerun the installer to finish shutting down; nothing needs to be undone."
         combinectl stop || error "Could not stop The Combine."
