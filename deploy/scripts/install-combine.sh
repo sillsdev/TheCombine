@@ -13,9 +13,9 @@ set -eo pipefail
 #   - single-step - run the next "step" in the installation process and stop.
 #   - start-at <step-name> - start at the step named <step-name> and run to completion.
 #
-# The WAIT_TIMEOUT_SECONDS environment variable overrides how long the
-# "Wait-for-combine" step waits for the deployments to become available, and then
-# again for the semantic domain import, before giving up.
+# The WAIT_TIMEOUT_SECONDS environment variable overrides how long the "Wait-for-combine"
+# step waits for the deployments to become available. The check that follows, which
+# normally passes at once, is given the same budget again.
 #
 #########################################################################################
 
@@ -32,9 +32,9 @@ error () {
   exit 1
 }
 
-# Set the environment variables that are required by The Combine.
-# In addition, the values are stored in a file so that they do not
-# need to be re-entered on subsequent installations.
+# Set the environment variables that are required by The Combine. In addition,
+# the values are stored in a file so that they do not need to be re-entered on
+# subsequent installations.
 set-combine-env () {
   if [ ! -f "${CONFIG_DIR}/env" ] ; then
     # Generate JWT Secret Key
@@ -101,9 +101,8 @@ install-kubernetes () {
   ansible-playbook playbook_desktop_setup.yml -K ${EXTRA_VARS} $(((DEBUG == 1)) && echo "-vv")
 }
 
-# Set the KUBECONFIG environment variable so that the cluster can
-# be reached by the installation scripts.  It also starts the k3s
-# service if it is not already running.
+# Set the KUBECONFIG env var so the cluster can be reached by the installation
+# scripts. It also starts the k3s service if it is not already running.
 set-k3s-env () {
   #####
   # Setup kubectl configuration file
@@ -159,7 +158,7 @@ install-the-combine () {
 }
 
 # Exit if the deadline for the current wait has passed, printing the state of
-# the pods so that the user has somewhere to start looking.  $1 names what is
+# the pods so that the user has somewhere to start looking. $1 names what is
 # still being waited for and $2 optionally replaces the default error hint.
 check-wait-deadline () {
   if (( SECONDS < WAIT_DEADLINE )) ; then
@@ -173,8 +172,9 @@ check-wait-deadline () {
   error "Timed out after ${WAIT_TIMEOUT_SECONDS}s; still waiting for $1."
 }
 
-# Wait until all The Combine deployments are available.  One deadline covers all
-# of them, so a database that takes most of it leaves the rest less time.
+# Wait until all The Combine deployments are available. One deadline covers all
+# of them, so the database, which is not available until its postStart hook has
+# imported the semantic domains, leaves the rest of them less time.
 wait-for-combine () {
   set-k3s-env
   WAIT_DEADLINE=$(( SECONDS + WAIT_TIMEOUT_SECONDS ))
@@ -197,10 +197,15 @@ wait-for-combine () {
   done
 }
 
-# Wait until the database has recorded a completed semantic domain import. The
-# import runs from the database's postStart hook and takes several minutes on a
-# first install. It is redone on the next start if it is interrupted, so waiting
-# here keeps the shutdown below from silently costing the user another import.
+# Check that the database has recorded a completed semantic domain import, which
+# is redone on the next pod start if it was interrupted, so that the shutdown
+# below does not silently cost the user another import.
+#
+# The import runs from the database's postStart hook, and the kubelet does not
+# report a container ready until its hook returns, so wait-for-combine has
+# already waited the import out and this normally passes on its first check. It
+# is here for what that wait cannot see: a database pod that an install left
+# running, and so never ran the hook, with no import recorded.
 wait-for-semantic-domains () {
   echo "Waiting for the semantic domain import."
   WAIT_DEADLINE=$(( SECONDS + WAIT_TIMEOUT_SECONDS ))
@@ -277,10 +282,10 @@ SINGLE_STEP=0
 IS_SERVER=0
 DEBUG=0
 ERROR_HINT=""
-# Only a timeout given as an option is checked for a valid format, so ignore any
-# value that happens to be set in the environment.
+# Only a timeout given as an option is checked for a valid format, so ignore
+# any value that happens to be set in the environment.
 HELM_TIMEOUT=""
-# Maximum time to wait for each stage of The Combine to come up.  A first
+# Maximum time to wait for each stage of The Combine to come up. A first
 # install pulls several images and imports the semantic domains, so a generous
 # default is better than one that gives up on a slow machine or connection.
 WAIT_TIMEOUT_SECONDS=${WAIT_TIMEOUT_SECONDS:-3600}
@@ -429,7 +434,7 @@ while [ "$STATE" != "Done" ] ; do
     Shutdown-combine)
       # If not being installed as a server,
       if [[ $IS_SERVER != 1 ]] ; then
-        # Shut down The Combine services.  combinectl leaves them running rather
+        # Shut down The Combine services. combinectl leaves them running rather
         # than kill them mid-shutdown, so stop here if it could not stop them.
         ERROR_HINT="Rerun the installer to finish shutting down; nothing needs to be undone."
         combinectl stop || error "Could not stop The Combine."

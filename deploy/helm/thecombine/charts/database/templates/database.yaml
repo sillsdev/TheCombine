@@ -57,8 +57,10 @@ spec:
                   - -c
                   - |
                     log=/data/db/postStart.log
-                    # One block is appended per container start, so keep the most
-                    # recent starts and drop the rest.
+                    # One block is appended per container start. Keeping the last
+                    # 200 lines keeps the recent starts and drops the rest, but it
+                    # does not respect block boundaries, so the oldest block that
+                    # survives can begin part way through.
                     if [ -f "${log}" ]; then
                       tail -n 200 "${log}" > "${log}.trim" && mv "${log}.trim" "${log}"
                     fi
@@ -106,9 +108,9 @@ spec:
           readinessProbe:
             # /tmp/replica-set-ready is written at the end of the postStart hook,
             # once mongod is a writable primary advertising this pod's IP and the
-            # semantic domains are in place.  The pod IP is part of the replica set
+            # semantic domains are in place. The pod IP is part of the replica set
             # config and changes on every restart, so without this the Service can
-            # route the backend to a mongod it cannot use.  A hook that fails, and
+            # route the backend to a mongod it cannot use. A hook that fails, and
             # so restarts the container, never writes the marker at all.
             exec:
               command:
