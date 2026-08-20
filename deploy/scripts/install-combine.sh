@@ -14,8 +14,8 @@ set -eo pipefail
 #   - start-at <step-name> - start at the step named <step-name> and run to completion.
 #
 # The WAIT_TIMEOUT_SECONDS environment variable overrides how long the "Wait-for-combine"
-# step waits for the deployments to become available. The check that follows, which
-# normally passes at once, is given the same budget again.
+# step waits for the deployments to become available. The check that follows it has a
+# short budget of its own, since it normally passes at once.
 #
 #########################################################################################
 
@@ -157,6 +157,12 @@ install-the-combine () {
   deactivate
 }
 
+# Start a wait of $1 seconds, keeping the budget for check-wait-deadline to report.
+start-wait () {
+  WAIT_BUDGET=$1
+  WAIT_DEADLINE=$(( SECONDS + WAIT_BUDGET ))
+}
+
 # Exit if the deadline for the current wait has passed, printing the state of
 # the pods so that the user has somewhere to start looking. $1 names what is
 # still being waited for and $2 optionally replaces the default error hint.
@@ -169,7 +175,7 @@ check-wait-deadline () {
   ERROR_HINT="${2:-Rerun the installer to resume waiting; nothing needs to be undone.}"
   # The deadline covers the whole wait, so report what it was still waiting for
   # rather than implying that $1 alone had the full timeout.
-  error "Timed out after ${WAIT_TIMEOUT_SECONDS}s; still waiting for $1."
+  error "Timed out after ${WAIT_BUDGET}s; still waiting for $1."
 }
 
 # Wait until all The Combine deployments are available. One deadline covers all
@@ -177,7 +183,7 @@ check-wait-deadline () {
 # imported the semantic domains, leaves the rest of them less time.
 wait-for-combine () {
   set-k3s-env
-  WAIT_DEADLINE=$(( SECONDS + WAIT_TIMEOUT_SECONDS ))
+  start-wait "${WAIT_TIMEOUT_SECONDS}"
   # The database is checked first because everything else depends on it and it
   # is the slowest to come up on a first install.
   for deployment in database backend frontend maintenance ; do
@@ -205,10 +211,11 @@ wait-for-combine () {
 # report a container ready until its hook returns, so wait-for-combine has
 # already waited the import out and this normally passes on its first check. It
 # is here for what that wait cannot see: a database pod that an install left
-# running, and so never ran the hook, with no import recorded.
+# running, and so never ran the hook, with no import recorded. Nothing will write
+# the record then, so the wait is short and ends in the hint below.
 wait-for-semantic-domains () {
   echo "Waiting for the semantic domain import."
-  WAIT_DEADLINE=$(( SECONDS + WAIT_TIMEOUT_SECONDS ))
+  start-wait "${IMPORT_CHECK_TIMEOUT_SECONDS}"
   import_done="quit(db.getSiblingDB('CombineDatabase').SemanticDomainImportStatus.countDocuments({ _id: 'semantic-domains', completed: true }) === 1 ? 0 : 1)"
   # Rerunning the installer does not restart the database pod, so it does not
   # start an import that never ran; point at the manual import instead.
@@ -285,10 +292,15 @@ ERROR_HINT=""
 # Only a timeout given as an option is checked for a valid format, so ignore
 # any value that happens to be set in the environment.
 HELM_TIMEOUT=""
-# Maximum time to wait for each stage of The Combine to come up. A first
-# install pulls several images and imports the semantic domains, so a generous
-# default is better than one that gives up on a slow machine or connection.
+# Maximum time to wait for each stage of The Combine to come up. A first install
+# pulls several images and imports the semantic domains, so be generous.
 WAIT_TIMEOUT_SECONDS=${WAIT_TIMEOUT_SECONDS:-3600}
+# Prevent silently bad values: non-number (reads as 0); leading zero (octal).
+if [[ ! ${WAIT_TIMEOUT_SECONDS} =~ ^[1-9][0-9]*$ ]] ; then
+  error "Invalid WAIT_TIMEOUT_SECONDS, '${WAIT_TIMEOUT_SECONDS}'; it must be a whole number greater than zero."
+fi
+# The deployments wait already covers the import, so this only covers one slow call.
+IMPORT_CHECK_TIMEOUT_SECONDS=120
 
 # See if we need to continue from a previous install
 STATE_FILE=${CONFIG_DIR}/install-state
