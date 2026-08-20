@@ -437,10 +437,12 @@ Notes:
   pod cannot become ready during the import no matter when the marker is written.
 
   The completion record is in the database's persistent volume, so it outlives the pod that wrote it: once an import is
-  recorded, no later pod start imports again. Whenever the Semantic Domain data change, the import has to be rerun
-  manually. That is true both of data added by hand, for example a new language, and of a release that ships an updated
-  `tree.json` or `nodes.json`, including one installed with `combinectl update`; neither is picked up on its own. A
-  manual run refreshes the completion record, so it is not redone on the next pod start:
+  recorded, no later pod start imports again. An installation that imported before the record existed does not have one,
+  so its first pod start on this chart imports once more, and the pod stays out of the `database` Service for the few
+  minutes that takes. Whenever the Semantic Domain data change, the import has to be rerun manually. That is true both
+  of data added by hand, for example a new language, and of a release that ships an updated `tree.json` or `nodes.json`,
+  including one installed with `combinectl update`; neither is picked up on its own. A manual run refreshes the
+  completion record, so it is not redone on the next pod start:
 
   ```console
   kubectl -n thecombine exec deployment/database -- /opt/thecombine/update-semantic-domains.sh

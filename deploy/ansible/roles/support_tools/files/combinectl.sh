@@ -161,8 +161,9 @@ start-combine-deployments () {
 # k3s service is patched to KillMode=mixed, so stopping it SIGKILLs whatever is
 # still running, which can be the database part way through its startup setup.
 #
-# Returns non-zero when the deployments were not stopped, so that the caller can
-# leave k3s running rather than SIGKILL them.
+# Returns non-zero if the cluster could not be reached, so that the caller leaves
+# k3s running. A pod still terminating after two minutes only warns, so that one
+# stuck pod cannot leave The Combine with no way to stop.
 stop-combine-deployments () {
   # An unreachable Kubernetes API looks exactly like an empty namespace, so wait
   # for it: a stop issued while the cluster is still coming up must not be read
