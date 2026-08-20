@@ -295,10 +295,6 @@ HELM_TIMEOUT=""
 # Maximum time to wait for each stage of The Combine to come up. A first install
 # pulls several images and imports the semantic domains, so be generous.
 WAIT_TIMEOUT_SECONDS=${WAIT_TIMEOUT_SECONDS:-3600}
-# Prevent silently bad values: non-number (reads as 0); leading zero (octal).
-if [[ ! ${WAIT_TIMEOUT_SECONDS} =~ ^[1-9][0-9]*$ ]] ; then
-  error "Invalid WAIT_TIMEOUT_SECONDS, '${WAIT_TIMEOUT_SECONDS}'; it must be a whole number greater than zero."
-fi
 # The deployments wait already covers the import, so this only covers one slow call.
 IMPORT_CHECK_TIMEOUT_SECONDS=120
 
@@ -371,6 +367,10 @@ fi
 
 SETUP_OPTS=""
 if [ "${STATE}" != "Uninstall-combine" ] ; then
+  # Prevent silently bad values: non-number (reads as 0); leading zero (octal).
+  if [[ ! ${WAIT_TIMEOUT_SECONDS} =~ ^[1-9][0-9]*$ ]] ; then
+    error "Invalid WAIT_TIMEOUT_SECONDS, '${WAIT_TIMEOUT_SECONDS}'; it must be a whole number greater than zero."
+  fi
   # Every helm command runs after the restart that the Pre-reqs step usually
   # requires, so record a timeout and reuse it until the install finishes.
   if [ -z "${HELM_TIMEOUT}" ] ; then
