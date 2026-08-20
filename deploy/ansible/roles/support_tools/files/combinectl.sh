@@ -20,9 +20,9 @@ usage () {
                 The Combine does not run properly, download and run the
                 updated install package.
       wifi [wifi-passphrase]:
-                If no parameters are provided, display the wifi
+                If no parameters are provided, display the WiFi
                 passphrase.  If a new passphase is provided, the
-                wifi passphrase is updated to the new phrase.
+                WiFi passphrase is updated to the new phrase.
                 If your passphrase has spaces or special characters,
                 it is best to enclose your pass phrase in quotation marks ("").
 
@@ -31,7 +31,7 @@ usage () {
 .EOM
 }
 
-# Get the name of the first wifi interface. In general, this script assumes
+# Get the name of the first WiFi interface. In general, this script assumes
 # that there is a single WiFi interface installed.
 get-wifi-if () {
   IFS=$'\n' WIFI_DEVICES=( $(nmcli d | grep "^wl") )
@@ -239,15 +239,15 @@ combine-stop () {
   echo "Stopping The Combine."
   if systemctl is-active --quiet k3s ; then
     # Stopping k3s SIGKILLs the containers, so only do it once the deployments
-    # have shut down; leave everything running otherwise. That includes the
-    # hotspot below: the pods keep serving without the Kubernetes API, so a
-    # Combine that is still up stays reachable, and a refused stop really has
-    # stopped nothing. Stopping k3s by hand then leaves "combinectl stop" the
-    # WiFi connection to restore.
+    # have shut down; leave everything running otherwise, the hotspot included.
     if ! stop-combine-deployments ; then
       return 1
     fi
-    sudo systemctl stop k3s
+    if ! sudo systemctl stop k3s ; then
+      echo "Could not stop k3s; the deployments are stopped but the cluster is" >&2
+      echo "still running. Run \"combinectl stop\" again." >&2
+      return 1
+    fi
   fi
   if systemctl is-active --quiet create_ap ; then
     sudo systemctl stop create_ap
@@ -258,9 +258,8 @@ combine-stop () {
 }
 
 # Print the status of The Combine services. When the cluster is up, also
-# distinguish between The Combine being uninstalled, incompletely installed,
-# scaled down, partly scaled down, still starting, and fully running, then print
-# the status of the deployments in the "thecombine" namespace.
+# distinguish between various possible installation states, then print the
+# status of the deployments.
 #
 # Always exits 0; install-combine.sh calls this under "set -e".
 combine-status () {
@@ -296,10 +295,8 @@ combine-status () {
     fi
   done
 
-  # Total requested replicas, to tell a scaled down Combine from a running one,
-  # the deployments that ask for no replicas at all, and the ones that do not
-  # have all of the replicas they asked for. A deployment scaled to zero has
-  # every replica it asked for, so it has to be counted separately from those.
+  # A deployment scaled to zero has every replica it asked for, so it has to be
+  # counted separately from the ones that are still short of theirs.
   REQUESTED=0
   STOPPED=()
   PENDING=()
@@ -371,13 +368,12 @@ combine-wifi-set-password () {
 }
 
 # Main script entrypoint
-# The deployments that make up The Combine, used to detect an installation that
-# is missing components. Matches the list in install-combine.sh.
-COMBINE_DEPLOYMENTS=(backend database frontend maintenance)
 WIFI_IF=$(get-wifi-if)
 WIFI_CONFIG=/etc/create_ap/create_ap.conf
 export KUBECONFIG=${HOME}/.kube/config
 COMBINE_CONFIG=${HOME}/.config/combine
+# Deployments match the list in install-combine.sh
+COMBINE_DEPLOYMENTS=(backend database frontend maintenance)
 CACHED_WIFI_CONN=${COMBINE_CONFIG}/wifi-connection.txt
 CACHED_REPLICAS=${COMBINE_CONFIG}/deployment-replicas.txt
 

@@ -384,12 +384,7 @@ while [ "$STATE" != "Done" ] ; do
         # than kill them mid-shutdown, so stop here if it could not stop them.
         #
         # k3s still being active is the check rather than combinectl's exit
-        # status, which is not a full account of what happened: combine-stop
-        # does not check its "systemctl stop k3s", so it returns 0 with the
-        # cluster still up if that fails. The update option also does not
-        # reinstall combinectl, so this can be an older one that stops k3s
-        # without draining it first, and returns 0 for that too. What the
-        # cluster is doing afterwards is the same question for either.
+        # status, which can be zero with the cluster still up.
         combinectl stop || true
         if systemctl is-active --quiet k3s ; then
           ERROR_HINT="Rerun the installer to finish shutting down; nothing needs to be undone."
