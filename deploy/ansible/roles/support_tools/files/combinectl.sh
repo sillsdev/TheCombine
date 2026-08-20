@@ -169,8 +169,12 @@ stop-combine-deployments () {
   # for it: a stop issued while the cluster is still coming up must not be read
   # as "nothing is running here."
   if ! wait-for-cluster ; then
-    echo "The cluster is not responding, so The Combine was not stopped." >&2
+    echo "The cluster is not responding, so nothing was stopped." >&2
     echo "Wait a minute, then run \"combinectl stop\" again." >&2
+    echo "If it keeps failing, the cluster is broken rather than slow. Stop it" >&2
+    echo "with \"sudo systemctl stop k3s\", which kills the containers instead of" >&2
+    echo "shutting them down, then run \"combinectl stop\" again to restore the" >&2
+    echo "WiFi connection." >&2
     return 1
   fi
   DEPLOY_STATUS=$(combine-deployments)
@@ -218,7 +222,11 @@ combine-stop () {
   echo "Stopping The Combine."
   if systemctl is-active --quiet k3s ; then
     # Stopping k3s SIGKILLs the containers, so only do it once the deployments
-    # have shut down; leave everything running otherwise.
+    # have shut down; leave everything running otherwise. That includes the
+    # hotspot below: the pods keep serving without the Kubernetes API, so a
+    # Combine that is still up stays reachable, and a refused stop really has
+    # stopped nothing. Stopping k3s by hand then leaves "combinectl stop" the
+    # WiFi connection to restore.
     if ! stop-combine-deployments ; then
       return 1
     fi
