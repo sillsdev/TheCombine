@@ -121,6 +121,10 @@ To shutdown _The Combine_, open a terminal window and run:
 combinectl stop
 ```
 
+If _The Combine_ is still starting up, `combinectl stop` waits for it to finish before shutting anything down, so the
+command can take a few minutes. If it reports that the cluster is not responding, then nothing was stopped and it is
+safe to run again; the message it prints also says how to stop the cluster directly if the problem does not clear.
+
 ### combinectl Tool
 
 Once installation is complete, you can use the `combinectl` command to manage the installation. The `combinectl` command
