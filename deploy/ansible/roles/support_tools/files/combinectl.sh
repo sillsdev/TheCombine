@@ -73,6 +73,63 @@ combine-cert () {
   echo $CERT_DATA | base64 -d | openssl x509 -enddate -noout| sed -e "s/^notAfter=/Web certificate expires at /"
 }
 
+# Restore the deployment replica counts saved by stop-combine-deployments.
+start-combine-deployments () {
+  if [ ! -f "${CACHED_REPLICAS}" ] ; then
+    return
+  fi
+  # k3s has only just been started, so give the API server time to answer.
+  ATTEMPTS=0
+  until kubectl -n thecombine get deployments > /dev/null 2>&1 ; do
+    ATTEMPTS=$((ATTEMPTS + 1))
+    if [[ ${ATTEMPTS} -ge 60 ]] ; then
+      echo "The cluster is not responding; run \"combinectl start\" again." >&2
+      return
+    fi
+    sleep 2
+  done
+  echo "Starting The Combine deployments."
+  RESTORE_FAILED=0
+  while IFS="=" read -r DEPLOYMENT REPLICAS ; do
+    if [[ -z ${DEPLOYMENT} || -z ${REPLICAS} ]] ; then
+      continue
+    fi
+    if ! kubectl -n thecombine scale "deployment/${DEPLOYMENT}" --replicas="${REPLICAS}" > /dev/null ; then
+      echo "Could not start deployment/${DEPLOYMENT}." >&2
+      RESTORE_FAILED=1
+    fi
+  done < "${CACHED_REPLICAS}"
+  # Keep the counts for the next attempt if any deployment was not restored.
+  if [[ ${RESTORE_FAILED} -eq 0 ]] ; then
+    rm -f "${CACHED_REPLICAS}"
+  fi
+}
+
+# Scale The Combine deployments to zero and wait for their pods to exit.  The
+# k3s service is patched to KillMode=mixed, so stopping it SIGKILLs whatever is
+# still running, which can be the database part way through its startup setup.
+stop-combine-deployments () {
+  if ! kubectl -n thecombine get deployments > /dev/null 2>&1 ; then
+    return
+  fi
+  REPLICAS=$(kubectl -n thecombine get deployments \
+    -o 'jsonpath={range .items[*]}{.metadata.name}={.spec.replicas}{"\n"}{end}')
+  if [[ -z ${REPLICAS} ]] ; then
+    return
+  fi
+  # Only overwrite the cache when there is something to restore, so that
+  # stopping The Combine when it's already stopped doesn't lose the counts.
+  if echo "${REPLICAS}" | grep -qv "=0$" ; then
+    echo "${REPLICAS}" > "${CACHED_REPLICAS}"
+  fi
+  echo "Stopping The Combine deployments."
+  kubectl -n thecombine scale deployment --all --replicas=0 > /dev/null
+  if ! kubectl -n thecombine wait --for=delete pod -l combine-component \
+      --timeout=2m > /dev/null 2>&1 ; then
+    echo "The Combine did not stop within 2 minutes; stopping anyway." >&2
+  fi
+}
+
 # Start The Combine services
 combine-start () {
   echo "Starting The Combine."
@@ -84,6 +141,7 @@ combine-start () {
   if ! systemctl is-active --quiet k3s ; then
     sudo systemctl start k3s
   fi
+  start-combine-deployments
 }
 
 # Stop The Combine services and restore the WiFI
@@ -91,6 +149,7 @@ combine-start () {
 combine-stop () {
   echo "Stopping The Combine."
   if systemctl is-active --quiet k3s ; then
+    stop-combine-deployments
     sudo systemctl stop k3s
   fi
   if systemctl is-active --quiet create_ap ; then
@@ -160,6 +219,7 @@ WIFI_CONFIG=/etc/create_ap/create_ap.conf
 export KUBECONFIG=${HOME}/.kube/config
 COMBINE_CONFIG=${HOME}/.config/combine
 CACHED_WIFI_CONN=${COMBINE_CONFIG}/wifi-connection.txt
+CACHED_REPLICAS=${COMBINE_CONFIG}/deployment-replicas.txt
 
 # Make sure config directory exists
 mkdir -p "${COMBINE_CONFIG}"
