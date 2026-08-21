@@ -1,6 +1,6 @@
 #! /usr/bin/bash
 # A partial import leaves the collections non-empty but incomplete, so record
-# completion here and only on success.  Doing it here rather than in the caller
+# completion here and only on success. Doing it here rather than in the caller
 # means a manual run also counts, and stops the next container start from
 # redoing the whole import.
 #

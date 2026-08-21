@@ -436,15 +436,18 @@ Notes:
   with `?replicaSet=rs0`. Note that the kubelet does not probe a container until its `postStart` hook returns, so the
   pod cannot become ready during the import no matter when the marker is written.
 
-  If the Semantic Domain data are updated, for example, adding a new language, then the import needs to be rerun
-  manually. This also refreshes the completion record, so a manual import is not redone on the next pod start:
+  The completion record is in the database's persistent volume, so it outlives the pod that wrote it: once an import is
+  recorded, no later pod start imports again. Whenever the Semantic Domain data change, the import has to be rerun
+  manually. That is true both of data added by hand, for example a new language, and of a release that ships an updated
+  `tree.json` or `nodes.json`, including one installed with `combinectl update`; neither is picked up on its own. A
+  manual run refreshes the completion record, so it is not redone on the next pod start:
 
   ```console
   kubectl -n thecombine exec deployment/database -- /opt/thecombine/update-semantic-domains.sh
   ```
 
   The `postStart` hook appends its output to `/data/db/postStart.log`, which is on the database's persistent volume and
-  so survives restarts. Only the most recent starts are kept:
+  so survives restarts. Only the last 200 lines are kept, so the oldest entry in it may begin part way through:
 
   ```console
   kubectl -n thecombine exec deployment/database -- cat /data/db/postStart.log
