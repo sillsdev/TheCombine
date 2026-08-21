@@ -1,16 +1,14 @@
 #! /bin/bash
 
-###############################################################
-# nginx resolves the hostnames in its proxy_pass directives when
-# it loads its configuration and exits if any of them cannot be
-# resolved:
+###############################################################################
+# nginx resolves the hostnames in its proxy_pass directives when it loads its
+# configuration, and exits if any of them cannot be resolved:
 #
 #   [emerg] host not found in upstream "backend"
 #
-# On a cold start the frontend container can be running before
-# the cluster DNS is able to answer for the backend service, so
-# wait for the name before letting nginx start.
-###############################################################
+# On a cold start the frontend container can be running before the cluster DNS
+# can answer for the backend service, so wait for the name before starting.
+###############################################################################
 
 BACKEND_HOST=backend
 MAX_WAIT_SECONDS=120
