@@ -74,6 +74,9 @@ jobs:
           path: installer/combine-net-installer.run
           retention-days: 5
       - name: Make installer with release version
+        # A manual run exists to publish a net-installer for the branch; the full
+        # installer is not uploaded, and building it needs a reachable release tag.
+        if: github.event_name != 'workflow_dispatch'
         run: |
           cd installer
           ./make-combine-installer.sh $(git describe --tags --abbrev=0) --debug
