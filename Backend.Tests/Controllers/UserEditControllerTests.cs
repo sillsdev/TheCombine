@@ -148,6 +148,25 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestUpdateGoalInUserEdit()
+        {
+            var userEdit = RandomUserEdit();
+            await _userEditRepo.Create(userEdit);
+            var existingEdit = userEdit.Edits.First();
+
+            var updatedEdit = existingEdit.Clone();
+            updatedEdit.GoalType = existingEdit.GoalType + 1;
+            updatedEdit.StepData = ["A revised step"];
+            await _userEditController.UpdateUserEditGoal(ProjId, userEdit.Id, updatedEdit);
+
+            var repoUserEdit = await _userEditRepo.GetUserEdit(ProjId, userEdit.Id);
+            Assert.That(repoUserEdit, Is.Not.Null);
+            Assert.That(repoUserEdit.Edits, Has.Count.EqualTo(1));
+            Assert.That(repoUserEdit.Edits.First().GoalType, Is.EqualTo(updatedEdit.GoalType));
+            Assert.That(repoUserEdit.Edits.First().StepData, Is.EqualTo(updatedEdit.StepData));
+        }
+
+        [Test]
         public async Task TestAddGoalToUserEditNoPermissions()
         {
             _userEditController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();

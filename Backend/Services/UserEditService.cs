@@ -24,58 +24,31 @@ namespace BackendFramework.Services
         /// </summary>
         /// <returns>
         /// Tuple of
-        ///     bool: true if Edit added/updated, false if nothing modified
-        ///     Guid?: guid of added/updated Edit, or null if UserEdit not found
+        ///     bool: true if the Edit was added or updated, false if the UserEdit was not found
+        ///     Guid?: guid of the added/updated Edit, or null if the UserEdit was not found
         /// </returns>
         public async Task<Tuple<bool, Guid?>> AddGoalToUserEdit(string projectId, string userEditId, Edit edit)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "adding goal to user edit");
 
-            // Get userEdit to change
-            var userEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
-            if (userEdit is null)
-            {
-                return new Tuple<bool, Guid?>(false, null);
-            }
-
             edit.Modified = DateTime.UtcNow;
 
-            // Update existing Edit if guid exists, otherwise add new one at end of List.
-            var editIndex = userEdit.Edits.FindLastIndex(e => e.Guid == edit.Guid);
-            if (editIndex > -1)
-            {
-                userEdit.Edits[editIndex] = edit;
-            }
-            else
-            {
-                userEdit.Edits.Add(edit);
-            }
+            // Replace the Edit with this guid if present, otherwise add it. Each repo call is atomic on its
+            // own. Two concurrent first-time writes of the same new guid could still both add it, but guids
+            // are client-generated and unique per goal, so that window is tolerated rather than locked.
+            var isSuccess = await _userEditRepo.ReplaceEdit(projectId, userEditId, edit)
+                || await _userEditRepo.AddEdit(projectId, userEditId, edit);
 
-            // Replace the old UserEdit object with the new one that contains the new/updated edit
-            var editReplaced = await _userEditRepo.Replace(projectId, userEditId, userEdit);
-
-            return new Tuple<bool, Guid?>(editReplaced, edit.Guid);
+            return new Tuple<bool, Guid?>(isSuccess, isSuccess ? edit.Guid : null);
         }
 
         /// <summary> Adds a string representation of a step to a specified <see cref="Edit"/> </summary>
-        /// <returns> A bool: success of operation </returns>
+        /// <returns> A bool: success of operation (false if userEdit or edit not found) </returns>
         public async Task<bool> AddStepToGoal(string projectId, string userEditId, Guid editGuid, string stepString)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "adding step to goal");
 
-            var userEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
-            if (userEdit is null)
-            {
-                return false;
-            }
-            var edit = userEdit.Edits.FindLast(e => e.Guid == editGuid);
-            if (edit is null)
-            {
-                return false;
-            }
-            edit.Modified = DateTime.UtcNow;
-            edit.StepData.Add(stepString);
-            return await _userEditRepo.Replace(projectId, userEditId, userEdit);
+            return await _userEditRepo.AddStepToEdit(projectId, userEditId, editGuid, stepString);
         }
 
         /// <summary> Updates a specified step in a specified <see cref="Edit"/> </summary>
@@ -89,19 +62,8 @@ namespace BackendFramework.Services
             {
                 return false;
             }
-            var userEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
-            if (userEdit is null)
-            {
-                return false;
-            }
-            var edit = userEdit.Edits.FindLast(e => e.Guid == editGuid);
-            if (edit is null || stepIndex >= edit.StepData.Count)
-            {
-                return false;
-            }
-            edit.Modified = DateTime.UtcNow;
-            edit.StepData[stepIndex] = stepString;
-            return await _userEditRepo.Replace(projectId, userEditId, userEdit);
+
+            return await _userEditRepo.UpdateStepInEdit(projectId, userEditId, editGuid, stepIndex, stepString);
         }
     }
 }
