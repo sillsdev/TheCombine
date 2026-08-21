@@ -13,8 +13,9 @@ set -eo pipefail
 #   - single-step - run the next "step" in the installation process and stop.
 #   - start-at <step-name> - start at the step named <step-name> and run to completion.
 #
-# The WAIT_TIMEOUT_SECONDS environment variable overrides how long each stage of
-# the "Wait-for-combine" step waits before giving up.
+# The WAIT_TIMEOUT_SECONDS environment variable overrides how long the
+# "Wait-for-combine" step waits for the deployments to become available, and then
+# again for the semantic domain import, before giving up.
 #
 #########################################################################################
 
@@ -158,18 +159,22 @@ install-the-combine () {
 }
 
 # Exit if the deadline for the current wait has passed, printing the state of
-# the pods so that the user has somewhere to start looking.
+# the pods so that the user has somewhere to start looking.  $1 names what is
+# still being waited for and $2 optionally replaces the default error hint.
 check-wait-deadline () {
   if (( SECONDS < WAIT_DEADLINE )) ; then
     return 0
   fi
   echo "Current state of the pods in the 'thecombine' namespace:" >&2
   kubectl -n thecombine get pods --request-timeout=10s >&2 || true
-  ERROR_HINT="Rerun the installer to resume waiting; nothing needs to be undone."
-  error "Timed out after ${WAIT_TIMEOUT_SECONDS}s waiting for $1."
+  ERROR_HINT="${2:-Rerun the installer to resume waiting; nothing needs to be undone.}"
+  # The deadline covers the whole wait, so report what it was still waiting for
+  # rather than implying that $1 alone had the full timeout.
+  error "Timed out after ${WAIT_TIMEOUT_SECONDS}s; still waiting for $1."
 }
 
-# Wait until all The Combine deployments are available.
+# Wait until all The Combine deployments are available.  One deadline covers all
+# of them, so a database that takes most of it leaves the rest less time.
 wait-for-combine () {
   set-k3s-env
   WAIT_DEADLINE=$(( SECONDS + WAIT_TIMEOUT_SECONDS ))
@@ -200,11 +205,14 @@ wait-for-semantic-domains () {
   echo "Waiting for the semantic domain import."
   WAIT_DEADLINE=$(( SECONDS + WAIT_TIMEOUT_SECONDS ))
   import_done="quit(db.getSiblingDB('CombineDatabase').SemanticDomainImportStatus.countDocuments({ _id: 'semantic-domains', completed: true }) === 1 ? 0 : 1)"
+  # Rerunning the installer does not restart the database pod, so it does not
+  # start an import that never ran; point at the manual import instead.
+  import_hint="Import the semantic domains manually with: kubectl -n thecombine exec deployment/database -- /opt/thecombine/update-semantic-domains.sh"
   # Each check starts a mongosh inside the database container, competing with the
   # import it is waiting on, so check infrequently.
   until kubectl -n thecombine exec deployment/database -- \
       mongosh --quiet --host 127.0.0.1 --eval "${import_done}" > /dev/null 2>&1 ; do
-    check-wait-deadline "the semantic domain import"
+    check-wait-deadline "the semantic domain import" "${import_hint}"
     sleep 30
   done
 }
