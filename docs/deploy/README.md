@@ -427,11 +427,14 @@ Notes:
   the import has not already been recorded as complete, runs `update-semantic-domains.sh`. That script records its own
   completion in `CombineDatabase.SemanticDomainImportStatus`, and only on success; a count of the imported collections
   is not used, because an import that is interrupted part way through leaves them non-empty but incomplete. If the
-  import is interrupted, the next pod start redoes it.
+  import is interrupted, the next pod start redoes it. If the import fails outright, the hook fails, and the kubelet
+  restarts the container to retry; _The Combine_ cannot be used without the semantic domains, so this is preferred over
+  a database that looks healthy without them. Look in the `postStart` log, below, to see why an import is failing.
 
-  The hook also writes `/tmp/replica-set-ready` once the replica set is aligned, which is what the pod's readiness probe
-  checks. Until then the pod is kept out of the `database` Service endpoints, since the replica set advertises the pod's
-  IP and the backend connects with `?replicaSet=rs0`.
+  The hook then writes `/tmp/replica-set-ready`, which is what the pod's readiness probe checks. Until then the pod is
+  kept out of the `database` Service endpoints, since the replica set advertises the pod's IP and the backend connects
+  with `?replicaSet=rs0`. Note that the kubelet does not probe a container until its `postStart` hook returns, so the
+  pod cannot become ready during the import no matter when the marker is written.
 
   If the Semantic Domain data are updated, for example, adding a new language, then the import needs to be rerun
   manually. This also refreshes the completion record, so a manual import is not redone on the next pod start:
