@@ -21,7 +21,7 @@ usage () {
                 updated install package.
       wifi [wifi-passphrase]:
                 If no parameters are provided, display the WiFi
-                passphrase.  If a new passphase is provided, the
+                passphrase.  If a new passphrase is provided, the
                 WiFi passphrase is updated to the new phrase.
                 If your passphrase has spaces or special characters,
                 it is best to enclose your pass phrase in quotation marks ("").
