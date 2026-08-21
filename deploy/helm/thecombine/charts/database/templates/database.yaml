@@ -56,8 +56,9 @@ spec:
                   - /bin/sh
                   - -c
                   - |
-                    exec > /data/db/postStart.log 2>&1
+                    exec >> /data/db/postStart.log 2>&1
                     set -e
+                    echo "[postStart] $(date -Is) starting"
                     echo "[postStart] Waiting for mongod to accept connections"
                     attempts=0
                     until mongosh --quiet --host 127.0.0.1 --eval "db.adminCommand({ ping: 1 }).ok" >/dev/null 2>&1; do
@@ -70,10 +71,17 @@ spec:
                     done
                     echo "[postStart] Ensuring replica set host"
                     mongosh --quiet --host 127.0.0.1 /opt/thecombine/00-replica-set.js || exit $?
-                    needs_semantic_import="$(mongosh --quiet --host 127.0.0.1 --eval "const combineDb = db.getSiblingDB('CombineDatabase'); const treeCount = combineDb.SemanticDomainTree.countDocuments({}); const domainCount = combineDb.SemanticDomains.countDocuments({}); print(treeCount === 0 || domainCount === 0 ? 'yes' : 'no');")"
-                    if [ "${needs_semantic_import}" = "yes" ]; then
+                    # mongod can serve the backend from here on, so let the readiness
+                    # probe pass while the semantic domain import runs.
+                    touch /tmp/replica-set-ready
+                    # Only a finished import is recorded, so an interrupted one is redone.
+                    import_state="$(mongosh --quiet --host 127.0.0.1 --eval "print(db.getSiblingDB('CombineDatabase').SemanticDomainImportStatus.countDocuments({ _id: 'semantic-domains', completed: true }) === 1 ? 'done' : 'needed');")"
+                    if [ "${import_state}" = "needed" ]; then
+                      echo "[postStart] Importing semantic domains"
                       /bin/bash /opt/thecombine/update-semantic-domains.sh
+                      mongosh --quiet --host 127.0.0.1 --eval "db.getSiblingDB('CombineDatabase').SemanticDomainImportStatus.replaceOne({ _id: 'semantic-domains' }, { _id: 'semantic-domains', completed: true }, { upsert: true });"
                     fi
+                    echo "[postStart] $(date -Is) done"
           env:
             - name: POD_IP
               valueFrom:
@@ -83,6 +91,19 @@ spec:
               value: "$(POD_IP):27017"
           ports:
             - containerPort: 27017
+          readinessProbe:
+            # /tmp/replica-set-ready is written by the postStart hook once mongod is
+            # a writable primary advertising this pod's IP.  The pod IP is part of
+            # the replica set config and changes on every restart, so without this
+            # the Service can route the backend to a mongod it cannot use.
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - test -f /tmp/replica-set-ready
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
           resources:
             requests:
               cpu:  25m
