@@ -338,6 +338,10 @@ combine-status () {
     echo "The Combine is Running."
   fi
   kubectl -n thecombine get deployments
+  # Whether a pending deployment is stuck or still starting shows in the pods.
+  if [[ ${#PENDING[@]} -gt 0 ]] ; then
+    kubectl -n thecombine get pods
+  fi
   return 0
 }
 
