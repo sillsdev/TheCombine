@@ -44,7 +44,7 @@ server {
     text/x-cross-domain-policy;
     # text/html is always compressed by gzip module
 
-    # Cluster-internal upstreams must be added to nginx/init/05-wait-for-backend-dns.sh.
+    # Only "backend" is waited for in nginx/init/05-wait-for-backend-dns.sh.
     location /v1 {
         proxy_pass         http://backend:5000;
         proxy_http_version 1.1;
