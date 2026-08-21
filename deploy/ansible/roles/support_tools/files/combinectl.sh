@@ -78,9 +78,11 @@ cluster-ready () {
   kubectl get --raw='/readyz' --request-timeout=10s > /dev/null 2>&1
 }
 
-# Wait for the Kubernetes API to serve requests: sixty attempts, two seconds
-# apart. About two minutes while the API refuses connections, as it does while
-# k3s starts, and up to twelve if it accepts them and then hangs.
+# Wait for the Kubernetes API to serve requests: 60 attempts, two seconds apart.
+# About two minutes while the API refuses connections, as it does while k3s
+# starts; up to twelve if it accepts them and then hangs.
+#
+# Returns non-zero if API is not ready after the maximum number of attempts.
 wait-for-cluster () {
   ATTEMPTS=0
   until cluster-ready ; do
@@ -101,13 +103,9 @@ combine-deployments () {
     -o 'jsonpath={range .items[*]}{.metadata.name} {.spec.replicas} {.status.availableReplicas}{"\n"}{end}'
 }
 
-# Restore the deployment replica counts saved by stop-combine-deployments. The
-# counts live in a local file, so fall back to one replica each when it is
-# missing: k3s can be started without combinectl, which would otherwise leave
-# the deployments scaled to zero with nothing to bring them back.
+# Restore the deployment replica counts saved by stop-combine-deployments.
 #
-# Returns non-zero if a deployment could not be scaled up. Whether the pods
-# then run is what "combinectl status" reports.
+# Returns non-zero if a deployment could not be scaled up.
 start-combine-deployments () {
   if ! wait-for-cluster ; then
     echo "The cluster is not responding; run \"combinectl start\" again." >&2
@@ -128,10 +126,10 @@ start-combine-deployments () {
     CACHE_FILE=/dev/null
   fi
   # List every deployment that is scaled down, with its saved count. The saved
-  # counts are reconciled with the cluster rather than replayed as they are: a
-  # cached deployment that no longer exists, for example one renamed by a chart
-  # update, would otherwise fail to scale on every start, and its failure would
-  # keep the stale file, and any deployment the file omits, forever.
+  # counts are reconciled with the cluster rather than replayed as is: a cached
+  # deployment that no longer exists (e.g., one renamed by a chart update)
+  # would otherwise fail to scale on every start. Its failure would keep the
+  # stale file, and any deployment the file omits, forever.
   REPLICA_LIST=$(awk '
     NR == FNR { if ($2 == 0) { stopped[$1] = 1 } ; next }
     $1 in stopped && $2 > 0 { print $1, $2 ; delete stopped[$1] }
@@ -205,10 +203,8 @@ stop-combine-deployments () {
     echo "${REPLICA_LIST}" > "${CACHED_REPLICAS}"
   fi
   echo "Stopping The Combine deployments."
-  # Nothing was asked to stop if this fails, so refuse here rather than fall
-  # through to the wait below, which would time out, warn, and let the caller
-  # SIGKILL the containers. That warning is for a pod that is slow to stop,
-  # which is not this.
+  # If the scale fails, nothing is shutting down (and the wait below would just
+  # time out before the caller SIGKILLs the containers).
   if ! kubectl -n thecombine scale deployment --all --replicas=0 > /dev/null ; then
     report-stop-refused "The deployments could not be scaled down, so The Combine was not stopped."
     return 1
@@ -389,8 +385,8 @@ export KUBECONFIG=${HOME}/.kube/config
 COMBINE_CONFIG=${HOME}/.config/combine
 # Deployments match the list in install-combine.sh
 COMBINE_DEPLOYMENTS=(backend database frontend maintenance)
-CACHED_WIFI_CONN=${COMBINE_CONFIG}/wifi-connection.txt
 CACHED_REPLICAS=${COMBINE_CONFIG}/deployment-replicas.txt
+CACHED_WIFI_CONN=${COMBINE_CONFIG}/wifi-connection.txt
 
 # Make sure config directory exists
 mkdir -p "${COMBINE_CONFIG}"
