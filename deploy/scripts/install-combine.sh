@@ -13,6 +13,10 @@ set -eo pipefail
 #   - single-step - run the next "step" in the installation process and stop.
 #   - start-at <step-name> - start at the step named <step-name> and run to completion.
 #
+# The WAIT_TIMEOUT_SECONDS environment variable overrides how long the "Wait-for-combine"
+# step waits for the deployments to become available. The check that follows it has a
+# short budget of its own, since it normally passes at once.
+#
 #########################################################################################
 
 # Warning and Error reporting functions
@@ -28,9 +32,9 @@ error () {
   exit 1
 }
 
-# Set the environment variables that are required by The Combine.
-# In addition, the values are stored in a file so that they do not
-# need to be re-entered on subsequent installations.
+# Set the environment variables that are required by The Combine. In addition,
+# the values are stored in a file so that they do not need to be re-entered on
+# subsequent installations.
 set-combine-env () {
   if [ ! -f "${CONFIG_DIR}/env" ] ; then
     # Generate JWT Secret Key
@@ -97,9 +101,8 @@ install-kubernetes () {
   ansible-playbook playbook_desktop_setup.yml -K ${EXTRA_VARS} $(((DEBUG == 1)) && echo "-vv")
 }
 
-# Set the KUBECONFIG environment variable so that the cluster can
-# be reached by the installation scripts.  It also starts the k3s
-# service if it is not already running.
+# Set the KUBECONFIG env var so the cluster can be reached by the installation
+# scripts. It also starts the k3s service if it is not already running.
 set-k3s-env () {
   #####
   # Setup kubectl configuration file
@@ -154,25 +157,75 @@ install-the-combine () {
   deactivate
 }
 
-# Wait until all The Combine deployments are "Running"
+# Start a wait of $1 seconds, keeping the budget for check-wait-deadline to report.
+start-wait () {
+  WAIT_BUDGET=$1
+  WAIT_DEADLINE=$(( SECONDS + WAIT_BUDGET ))
+}
+
+# Exit if the deadline for the current wait has passed, printing the state of
+# the pods so that the user has somewhere to start looking. $1 names what is
+# still being waited for and $2 optionally replaces the default error hint.
+check-wait-deadline () {
+  if (( SECONDS < WAIT_DEADLINE )) ; then
+    return 0
+  fi
+  echo "Current state of the pods in the 'thecombine' namespace:" >&2
+  kubectl -n thecombine get pods --request-timeout=10s >&2 || true
+  ERROR_HINT="${2:-Rerun the installer to resume waiting; nothing needs to be undone.}"
+  # The deadline covers the whole wait, so report what it was still waiting for
+  # rather than implying that $1 alone had the full timeout.
+  error "Timed out after ${WAIT_BUDGET}s; still waiting for $1."
+}
+
+# Wait until all The Combine deployments are available. One deadline covers all
+# of them, so the database, which is not available until its postStart hook has
+# imported the semantic domains, leaves the rest of them less time.
 wait-for-combine () {
-  # Wait for all The Combine deployments to be up
-  while true ; do
-    combine_status=`kubectl -n thecombine get deployments`
-    # Assert The Combine is up; if any components are not up, set it to false
-    combine_up=true
-    for deployment in frontend backend database maintenance ; do
-      deployment_status=$(echo ${combine_status} | grep "${deployment}" | sed "s/^.*\([0-9]\)\/1.*/\1/")
-      if [ "$deployment_status" == "0" ] ; then
-        combine_up=false
-        break
-      fi
-    done
-    if [ ${combine_up} != true ] ; then
+  set-k3s-env
+  start-wait "${WAIT_TIMEOUT_SECONDS}"
+  # The database is checked first because everything else depends on it and it
+  # is the slowest to come up on a first install.
+  for deployment in database backend frontend maintenance ; do
+    echo "Waiting for deployment/${deployment}."
+    until kubectl -n thecombine get deployment/${deployment} > /dev/null 2>&1 ; do
+      check-wait-deadline "deployment/${deployment}"
       sleep 5
-    else
-      break
-    fi
+    done
+    # "kubectl wait" returns at once, rather than blocking for its timeout, when
+    # the API is unreachable or the deployment is gone, so pace the retries.
+    until kubectl -n thecombine wait --for=condition=Available \
+        --timeout=1m deployment/${deployment} > /dev/null 2>&1 ; do
+      check-wait-deadline "deployment/${deployment}"
+      echo "  still waiting for deployment/${deployment}."
+      sleep 5
+    done
+  done
+}
+
+# Check that the database has recorded a completed semantic domain import, which
+# is redone on the next pod start if it was interrupted, so that the shutdown
+# below does not silently cost the user another import.
+#
+# The import runs from the database's postStart hook, and the kubelet does not
+# report a container ready until its hook returns, so wait-for-combine has
+# already waited the import out and this normally passes on its first check. It
+# is here for what that wait cannot see: a database pod that an install left
+# running, and so never ran the hook, with no import recorded. Nothing will write
+# the record then, so the wait is short and ends in the hint below.
+wait-for-semantic-domains () {
+  echo "Waiting for the semantic domain import."
+  start-wait "${IMPORT_CHECK_TIMEOUT_SECONDS}"
+  import_done="quit(db.getSiblingDB('CombineDatabase').SemanticDomainImportStatus.countDocuments({ _id: 'semantic-domains', completed: true }) === 1 ? 0 : 1)"
+  # Rerunning the installer does not restart the database pod, so it does not
+  # start an import that never ran; point at the manual import instead.
+  import_hint="Import the semantic domains manually with: kubectl -n thecombine exec deployment/database -- /opt/thecombine/update-semantic-domains.sh"
+  # Each check starts a mongosh inside the database container, competing with the
+  # import it is waiting on, so check infrequently.
+  until kubectl -n thecombine exec deployment/database -- \
+      mongosh --quiet --host 127.0.0.1 --eval "${import_done}" > /dev/null 2>&1 ; do
+    check-wait-deadline "the semantic domain import" "${import_hint}"
+    sleep 30
   done
 }
 
@@ -236,9 +289,14 @@ SINGLE_STEP=0
 IS_SERVER=0
 DEBUG=0
 ERROR_HINT=""
-# Only a timeout given as an option is checked for a valid format, so ignore any
-# value that happens to be set in the environment.
+# Only a timeout given as an option is checked for a valid format, so ignore
+# any value that happens to be set in the environment.
 HELM_TIMEOUT=""
+# Maximum time to wait for each stage of The Combine to come up. A first install
+# pulls several images and imports the semantic domains, so be generous.
+WAIT_TIMEOUT_SECONDS=${WAIT_TIMEOUT_SECONDS:-3600}
+# The deployments wait already covers the import, so this only covers one slow call.
+IMPORT_CHECK_TIMEOUT_SECONDS=120
 
 # See if we need to continue from a previous install
 STATE_FILE=${CONFIG_DIR}/install-state
@@ -309,6 +367,10 @@ fi
 
 SETUP_OPTS=""
 if [ "${STATE}" != "Uninstall-combine" ] ; then
+  # Prevent silently bad values: non-number (reads as 0); leading zero (octal).
+  if [[ ! ${WAIT_TIMEOUT_SECONDS} =~ ^[1-9][0-9]*$ ]] ; then
+    error "Invalid WAIT_TIMEOUT_SECONDS, '${WAIT_TIMEOUT_SECONDS}'; it must be a whole number greater than zero."
+  fi
   # Every helm command runs after the restart that the Pre-reqs step usually
   # requires, so record a timeout and reuse it until the install finishes.
   if [ -z "${HELM_TIMEOUT}" ] ; then
@@ -374,8 +436,12 @@ while [ "$STATE" != "Done" ] ; do
       echo "This may take some time depending on your Internet connection."
       echo "Press Ctrl-C to interrupt."
       wait-for-combine
+      wait-for-semantic-domains
       echo "The Combine was successfully setup!"
       next-state "Shutdown-combine"
+      if [ "$SINGLE_STEP" == "1" ] ; then
+        STATE=Done
+      fi
       ;;
     Shutdown-combine)
       # If not being installed as a server,
