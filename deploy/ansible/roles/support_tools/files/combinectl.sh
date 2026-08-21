@@ -106,8 +106,8 @@ combine-deployments () {
 # missing: k3s can be started without combinectl, which would otherwise leave
 # the deployments scaled to zero with nothing to bring them back.
 #
-# Returns non-zero when a deployment that should be running is not, so that a
-# failed start is not reported as a successful one.
+# Returns non-zero if a deployment could not be scaled up. Whether the pods
+# then run is what "combinectl status" reports.
 start-combine-deployments () {
   if ! wait-for-cluster ; then
     echo "The cluster is not responding; run \"combinectl start\" again." >&2
@@ -225,8 +225,7 @@ stop-combine-deployments () {
 }
 
 # Start The Combine services. The status of the last command is the status of
-# the function, so this returns non-zero if the deployments were not started,
-# which matches combine-stop.
+# the function, so a deployment that could not be scaled up is reported.
 combine-start () {
   echo "Starting The Combine."
   if ! systemctl is-active --quiet create_ap ; then
