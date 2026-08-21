@@ -11,10 +11,13 @@ on:
       - "deploy/**/*.yaml"
       - "deploy/**/*.yml"
       - "installer/**"
+  workflow_dispatch:
 
 concurrency:
   cancel-in-progress: true
-  group: ${{ github.workflow }}-${{ github.ref_protected && github.run_id || github.event.pull_request.number }}
+  group:
+    ${{ github.workflow }}-${{ github.ref_protected && github.run_id || github.event.pull_request.number ||
+    github.ref_name }}
 
 permissions:
   contents: read
@@ -71,6 +74,7 @@ jobs:
           path: installer/combine-net-installer.run
           retention-days: 5
       - name: Make installer with release version
+        if: github.event_name != 'workflow_dispatch'
         run: |
           cd installer
           ./make-combine-installer.sh $(git describe --tags --abbrev=0) --debug
@@ -154,31 +158,40 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 2
-      - name: Detect changes to installer scripts
-        id: changed-installer
+      - name: Determine upload target
+        id: target
+        env:
+          REF_NAME: ${{ github.ref_name }}
         run: |
           paths="^installer/make-combine-installer.sh$|^deploy/.*\.sh$|^deploy/.*\.ya?ml$"
-          if git diff --name-only HEAD~1.. | grep -Eq "$paths"; then
-            echo "changed=true" >> $GITHUB_OUTPUT
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            # Manual runs publish with a branch-specific name, sanitized for use as an S3 key.
+            echo "file=combine-net-installer-${REF_NAME//[^A-Za-z0-9._-]/-}.run" >> $GITHUB_OUTPUT
+            echo "upload=true" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "push" ]] && git diff --name-only HEAD~1.. | grep -Eq "$paths"; then
+            echo "file=combine-net-installer.run" >> $GITHUB_OUTPUT
+            echo "upload=true" >> $GITHUB_OUTPUT
           else
-            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "upload=false" >> $GITHUB_OUTPUT
           fi
         shell: bash
       - name: Download net-installer artifact
-        if: steps.changed-installer.outputs.changed == 'true' && github.event_name == 'push'
+        if: steps.target.outputs.upload == 'true'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: combine-net-installer
           path: installer/
       - name: Configure AWS credentials
-        if: steps.changed-installer.outputs.changed == 'true' && github.event_name == 'push'
+        if: steps.target.outputs.upload == 'true'
         uses: aws-actions/configure-aws-credentials@254c19bd240aabef8777f48595e9d2d7b972184b # v6.2.1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: Upload net-installer to S3
-        if: steps.changed-installer.outputs.changed == 'true' && github.event_name == 'push'
+        if: steps.target.outputs.upload == 'true'
+        env:
+          TARGET_FILE: ${{ steps.target.outputs.file }}
         run: |
-          aws s3 cp installer/combine-net-installer.run s3://software.thecombine.app/combine-net-installer.run --content-type application/octet-stream
+          aws s3 cp installer/combine-net-installer.run "s3://software.thecombine.app/$TARGET_FILE" --content-type application/octet-stream
         shell: bash
