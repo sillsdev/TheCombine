@@ -56,7 +56,13 @@ spec:
                   - /bin/sh
                   - -c
                   - |
-                    exec >> /data/db/postStart.log 2>&1
+                    log=/data/db/postStart.log
+                    # One block is appended per container start, so keep the most
+                    # recent starts and drop the rest.
+                    if [ -f "${log}" ]; then
+                      tail -n 200 "${log}" > "${log}.trim" && mv "${log}.trim" "${log}"
+                    fi
+                    exec >> "${log}" 2>&1
                     set -e
                     echo "[postStart] $(date -Is) starting"
                     echo "[postStart] Waiting for mongod to accept connections"
@@ -79,7 +85,6 @@ spec:
                     if [ "${import_state}" = "needed" ]; then
                       echo "[postStart] Importing semantic domains"
                       /bin/bash /opt/thecombine/update-semantic-domains.sh
-                      mongosh --quiet --host 127.0.0.1 --eval "db.getSiblingDB('CombineDatabase').SemanticDomainImportStatus.replaceOne({ _id: 'semantic-domains' }, { _id: 'semantic-domains', completed: true }, { upsert: true });"
                     fi
                     echo "[postStart] $(date -Is) done"
           env:
