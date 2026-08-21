@@ -20,9 +20,9 @@ usage () {
                 The Combine does not run properly, download and run the
                 updated install package.
       wifi [wifi-passphrase]:
-                If no parameters are provided, display the wifi
-                passphrase.  If a new passphase is provided, the
-                wifi passphrase is updated to the new phrase.
+                If no parameters are provided, display the WiFi
+                passphrase.  If a new passphrase is provided, the
+                WiFi passphrase is updated to the new phrase.
                 If your passphrase has spaces or special characters,
                 it is best to enclose your pass phrase in quotation marks ("").
 
@@ -31,9 +31,8 @@ usage () {
 .EOM
 }
 
-# Get the name of the first wifi interface.  In general,
-# this script assumes that there is a single WiFi interface
-# installed.
+# Get the name of the first WiFi interface. In general, this script assumes
+# that there is a single WiFi interface installed.
 get-wifi-if () {
   IFS=$'\n' WIFI_DEVICES=( $(nmcli d | grep "^wl") )
   if [[ ${#WIFI_DEVICES[@]} -gt 0 ]] ; then
@@ -73,7 +72,156 @@ combine-cert () {
   echo $CERT_DATA | base64 -d | openssl x509 -enddate -noout| sed -e "s/^notAfter=/Web certificate expires at /"
 }
 
-# Start The Combine services
+# Report whether the Kubernetes API is serving requests. The k3s unit becomes
+# active before the API is up, so an active unit alone is not enough.
+cluster-ready () {
+  kubectl get --raw='/readyz' --request-timeout=10s > /dev/null 2>&1
+}
+
+# Wait for the Kubernetes API to serve requests: 60 attempts, two seconds apart.
+# About two minutes while the API refuses connections, as it does while k3s
+# starts; up to twelve if it accepts them and then hangs.
+#
+# Returns non-zero if API is not ready after the maximum number of attempts.
+wait-for-cluster () {
+  ATTEMPTS=0
+  until cluster-ready ; do
+    ATTEMPTS=$((ATTEMPTS + 1))
+    if [[ ${ATTEMPTS} -ge 60 ]] ; then
+      return 1
+    fi
+    sleep 2
+  done
+  return 0
+}
+
+# Print "name requested available" for every deployment in the namespace, and
+# return kubectl's status: a failed query prints nothing, like an empty one.
+# availableReplicas is absent, rather than 0, when none are available.
+combine-deployments () {
+  kubectl -n thecombine get deployments \
+    -o 'jsonpath={range .items[*]}{.metadata.name} {.spec.replicas} {.status.availableReplicas}{"\n"}{end}'
+}
+
+# Restore the deployment replica counts saved by stop-combine-deployments.
+#
+# Returns non-zero if a deployment could not be scaled up.
+start-combine-deployments () {
+  if ! wait-for-cluster ; then
+    echo "The cluster is not responding; run \"combinectl start\" again." >&2
+    return 1
+  fi
+  if ! DEPLOY_STATUS=$(combine-deployments) ; then
+    echo "The deployments could not be read; run \"combinectl start\" again." >&2
+    return 1
+  fi
+  if [[ -z ${DEPLOY_STATUS} ]] ; then
+    # Nothing is installed, so there is nothing to start; combine-status is
+    # where an empty namespace is reported.
+    return 0
+  fi
+  if [ -f "${CACHED_REPLICAS}" ] ; then
+    CACHE_FILE="${CACHED_REPLICAS}"
+  else
+    CACHE_FILE=/dev/null
+  fi
+  # List every deployment that is scaled down, with its saved count. The saved
+  # counts are reconciled with the cluster rather than replayed as is: a cached
+  # deployment that no longer exists (e.g., one renamed by a chart update)
+  # would otherwise fail to scale on every start. Its failure would keep the
+  # stale file, and any deployment the file omits, forever.
+  REPLICA_LIST=$(awk '
+    NR == FNR { if ($2 == 0) { stopped[$1] = 1 } ; next }
+    $1 in stopped && $2 > 0 { print $1, $2 ; delete stopped[$1] }
+    END { for (name in stopped) { print name, 1 } }
+    ' <(printf '%s\n' "${DEPLOY_STATUS}") "${CACHE_FILE}")
+  if [[ -z ${REPLICA_LIST} ]] ; then
+    # Nothing is scaled down, so any saved counts no longer apply.
+    rm -f "${CACHED_REPLICAS}"
+    return 0
+  fi
+  if [[ ${CACHE_FILE} == /dev/null ]] ; then
+    echo "No saved replica counts; starting one replica of each deployment."
+  fi
+  echo "Starting The Combine deployments."
+  RESTORE_FAILED=0
+  while read -r DEPLOYMENT REPLICAS ; do
+    if [[ -z ${DEPLOYMENT} || -z ${REPLICAS} ]] ; then
+      continue
+    fi
+    if ! kubectl -n thecombine scale "deployment/${DEPLOYMENT}" --replicas="${REPLICAS}" > /dev/null ; then
+      echo "Could not start deployment/${DEPLOYMENT}." >&2
+      RESTORE_FAILED=1
+    fi
+  done <<< "${REPLICA_LIST}"
+  # Keep the counts for the next attempt if any deployment was not restored.
+  if [[ ${RESTORE_FAILED} -eq 0 ]] ; then
+    rm -f "${CACHED_REPLICAS}"
+  fi
+  return ${RESTORE_FAILED}
+}
+
+# Explain a stop that did not happen, given $1 as the reason. The Combine is
+# left running either way, so the way out is the same: stop k3s directly, which
+# kills the containers, and then stop again for the WiFi connection that a
+# refusal skips along with everything else.
+report-stop-refused () {
+  echo "$1" >&2
+  echo "Wait a minute, then run \"combinectl stop\" again." >&2
+  echo "If it keeps failing, stop the cluster with \"sudo systemctl stop k3s\"," >&2
+  echo "which kills the containers instead of shutting them down, then run" >&2
+  echo "\"combinectl stop\" again to restore the WiFi connection." >&2
+}
+
+# Scale The Combine deployments to zero and wait for their pods to exit. The
+# k3s service is patched to KillMode=mixed, so stopping it SIGKILLs whatever is
+# still running, which can be the database part way through its startup setup.
+#
+# Returns non-zero if the cluster could not be reached, or if the deployments
+# could not be scaled down, so that the caller leaves k3s running rather than
+# SIGKILL them. A pod still terminating after two minutes only warns, so that
+# one stuck pod cannot leave The Combine with no way to stop.
+stop-combine-deployments () {
+  # An unreachable Kubernetes API looks exactly like an empty namespace, so wait
+  # for it: a stop issued while the cluster is still coming up must not be read
+  # as "nothing is running here."
+  if ! wait-for-cluster ; then
+    report-stop-refused "The cluster is not responding, so nothing was stopped."
+    return 1
+  fi
+  if ! DEPLOY_STATUS=$(combine-deployments) ; then
+    report-stop-refused "The deployments could not be read, so nothing was stopped."
+    return 1
+  fi
+  if [[ -z ${DEPLOY_STATUS} ]] ; then
+    return 0
+  fi
+  # Only record the deployments that are running, so that stopping The Combine
+  # when it's already stopped doesn't lose the counts.
+  REPLICA_LIST=$(awk '$2 > 0 { print $1, $2 }' <<< "${DEPLOY_STATUS}")
+  if [[ -n ${REPLICA_LIST} ]] ; then
+    echo "${REPLICA_LIST}" > "${CACHED_REPLICAS}"
+  fi
+  echo "Stopping The Combine deployments."
+  # If the scale fails, nothing is shutting down (and the wait below would just
+  # time out before the caller SIGKILLs the containers).
+  if ! kubectl -n thecombine scale deployment --all --replicas=0 > /dev/null ; then
+    report-stop-refused "The deployments could not be scaled down, so The Combine was not stopped."
+    return 1
+  fi
+  # A selector-based "kubectl wait" fails immediately when nothing matches it,
+  # so only wait when there are pods left to wait for.
+  if [[ -n $(kubectl -n thecombine get pods -l combine-component --no-headers 2> /dev/null) ]] ; then
+    if ! kubectl -n thecombine wait --for=delete pod -l combine-component \
+        --timeout=2m > /dev/null 2>&1 ; then
+      echo "The Combine did not stop within 2 minutes; stopping anyway." >&2
+    fi
+  fi
+  return 0
+}
+
+# Start The Combine services. The status of the last command is the status of
+# the function, so a deployment that could not be scaled up is reported.
 combine-start () {
   echo "Starting The Combine."
   if ! systemctl is-active --quiet create_ap ; then
@@ -84,42 +232,118 @@ combine-start () {
   if ! systemctl is-active --quiet k3s ; then
     sudo systemctl start k3s
   fi
+  start-combine-deployments
 }
 
-# Stop The Combine services and restore the WiFI
-# connection if needed.
+# Stop The Combine services and restore the WiFi connection if needed. Returns
+# non-zero if The Combine is still running.
 combine-stop () {
   echo "Stopping The Combine."
   if systemctl is-active --quiet k3s ; then
-    sudo systemctl stop k3s
+    # Stopping k3s SIGKILLs the containers, so only do it once the deployments
+    # have shut down; leave everything running otherwise, the hotspot included.
+    if ! stop-combine-deployments ; then
+      return 1
+    fi
+    if ! sudo systemctl stop k3s ; then
+      echo "Could not stop k3s; the deployments are stopped but the cluster is" >&2
+      echo "still running. Run \"combinectl stop\" again." >&2
+      return 1
+    fi
   fi
   if systemctl is-active --quiet create_ap ; then
     sudo systemctl stop create_ap
     restore-wifi-connection
     sudo systemctl restart systemd-resolved
   fi
+  return 0
 }
 
-# Print the status of The Combine services.  If the combine is
-# "up" then also print that status of the deployments in
-# "thecombine" namespace.
+# Print the status of The Combine services. When the cluster is up, also
+# distinguish between various possible installation states, then print the
+# status of the deployments.
+#
+# Always exits 0; install-combine.sh calls this under "set -e".
 combine-status () {
   if systemctl is-active --quiet create_ap ; then
     echo "WiFi hotspot is Running."
   else
     echo "WiFi hotspot is Stopped."
   fi
-  if systemctl is-active --quiet k3s ; then
-    echo "The Combine  is Running."
-    kubectl -n thecombine get deployments
-  else
+
+  if ! systemctl is-active --quiet k3s ; then
     echo "The Combine is Stopped."
+    return 0
   fi
+
+  if ! cluster-ready ; then
+    echo "The Combine is Starting; the Kubernetes cluster is not ready yet."
+    echo "Wait a minute, then run \"combinectl status\" again."
+    return 0
+  fi
+
+  if ! DEPLOY_STATUS=$(combine-deployments) ; then
+    echo "The Combine's state is Unknown; the cluster is running, but its"
+    echo "deployments could not be read."
+    echo "Wait a minute, then run \"combinectl status\" again."
+    return 0
+  fi
+  if [[ -z ${DEPLOY_STATUS} ]] ; then
+    echo "The Combine is Not Installed; the Kubernetes cluster is running, but"
+    echo "the \"thecombine\" namespace has no deployments."
+    echo "Download and run the install package to install The Combine."
+    return 0
+  fi
+
+  MISSING=()
+  for DEPLOYMENT in "${COMBINE_DEPLOYMENTS[@]}" ; do
+    if ! grep -q "^${DEPLOYMENT} " <<< "${DEPLOY_STATUS}" ; then
+      MISSING+=( "${DEPLOYMENT}" )
+    fi
+  done
+
+  # A deployment scaled to zero has every replica it asked for, so it has to be
+  # counted separately from the ones that are still short of theirs.
+  REQUESTED=0
+  STOPPED=()
+  PENDING=()
+  while read -r NAME WANT HAVE ; do
+    if [[ -z ${NAME} ]] ; then
+      continue
+    fi
+    REQUESTED=$(( REQUESTED + ${WANT:-0} ))
+    if [[ ${WANT:-0} -eq 0 ]] ; then
+      STOPPED+=( "${NAME}" )
+    elif [[ ${HAVE:-0} -lt ${WANT:-0} ]] ; then
+      PENDING+=( "${NAME}" )
+    fi
+  done <<< "${DEPLOY_STATUS}"
+
+  if [[ ${#MISSING[@]} -gt 0 ]] ; then
+    echo "The Combine is Incomplete; missing deployment(s): ${MISSING[*]}."
+    echo "Download and run the install package to repair the installation."
+  elif [[ ${REQUESTED} -eq 0 ]] ; then
+    echo "The Combine is Stopped; the cluster is up but its services are"
+    echo "scaled down. Run \"combinectl start\" to start them."
+  elif [[ ${#STOPPED[@]} -gt 0 ]] ; then
+    echo "The Combine is Partly Stopped; scaled down deployment(s): ${STOPPED[*]}."
+    echo "Run \"combinectl start\" to start them."
+  elif [[ ${#PENDING[@]} -gt 0 ]] ; then
+    echo "The Combine is Starting; waiting for: ${PENDING[*]}."
+  else
+    echo "The Combine is Running."
+  fi
+  kubectl -n thecombine get deployments
+  # Whether a pending deployment is stuck or still starting shows in the pods.
+  if [[ ${#PENDING[@]} -gt 0 ]] ; then
+    kubectl -n thecombine get pods
+  fi
+  return 0
 }
 
-# Update the image used in each of the deployments in The Combine.  This
-# is akin to our current update process for Production and QA servers.  It
-# does *not* update any configuration files or secrets.
+# Update the image used in each of the deployments in The Combine. This is akin
+# to our current update process for Production and QA servers. It does *not*
+# update any configuration files or secrets.
 combine-update () {
   echo "Updating The Combine to $1"
   IMAGE_TAG=$1
@@ -159,6 +383,9 @@ WIFI_IF=$(get-wifi-if)
 WIFI_CONFIG=/etc/create_ap/create_ap.conf
 export KUBECONFIG=${HOME}/.kube/config
 COMBINE_CONFIG=${HOME}/.config/combine
+# Deployments match the list in install-combine.sh
+COMBINE_DEPLOYMENTS=(backend database frontend maintenance)
+CACHED_REPLICAS=${COMBINE_CONFIG}/deployment-replicas.txt
 CACHED_WIFI_CONN=${COMBINE_CONFIG}/wifi-connection.txt
 
 # Make sure config directory exists

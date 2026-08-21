@@ -121,6 +121,10 @@ To shutdown _The Combine_, open a terminal window and run:
 combinectl stop
 ```
 
+If _The Combine_ is still starting up, `combinectl stop` waits for it to finish before shutting anything down, so the
+command can take a few minutes. If it reports that the cluster is not responding, then nothing was stopped and it is
+safe to run again; the message it prints also says how to stop the cluster directly if the problem does not clear.
+
 ### combinectl Tool
 
 Once installation is complete, you can use the `combinectl` command to manage the installation. The `combinectl` command
@@ -164,7 +168,7 @@ To run `combine-installer.run` with options, the option list must be started wit
 | server          | Install _The Combine_ in a server environment so that _The Combine_ is always running by default. |
 | timeout TIMEOUT | Use a different timeout when installing. (Default: 5 minutes.) With slow internet, it is helpful to extend the timeout. See <https://pkg.go.dev/time#ParseDuration> for timeout formats. The value is used for the rest of the installation, including after a restart, so it does not need to be entered again. |
 | uninstall       | Remove software installed by this script. |
-| update          | Update _The Combine_ to the version number provided. This skips installing support software that was installed previously. |
+| update          | Update _The Combine_ to the version number provided. This skips installing/updating support software that was installed previously (e.g., the `combinectl` tool). |
 | version-number  | Specify a version to install instead of the current version. A version number will have the form `vn.n.n` where `n` represents an integer value, for example, `v1.20.0`. |
 
 ### Examples

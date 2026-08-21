@@ -380,8 +380,16 @@ while [ "$STATE" != "Done" ] ; do
     Shutdown-combine)
       # If not being installed as a server,
       if [[ $IS_SERVER != 1 ]] ; then
-        # Shut down The Combine services
-        combinectl stop
+        # Shut down The Combine services. combinectl leaves them running rather
+        # than kill them mid-shutdown, so stop here if it could not stop them.
+        #
+        # k3s still being active is the check rather than combinectl's exit
+        # status, which can be zero with the cluster still up.
+        combinectl stop || true
+        if systemctl is-active --quiet k3s ; then
+          ERROR_HINT="Rerun the installer to finish shutting down; nothing needs to be undone."
+          error "Could not stop The Combine."
+        fi
         # Disable The Combine services from starting at boot time
         sudo systemctl disable create_ap
         sudo systemctl disable k3s
