@@ -56,8 +56,17 @@ spec:
                   - /bin/sh
                   - -c
                   - |
-                    exec > /data/db/postStart.log 2>&1
+                    log=/data/db/postStart.log
+                    # One block is appended per container start. Keeping the last
+                    # 200 lines keeps the recent starts and drops the rest, but it
+                    # does not respect block boundaries, so the oldest block that
+                    # survives can begin part way through.
+                    if [ -f "${log}" ]; then
+                      tail -n 200 "${log}" > "${log}.trim" && mv "${log}.trim" "${log}"
+                    fi
+                    exec >> "${log}" 2>&1
                     set -e
+                    echo "[postStart] $(date -Is) starting"
                     echo "[postStart] Waiting for mongod to accept connections"
                     attempts=0
                     until mongosh --quiet --host 127.0.0.1 --eval "db.adminCommand({ ping: 1 }).ok" >/dev/null 2>&1; do
@@ -70,10 +79,31 @@ spec:
                     done
                     echo "[postStart] Ensuring replica set host"
                     mongosh --quiet --host 127.0.0.1 /opt/thecombine/00-replica-set.js || exit $?
-                    needs_semantic_import="$(mongosh --quiet --host 127.0.0.1 --eval "const combineDb = db.getSiblingDB('CombineDatabase'); const treeCount = combineDb.SemanticDomainTree.countDocuments({}); const domainCount = combineDb.SemanticDomains.countDocuments({}); print(treeCount === 0 || domainCount === 0 ? 'yes' : 'no');")"
-                    if [ "${needs_semantic_import}" = "yes" ]; then
-                      /bin/bash /opt/thecombine/update-semantic-domains.sh
+                    # Only a finished import is recorded, so an interrupted one is
+                    # redone. The record is read by exit status; anything short of a
+                    # completed import, including a query that fails, imports again,
+                    # which is a merge and so safe to repeat. Only stdout is discarded,
+                    # to leave any error mongosh reports in this log.
+                    import_done="quit(db.getSiblingDB('CombineDatabase').SemanticDomainImportStatus.countDocuments({ _id: 'semantic-domains', completed: true }) === 1 ? 0 : 1)"
+                    if ! mongosh --quiet --host 127.0.0.1 --eval "${import_done}" > /dev/null; then
+                      echo "[postStart] Importing semantic domains"
+                      # The Combine cannot be used without the semantic domains, so a
+                      # failed import fails the hook, which restarts the container to
+                      # retry, rather than leaving a database that looks healthy.
+                      if ! /bin/bash /opt/thecombine/update-semantic-domains.sh; then
+                        echo "[postStart] Semantic domain import failed; restarting the container"
+                        exit 1
+                      fi
+                      # The script records the import too, which is what makes a manual
+                      # rerun count. Recording it here as well is an upsert either way,
+                      # and is what an image whose script predates the record needs.
+                      mongosh --quiet --host 127.0.0.1 --eval "db.getSiblingDB('CombineDatabase').SemanticDomainImportStatus.replaceOne({ _id: 'semantic-domains' }, { _id: 'semantic-domains', completed: true }, { upsert: true });"
                     fi
+                    # The kubelet does not probe a container until its postStart hook
+                    # returns, so this marker is written last: it cannot make the pod
+                    # ready any sooner, and everything above it has to succeed first.
+                    touch /tmp/replica-set-ready
+                    echo "[postStart] $(date -Is) done"
           env:
             - name: POD_IP
               valueFrom:
@@ -83,6 +113,21 @@ spec:
               value: "$(POD_IP):27017"
           ports:
             - containerPort: 27017
+          readinessProbe:
+            # /tmp/replica-set-ready is written at the end of the postStart hook,
+            # once mongod is a writable primary advertising this pod's IP and the
+            # semantic domains are in place. The pod IP is part of the replica set
+            # config and changes on every restart, so without this the Service can
+            # route the backend to a mongod it cannot use. A hook that fails, and
+            # so restarts the container, never writes the marker at all.
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - test -f /tmp/replica-set-ready
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
           resources:
             requests:
               cpu:  25m

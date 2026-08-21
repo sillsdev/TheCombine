@@ -423,12 +423,38 @@ Notes:
 - When the `./setup_combine.py` script is used to install _The Combine_ on a NUC, it will install the fonts required for
   Arabic, English, French, Portuguese, and Spanish. If additional fonts will be required, call the `setup_combine.py`
   commands with the `--langs` option. Use the `--help` option to see the argument syntax.
-- The database pod has a `postStart` lifecycle hook that runs `update-semantic-domains.sh` automatically on every pod
-  start, but only imports data if the `SemanticDomainTree` or `SemanticDomains` collections are empty. If the Semantic
-  Domain data are updated, for example, adding a new language, then the script needs to be rerun manually:
+- The database pod has a `postStart` lifecycle hook that initializes the `rs0` replica set on every pod start and, if
+  the import has not already been recorded as complete, runs `update-semantic-domains.sh`. That script records its own
+  completion in `CombineDatabase.SemanticDomainImportStatus`, and only on success, so that a manual rerun counts as
+  well; the hook records it again afterwards, which is what an older image, whose script does not write the record,
+  needs. A count of the imported collections is not used, because an import that is interrupted part way through leaves
+  them non-empty but incomplete. If the import is interrupted, the next pod start redoes it. If the import fails
+  outright, the hook fails, and the kubelet restarts the container to retry; _The Combine_ cannot be used without the
+  semantic domains, so this is preferred over a database that looks healthy without them. Look in the `postStart` log,
+  below, to see why an import is failing.
+
+  The hook then writes `/tmp/replica-set-ready`, which is what the pod's readiness probe checks. Until then the pod is
+  kept out of the `database` Service endpoints, since the replica set advertises the pod's IP and the backend connects
+  with `?replicaSet=rs0`. Note that the kubelet does not probe a container until its `postStart` hook returns, so the
+  pod cannot become ready during the import no matter when the marker is written.
+
+  The completion record is in the database's persistent volume, so it outlives the pod that wrote it: once an import is
+  recorded, no later pod start imports again. An installation that imported before the record existed does not have one,
+  so its first pod start on this chart imports once more, and the pod stays out of the `database` Service for the few
+  minutes that takes. Whenever the Semantic Domain data change, the import has to be rerun manually. That is true both
+  of data added by hand, for example a new language, and of a release that ships an updated `tree.json` or `nodes.json`,
+  including one installed with `combinectl update`; neither is picked up on its own. A manual run refreshes the
+  completion record, so it is not redone on the next pod start:
 
   ```console
   kubectl -n thecombine exec deployment/database -- /opt/thecombine/update-semantic-domains.sh
+  ```
+
+  The `postStart` hook appends its output to `/data/db/postStart.log`, which is on the database's persistent volume and
+  so survives restarts. Only the last 200 lines are kept, so the oldest entry in it may begin part way through:
+
+  ```console
+  kubectl -n thecombine exec deployment/database -- cat /data/db/postStart.log
   ```
 
 ## Maintenance
