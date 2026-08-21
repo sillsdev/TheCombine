@@ -173,9 +173,16 @@ namespace Backend.Tests.Repositories
                 {
                     var admin = client.GetDatabase("admin");
                     var status = admin.RunCommand<BsonDocument>(new BsonDocument("replSetGetStatus", 1));
+                    // myState == 1 means PRIMARY, but a freshly elected primary briefly rejects writes with
+                    // "not primary" until it finishes transitioning. Also confirm it is writable via hello so
+                    // callers that write immediately (e.g. index creation) don't race that window.
                     if (status["ok"].ToInt32() == 1 && status["myState"].ToInt32() == 1)
                     {
-                        return;
+                        var hello = admin.RunCommand<BsonDocument>(new BsonDocument("hello", 1));
+                        if (hello.GetValue("isWritablePrimary", BsonBoolean.False).ToBoolean())
+                        {
+                            return;
+                        }
                     }
                 }
                 catch (Exception ex)
