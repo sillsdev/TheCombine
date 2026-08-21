@@ -13,6 +13,9 @@ set -eo pipefail
 #   - single-step - run the next "step" in the installation process and stop.
 #   - start-at <step-name> - start at the step named <step-name> and run to completion.
 #
+# The WAIT_TIMEOUT_SECONDS environment variable overrides how long each stage of
+# the "Wait-for-combine" step waits before giving up.
+#
 #########################################################################################
 
 # Warning and Error reporting functions
@@ -154,20 +157,37 @@ install-the-combine () {
   deactivate
 }
 
-# Wait until all The Combine deployments are available. There is no timeout;
-# the caller tells the user how to interrupt.
+# Exit if the deadline for the current wait has passed, printing the state of
+# the pods so that the user has somewhere to start looking.
+check-wait-deadline () {
+  if (( SECONDS < WAIT_DEADLINE )) ; then
+    return 0
+  fi
+  echo "Current state of the pods in the 'thecombine' namespace:" >&2
+  kubectl -n thecombine get pods --request-timeout=10s >&2 || true
+  ERROR_HINT="Rerun the installer to resume waiting; nothing needs to be undone."
+  error "Timed out after ${WAIT_TIMEOUT_SECONDS}s waiting for $1."
+}
+
+# Wait until all The Combine deployments are available.
 wait-for-combine () {
   set-k3s-env
+  WAIT_DEADLINE=$(( SECONDS + WAIT_TIMEOUT_SECONDS ))
   # The database is checked first because everything else depends on it and it
   # is the slowest to come up on a first install.
   for deployment in database backend frontend maintenance ; do
     echo "Waiting for deployment/${deployment}."
     until kubectl -n thecombine get deployment/${deployment} > /dev/null 2>&1 ; do
+      check-wait-deadline "deployment/${deployment}"
       sleep 5
     done
+    # "kubectl wait" returns at once, rather than blocking for its timeout, when
+    # the API is unreachable or the deployment is gone, so pace the retries.
     until kubectl -n thecombine wait --for=condition=Available \
         --timeout=1m deployment/${deployment} > /dev/null 2>&1 ; do
+      check-wait-deadline "deployment/${deployment}"
       echo "  still waiting for deployment/${deployment}."
+      sleep 5
     done
   done
 }
@@ -178,10 +198,14 @@ wait-for-combine () {
 # here keeps the shutdown below from silently costing the user another import.
 wait-for-semantic-domains () {
   echo "Waiting for the semantic domain import."
+  WAIT_DEADLINE=$(( SECONDS + WAIT_TIMEOUT_SECONDS ))
   import_done="quit(db.getSiblingDB('CombineDatabase').SemanticDomainImportStatus.countDocuments({ _id: 'semantic-domains', completed: true }) === 1 ? 0 : 1)"
+  # Each check starts a mongosh inside the database container, competing with the
+  # import it is waiting on, so check infrequently.
   until kubectl -n thecombine exec deployment/database -- \
       mongosh --quiet --host 127.0.0.1 --eval "${import_done}" > /dev/null 2>&1 ; do
-    sleep 10
+    check-wait-deadline "the semantic domain import"
+    sleep 30
   done
 }
 
@@ -248,6 +272,10 @@ ERROR_HINT=""
 # Only a timeout given as an option is checked for a valid format, so ignore any
 # value that happens to be set in the environment.
 HELM_TIMEOUT=""
+# Maximum time to wait for each stage of The Combine to come up.  A first
+# install pulls several images and imports the semantic domains, so a generous
+# default is better than one that gives up on a slow machine or connection.
+WAIT_TIMEOUT_SECONDS=${WAIT_TIMEOUT_SECONDS:-3600}
 
 # See if we need to continue from a previous install
 STATE_FILE=${CONFIG_DIR}/install-state
