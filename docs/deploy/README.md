@@ -425,11 +425,13 @@ Notes:
   commands with the `--langs` option. Use the `--help` option to see the argument syntax.
 - The database pod has a `postStart` lifecycle hook that initializes the `rs0` replica set on every pod start and, if
   the import has not already been recorded as complete, runs `update-semantic-domains.sh`. That script records its own
-  completion in `CombineDatabase.SemanticDomainImportStatus`, and only on success; a count of the imported collections
-  is not used, because an import that is interrupted part way through leaves them non-empty but incomplete. If the
-  import is interrupted, the next pod start redoes it. If the import fails outright, the hook fails, and the kubelet
-  restarts the container to retry; _The Combine_ cannot be used without the semantic domains, so this is preferred over
-  a database that looks healthy without them. Look in the `postStart` log, below, to see why an import is failing.
+  completion in `CombineDatabase.SemanticDomainImportStatus`, and only on success, so that a manual rerun counts as
+  well; the hook records it again afterwards, which is what an older image, whose script does not write the record,
+  needs. A count of the imported collections is not used, because an import that is interrupted part way through leaves
+  them non-empty but incomplete. If the import is interrupted, the next pod start redoes it. If the import fails
+  outright, the hook fails, and the kubelet restarts the container to retry; _The Combine_ cannot be used without the
+  semantic domains, so this is preferred over a database that looks healthy without them. Look in the `postStart` log,
+  below, to see why an import is failing.
 
   The hook then writes `/tmp/replica-set-ready`, which is what the pod's readiness probe checks. Until then the pod is
   kept out of the `database` Service endpoints, since the replica set advertises the pod's IP and the backend connects

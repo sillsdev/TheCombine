@@ -94,6 +94,10 @@ spec:
                         echo "[postStart] Semantic domain import failed; restarting the container"
                         exit 1
                       fi
+                      # The script records the import too, which is what makes a manual
+                      # rerun count. Recording it here as well is an upsert either way,
+                      # and is what an image whose script predates the record needs.
+                      mongosh --quiet --host 127.0.0.1 --eval "db.getSiblingDB('CombineDatabase').SemanticDomainImportStatus.replaceOne({ _id: 'semantic-domains' }, { _id: 'semantic-domains', completed: true }, { upsert: true });"
                     fi
                     # The kubelet does not probe a container until its postStart hook
                     # returns, so this marker is written last: it cannot make the pod
