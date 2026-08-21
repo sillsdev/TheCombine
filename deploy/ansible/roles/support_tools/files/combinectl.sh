@@ -93,10 +93,11 @@ wait-for-cluster () {
   return 0
 }
 
-# Print "name requested available" for every deployment in the namespace.
+# Print "name requested available" for every deployment in the namespace, and
+# return kubectl's status: a failed query prints nothing, like an empty one.
 # availableReplicas is absent, rather than 0, when none are available.
 combine-deployments () {
-  kubectl -n thecombine get deployments 2> /dev/null \
+  kubectl -n thecombine get deployments \
     -o 'jsonpath={range .items[*]}{.metadata.name} {.spec.replicas} {.status.availableReplicas}{"\n"}{end}'
 }
 
@@ -112,7 +113,10 @@ start-combine-deployments () {
     echo "The cluster is not responding; run \"combinectl start\" again." >&2
     return 1
   fi
-  DEPLOY_STATUS=$(combine-deployments)
+  if ! DEPLOY_STATUS=$(combine-deployments) ; then
+    echo "The deployments could not be read; run \"combinectl start\" again." >&2
+    return 1
+  fi
   if [[ -z ${DEPLOY_STATUS} ]] ; then
     # Nothing is installed, so there is nothing to start; combine-status is
     # where an empty namespace is reported.
@@ -187,7 +191,10 @@ stop-combine-deployments () {
     report-stop-refused "The cluster is not responding, so nothing was stopped."
     return 1
   fi
-  DEPLOY_STATUS=$(combine-deployments)
+  if ! DEPLOY_STATUS=$(combine-deployments) ; then
+    report-stop-refused "The deployments could not be read, so nothing was stopped."
+    return 1
+  fi
   if [[ -z ${DEPLOY_STATUS} ]] ; then
     return 0
   fi
@@ -280,7 +287,12 @@ combine-status () {
     return 0
   fi
 
-  DEPLOY_STATUS=$(combine-deployments)
+  if ! DEPLOY_STATUS=$(combine-deployments) ; then
+    echo "The Combine's state is Unknown; the cluster is running, but its"
+    echo "deployments could not be read."
+    echo "Wait a minute, then run \"combinectl status\" again."
+    return 0
+  fi
   if [[ -z ${DEPLOY_STATUS} ]] ; then
     echo "The Combine is Not Installed; the Kubernetes cluster is running, but"
     echo "the \"thecombine\" namespace has no deployments."
