@@ -193,5 +193,5 @@ jobs:
         env:
           TARGET_FILE: ${{ steps.target.outputs.file }}
         run: |
-          aws s3 cp installer/combine-net-installer.run "s3://software.thecombine.app/$TARGET_FILE"             --content-type application/octet-stream
+          aws s3 cp installer/combine-net-installer.run "s3://software.thecombine.app/$TARGET_FILE" --content-type application/octet-stream
         shell: bash
