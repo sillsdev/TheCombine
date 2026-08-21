@@ -74,8 +74,6 @@ jobs:
           path: installer/combine-net-installer.run
           retention-days: 5
       - name: Make installer with release version
-        # A manual run exists to publish a net-installer for the branch; the full
-        # installer is not uploaded, and building it needs a reachable release tag.
         if: github.event_name != 'workflow_dispatch'
         run: |
           cd installer
@@ -167,9 +165,8 @@ jobs:
         run: |
           paths="^installer/make-combine-installer.sh$|^deploy/.*\.sh$|^deploy/.*\.ya?ml$"
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            # Manual runs are published under a branch-specific name so that they cannot
-            # clobber the installer that the release documentation points users to.
-            echo "file=combine-net-installer-${REF_NAME//\//-}.run" >> $GITHUB_OUTPUT
+            # Manual runs publish with a branch-specific name, sanitized for use as an S3 key.
+            echo "file=combine-net-installer-${REF_NAME//[^A-Za-z0-9._-]/-}.run" >> $GITHUB_OUTPUT
             echo "upload=true" >> $GITHUB_OUTPUT
           elif [[ "${{ github.event_name }}" == "push" ]] && git diff --name-only HEAD~1.. | grep -Eq "$paths"; then
             echo "file=combine-net-installer.run" >> $GITHUB_OUTPUT
