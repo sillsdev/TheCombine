@@ -79,9 +79,13 @@ spec:
                     done
                     echo "[postStart] Ensuring replica set host"
                     mongosh --quiet --host 127.0.0.1 /opt/thecombine/00-replica-set.js || exit $?
-                    # Only a finished import is recorded, so an interrupted one is redone.
-                    import_state="$(mongosh --quiet --host 127.0.0.1 --eval "print(db.getSiblingDB('CombineDatabase').SemanticDomainImportStatus.countDocuments({ _id: 'semantic-domains', completed: true }) === 1 ? 'done' : 'needed');")"
-                    if [ "${import_state}" = "needed" ]; then
+                    # Only a finished import is recorded, so an interrupted one is
+                    # redone. The record is read by exit status; anything short of a
+                    # completed import, including a query that fails, imports again,
+                    # which is a merge and so safe to repeat. Only stdout is discarded,
+                    # to leave any error mongosh reports in this log.
+                    import_done="quit(db.getSiblingDB('CombineDatabase').SemanticDomainImportStatus.countDocuments({ _id: 'semantic-domains', completed: true }) === 1 ? 0 : 1)"
+                    if ! mongosh --quiet --host 127.0.0.1 --eval "${import_done}" > /dev/null; then
                       echo "[postStart] Importing semantic domains"
                       # The Combine cannot be used without the semantic domains, so a
                       # failed import fails the hook, which restarts the container to
