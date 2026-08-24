@@ -71,7 +71,7 @@ def parse_args() -> argparse.Namespace:
         "-l",
         nargs="*",
         metavar="LANG",
-        help="Additional language(s) that require fonts on the target cluster.",
+        help="Language(s) that require fonts to be installed on the target cluster.",
     )
     parser.add_argument(
         "--list-targets",

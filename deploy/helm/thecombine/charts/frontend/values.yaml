@@ -7,7 +7,6 @@ global:
   # Combine variables
   captchaRequired: false
   emailEnabled: false
-  offline: false
   # Update strategy should be "Recreate" or "Rolling Update"
   updateStrategy: Recreate
   # Values for pulling container image from image registry
@@ -24,3 +23,4 @@ imageName: combine_frontend
 # The additional domain list is a space-separated string list of domains
 combineAddlDomainList: ""
 configCaptchaSiteKey: ""
+configOffline: false

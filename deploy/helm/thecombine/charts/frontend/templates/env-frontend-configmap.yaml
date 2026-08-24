@@ -10,5 +10,5 @@ data:
   CONFIG_USE_CONNECTION_URL: "true"
   CONFIG_CAPTCHA_REQUIRED: {{ .Values.global.captchaRequired | quote | lower }}
   CONFIG_CAPTCHA_SITE_KEY: {{ .Values.configCaptchaSiteKey | quote }}
-  CONFIG_OFFLINE: {{ .Values.global.offline | quote | lower }}
+  CONFIG_OFFLINE: {{ .Values.configOffline | quote | lower }}
   CONFIG_EMAIL_ENABLED: {{ .Values.global.emailEnabled | quote | lower }}

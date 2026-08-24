@@ -39,9 +39,6 @@ spec:
           - --
           - /usr/bin/python3
           - /home/user/.local/bin/get_fonts.py
-{{- if .Values.global.offline }}
-          - --offline
-{{- end }}
 {{- if .Values.localLangList }}
           - --langs
           {{- range $lang := .Values.localLangList }}

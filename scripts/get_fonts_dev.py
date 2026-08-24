@@ -35,20 +35,14 @@ def parse_args() -> argparse.Namespace:
         "-l",
         nargs="*",
         metavar="LANG",
-        help="List of additional language tags for which fonts should be downloaded.",
-    )
-    parser.add_argument(
-        "--offline",
-        "-O",
-        action="store_true",
-        help="Download fonts for all UI languages, used in the offline deployment.",
+        help="List of language tags for which fonts should be downloaded.",
     )
     parser.add_argument(
         "--scripts",
         "-s",
         nargs="*",
         metavar="SCRIPT",
-        help="List of additional script tags for which fonts should be downloaded.",
+        help="List of script tags for which fonts should be downloaded.",
     )
     parser.add_argument(
         "--url",
@@ -118,8 +112,6 @@ def main() -> None:
     if args.langs:
         command.append("-l")
         command.extend(args.langs)
-    if args.offline:
-        command.append("-O")
     if args.scripts:
         command.append("-s")
         command.extend(args.scripts)

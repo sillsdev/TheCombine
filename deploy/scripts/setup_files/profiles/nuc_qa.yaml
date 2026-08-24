@@ -13,8 +13,17 @@ charts:
       awsS3Location: prod.thecombine.app
       captchaRequired: false
       emailEnabled: false
-      offline: true
       imagePullPolicy: Always
+    frontend:
+      configOffline: true
+    maintenance:
+      localLangList:
+        - "ar"
+        - "en"
+        - "es"
+        - "fr"
+        - "pt"
+        - "zh"
 
     cert-proxy-client:
       enabled: true
