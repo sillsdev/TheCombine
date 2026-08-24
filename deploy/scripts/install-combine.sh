@@ -150,7 +150,8 @@ install-the-combine () {
     --repo public.ecr.aws/thecombine \
     --tag ${COMBINE_VERSION} \
     --target desktop \
-    ${SETUP_OPTS}
+    ${SETUP_OPTS} \
+    ${LANG_OPTS}
   deactivate
 }
 
@@ -180,9 +181,9 @@ wait-for-combine () {
 next-state () {
   STATE=$1
   if [[ "${STATE}" == "Done" ]] ; then
-    # A recorded timeout is discarded here and by "clean", but deliberately
-    # survives an install that failed or was restarted.
-    rm -f ${STATE_FILE} ${TIMEOUT_FILE}
+    # A recorded language list and timeout are discarded here and by "clean",
+    # but deliberately survive an install that failed or was restarted.
+    rm -f ${LANGS_FILE} ${STATE_FILE} ${TIMEOUT_FILE}
   else
     echo -n ${STATE} > ${STATE_FILE}
   fi
@@ -192,6 +193,16 @@ next-state () {
 # option is applied, since applying one can record a new state.
 check-opt-value () {
   case $1 in
+    langs)
+      if [ -z "$2" ] ; then
+        error "The langs option requires a comma-separated list of language tags."
+      fi
+      # get_fonts.py matches a bare language code, so a code carrying a script or
+      # region subtag ("zh-Hant") would quietly contribute no fonts at all.
+      if [[ ! $2 =~ ^[a-zA-Z]+(,[a-zA-Z]+)*$ ]] ; then
+        error "Invalid language codes, '$2'; use a comma-separated list, such as 'en,id,zh'."
+      fi
+      ;;
     start-at)
       if [ -z "$2" ] ; then
         error "The start-at option requires a step name."
@@ -227,7 +238,7 @@ wait-for-k8s-interfaces () {
 }
 
 #####
-# Setup initial variables
+# Setup initial variables, overwriting unvalidated values set in the environment.
 DEPLOY_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 # Create directory for configuration files 
 CONFIG_DIR=${HOME}/.config/combine
@@ -236,13 +247,13 @@ SINGLE_STEP=0
 IS_SERVER=0
 DEBUG=0
 ERROR_HINT=""
-# Only a timeout given as an option is checked for a valid format, so ignore any
-# value that happens to be set in the environment.
 HELM_TIMEOUT=""
+LANGS=""
 
-# See if we need to continue from a previous install
+LANGS_FILE=${CONFIG_DIR}/install-langs
 STATE_FILE=${CONFIG_DIR}/install-state
 TIMEOUT_FILE=${CONFIG_DIR}/install-timeout
+# See if we need to continue from a previous install
 if [ -f ${STATE_FILE} ] ; then
   STATE=`cat ${STATE_FILE}`
 else
@@ -251,8 +262,20 @@ fi
 
 # Check every option value before any option is applied
 OPT_LIST=("$@")
+SKIP_VALUE=0
 for OPT_INDEX in "${!OPT_LIST[@]}" ; do
+  # Skip the value of the preceding option; checking it as an option name can
+  # misread it, e.g. the language tag "vi" as a malformed version number.
+  if (( SKIP_VALUE )) ; then
+    SKIP_VALUE=0
+    continue
+  fi
   check-opt-value "${OPT_LIST[OPT_INDEX]}" "${OPT_LIST[OPT_INDEX+1]}"
+  case "${OPT_LIST[OPT_INDEX]}" in
+    langs|start-at|timeout)
+      SKIP_VALUE=1
+      ;;
+  esac
 done
 
 # Parse arguments to customize installation
@@ -264,10 +287,14 @@ while (( "$#" )) ; do
       if [ -f ${CONFIG_DIR}/env ] ; then
         rm ${CONFIG_DIR}/env
       fi
-      rm -f ${TIMEOUT_FILE}
+      rm -f ${TIMEOUT_FILE} ${LANGS_FILE}
       ;;
     debug)
       DEBUG=1
+      ;;
+    langs)
+      LANGS=$2
+      shift
       ;;
     restart)
       next-state "Pre-reqs"
@@ -308,6 +335,7 @@ if [[ "${STATE}" != "Uninstall-combine" && -z "${COMBINE_VERSION}" ]] ; then
 fi
 
 SETUP_OPTS=""
+LANG_OPTS=""
 if [ "${STATE}" != "Uninstall-combine" ] ; then
   # Every helm command runs after the restart that the Pre-reqs step usually
   # requires, so record a timeout and reuse it until the install finishes.
@@ -324,6 +352,24 @@ if [ "${STATE}" != "Uninstall-combine" ] ; then
   if [ -n "${HELM_TIMEOUT}" ] ; then
     echo "Helm timeout: ${HELM_TIMEOUT}"
     SETUP_OPTS="--timeout ${HELM_TIMEOUT}"
+  fi
+  # Fonts are installed in the Install-combine step, which also runs after the
+  # restart, so record the language list and reuse it until the install finishes.
+  if [ -z "${LANGS}" ] ; then
+    if [ -f ${LANGS_FILE} ] ; then
+      ERROR_HINT="Delete ${LANGS_FILE} or install with the clean option."
+      LANGS=`cat ${LANGS_FILE}` || error "Cannot read ${LANGS_FILE}."
+      check-opt-value langs "${LANGS}"
+      ERROR_HINT=""
+    fi
+  else
+    echo -n ${LANGS} > ${LANGS_FILE}
+  fi
+  if [ -n "${LANGS}" ] ; then
+    echo "Font support for languages: ${LANGS}"
+    # setup_combine.py takes a space-separated list, and since it accepts any
+    # number of values, --langs has to be the last option on the command line.
+    LANG_OPTS="--langs ${LANGS//,/ }"
   fi
 fi
 

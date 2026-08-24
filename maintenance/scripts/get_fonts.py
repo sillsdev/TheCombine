@@ -122,14 +122,6 @@ def check_font_info(font_info: dict[str, Any]) -> bool:
     return True
 
 
-def extract_lang_subtags(langs: List[str]) -> List[str]:
-    """Given a (comma-separated) string langtags, return list of the initial lang subtags."""
-    subtags = [tag.split("-")[0].lower() for tag in langs]
-    lang_list = [subtag for subtag in set(subtags) if subtag != ""]
-    lang_list.sort()
-    return lang_list
-
-
 def fetch_scripts_for_langs(langs: List[str]) -> List[str]:
     """Given a list of langtags, look up and return all script tags used with the languages."""
     langs = [lang.lower() for lang in langs]
