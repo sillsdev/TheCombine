@@ -13,11 +13,15 @@ This README describes how to install _The Combine_ Rapid Word Collection tool on
 
 _The Combine_ can be installed on a PC that meets the following requirements:
 
-- Debian-based Linux Operating system
-- 8 GB of memory;
+- Debian-based Linux Operating system (Ubuntu 24.04 recommended);
+- x86-64 processor (ARM not supported);
+- 8 GB of memory (12+ GB recommended);
 - WiFi interface that supports creating a WiFi Hotspot;
-- a wired-ethernet connection to the Internet
-- User account that can run as `root` with `sudo`.
+  - run `iw list | grep -A10 "Supported interface modes"` and confirm that `* AP` is listed;
+  - run `iw list | grep 2412` and confirm the `MHz` line is present and not marked `disabled` or `no IR`;
+- wired-ethernet connection to the Internet;
+  - USB ethernet adapter works, but with additional complication;
+- user account that can run as `root` with `sudo`.
 
 The installation script has been tested on _Ubuntu 24.04_.
 
@@ -45,19 +49,19 @@ The installation script has been tested on _Ubuntu 24.04_.
    ```
 
 4. Download the installation script from
-   [https://s3.amazonaws.com/software.thecombine.app/combine-installer.run](https://s3.amazonaws.com/software.thecombine.app/combine-installer.run)
+   [https://s3.amazonaws.com/software.thecombine.app/combine-net-installer.run](https://s3.amazonaws.com/software.thecombine.app/combine-net-installer.run)
 5. Open a terminal window (Ctrl-Alt-T) and make the script executable:
 
    ```console
    cd [path where installer was downloaded]
-   chmod +x combine-installer.run
+   chmod +x combine-net-installer.run
    ```
 
 6. Run the script:
 
    ```console
    cd [path where installer was downloaded]
-   ./combine-installer.run
+   ./combine-net-installer.run
    ```
 
    Notes:
@@ -74,7 +78,7 @@ The installation script has been tested on _Ubuntu 24.04_.
    - The first time you run the installation script, it will prompt you for an `AWS_ACCESS_KEY_ID` and an
      `AWS_SECRET_ACCESS_KEY`. To get the values to enter here, send a request to the team at
      [The Combine](https://software.sil.org/thecombine/#contact)
-   - When run with no options, ./combine-installer.run will install the current version of _The Combine_.
+   - When run with no options, `./combine-net-installer.run` will install the current version of _The Combine_.
    - If the previous installation did not run to completion, it will resume where the previous installation left off.
    - If you get the error `Job for k3s.service failed because the control process exited with error code.`, make sure no
      other instance of k3s is running. For example, if Docker Desktop is active on the current user, run:
@@ -159,22 +163,27 @@ Web certificate expires at Jul  8 08:54:11 2024 GMT
 
 ## Advanced Installation Options
 
-To run `combine-installer.run` with options, the option list must be started with `--` . The following options are supported:
+To run `combine-net-installer.run` with options, the option list must be started with `--` . The following options are supported:
 
 | option          | description |
 | ---------------- | ---------------------------------------------------------------------------- |
-| clean           | Remove the previously saved environment (AWS Access Key, admin user info) and any previously saved timeout before performing the installation. |
+| clean           | Remove the previously saved environment (AWS Access Key, admin user info) and any previously saved timeout or language list before performing the installation. |
+| langs LANGS     | Install fonts for the languages in LANGS, a comma-separated list of language tags, for example, `km,vi`. (These are added to the built-in list, which covers all available UI languages.) \* |
 | restart         | Run the installation from the beginning; do not resume a previous installation. |
 | server          | Install _The Combine_ in a server environment so that _The Combine_ is always running by default. |
-| timeout TIMEOUT | Use a different timeout when installing. (Default: 5 minutes.) With slow internet, it is helpful to extend the timeout. See <https://pkg.go.dev/time#ParseDuration> for timeout formats. The value is used for the rest of the installation, including after a restart, so it does not need to be entered again. |
+| timeout TIMEOUT | Use a different timeout when installing. (Default: 5 minutes.) With slow internet, it is helpful to extend the timeout. See <https://pkg.go.dev/time#ParseDuration> for timeout formats. \* |
 | uninstall       | Remove software installed by this script. |
 | update          | Update _The Combine_ to the version number provided. This skips installing/updating support software that was installed previously (e.g., the `combinectl` tool). |
 | version-number  | Specify a version to install instead of the current version. A version number will have the form `vn.n.n` where `n` represents an integer value, for example, `v1.20.0`. |
+
+\* The value is used for the rest of the installation, including after a restart, so it does not
+need to be entered again.
 
 ### Examples
 
 | Command                                                                              | Effect                                     |
 | ------------------------------------------------------------------------------------ | -------------------------------------------|
-| `./combine-installer.run -- v2.0.1`                                                  | Install version `v2.0.1` of _The Combine_. |
-| `./combine-installer.run -- update v2.2.0`                                           | Update installation to version `v2.2.0`    |
-| `./combine-installer.run -- restart`                                                 | Restart process from the beginning.        |
+| `./combine-net-installer.run -- v2.0.1`                                              | Install version `v2.0.1` of _The Combine_. |
+| `./combine-net-installer.run -- update v2.2.0`                                       | Update installation to version `v2.2.0`    |
+| `./combine-net-installer.run -- restart`                                             | Restart process from the beginning.        |
+| `./combine-net-installer.run -- langs km v3.0.0`                                     | Install `v3.0.0`, adding fonts for Khmer.  |

@@ -34,7 +34,7 @@ error () {
 set-combine-env () {
   if [ ! -f "${CONFIG_DIR}/env" ] ; then
     # Generate JWT Secret Key
-    COMBINE_JWT_SECRET_KEY=`LC_ALL=C tr -dc 'A-Za-z0-9*\-_@!' </dev/urandom | head -c 64; echo`
+    COMBINE_JWT_SECRET_KEY=$(LC_ALL=C tr -dc 'A-Za-z0-9*\-_@!' </dev/urandom | head -c 64; echo)
     # Collect values from user
     read -p "Enter AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
     read -p "Enter AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY
@@ -42,20 +42,20 @@ set-combine-env () {
     AWS_ACCESS_KEY_ID="$(printf '%s' "$AWS_ACCESS_KEY_ID" | xargs)"
     AWS_SECRET_ACCESS_KEY="$(printf '%s' "$AWS_SECRET_ACCESS_KEY" | xargs)"
     # Write collected values and static values to config file
-    cat <<.EOF > ${CONFIG_DIR}/env
+    cat <<.EOF > "${CONFIG_DIR}/env"
     export COMBINE_JWT_SECRET_KEY="${COMBINE_JWT_SECRET_KEY}"
     export AWS_DEFAULT_REGION="us-east-1"
     export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
     export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
 .EOF
-    chmod 600 ${CONFIG_DIR}/env
+    chmod 600 "${CONFIG_DIR}/env"
   fi
-  source ${CONFIG_DIR}/env
+  source "${CONFIG_DIR}/env"
 }
 
 # Create the virtual environment needed by the Python installation scripts
 create-python-venv () {
-  cd $DEPLOY_DIR
+  cd "${DEPLOY_DIR}"
   # Install required packages
   sudo apt install -y python3-pip python3-venv
 
@@ -83,18 +83,18 @@ install-kubernetes () {
 .EOM
   #####
   # Setup Kubernetes environment and WiFi Access Point
-  cd ${DEPLOY_DIR}/ansible
+  cd "${DEPLOY_DIR}/ansible"
 
   # Set -e/--extra-vars for ansible-playbook
   K8S_USER=$(whoami)
   echo "Install Kubernetes with user: ${K8S_USER}"
-  EXTRA_VARS="-e k8s_user=${K8S_USER}"
+  EXTRA_VARS=(-e "k8s_user=${K8S_USER}")
   if [ -d "${DEPLOY_DIR}/airgap-images" ] ; then
-    EXTRA_VARS="${EXTRA_VARS} -e install_airgap_images=True"
+    EXTRA_VARS+=(-e install_airgap_images=True)
   fi
   
   export ANSIBLE_ALLOW_BROKEN_CONDITIONALS=True
-  ansible-playbook playbook_desktop_setup.yml -K ${EXTRA_VARS} $(((DEBUG == 1)) && echo "-vv")
+  ansible-playbook playbook_desktop_setup.yml -K "${EXTRA_VARS[@]}" $(((DEBUG == 1)) && echo "-vv")
 }
 
 # Set the KUBECONFIG environment variable so that the cluster can
@@ -104,7 +104,7 @@ set-k3s-env () {
   #####
   # Setup kubectl configuration file
   K3S_CONFIG_FILE=${HOME}/.kube/config
-  if [ ! -e ${K3S_CONFIG_FILE} ] ; then
+  if [ ! -e "${K3S_CONFIG_FILE}" ] ; then
     error "Kubernetes (k3s) configuration file is missing."
   fi
   export KUBECONFIG=${K3S_CONFIG_FILE}
@@ -125,13 +125,13 @@ install-base-charts () {
 
   #####
   # Setup required cluster services
-  cd ${DEPLOY_DIR}
+  cd "${DEPLOY_DIR}"
   . venv/bin/activate
-  cd ${DEPLOY_DIR}/scripts
+  cd "${DEPLOY_DIR}/scripts"
   if [ -d "${DEPLOY_DIR}/airgap-charts" ] ; then
-    ./setup_cluster.py ${SETUP_OPTS} --chart-dir ${DEPLOY_DIR}/airgap-charts
+    ./setup_cluster.py "${SETUP_OPTS[@]}" --chart-dir "${DEPLOY_DIR}/airgap-charts"
   else
-    ./setup_cluster.py ${SETUP_OPTS}
+    ./setup_cluster.py "${SETUP_OPTS[@]}"
   fi
   deactivate
 }
@@ -140,17 +140,18 @@ install-base-charts () {
 install-the-combine () {
   #####
   # Setup The Combine
-  cd ${DEPLOY_DIR}
+  cd "${DEPLOY_DIR}"
   . venv/bin/activate
-  cd ${DEPLOY_DIR}/scripts
+  cd "${DEPLOY_DIR}/scripts"
   set-combine-env
   set-k3s-env
   ./setup_combine.py \
     $(((DEBUG == 1)) && echo "--debug") \
     --repo public.ecr.aws/thecombine \
-    --tag ${COMBINE_VERSION} \
+    --tag "${COMBINE_VERSION}" \
     --target desktop \
-    ${SETUP_OPTS}
+    "${SETUP_OPTS[@]}" \
+    "${LANG_OPTS[@]}"
   deactivate
 }
 
@@ -158,7 +159,7 @@ install-the-combine () {
 wait-for-combine () {
   # Wait for all The Combine deployments to be up
   while true ; do
-    combine_status=`kubectl -n thecombine get deployments`
+    combine_status=$(kubectl -n thecombine get deployments)
     # Assert The Combine is up; if any components are not up, set it to false
     combine_up=true
     for deployment in frontend backend database maintenance ; do
@@ -168,7 +169,7 @@ wait-for-combine () {
         break
       fi
     done
-    if [ ${combine_up} != true ] ; then
+    if [ "${combine_up}" != true ] ; then
       sleep 5
     else
       break
@@ -180,11 +181,11 @@ wait-for-combine () {
 next-state () {
   STATE=$1
   if [[ "${STATE}" == "Done" ]] ; then
-    # A recorded timeout is discarded here and by "clean", but deliberately
-    # survives an install that failed or was restarted.
-    rm -f ${STATE_FILE} ${TIMEOUT_FILE}
+    # A recorded language list and timeout are discarded here and by "clean",
+    # but deliberately survive an install that failed or was restarted.
+    rm -f "${LANGS_FILE}" "${STATE_FILE}" "${TIMEOUT_FILE}"
   else
-    echo -n ${STATE} > ${STATE_FILE}
+    echo -n "${STATE}" > "${STATE_FILE}"
   fi
 }
 
@@ -192,6 +193,15 @@ next-state () {
 # option is applied, since applying one can record a new state.
 check-opt-value () {
   case $1 in
+    langs)
+      if [ -z "$2" ] ; then
+        error "The langs option requires a comma-separated list of language tags."
+      fi
+      if [[ ! $2 =~ ^[a-zA-Z]+(,[a-zA-Z]+)*$ ]] ; then
+        ERROR_HINT="Don't use script or region subtags; e.g., use 'qu' instead of 'qu-BO'."
+        error "Invalid language codes, '$2'; use a comma-separated list, such as 'km,vi'."
+      fi
+      ;;
     start-at)
       if [ -z "$2" ] ; then
         error "The start-at option requires a step name."
@@ -217,9 +227,9 @@ check-opt-value () {
 
 # Verify that the required network devices have been setup for Kubernetes cluster
 wait-for-k8s-interfaces () {
-  echo "Waiting for k8s interfaces: $@"
-  for interface in $@ ; do
-    while ! ip link show $interface > /dev/null 2>&1 ; do
+  echo "Waiting for k8s interfaces: $*"
+  for interface in "$@" ; do
+    while ! ip link show "${interface}" > /dev/null 2>&1 ; do
       sleep 1
     done
   done
@@ -227,32 +237,44 @@ wait-for-k8s-interfaces () {
 }
 
 #####
-# Setup initial variables
+# Setup initial variables, overwriting unvalidated values set in the environment.
 DEPLOY_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 # Create directory for configuration files 
 CONFIG_DIR=${HOME}/.config/combine
-mkdir -p ${CONFIG_DIR}
+mkdir -p "${CONFIG_DIR}"
 SINGLE_STEP=0
 IS_SERVER=0
 DEBUG=0
 ERROR_HINT=""
-# Only a timeout given as an option is checked for a valid format, so ignore any
-# value that happens to be set in the environment.
 HELM_TIMEOUT=""
+LANGS=""
 
-# See if we need to continue from a previous install
+LANGS_FILE=${CONFIG_DIR}/install-langs
 STATE_FILE=${CONFIG_DIR}/install-state
 TIMEOUT_FILE=${CONFIG_DIR}/install-timeout
-if [ -f ${STATE_FILE} ] ; then
-  STATE=`cat ${STATE_FILE}`
+# See if we need to continue from a previous install
+if [ -f "${STATE_FILE}" ] ; then
+  STATE=$(cat "${STATE_FILE}")
 else
   STATE=Pre-reqs
 fi
 
 # Check every option value before any option is applied
 OPT_LIST=("$@")
+SKIP_VALUE=0
 for OPT_INDEX in "${!OPT_LIST[@]}" ; do
+  # Skip the value of the preceding option; checking it as an option name can
+  # misread it, e.g. the language tag "vi" as a malformed version number.
+  if (( SKIP_VALUE )) ; then
+    SKIP_VALUE=0
+    continue
+  fi
   check-opt-value "${OPT_LIST[OPT_INDEX]}" "${OPT_LIST[OPT_INDEX+1]}"
+  case "${OPT_LIST[OPT_INDEX]}" in
+    langs|start-at|timeout)
+      SKIP_VALUE=1
+      ;;
+  esac
 done
 
 # Parse arguments to customize installation
@@ -261,13 +283,17 @@ while (( "$#" )) ; do
   case $OPT in
     clean)
       next-state "Pre-reqs"
-      if [ -f ${CONFIG_DIR}/env ] ; then
-        rm ${CONFIG_DIR}/env
+      if [ -f "${CONFIG_DIR}/env" ] ; then
+        rm "${CONFIG_DIR}/env"
       fi
-      rm -f ${TIMEOUT_FILE}
+      rm -f "${TIMEOUT_FILE}" "${LANGS_FILE}"
       ;;
     debug)
       DEBUG=1
+      ;;
+    langs)
+      LANGS=$2
+      shift
       ;;
     restart)
       next-state "Pre-reqs"
@@ -279,7 +305,7 @@ while (( "$#" )) ; do
       SINGLE_STEP=1
       ;;
     start-at)
-      next-state $2
+      next-state "$2"
       shift
       ;;
     timeout)
@@ -307,23 +333,43 @@ if [[ "${STATE}" != "Uninstall-combine" && -z "${COMBINE_VERSION}" ]] ; then
   error "Combine version is not specified."
 fi
 
-SETUP_OPTS=""
+SETUP_OPTS=()
+LANG_OPTS=()
 if [ "${STATE}" != "Uninstall-combine" ] ; then
   # Every helm command runs after the restart that the Pre-reqs step usually
   # requires, so record a timeout and reuse it until the install finishes.
   if [ -z "${HELM_TIMEOUT}" ] ; then
-    if [ -f ${TIMEOUT_FILE} ] ; then
+    if [ -f "${TIMEOUT_FILE}" ] ; then
       ERROR_HINT="Delete ${TIMEOUT_FILE} or install with the clean option."
-      HELM_TIMEOUT=`cat ${TIMEOUT_FILE}` || error "Cannot read ${TIMEOUT_FILE}."
+      HELM_TIMEOUT=$(cat "${TIMEOUT_FILE}") || error "Cannot read ${TIMEOUT_FILE}."
       check-opt-value timeout "${HELM_TIMEOUT}"
       ERROR_HINT=""
     fi
   else
-    echo -n ${HELM_TIMEOUT} > ${TIMEOUT_FILE}
+    echo -n "${HELM_TIMEOUT}" > "${TIMEOUT_FILE}"
   fi
   if [ -n "${HELM_TIMEOUT}" ] ; then
     echo "Helm timeout: ${HELM_TIMEOUT}"
-    SETUP_OPTS="--timeout ${HELM_TIMEOUT}"
+    SETUP_OPTS=(--timeout "${HELM_TIMEOUT}")
+  fi
+  # Fonts are installed in the Install-combine step, which also runs after the
+  # restart, so record the language list and reuse it until the install finishes.
+  if [ -z "${LANGS}" ] ; then
+    if [ -f "${LANGS_FILE}" ] ; then
+      ERROR_HINT="Delete ${LANGS_FILE} or install with the clean option."
+      LANGS=$(cat "${LANGS_FILE}") || error "Cannot read ${LANGS_FILE}."
+      check-opt-value langs "${LANGS}"
+      ERROR_HINT=""
+    fi
+  else
+    echo -n "${LANGS}" > "${LANGS_FILE}"
+  fi
+  if [ -n "${LANGS}" ] ; then
+    echo "Font support for languages: ${LANGS}"
+    # setup_combine.py takes a space-separated list, and since it accepts any
+    # number of values, --langs has to be the last option on the command line.
+    IFS=',' read -ra LANG_LIST <<< "${LANGS}"
+    LANG_OPTS=(--langs "${LANG_LIST[@]}")
   fi
 fi
 
@@ -399,11 +445,11 @@ while [ "$STATE" != "Done" ] ; do
       next-state "Done"
       ;;
     Uninstall-combine)
-      ${DEPLOY_DIR}/scripts/uninstall-combine.sh
+      "${DEPLOY_DIR}/scripts/uninstall-combine.sh"
       next-state "Done"
       ;;
     *)
-      rm ${STATE_FILE}
+      rm "${STATE_FILE}"
       error "Unrecognized STATE: ${STATE}"
       ;;
   esac

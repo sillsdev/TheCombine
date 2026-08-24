@@ -28,6 +28,8 @@ url_script_font_table = (
 default_output_dir = os.getenv("font_dir", "/mnt/fonts")
 default_local_font_url = os.getenv("local_font_url", "/fonts")
 
+ui_languages = ["ar", "en", "es", "fr", "id", "pt", "zh"]
+
 
 def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
@@ -43,14 +45,20 @@ def parse_args() -> argparse.Namespace:
         "-l",
         nargs="*",
         metavar="LANG",
-        help="List of language tags for which fonts should be downloaded.",
+        help="List of additional language tags for which fonts should be downloaded.",
+    )
+    parser.add_argument(
+        "--offline",
+        "-O",
+        action="store_true",
+        help="Download fonts for all UI languages, used in the offline deployment.",
     )
     parser.add_argument(
         "--scripts",
         "-s",
         nargs="*",
         metavar="SCRIPT",
-        help="List of script tags for which fonts should be downloaded.",
+        help="List of additional script tags for which fonts should be downloaded.",
     )
     parser.add_argument(
         "--url",
@@ -120,14 +128,6 @@ def check_font_info(font_info: dict[str, Any]) -> bool:
         return False
 
     return True
-
-
-def extract_lang_subtags(langs: List[str]) -> List[str]:
-    """Given a (comma-separated) string langtags, return list of the initial lang subtags."""
-    subtags = [tag.split("-")[0].lower() for tag in langs]
-    lang_list = [subtag for subtag in set(subtags) if subtag != ""]
-    lang_list.sort()
-    return lang_list
 
 
 def fetch_scripts_for_langs(langs: List[str]) -> List[str]:
@@ -210,17 +210,17 @@ def main() -> None:
         logging.error(f"Invalid output directory: '{args.output}'")
         exit(1)
 
-    is_for_offline: bool = args.langs or args.scripts
+    is_for_offline: bool = args.langs or args.offline or args.scripts
 
     with open(mlp_font_list, "r") as mlp_fonts_list:
         fonts = [f.strip() for f in mlp_fonts_list.readlines()]
 
     if is_for_offline:
-        scripts: List[str] = []
+        logging.info(f"UI languages: {', '.join(ui_languages)}")
         if args.langs:
             logging.info(f"Specified languages: {', '.join(args.langs)}")
-            scripts = fetch_scripts_for_langs(args.langs)
-            logging.info(f"Scripts for specified languages: {', '.join(scripts)}")
+        scripts = fetch_scripts_for_langs([*ui_languages, *(args.langs or [])])
+        logging.info(f"Scripts for languages: {', '.join(scripts)}")
 
         if args.scripts:
             logging.info(f"Specified scripts: {', '.join(args.scripts)}")
