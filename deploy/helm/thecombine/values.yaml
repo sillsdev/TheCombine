@@ -29,7 +29,6 @@ global:
   combineSmtpUsername: "Override"
   combineSmtpPassword: "Override"
   emailEnabled: false
-  offline: false
   # Local Storage for fonts
   fontStorageAccessMode: "ReadWriteOnce"
   fontStorageSize: 1Gi

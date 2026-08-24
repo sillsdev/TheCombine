@@ -1,6 +1,5 @@
 # Verify that the language lists in the README localization badges agree with
-# the languages available for the user interface, semantic domains, and user guide,
-# and that offline deployments install fonts for every user-interface language.
+# the languages available for the user interface, semantic domains, and user guide.
 # Also verify that the semantic domain xml files contain no <Example*> elements.
 name: localization-check
 
@@ -11,7 +10,6 @@ on:
       - .github/workflows/localization_check.yml
       - README.md
       - src/types/writingSystem.ts
-      - maintenance/scripts/get_fonts.py
       - deploy/scripts/semantic_domains/xml/**
       - docs/user_guide/mkdocs.yml
   pull_request:
@@ -20,7 +18,6 @@ on:
       - .github/workflows/localization_check.yml
       - README.md
       - src/types/writingSystem.ts
-      - maintenance/scripts/get_fonts.py
       - deploy/scripts/semantic_domains/xml/**
       - docs/user_guide/mkdocs.yml
 
@@ -103,16 +100,12 @@ jobs:
           ui_ts=$(ts_langs uiWritingSystems)
           ui_badge=$(badge_langs 'User%20Interface')
           locales=$(find public/locales -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort -u)
-          font_langs=$(grep -oP 'ui_languages = \[\K[^]]+' maintenance/scripts/get_fonts.py |
-            grep -oP '"\K[a-z]+' | sort -u)
           show "uiWritingSystems" "$ui_ts"
           show "localization-ui-badge" "$ui_badge"
           show "public/locales/ subdirectories" "$locales"
-          show "maintenance/scripts/get_fonts.py ui_languages" "$font_langs"
           echo "::endgroup::"
           compare "uiWritingSystems" "$ui_ts" "localization-ui-badge" "$ui_badge"
-          compare "uiWritingSystems" "$ui_ts" "public/locales/ subdirectories" "$locales"
-          compare "uiWritingSystems" "$ui_ts" "maintenance/scripts/get_fonts.py ui_languages" "$font_langs"
+          compare "localization-ui-badge" "$ui_badge" "public/locales/ subdirectories" "$locales"
 
           # User guide: mkdocs.yml (i18n locales <-> search langs <-> alternate langs) <-> ug badge.
           echo "::group::User guide"

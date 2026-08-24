@@ -168,7 +168,6 @@ To run `combine-net-installer.run` with options, the option list must be started
 | option          | description |
 | ---------------- | ---------------------------------------------------------------------------- |
 | clean           | Remove the previously saved environment (AWS Access Key, admin user info) and any previously saved timeout or language list before performing the installation. |
-| langs LANGS     | Install fonts for the languages in LANGS, a comma-separated list of language tags, for example, `km,vi`. (These are added to the built-in list, which covers all available UI languages.) \* |
 | restart         | Run the installation from the beginning; do not resume a previous installation. |
 | server          | Install _The Combine_ in a server environment so that _The Combine_ is always running by default. |
 | timeout TIMEOUT | Use a different timeout when installing. (Default: 5 minutes.) With slow internet, it is helpful to extend the timeout. See <https://pkg.go.dev/time#ParseDuration> for timeout formats. \* |
@@ -186,4 +185,3 @@ need to be entered again.
 | `./combine-net-installer.run -- v2.0.1`                                              | Install version `v2.0.1` of _The Combine_. |
 | `./combine-net-installer.run -- update v2.2.0`                                       | Update installation to version `v2.2.0`    |
 | `./combine-net-installer.run -- restart`                                             | Restart process from the beginning.        |
-| `./combine-net-installer.run -- langs km v3.0.0`                                     | Install `v3.0.0`, adding fonts for Khmer.  |
