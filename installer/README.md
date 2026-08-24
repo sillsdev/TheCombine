@@ -17,8 +17,8 @@ _The Combine_ can be installed on a PC that meets the following requirements:
 - x86-64 processor (ARM not supported);
 - 8 GB of memory (12+ GB recommended);
 - WiFi interface that supports creating a WiFi Hotspot;
-  - specifically AP mode on a virtual interface at 2.4 GHz;
   - run `iw list | grep -A10 "Supported interface modes"` and confirm that `* AP` is listed;
+  - run `iw list | grep 2412` and confirm the `MHz` line is present and not marked `disabled` or `no IR`;
 - wired-ethernet connection to the Internet;
   - USB ethernet adapter works, but with additional complication;
 - user account that can run as `root` with `sudo`.
