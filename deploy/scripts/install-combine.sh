@@ -197,10 +197,9 @@ check-opt-value () {
       if [ -z "$2" ] ; then
         error "The langs option requires a comma-separated list of language tags."
       fi
-      # get_fonts.py matches a bare language code, so a code carrying a script or
-      # region subtag ("zh-Hant") would quietly contribute no fonts at all.
       if [[ ! $2 =~ ^[a-zA-Z]+(,[a-zA-Z]+)*$ ]] ; then
-        error "Invalid language codes, '$2'; use a comma-separated list, such as 'en,id,zh'."
+        ERROR_HINT="Don't use script or region subtags; e.g., use 'qu' instead of 'qu-BO'."
+        error "Invalid language codes, '$2'; use a comma-separated list, such as 'km,vi'."
       fi
       ;;
     start-at)

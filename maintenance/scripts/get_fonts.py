@@ -43,14 +43,20 @@ def parse_args() -> argparse.Namespace:
         "-l",
         nargs="*",
         metavar="LANG",
-        help="List of language tags for which fonts should be downloaded.",
+        help="List of additional language tags for which fonts should be downloaded.",
+    )
+    parser.add_argument(
+        "--offline",
+        "-O",
+        action="store_true",
+        help="Download fonts for all UI languages, used in the offline deployment.",
     )
     parser.add_argument(
         "--scripts",
         "-s",
         nargs="*",
         metavar="SCRIPT",
-        help="List of script tags for which fonts should be downloaded.",
+        help="List of additional script tags for which fonts should be downloaded.",
     )
     parser.add_argument(
         "--url",
@@ -202,17 +208,19 @@ def main() -> None:
         logging.error(f"Invalid output directory: '{args.output}'")
         exit(1)
 
-    is_for_offline: bool = args.langs or args.scripts
+    is_for_offline: bool = args.langs or args.offline or args.scripts
 
     with open(mlp_font_list, "r") as mlp_fonts_list:
         fonts = [f.strip() for f in mlp_fonts_list.readlines()]
 
     if is_for_offline:
-        scripts: List[str] = []
+        offline_langs = ["ar", "en", "es", "fr", "id", "pt", "zh"]
+        logging.info(f"UI languages: {', '.join(offline_langs)}")
         if args.langs:
             logging.info(f"Specified languages: {', '.join(args.langs)}")
-            scripts = fetch_scripts_for_langs(args.langs)
-            logging.info(f"Scripts for specified languages: {', '.join(scripts)}")
+            offline_langs.extend(args.langs)
+        scripts = fetch_scripts_for_langs(offline_langs)
+        logging.info(f"Scripts for languages: {', '.join(scripts)}")
 
         if args.scripts:
             logging.info(f"Specified scripts: {', '.join(args.scripts)}")

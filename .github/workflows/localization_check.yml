@@ -1,6 +1,6 @@
 # Verify that the language lists in the README localization badges agree with
 # the languages available for the user interface, semantic domains, and user guide,
-# and that each deployment profile downloads fonts for every user-interface language.
+# and that offline deployments install fonts for every user-interface language.
 # Also verify that the semantic domain xml files contain no <Example*> elements.
 name: localization-check
 
@@ -11,8 +11,8 @@ on:
       - .github/workflows/localization_check.yml
       - README.md
       - src/types/writingSystem.ts
+      - maintenance/scripts/get_fonts.py
       - deploy/scripts/semantic_domains/xml/**
-      - deploy/scripts/setup_files/profiles/*.yaml
       - docs/user_guide/mkdocs.yml
   pull_request:
     branches: [master]
@@ -20,8 +20,8 @@ on:
       - .github/workflows/localization_check.yml
       - README.md
       - src/types/writingSystem.ts
+      - maintenance/scripts/get_fonts.py
       - deploy/scripts/semantic_domains/xml/**
-      - deploy/scripts/setup_files/profiles/*.yaml
       - docs/user_guide/mkdocs.yml
 
 concurrency:
@@ -68,13 +68,6 @@ jobs:
               sed 's/%20/\n/g' | tr '[:upper:]' '[:lower:]' | sort -u
           }
 
-          # Sorted language codes of a deployment profile's localLangList.
-          profile_langs() {
-            awk '/localLangList:/ {flag = 1; next}
-                 flag && /^[[:space:]]*- "/ {gsub(/"/, "", $2); print $2; next}
-                 flag {exit}' "$1" | sort -u
-          }
-
           # compare <label-a> <langs-a> <label-b> <langs-b>
           compare() {
             if [ "$2" != "$4" ]; then
@@ -117,18 +110,14 @@ jobs:
           compare "uiWritingSystems" "$ui_ts" "localization-ui-badge" "$ui_badge"
           compare "localization-ui-badge" "$ui_badge" "public/locales/ subdirectories" "$locales"
 
-          # Offline fonts: uiWritingSystems <-> localLangList of each deployment profile that
-          # pins one. An offline install only has the fonts these lists download, so a ui
-          # language missing from a list renders in whatever the browser falls back to.
+          # Offline fonts: uiWritingSystems <-> maintenance/scripts/get_fonts.py offline_langs.
           echo "::group::Offline fonts"
-          profiles=$(grep -l localLangList: deploy/scripts/setup_files/profiles/*.yaml || true)
-          for profile in $profiles ; do
-            show "$profile localLangList" "$(profile_langs "$profile")"
-          done
+          script_ui_langs=$(sed -n "/offline_langs = \[/,/]/p" maintenance/scripts/get_fonts.py |
+            grep -oP '"\K[a-z]+' | sort -u)
+          show "maintenance/scripts/get_fonts.py offline_langs" "$script_ui_langs"
           echo "::endgroup::"
-          for profile in $profiles ; do
-            compare "uiWritingSystems" "$ui_ts" "$profile localLangList" "$(profile_langs "$profile")"
-          done
+          compare "uiWritingSystems" "$ui_ts" \
+            "maintenance/scripts/get_fonts.py offline_langs" "$script_ui_langs"
 
           # User guide: mkdocs.yml (i18n locales <-> search langs <-> alternate langs) <-> ug badge.
           echo "::group::User guide"
