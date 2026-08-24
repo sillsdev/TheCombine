@@ -28,6 +28,8 @@ url_script_font_table = (
 default_output_dir = os.getenv("font_dir", "/mnt/fonts")
 default_local_font_url = os.getenv("local_font_url", "/fonts")
 
+ui_languages = ["ar", "en", "es", "fr", "id", "pt", "zh"]
+
 
 def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
@@ -214,12 +216,10 @@ def main() -> None:
         fonts = [f.strip() for f in mlp_fonts_list.readlines()]
 
     if is_for_offline:
-        offline_langs = ["ar", "en", "es", "fr", "id", "pt", "zh"]
-        logging.info(f"UI languages: {', '.join(offline_langs)}")
+        logging.info(f"UI languages: {', '.join(ui_languages)}")
         if args.langs:
             logging.info(f"Specified languages: {', '.join(args.langs)}")
-            offline_langs.extend(args.langs)
-        scripts = fetch_scripts_for_langs(offline_langs)
+        scripts = fetch_scripts_for_langs([*ui_languages, *(args.langs or [])])
         logging.info(f"Scripts for languages: {', '.join(scripts)}")
 
         if args.scripts:

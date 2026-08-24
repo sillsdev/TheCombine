@@ -103,21 +103,16 @@ jobs:
           ui_ts=$(ts_langs uiWritingSystems)
           ui_badge=$(badge_langs 'User%20Interface')
           locales=$(find public/locales -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort -u)
+          font_langs=$(grep -oP 'ui_languages = \[\K[^]]+' maintenance/scripts/get_fonts.py |
+            grep -oP '"\K[a-z]+' | sort -u)
           show "uiWritingSystems" "$ui_ts"
           show "localization-ui-badge" "$ui_badge"
           show "public/locales/ subdirectories" "$locales"
+          show "maintenance/scripts/get_fonts.py ui_languages" "$font_langs"
           echo "::endgroup::"
           compare "uiWritingSystems" "$ui_ts" "localization-ui-badge" "$ui_badge"
-          compare "localization-ui-badge" "$ui_badge" "public/locales/ subdirectories" "$locales"
-
-          # Offline fonts: uiWritingSystems <-> maintenance/scripts/get_fonts.py offline_langs.
-          echo "::group::Offline fonts"
-          script_ui_langs=$(sed -n "/offline_langs = \[/,/]/p" maintenance/scripts/get_fonts.py |
-            grep -oP '"\K[a-z]+' | sort -u)
-          show "maintenance/scripts/get_fonts.py offline_langs" "$script_ui_langs"
-          echo "::endgroup::"
-          compare "uiWritingSystems" "$ui_ts" \
-            "maintenance/scripts/get_fonts.py offline_langs" "$script_ui_langs"
+          compare "uiWritingSystems" "$ui_ts" "public/locales/ subdirectories" "$locales"
+          compare "uiWritingSystems" "$ui_ts" "maintenance/scripts/get_fonts.py ui_languages" "$font_langs"
 
           # User guide: mkdocs.yml (i18n locales <-> search langs <-> alternate langs) <-> ug badge.
           echo "::group::User guide"
