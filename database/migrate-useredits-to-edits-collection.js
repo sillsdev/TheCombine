@@ -41,10 +41,17 @@ var edits = db.getCollection("EditsCollection");
 // migrated documents hold plain ObjectIds, which have no subfields.
 var oldFormat = { "edits.0.guid": { $exists: true } };
 
-// Gather ids up front so the update inside the loop can't disturb the cursor,
-// and so multi-MB documents are held in memory only one at a time.
-var idsToMigrate = userEdits.find(oldFormat, { _id: 1 }).toArray().map(function (d) {
-  return d._id;
+// Gather ids up front so the update inside the loop can't disturb the cursor, and so
+// multi-MB documents are held in memory only one at a time. Sizes come from $bsonSize
+// because mongosh has no Object.bsonsize and its bsonsize() global isn't in every version.
+var idsToMigrate = [];
+var sizeMbById = {};
+userEdits.aggregate([
+  { $match: oldFormat },
+  { $project: { size: { $bsonSize: "$$ROOT" } } },
+]).forEach(function (d) {
+  idsToMigrate.push(d._id);
+  sizeMbById[d._id.toHexString()] = (d.size / (1024 * 1024)).toFixed(2);
 });
 print("UserEdit documents to migrate: " + idsToMigrate.length);
 
@@ -83,38 +90,93 @@ idsToMigrate.forEach(function (id) {
   totalEditsMoved += newDocs.length;
   print(
     "  migrated " + userEditId + " (projectId: " + doc.projectId + "): " +
-    newDocs.length + " edit(s), was " +
-    (Object.bsonsize(doc) / (1024 * 1024)).toFixed(2) + " MB"
+    newDocs.length + " edit(s), was " + sizeMbById[userEditId] + " MB"
   );
 });
 print("Moved " + totalEditsMoved + " edit(s) from " + idsToMigrate.length + " document(s).");
 
-// Backend queries filter by projectId + userEditId (list a user edit's edits) and by
-// projectId + userEditId + guid (replace/update a single edit). One compound index serves
-// both: the leading fields cover the former, the full key covers the latter.
+// database/init/01-indexes.js creates this on every container start and documents the key;
+// repeated here so a just-migrated database is indexed before its next restart.
 edits.createIndex({ projectId: 1, userEditId: 1, guid: 1 });
 print("Ensured index { projectId: 1, userEditId: 1, guid: 1 } on EditsCollection.");
 
-// Verify: no old-format documents remain, and every ref resolves.
+// Verify: no old-format documents remain, and refs and edit documents correspond exactly.
 var failures = 0;
-if (userEdits.countDocuments(oldFormat) > 0) {
+function fail(message) {
   failures++;
-  print("WARNING: old-format UserEdit documents remain.");
+  print("WARNING: " + message);
 }
+
+if (userEdits.countDocuments(oldFormat) > 0) {
+  fail("old-format UserEdit documents remain.");
+}
+
+var knownUserEditIds = {};
 userEdits.find().forEach(function (doc) {
-  var refCount = doc.edits.length;
-  var docCount = edits.countDocuments({ userEditId: doc._id.toHexString() });
-  if (refCount !== docCount) {
-    failures++;
-    print(
-      "WARNING: UserEdit " + doc._id.toHexString() + " has " + refCount +
-      " ref(s) but " + docCount + " EditsCollection document(s)."
+  var userEditId = doc._id.toHexString();
+  knownUserEditIds[userEditId] = true;
+
+  if (!Array.isArray(doc.edits)) {
+    fail("UserEdit " + userEditId + " has no `edits` array.");
+    return;
+  }
+
+  // Exact ids, not counts: a dangling ref alongside an unreferenced edit, or a ref listed
+  // twice, balances out in a count. AssembleUserEdit silently skips a dangling ref.
+  var editsById = {};
+  edits.find({ userEditId: userEditId }, { _id: 1, projectId: 1 }).forEach(function (e) {
+    editsById[e._id.toHexString()] = e;
+  });
+
+  var seen = {};
+  doc.edits.forEach(function (ref, index) {
+    var refId = String(ref);
+    if (seen[refId]) {
+      fail("UserEdit " + userEditId + " references " + refId + " more than once.");
+      return;
+    }
+    seen[refId] = true;
+
+    var edit = editsById[refId];
+    if (!edit) {
+      fail(
+        "UserEdit " + userEditId + " ref " + index + " (" + refId +
+        ") has no EditsCollection document."
+      );
+      return;
+    }
+    // The backend filters on projectId too, so a mismatched child is invisible to it.
+    if (edit.projectId !== doc.projectId) {
+      fail(
+        "EditsCollection " + refId + " has projectId " + edit.projectId +
+        " but UserEdit " + userEditId + " has " + doc.projectId + "."
+      );
+    }
+  });
+
+  Object.keys(editsById).forEach(function (editId) {
+    if (!seen[editId]) {
+      fail("EditsCollection " + editId + " is unreferenced by UserEdit " + userEditId + ".");
+    }
+  });
+});
+
+// A second pass, since the loop above only sees edits that have a parent. Keyed on parent
+// id so unreferenced edits under a parent aren't reported twice.
+edits.find({}, { _id: 1, userEditId: 1 }).forEach(function (e) {
+  if (!knownUserEditIds[e.userEditId]) {
+    fail(
+      "EditsCollection " + e._id.toHexString() + " is orphaned: userEditId " +
+      e.userEditId + " matches no UserEdit."
     );
   }
 });
-if (failures === 0) {
-  print(
-    "Verification passed: " + userEdits.countDocuments({}) + " UserEdit document(s), " +
-    edits.countDocuments({}) + " EditsCollection document(s), all refs resolve."
-  );
+
+if (failures > 0) {
+  // Throw, don't just print: mongosh otherwise exits 0 and a failed run looks like a pass.
+  throw new Error("Verification FAILED with " + failures + " problem(s); see warnings.");
 }
+print(
+  "Verification passed: " + userEdits.countDocuments({}) + " UserEdit document(s), " +
+  edits.countDocuments({}) + " EditsCollection document(s), all refs resolve."
+);
