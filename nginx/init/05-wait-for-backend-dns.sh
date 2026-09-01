@@ -18,15 +18,15 @@ if getent hosts "${BACKEND_HOST}" > /dev/null 2>&1 ; then
 fi
 
 echo "Waiting up to ${MAX_WAIT_SECONDS}s for '${BACKEND_HOST}' to resolve"
-WAITED=0
 until getent hosts "${BACKEND_HOST}" > /dev/null 2>&1 ; do
-    if [ "${WAITED}" -ge "${MAX_WAIT_SECONDS}" ] ; then
+    # SECONDS is wall clock since this shell started, so the cap covers the time
+    # getent spends blocking on resolver timeouts, not just the sleeps.
+    if [ "${SECONDS}" -ge "${MAX_WAIT_SECONDS}" ] ; then
         # Start nginx anyway so that it reports the problem itself, rather than
         # leaving a container that is running but never serving.
-        echo "'${BACKEND_HOST}' did not resolve after ${MAX_WAIT_SECONDS}s"
+        echo "'${BACKEND_HOST}' did not resolve after ${SECONDS}s"
         exit 0
     fi
     sleep 2
-    WAITED=$((WAITED + 2))
 done
-echo "'${BACKEND_HOST}' resolved after ${WAITED}s"
+echo "'${BACKEND_HOST}' resolved after ${SECONDS}s"
