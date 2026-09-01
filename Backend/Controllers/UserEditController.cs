@@ -174,8 +174,9 @@ namespace BackendFramework.Controllers
                 return NotFound($"userEditId: {userEditId}");
             }
 
-            // Ensure Edit exist.
-            var edit = document.Edits.FindLast(e => e.Guid == stepWrapper.EditGuid);
+            // Ensure Edit exist. First match, since the repo's step writes are UpdateOne
+            // calls that target the first edit with this guid.
+            var edit = document.Edits.Find(e => e.Guid == stepWrapper.EditGuid);
             if (edit is null)
             {
                 return NotFound($"editGuid: {stepWrapper.EditGuid}");

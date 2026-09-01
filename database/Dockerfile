@@ -20,6 +20,7 @@ COPY semantic_domains/* /data/semantic-domains/
 # them from Kubernetes postStart to avoid first-boot race conditions.
 COPY init/update-semantic-domains.sh /opt/thecombine/update-semantic-domains.sh
 
-# Replica set readiness/alignment runs from Kubernetes postStart hook on every
-# container start, so this script is intentionally kept out of initdb.d.
+# Replica set readiness/alignment and index creation run from Kubernetes postStart
+# hook on every container start, so these scripts are intentionally kept out of initdb.d.
 COPY init/00-replica-set.js /opt/thecombine/00-replica-set.js
+COPY init/01-indexes.js /opt/thecombine/01-indexes.js
