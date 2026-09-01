@@ -67,6 +67,13 @@ spec:
           ports:
             - containerPort: 80
             - containerPort: 443
+          readinessProbe:
+            # The entrypoint waits for cluster DNS to resolve the backend before
+            # starting nginx, so a running container is not yet a serving one.
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
           resources:
             requests:
               cpu:  1m
