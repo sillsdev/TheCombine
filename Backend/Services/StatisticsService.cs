@@ -13,15 +13,17 @@ namespace BackendFramework.Services
     {
         private readonly IWordRepository _wordRepo;
         private readonly ISemanticDomainRepository _domainRepo;
+        private readonly ISemanticDomainCountRepository _semDomCountRepo;
         private readonly IUserRepository _userRepo;
 
         private const string otelTagName = "otel.StatisticsService";
 
-        public StatisticsService(
-            IWordRepository wordRepo, ISemanticDomainRepository domainRepo, IUserRepository userRepo)
+        public StatisticsService(IWordRepository wordRepo, ISemanticDomainRepository domainRepo,
+            ISemanticDomainCountRepository semDomCountRepo, IUserRepository userRepo)
         {
             _wordRepo = wordRepo;
             _domainRepo = domainRepo;
+            _semDomCountRepo = semDomCountRepo;
             _userRepo = userRepo;
         }
 
@@ -39,32 +41,17 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting semantic domain counts");
 
-            var hashMap = new Dictionary<string, int>();
             var domainTreeNodeList = await _domainRepo.GetAllSemanticDomainTreeNodes(lang);
-            var wordList = await _wordRepo.GetAllFrontier(projectId);
-
-            if (domainTreeNodeList is null || domainTreeNodeList.Count == 0 || wordList.Count == 0)
+            if (domainTreeNodeList is null || domainTreeNodeList.Count == 0)
             {
                 return [];
             }
 
-            foreach (var word in wordList)
-            {
-                foreach (var sense in word.Senses)
-                {
-                    foreach (var sd in sense.SemanticDomains)
-                    {
-                        hashMap[sd.Id] = hashMap.GetValueOrDefault(sd.Id, 0) + 1;
-                    }
-                }
-            }
+            var domainCounts =
+                (await _semDomCountRepo.GetAllCounts(projectId)).ToDictionary(dc => dc.DomainId, dc => dc.Count);
 
-            var resList = new List<SemanticDomainCount>();
-            foreach (var domainTreeNode in domainTreeNodeList)
-            {
-                resList.Add(new(domainTreeNode, hashMap.GetValueOrDefault(domainTreeNode.Id, 0)));
-            }
-            return resList;
+            return domainTreeNodeList
+                .Select(node => new SemanticDomainCount(node, domainCounts.GetValueOrDefault(node.Id, 0))).ToList();
         }
 
         /// <summary>

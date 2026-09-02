@@ -17,22 +17,9 @@ namespace Backend.Tests.Repositories
     [Category("IntegrationTest")]
     public sealed class WordRepositoryTests
     {
-        private static MongoDbTestRunner _runner = null!;
         private WordRepository _repo = null!;
+        private SemanticDomainCountRepository _semDomCountRepo = null!;
         private string _projectId = null!;
-
-        [OneTimeSetUp]
-        public static void StartMongo()
-        {
-            _runner?.Dispose();
-            _runner = MongoDbTestRunner.Start();
-        }
-
-        [OneTimeTearDown]
-        public static void StopMongo()
-        {
-            _runner?.Dispose();
-        }
 
         [SetUp]
         public void SetUp()
@@ -40,10 +27,12 @@ namespace Backend.Tests.Repositories
             _projectId = Guid.NewGuid().ToString();
             var options = Options.Create(new BackendFramework.Startup.Settings
             {
-                ConnectionString = _runner.ConnectionString,
+                ConnectionString = MongoDbSetUpFixture.Runner.ConnectionString,
                 CombineDatabase = "WordRepositoryTests",
             });
-            _repo = new WordRepository(new MongoDbContext(options));
+            var dbContext = new MongoDbContext(options);
+            _semDomCountRepo = new SemanticDomainCountRepository(dbContext);
+            _repo = new WordRepository(dbContext, _semDomCountRepo);
         }
 
         private Task<Word> CreateWord(string? vernacular = null, string? domainId = null)
@@ -704,23 +693,88 @@ namespace Backend.Tests.Repositories
         }
 
         [Test]
-        public async Task TestCountFrontierWordsWithDomainReturnsCorrectCount()
+        public async Task TestCreateIncrementsDomainCount()
         {
             const string domainId = "1.1";
             await CreateWord(domainId: domainId);
             await CreateWord(domainId: domainId);
-            await CreateWord();
-
-            var count = await _repo.CountFrontierWordsWithDomain(_projectId, domainId);
-            Assert.That(count, Is.EqualTo(2));
+            Assert.That(await _semDomCountRepo.GetCount(_projectId, domainId), Is.EqualTo(2));
         }
 
         [Test]
-        public async Task TestCountFrontierWordsWithDomainNoneMatchReturnsZero()
+        public async Task TestDeleteFrontierDecrementsDomainCount()
         {
-            await CreateWord();
-            var count = await _repo.CountFrontierWordsWithDomain(_projectId, "99.99");
-            Assert.That(count, Is.Zero);
+            const string domainId = "1.1";
+            var word = await CreateWord(domainId: domainId);
+            await _repo.DeleteFrontier(_projectId, word.Id, _ => { });
+            Assert.That(await _semDomCountRepo.GetCount(_projectId, domainId), Is.Zero);
+        }
+
+        [Test]
+        public async Task TestUpdateFrontierAdjustsDomainCounts()
+        {
+            const string oldDomain = "1.1";
+            const string newDomain = "2.2";
+            var word = await CreateWord(domainId: oldDomain);
+
+            await _repo.UpdateFrontier(_projectId, word.Id,
+                w => w.Senses[0].SemanticDomains = [new SemanticDomain { Id = newDomain, Name = "Test" }]);
+
+            Assert.That(await _semDomCountRepo.GetCount(_projectId, oldDomain), Is.Zero);
+            Assert.That(await _semDomCountRepo.GetCount(_projectId, newDomain), Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task TestReplaceFrontierAdjustsDomainCounts()
+        {
+            const string oldDomain = "1.1";
+            const string newDomain = "2.2";
+            var word = await CreateWord(domainId: oldDomain);
+            var updated = word.Clone();
+            updated.Senses[0].SemanticDomains = [new SemanticDomain { Id = newDomain, Name = "Test" }];
+
+            await _repo.ReplaceFrontier(_projectId, [updated], [word.Id], (_, _) => { }, _ => { });
+
+            Assert.That(await _semDomCountRepo.GetCount(_projectId, oldDomain), Is.Zero);
+            Assert.That(await _semDomCountRepo.GetCount(_projectId, newDomain), Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task TestRestoreFrontierRestoresDomainCount()
+        {
+            const string domainId = "1.1";
+            var word = await CreateWord(domainId: domainId);
+            await _repo.DeleteFrontier(_projectId, word.Id, _ => { });
+            Assert.That(await _semDomCountRepo.GetCount(_projectId, domainId), Is.Zero);
+
+            await _repo.RestoreFrontier(_projectId, word.Id);
+            Assert.That(await _semDomCountRepo.GetCount(_projectId, domainId), Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task TestDeleteAllFrontierWordsClearsDomainCounts()
+        {
+            await CreateWord(domainId: "1.1");
+            await CreateWord(domainId: "2.2");
+
+            await _repo.DeleteAllFrontierWords(_projectId);
+
+            Assert.That(await _semDomCountRepo.GetAllCounts(_projectId), Is.Empty);
+        }
+
+        [Test]
+        public async Task TestDeleteFrontierModifyThrowsRollsBackDomainCount()
+        {
+            const string domainId = "1.1";
+            var word = await CreateWord(domainId: domainId);
+            Assert.That(await _semDomCountRepo.GetCount(_projectId, domainId), Is.EqualTo(1));
+
+            // The count delta is applied inside the same transaction as the word write; when the modify
+            // action throws, the whole transaction aborts and the delta must roll back with it.
+            Assert.ThrowsAsync<InvalidOperationException>(() =>
+                _repo.DeleteFrontier(_projectId, word.Id, _ => throw new InvalidOperationException()));
+
+            Assert.That(await _semDomCountRepo.GetCount(_projectId, domainId), Is.EqualTo(1));
         }
     }
 }
