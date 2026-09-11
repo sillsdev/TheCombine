@@ -19,9 +19,9 @@ namespace Backend.Tests.Repositories
     [Category("IntegrationTest")]
     public sealed class UserEditRepositoryTests
     {
-        private MongoDbContext _dbContext = null!;
         private UserEditRepository _repo = null!;
         private IMongoCollection<StoredEdit> _editsCollection = null!;
+        private IMongoCollection<StoredUserEdit> _userEditsCollection = null!;
         private string _projectId = null!;
 
         [SetUp]
@@ -33,9 +33,10 @@ namespace Backend.Tests.Repositories
                 ConnectionString = MongoDbSetUpFixture.Runner.ConnectionString,
                 CombineDatabase = "UserEditRepositoryTests",
             });
-            _dbContext = new MongoDbContext(options);
-            _repo = new UserEditRepository(_dbContext);
-            _editsCollection = _dbContext.Db.GetCollection<StoredEdit>("EditsCollection");
+            var dbContext = new MongoDbContext(options);
+            _repo = new UserEditRepository(dbContext);
+            _editsCollection = dbContext.Db.GetCollection<StoredEdit>("EditsCollection");
+            _userEditsCollection = dbContext.Db.GetCollection<StoredUserEdit>("UserEditsCollection");
         }
 
         private Task<UserEdit> CreateUserEdit(params Edit[] edits)
@@ -46,17 +47,16 @@ namespace Backend.Tests.Repositories
         /// <summary> Generates a valid MongoDB ObjectId string that does not exist in the database. </summary>
         private static string NewObjectId() => ObjectId.GenerateNewId().ToString();
 
-        /// <summary> Gets all EditsCollection documents for a user edit in the test project. </summary>
-        private Task<List<StoredEdit>> GetStoredEdits(string userEditId)
+        /// <summary>
+        /// Asserts that every EditsCollection document in a project is reachable from a user edit,
+        /// i.e. that no operation orphaned or leaked a stored edit.
+        /// </summary>
+        private async Task AssertNoOrphanedEdits(string? projectId = null)
         {
-            return _editsCollection
-                .Find(e => e.ProjectId == _projectId && e.UserEditId == userEditId).ToListAsync();
-        }
-
-        /// <summary> Counts EditsCollection documents (in any project) for an edit guid. </summary>
-        private async Task<long> CountStoredEditsWithGuid(Guid editGuid)
-        {
-            return await _editsCollection.CountDocumentsAsync(e => e.Guid == editGuid);
+            projectId ??= _projectId;
+            var reachable = (await _repo.GetAllUserEdits(projectId)).Sum(u => u.Edits.Count);
+            var stored = await _editsCollection.CountDocumentsAsync(e => e.ProjectId == projectId);
+            Assert.That(stored, Is.EqualTo(reachable), "EditsCollection holds documents no user edit references");
         }
 
         [Test]
@@ -84,16 +84,14 @@ namespace Backend.Tests.Repositories
             Assert.That(userEdit.Edits, Has.Count.EqualTo(2));
 
             // One StoredEdit document per edit, each with the correct projectId and userEditId.
-            var storedEdits = await GetStoredEdits(userEdit.Id);
+            var storedEdits = await _editsCollection
+                .Find(e => e.ProjectId == _projectId && e.UserEditId == userEdit.Id).ToListAsync();
             Assert.That(storedEdits, Has.Count.EqualTo(2));
             var storedIdsByGuid = storedEdits.ToDictionary(e => e.Guid, e => e.Id);
 
-            // The UserEdit document's edits array holds ObjectId refs to those documents, in order.
-            var rawUserEdits = _dbContext.Db.GetCollection<BsonDocument>("UserEditsCollection");
-            var rawDoc = await rawUserEdits.Find(new BsonDocument("_id", ObjectId.Parse(userEdit.Id))).FirstAsync();
-            var refs = rawDoc["edits"].AsBsonArray;
-            Assert.That(refs.Select(r => r.BsonType), Is.All.EqualTo(BsonType.ObjectId));
-            Assert.That(refs.Select(r => r.AsObjectId.ToString()),
+            // The UserEdit document's edits array holds refs to those documents, in order.
+            var storedUserEdit = await _userEditsCollection.Find(u => u.Id == userEdit.Id).FirstAsync();
+            Assert.That(storedUserEdit.EditIds,
                 Is.EqualTo(new[] { storedIdsByGuid[editA.Guid], storedIdsByGuid[editB.Guid] }));
 
             // GetUserEdit round-trips all edit fields.
@@ -158,34 +156,30 @@ namespace Backend.Tests.Repositories
             Assert.That(retrieved, Is.Not.Null);
             Assert.That(retrieved.Edits, Has.Count.EqualTo(2));
             Assert.That(retrieved.Edits.Last().Guid, Is.EqualTo(newEdit.Guid));
-
-            // The EditsCollection gained a document with the correct projectId and userEditId.
-            var storedEdits = await GetStoredEdits(userEdit.Id);
-            Assert.That(storedEdits, Has.Count.EqualTo(2));
-            Assert.That(storedEdits.Select(e => e.Guid), Does.Contain(newEdit.Guid));
+            await AssertNoOrphanedEdits();
         }
 
         [Test]
         public async Task TestAddEditNonexistentUserEditReturnsFalse()
         {
-            var edit = new Edit();
-            var result = await _repo.AddEdit(_projectId, NewObjectId(), edit);
+            var result = await _repo.AddEdit(_projectId, NewObjectId(), new Edit());
 
             Assert.That(result, Is.False);
             // The transaction must abort without leaving an orphaned EditsCollection document.
-            Assert.That(await CountStoredEditsWithGuid(edit.Guid), Is.Zero);
+            await AssertNoOrphanedEdits();
         }
 
         [Test]
         public async Task TestAddEditWrongProjectIdReturnsFalse()
         {
             var userEdit = await CreateUserEdit();
-            var edit = new Edit();
-            var result = await _repo.AddEdit(Guid.NewGuid().ToString(), userEdit.Id, edit);
+            var wrongProjectId = Guid.NewGuid().ToString();
+            var result = await _repo.AddEdit(wrongProjectId, userEdit.Id, new Edit());
 
             Assert.That(result, Is.False);
-            // The transaction must abort without leaving an orphaned EditsCollection document.
-            Assert.That(await CountStoredEditsWithGuid(edit.Guid), Is.Zero);
+            // The aborted transaction must not leave orphaned edits in either project.
+            await AssertNoOrphanedEdits();
+            await AssertNoOrphanedEdits(wrongProjectId);
         }
 
         [Test]
@@ -309,10 +303,9 @@ namespace Backend.Tests.Repositories
 
             Assert.That(result, Is.True);
             Assert.That(await _repo.GetUserEdit(_projectId, userEdit.Id), Is.Null);
-            Assert.That(await GetStoredEdits(userEdit.Id), Is.Empty);
+            await AssertNoOrphanedEdits();
 
             // Another user edit in the same project is untouched.
-            Assert.That(await GetStoredEdits(otherUserEdit.Id), Has.Count.EqualTo(1));
             var retrievedOther = await _repo.GetUserEdit(_projectId, otherUserEdit.Id);
             Assert.That(retrievedOther, Is.Not.Null);
             Assert.That(retrievedOther.Edits, Has.Count.EqualTo(1));
@@ -337,7 +330,7 @@ namespace Backend.Tests.Repositories
 
             Assert.That(result, Is.True);
             Assert.That(await _repo.GetAllUserEdits(_projectId), Is.Empty);
-            Assert.That(await _editsCollection.CountDocumentsAsync(e => e.ProjectId == _projectId), Is.Zero);
+            await AssertNoOrphanedEdits();
 
             // Another project's documents are untouched.
             var retrievedOther = await _repo.GetUserEdit(otherProjectId, otherUserEdit.Id);
