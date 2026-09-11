@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,15 +48,20 @@ namespace Backend.Tests.Repositories
         private static string NewObjectId() => ObjectId.GenerateNewId().ToString();
 
         /// <summary>
-        /// Asserts that every EditsCollection document in a project is reachable from a user edit,
-        /// i.e. that no operation orphaned or leaked a stored edit.
+        /// Asserts that a project's stored edits and its user edits' references correspond exactly:
+        /// no EditsCollection document is orphaned, and no reference dangles. Reads both collections
+        /// directly, so an assembly bug cannot mask a storage one.
         /// </summary>
-        private async Task AssertNoOrphanedEdits(string? projectId = null)
+        private async Task AssertEditsCorrespond(string? projectId = null)
         {
             projectId ??= _projectId;
-            var reachable = (await _repo.GetAllUserEdits(projectId)).Sum(u => u.Edits.Count);
-            var stored = await _editsCollection.CountDocumentsAsync(e => e.ProjectId == projectId);
-            Assert.That(stored, Is.EqualTo(reachable), "EditsCollection holds documents no user edit references");
+            var userEdits = await _userEditsCollection.Find(u => u.ProjectId == projectId).ToListAsync();
+            var referenced = userEdits.SelectMany(u => u.EditIds).ToList();
+            Assert.That(referenced, Is.Unique, "a stored edit is referenced more than once");
+            var stored = (await _editsCollection.Find(e => e.ProjectId == projectId).ToListAsync())
+                .ConvertAll(e => e.Id);
+            Assert.That(stored, Is.EquivalentTo(referenced),
+                "EditsCollection documents and user edit references don't correspond");
         }
 
         [Test]
@@ -156,7 +161,7 @@ namespace Backend.Tests.Repositories
             Assert.That(retrieved, Is.Not.Null);
             Assert.That(retrieved.Edits, Has.Count.EqualTo(2));
             Assert.That(retrieved.Edits.Last().Guid, Is.EqualTo(newEdit.Guid));
-            await AssertNoOrphanedEdits();
+            await AssertEditsCorrespond();
         }
 
         [Test]
@@ -165,8 +170,7 @@ namespace Backend.Tests.Repositories
             var result = await _repo.AddEdit(_projectId, NewObjectId(), new Edit());
 
             Assert.That(result, Is.False);
-            // The transaction must abort without leaving an orphaned EditsCollection document.
-            await AssertNoOrphanedEdits();
+            await AssertEditsCorrespond();
         }
 
         [Test]
@@ -177,9 +181,8 @@ namespace Backend.Tests.Repositories
             var result = await _repo.AddEdit(wrongProjectId, userEdit.Id, new Edit());
 
             Assert.That(result, Is.False);
-            // The aborted transaction must not leave orphaned edits in either project.
-            await AssertNoOrphanedEdits();
-            await AssertNoOrphanedEdits(wrongProjectId);
+            await AssertEditsCorrespond();
+            await AssertEditsCorrespond(wrongProjectId);
         }
 
         [Test]
@@ -303,7 +306,7 @@ namespace Backend.Tests.Repositories
 
             Assert.That(result, Is.True);
             Assert.That(await _repo.GetUserEdit(_projectId, userEdit.Id), Is.Null);
-            await AssertNoOrphanedEdits();
+            await AssertEditsCorrespond();
 
             // Another user edit in the same project is untouched.
             var retrievedOther = await _repo.GetUserEdit(_projectId, otherUserEdit.Id);
@@ -330,7 +333,7 @@ namespace Backend.Tests.Repositories
 
             Assert.That(result, Is.True);
             Assert.That(await _repo.GetAllUserEdits(_projectId), Is.Empty);
-            await AssertNoOrphanedEdits();
+            await AssertEditsCorrespond();
 
             // Another project's documents are untouched.
             var retrievedOther = await _repo.GetUserEdit(otherProjectId, otherUserEdit.Id);
