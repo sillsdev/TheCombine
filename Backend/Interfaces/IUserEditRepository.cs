@@ -15,6 +15,7 @@ namespace BackendFramework.Interfaces
         Task<bool> AddEdit(string projectId, string userEditId, Edit edit);
         Task<bool> ReplaceEdit(string projectId, string userEditId, Edit edit);
         Task<bool> AddStepToEdit(string projectId, string userEditId, Guid editGuid, string stepData);
-        Task<bool> UpdateStepInEdit(string projectId, string userEditId, Guid editGuid, int stepIndex, string stepData);
+        Task<bool> UpdateStepInEdit(
+            string projectId, string userEditId, Guid editGuid, int stepIndex, string stepData);
     }
 }

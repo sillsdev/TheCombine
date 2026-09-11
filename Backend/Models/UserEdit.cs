@@ -11,16 +11,12 @@ namespace BackendFramework.Models
     public class UserEdit
     {
         [Required]
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; } = "";
 
         [Required]
-        [BsonElement("edits")]
         public List<Edit> Edits { get; set; } = [];
 
         [Required]
-        [BsonElement("projectId")]
         public string ProjectId { get; set; } = "";
 
         /// <summary> Create a deep copy. </summary>
@@ -32,50 +28,36 @@ namespace BackendFramework.Models
         }
     }
 
-    public class UserEditStepWrapper
+    public class UserEditStepWrapper(Guid editGuid, string stepString, int? stepIndex = null)
     {
         [Required]
-        [BsonGuidRepresentation(GuidRepresentation.Standard)]
-        public Guid EditGuid { get; set; }
+        public Guid EditGuid { get; set; } = editGuid;
 
         [Required]
-        public string StepString { get; set; }
+        public string StepString { get; set; } = stepString;
 
         /* A null StepIndex implies index equal to the length of the step list--
          * i.e. the step is to be added to the end of the list. */
-        public int? StepIndex { get; set; }
-
-        public UserEditStepWrapper(Guid editGuid, string stepString, int? stepIndex = null)
-        {
-            EditGuid = editGuid;
-            StepString = stepString;
-            StepIndex = stepIndex;
-        }
+        public int? StepIndex { get; set; } = stepIndex;
     }
 
     public class Edit
     {
         [Required]
-        [BsonElement("guid")]
-        [BsonGuidRepresentation(GuidRepresentation.Standard)]
 #pragma warning disable CA1720
         public Guid Guid { get; set; } = Guid.NewGuid();
 #pragma warning restore CA1720
 
         /// <summary> Integer representation of enum GoalType in src/types/goals.ts </summary>
         [Required]
-        [BsonElement("goalType")]
         public int GoalType { get; set; }
 
         [Required]
-        [BsonElement("stepData")]
         public List<string> StepData { get; set; } = [];
 
         [Required]
-        [BsonElement("changes")]
         public string Changes { get; set; } = "{}";
 
-        [BsonElement("modified")]
         public DateTime? Modified { get; set; }
 
         /// <summary> Create a deep copy. </summary>
