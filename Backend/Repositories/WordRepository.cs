@@ -504,11 +504,9 @@ namespace BackendFramework.Repositories
         private async Task<Word?> UpdateFrontierWithSession(IClientSessionHandle session,
             Word word, bool createIfNotFound, Action<Word, Word?> modifyUpdatedWord)
         {
-            // A word with no id has no Frontier predecessor to replace. Skip the lookup, because Id is stored as an
-            // ObjectId and the driver throws a FormatException when a filter on it is given a non-ObjectId string.
+            // Skip the lookup for a word with no id: there is no predecessor, and an ObjectId filter would throw.
             var deletedWord = string.IsNullOrEmpty(word.Id)
                 ? null
-                // Make sure old word exists in the Frontier.
                 : await _frontier.FindOneAndDeleteAsync(session, GetProjectWordFilter(word.ProjectId, word.Id));
             if (deletedWord is null && !createIfNotFound)
             {
