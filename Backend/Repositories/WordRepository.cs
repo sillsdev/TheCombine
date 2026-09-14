@@ -504,9 +504,10 @@ namespace BackendFramework.Repositories
         private async Task<Word?> UpdateFrontierWithSession(IClientSessionHandle session,
             Word word, bool createIfNotFound, Action<Word, Word?> modifyUpdatedWord)
         {
-            // Make sure old word exists in the Frontier.
-            var deletedWord =
-                await _frontier.FindOneAndDeleteAsync(session, GetProjectWordFilter(word.ProjectId, word.Id));
+            // Skip the lookup for a word with no id: there is no predecessor, and an ObjectId filter would throw.
+            var deletedWord = string.IsNullOrEmpty(word.Id)
+                ? null
+                : await _frontier.FindOneAndDeleteAsync(session, GetProjectWordFilter(word.ProjectId, word.Id));
             if (deletedWord is null && !createIfNotFound)
             {
                 return null;
