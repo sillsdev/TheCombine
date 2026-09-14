@@ -486,6 +486,19 @@ namespace Backend.Tests.Repositories
         }
 
         [Test]
+        public async Task TestUpdateFrontierByWordWithNoIdReturnsNull()
+        {
+            var word = Util.RandomWord(_projectId);
+            word.Id = "";
+
+            var result = await _repo.UpdateFrontier(word, (_, _) => { });
+
+            Assert.That(result, Is.Null);
+            Assert.That(await _repo.HasWords(_projectId), Is.False);
+            Assert.That(await _repo.HasFrontierWords(_projectId), Is.False);
+        }
+
+        [Test]
         public async Task TestUpdateFrontierByWordModifyActionThrowsLeavesRepoUnchanged()
         {
             var created = await CreateWord();
@@ -560,6 +573,27 @@ namespace Backend.Tests.Repositories
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(await _repo.IsInFrontier(_projectId, result[0].Id), Is.True);
+        }
+
+        [Test]
+        public async Task TestReplaceFrontierCreatesWordWithNoId()
+        {
+            // A merge parent for a brand-new word is sent with no id.
+            var newWord = Util.RandomWord(_projectId);
+            newWord.Id = "";
+            var toDelete = await CreateWord();
+
+            var result = await _repo.ReplaceFrontier(_projectId, [newWord], [toDelete.Id],
+                modifyUpdatedWord: (_, oldWord) => Assert.That(oldWord, Is.Null),
+                modifyDeletedWord: w => w.Accessibility = Status.Deleted);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Has.Count.EqualTo(1));
+            Assert.That(result[0].Id, Is.Not.Empty);
+
+            Assert.That(await _repo.IsInFrontier(_projectId, result[0].Id), Is.True);
+            Assert.That(await _repo.IsInFrontier(_projectId, toDelete.Id), Is.False);
+            Assert.That(await _repo.GetFrontierCount(_projectId), Is.EqualTo(1));
         }
 
         [Test]
