@@ -333,6 +333,41 @@ describe("MergeDupsActions", () => {
       expect(blacklist).not.toContain(idA);
       expect(blacklist).toContain(idB);
     });
+
+    // The merge hasn't happened, so the caller can retry.
+    it("rejects when the merge request fails", async () => {
+      mockMergeWords.mockRejectedValue(new Error("Merge failed."));
+      const WA = newMergeTreeWord(vernA, { ID1: [S1], ID2: [S2] });
+      WA.flag = newFlag("New flag");
+      const WB = newMergeTreeWord(vernB, { ID1: [S3], ID2: [S4] });
+      const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
+      const store = setupStore({
+        ...preloadedState,
+        mergeDuplicateGoal: { ...defaultMergeState, data, tree },
+      });
+
+      await expect(store.dispatch(mergeAll())).rejects.toThrow();
+      expect(mockBlacklistAdd).not.toHaveBeenCalled();
+    });
+
+    // The merge has happened, so retrying it would resubmit ids no longer in the Frontier.
+    it("resolves when bookkeeping after the merge fails", async () => {
+      const consoleError = jest.spyOn(console, "error").mockImplementation();
+      mockBlacklistAdd.mockRejectedValue(new Error("Blacklist failed."));
+      const WA = newMergeTreeWord(vernA, { ID1: [S1], ID2: [S2] });
+      WA.flag = newFlag("New flag");
+      const WB = newMergeTreeWord(vernB, { ID1: [S3], ID2: [S4] });
+      const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
+      const store = setupStore({
+        ...preloadedState,
+        mergeDuplicateGoal: { ...defaultMergeState, data, tree },
+      });
+
+      await expect(store.dispatch(mergeAll())).resolves.toBeUndefined();
+      expect(mockMergeWords).toHaveBeenCalledTimes(1);
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      expect(consoleError).toHaveBeenCalled();
+    });
   });
 
   describe("dispatchMergeStepData", () => {

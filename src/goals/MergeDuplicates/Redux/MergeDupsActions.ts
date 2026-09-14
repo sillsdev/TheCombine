@@ -120,7 +120,9 @@ export function deferMerge() {
  * Each word column with any changes results in a `MergeWord` with `deleteOnly: false`.
  * The resulting `MergeWord` array is sent to the backend for merging.
  * Also, the merges are added as changes to the current goal.
- * Also, the new set of ids (for merge parents and unchanged words) is blacklisted. */
+ * Also, the new set of ids (for merge parents and unchanged words) is blacklisted.
+ * Only a failure of the merge itself rejects: once the merge is committed, its child ids are
+ * gone from the Frontier, so the save cannot be retried and must not be reported as failed. */
 export function mergeAll() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     // Get MergeWord array from the state.
@@ -131,30 +133,38 @@ export function mergeAll() {
 
     let parentIds: string[] = [];
     if (mergeWordsArray.length) {
-      // Send merges to the backend.
+      // Send merges to the backend. This is the only step the caller can safely retry.
       parentIds = await backend.mergeWords(mergeWordsArray);
-
-      // Add merges as changes to the goal.
-      const childIds = [
-        ...new Set(
-          mergeWordsArray.flatMap((m) => m.children).map((s) => s.srcWordId)
-        ),
-      ];
-      const completedMerge = { childIds, parentIds };
-      dispatch(addCompletedMergeToGoal(completedMerge));
-      await dispatch(asyncUpdateGoal());
     }
 
-    // Blacklist the set of words with updated ids.
-    const mergedIds = new Set(
-      mergeWordsArray.flatMap((mw) => mw.children.map((c) => c.srcWordId))
-    );
-    const unmergedIds = Object.keys(mergeTree.data.words).filter(
-      (id) => !mergedIds.has(id)
-    );
-    const blacklistIds = [...unmergedIds, ...parentIds];
-    if (blacklistIds.length > 1) {
-      await backend.blacklistAdd(blacklistIds);
+    // Everything below follows a committed merge, so failures here are reported but not thrown.
+    try {
+      if (mergeWordsArray.length) {
+        // Add merges as changes to the goal.
+        const childIds = [
+          ...new Set(
+            mergeWordsArray.flatMap((m) => m.children).map((s) => s.srcWordId)
+          ),
+        ];
+        const completedMerge = { childIds, parentIds };
+        dispatch(addCompletedMergeToGoal(completedMerge));
+        await dispatch(asyncUpdateGoal());
+      }
+
+      // Blacklist the set of words with updated ids.
+      const mergedIds = new Set(
+        mergeWordsArray.flatMap((mw) => mw.children.map((c) => c.srcWordId))
+      );
+      const unmergedIds = Object.keys(mergeTree.data.words).filter(
+        (id) => !mergedIds.has(id)
+      );
+      const blacklistIds = [...unmergedIds, ...parentIds];
+      if (blacklistIds.length > 1) {
+        await backend.blacklistAdd(blacklistIds);
+      }
+    } catch (err) {
+      // The api reports the error; don't strand the user on a merge that already succeeded.
+      console.error(err);
     }
   };
 }
