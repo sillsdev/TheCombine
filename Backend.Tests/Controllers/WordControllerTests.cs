@@ -26,7 +26,7 @@ namespace Backend.Tests.Controllers
         }
 
         private const string ProjId = "PROJECT_ID";
-        private const string MissingId = "MISSING_ID";
+        private static readonly string MissingId = Util.NewObjectId();
 
         [SetUp]
         public void Setup()
@@ -41,13 +41,13 @@ namespace Backend.Tests.Controllers
         public async Task TestAreInFrontier()
         {
             var wordNotInFrontier = await _wordRepo.Add(Util.RandomWord(ProjId));
-            var emptyResult = await _wordController.AreInFrontier(ProjId, [wordNotInFrontier.Id, "non-id"])
+            var emptyResult = await _wordController.AreInFrontier(ProjId, [wordNotInFrontier.Id, Util.NewObjectId()])
                 as OkObjectResult;
             Assert.That(emptyResult, Is.Not.Null);
             Assert.That(emptyResult.Value, Is.Empty);
 
             var wordInFrontier = await _wordRepo.AddFrontier(Util.RandomWord(ProjId));
-            var nonemptyResult = await _wordController.AreInFrontier(ProjId, [wordInFrontier.Id, "non-id"])
+            var nonemptyResult = await _wordController.AreInFrontier(ProjId, [wordInFrontier.Id, Util.NewObjectId()])
                 as OkObjectResult;
             Assert.That(nonemptyResult, Is.Not.Null);
             Assert.That(nonemptyResult.Value, Is.EqualTo(new List<string> { wordInFrontier.Id }));
@@ -265,7 +265,7 @@ namespace Backend.Tests.Controllers
 
             var result = await _wordController.RevertWords(ProjId, new()
             {
-                ["non-id"] = frontierWord1.Id, // Cannot revert with key not a word
+                [Util.NewObjectId()] = frontierWord1.Id, // Cannot revert with key not a word
                 [nonFrontierWord1.Id] = nonFrontierWord2.Id, // Cannot revert with value not in frontier
                 [nonFrontierWord0.Id] = frontierWord0.Id, // Can revert
             }) as OkObjectResult;

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using MongoDB.Bson;
 
 namespace Backend.Tests.Mocks
 {
@@ -15,6 +16,33 @@ namespace Backend.Tests.Mocks
 
         private Task<bool>? _getAllFrontierDelay;
         private int _getAllFrontierCallCount;
+
+        /// <summary> Generates an id the way the database does. </summary>
+        private static string NewId()
+        {
+            return ObjectId.GenerateNewId().ToString();
+        }
+
+        /// <summary>
+        /// Mimics the driver, which parses an id as an ObjectId when building a filter on it,
+        /// throwing for any string that isn't one.
+        /// </summary>
+        private static void CheckId(string wordId)
+        {
+            if (!ObjectId.TryParse(wordId, out _))
+            {
+                throw new FormatException($"'{wordId}' is not a valid 24 digit hex string.");
+            }
+        }
+
+        /// <summary> Applies <see cref="CheckId"/> to each of the ids. </summary>
+        private static void CheckIds(IEnumerable<string> wordIds)
+        {
+            foreach (var wordId in wordIds)
+            {
+                CheckId(wordId);
+            }
+        }
 
         /// <summary>
         /// Sets a delay for the GetFrontier method. The first call to GetFrontier will wait
@@ -33,6 +61,7 @@ namespace Backend.Tests.Mocks
 
         public Task<Word?> GetWord(string projectId, string wordId)
         {
+            CheckId(wordId);
             return Task.FromResult(_words.FirstOrDefault(w => w.ProjectId == projectId && w.Id == wordId)?.Clone());
         }
 
@@ -50,7 +79,7 @@ namespace Backend.Tests.Mocks
 
             words.ForEach(word =>
             {
-                word.Id = Guid.NewGuid().ToString();
+                word.Id = NewId();
                 _words.Add(word.Clone());
                 _frontier.Add(word.Clone());
             });
@@ -82,11 +111,13 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> IsInFrontier(string projectId, string wordId)
         {
+            CheckId(wordId);
             return Task.FromResult(_frontier.Any(w => w.ProjectId == projectId && w.Id == wordId));
         }
 
         public Task<bool> AreInFrontier(string projectId, List<string> wordIds, int count)
         {
+            CheckIds(wordIds);
             return Task.FromResult(_frontier.Count(w => w.ProjectId == projectId && wordIds.Contains(w.Id)) >= count);
         }
 
@@ -112,6 +143,7 @@ namespace Backend.Tests.Mocks
 
         public Task<Word?> GetFrontier(string projectId, string wordId, string? audioFileName = null)
         {
+            CheckId(wordId);
             var word = _frontier.Find(w => w.ProjectId == projectId && w.Id == wordId &&
                 (string.IsNullOrEmpty(audioFileName) || w.Audio.Any(a => a.FileName == audioFileName)));
             return Task.FromResult(word?.Clone());
@@ -126,7 +158,7 @@ namespace Backend.Tests.Mocks
         /// <summary> Adds a new word to the words without adding it to the frontier. </summary>
         internal Task<Word> Add(Word word)
         {
-            word.Id = Guid.NewGuid().ToString();
+            word.Id = NewId();
             _words.Add(word.Clone());
             return Task.FromResult(word);
         }
@@ -147,6 +179,7 @@ namespace Backend.Tests.Mocks
 
         public Task<Word?> DeleteFrontier(string projectId, string wordId, Action<Word> modifyDeletedWord)
         {
+            CheckId(wordId);
             var removedWord = _frontier.Find(w => w.ProjectId == projectId && w.Id == wordId);
             if (removedWord is null)
             {
@@ -157,7 +190,7 @@ namespace Backend.Tests.Mocks
 
             var modifiedWord = removedWord.Clone();
             modifyDeletedWord(modifiedWord);
-            modifiedWord.Id = Guid.NewGuid().ToString();
+            modifiedWord.Id = NewId();
 
             _words.Add(modifiedWord.Clone());
             return Task.FromResult<Word?>(modifiedWord);
@@ -165,6 +198,7 @@ namespace Backend.Tests.Mocks
 
         private bool CanRestore(string projectId, string wordId)
         {
+            CheckId(wordId);
             var word = _words.FirstOrDefault(w => w.ProjectId == projectId && w.Id == wordId);
             if (word is null)
             {
@@ -196,7 +230,14 @@ namespace Backend.Tests.Mocks
 
         private Task<Word?> UpdateFrontier(Word word, bool createIfNotFound, Action<Word, Word?> modifyUpdatedWord)
         {
-            var removedWord = _frontier.Find(w => w.ProjectId == word.ProjectId && w.Id == word.Id);
+            // A word with no id has no Frontier predecessor, so the repo skips the lookup rather than filter on it.
+            Word? removedWord = null;
+            if (!string.IsNullOrEmpty(word.Id))
+            {
+                CheckId(word.Id);
+                removedWord = _frontier.Find(w => w.ProjectId == word.ProjectId && w.Id == word.Id);
+            }
+
             if (removedWord is null && !createIfNotFound)
             {
                 return Task.FromResult<Word?>(null);
@@ -208,7 +249,7 @@ namespace Backend.Tests.Mocks
             }
 
             modifyUpdatedWord(word, removedWord?.Clone());
-            word.Id = Guid.NewGuid().ToString();
+            word.Id = NewId();
 
             _words.Add(word.Clone());
             _frontier.Add(word.Clone());
@@ -217,6 +258,7 @@ namespace Backend.Tests.Mocks
 
         public Task<Word?> UpdateFrontier(string projectId, string wordId, Action<Word> modifyUpdatedWord)
         {
+            CheckId(wordId);
             var removedWord = _frontier.Find(w => w.ProjectId == projectId && w.Id == wordId);
             if (removedWord is null)
             {
@@ -227,7 +269,7 @@ namespace Backend.Tests.Mocks
             modifyUpdatedWord(modifiedWord);
 
             _frontier.Remove(removedWord);
-            modifiedWord.Id = Guid.NewGuid().ToString();
+            modifiedWord.Id = NewId();
 
             _words.Add(modifiedWord.Clone());
             _frontier.Add(modifiedWord.Clone());
@@ -236,12 +278,6 @@ namespace Backend.Tests.Mocks
 
         public async Task<Word?> UpdateFrontier(Word word, Action<Word, Word?> modifyUpdatedWord)
         {
-            var removedWord = _frontier.Find(w => w.ProjectId == word.ProjectId && w.Id == word.Id);
-            if (removedWord is null)
-            {
-                return null;
-            }
-
             return await UpdateFrontier(word, createIfNotFound: false, modifyUpdatedWord);
         }
 
@@ -253,6 +289,7 @@ namespace Backend.Tests.Mocks
                 throw new ArgumentException("All new words must have the specified projectId");
             }
 
+            CheckIds(idsToDelete);
             var oldIdSet = idsToDelete.ToHashSet();
             // Make sure the replace is valid, mimicking a canceled transaction in production.
             if (oldIdSet.Any(id => !_frontier.Any(f => f.ProjectId == projectId && f.Id == id)))
@@ -276,6 +313,9 @@ namespace Backend.Tests.Mocks
         public async Task<bool> RevertReplaceFrontier(
             string projectId, List<string> idsToRestore, List<string> idsToDelete, Action<Word> modifyDeletedWord)
         {
+            CheckIds(idsToRestore);
+            CheckIds(idsToDelete);
+
             // Remove duplicates and enforce no overlap.
             var restoreSet = idsToRestore.ToHashSet();
             var deleteSet = idsToDelete.ToHashSet();

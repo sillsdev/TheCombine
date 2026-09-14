@@ -15,7 +15,7 @@ namespace Backend.Tests.Services
 
         private const string ProjId = "WordServiceTestProjId";
         private const string UserId = "WordServiceTestUserId";
-        private const string WordId = "WordServiceTestWordId";
+        private static readonly string WordId = Util.NewObjectId();
 
         [SetUp]
         public void Setup()
@@ -97,7 +97,7 @@ namespace Backend.Tests.Services
             var wordInFrontier = _wordRepo.Create(
                 new Word() { Audio = [new() { FileName = fileName }], ProjectId = ProjId }).Result;
             Assert.That(_wordService.DeleteAudio("non-proj-id", UserId, wordInFrontier.Id, fileName).Result, Is.Null);
-            Assert.That(_wordService.DeleteAudio(ProjId, UserId, "non-word-id", fileName).Result, Is.Null);
+            Assert.That(_wordService.DeleteAudio(ProjId, UserId, Util.NewObjectId(), fileName).Result, Is.Null);
 
             var result = _wordService.DeleteAudio(ProjId, UserId, wordInFrontier.Id, "non-file-name").Result;
             Assert.That(result, Is.Null);
@@ -217,7 +217,7 @@ namespace Backend.Tests.Services
         {
             _wordRepo.Add(new Word { ProjectId = ProjId }).Wait();
 
-            var result = _wordService.RestoreFrontierWord(ProjId, "NotAnId").Result;
+            var result = _wordService.RestoreFrontierWord(ProjId, Util.NewObjectId()).Result;
 
             Assert.That(result, Is.False);
             Assert.That(_wordRepo.GetAllFrontier(ProjId).Result, Is.Empty);
@@ -477,7 +477,7 @@ namespace Backend.Tests.Services
             var frontierWordToDelete = _wordRepo.Create(new Word { ProjectId = ProjId }).Result;
 
             var result = _wordService.RevertMergeReplaceFrontier(
-                ProjId, UserId, ["missing-id"], [frontierWordToDelete.Id]).Result;
+                ProjId, UserId, [Util.NewObjectId()], [frontierWordToDelete.Id]).Result;
 
             Assert.That(result, Is.False);
             Assert.That(_wordRepo.IsInFrontier(ProjId, frontierWordToDelete.Id).Result, Is.True);

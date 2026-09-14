@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using BackendFramework.Models;
+using MongoDB.Bson;
 using NUnit.Framework;
 using static System.Linq.Enumerable;
 
@@ -37,6 +38,12 @@ namespace Backend.Tests
             return RandString(rnd.Next(4, 10));
         }
 
+        /// <summary> Generates a valid MongoDB ObjectId string, as the database does for a new document. </summary>
+        public static string NewObjectId()
+        {
+            return ObjectId.GenerateNewId().ToString();
+        }
+
         public static List<Word> RandomWordList(int length, string? projId = null)
         {
             var wordList = new List<Word>();
@@ -53,7 +60,7 @@ namespace Backend.Tests
         {
             return new()
             {
-                Id = RandString(),
+                Id = NewObjectId(),
                 Created = RandString(),
                 Vernacular = RandString(),
                 Modified = RandString(),

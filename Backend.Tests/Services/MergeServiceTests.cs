@@ -443,16 +443,20 @@ namespace Backend.Tests.Services
         [Test]
         public void HasGraylistEntriesTrueTest()
         {
+            var wordIds = Enumerable.Range(0, 4).Select(_ => Util.NewObjectId()).ToList();
+
             _mergeGraylistRepo.Create(new() { Id = "A", ProjectId = ProjId, UserId = UserId }).Wait();
             _mergeGraylistRepo.Create(new()
             {
                 Id = "B",
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = ["i", "ii", "iii", "iv"]
+                WordIds = wordIds
             }).Wait();
-            _wordRepo.AddFrontier([new() { Id = "ii", ProjectId = ProjId }]).Wait();
-            _wordRepo.AddFrontier([new() { Id = "iv", ProjectId = ProjId }]).Wait();
+
+            // Two of the four words are in the Frontier.
+            _wordRepo.AddFrontier([new() { Id = wordIds[1], ProjectId = ProjId }]).Wait();
+            _wordRepo.AddFrontier([new() { Id = wordIds[3], ProjectId = ProjId }]).Wait();
 
             Assert.That(_mergeService.HasGraylistEntries(ProjId, UserId).Result, Is.True);
         }
@@ -460,6 +464,9 @@ namespace Backend.Tests.Services
         [Test]
         public void HasGraylistEntriesRemovesInvalidEntriesTest()
         {
+            var wordIdsB = Enumerable.Range(0, 4).Select(_ => Util.NewObjectId()).ToList();
+            var wordIdsC = Enumerable.Range(0, 3).Select(_ => Util.NewObjectId()).ToList();
+
             // Create graylist entries with fewer than 2 words in the Frontier.
             _mergeGraylistRepo.Create(new() { Id = "A", ProjectId = ProjId, UserId = UserId }).Wait();
             _mergeGraylistRepo.Create(new()
@@ -467,16 +474,16 @@ namespace Backend.Tests.Services
                 Id = "B",
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = ["i", "ii", "iii", "iv"]
+                WordIds = wordIdsB
             }).Wait();
             _mergeGraylistRepo.Create(new()
             {
                 Id = "C",
                 ProjectId = ProjId,
                 UserId = UserId,
-                WordIds = ["1", "2", "3"]
+                WordIds = wordIdsC
             }).Wait();
-            _wordRepo.AddFrontier([new() { Id = "1", ProjectId = ProjId }]).Wait();
+            _wordRepo.AddFrontier([new() { Id = wordIdsC[0], ProjectId = ProjId }]).Wait();
 
             // Check for graylist entries.
             Assert.That(_mergeService.HasGraylistEntries(ProjId, UserId).Result, Is.False);

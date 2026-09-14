@@ -100,10 +100,10 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUploadAudioFileNoWord()
         {
-            var result = _audioController.UploadAudioFile(_projId, "not-a-word", _file).Result;
+            var result = _audioController.UploadAudioFile(_projId, Util.NewObjectId(), _file).Result;
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
 
-            result = _audioController.UploadAudioFile(_projId, "not-a-word", "speakerId", _file).Result;
+            result = _audioController.UploadAudioFile(_projId, Util.NewObjectId(), "speakerId", _file).Result;
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
 
@@ -163,7 +163,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDeleteAudioFileNoWordWithAudio()
         {
-            var result1 = _audioController.DeleteAudioFile(_projId, "not-a-word", _file.FileName).Result;
+            var result1 = _audioController.DeleteAudioFile(_projId, Util.NewObjectId(), _file.FileName).Result;
             Assert.That(result1, Is.InstanceOf<NotFoundObjectResult>());
 
             var wordId = _wordRepo.Create(Util.RandomWord(_projId)).Result.Id;
