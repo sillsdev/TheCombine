@@ -183,14 +183,24 @@ namespace BackendFramework.Controllers
         internal async Task<bool> GetDuplicatesThenSignal(
             string projectId, int maxInList, int maxLists, string userId, bool ignoreProtected = false)
         {
-            var proceed = await _mergeService.GetAndStorePotentialDuplicates(
-                projectId, maxInList, maxLists, userId, ignoreProtected);
-            if (proceed)
+            try
             {
-                await _ackService.SendWithRetry(userId,
-                    requestId => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId));
+                var proceed = await _mergeService.GetAndStorePotentialDuplicates(
+                    projectId, maxInList, maxLists, userId, ignoreProtected);
+                if (proceed)
+                {
+                    await _ackService.SendWithRetry(userId, requestId =>
+                        _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId));
+                }
+                return proceed;
             }
-            return proceed;
+            catch (Exception e)
+            {
+                // This runs detached from the request, which has already returned Ok, so an unlogged
+                // exception would leave the user waiting on a signal that never comes.
+                _logger.LogError(e, "Error finding duplicates in project {ProjectId}.", projectId);
+                return false;
+            }
         }
 
         /// <summary> Retrieve current user's potential duplicates for merging. </summary>
