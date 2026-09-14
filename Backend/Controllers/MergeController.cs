@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 
 namespace BackendFramework.Controllers
 {
@@ -17,12 +19,14 @@ namespace BackendFramework.Controllers
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/merge")]
     public class MergeController(IAcknowledgmentService ackService, IMergeService mergeService,
-        IHubContext<MergeHub> notifyService, IPermissionService permissionService) : Controller
+        IHubContext<MergeHub> notifyService, IPermissionService permissionService,
+        ILogger<MergeController> logger) : Controller
     {
         private readonly IAcknowledgmentService _ackService = ackService;
         private readonly IMergeService _mergeService = mergeService;
         private readonly IHubContext<MergeHub> _notifyService = notifyService;
         private readonly IPermissionService _permissionService = permissionService;
+        private readonly ILogger<MergeController> _logger = logger;
 
         private const string otelTagName = "otel.MergeController";
 
@@ -49,8 +53,9 @@ namespace BackendFramework.Controllers
                 var newWords = await _mergeService.Merge(projectId, userId, mergeWordsList);
                 return Ok(newWords.Select(w => w.Id).ToList());
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e, "Error merging words in project {ProjectId}.", projectId);
                 return BadRequest("Merge failed.");
             }
         }

@@ -44,7 +44,8 @@ namespace Backend.Tests.Controllers
             _mergeService = new MergeService(_cache, _mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
             var notifyService = new HubContextMock<MergeHub>();
             var permissionService = new PermissionServiceMock();
-            _mergeController = new MergeController(ackService, _mergeService, notifyService, permissionService);
+            _mergeController = new MergeController(
+                ackService, _mergeService, notifyService, permissionService, new LoggerMock<MergeController>());
         }
 
         [Test]
