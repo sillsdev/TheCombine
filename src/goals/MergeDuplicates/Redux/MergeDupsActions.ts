@@ -114,15 +114,29 @@ export function deferMerge() {
   };
 }
 
+/** Run a step that follows a committed merge. Retrying the save cannot undo that merge, so
+ * report the failure instead of letting it reject, and let the remaining steps run. */
+async function reportFailure(step: () => Promise<void>): Promise<void> {
+  try {
+    await step();
+  } catch (err) {
+    // The api layer already reported the error; add the context it cannot have.
+    console.error("Merge saved; a follow-up step failed:", err);
+  }
+}
+
 /** Dispatch function to construct all merges from the current merge tree.
+ *
  * Each word with all senses deleted results in a `MergeWord` with `deleteOnly: true`.
  * Each word column with no changes is ignored.
  * Each word column with any changes results in a `MergeWord` with `deleteOnly: false`.
  * The resulting `MergeWord` array is sent to the backend for merging.
  * Also, the merges are added as changes to the current goal.
  * Also, the new set of ids (for merge parents and unchanged words) is blacklisted.
- * Only a failure of the merge itself rejects: once the merge is committed, its child ids are
- * gone from the Frontier, so the save cannot be retried and must not be reported as failed. */
+ *
+ * Only retryable failures reject: the merge request, or the blacklisting of a set with no
+ * merges. Once a merge is committed its children are gone from the Frontier, so the steps
+ * after it report their failures independently rather than failing the save. */
 export function mergeAll() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     // Get MergeWord array from the state.
@@ -131,27 +145,8 @@ export function mergeAll() {
     const mergeWordsArray = [...mergeTree.mergeWords];
     dispatch(clearMergeWords());
 
-    let parentIds: string[] = [];
-    if (mergeWordsArray.length) {
-      // Send merges to the backend. This is the only step the caller can safely retry.
-      parentIds = await backend.mergeWords(mergeWordsArray);
-    }
-
-    // Everything below follows a committed merge, so failures here are reported but not thrown.
-    try {
-      if (mergeWordsArray.length) {
-        // Add merges as changes to the goal.
-        const childIds = [
-          ...new Set(
-            mergeWordsArray.flatMap((m) => m.children).map((s) => s.srcWordId)
-          ),
-        ];
-        const completedMerge = { childIds, parentIds };
-        dispatch(addCompletedMergeToGoal(completedMerge));
-        await dispatch(asyncUpdateGoal());
-      }
-
-      // Blacklist the set of words with updated ids.
+    /** Blacklist the set of words with updated ids. */
+    const blacklistSet = async (parentIds: string[]): Promise<void> => {
       const mergedIds = new Set(
         mergeWordsArray.flatMap((mw) => mw.children.map((c) => c.srcWordId))
       );
@@ -162,10 +157,32 @@ export function mergeAll() {
       if (blacklistIds.length > 1) {
         await backend.blacklistAdd(blacklistIds);
       }
-    } catch (err) {
-      // The api reports the error; don't strand the user on a merge that already succeeded.
-      console.error(err);
+    };
+
+    // With nothing to merge, blacklisting is the only record of the decision not to merge
+    // this set, and no merge has been committed, so let a failure reject for a retry.
+    if (!mergeWordsArray.length) {
+      await blacklistSet([]);
+      return;
     }
+
+    // Send merges to the backend. This is the only step the caller can safely retry.
+    const parentIds = await backend.mergeWords(mergeWordsArray);
+
+    // The merge is committed. What follows is independent bookkeeping, so a failure in one
+    // step must neither fail the save nor skip the other step.
+    await reportFailure(async () => {
+      // Add merges as changes to the goal.
+      const childIds = [
+        ...new Set(
+          mergeWordsArray.flatMap((m) => m.children).map((s) => s.srcWordId)
+        ),
+      ];
+      const completedMerge = { childIds, parentIds };
+      dispatch(addCompletedMergeToGoal(completedMerge));
+      await dispatch(asyncUpdateGoal());
+    });
+    await reportFailure(() => blacklistSet(parentIds));
   };
 }
 
