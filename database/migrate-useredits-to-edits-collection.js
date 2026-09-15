@@ -20,8 +20,8 @@
 // - The script is idempotent: it only touches documents still in the old format,
 //   and clears partial output from any interrupted previous run before redoing it.
 // - If an old (pre-migration) backup is ever restored, rerun this script.
-// - If a backend did write to unmigrated documents, the script refuses to run rather
-//   than migrate a half-written `edits` array; see the mixed-array check below.
+// - If a backend did write to unmigrated documents, those edits are kept rather than
+//   dropped, and win over any stale embedded copy of the same goal; see the merge below.
 //
 // Background (https://github.com/sillsdev/TheCombine/issues/4320):
 //   UserEdit documents grow with every goal a user works on; documents approaching
@@ -48,74 +48,59 @@ var oldFormat = { "edits.0.guid": { $exists: true } };
 // because mongosh has no Object.bsonsize and its bsonsize() global isn't in every version.
 var idsToMigrate = [];
 var sizeMbById = new Map();
-var mixedDocs = [];
 userEdits.aggregate([
   { $match: oldFormat },
-  {
-    $project: {
-      size: { $bsonSize: "$$ROOT" },
-      // Embedded edits are BSON objects and refs are ObjectIds, so in a document
-      // that matched oldFormat anything non-object is a ref that got mixed in.
-      refCount: {
-        $size: {
-          $filter: {
-            input: "$edits",
-            cond: { $ne: [{ $type: "$$this" }, "object"] },
-          },
-        },
-      },
-    },
-  },
+  { $project: { size: { $bsonSize: "$$ROOT" } } },
 ]).forEach(function (d) {
   idsToMigrate.push(d._id);
   sizeMbById.set(d._id.toHexString(), (d.size / (1024 * 1024)).toFixed(2));
-  if (d.refCount > 0) {
-    mixedDocs.push(d._id.toHexString() + " (" + d.refCount + " ref(s))");
-  }
 });
 print("UserEdit documents to migrate: " + idsToMigrate.length);
 
-// An `edits` array mixing embedded edits with ObjectId refs means a backend wrote to a
-// document that was still unmigrated: UpdateUserEditGoal never reads the UserEdit, so
-// ReplaceEdit matches nothing and AddEdit $pushes a ref onto the embedded array.
-// Migrating that would drop the pushed edit's document in the deleteMany below and write
-// an edit whose every field reads as null, which the verification at the end cannot see:
-// the ref resolves, the projectId matches, nothing is orphaned or unreferenced.
-// Refuse before anything is written, and name every affected document rather than
-// stopping at the first, so one pass diagnoses the whole database.
-if (mixedDocs.length > 0) {
-  throw new Error(
-    "Refusing to migrate: " + mixedDocs.length + " UserEdit document(s) mix " +
-    "embedded edits with ObjectId refs, so a backend wrote to them while they " +
-    "were unmigrated: " + mixedDocs.join(", ") + ". Confirm the backend is " +
-    "stopped, repair or restore those documents, then rerun."
-  );
-}
-
 var totalEditsMoved = 0;
+var mergedDocs = [];
 idsToMigrate.forEach(function (id) {
   var doc = userEdits.findOne({ _id: id });
   var userEditId = id.toHexString();
 
-  // The scan above is a snapshot, so re-check the document as actually read: a backend
-  // that should have been stopped could have mixed a ref in since. Before the deleteMany,
-  // so aborting here leaves this document and its edit documents intact.
-  var refIndex = doc.edits.findIndex(function (e) {
+  // An ObjectId among the embedded edits was pushed by a backend writing to this document
+  // while it was still unmigrated: UpdateUserEditGoal never reads the UserEdit, so
+  // ReplaceEdit matches nothing and AddEdit $pushes a ref onto the embedded array with no
+  // error. Those refs point at StoredEdits that are already in the target shape, so keep
+  // them -- dropping them would discard a user's in-progress goal and leave their client
+  // (which persists currentGoal) saving steps against an edit that no longer exists.
+  var keptRefs = doc.edits.filter(function (e) {
     return e instanceof ObjectId;
   });
-  if (refIndex !== -1) {
-    throw new Error(
-      "UserEdit " + userEditId + " gained an ObjectId ref at index " + refIndex +
-      " since the scan above; a backend is still writing. Stop it, then rerun."
-    );
-  }
 
-  // Clear any partial output from a previous interrupted run: while the document
-  // is still old-format, every EditsCollection row for it is a leftover.
-  edits.deleteMany({ userEditId: userEditId });
+  // A kept ref can share a guid with an embedded edit: advancing a step in an
+  // already-started goal makes ReplaceEdit miss, so the pushed ref holds the newer state
+  // of that same goal. The ref wins, and the stale embedded copy is skipped rather than
+  // left as a duplicate guid for the backend's first-match reads to shadow.
+  var supersededGuids = new Set();
+  keptRefs.forEach(function (ref) {
+    var kept = edits.findOne({ _id: ref }, { guid: 1 });
+    if (kept) {
+      supersededGuids.add(String(kept.guid));
+    }
+  });
+
+  // Clear any partial output from a previous interrupted run, sparing the kept refs:
+  // every other EditsCollection row for this document is a leftover.
+  edits.deleteMany({ userEditId: userEditId, _id: { $nin: keptRefs } });
 
   var refs = [];
-  var newDocs = doc.edits.map(function (e) {
+  var newDocs = [];
+  var superseded = 0;
+  doc.edits.forEach(function (e) {
+    if (e instanceof ObjectId) {
+      refs.push(e);
+      return;
+    }
+    if (supersededGuids.has(String(e.guid))) {
+      superseded++;
+      return;
+    }
     var newDoc = {
       _id: new ObjectId(),
       projectId: doc.projectId,
@@ -129,7 +114,7 @@ idsToMigrate.forEach(function (id) {
       newDoc.modified = e.modified;
     }
     refs.push(newDoc._id);
-    return newDoc;
+    newDocs.push(newDoc);
   });
 
   if (newDocs.length > 0) {
@@ -142,8 +127,28 @@ idsToMigrate.forEach(function (id) {
     "  migrated " + userEditId + " (projectId: " + doc.projectId + "): " +
     newDocs.length + " edit(s), was " + sizeMbById.get(userEditId) + " MB"
   );
+  if (keptRefs.length > 0) {
+    mergedDocs.push(userEditId);
+    print(
+      "    kept " + keptRefs.length + " edit(s) a backend had already written" +
+      (superseded > 0 ? ", superseding " + superseded + " stale embedded copy(ies)" : "")
+    );
+  }
 });
 print("Moved " + totalEditsMoved + " edit(s) from " + idsToMigrate.length + " document(s).");
+
+// The merge above keeps the data, but a mixed array is the one cheap signal that a backend
+// was running against unmigrated documents, and this script cannot serialize against a live
+// writer: a $push landing between the findOne and the $set above is overwritten (caught
+// below as an unreferenced edit, but only after the fact). Say so loudly -- the run exits 0
+// because the database really is correct, so this warning is the only thing the operator gets.
+if (mergedDocs.length > 0) {
+  print(
+    "WARNING: " + mergedDocs.length + " document(s) already held edits written by a " +
+    "backend, so a backend was up while the data was unmigrated: " + mergedDocs.join(", ") +
+    ". Those edits were kept. Find out why it was running before trusting this run."
+  );
+}
 
 // database/init/01-indexes.js creates this on every container start and documents the key;
 // repeated here so a just-migrated database is indexed before its next restart.
