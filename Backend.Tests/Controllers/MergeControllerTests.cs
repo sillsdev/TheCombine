@@ -57,6 +57,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestMergeWordsInvalidProjectId()
+        {
+            var result = _mergeController.MergeWords("proj\nId", []).Result;
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+            Assert.That(((BadRequestObjectResult)result).Value, Is.EqualTo("Invalid project id."));
+        }
+
+        [Test]
         public void TestUndoMergeNoPermission()
         {
             _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
@@ -132,6 +140,13 @@ namespace Backend.Tests.Controllers
             _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = _mergeController.FindPotentialDuplicates("projId", 2, 1, false).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestGetDuplicatesThenSignalInvalidProjectId()
+        {
+            var result = _mergeController.GetDuplicatesThenSignal("proj\nId", 2, 1, "userId").Result;
+            Assert.That(result, Is.False);
         }
 
         [Test]

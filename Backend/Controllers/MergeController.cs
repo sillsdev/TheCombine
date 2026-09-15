@@ -46,6 +46,18 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
+
+            // Sanitize projectId before it reaches the log entry below.
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch (InvalidIdException)
+            {
+                _logger.LogError("Invalid project id in merge request.");
+                return BadRequest("Invalid project id.");
+            }
+
             var userId = _permissionService.GetUserId(HttpContext);
 
             try
@@ -183,6 +195,17 @@ namespace BackendFramework.Controllers
         internal async Task<bool> GetDuplicatesThenSignal(
             string projectId, int maxInList, int maxLists, string userId, bool ignoreProtected = false)
         {
+            // Sanitize projectId before it reaches the log entry below.
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch (InvalidIdException)
+            {
+                _logger.LogError("Invalid project id in detached duplicate finding.");
+                return false;
+            }
+
             try
             {
                 var proceed = await _mergeService.GetAndStorePotentialDuplicates(
