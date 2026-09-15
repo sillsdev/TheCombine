@@ -59,9 +59,9 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestMergeWordsInvalidProjectId()
         {
-            var result = _mergeController.MergeWords("proj\nId", []).Result;
-            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-            Assert.That(((BadRequestObjectResult)result).Value, Is.EqualTo("Invalid project id."));
+            var result = _mergeController.MergeWords("proj\nId", []).Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo("Invalid project id."));
         }
 
         [Test]
@@ -73,11 +73,27 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestUndoMergeInvalidProjectId()
+        {
+            var result = _mergeController.UndoMerge("proj\nId", new()).Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo("Invalid project id."));
+        }
+
+        [Test]
         public void TestBlacklistAddNoPermission()
         {
             _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = _mergeController.BlacklistAdd("projId", []).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestBlacklistAddInvalidProjectId()
+        {
+            var result = _mergeController.BlacklistAdd("proj\nId", []).Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo("Invalid project id."));
         }
 
         [Test]
@@ -112,6 +128,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestGraylistAddInvalidProjectId()
+        {
+            var result = _mergeController.GraylistAdd("proj\nId", []).Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo("Invalid project id."));
+        }
+
+        [Test]
         public void TestGraylistAdd()
         {
             var wordIdsA = new List<string> { "1", "2" };
@@ -143,10 +167,11 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestGetDuplicatesThenSignalInvalidProjectId()
+        public void TestFindPotentialDuplicatesInvalidProjectId()
         {
-            var result = _mergeController.GetDuplicatesThenSignal("proj\nId", 2, 1, "userId").Result;
-            Assert.That(result, Is.False);
+            var result = _mergeController.FindPotentialDuplicates("proj\nId", 2, 1, false).Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo("Invalid project id."));
         }
 
         [Test]
@@ -165,6 +190,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestHasGraylistEntriesInvalidProjectId()
+        {
+            var result = _mergeController.HasGraylistEntries("proj\nId", "userId").Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo("Invalid project id."));
+        }
+
+        [Test]
         public void TestGetGraylistEntriesNoPermission()
         {
             _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
@@ -173,11 +206,27 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestGetGraylistEntriesInvalidProjectId()
+        {
+            var result = _mergeController.GetGraylistEntries("proj\nId", 3, "userId").Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo("Invalid project id."));
+        }
+
+        [Test]
         public void TestFindIdenticalPotentialDuplicatesNoPermission()
         {
             _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = _mergeController.FindIdenticalPotentialDuplicates("projId", 2, 1, false).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestFindIdenticalPotentialDuplicatesInvalidProjectId()
+        {
+            var result = _mergeController.FindIdenticalPotentialDuplicates("proj\nId", 2, 1, false).Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo("Invalid project id."));
         }
 
         [Test]
