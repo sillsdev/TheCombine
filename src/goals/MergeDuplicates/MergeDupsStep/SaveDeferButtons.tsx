@@ -51,7 +51,7 @@ export default function SaveDeferButtons(): ReactElement {
     try {
       await dispatch(deferMerge());
     } catch {
-      // Leave the user on this set to retry; the error is reported by the backend api.
+      // Leave the user on this set to retry.
       setIsDeferring(false);
       return;
     }
@@ -64,7 +64,7 @@ export default function SaveDeferButtons(): ReactElement {
     try {
       await dispatch(mergeAll());
     } catch {
-      // Leave the user on this set to retry; the error is reported by the backend api.
+      // Leave the user on this set to retry.
       setIsSaving(false);
       return;
     }
