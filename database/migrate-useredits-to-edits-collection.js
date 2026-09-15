@@ -75,16 +75,71 @@ idsToMigrate.forEach(function (id) {
     return e instanceof ObjectId;
   });
 
+  // Validate kept refs before any write: duplicates, existence, and ownership must
+  // be correct or this run should fail fast with no mutations for this document.
+  var keptRefIds = keptRefs.map(function (ref) {
+    return ref.toHexString();
+  });
+  var uniqueKeptRefIds = new Set(keptRefIds);
+  if (uniqueKeptRefIds.size !== keptRefIds.length) {
+    throw new Error(
+      "UserEdit " +
+        userEditId +
+        " has duplicate kept ref(s); aborting before mutation."
+    );
+  }
+
+  var keptById = new Map();
+  if (keptRefs.length > 0) {
+    edits
+      .find(
+        { _id: { $in: keptRefs } },
+        { _id: 1, guid: 1, userEditId: 1, projectId: 1 }
+      )
+      .forEach(function (kept) {
+        keptById.set(kept._id.toHexString(), kept);
+      });
+  }
+  if (keptById.size !== uniqueKeptRefIds.size) {
+    throw new Error(
+      "UserEdit " +
+        userEditId +
+        " has kept ref(s) with no EditsCollection document; aborting before mutation."
+    );
+  }
+
   // A kept ref can share a guid with an embedded edit: advancing a step in an
   // already-started goal makes ReplaceEdit miss, so the pushed ref holds the newer state
   // of that same goal. The ref wins, and the stale embedded copy is skipped rather than
   // left as a duplicate guid for the backend's first-match reads to shadow.
   var supersededGuids = new Set();
-  keptRefs.forEach(function (ref) {
-    var kept = edits.findOne({ _id: ref }, { guid: 1 });
-    if (kept) {
-      supersededGuids.add(String(kept.guid));
+  uniqueKeptRefIds.forEach(function (refId) {
+    var kept = keptById.get(refId);
+    if (kept.userEditId !== userEditId) {
+      throw new Error(
+        "UserEdit " +
+          userEditId +
+          " has kept ref " +
+          refId +
+          " with userEditId " +
+          kept.userEditId +
+          "; aborting before mutation."
+      );
     }
+    if (kept.projectId !== doc.projectId) {
+      throw new Error(
+        "UserEdit " +
+          userEditId +
+          " has kept ref " +
+          refId +
+          " with projectId " +
+          kept.projectId +
+          " (expected " +
+          doc.projectId +
+          "); aborting before mutation."
+      );
+    }
+    supersededGuids.add(String(kept.guid));
   });
 
   // Clear any partial output from a previous interrupted run, sparing the kept refs:
@@ -180,6 +235,9 @@ print(
 );
 
 // Verify: no old-format documents remain, and refs and edit documents correspond exactly.
+// This intentionally overlaps with fail-fast kept-ref checks above: those protect a
+// single document before writes, while this pass protects whole-run integrity,
+// including pre-existing drift and races that can happen after a document is updated.
 var failures = 0;
 function fail(message) {
   failures++;
