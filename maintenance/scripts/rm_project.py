@@ -20,6 +20,7 @@ import sys
 from combine_app import CombineApp
 
 collections_with_project_id = (
+    "EditsCollection",
     "FrontierCollection",
     "MergeBlacklistCollection",
     "MergeGraylistCollection",

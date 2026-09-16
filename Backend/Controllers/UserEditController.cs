@@ -175,7 +175,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure Edit exist.
-            var edit = document.Edits.FindLast(e => e.Guid == stepWrapper.EditGuid);
+            var edit = document.Edits.Find(e => e.Guid == stepWrapper.EditGuid);
             if (edit is null)
             {
                 return NotFound($"editGuid: {stepWrapper.EditGuid}");

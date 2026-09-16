@@ -70,6 +70,8 @@ spec:
                     done
                     echo "[postStart] Ensuring replica set host"
                     mongosh --quiet --host 127.0.0.1 /opt/thecombine/00-replica-set.js || exit $?
+                    echo "[postStart] Ensuring indexes"
+                    mongosh --quiet --host 127.0.0.1 /opt/thecombine/01-indexes.js || exit $?
                     needs_semantic_import="$(mongosh --quiet --host 127.0.0.1 --eval "const combineDb = db.getSiblingDB('CombineDatabase'); const treeCount = combineDb.SemanticDomainTree.countDocuments({}); const domainCount = combineDb.SemanticDomains.countDocuments({}); print(treeCount === 0 || domainCount === 0 ? 'yes' : 'no');")"
                     if [ "${needs_semantic_import}" = "yes" ]; then
                       /bin/bash /opt/thecombine/update-semantic-domains.sh
