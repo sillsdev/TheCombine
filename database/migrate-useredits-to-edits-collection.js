@@ -18,14 +18,19 @@
 //   than the current context.
 //
 // IMPORTANT:
-// - Back up the database first (e.g., maintenance/scripts/combine_backup.py, or at
-//   minimum `mongodump --db=CombineDatabase --collection=UserEditsCollection`).
+// - Back up the database first (e.g., maintenance/scripts/combine_backup.py).
 // - This is a BREAKING schema change: run it while the backend is stopped/scaled
 //   down, then deploy the backend version that reads the new schema. Old backends
 //   cannot read migrated documents, and the new backend cannot read unmigrated ones.
 // - The script is idempotent: it only touches documents still in the old format,
 //   and clears partial output from any interrupted previous run before redoing it.
-// - If an old (pre-migration) backup is ever restored, rerun this script.
+// - If an old (pre-migration) backup is ever restored, drop EditsCollection (e.g., run
+//   in the database pod: mongosh CombineDatabase --eval 'db.EditsCollection.drop()')
+//   and then rerun this script. Rerunning alone is not enough: combine_restore.py uses
+//   `mongorestore --drop`, which drops only the collections the dump contains, and a
+//   pre-migration dump has no EditsCollection. Its rows from an earlier run therefore
+//   survive the restore, and any whose UserEdit the restore removed become orphans that
+//   the per-document sweep below cannot reach and verification reports on every run.
 // - If a backend did write to unmigrated documents, those edits are kept rather than
 //   dropped, and win over any stale embedded copy of the same goal; see the merge below.
 //
