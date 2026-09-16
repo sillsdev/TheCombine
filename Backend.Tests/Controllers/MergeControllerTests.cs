@@ -44,7 +44,8 @@ namespace Backend.Tests.Controllers
             _mergeService = new MergeService(_cache, _mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
             var notifyService = new HubContextMock<MergeHub>();
             var permissionService = new PermissionServiceMock();
-            _mergeController = new MergeController(ackService, _mergeService, notifyService, permissionService);
+            _mergeController = new MergeController(
+                ackService, _mergeService, notifyService, permissionService, new LoggerMock<MergeController>());
         }
 
         [Test]
@@ -56,6 +57,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestMergeWordsInvalidProjectId()
+        {
+            var result = _mergeController.MergeWords("proj\nId", []).Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo("Invalid project id."));
+        }
+
+        [Test]
         public void TestUndoMergeNoPermission()
         {
             _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
@@ -64,11 +73,27 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestUndoMergeInvalidProjectId()
+        {
+            var result = _mergeController.UndoMerge("proj\nId", new()).Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo("Invalid project id."));
+        }
+
+        [Test]
         public void TestBlacklistAddNoPermission()
         {
             _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = _mergeController.BlacklistAdd("projId", []).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestBlacklistAddInvalidProjectId()
+        {
+            var result = _mergeController.BlacklistAdd("proj\nId", []).Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo("Invalid project id."));
         }
 
         [Test]
@@ -103,6 +128,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestGraylistAddInvalidProjectId()
+        {
+            var result = _mergeController.GraylistAdd("proj\nId", []).Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo("Invalid project id."));
+        }
+
+        [Test]
         public void TestGraylistAdd()
         {
             var wordIdsA = new List<string> { "1", "2" };
@@ -134,6 +167,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestFindPotentialDuplicatesInvalidProjectId()
+        {
+            var result = _mergeController.FindPotentialDuplicates("proj\nId", 2, 1, false).Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo("Invalid project id."));
+        }
+
+        [Test]
         public void TestRetrievePotentialDuplicatesNoDuplicates()
         {
             var result = _mergeController.RetrievePotentialDuplicates();
@@ -149,6 +190,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestHasGraylistEntriesInvalidProjectId()
+        {
+            var result = _mergeController.HasGraylistEntries("proj\nId", "userId").Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo("Invalid project id."));
+        }
+
+        [Test]
         public void TestGetGraylistEntriesNoPermission()
         {
             _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
@@ -157,11 +206,27 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestGetGraylistEntriesInvalidProjectId()
+        {
+            var result = _mergeController.GetGraylistEntries("proj\nId", 3, "userId").Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo("Invalid project id."));
+        }
+
+        [Test]
         public void TestFindIdenticalPotentialDuplicatesNoPermission()
         {
             _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = _mergeController.FindIdenticalPotentialDuplicates("projId", 2, 1, false).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestFindIdenticalPotentialDuplicatesInvalidProjectId()
+        {
+            var result = _mergeController.FindIdenticalPotentialDuplicates("proj\nId", 2, 1, false).Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo("Invalid project id."));
         }
 
         [Test]
