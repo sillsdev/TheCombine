@@ -3,6 +3,7 @@
 #
 # Supported Platforms:
 #   - Intel/AMD 64-bit
+#   - ARM 64-bit
 ############################################################
 
 FROM python:3.12.12-slim-bookworm@sha256:28cf028e5a544e92dbe11450debd93dd5eb70eaf3179a9e878cfaee426556b3b
@@ -16,7 +17,7 @@ RUN apt-get update && \
   rm -rf /var/lib/apt/lists/*
 
 # Install kubectl and helm
-RUN MACH=amd64 && \
+RUN MACH=$(case $(uname -m) in *86*) echo amd64;; *aarch*) echo arm64;; *arm*) echo arm64;; esac) && \
   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/${MACH}/kubectl" && \
   install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
   curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
