@@ -173,8 +173,8 @@ def main() -> None:
         if not db_pod:
             logging.error("Cannot find the database container.")
             sys.exit(1)
-        backend_pod = combine.get_pod_id(CombineApp.Component.Backend)
-        if not backend_pod:
+        # Deliberately not kept: a rollout during the restore would invalidate this id.
+        if not combine.get_pod_id(CombineApp.Component.Backend):
             logging.error("Cannot find the backend container.")
             sys.exit(1)
 
@@ -197,6 +197,14 @@ def main() -> None:
         logging.debug(f"stdout:\n{rm_proc.stdout.strip()}")
 
         step.print("Copy the backend files.")
+        # The database is already replaced, so failing here leaves the restore half done:
+        # wait out any rollout rather than fail on a pod id that predates it.
+        wait_for_combine(wait_time)
+        backend_pod = combine.get_pod_id(CombineApp.Component.Backend, refresh=True)
+        if not backend_pod:
+            logging.error("Cannot find the backend container.")
+            sys.exit(1)
+
         # if --clean option was used, delete the existing backend files
         if args.clean:
             logging.info(f"Cleaning out backend files in {backend_pod} ...")

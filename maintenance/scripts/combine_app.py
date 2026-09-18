@@ -145,14 +145,22 @@ class CombineApp:
         logging.error(f"Failed to copy {label} after {attempts} attempts; aborting.")
         sys.exit(1)
 
-    def get_pod_id(self, service: CombineApp.Component, *, instance: int = 0) -> str:
+    def get_pod_id(
+        self, service: CombineApp.Component, *, instance: int = 0, refresh: bool = False
+    ) -> str:
         """Look up the Kubernetes pod id for the specified service.
 
         Returns an empty string when the service has no running pod, so that callers
         can report the missing component themselves. Note that a pod whose container
         is crash-looping is still Running, so an empty result means the pod is
         pending, evicted, or gone entirely, as it is during a Recreate rollout.
+
+        Set `refresh` to drop any cached id and query again. A caller that has held an
+        id across a long operation needs this: a rollout in the meantime deletes the
+        pod that id names, and the cache would keep handing back the dead one.
         """
+        if refresh:
+            self.pod_id_cache.pop(service.value, None)
         if service.value not in self.pod_id_cache:
             # Print the whole (possibly empty) list of names rather than indexing in the
             # jsonpath: an out-of-bounds `{.items[0]...}` makes kubectl exit non-zero,
