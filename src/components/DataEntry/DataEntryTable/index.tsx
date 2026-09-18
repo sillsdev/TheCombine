@@ -1,5 +1,5 @@
 import { ExitToApp, List as ListIcon } from "@mui/icons-material";
-import { Button, Grid2, Typography } from "@mui/material";
+import { Box, Button, Grid2, Typography } from "@mui/material";
 import {
   FormEvent,
   ReactElement,
@@ -25,7 +25,10 @@ import {
 import * as backend from "backend";
 import { getCurrentUser, getUserId } from "backend/localStorage";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
-import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
+import RecentEntry, {
+  RecentEntryIdPrefix,
+} from "components/DataEntry/DataEntryTable/RecentEntry";
+import RecentEntryCold from "components/DataEntry/DataEntryTable/RecentEntryCold";
 import {
   filterWordsWithSenses,
   focusInput,
@@ -218,6 +221,7 @@ const defaultNewEntryState = (): NewEntryState => ({
 interface EntryTableState extends NewEntryState {
   defunctUpdates: Hash<string>;
   defunctWordIds: Hash<DefunctStatus>;
+  recentWordEditingIndex: number | undefined;
   recentWords: WordAccess[];
   senseSwitches: SenseSwitch[];
 }
@@ -226,6 +230,7 @@ const defaultEntryTableState = (): EntryTableState => ({
   ...defaultNewEntryState(),
   defunctUpdates: {},
   defunctWordIds: {},
+  recentWordEditingIndex: undefined,
   recentWords: [],
   senseSwitches: [],
 });
@@ -375,9 +380,23 @@ export default function DataEntryTable(
   const removeRecentEntry = (index: number): void => {
     setState((prevState) => {
       const recentWords = prevState.recentWords.filter((_w, i) => i !== index);
-      return { ...prevState, recentWords };
+      // Removal shifts the remaining indices, so no entry stays editable.
+      return { ...prevState, recentWordEditingIndex: undefined, recentWords };
     });
   };
+
+  /** Make the recent entry at the specified index editable. */
+  const editRecentEntry = (index: number): void => {
+    setState((prevState) => ({ ...prevState, recentWordEditingIndex: index }));
+  };
+
+  /** Make every recent entry read-only. */
+  const closeRecentEntry = useCallback((): void => {
+    setState((prevState) => ({
+      ...prevState,
+      recentWordEditingIndex: undefined,
+    }));
+  }, []);
 
   /** Add a senseSwitch to the queue to be processed when possible. */
   const queueSenseSwitch = (oldGuid: string, newGuid: string): void => {
@@ -1044,25 +1063,51 @@ export default function DataEntryTable(
             key={`${wordAccess.word.id}_${wordAccess.senseGuid}`}
             role="row"
             size={12}
+            sx={{ borderBottom: 1, borderColor: "divider" }}
           >
-            <RecentEntry
-              rowIndex={index}
-              entry={wordAccess.word}
-              senseGuid={wordAccess.senseGuid}
-              updateGloss={updateRecentGloss}
-              updateNote={updateRecentNote}
-              updateVern={updateRecentVern}
-              removeEntry={undoRecentEntry}
-              addAudioToWord={addAudioFileToWord}
-              delAudioFromWord={deleteAudioFromWord}
-              repAudioInWord={replaceAudioInWord}
-              focusNewEntry={handleFocusNewEntry}
-              analysisLang={analysisLang}
-              vernacularLang={vernacularLang}
-              disabled={Object.keys(state.defunctWordIds).includes(
-                wordAccess.word.id
-              )}
-            />
+            {index === state.recentWordEditingIndex ? (
+              <RecentEntry
+                rowIndex={index}
+                entry={wordAccess.word}
+                senseGuid={wordAccess.senseGuid}
+                updateGloss={updateRecentGloss}
+                updateNote={updateRecentNote}
+                updateVern={updateRecentVern}
+                removeEntry={undoRecentEntry}
+                addAudioToWord={addAudioFileToWord}
+                delAudioFromWord={deleteAudioFromWord}
+                repAudioInWord={replaceAudioInWord}
+                focusNewEntry={handleFocusNewEntry}
+                analysisLang={analysisLang}
+                vernacularLang={vernacularLang}
+                disabled={Object.keys(state.defunctWordIds).includes(
+                  wordAccess.word.id
+                )}
+                close={closeRecentEntry}
+              />
+            ) : (
+              <Box
+                data-testid={`${RecentEntryIdPrefix.ButtonEdit}${index}`}
+                id={`${RecentEntryIdPrefix.ButtonEdit}${index}`}
+                onClick={() => editRecentEntry(index)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    editRecentEntry(index);
+                  }
+                }}
+                role="button"
+                sx={{ cursor: "pointer" }}
+                tabIndex={0}
+              >
+                <RecentEntryCold
+                  analysisLang={analysisLang}
+                  entry={wordAccess.word}
+                  rowIndex={index}
+                  senseGuid={wordAccess.senseGuid}
+                />
+              </Box>
+            )}
           </Grid2>
         ))}
 
