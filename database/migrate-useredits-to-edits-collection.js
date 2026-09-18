@@ -6,20 +6,31 @@
 //   mongosh CombineDatabase database/migrate-useredits-to-edits-collection.js
 //
 // Usage (Kubernetes, e.g. production):
+//   POD=$(kubectl -n thecombine get pod -l combine-component=database \
+//     -o jsonpath="{.items[0].metadata.name}")
 //   kubectl -n thecombine cp database/migrate-useredits-to-edits-collection.js \
-//     <database-pod>:/tmp/migrate-useredits-to-edits-collection.js
-//   kubectl -n thecombine exec <database-pod> -- \
+//     "$POD:/tmp/migrate-useredits-to-edits-collection.js"
+//   kubectl -n thecombine exec "$POD" -- \
 //     mongosh CombineDatabase /tmp/migrate-useredits-to-edits-collection.js
 //
+//   Look the pod name up rather than hard-coding it: it changes on every redeploy.
+//   Add `--context <kube-context>` to each kubectl command to target a cluster other
+//   than the current context.
+//
 // IMPORTANT:
-// - Back up the database first (e.g., maintenance/scripts/combine_backup.py, or at
-//   minimum `mongodump --db=CombineDatabase --collection=UserEditsCollection`).
+// - Back up the database first (e.g., maintenance/scripts/combine_backup.py).
 // - This is a BREAKING schema change: run it while the backend is stopped/scaled
 //   down, then deploy the backend version that reads the new schema. Old backends
 //   cannot read migrated documents, and the new backend cannot read unmigrated ones.
 // - The script is idempotent: it only touches documents still in the old format,
 //   and clears partial output from any interrupted previous run before redoing it.
-// - If an old (pre-migration) backup is ever restored, rerun this script.
+// - If an old (pre-migration) backup is ever restored, drop EditsCollection (e.g., run
+//   in the database pod: mongosh CombineDatabase --eval 'db.EditsCollection.drop()')
+//   and then rerun this script. Rerunning alone is not enough: combine_restore.py uses
+//   `mongorestore --drop`, which drops only the collections the dump contains, and a
+//   pre-migration dump has no EditsCollection. Its rows from an earlier run therefore
+//   survive the restore, and any whose UserEdit the restore removed become orphans that
+//   the per-document sweep below cannot reach and verification reports on every run.
 // - If a backend did write to unmigrated documents, those edits are kept rather than
 //   dropped, and win over any stale embedded copy of the same goal; see the merge below.
 //
@@ -39,9 +50,11 @@
 var userEdits = db.getCollection("UserEditsCollection");
 var edits = db.getCollection("EditsCollection");
 
-// Old-format documents have embedded edit objects (each with a `guid` field);
-// migrated documents hold plain ObjectIds, which have no subfields.
-var oldFormat = { "edits.0.guid": { $exists: true } };
+// Old-format documents still hold at least one embedded edit object; migrated documents
+// hold only ObjectIds. Match on element type rather than on a subfield such as `guid`:
+// the oldest embedded edits have only `goalType` and `stepData`, and a mixed array (see
+// the merge below) can hold an embedded edit at any index, not just index 0.
+var oldFormat = { edits: { $elemMatch: { $type: "object" } } };
 
 // Gather ids up front so the update inside the loop can't disturb the cursor, and so
 // multi-MB documents are held in memory only one at a time. Sizes come from $bsonSize
@@ -139,7 +152,11 @@ idsToMigrate.forEach(function (id) {
           "); aborting before mutation."
       );
     }
-    supersededGuids.add(String(kept.guid));
+    // Only a real guid: a guid-less StoredEdit would add "undefined" to the set, and
+    // every guid-less embedded edit below would then match it and be dropped.
+    if (kept.guid !== undefined && kept.guid !== null) {
+      supersededGuids.add(String(kept.guid));
+    }
   });
 
   // Clear any partial output from a previous interrupted run, sparing the kept refs:
@@ -154,18 +171,27 @@ idsToMigrate.forEach(function (id) {
       refs.push(e);
       return;
     }
-    if (supersededGuids.has(String(e.guid))) {
+    if (
+      e.guid !== undefined &&
+      e.guid !== null &&
+      supersededGuids.has(String(e.guid))
+    ) {
       superseded++;
       return;
     }
+    // The oldest embedded edits predate `guid` and `changes`. Leaving those elements out
+    // of the new document would let the C# initializers supply them on read, and
+    // StoredEdit.Guid's initializer mints a *different* Guid every time, so fill in the
+    // model's defaults here to give each edit one stable guid. UUID() is BSON binary
+    // subtype 4, matching the model's GuidRepresentation.Standard.
     var newDoc = {
       _id: new ObjectId(),
       projectId: doc.projectId,
       userEditId: userEditId,
-      guid: e.guid,
+      guid: "guid" in e ? e.guid : UUID(),
       goalType: e.goalType,
       stepData: e.stepData,
-      changes: e.changes,
+      changes: "changes" in e ? e.changes : "{}",
     };
     if ("modified" in e) {
       newDoc.modified = e.modified;
@@ -271,7 +297,23 @@ userEdits.find().forEach(function (doc) {
 
   var seen = new Set();
   doc.edits.forEach(function (ref, index) {
-    var refId = String(ref);
+    // Check the type before stringifying: String() on an embedded edit yields
+    // "[object Object]", which hides the real problem and makes every such element
+    // collide in `seen`, so one unmigrated document reports once per element.
+    if (!(ref instanceof ObjectId)) {
+      fail(
+        "UserEdit " +
+          userEditId +
+          " ref " +
+          index +
+          " is not an ObjectId: " +
+          (ref !== null && typeof ref === "object"
+            ? "object with field(s) " + Object.keys(ref).join(", ")
+            : JSON.stringify(ref))
+      );
+      return;
+    }
+    var refId = ref.toHexString();
     if (seen.has(refId)) {
       fail(
         "UserEdit " + userEditId + " references " + refId + " more than once."
