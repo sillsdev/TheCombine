@@ -1,5 +1,3 @@
-import { v4 } from "uuid";
-
 import {
   SemanticDomain,
   SemanticDomainFull,
@@ -18,7 +16,7 @@ export function newSemanticDomain(
   lang = Bcp47Code.Default as string
 ): SemanticDomainFull {
   return {
-    guid: v4(),
+    guid: crypto.randomUUID(),
     id,
     name,
     lang,
@@ -51,7 +49,7 @@ export function newSemanticDomainTreeNode(
     id,
     name,
     lang,
-    guid: v4(),
+    guid: crypto.randomUUID(),
   };
 }
 

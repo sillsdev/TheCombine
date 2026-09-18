@@ -10,8 +10,8 @@ import {
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Permission } from "api/models";
-import { getCurrentPermissions, hasGraylistEntries } from "backend";
+import { OffOnSetting, Permission } from "api/models";
+import { hasGraylistEntries } from "backend";
 import GoalHistoryButton from "components/GoalTimeline/GoalHistoryButton";
 import GoalNameButton from "components/GoalTimeline/GoalNameButton";
 import { asyncAddGoal, asyncGetUserEdits } from "goals/Redux/GoalActions";
@@ -23,6 +23,7 @@ import {
   hasChanges,
   requiredPermission,
 } from "utilities/goalUtilities";
+import { useCurrentPermissions } from "utilities/useCurrentPermissions";
 
 /** List of goals, followed by goal history. */
 export default function GoalTimeline(): ReactElement {
@@ -31,33 +32,41 @@ export default function GoalTimeline(): ReactElement {
   const { allGoals, history } = useAppSelector(
     (state: StoreState) => state.goalsState
   );
+  const harvesterReviewEntriesEnabled = useAppSelector(
+    (state: StoreState) =>
+      state.currentProjectState.project.harvesterReviewEntriesEnabled
+  );
 
   const small = useMediaQuery((th) => th.breakpoints.down("md"));
 
   const [goalOptions, setGoalOptions] = useState<GoalName[]>([]);
   const [hasGraylist, setHasGraylist] = useState(false);
-  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const permissions = useCurrentPermissions();
 
   const { t } = useTranslation();
-
-  useEffect(() => {
-    hasGraylistEntries().then(setHasGraylist);
-    getCurrentPermissions().then(setPermissions);
-  }, []);
 
   useEffect(() => {
     dispatch(asyncGetUserEdits());
   }, [dispatch]);
 
   useEffect(() => {
+    if (permissions.includes(Permission.MergeAndReviewEntries)) {
+      hasGraylistEntries().then(setHasGraylist);
+    }
+  }, [permissions]);
+
+  useEffect(() => {
     setGoalOptions(
       allGoals.filter(
         (g) =>
           (g !== GoalName.ReviewDeferredDups || hasGraylist) &&
-          permissions.includes(requiredPermission(g))
+          permissions.includes(requiredPermission(g)) &&
+          (g !== GoalName.ReviewEntries ||
+            permissions.includes(Permission.MergeAndReviewEntries) ||
+            harvesterReviewEntriesEnabled === OffOnSetting.On)
       )
     );
-  }, [allGoals, hasGraylist, permissions]);
+  }, [allGoals, harvesterReviewEntriesEnabled, hasGraylist, permissions]);
 
   const thinScrollX: SxProps = {
     overflowX: "auto",

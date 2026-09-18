@@ -1,3 +1,6 @@
+# Maintainer note: any new proxy_pass host must also be added to
+# nginx/init/05-wait-for-backend-dns.sh, else nginx will exit at startup when
+# that name is not yet resolvable.
 server {
     listen 80;
     server_name ${SERVER_NAME};

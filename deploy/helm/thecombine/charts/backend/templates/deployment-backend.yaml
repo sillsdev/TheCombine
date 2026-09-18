@@ -124,6 +124,8 @@ spec:
             - mountPath: /home/app/.CombineFiles
               name: backend-data
       restartPolicy: Always
+      securityContext:
+        fsGroup: 999
 {{- if ne .Values.global.pullSecretName "None" }}
       imagePullSecrets:
          - name: {{ .Values.global.pullSecretName }}

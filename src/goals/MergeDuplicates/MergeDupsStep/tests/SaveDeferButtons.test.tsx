@@ -7,6 +7,7 @@ import configureMockStore from "redux-mock-store";
 import SaveDeferButtons from "goals/MergeDuplicates/MergeDupsStep/SaveDeferButtons";
 import { resetTreeToInitial } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+import { asyncAdvanceStep } from "goals/Redux/GoalActions";
 import { defaultState } from "rootRedux/types";
 
 jest.mock("backend");
@@ -17,6 +18,15 @@ jest.mock("rootRedux/hooks", () => ({
 }));
 
 const mockDispatch = jest.fn();
+
+/** Make dispatch of a thunk reject, as when its backend request fails. */
+function mockDispatchRejects(): void {
+  mockDispatch.mockImplementation((action: any) =>
+    typeof action === "function"
+      ? Promise.reject(new Error("Request failed."))
+      : action
+  );
+}
 const mockStore = configureMockStore();
 
 function createMockStore(hasChanges = false): any {
@@ -90,5 +100,34 @@ describe("SaveDeferButtons", () => {
     await userEvent.click(screen.getByText("buttons.confirm"));
 
     expect(mockDispatch).toHaveBeenCalledWith(resetTreeToInitial());
+  });
+
+  it("advances to the next set when save succeeds", async () => {
+    await renderSaveDeferButtons(true);
+    await userEvent.click(screen.getByText("buttons.saveAndContinue"));
+
+    await waitFor(() => expect(asyncAdvanceStep).toHaveBeenCalled());
+  });
+
+  it("stays on the set with save re-enabled when the merge fails", async () => {
+    mockDispatchRejects();
+    await renderSaveDeferButtons(true);
+    await userEvent.click(screen.getByText("buttons.saveAndContinue"));
+
+    await waitFor(() =>
+      expect(screen.getByText("buttons.saveAndContinue")).toBeEnabled()
+    );
+    expect(asyncAdvanceStep).not.toHaveBeenCalled();
+  });
+
+  it("stays on the set with defer re-enabled when the defer fails", async () => {
+    mockDispatchRejects();
+    await renderSaveDeferButtons(true);
+    await userEvent.click(screen.getByText("buttons.defer"));
+
+    await waitFor(() =>
+      expect(screen.getByText("buttons.defer")).toBeEnabled()
+    );
+    expect(asyncAdvanceStep).not.toHaveBeenCalled();
   });
 });

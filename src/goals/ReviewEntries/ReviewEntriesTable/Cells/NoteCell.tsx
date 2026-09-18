@@ -1,9 +1,9 @@
 import { type ReactElement } from "react";
 
-import { type CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
+import { type ReadonlyCellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 import { TypographyWithFont } from "utilities/fontComponents";
 
-export default function NoteCell(props: CellProps): ReactElement {
+export default function NoteCell(props: ReadonlyCellProps): ReactElement {
   const MAX_LENGTH = 100;
   let text = props.word.note.text;
   if (text.length > MAX_LENGTH) {

@@ -19,12 +19,12 @@
 [codecov-backend]: https://app.codecov.io/gh/sillsdev/TheCombine/tree/master/Backend
 [github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
 [backend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=backend
-[localization-ui-badge]: https://img.shields.io/badge/User%20Interface-Ar%20En%20Es%20Fr%20Pt%20Zh-blue
+[localization-ui-badge]: https://img.shields.io/badge/User%20Interface-Ar%20En%20Es%20Fr%20Id%20Pt%20Zh-blue
 [github-actions-frontend]: https://github.com/sillsdev/TheCombine/actions/workflows/frontend.yml
 [github-actions-backend]: https://github.com/sillsdev/TheCombine/actions/workflows/backend.yml
 [localization-sd-badge]:
-  https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Id%20Ml%20My%20Pt%20Ru%20Sw%20Zh-blue
-[localization-ug-badge]: https://img.shields.io/badge/User%20Guide-En%20Es%20Zh-blue
+  https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Id%20Ml%20My%20Pt%20Ru%20Sw%20Te%20Zh-blue
+[localization-ug-badge]: https://img.shields.io/badge/User%20Guide-En%20Es%20Id%20Zh-blue
 [localization-crowdin-combine]: https://crowdin.com/project/the-combine
 [localization-crowdin-flex]: https://crowdin.com/project/fieldworks
 [github-version-badge]: https://img.shields.io/github/package-json/v/sillsdev/TheCombine
@@ -106,7 +106,12 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 
    After installation:
    - Add mongo's `/bin` directory to your PATH environment variable.
-   - Disable automatically start of the `mongod` service on your development host.
+   - On Windows, the installer creates a `MongoDB` service that starts automatically and does not use replica sets,
+     which will conflict with `npm run database`. Remove it (in an elevated PowerShell):
+     ```powershell
+     Stop-Service -Name MongoDB
+     sc.exe delete MongoDB
+     ```
    - If `mongosh` is not a recognized command, you may have to separately install the
      [MongoDB Shell](https://www.mongodb.com/try/download/shell) and add its `/bin` to your PATH.
    - If `mongoimport` is not a recognized command, you may have to separately install the
@@ -123,7 +128,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      - If manually installing from the FFmpeg website, install both `ffmpeg` and `ffprobe`
 
 9. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
-   `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
+   `dotnet tool update --global dotnet-reportgenerator-globaltool`
 10. [nuget-license](https://github.com/sensslen/nuget-license) `dotnet tool update --global nuget-license`
 11. Tools for generating the self installer (Linux only):
     - [makeself](https://makeself.io/) - a tool to make self-extracting archives in Unix
@@ -150,6 +155,8 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    - `COMBINE_SMTP_FROM`
 
 2. Run `npm start` from the project directory to install dependencies and start the project.
+
+   > Note: To install frontend dependencies separately, use `npm run i` — not `npm install` or `npm i`.
 
 3. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
    guides for best coding practices in this project.
@@ -221,11 +228,9 @@ environment. This will be denoted with the `(venv)` prefix on the prompt.
 With an active virtual environment, install Python development requirements for this project:
 
 ```bash
-python -m pip -q install pip==24.2 pip-tools==7.5.1
+python -m pip -q install pip==26.0.1 pip-tools==7.5.3
 python -m piptools sync -q dev-requirements.txt
 ```
-
-(We used to use `... install --upgrade pip pip-tools`, but pip 25.3 and piptools 7.5.1 are incompatible.)
 
 The following Python scripts can now be run from the virtual environment.
 
@@ -264,7 +269,7 @@ python -m piptools compile --upgrade requirements.in
 ### Load Semantic Domains
 
 Data Entry will not work in The Combine unless the semantic domains have been loaded into the database. Follow the
-instuctions in [Import Semantic Domains](#import-semantic-domains) below to import the domains from at least one of the
+instructions in [Import Semantic Domains](#import-semantic-domains) below to import the domains from at least one of the
 semantic domains XML files (which each contain domain data in English and one other language.)
 
 ## Available Scripts
@@ -275,8 +280,8 @@ In the project directory, you can run:
 
 #### `npm start`
 
-> Note: To avoid browser tabs from being opened automatically every time the frontend is launched, set
-> [`BROWSER=none`](https://create-react-app.dev/docs/advanced-configuration/) environment variable.
+> Note: To avoid browser tabs from being opened automatically every time the frontend is launched, set the
+> `BROWSER=none` environment variable (Parcel's `--open` flag controls browser opening).
 
 Installs the necessary packages and runs the app in the development mode.
 
@@ -304,7 +309,7 @@ The build is minified and the filenames include the hashes.
 
 Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The project uses Parcel and outputs to the `dist/` folder.
 
 #### `npm run build:analyze`
 
@@ -323,7 +328,7 @@ First, you must install the Java Runtime Environment (JRE) 8 or newer as mention
 
 - For Windows: Install [OpenJDK](https://www.microsoft.com/openjdk)
 - For Ubuntu: `sudo apt install default-jre`
-- For macOS: `brew install adoptopenjdk`
+- For macOS: `brew install --cask temurin`
 
 After that, run the following script in your Python virtual environment to regenerate the frontend OpenAPI bindings in
 place:
@@ -352,8 +357,7 @@ npm run test-backend -- --filter FullyQualifiedName~Backend.Tests.Models.Project
 
 #### `npm run test-frontend`
 
-Launches the test runners in the interactive watch mode. See the section about
-[running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Launches the test runners in the interactive watch mode. Tests run via Jest (`scripts/jestTest.js`).
 
 To run a subset of tests, pass in the name of a partial file path to filter:
 
@@ -416,7 +420,14 @@ Auto-format frontend code in the `src` folder.
 
 ### Import Semantic Domains
 
-To import Semantic Domains from the XML files in `./deploy/scripts/semantic_domains/xml`. Run from within a Python
+The raw semantic domain XML files are in `./deploy/scripts/semantic_domains/xml/`. If you update them, remove the
+`<Example*>` blocks before committing to the repo:
+
+```bash
+python scripts/remove_sem_dom_examples.py
+```
+
+Use the following steps to import semantic domains from the XML files into the database. Run from within a Python
 virtual environment.
 
 1. Generate the files for import into the Mongo database:
@@ -482,8 +493,8 @@ The dictionary files for spell-check functionality in _The Combine_ are split in
 sake of devices with limited bandwidth. There are scripts for generating these files in `public/dictionaries/` and
 `src/resources/dictionaries/`; files in this directory should _not_ be manually edited.
 
-The bash script `scripts/fetch_wordlists.sh` is used to fetch dictionary files for a given language (e.g., `es`) from
-the [LibreOffice dictionaries](https://github.com/LibreOffice/dictionaries) and convert them to raw wordlists (e.g.,
+The bash script `scripts/fetch_wordlist.sh` is used to fetch dictionary files for a given language (e.g., `es`) from the
+[LibreOffice dictionaries](https://github.com/LibreOffice/dictionaries) and convert them to raw wordlists (e.g.,
 `src/resources/dictionaries/es.txt`). Execute the script with no arguments for its usage details. Any language not
 currently supported can be manually added as a case in this script.
 
@@ -746,6 +757,8 @@ Notes:
 
 - Run the script with the `--help` option to see possible options for the script.
 
+- Run the script with `--non-interactive` in CI/CD to avoid user prompts.
+
 - The setup assumes `amd64` architecture. If the target architecture is `arm64`, add `--set global.cpuArch=arm64`.
 
 When the script completes, the resources will be installed on the specified cluster. It may take a few moments before
@@ -898,11 +911,11 @@ To delete a chart, first list all of the existing charts:
 
 ```console
 $ helm list -A
-NAME                NAMESPACE       REVISION    UPDATED                                 STATUS      CHART                   APP VERSION
-cert-manager        cert-manager    3           2022-02-28 11:27:12.141797222 -0500 EST deployed    cert-manager-v1.7.1     v1.7.1
-ingress-controller  ingress-nginx   3           2022-02-28 11:27:15.729203306 -0500 EST deployed    ingress-nginx-4.0.17    1.1.1
-rancher             cattle-system   1           2022-03-11 12:46:06.962438027 -0500 EST deployed    rancher-2.6.3           v2.6.3
-thecombine          thecombine      2           2022-03-11 11:41:38.304404635 -0500 EST deployed    thecombine-0.7.14       2.0.0
+NAME                NAMESPACE      REVISION  UPDATED                                STATUS    CHART                            APP VERSION
+cert-manager        cert-manager   1         2026-07-08 16:05:41.4513815 -0400 EDT  deployed  cert-manager-v1.17.1             v1.17.1
+ingress-controller  ingress-nginx  1         2026-07-08 16:07:07.0383646 -0400 EDT  deployed  ingress-nginx-4.15.1             1.15.1
+otel                thecombine     1         2026-07-08 16:07:40.6896911 -0400 EDT  deployed  opentelemetry-collector-0.147.1  0.147.0
+thecombine          thecombine     1         2026-07-08 16:17:10.4547471 -0400 EDT  deployed  thecombine-v2.9.0-v3.70          3.0.0
 ```
 
 Using the chart name and namespace, you can then delete the chart:
@@ -926,7 +939,7 @@ Combine_ is set up as five deployments:
 - backend
 - database
 - maintenance
-- otel/opentelemetry-collector
+- otel-opentelemetry-collector
 
 Each deployment definition is used to create a _pod_ that runs the docker image.
 
@@ -939,7 +952,7 @@ database                          1/1     1            1           3h41m
 maintenance                       1/1     1            1           3h41m
 backend                           1/1     1            1           3h41m
 frontend                          1/1     1            1           3h41m
-otel/opentelemetry-collector      1/1     1            1           3h46m
+otel-opentelemetry-collector      1/1     1            1           3h46m
 ```
 
 Similarly, you can view the state of the pods:
@@ -952,7 +965,7 @@ install-fonts-fvrb4                                 0/1     Completed   0       
 maintenance-85644b9c76-55pz8                        1/1     Running     0               130m
 backend-69b77c46c5-8dqlv                            1/1     Running     0               130m
 frontend-c94c5747c-pz6cc                            1/1     Running     0               60m
-otel/opentelemetry-collector-5cd6b9c867-6j5zb       1/1     Running     0               4h03m
+otel-opentelemetry-collector-5cd6b9c867-6j5zb       1/1     Running     0               4h03m
 ```
 
 Use the `logs` command to view the log file of a pod; you can specify the pod name listed in the output of the
@@ -970,22 +983,6 @@ kubectl -n thecombine logs deployment/frontend
 ```
 
 If you want to monitor the logs while the system is running, add the `--follow` option to the command.
-
-#### Add a User to a Project
-
-Task: add an existing user to a project
-
-Run:
-
-```bash
-kubectl -n thecombine exec -it deployment/maintenance -- add_user_to_proj.py --project <PROJECT_NAME> --user <USER>
-```
-
-For additional options, run:
-
-```bash
-kubectl -n thecombine exec -it deployment/maintenance -- add_user_to_proj.py --help
-```
 
 #### Backup _TheCombine_
 

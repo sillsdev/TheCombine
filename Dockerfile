@@ -15,8 +15,8 @@ ENV PIP_NO_CACHE_DIR=1
 
 WORKDIR /app
 
-RUN pip install --upgrade pip && \
-    pip install tox
+RUN pip install pip==26.0.1 && \
+    pip install tox==4.51.0
 
 COPY dev-requirements.txt tox.ini ./
 COPY docs/user_guide docs/user_guide
@@ -28,7 +28,6 @@ FROM node:22.21.1-bookworm-slim@sha256:7378f5a4830ef48eb36d1abf4ef398391db562b5c
 WORKDIR /app
 
 # Install app dependencies.
-COPY .npmrc ./
 COPY package*.json ./
 RUN npm ci --ignore-scripts
 

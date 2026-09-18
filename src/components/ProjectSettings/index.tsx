@@ -7,6 +7,7 @@ import {
   GetApp,
   ImportExport,
   Language,
+  ManageSearch,
   People,
   PersonAdd,
   RecordVoiceOver,
@@ -38,7 +39,6 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
 import { Permission, type Project } from "api/models";
-import { getCurrentPermissions } from "backend";
 import {
   asyncRefreshProjectUsers,
   asyncSetNewCurrentProject,
@@ -49,6 +49,7 @@ import BaseSettings from "components/ProjectSettings/BaseSettings";
 import ProjectArchive from "components/ProjectSettings/ProjectArchive";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
 import ProjectDomains from "components/ProjectSettings/ProjectDomains";
+import ProjectHarvesterReviewEntries from "components/ProjectSettings/ProjectHarvesterReviewEntries";
 import ProjectImport from "components/ProjectSettings/ProjectImport";
 import ProjectLanguages, {
   SemanticDomainLanguage,
@@ -63,6 +64,7 @@ import ProjectSpeakersList from "components/ProjectUsers/ProjectSpeakersList";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { Path } from "types/path";
+import { useCurrentPermissions } from "utilities/useCurrentPermissions";
 
 export enum ProjectSettingsTab {
   Basic = "TabBasic",
@@ -79,6 +81,7 @@ export enum Setting {
   DomainsCustom = "SettingDomainsCustom",
   DomainsLanguage = "SettingsDomainsLanguage",
   Export = "SettingExport",
+  HarvesterReviewEntries = "SettingHarvesterReviewEntries",
   Import = "SettingImport",
   Languages = "SettingLanguages",
   Name = "SettingName",
@@ -98,13 +101,12 @@ export default function ProjectSettingsComponent(): ReactElement {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const permissions = useCurrentPermissions();
   const [tab, setTab] = useState(ProjectSettingsTab.Languages);
 
   useEffect(() => {
     // Default to Languages tab as it's available for any permissions.
     setTab(ProjectSettingsTab.Languages);
-    getCurrentPermissions().then(setPermissions);
   }, [project.id]);
 
   useEffect(() => {
@@ -182,6 +184,22 @@ export default function ProjectSettingsComponent(): ReactElement {
               title={t("projectSettings.protectedData.label")}
               body={
                 <ProjectProtectedData
+                  project={project}
+                  setProject={updateProject}
+                />
+              }
+            />
+          )}
+
+          {/* Harvester Review Entries toggle */}
+          {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+            <BaseSettings
+              icon={
+                <ManageSearch data-testid={Setting.HarvesterReviewEntries} />
+              }
+              title={t("projectSettings.harvesterReviewEntries.label")}
+              body={
+                <ProjectHarvesterReviewEntries
                   project={project}
                   setProject={updateProject}
                 />

@@ -1,70 +1,95 @@
 name: "Combine Deploy Updates"
-description: "Deploy updated images for The Combine to the Kubernetes cluster"
+description: "Deploy updated Helm charts for The Combine to the Kubernetes cluster"
 inputs:
+  aws_access_key_id:
+    description: "AWS Access Key ID"
+    required: true
+  aws_account:
+    description: "AWS Account ID"
+    required: true
+  aws_default_region:
+    description: "AWS Default Region"
+    required: true
+  aws_secret_access_key:
+    description: "AWS Secret Access Key"
+    required: true
+  combine_captcha_secret_key:
+    description: "Cloudflare Turnstile secret key for The Combine"
+    required: true
+  combine_jwt_secret_key:
+    description: "JWT secret key for The Combine"
+    required: true
+  combine_smtp_password:
+    description: "SMTP password for sending emails from The Combine"
+    required: true
+  combine_smtp_username:
+    description: "SMTP username for sending emails from The Combine"
+    required: true
+  helm_version:
+    description: "Version of helm to install on the runner"
+    required: true
   image_registry:
     description: "Docker Image Registry"
     required: true
-  image_registry_alias:
-    description: >
-      Custom or default alias for AWS Public ECR registries.  Blank for AWS ECR Private registries.
-      If the image_registry_alias is specified, include the '/' at the beginning of the string,
-      e.g. /thecombine
-    required: false
-    default: ""
   image_tag:
     description: "Image Tag for docker images"
     required: true
   kube_context:
-    description: "Context for the kubectl commands"
+    description: "Context for the kubectl/helm commands"
     required: true
   kubectl_version:
     description: "Version of kubectl to install on the runner"
     required: true
-  update_cert_proxy:
-    description: "Specification for whether the combine-cert-proxy should be updated."
+  target:
+    description: "Deployment target (qa or prod)"
     required: true
+
 runs:
   using: "composite"
   steps:
-    - name: Install pre-requisites
+    - name: Install Helm
+      run: |
+        echo "Installing Helm version ${{ inputs.helm_version }}"
+        curl -fSL https://raw.githubusercontent.com/helm/helm/${{ inputs.helm_version }}/scripts/get-helm-3 | DESIRED_VERSION=${{ inputs.helm_version }} bash
+        helm version
+      shell: bash
+
+    - name: Install kubectl
       run: |
         cd
         echo "Installing kubectl version ${{ inputs.kubectl_version }}"
-        curl -LO https://dl.k8s.io/release/${{ inputs.kubectl_version }}/bin/linux/amd64/kubectl
+        curl -fLO https://dl.k8s.io/release/${{ inputs.kubectl_version }}/bin/linux/amd64/kubectl
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-        kubectl version --output=yaml
+        kubectl version --client --output=yaml
       shell: bash
-    - name: Deploy updated images
-      run: echo "Update images with version ${{ inputs.image_tag }}"
+
+    - name: Set up Python
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+      with:
+        python-version: "3.12"
+
+    - name: Install Python requirements
+      run: |
+        python -m pip install pip==26.0.1
+        python -m pip install -r deploy/requirements.txt
       shell: bash
-    - name: Update database
-      run: kubectl --context ${{ inputs.kube_context }}
-        --namespace thecombine
-        set image deployment/database
-        database="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_database:${{ inputs.image_tag }}"
+
+    - name: Deploy with Helm
+      run: >
+        python
+        deploy/scripts/setup_combine.py
+        --context ${{ inputs.kube_context }}
+        --non-interactive
+        --repo ${{ inputs.image_registry }}
+        --tag ${{ inputs.image_tag }}
+        --target ${{ inputs.target }}
       shell: bash
-    - name: Update frontend
-      run: kubectl --context ${{ inputs.kube_context }}
-        --namespace thecombine
-        set image deployment/frontend
-        frontend="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_frontend:${{ inputs.image_tag }}"
-      shell: bash
-    - name: Update backend
-      run: kubectl --context ${{ inputs.kube_context }}
-        --namespace thecombine
-        set image deployment/backend
-        backend="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_backend:${{ inputs.image_tag }}"
-      shell: bash
-    - name: Update maintenance
-      run: kubectl --context ${{ inputs.kube_context }}
-        --namespace thecombine
-        set image deployment/maintenance
-        maintenance="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_maint:${{ inputs.image_tag }}"
-      shell: bash
-    - name: Update Cert Proxy Server
-      if: ${{ inputs.update_cert_proxy == 'true' }}
-      run: kubectl --context ${{ inputs.kube_context }}
-        --namespace combine-cert-proxy
-        set image deployment/combine-cert-proxy
-        combine-cert-proxy="${{ inputs.image_registry }}${{ inputs.image_registry_alias }}/combine_maint:${{ inputs.image_tag }}"
-      shell: bash
+      env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
+        AWS_ACCOUNT: ${{ inputs.aws_account }}
+        AWS_DEFAULT_REGION: ${{ inputs.aws_default_region }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}
+        COMBINE_CAPTCHA_SECRET_KEY: ${{ inputs.combine_captcha_secret_key }}
+        COMBINE_JWT_SECRET_KEY: ${{ inputs.combine_jwt_secret_key }}
+        COMBINE_SMTP_PASSWORD: ${{ inputs.combine_smtp_password }}
+        COMBINE_SMTP_USERNAME: ${{ inputs.combine_smtp_username }}

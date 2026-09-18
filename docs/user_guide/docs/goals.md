@@ -43,11 +43,19 @@ include subdomains, add a final period to your filter. For example, "8111." incl
 You can record, play, or delete an entry's audio recordings by using the icons in the Pronunciations
 (![Review Entries pronunciations column header](images/reviewEntriesColumnPronunciations.png){width=28}) column.
 
+You can modify the flag on an entry by clicking the
+![Review Entries flag column header](images/reviewEntriesColumnFlag.png){width=16} icon in the Flag column.
+
 To edit any other part of an entry, click the ![Review Entries row edit icon](images/reviewEntriesRowEdit.png){width=20}
 edit icon in the initial column.
 
 You can delete an entire entry by clicking the
 ![Review Entries row delete icon](images/reviewEntriesRowDelete.png){width=20} delete icon in the final column.
+
+!!! note "Note"
+
+    If a project Administrator has enabled the [Harvester Review Entries](project.md#harvester-review-entries) setting, Harvesters can also use Review Entries.
+    Harvesters can update audio recordings and flags, but the Edit and Delete columns are not available to them.
 
 ## Merge Duplicates {#merge-duplicates}
 
@@ -133,7 +141,8 @@ senses), updating the words in the database. Second, it saves the resulting set 
 
 !!! tip "Tip"
 
-    Are the potential duplicates not duplicates? Just click Save & Continue to tell The Combine not to show you that set again.
+    Are the potential duplicates not duplicates?
+    Just click Save & Continue to tell The Combine not to show you that set again.
 
 !!! note "Note"
 
@@ -141,7 +150,8 @@ senses), updating the words in the database. Second, it saves the resulting set 
 
 !!! warning "Important"
 
-    Avoid having multiple users merge duplicates in the same project at the same time. If different users simultaneously merge the same set of duplicates, it will results in the creation of new duplicates (even if the users are making the same merge decisions).
+    Avoid having multiple users merge duplicates in the same project at the same time.
+    If different users simultaneously merge the same set of duplicates, it will results in the creation of new duplicates (even if the users are making the same merge decisions).
 
 #### Defer
 
@@ -149,6 +159,11 @@ senses), updating the words in the database. Second, it saves the resulting set 
 
 The grey "Defer" button resets any changes made to the set of potential duplicates. The deferred set can be re-visited
 via Review Deferred Duplicates.
+
+#### Revert Set
+
+The "Revert Set" button resets all changes made to the current duplicate set (moved, merged, or deleted senses) without
+deferring it. It is only active when changes have been made to the current set.
 
 ### Merging with Imported Data
 
@@ -166,7 +181,9 @@ information will appear in the Merge Duplicate sense cards as follows:
 
 !!! note "Note"
 
-    A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different general categories, only the first one is preserved.
+    A sense can only have one part of speech.
+    If two senses are merged that have different parts of speech in the same general category, the parts of speech will be combined, separated by a semicolon (;).
+    However, if they have different general categories, only the first one is preserved.
 
 #### Protected Entries and Senses {#protected-entries-and-senses}
 
@@ -175,6 +192,11 @@ protected to prevent its deletion. If a sense is protected, its card will have a
 or dropped into (i.e., merged into) another sense card. If an entire entry is protected, its column will have a yellow
 header (where the vernacular and flag are located). When a protected entry has only one sense, that sense card cannot be
 moved.
+
+## Review Deferred Duplicates {#review-deferred-duplicates}
+
+This opens the [Merge Duplicates](#merge-duplicates) with all sets of potential duplicates that were previously deferred
+with _Merge Duplicates_. It is only available if there is at least one deferred set.
 
 ## Check Orthography
 
@@ -201,9 +223,9 @@ Click on a character tile to open a panel for that character.
 
 !!! tip "Tip"
 
-    You may have to scroll to see the panel. If your window is wide enough, there will be a blank margin on the
-    right; the panel will be at the top of this. If your window is narrow, tiles fill all the way to the right side of the
-    window; the panel will be at the bottom, below all the tiles.
+    You may have to scroll to see the panel.
+    If your window is wide enough, there will be a blank margin on the right; the panel will be at the top of this.
+    If your window is narrow, tiles fill all the way to the right side of the window; the panel will be at the bottom, below all the tiles.
 
 ![Character Inventory character panel](images/characterInventoryPanel.png){.center}
 

@@ -34,8 +34,8 @@ def create_secrets(
             else:
                 missing_env_vars.append(item["env_var"])
     if len(missing_env_vars) > 0:
-        logging.debug("The following environment variables are not defined:")
-        logging.debug(", ".join(missing_env_vars))
+        logging.warning("The following environment variables are not defined:")
+        logging.warning(", ".join(missing_env_vars))
         if not env_vars_req:
             return secrets_written
         sys.exit(ExitStatus.FAILURE.value)
@@ -108,4 +108,4 @@ def add_profile_values(
                     yaml.dump(profile_values["charts"][chart], file)
                 helm_cmd.extend(["-f", str(profile_file)])
         else:
-            print(f"Warning: cannot find profile {profile_name}", file=sys.stderr)
+            logging.warning(f"Cannot find profile {profile_name}")

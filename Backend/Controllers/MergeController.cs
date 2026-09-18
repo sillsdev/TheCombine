@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 
 namespace BackendFramework.Controllers
 {
@@ -17,12 +19,14 @@ namespace BackendFramework.Controllers
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/merge")]
     public class MergeController(IAcknowledgmentService ackService, IMergeService mergeService,
-        IHubContext<MergeHub> notifyService, IPermissionService permissionService) : Controller
+        IHubContext<MergeHub> notifyService, IPermissionService permissionService,
+        ILogger<MergeController> logger) : Controller
     {
         private readonly IAcknowledgmentService _ackService = ackService;
         private readonly IMergeService _mergeService = mergeService;
         private readonly IHubContext<MergeHub> _notifyService = notifyService;
         private readonly IPermissionService _permissionService = permissionService;
+        private readonly ILogger<MergeController> _logger = logger;
 
         private const string otelTagName = "otel.MergeController";
 
@@ -42,6 +46,16 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
+
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch (InvalidIdException)
+            {
+                return BadRequest("Invalid project id.");
+            }
+
             var userId = _permissionService.GetUserId(HttpContext);
 
             try
@@ -49,8 +63,9 @@ namespace BackendFramework.Controllers
                 var newWords = await _mergeService.Merge(projectId, userId, mergeWordsList);
                 return Ok(newWords.Select(w => w.Id).ToList());
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e, "Error merging words in project {ProjectId}.", projectId);
                 return BadRequest("Merge failed.");
             }
         }
@@ -59,6 +74,7 @@ namespace BackendFramework.Controllers
         /// <returns> Ok if merge was successfully undone </returns>
         [HttpPut("undo", Name = "UndoMerge")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UndoMerge(string projectId, [FromBody, BindRequired] MergeUndoIds merge)
@@ -70,8 +86,17 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
-            var userId = _permissionService.GetUserId(HttpContext);
 
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch (InvalidIdException)
+            {
+                return BadRequest("Invalid project id.");
+            }
+
+            var userId = _permissionService.GetUserId(HttpContext);
             return await _mergeService.UndoMerge(projectId, userId, merge) ? Ok() : NotFound();
         }
 
@@ -79,6 +104,7 @@ namespace BackendFramework.Controllers
         /// <returns> List of word ids added to blacklist. </returns>
         [HttpPut("blacklist/add", Name = "BlacklistAdd")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<string>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> BlacklistAdd(string projectId, [FromBody, BindRequired] List<string> wordIds)
         {
@@ -90,6 +116,15 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch (InvalidIdException)
+            {
+                return BadRequest("Invalid project id.");
+            }
+
             var userId = _permissionService.GetUserId(HttpContext);
             var blacklistEntry = await _mergeService.AddToMergeBlacklist(projectId, userId, wordIds);
             return Ok(blacklistEntry.WordIds);
@@ -99,6 +134,7 @@ namespace BackendFramework.Controllers
         /// <returns> List of word ids added to graylist. </returns>
         [HttpPut("graylist/add", Name = "graylistAdd")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<string>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GraylistAdd(string projectId, [FromBody, BindRequired] List<string> wordIds)
         {
@@ -108,6 +144,15 @@ namespace BackendFramework.Controllers
                 HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
                 return Forbid();
+            }
+
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch (InvalidIdException)
+            {
+                return BadRequest("Invalid project id.");
             }
 
             var userId = _permissionService.GetUserId(HttpContext);
@@ -123,6 +168,7 @@ namespace BackendFramework.Controllers
         /// <returns> List of Lists of <see cref="Word"/>s, each sublist a set of potential duplicates. </returns>
         [HttpGet("findidenticaldups/{maxInList:int}/{maxLists:int}/{ignoreProtected:bool}", Name = "FindIdenticalPotentialDuplicates")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<List<Word>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> FindIdenticalPotentialDuplicates(
             string projectId, int maxInList, int maxLists, bool ignoreProtected)
@@ -133,6 +179,15 @@ namespace BackendFramework.Controllers
                 HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
                 return Forbid();
+            }
+
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch (InvalidIdException)
+            {
+                return BadRequest("Invalid project id.");
             }
 
             await _mergeService.UpdateMergeBlacklist(projectId);
@@ -151,6 +206,7 @@ namespace BackendFramework.Controllers
         /// <param name="ignoreProtected"> Whether to require each set to have at least one unprotected word. </param>
         [HttpGet("finddups/{maxInList:int}/{maxLists:int}/{ignoreProtected:bool}", Name = "FindPotentialDuplicates")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> FindPotentialDuplicates(
             string projectId, int maxInList, int maxLists, bool ignoreProtected)
@@ -161,6 +217,15 @@ namespace BackendFramework.Controllers
                 HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
                 return Forbid();
+            }
+
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch (InvalidIdException)
+            {
+                return BadRequest("Invalid project id.");
             }
 
             await _mergeService.UpdateMergeBlacklist(projectId);
@@ -178,14 +243,24 @@ namespace BackendFramework.Controllers
         internal async Task<bool> GetDuplicatesThenSignal(
             string projectId, int maxInList, int maxLists, string userId, bool ignoreProtected = false)
         {
-            var proceed = await _mergeService.GetAndStorePotentialDuplicates(
-                projectId, maxInList, maxLists, userId, ignoreProtected);
-            if (proceed)
+            try
             {
-                await _ackService.SendWithRetry(userId,
-                    requestId => _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId));
+                var proceed = await _mergeService.GetAndStorePotentialDuplicates(
+                    projectId, maxInList, maxLists, userId, ignoreProtected);
+                if (proceed)
+                {
+                    await _ackService.SendWithRetry(userId, requestId =>
+                        _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId, requestId));
+                }
+                return proceed;
             }
-            return proceed;
+            catch (Exception e)
+            {
+                // This runs detached from the request, which has already returned Ok, so an unlogged
+                // exception would leave the user waiting on a signal that never comes.
+                _logger.LogError(e, "Error finding duplicates in project {ProjectId}.", projectId);
+                return false;
+            }
         }
 
         /// <summary> Retrieve current user's potential duplicates for merging. </summary>
@@ -207,6 +282,7 @@ namespace BackendFramework.Controllers
         /// <param name="userId"> Id of user whose merge graylist is to be used. </param>
         [HttpGet("hasgraylist/{userId}", Name = "HasGraylistEntries")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> HasGraylistEntries(string projectId, string userId)
         {
@@ -217,6 +293,16 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
+
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch (InvalidIdException)
+            {
+                return BadRequest("Invalid project id.");
+            }
+
             return Ok(await _mergeService.HasGraylistEntries(projectId, userId));
         }
 
@@ -227,6 +313,7 @@ namespace BackendFramework.Controllers
         /// <returns> List of Lists of <see cref="Word"/>s. </returns>
         [HttpGet("getgraylist/{maxLists}/{userId}", Name = "GetGraylistEntries")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<List<Word>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetGraylistEntries(
             string projectId, int maxLists, string userId)
@@ -237,6 +324,15 @@ namespace BackendFramework.Controllers
                 HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
                 return Forbid();
+            }
+
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch (InvalidIdException)
+            {
+                return BadRequest("Invalid project id.");
             }
 
             await _mergeService.UpdateMergeGraylist(projectId);

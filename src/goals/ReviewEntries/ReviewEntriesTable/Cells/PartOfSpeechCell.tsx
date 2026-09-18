@@ -3,7 +3,7 @@ import { type ReactElement } from "react";
 
 import { type GrammaticalInfo, type Sense } from "api/models";
 import PartOfSpeechButton from "components/Buttons/PartOfSpeechButton";
-import { type CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
+import { type ReadonlyCellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 
 /** Collect all distinct sense.grammaticalInfo values. */
 function gatherGramInfo(senses: Sense[]): GrammaticalInfo[] {
@@ -16,7 +16,9 @@ function gatherGramInfo(senses: Sense[]): GrammaticalInfo[] {
   }, []);
 }
 
-export default function PartOfSpeechCell(props: CellProps): ReactElement {
+export default function PartOfSpeechCell(
+  props: ReadonlyCellProps
+): ReactElement {
   return (
     <Grid2 container spacing={2}>
       {gatherGramInfo(props.word.senses).map((gi) => (

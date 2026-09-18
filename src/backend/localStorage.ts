@@ -34,7 +34,7 @@ export function getCurrentUser(): User | undefined {
   return userString ? JSON.parse(userString) : undefined;
 }
 export function setCurrentUser(user: User): void {
-  const userString = JSON.stringify(user);
+  const userString = JSON.stringify({ ...user, password: "" });
   localStorage.setItem(LocalStorageKey.User, userString);
 }
 

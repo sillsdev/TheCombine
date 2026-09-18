@@ -3,9 +3,9 @@
 Restore The Combine from a backup stored in the AWS S3 service.
 
 Restores The Combine database and backend files from a compressed tarball stored
-in the AWS S3 service.  This script only applies to instances of The Combine running
-in a Kubernetes cluster.  It can restore backups made from instances running under
-Kubernetes or Docker.  This script requires the following environment variables to
+in the AWS S3 service. This script only applies to instances of The Combine running
+in a Kubernetes cluster. It can restore backups made from instances running under
+Kubernetes or Docker. This script requires the following environment variables to
 be set:
   AWS_ACCESS_KEY_ID         The Access Key for the AWS S3 bucket where the backups
                             are stored
@@ -26,12 +26,12 @@ import re
 import sys
 import tarfile
 import tempfile
-from typing import List, Optional, Tuple
+from typing import List, NoReturn, Optional, Tuple
 
 from aws_backup import AwsBackup
 from combine_app import CombineApp
 import humanfriendly
-from maint_utils import check_env_vars
+from maint_utils import check_env_vars, wait_for_dependents
 from script_step import ScriptStep
 
 
@@ -59,13 +59,37 @@ def aws_strip_bucket(obj_name: str) -> str:
     return obj_name
 
 
+# Once the database has been replaced, quitting leaves The Combine in a mixed state.
+half_done_warning = (
+    "The database has been restored but the backend files have not; "
+    "re-run this script to finish the restore."
+)
+
+
+def fail(message: str, *, half_done: bool = False) -> NoReturn:
+    """Log the reason the restore cannot continue and exit."""
+    logging.error(message)
+    if half_done:
+        logging.error(half_done_warning)
+    sys.exit(1)
+
+
+def wait_for_combine(wait_time: int, *, half_done: bool = False) -> None:
+    """Wait for the deployments the restore needs, exiting if they do not come up."""
+    if not wait_for_dependents(
+        [CombineApp.Component.Database.value, CombineApp.Component.Backend.value],
+        timeout=wait_time,
+    ):
+        fail("The database or the backend is not available.", half_done=half_done)
+
+
 def main() -> None:
     """Restore The Combine from a backup stored in the AWS S3 service."""
     args = parse_args()
     if args.verbose:
-        logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
+        logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.DEBUG)
     else:
-        logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
+        logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
     # Look up the required environment variables
     aws_bucket, db_files_subdir, backend_files_subdir = check_env_vars(
         ["aws_bucket", "db_files_subdir", "backend_files_subdir"]
@@ -73,6 +97,10 @@ def main() -> None:
     combine = CombineApp()
     aws = AwsBackup(bucket=aws_bucket)
     step = ScriptStep()
+    wait_time = int(os.getenv("wait_time", 60))
+
+    step.print("Make sure the database and backend are available.")
+    wait_for_combine(wait_time)
 
     step.print("Prepare for the restore.")
     with tempfile.TemporaryDirectory() as restore_dir:
@@ -82,10 +110,10 @@ def main() -> None:
             backup = args.file
         else:
             # Get the list of backups
-            backup_list_output = aws.list().stdout.strip().split("\n")
+            backup_list_output = [line for line in aws.list().stdout.strip().split("\n") if line]
 
             if len(backup_list_output) == 0:
-                print(f"No backups available from {aws_bucket}")
+                logging.warning(f"No backups available from {aws_bucket}")
                 sys.exit(0)
 
             # Convert the list of backups to a more useful structure
@@ -101,7 +129,7 @@ def main() -> None:
                         )
                     )
 
-            # Print out the list of backups to choose from.  In the process,
+            # Print out the list of backups to choose from. In the process,
             # update each line in the backup list to be the AWS S3 object name
             # and its (human-friendly) size.
             print("Backup List:")
@@ -120,7 +148,9 @@ def main() -> None:
 
         step.print(f"Fetch the selected backup, {backup}.")
 
-        aws.pull(backup, Path(restore_dir) / restore_file)
+        aws_proc = aws.pull(backup, Path(restore_dir) / restore_file)
+        logging.debug(f"stderr:\n{aws_proc.stderr.strip()}")
+        logging.debug(f"stdout:\n{aws_proc.stdout.strip()}")
 
         step.print("Unpack the backup.")
         os.chdir(restore_dir)
@@ -151,57 +181,66 @@ def main() -> None:
 
             safe_extract(tar)
 
-        step.print("Restore the database.")
+        step.print("Locate the database and backend containers.")
+        wait_for_combine(wait_time)
         db_pod = combine.get_pod_id(CombineApp.Component.Database)
         if not db_pod:
-            print("Cannot find the database container.", file=sys.stderr)
-            sys.exit(1)
-        combine.kubectl(
-            [
-                "cp",
-                db_files_subdir,
-                f"{db_pod}:/",
-            ]
+            fail("Cannot find the database container.")
+        # Deliberately not kept: a rollout during the restore would invalidate this id.
+        if not combine.get_pod_id(CombineApp.Component.Backend):
+            fail("Cannot find the backend container.")
+
+        step.print("Restore the database.")
+        logging.debug(f"Copying {db_files_subdir} to {db_pod} ...")
+        combine.cp_with_retry(
+            [db_files_subdir, f"{db_pod}:/"], label=f"database dump ({db_files_subdir})"
         )
 
-        combine.exec(
-            db_pod,
-            [
-                "mongorestore",
-                "--drop",
-                "--gzip",
-                "--quiet",
-                f"--dir=/{db_files_subdir}",
-            ],
+        logging.debug(f"Running mongorestore on {db_pod} ...")
+        mongorestore_proc = combine.exec(
+            db_pod, ["mongorestore", "--drop", "--gzip", f"--dir=/{db_files_subdir}"]
         )
-        combine.exec(
-            db_pod,
-            [
-                "rm",
-                "-rf",
-                f"/{db_files_subdir}",
-            ],
-        )
+        logging.debug(f"stderr:\n{mongorestore_proc.stderr.strip()}")
+        logging.debug(f"stdout:\n{mongorestore_proc.stdout.strip()}")
+
+        logging.debug(f"Removing {db_files_subdir} from {db_pod} ...")
+        rm_proc = combine.exec(db_pod, ["rm", "-rf", f"/{db_files_subdir}"])
+        logging.debug(f"stderr:\n{rm_proc.stderr.strip()}")
+        logging.debug(f"stdout:\n{rm_proc.stdout.strip()}")
 
         step.print("Copy the backend files.")
-        backend_pod = combine.get_pod_id(CombineApp.Component.Backend)
+        # The database is already replaced, so failing here leaves the restore half done:
+        # wait out any rollout rather than fail on a pod id that predates it.
+        wait_for_combine(wait_time, half_done=True)
+        backend_pod = combine.get_pod_id(CombineApp.Component.Backend, refresh=True)
         if not backend_pod:
-            print("Cannot find the backend container.", file=sys.stderr)
-            sys.exit(1)
+            fail("Cannot find the backend container.", half_done=True)
+
         # if --clean option was used, delete the existing backend files
         if args.clean:
+            logging.info(f"Cleaning out backend files in {backend_pod} ...")
             # we run the rm command inside a bash shell so that the shell will do wildcard
             # expansion
-            combine.exec(
+            clean_proc = combine.exec(
                 backend_pod,
-                [
-                    "/bin/bash",
-                    "-c",
-                    f"rm -rf /home/app/{backend_files_subdir}/*",
-                ],
+                ["/bin/bash", "-c", f"rm -rf /home/app/{backend_files_subdir}/*"],
             )
+            logging.debug(f"stderr:\n{clean_proc.stderr.strip()}")
+            logging.debug(f"stdout:\n{clean_proc.stdout.strip()}")
 
-        combine.kubectl(["cp", backend_files_subdir, f"{backend_pod}:/home/app", "--no-preserve"])
+        # Iterate through every item in the backend subdirectory
+        remote_subdir = f"{backend_pod}:/home/app/{backend_files_subdir}/"
+        logging.debug(f"Copying contents of {backend_files_subdir} to {remote_subdir} ...")
+        for item in os.listdir(backend_files_subdir):
+            if item.startswith(".") or item == "lost+found":
+                logging.debug(f"Skipping {item} ...")
+                continue
+            logging.debug(f"Copying {item} ...")
+            local_item = os.path.join(backend_files_subdir, item)
+            combine.cp_with_retry(
+                [local_item, remote_subdir, "--no-preserve"],
+                label=f"backend files for {item}",
+            )
 
 
 if __name__ == "__main__":

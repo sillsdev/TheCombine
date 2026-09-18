@@ -22,7 +22,7 @@ use_directory_urls: false
 repo_url: https://github.com/sillsdev/TheCombine
 edit_uri: edit/master/docs/user_guide/docs/
 repo_name: sillsdev/TheCombine
-copyright: © 2019-2025 SIL Global
+copyright: © 2019-2026 SIL Global
 plugins:
   - i18n:
       docs_structure: suffix
@@ -41,6 +41,16 @@ plugins:
             Data Entry: Entrada de datos
             Data Cleanup: Limpieza de datos
             Admin: Administración
+        - locale: id
+          name: Bahasa Indonesia
+          build: true
+          nav_translations:
+            Overview: Ikhtisar
+            Account: Akun
+            Projects: Proyek
+            Data Entry: Pemasukan Data
+            Data Cleanup: Pembersihan Data
+            Admin: Administrasi
         - locale: zh
           name: 中文
           build: true
@@ -52,13 +62,7 @@ plugins:
             Data Cleanup: 清理数据
             Admin: 管理
   - search:
-      lang: [en, es, zh]
-  # This plugin is used to validate URLs (including some anchors).
-  # Uncomment to build the docs with this validation enabled.
-  # This is commented out by default because this requires network I/O to validate URLs, so it is
-  # inherently not exactly reproducible.
-#  - htmlproofer:
-#      raise_error: True
+      lang: [en, es, id, zh]
 markdown_extensions:
   - admonition
   - attr_list
@@ -72,24 +76,31 @@ extra:
     - name: Español
       link: /es/
       lang: es
+    - name: Bahasa Indonesia
+      link: /id/
+      lang: id
     - name: 中文
       link: /zh/
       lang: zh
   social:
     - icon: fontawesome/solid/globe
-      link: https://www.sil.org/
+      link: https://software.sil.org/
     - icon: fontawesome/brands/github
       link: https://github.com/sillsdev
+    - icon: fontawesome/brands/discourse
+      link: https://community.software.sil.org/
     - icon: fontawesome/brands/x-twitter
       link: https://x.com/silglobal
     - icon: fontawesome/brands/instagram
       link: https://www.instagram.com/SIL_global/
     - icon: fontawesome/brands/facebook
       link: https://www.facebook.com/SILglobal/
+    - icon: fontawesome/brands/vimeo
+      link: https://vimeo.com/silinternational
     - icon: fontawesome/brands/youtube
       link: https://www.youtube.com/channel/UC6ojqR9jOPHuPN7XP92Zj9Q
     - icon: fontawesome/brands/linkedin
-      link: https://www.linkedin.com/company/silglobal
+      link: https://www.linkedin.com/showcase/sil-language-technology/
 nav:
   - Overview: index.md
   - Account: account.md

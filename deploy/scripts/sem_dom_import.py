@@ -106,8 +106,7 @@ def get_questions(node: ElementTree.Element) -> Dict[str, List[DomainQuestion]]:
     """
     Gets a list of DomainQuestion objects from the CmDomainQ element.
 
-    The DomainQuestion consists of the question text, the example words and
-    the example sentences.
+    Extracts the question text; ignores example words and sentences.
     """
     results: Dict[str, List[DomainQuestion]] = {}
     for cm_domain_q in node:
@@ -117,16 +116,7 @@ def get_questions(node: ElementTree.Element) -> Dict[str, List[DomainQuestion]]:
                 if quest_field.tag == "Question":
                     for auni_node in quest_field:
                         lang, question = get_auni_text(auni_node)
-                        this_question[lang] = DomainQuestion(question, "", "")
-                elif quest_field.tag == "ExampleWords":
-                    for auni_node in quest_field:
-                        lang, words = get_auni_text(auni_node)
-                        this_question[lang].example_words = words
-                elif quest_field.tag == "ExampleSentences":
-                    for astr_node in quest_field:
-                        lang, sentences = get_astr_text(astr_node)
-                        if len(sentences) > 0:
-                            this_question[lang].example_sentences = "\n".join(sentences)
+                        this_question[lang] = DomainQuestion(question)
             for lang in this_question:
                 if lang in results:
                     results[lang].append(this_question[lang])

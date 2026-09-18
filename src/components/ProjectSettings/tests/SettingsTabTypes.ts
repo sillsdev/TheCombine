@@ -7,6 +7,7 @@ const settingsByTab: Record<ProjectSettingsTab, Setting[]> = {
   [ProjectSettingsTab.Basic]: [
     Setting.Archive,
     Setting.Autocomplete,
+    Setting.HarvesterReviewEntries,
     Setting.Name,
     Setting.ProtectOverride,
   ],
@@ -33,6 +34,7 @@ const settingsByPermission: Record<Permission, Setting[]> = {
     Setting.Autocomplete,
     Setting.DomainsLanguage,
     Setting.DomainsCustom,
+    Setting.HarvesterReviewEntries,
     Setting.Languages,
     Setting.Name,
     Setting.ProtectOverride,

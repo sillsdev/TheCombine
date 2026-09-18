@@ -75,6 +75,12 @@ Turn on "Allow data protection override in Merge Duplicates" to allow project us
 override protection of words and senses. If anybody tries to merge or delete a protected entry or sense, The Combine
 warns them of the fields that will be lost.
 
+#### Harvester Review Entries {#harvester-review-entries}
+
+This Off/On setting (default Off) allows Harvesters to access [Review Entries](goals.md#review-entries). When enabled,
+Harvesters will see a Data Cleanup button in the navigation bar and can use Review Entries to update audio recordings
+and flags on entries. However, Harvesters cannot edit or delete entries from the Review Entries table.
+
 #### Archive Project
 
 This is only available to the project Owner. Archiving a project makes it inaccessible to all users. This can only be
@@ -94,8 +100,8 @@ with new data entries.
 
 !!! note "Note"
 
-    If the project has glosses in multiple languages, those languages must be added here for all the glosses to show up
-    in [Data Cleanup](goals.md). Click the magnifying glass icon to see all language codes present in the project.
+    If the project has glosses in multiple languages, those languages must be added here for all the glosses to show up in [Data Cleanup](goals.md).
+    Click the magnifying glass icon to see all language codes present in the project.
 
 The _semantic domains language_ controls the language in which semantic domain titles and descriptions are displayed in
 [Data Entry](./dataEntry.md).
@@ -120,7 +126,10 @@ click this to open a user management menu with the following options:
 </pre>
 
 A _Harvester_ can do [Data Entry](./dataEntry.md) but not [Data Cleanup](./goals.md). In project settings, they can see
-the project languages and workshop schedule, but cannot make any changes.
+the project languages and workshop schedule, but cannot make any changes. However, if a project Administrator enables
+the [Harvester Review Entries](#harvester-review-entries) setting, Harvesters can also access
+[Review Entries](./goals.md#review-entries) with limited functionality: they can update pronunciations and flags, but
+cannot edit or delete entries.
 
 An _Editor_ has permission to do everything that a _Harvester_ can do, as well as
 [Review Entries](./goals.md#review-entries), [Merge Duplicates](./goals.md#merge-duplicates), and [Export](#export).
@@ -130,8 +139,8 @@ users.
 
 !!! warning "Important"
 
-    There is only one Owner per project. If you "Make project Owner" another user, you will automatically change from Owner to
-    Administrator for the project, and you will no longer be able to archive the project or make/remove Administrator on other users.
+    There is only one Owner per project.
+    If you "Make project Owner" another user, you will automatically change from Owner to Administrator for the project, and you will no longer be able to archive the project or make/remove Administrator on other users.
 
 #### Add Users
 
@@ -201,9 +210,9 @@ not be imported into FieldWorks.
 
 ![Schedule](images/projectSettings5Sched.png)
 
-This is only available for editing by the project Owner, allowing a schedule to be set for a Rapid Word Collection
-workshop. Click the first button to select a date range for the workshop. Click the middle button to add or remove
-specific dates. Click the last button to clear the schedule.
+This is only available for editing by a project Owner or Administrator, allowing a schedule to be set for a Rapid Word
+Collection workshop. Click the first button to select a date range for the workshop. Click the middle button to add or
+remove specific dates. Click the last button to clear the schedule.
 
 ![Workshop Schedule](images/projectSchedule.png){.center}
 
@@ -230,8 +239,8 @@ For each custom domain, you can add a description and questions to help with wor
 
 !!! note "Note"
 
-    Custom semantic domains are included in the project export and can be imported into FieldWorks. However, the
-    questions are not included.
+    Custom semantic domains are included in the project export and can be imported into FieldWorks.
+    However, the questions are not included.
 
 Custom semantic domains will be available to all project users doing Data Entry.
 
@@ -239,13 +248,13 @@ Custom semantic domains will be available to all project users doing Data Entry.
 
 !!! note "Note"
 
-    Custom semantic domains are language-specific. If you add a custom domain in one language then change the semantic
-    domains language, that domain will not be visible unless you change back to its language.
+    Custom semantic domains are language-specific.
+    If you add a custom domain in one language then change the semantic domains language, that domain will not be visible unless you change back to its language.
 
 ## Project Statistics
 
-If you are the project Owner, there will be another icon alongside the gear icon in App Bar at the top of The Combine.
-This opens statistics about words in the project.
+If you are a project Owner or Administrator, there will be another icon alongside the gear icon in App Bar at the top of
+The Combine. This opens statistics about words in the project.
 
 ![Project Statistics Button](images/projectStatsButton.png){.center}
 
@@ -254,8 +263,9 @@ semantic domains, will be counted as 6 words.
 
 ### Words per User
 
-A table listing number of words and distinct semantic domains for each project user. Imported words have no associated
-user and will be counted in an "unknownUser" row.
+A table listing the following for each project user: the number of words collected, the number of distinct semantic
+domains, and the most recent semantic domain used. Imported words have no associated user and will be counted in an
+"unknownUser" row.
 
 ### Words per Domain
 

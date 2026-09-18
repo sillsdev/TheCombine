@@ -7,4 +7,3 @@ metadata:
 data:
   NAMESPACES: "{{ .Release.Namespace }}"
   PULL_SECRET_NAME: "{{ .Values.global.pullSecretName }}"
-  DOCKER_EMAIL: "{{ .Values.awsEcr.dockerEmail }}"

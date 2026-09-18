@@ -25,7 +25,7 @@
     "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/scripts/jestTransform/babelTransform.js",
     "^(?!.*\\.(cjs|css|js|json|jsx|mjs|ts|tsx)$)": "<rootDir>/scripts/jestTransform/fileTransform.js"
   },
-  "transformIgnorePatterns": ["/node_modules/(!(axios))"],
+  "transformIgnorePatterns": ["/node_modules/(?!axios/)"],
   "watchPlugins": [
     "jest-watch-typeahead/filename",
     "jest-watch-typeahead/testname"

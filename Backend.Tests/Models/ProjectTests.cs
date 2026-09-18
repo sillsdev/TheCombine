@@ -21,6 +21,7 @@ namespace Backend.Tests.Models
                 AutocompleteSetting = OffOnSetting.On,
                 ProtectedDataMergeAvoidEnabled = OffOnSetting.Off,
                 ProtectedDataOverrideEnabled = OffOnSetting.Off,
+                HarvesterReviewEntriesEnabled = OffOnSetting.Off,
                 SemDomWritingSystem = new("fr", "Français"),
                 VernacularWritingSystem = new("en", "English", "Calibri"),
                 AnalysisWritingSystems = new() { new("es", "Español") },

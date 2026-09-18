@@ -2,13 +2,15 @@
 
 Los administradores del sitio disponen de una opción más en el menú de usuario: "Configuración del sitio".
 
-![Menú de usuario - Administrador](../images/userMenuAdmin.es.png){.center}
+![Menú de usuario - Administrador](images/userMenuAdmin.es.png){.center}
 
 ## Administración de proyectos
 
-Los administradores pueden exportar o archivar/restaurar cualquier proyecto. Archivar un proyecto lo hace invisible e
-inaccesible para todos los usuarios, incluso el creador del proyecto, pero cualquier administrador puede restaurar el
-proyecto. Actualmente no hay forma de eliminar permanentemente un proyecto.
+Los administradores pueden exportar, archivar/restaurar o administrar usuarios para cualquier proyecto. Archivar un
+proyecto lo hace invisible e inaccesible para todos los usuarios, incluso el creador del proyecto, pero cualquier
+administrador puede restaurar el proyecto. Actualmente no hay forma de eliminar permanentemente un proyecto. El botón
+"Roles del proyecto" para cada proyecto abre una vista en la que el administrador puede administrar los roles de usuario
+de ese proyecto.
 
 ## Administración de usuarios
 
@@ -26,7 +28,7 @@ Combine. Estos banners están destinados a mostrar a los usuarios mensajes impor
 con la instancia de The Combine. Los usos podrían incluir actualizaciones programadas, tiempos de inactividad
 planificados o próximos cambios en el servidor.
 
-![Banner de anuncios](../images/announcementBanner.png){.center}
+![Banner de anuncios](images/announcementBanner.png){.center}
 
 ### Banner de inicio de sesión
 
@@ -35,4 +37,4 @@ pensado para incluir información sobre una instancia de The Combine que los usu
 quién ponerse en contacto en relación con el soporte, actualizaciones de versión o políticas de copia de seguridad de la
 base de datos.
 
-![Banner de inicio de sesión](../images/loginBanner.png){width=400 .center}
+![Banner de inicio de sesión](images/loginBanner.png){width=400 .center}

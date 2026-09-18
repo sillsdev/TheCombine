@@ -23,7 +23,7 @@ export default function SaveDeferButtons(): ReactElement {
   const hasProtected = useAppSelector(
     (state: StoreState) =>
       state.mergeDuplicateGoal.hasProtected &&
-      state.currentProjectState.project.protectedDataOverrideEnabled ==
+      state.currentProjectState.project.protectedDataOverrideEnabled ===
         OffOnSetting.On
   );
   const overrideProtection = useAppSelector(
@@ -48,13 +48,27 @@ export default function SaveDeferButtons(): ReactElement {
   const defer = async (): Promise<void> => {
     setIsDeferring(true);
     dispatch(setSidebar());
-    await dispatch(deferMerge()).then(next);
+    try {
+      await dispatch(deferMerge());
+    } catch {
+      // Leave the user on this set to retry.
+      setIsDeferring(false);
+      return;
+    }
+    await next();
   };
 
   const saveContinue = async (): Promise<void> => {
     setIsSaving(true);
     dispatch(setSidebar());
-    await dispatch(mergeAll()).then(next);
+    try {
+      await dispatch(mergeAll());
+    } catch {
+      // Leave the user on this set to retry.
+      setIsSaving(false);
+      return;
+    }
+    await next();
   };
 
   const revert = (): void => {

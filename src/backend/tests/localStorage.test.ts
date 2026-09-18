@@ -51,7 +51,10 @@ describe("LocalStorage", () => {
     LocalStorage.setClosedBanner(mockClosedBanner);
     expect(LocalStorage.getClosedBanner()).toEqual(mockClosedBanner);
     LocalStorage.setCurrentUser(mockUser);
-    expect(LocalStorage.getCurrentUser()).toEqual(mockUser);
+    expect(LocalStorage.getCurrentUser()).toEqual({
+      ...mockUser,
+      password: "",
+    });
     expect(LocalStorage.getUserId()).toEqual(mockUser.id);
     LocalStorage.setProjectId(mockProjectId);
     expect(LocalStorage.getProjectId()).toEqual(mockProjectId);

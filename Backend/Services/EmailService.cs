@@ -8,16 +8,11 @@ using MimeKit;
 namespace BackendFramework.Services
 {
     [ExcludeFromCodeCoverage]
-    public class EmailService : IEmailService
+    public class EmailService(IEmailContext emailContext) : IEmailService
     {
-        private readonly IEmailContext _emailContext;
+        private readonly IEmailContext _emailContext = emailContext;
 
         private const string otelTagName = "otel.EmailService";
-
-        public EmailService(IEmailContext emailContext)
-        {
-            _emailContext = emailContext;
-        }
 
         public async Task<bool> SendEmail(MimeMessage message)
         {
@@ -26,6 +21,16 @@ namespace BackendFramework.Services
             if (!_emailContext.EmailEnabled)
             {
                 throw new EmailNotEnabledException();
+            }
+
+            if (string.IsNullOrEmpty(_emailContext.SmtpAddress) ||
+                string.IsNullOrEmpty(_emailContext.SmtpFrom) ||
+                string.IsNullOrEmpty(_emailContext.SmtpPassword) ||
+                _emailContext.SmtpPort == IEmailContext.InvalidPort ||
+                string.IsNullOrEmpty(_emailContext.SmtpServer) ||
+                string.IsNullOrEmpty(_emailContext.SmtpUsername))
+            {
+                throw new EmailNotConfiguredException();
             }
 
             using var client = new MailKit.Net.Smtp.SmtpClient();
@@ -44,6 +49,8 @@ namespace BackendFramework.Services
             await client.DisconnectAsync(true);
             return true;
         }
+
+        private sealed class EmailNotConfiguredException : Exception { }
 
         private sealed class EmailNotEnabledException : Exception { }
     }

@@ -287,7 +287,8 @@ def main() -> None:
     # Setup build options
     if args.quiet:
         build_cmd += ["--quiet"]
-        push_cmd += ["--quiet"]
+        if container_cmd[0] == "nerdctl":
+            push_cmd += ["--quiet"]
     else:
         build_cmd += ["--progress", "plain"]
     if args.no_cache:

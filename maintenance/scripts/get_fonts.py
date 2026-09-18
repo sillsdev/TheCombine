@@ -113,6 +113,12 @@ def check_font_info(font_info: dict[str, Any]) -> bool:
         logging.debug(f"{family}: No file list")
         return False
 
+    file_name = get_font_default(font_info["defaults"])
+    file_info = font_info["files"].get(file_name, {})
+    if "flourl" not in file_info and "url" not in file_info:
+        logging.debug(f"{family}: Default file has no download URL")
+        return False
+
     return True
 
 
@@ -149,7 +155,7 @@ def fetch_fonts_for_scripts(scripts: List[str]) -> List[str]:
     scripts = list({script.capitalize() for script in scripts})
 
     # Always have the Mui-Language-Picker default/safe fonts.
-    fonts = ["Annapurna SIL", "Charis SIL", "Noto Sans TC", "Scheherazade New"]
+    fonts = ["Annapurna SIL", "Charis", "Noto Sans TC", "Scheherazade New"]
 
     logging.debug(f"Downloading script font table from {url_script_font_table}")
     req = requests.get(url_script_font_table)
@@ -245,9 +251,10 @@ def main() -> None:
         font_id: str = font.replace(" ", "").lower()
 
         # Get font family info from font families info, using fallback font if necessary.
+        family: str = ""
         while font_id != "" and font_id in families.keys():
             font_info = families[font_id]
-            family: str = font_info["family"]
+            family = font_info["family"]
             source_is_google = "source" in font_info.keys() and font_info["source"] == "Google"
             get_from_google = source_is_google and not is_for_offline
             if check_font_info(font_info) or get_from_google:
@@ -319,7 +326,7 @@ def main() -> None:
 
         # Finish the css info for this font and write to file.
         css_lines.append("}\n")
-        css_file_path = args.output / f"{font}.css"
+        css_file_path = args.output / f"{font.replace(' ', '')}.css"
         logging.debug(f"Writing {css_file_path}")
         with open(css_file_path, "w") as css_file:
             css_file.writelines(css_lines)

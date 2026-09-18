@@ -12,7 +12,6 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { v4 } from "uuid";
 
 import {
   Note,
@@ -188,7 +187,7 @@ export function updateEntryGloss(
     senses.push(newSense);
   } else {
     // Otherwise, the other semantic domains should be retained with the old sense.
-    newSense.guid = v4();
+    newSense.guid = crypto.randomUUID();
     senses.push(oldSense, newSense);
   }
   return { ...entry.word, senses };

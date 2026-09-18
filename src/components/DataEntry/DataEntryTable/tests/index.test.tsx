@@ -10,7 +10,6 @@ import {
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
-import { v4 } from "uuid";
 
 import { Gloss, SemanticDomain, Sense, Word } from "api/models";
 import DataEntryTable, {
@@ -346,7 +345,7 @@ describe("DataEntryTable", () => {
   describe("with duplicate selected", () => {
     beforeEach(async () => {
       mockUpdateWord.mockImplementation((w: Word) =>
-        Promise.resolve({ ...w, id: v4() })
+        Promise.resolve({ ...w, id: crypto.randomUUID() })
       );
       await renderTable();
     });

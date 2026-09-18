@@ -19,7 +19,7 @@ from kubernetes import client, config, watch
 
 class TlsSecret:
     def __init__(self, cert_spec: str) -> None:
-        (self.hostname, aws_bucket) = cert_spec.split("@")
+        self.hostname, aws_bucket = cert_spec.split("@")
         self.aws = AwsBackup(bucket=aws_bucket)
         self.name = f"{self.hostname.replace('.', '-')}-tls"
 

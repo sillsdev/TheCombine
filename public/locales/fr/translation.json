@@ -234,6 +234,7 @@
       "on": "Allumé",
       "hint": "En mode « Saisie de données », proposer des mots vernaculaires existants qui se ressemblent au mot que l'on est en train de saisir."
     },
+    "harvesterReviewEntries": {},
     "protectedData": { "avoidInMerge": {}, "override": {} },
     "invite": {
       "inviteByEmailLabel": "Inviter par email",
@@ -378,6 +379,7 @@
       "yes": "Oui",
       "no": "Non"
     },
+    "identicalCompleted": {},
     "undo": {
       "undo": "Annuler la fusion",
       "undoDialog": "Annuler cette fusion ?",

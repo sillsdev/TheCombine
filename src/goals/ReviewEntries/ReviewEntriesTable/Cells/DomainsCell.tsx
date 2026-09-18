@@ -2,7 +2,7 @@ import { Chip, Grid2 } from "@mui/material";
 import { type ReactElement } from "react";
 
 import { type SemanticDomain, type Sense } from "api/models";
-import { type CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
+import { type ReadonlyCellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 
 /** Collect all distinct sense.semanticDomains entries. */
 export function gatherDomains(senses: Sense[]): SemanticDomain[] {
@@ -17,7 +17,7 @@ export function gatherDomains(senses: Sense[]): SemanticDomain[] {
     .sort((a, b) => a.id.localeCompare(b.id));
 }
 
-export default function DomainsCell(props: CellProps): ReactElement {
+export default function DomainsCell(props: ReadonlyCellProps): ReactElement {
   return (
     <Grid2 container spacing={1}>
       {gatherDomains(props.word.senses).map((dom) => (

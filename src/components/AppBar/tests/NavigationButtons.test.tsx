@@ -22,7 +22,7 @@ jest.mock("backend", () => ({
 
 const mockGetCurrentPermissions = jest.fn();
 const mockStore = configureMockStore()({
-  currentProjectState: { project: { id: "" } },
+  currentProjectState: { project: { id: "proj-id" } },
 });
 
 const renderNavButtons = async (

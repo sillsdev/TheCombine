@@ -21,7 +21,8 @@ will be sent to the email address associated with your account.
 
 !!! warning "Important"
 
-    The username and email address are **not** case-sensitive. The password **is** case-sensitive.
+    The username and email address are **not** case-sensitive.
+    The password **is** case-sensitive.
 
 ## Settings
 
@@ -37,6 +38,7 @@ You can add or update your:
 - phone number;
 - email address;
 - user-interface language;
+- gloss spelling suggestions (On/Off toggle that controls spelling suggestions in the Data Entry gloss field);
 - analytics consent.
 
 !!! note "Note"
