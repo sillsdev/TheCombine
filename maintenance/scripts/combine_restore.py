@@ -3,9 +3,9 @@
 Restore The Combine from a backup stored in the AWS S3 service.
 
 Restores The Combine database and backend files from a compressed tarball stored
-in the AWS S3 service.  This script only applies to instances of The Combine running
-in a Kubernetes cluster.  It can restore backups made from instances running under
-Kubernetes or Docker.  This script requires the following environment variables to
+in the AWS S3 service. This script only applies to instances of The Combine running
+in a Kubernetes cluster. It can restore backups made from instances running under
+Kubernetes or Docker. This script requires the following environment variables to
 be set:
   AWS_ACCESS_KEY_ID         The Access Key for the AWS S3 bucket where the backups
                             are stored
@@ -26,12 +26,12 @@ import re
 import sys
 import tarfile
 import tempfile
-from typing import List, Optional, Tuple
+from typing import List, NoReturn, Optional, Tuple
 
 from aws_backup import AwsBackup
 from combine_app import CombineApp
 import humanfriendly
-from maint_utils import check_env_vars
+from maint_utils import check_env_vars, wait_for_dependents
 from script_step import ScriptStep
 
 
@@ -59,6 +59,30 @@ def aws_strip_bucket(obj_name: str) -> str:
     return obj_name
 
 
+# Once the database has been replaced, quitting leaves The Combine in a mixed state.
+half_done_warning = (
+    "The database has been restored but the backend files have not; "
+    "re-run this script to finish the restore."
+)
+
+
+def fail(message: str, *, half_done: bool = False) -> NoReturn:
+    """Log the reason the restore cannot continue and exit."""
+    logging.error(message)
+    if half_done:
+        logging.error(half_done_warning)
+    sys.exit(1)
+
+
+def wait_for_combine(wait_time: int, *, half_done: bool = False) -> None:
+    """Wait for the deployments the restore needs, exiting if they do not come up."""
+    if not wait_for_dependents(
+        [CombineApp.Component.Database.value, CombineApp.Component.Backend.value],
+        timeout=wait_time,
+    ):
+        fail("The database or the backend is not available.", half_done=half_done)
+
+
 def main() -> None:
     """Restore The Combine from a backup stored in the AWS S3 service."""
     args = parse_args()
@@ -73,6 +97,10 @@ def main() -> None:
     combine = CombineApp()
     aws = AwsBackup(bucket=aws_bucket)
     step = ScriptStep()
+    wait_time = int(os.getenv("wait_time", 60))
+
+    step.print("Make sure the database and backend are available.")
+    wait_for_combine(wait_time)
 
     step.print("Prepare for the restore.")
     with tempfile.TemporaryDirectory() as restore_dir:
@@ -101,7 +129,7 @@ def main() -> None:
                         )
                     )
 
-            # Print out the list of backups to choose from.  In the process,
+            # Print out the list of backups to choose from. In the process,
             # update each line in the backup list to be the AWS S3 object name
             # and its (human-friendly) size.
             print("Backup List:")
@@ -153,12 +181,16 @@ def main() -> None:
 
             safe_extract(tar)
 
-        step.print("Restore the database.")
+        step.print("Locate the database and backend containers.")
+        wait_for_combine(wait_time)
         db_pod = combine.get_pod_id(CombineApp.Component.Database)
         if not db_pod:
-            logging.error("Cannot find the database container.")
-            sys.exit(1)
+            fail("Cannot find the database container.")
+        # Deliberately not kept: a rollout during the restore would invalidate this id.
+        if not combine.get_pod_id(CombineApp.Component.Backend):
+            fail("Cannot find the backend container.")
 
+        step.print("Restore the database.")
         logging.debug(f"Copying {db_files_subdir} to {db_pod} ...")
         combine.cp_with_retry(
             [db_files_subdir, f"{db_pod}:/"], label=f"database dump ({db_files_subdir})"
@@ -177,10 +209,12 @@ def main() -> None:
         logging.debug(f"stdout:\n{rm_proc.stdout.strip()}")
 
         step.print("Copy the backend files.")
-        backend_pod = combine.get_pod_id(CombineApp.Component.Backend)
+        # The database is already replaced, so failing here leaves the restore half done:
+        # wait out any rollout rather than fail on a pod id that predates it.
+        wait_for_combine(wait_time, half_done=True)
+        backend_pod = combine.get_pod_id(CombineApp.Component.Backend, refresh=True)
         if not backend_pod:
-            logging.error("Cannot find the backend container.")
-            sys.exit(1)
+            fail("Cannot find the backend container.", half_done=True)
 
         # if --clean option was used, delete the existing backend files
         if args.clean:

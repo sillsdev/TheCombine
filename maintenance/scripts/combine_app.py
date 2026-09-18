@@ -15,7 +15,7 @@ from typing import Any, Dict, List, Optional
 from maint_utils import run_cmd
 
 # A `kubectl cp` streams a tar over the exec channel and can stall intermittently,
-# which would otherwise hang forever.  Bound each copy with a timeout so a stalled
+# which would otherwise hang forever. Bound each copy with a timeout so a stalled
 # stream gets killed, and retry a few times so a transient stall is recovered.
 # Clamp to a sane floor so a misconfigured env var can't skip the copy entirely.
 CP_ATTEMPTS = max(1, int(os.getenv("kubectl_cp_attempts", "3")))
@@ -112,8 +112,8 @@ class CombineApp:
         """Run a `kubectl cp`, bounding it with a timeout and retrying transient stalls.
 
         `kubectl cp` streams a tar over the exec channel and can stall intermittently
-        with no output.  Each attempt is killed after `timeout` seconds and the copy is
-        tried up to `attempts` times, pausing briefly between attempts.  If every
+        with no output. Each attempt is killed after `timeout` seconds and the copy is
+        tried up to `attempts` times, pausing briefly between attempts. If every
         attempt fails, the failing copy is logged and the process exits non-zero so
         the failure surfaces instead of hanging silently.
 
@@ -145,18 +145,42 @@ class CombineApp:
         logging.error(f"Failed to copy {label} after {attempts} attempts; aborting.")
         sys.exit(1)
 
-    def get_pod_id(self, service: CombineApp.Component, *, instance: int = 0) -> str:
-        """Look up the Kubernetes pod id for the specified service."""
+    def get_pod_id(
+        self, service: CombineApp.Component, *, instance: int = 0, refresh: bool = False
+    ) -> str:
+        """Look up the Kubernetes pod id for the specified service.
+
+        Returns an empty string when the service has no running pod, so that callers
+        can report the missing component themselves. Note that a pod whose container
+        is crash-looping is still Running, so an empty result means the pod is
+        pending, evicted, or gone entirely, as it is during a Recreate rollout.
+
+        Set `refresh` to drop any cached id and query again. A caller that has held an
+        id across a long operation needs this: a rollout in the meantime deletes the
+        pod that id names, and the cache would keep handing back the dead one.
+        """
+        if refresh:
+            self.pod_id_cache.pop(service.value, None)
         if service.value not in self.pod_id_cache:
-            self.pod_id_cache[service.value] = self.kubectl(
-                [
-                    "get",
-                    "pods",
-                    "--field-selector=status.phase==Running",
-                    "-o" f"jsonpath={{.items[{instance}].metadata.name}}",
-                    f"-l=combine-component={service.value}",
-                ]
-            ).stdout.strip()
+            # Print the whole (possibly empty) list of names rather than indexing in the
+            # jsonpath: an out-of-bounds `{.items[0]...}` makes kubectl exit non-zero,
+            # which would abort the script before it can report the missing component.
+            pod_ids = (
+                self.kubectl(
+                    [
+                        "get",
+                        "pods",
+                        "--field-selector=status.phase==Running",
+                        "-ojsonpath={.items[*].metadata.name}",
+                        f"-l=combine-component={service.value}",
+                    ]
+                )
+                .stdout.strip()
+                .split()
+            )
+            if instance >= len(pod_ids):
+                return ""
+            self.pod_id_cache[service.value] = pod_ids[instance]
         return self.pod_id_cache[service.value]
 
     def db_cmd(self, cmd: str) -> Optional[Dict[str, Any]]:
@@ -164,7 +188,7 @@ class CombineApp:
 
         Note:
             A list of results can be returned if the query to be evaluated returns a list of
-            values.  mypy is strict about indexing Union[Dict, List], so in general we cannot
+            values. mypy is strict about indexing Union[Dict, List], so in general we cannot
             properly type hint this return type without generating many false positives.
         """
         db_results = self.exec(
