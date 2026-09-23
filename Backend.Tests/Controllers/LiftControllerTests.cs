@@ -441,6 +441,36 @@ namespace Backend.Tests.Controllers
             Assert.That(notFoundResult, Is.InstanceOf<NotFoundObjectResult>());
         }
 
+        /// <summary>
+        /// Create a word that is absent from the Frontier without having been marked as deleted. Ensure that it is
+        /// not exported to LIFT format, as deleted or otherwise.
+        /// </summary>
+        [Test]
+        public async Task TestWordLostFromFrontierNotExportedAsDeleted()
+        {
+            // A word in the Frontier, to be exported as a live entry.
+            await _wordRepo.Create(Util.RandomWord(_projId));
+
+            // A word deleted by the user, to be exported as a deleted entry.
+            var deletedWord = await _wordRepo.Create(Util.RandomWord(_projId));
+            await _wordService.DeleteFrontierWord(_projId, UserId, deletedWord.Id);
+
+            // A word missing from the Frontier but still Active, as could result from an unforeseen bug.
+            var lostWord = await _wordRepo.Add(Util.RandomWord(_projId));
+
+            _liftService.SetExportInProgress(UserId, ExportId);
+            await _liftController.CreateLiftExportThenSignal(_projId, UserId, ExportId);
+            var text = await DownloadAndReadLift(_liftController, _projId);
+
+            // Only the live entry and the deleted entry are exported.
+            Assert.That(Regex.Matches(text, "<entry"), Has.Count.EqualTo(2));
+            Assert.That(Regex.Matches(text, "dateDeleted"), Has.Count.EqualTo(1));
+            Assert.That(text, Does.Not.Contain(lostWord.Guid.ToString()));
+
+            // Delete the export
+            _liftController.DeleteLiftFile(UserId);
+        }
+
         [Test]
         public async Task TestExportConsentFileWithSpeakerName()
         {
