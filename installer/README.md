@@ -184,3 +184,4 @@ need to be entered again.
 | `./combine-net-installer.run -- v3.0.0`                                              | Install version `v3.0.0` of _The Combine_. |
 | `./combine-net-installer.run -- update v3.0.1`                                       | Update installation to version `v3.0.1`.   |
 | `./combine-net-installer.run -- restart`                                             | Restart process from the beginning.        |
+| `./combine-net-installer.run -- uninstall`                                           | Remove _The Combine_; no version needed.   |
