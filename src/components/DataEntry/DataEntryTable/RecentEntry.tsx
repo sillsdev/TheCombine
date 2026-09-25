@@ -1,5 +1,7 @@
-import { Grid2 } from "@mui/material";
+import { Check } from "@mui/icons-material";
+import { Grid2, IconButton } from "@mui/material";
 import { ReactElement, memo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Pronunciation, Status, Word, WritingSystem } from "api/models";
 import NoteButton from "components/Buttons/NoteButton";
@@ -13,7 +15,9 @@ import { FileWithSpeakerId, newGloss } from "types/word";
 import { firstGlossText } from "utilities/wordUtilities";
 
 export enum RecentEntryIdPrefix {
+  ButtonClose = "recent-entry-close-",
   ButtonDelete = "recent-entry-delete-",
+  ButtonEdit = "recent-entry-edit-",
   ButtonNote = "recent-entry-note-",
   Row = "recent-entry-",
   TextFieldGloss = "recent-entry-gloss-",
@@ -35,6 +39,8 @@ export interface RecentEntryProps {
   analysisLang: WritingSystem;
   vernacularLang: WritingSystem;
   disabled?: boolean;
+  /** If defined, called when the entry no longer needs to be editable. */
+  close?: () => void;
 }
 
 /**
@@ -50,6 +56,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
     firstGlossText(sense, props.analysisLang.bcp47)
   );
   const [vernacular, setVernacular] = useState(props.entry.vernacular);
+  const { t } = useTranslation();
 
   const updateGlossField = (gloss: string): void => {
     setEditing(gloss !== firstGlossText(sense, props.analysisLang.bcp47));
@@ -63,6 +70,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
   function conditionallyUpdateGloss(): void {
     if (firstGlossText(sense, props.analysisLang.bcp47) !== gloss) {
       props.updateGloss(props.rowIndex, gloss);
+      props.close?.();
     }
   }
 
@@ -70,6 +78,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
     if (vernacular.trim()) {
       if (props.entry.vernacular !== vernacular) {
         props.updateVern(props.rowIndex, vernacular);
+        props.close?.();
       }
     } else {
       setVernacular(props.entry.vernacular);
@@ -77,8 +86,10 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
   }
 
   const handleRemoveEntry = (): void => props.removeEntry(props.rowIndex);
-  const handleUpdateNote = (noteText: string): Promise<void> =>
-    props.updateNote(props.rowIndex, noteText);
+  const handleUpdateNote = async (noteText: string): Promise<void> => {
+    await props.updateNote(props.rowIndex, noteText);
+    props.close?.();
+  };
 
   return (
     <Grid2
@@ -155,6 +166,17 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
           confirmId="addWords.deleteRowWarning"
           disabled={editing || props.disabled}
         />
+        {!!props.close && (
+          <IconButton
+            aria-label={t("buttons.done")}
+            data-testid={`${RecentEntryIdPrefix.ButtonClose}${props.rowIndex}`}
+            id={`${RecentEntryIdPrefix.ButtonClose}${props.rowIndex}`}
+            onClick={props.close}
+            size="small"
+          >
+            <Check sx={{ color: (theme) => theme.palette.success.main }} />
+          </IconButton>
+        )}
       </Grid2>
     </Grid2>
   );
