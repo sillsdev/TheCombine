@@ -211,7 +211,9 @@ check-opt-value () {
       fi
       MAJOR_VERSION=${1%%.*}
       if (( 10#${MAJOR_VERSION#v} < 3 )) ; then
-        # The charts assume a replica-set database (in v3+).
+        # The charts assume a replica-set database (in v3+). Keep them working
+        # with v3.0.0 images rather than raising this minimum; guard any chart
+        # step (e.g., the database postStart) that needs newer image content.
         error "Unsupported version, $1; this installer requires v3.0.0 or later."
       fi
       ;;

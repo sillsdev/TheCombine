@@ -50,6 +50,9 @@ spec:
             - "--replSet"
             - "rs0"
           lifecycle:
+            # The net installer deploys this chart with images as old as v3.0.0
+            # (see install-combine.sh), so guard any step that needs newer
+            # image content.
             postStart:
               exec:
                 command:
@@ -70,8 +73,7 @@ spec:
                     done
                     echo "[postStart] Ensuring replica set host"
                     mongosh --quiet --host 127.0.0.1 /opt/thecombine/00-replica-set.js || exit $?
-                    # Images before v3.0.1 do not include the index script, and
-                    # the net installer can deploy this chart with such images.
+                    # Images before v3.0.1 do not include the index script.
                     if [ -f /opt/thecombine/01-indexes.js ]; then
                       echo "[postStart] Ensuring indexes"
                       mongosh --quiet --host 127.0.0.1 /opt/thecombine/01-indexes.js || exit $?
