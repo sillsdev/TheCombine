@@ -172,7 +172,7 @@ To run `combine-net-installer.run` with options, the option list must be started
 | timeout TIMEOUT | Use a different timeout when installing. (Default: 5 minutes.) With slow internet, it is helpful to extend the timeout. See <https://pkg.go.dev/time#ParseDuration> for timeout formats. \* |
 | uninstall       | Remove software installed by this script. |
 | update          | Update _The Combine_ to the version number provided. This skips installing/updating support software that was installed previously (e.g., the `combinectl` tool). |
-| version-number  | Specify a version to install. A version number will have the form `vn.n.n` where `n` represents an integer value, for example, `v1.20.0`. |
+| version-number  | Specify a version to install. A version number will have the form `vn.n.n` where `n` represents an integer value, for example, `v3.0.1`. The version must be `v3.0.0` or later. |
 
 \* The value is used for the rest of the installation, including after a restart, so it does not
 need to be entered again.
@@ -181,6 +181,6 @@ need to be entered again.
 
 | Command                                                                              | Effect                                     |
 | ------------------------------------------------------------------------------------ | -------------------------------------------|
-| `./combine-net-installer.run -- v2.2.0`                                              | Install version `v2.2.0` of _The Combine_. |
-| `./combine-net-installer.run -- update v3.0.0`                                       | Update installation to version `v3.0.0`    |
+| `./combine-net-installer.run -- v3.0.0`                                              | Install version `v3.0.0` of _The Combine_. |
+| `./combine-net-installer.run -- update v3.0.1`                                       | Update installation to version `v3.0.1`.   |
 | `./combine-net-installer.run -- restart`                                             | Restart process from the beginning.        |

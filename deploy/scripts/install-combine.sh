@@ -209,6 +209,11 @@ check-opt-value () {
       if [[ ! $1 =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9-]+\.[0-9]+)?$ ]] ; then
         error "Invalid version number, $1"
       fi
+      MAJOR_VERSION=${1%%.*}
+      if (( 10#${MAJOR_VERSION#v} < 3 )) ; then
+        # The charts assume a replica-set database (in v3+).
+        error "Unsupported version, $1; this installer requires v3.0.0 or later."
+      fi
       ;;
   esac
   # A failed test at the end would stop the script, so succeed explicitly
