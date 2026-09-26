@@ -13,10 +13,11 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/words")]
-    public class WordController(
-        IWordRepository wordRepo, IWordService wordService, IPermissionService permissionService) : Controller
+    public class WordController(IWordRepository wordRepo, IWordService wordService,
+        ISemanticDomainCountRepository semDomCountRepo, IPermissionService permissionService) : Controller
     {
         private readonly IWordRepository _wordRepo = wordRepo;
+        private readonly ISemanticDomainCountRepository _semDomCountRepo = semDomCountRepo;
         private readonly IPermissionService _permissionService = permissionService;
         private readonly IWordService _wordService = wordService;
 
@@ -299,7 +300,7 @@ namespace BackendFramework.Controllers
             return Ok(updates);
         }
 
-        /// <summary> Get the count of frontier words with senses in a specific semantic domain </summary>
+        /// <summary> Get the count of frontier word senses in a specific semantic domain </summary>
         /// <returns> An integer count </returns>
         [HttpGet("domainwordcount/{domainId}", Name = "GetDomainWordCount")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
@@ -313,7 +314,7 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
-            return Ok(await _wordRepo.CountFrontierWordsWithDomain(projectId, domainId));
+            return Ok(await _semDomCountRepo.GetCount(projectId, domainId));
         }
     }
 }
