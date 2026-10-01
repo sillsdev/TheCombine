@@ -35,7 +35,7 @@ kubernetes==35.0.0
     # via -r requirements.in
 markupsafe==3.0.3
     # via jinja2
-oauthlib==3.3.1
+oauthlib==4.0.0
     # via requests-oauthlib
 packaging==26.0
     # via ansible-core
