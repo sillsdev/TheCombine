@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import subprocess
+from typing import Optional
 
 from maint_utils import run_cmd
 
@@ -18,10 +19,21 @@ class AwsBackup:
         else:
             self.bucket = f"s3://{bucket}"
 
-    def push(self, src: Path, dest: str) -> subprocess.CompletedProcess[str]:
+    def push(
+        self,
+        src: Path,
+        dest: str,
+        *,
+        check_results: bool = True,
+        timeout: Optional[float] = None,
+    ) -> subprocess.CompletedProcess[str]:
         """Push a file to the AWS S3 bucket."""
         s3_uri = f"{self.bucket}/{dest}"
-        return run_cmd(["aws", "s3", "cp", "--no-progress", str(src), s3_uri])
+        return run_cmd(
+            ["aws", "s3", "cp", "--no-progress", str(src), s3_uri],
+            check_results=check_results,
+            timeout=timeout,
+        )
 
     def pull(self, src: str, dest: Path) -> subprocess.CompletedProcess[str]:
         """Pull a file from the AWS S3 bucket."""

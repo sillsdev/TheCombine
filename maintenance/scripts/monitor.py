@@ -10,6 +10,7 @@ to the specified AWS S3 bucket.
 import base64
 import os
 from pathlib import Path
+import subprocess
 import tempfile
 import time
 from typing import Dict
@@ -19,6 +20,10 @@ from kubernetes import client, config, watch
 
 
 class TlsSecret:
+    push_attempts = 5
+    push_timeout = 60
+    retry_delay = 10
+
     def __init__(self, cert_spec: str) -> None:
         self.hostname, aws_bucket = cert_spec.split("@")
         self.aws = AwsBackup(bucket=aws_bucket)
@@ -36,6 +41,9 @@ class TlsSecret:
             a_secret.push(data=b'<my cert data>', filename="cert.pem")
             will create a file that contains the data received in the AWS
             S3 bucket under my-cert-tls/cert.pem.
+
+        Raises:
+            RuntimeError: if every attempt to push the file fails or times out.
         """
         secret_dest = f"{self.name}/{filename}"
         print(f"Push {secret_dest} to AWS {self.aws.bucket}", flush=True)
@@ -44,7 +52,24 @@ class TlsSecret:
             secret_dir.mkdir(parents=True, exist_ok=True)
             secret_filename = secret_dir / filename
             secret_filename.write_bytes(data)
-            self.aws.push(secret_filename, secret_dest)
+            for attempt in range(1, self.push_attempts + 1):
+                try:
+                    result = self.aws.push(
+                        secret_filename,
+                        secret_dest,
+                        check_results=False,
+                        timeout=self.push_timeout,
+                    )
+                except subprocess.TimeoutExpired:
+                    error = f"timed out after {self.push_timeout}s"
+                else:
+                    if result.returncode == 0:
+                        return
+                    error = result.stderr.strip()
+                print(f"Push attempt {attempt} failed: {error}", flush=True)
+                if attempt < self.push_attempts:
+                    time.sleep(self.retry_delay)
+        raise RuntimeError(f"Could not push {secret_dest} to AWS {self.aws.bucket}")
 
 
 class CertMonitor:
