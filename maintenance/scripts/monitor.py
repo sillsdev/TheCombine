@@ -11,6 +11,7 @@ import base64
 import os
 from pathlib import Path
 import tempfile
+import time
 from typing import Dict
 
 from aws_backup import AwsBackup
@@ -64,6 +65,12 @@ class CertMonitor:
     """
 
     trigger_events = ("ADDED", "MODIFIED")
+    # The API server ends each watch after this many seconds, so that a new
+    # watch is started, which re-pushes all the secrets.
+    watch_timeout = 1800
+    # If no data arrives for this long, the connection is assumed dead.
+    read_timeout = watch_timeout + 60
+    retry_delay = 30
 
     def __init__(self) -> None:
         self.secrets_dict = CertMonitor.get_secrets_dict()
@@ -86,15 +93,24 @@ class CertMonitor:
         return secret_dict
 
     def monitor(self) -> None:
-        """Monitor for updates to the secrets."""
-        # Setup watch on Kubernetes secrets
+        """Monitor for updates to the secrets, restarting the watch as needed."""
         config.load_incluster_config()
         core_api = client.CoreV1Api()
-        # Create watch object
+        while True:
+            try:
+                self.watch_secrets(core_api)
+            except Exception as err:
+                print(f"Watch failed ({err!r}); restarting in {self.retry_delay}s.", flush=True)
+                time.sleep(self.retry_delay)
+
+    def watch_secrets(self, core_api: client.CoreV1Api) -> None:
+        """Push the secrets on each event until the watch times out."""
         watch_obj = watch.Watch()
-        # Wait for events
         for event in watch_obj.stream(
-            core_api.list_namespaced_secret, namespace=self.k8s_namespace
+            core_api.list_namespaced_secret,
+            namespace=self.k8s_namespace,
+            timeout_seconds=self.watch_timeout,
+            _request_timeout=self.read_timeout,
         ):
             secret_name = event["object"].metadata.name
             event_type = event["type"]
