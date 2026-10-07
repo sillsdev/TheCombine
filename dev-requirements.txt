@@ -31,8 +31,6 @@ click==8.3.2
 colorama==0.4.6
     # via
     #   -r dev-requirements.in
-    #   click
-    #   mkdocs
     #   mkdocs-material
     #   tox
 cryptography==46.0.7
@@ -142,7 +140,6 @@ platformdirs==4.9.6
     # via
     #   black
     #   mkdocs-get-deps
-    #   python-discovery
     #   tox
     #   virtualenv
 pluggy==1.6.0
@@ -164,14 +161,12 @@ pyopenssl==26.0.0
 pyproject-api==1.10.0
     # via tox
 pyreadline3==3.5.4
-    # via
-    #   -r dev-requirements.in
-    #   humanfriendly
+    # via -r dev-requirements.in
 python-dateutil==2.9.0.post0
     # via
     #   ghp-import
     #   kubernetes
-python-discovery==1.2.2
+python-discovery==1.6.1
     # via
     #   tox
     #   virtualenv
@@ -224,7 +219,7 @@ urllib3==2.6.3
     #   kubernetes
     #   requests
     #   types-requests
-virtualenv==21.2.1
+virtualenv==21.7.13
     # via tox
 watchdog==6.0.0
     # via mkdocs
