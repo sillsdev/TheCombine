@@ -3,11 +3,12 @@
 Monitor TLS secrets for changes and push changes to AWS S3.
 
 monitor.py will monitor the secrets specified in the CERT_PROXY_CERTIFICATES
-environment variable.  When a secret is updated, the updated secret is pushed
+environment variable. When a secret is updated, the updated secret is pushed
 to the specified AWS S3 bucket.
 """
 
 import base64
+import hashlib
 import os
 from pathlib import Path
 import subprocess
@@ -65,7 +66,7 @@ class TlsSecret:
                 else:
                     if result.returncode == 0:
                         return
-                    error = result.stderr.strip()
+                    error = f"exit {result.returncode}: {result.stderr.strip()}"
                 print(f"Push attempt {attempt} failed: {error}", flush=True)
                 if attempt < self.push_attempts:
                     time.sleep(self.retry_delay)
@@ -90,9 +91,10 @@ class CertMonitor:
     """
 
     trigger_events = ("ADDED", "MODIFIED")
-    # The API server ends each watch after this many seconds, so that a new
-    # watch is started, which re-pushes all the secrets.
+    # The API server ends each watch after this many seconds. Each new watch
+    # lists all the secrets again, so any secret whose push failed is retried.
     watch_timeout = 1800
+    connect_timeout = 10
     # If no data arrives for this long, the connection is assumed dead.
     read_timeout = watch_timeout + 60
     retry_delay = 30
@@ -100,6 +102,8 @@ class CertMonitor:
     def __init__(self) -> None:
         self.secrets_dict = CertMonitor.get_secrets_dict()
         self.k8s_namespace = os.environ["CERT_PROXY_NAMESPACE"]
+        # Digest of each secret's data as of its last successful push
+        self.pushed_digests: Dict[str, str] = {}
 
     @staticmethod
     def get_secrets_dict() -> Dict[str, TlsSecret]:
@@ -107,7 +111,7 @@ class CertMonitor:
         Create the list of secrets to monitor.
 
         Create the list of secrets to monitor from the CERT_PROXY_CERTIFICATES
-        environment variable.  This function assumes that the secret name is '-tls'
+        environment variable. This function assumes that the secret name is '-tls'
         appended to the dns name of the server (with '.' converted to '-').
         """
         secret_dict: Dict[str, TlsSecret] = {}
@@ -134,21 +138,30 @@ class CertMonitor:
         for event in watch_obj.stream(
             core_api.list_namespaced_secret,
             namespace=self.k8s_namespace,
+            field_selector="type=kubernetes.io/tls",
             timeout_seconds=self.watch_timeout,
-            _request_timeout=self.read_timeout,
+            _request_timeout=(self.connect_timeout, self.read_timeout),
         ):
             secret_name = event["object"].metadata.name
             event_type = event["type"]
             print(f"Event: {event_type} {secret_name}", flush=True)
             if (event_type in CertMonitor.trigger_events) and (secret_name in self.secrets_dict):
+                data = event["object"].data
+                digest = hashlib.sha256(
+                    f"{data['tls.key']}:{data['tls.crt']}".encode()
+                ).hexdigest()
+                if self.pushed_digests.get(secret_name) == digest:
+                    print(f"{secret_name} unchanged since last push", flush=True)
+                    continue
                 self.secrets_dict[secret_name].push(
-                    data=base64.b64decode(event["object"].data["tls.key"]),
+                    data=base64.b64decode(data["tls.key"]),
                     filename="key.pem",
                 )
                 self.secrets_dict[secret_name].push(
-                    data=base64.b64decode(event["object"].data["tls.crt"]),
+                    data=base64.b64decode(data["tls.crt"]),
                     filename="cert.pem",
                 )
+                self.pushed_digests[secret_name] = digest
 
 
 def main() -> None:

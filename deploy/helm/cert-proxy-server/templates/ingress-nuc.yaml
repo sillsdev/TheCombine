@@ -13,7 +13,7 @@ metadata:
 {{- end }}
     cert-manager.io/issuer: {{ $.Values.certIssuer }}
     cert-manager.io/duration: 2160h
-    cert-manager.io/renew-before: {{ $.Values.certRenewBefore }}
+    cert-manager.io/renew-before-percentage: {{ $.Values.certRenewBeforePercentage | quote }}
 spec:
   ingressClassName: {{ $.Values.ingressClass }}
   tls:

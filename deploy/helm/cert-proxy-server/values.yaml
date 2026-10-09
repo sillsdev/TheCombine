@@ -55,8 +55,11 @@ imageName: combine_maint
 
 awsS3CertLoc: certs
 certIssuer: letsencrypt-prod
-# Renew before there are 1440 hours left (60 days)
-certRenewBefore: 1440h
+# Renew when 92% of the certificate's lifetime is left, so that a NUC that pulls
+# it from AWS S3 can stay offline for as long as possible. With 45-day certificates,
+# that is a renewal every 3.6 days (about 2 per week per hostname), which leaves
+# room under Let's Encrypt's limit of 5 certificates per week for the same hostname.
+certRenewBeforePercentage: 92
 
 # monitor.py loads the Kubernetes client library and then invokes the AWS CLI
 # as a subprocess.

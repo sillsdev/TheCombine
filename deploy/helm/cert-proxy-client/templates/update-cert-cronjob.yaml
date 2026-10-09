@@ -58,10 +58,10 @@ spec:
                     configMapKeyRef:
                       key: CERT_NAMESPACE
                       name: {{ .Values.envName | quote }}
-                - name: CERT_RENEW_BEFORE
+                - name: CERT_RENEW_BEFORE_PERCENTAGE
                   valueFrom:
                     configMapKeyRef:
-                      key: CERT_RENEW_BEFORE
+                      key: CERT_RENEW_BEFORE_PERCENTAGE
                       name: {{ .Values.envName | quote }}
                 - name: TEST_URL
                   valueFrom:

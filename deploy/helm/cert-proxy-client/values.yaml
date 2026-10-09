@@ -27,7 +27,9 @@ global:
   awsS3Location: "thecombine.app"
 
 awsS3CertLoc: certs
-certRenewBefore: "60"
+# Pull from AWS S3 when 88% of the certificate's lifetime is left. The server
+# renews at 92%, so by then the certificate in AWS S3 is newer.
+certRenewBeforePercentage: 88
 imageName: combine_maint
 envName: env-cert-proxy
 
@@ -39,8 +41,6 @@ memoryLimit: 1Gi
 # Run once a minute.  If the cert is not up for renewal, The Combine
 # will not try to reach AWS S3
 schedule: "* * * * *"
-
-cert_renew_before: 60
 
 serviceAccount:
   name: account-tls-secret

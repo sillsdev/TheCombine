@@ -2,7 +2,7 @@ name: cert_check
 
 on:
   schedule:
-    - cron: "0 12 * * *"
+    - cron: "0 */12 * * *"
   workflow_dispatch:
 
 permissions:
@@ -27,9 +27,11 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      # The cert-proxy-server renews certs with 60 days left, so fewer than 50 means renewal has stalled.
+      # The cert-proxy-server renews certs with 92% of their lifetime left
+      # (certRenewBeforePercentage in deploy/helm/cert-proxy-server/values.yaml),
+      # so less than 91% left means renewal has stalled.
       # Certs match combineCertProxyList in deploy/scripts/setup_files/profiles/prod.yaml.
-      - name: Check expiration of the certs in S3
+      - name: Check the certs in S3
         run: |
           failed=0
           for cert in \
@@ -37,17 +39,25 @@ jobs:
             prod.thecombine.app/certs/nuc2-thecombine-app-tls \
             prod.thecombine.app/certs/nuc3-thecombine-app-tls \
             local.thecombine.app/certs/local-thecombine-app-tls; do
-            if ! aws s3 cp --no-progress "s3://$cert/cert.pem" cert.pem; then
-              echo "::error::Could not download $cert/cert.pem from S3."
+            if ! aws s3 cp --no-progress "s3://$cert/cert.pem" cert.pem ||
+              ! aws s3 cp --no-progress "s3://$cert/key.pem" key.pem; then
+              echo "::error::Could not download $cert from S3."
               failed=1
               continue
             fi
-            echo -n "$cert: "
-            openssl x509 -enddate -noout -in cert.pem
-            if ! openssl x509 -checkend $((50 * 24 * 60 * 60)) -noout -in cert.pem > /dev/null; then
-              echo "::error::The $cert cert in S3 expires within 50 days."
+            if [ "$(openssl x509 -pubkey -noout -in cert.pem)" != "$(openssl pkey -pubout -in key.pem)" ]; then
+              echo "::error::The $cert key in S3 does not match its cert."
               failed=1
             fi
+            echo -n "$cert: "
+            openssl x509 -enddate -noout -in cert.pem
+            not_before=$(date -d "$(openssl x509 -startdate -noout -in cert.pem | cut -d= -f2)" +%s)
+            not_after=$(date -d "$(openssl x509 -enddate -noout -in cert.pem | cut -d= -f2)" +%s)
+            if (( (not_after - $(date +%s)) * 100 < (not_after - not_before) * 91 )); then
+              echo "::error::The $cert cert in S3 has less than 91% of its lifetime left."
+              failed=1
+            fi
+            rm -f cert.pem key.pem
           done
           exit $failed
         shell: bash
