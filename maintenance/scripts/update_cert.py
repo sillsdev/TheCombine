@@ -100,7 +100,7 @@ class CertUpdater:
         # 2. Lookup the validity period
         try:
             not_before, not_after = get_validity(base64.b64decode(ssl_cert.data["tls.crt"]))
-        except ValueError:
+        except (ValueError, crypto.Error):
             return True
         self.current_expiration = not_after
         expires_in = not_after - datetime.now(timezone.utc)

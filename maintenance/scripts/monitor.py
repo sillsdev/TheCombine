@@ -130,8 +130,8 @@ class CertMonitor:
             try:
                 self.watch_secrets(core_api)
             except Exception as err:
-                print(f"Watch failed ({err!r}); restarting in {self.retry_delay}s.", flush=True)
-                time.sleep(self.retry_delay)
+                print(f"Watch failed ({err!r}).", flush=True)
+            time.sleep(self.retry_delay)
 
     def watch_secrets(self, core_api: client.CoreV1Api) -> None:
         """Push the secrets on each event until the watch times out."""
