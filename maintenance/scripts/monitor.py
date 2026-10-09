@@ -92,7 +92,8 @@ class CertMonitor:
 
     trigger_events = ("ADDED", "MODIFIED")
     # The API server ends each watch after this many seconds. Each new watch
-    # lists all the secrets again, so any secret whose push failed is retried.
+    # starts without a resource version, so it begins with an ADDED event for
+    # every existing secret, and any secret whose push failed is retried.
     watch_timeout = 1800
     connect_timeout = 10
     # If no data arrives for this long, the connection is assumed dead.
