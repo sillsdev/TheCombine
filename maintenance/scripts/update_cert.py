@@ -141,9 +141,7 @@ class CertUpdater:
                     "yaml",
                 ]
             ).stdout
-            secret_file = Path(temp_dir) / "secret.yaml"
-            secret_file.write_text(secret_yaml)
-            run_cmd(["kubectl", "-n", self.namespace, "apply", "-f", str(secret_file)])
+            run_cmd(["kubectl", "-n", self.namespace, "apply", "-f", "-"], stdin_text=secret_yaml)
 
 
 if __name__ == "__main__":
