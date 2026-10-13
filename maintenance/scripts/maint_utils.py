@@ -27,7 +27,11 @@ def check_env_vars(var_names: List[str]) -> tuple[str, ...]:
 
 
 def run_cmd(
-    cmd: List[str], *, check_results: bool = True, timeout: Optional[float] = None
+    cmd: List[str],
+    *,
+    check_results: bool = True,
+    timeout: Optional[float] = None,
+    stdin_text: Optional[str] = None,
 ) -> subprocess.CompletedProcess[str]:
     """Run a command with subprocess and catch any CalledProcessErrors.
 
@@ -37,10 +41,12 @@ def run_cmd(
         timeout: if set, the command is killed and subprocess.TimeoutExpired is
                  raised when it runs longer than this many seconds.  Callers that
                  pass a timeout are responsible for handling TimeoutExpired.
+        stdin_text: if set, this text is sent to the command's standard input.
     """
     try:
         return subprocess.run(
             cmd,
+            input=stdin_text,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             universal_newlines=True,

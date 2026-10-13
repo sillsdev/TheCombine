@@ -8,6 +8,6 @@ data:
   AWS_S3_BUCKET: {{ print "s3://" .Values.global.awsS3Location "/" .Values.awsS3CertLoc | quote }}
   CERT_SECRET: {{ include "cert-proxy-client.certSecretName" . }}
   CERT_NAMESPACE: {{ .Release.Namespace  }}
-  CERT_RENEW_BEFORE: "{{ .Values.certRenewBefore }}"
+  CERT_RENEW_BEFORE_PERCENTAGE: {{ .Values.certRenewBeforePercentage | quote }}
   TEST_URL: "https://aws.amazon.com"
   VERBOSE: "True"
