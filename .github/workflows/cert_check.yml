@@ -31,18 +31,19 @@ jobs:
       # (certRenewBeforePercentage in deploy/helm/cert-proxy-server/values.yaml),
       # so less than 91% left means renewal has stalled.
       # Certs match combineCertProxyList in deploy/scripts/setup_files/profiles/prod.yaml.
-      # The cert buckets are in us-east-2, which need not be AWS_DEFAULT_REGION, and
-      # the egress policy blocks the CLI's redirect to another region's endpoint.
       - name: Check the certs in S3
         run: |
+          # The cert buckets are in us-east-2, which might not be AWS_DEFAULT_REGION,
+          # and the egress policy blocks the CLI's redirect to another region.
+          export AWS_REGION=us-east-2
           failed=0
           for cert in \
             prod.thecombine.app/certs/nuc1-thecombine-app-tls \
             prod.thecombine.app/certs/nuc2-thecombine-app-tls \
             prod.thecombine.app/certs/nuc3-thecombine-app-tls \
             local.thecombine.app/certs/local-thecombine-app-tls; do
-            if ! aws s3 cp --no-progress --region us-east-2 "s3://$cert/cert.pem" cert.pem ||
-              ! aws s3 cp --no-progress --region us-east-2 "s3://$cert/key.pem" key.pem; then
+            if ! aws s3 cp --no-progress "s3://$cert/cert.pem" cert.pem ||
+              ! aws s3 cp --no-progress "s3://$cert/key.pem" key.pem; then
               echo "::error::Could not download $cert from S3."
               failed=1
               continue
