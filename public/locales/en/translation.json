@@ -30,6 +30,7 @@
     "addNote": "Add a note",
     "domain": "Domain",
     "domainTitle": "Domain: {{ val1 }} ({{ val2 }})",
+    "editRow": "Edit this row",
     "glosses": "Glosses",
     "pressEnter": "Press Enter to save word",
     "vernacular": "Vernacular"
