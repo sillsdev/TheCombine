@@ -1,5 +1,6 @@
 import {
   act,
+  fireEvent,
   render,
   screen,
   waitForElementToBeRemoved,
@@ -11,6 +12,7 @@ import configureMockStore from "redux-mock-store";
 
 import { Permission } from "api/models";
 import { defaultState } from "components/Project/ProjectReduxTypes";
+import { defaultState as defaultPronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import ReviewEntriesTable, {
   ColumnHeaderTextId,
   ColumnId,
@@ -74,6 +76,7 @@ const mockState = (
       grammaticalInfoEnabled,
     },
   },
+  pronunciationsState: defaultPronunciationsState,
 });
 
 const renderReviewEntriesTable = async (
@@ -168,6 +171,25 @@ describe("ReviewEntriesTable", () => {
     expect(mockAsyncUpdateEntry).toHaveBeenCalledWith("0", undefined);
     expect(screen.queryByText(verns[0])).toBeNull();
     expect(screen.getAllByRole("row")).toHaveLength(initialRowCount - 1);
+  });
+
+  describe("arrow keys", () => {
+    test("work in the edit dialog text fields", async () => {
+      await renderReviewEntriesTable();
+      await userEvent.click(screen.getByTestId("row-0-edit"));
+      const dialog = screen.getByRole("dialog");
+      const textField = within(dialog).getAllByRole("textbox")[0];
+
+      // fireEvent returns false if the event's default was prevented.
+      expect(fireEvent.keyDown(textField, { key: "ArrowLeft" })).toBe(true);
+      expect(fireEvent.keyDown(textField, { key: "ArrowRight" })).toBe(true);
+    });
+
+    test("still navigate between table cells", async () => {
+      await renderReviewEntriesTable();
+      const cell = screen.getByTestId("row-0-edit").closest("td")!;
+      expect(fireEvent.keyDown(cell, { key: "ArrowRight" })).toBe(false);
+    });
   });
 
   describe("table sort", () => {

@@ -438,8 +438,16 @@ export default function ReviewEntriesTable(props: {
     initialState: { density: "compact" },
     localization,
     muiPaginationProps: { rowsPerPageOptions },
-    // Override whiteSpace: "nowrap" from having density: "compact"
-    muiTableBodyCellProps: { sx: { whiteSpace: "normal" } },
+    muiTableBodyCellProps: {
+      // Keep MRT's cell keyboard nav from blocking arrow keys in cell dialogs.
+      onKeyDown: (e) => {
+        if (!e.currentTarget.contains(e.target as Node)) {
+          e.stopPropagation();
+        }
+      },
+      // Override whiteSpace: "nowrap" from having density: "compact"
+      sx: { whiteSpace: "normal" },
+    },
     // Keep the table from going below the bottom of the page
     muiTableContainerProps: {
       sx: { maxHeight: `calc(100vh - ${enablePagination ? 180 : 130}px)` },
