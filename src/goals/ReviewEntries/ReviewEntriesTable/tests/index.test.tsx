@@ -185,10 +185,18 @@ describe("ReviewEntriesTable", () => {
       expect(fireEvent.keyDown(textField, { key: "ArrowRight" })).toBe(true);
     });
 
-    test("still navigate between table cells", async () => {
+    // The semantic domain tree navigates with a window keydown listener.
+    test("from the edit dialog reach window listeners", async () => {
       await renderReviewEntriesTable();
-      const cell = screen.getByTestId("row-0-edit").closest("td")!;
-      expect(fireEvent.keyDown(cell, { key: "ArrowRight" })).toBe(false);
+      await userEvent.click(screen.getByTestId("row-0-edit"));
+      const dialog = screen.getByRole("dialog");
+
+      const listener = jest.fn();
+      window.addEventListener("keydown", listener);
+      fireEvent.keyDown(dialog, { key: "ArrowRight" });
+      window.removeEventListener("keydown", listener);
+
+      expect(listener).toHaveBeenCalledTimes(1);
     });
   });
 
