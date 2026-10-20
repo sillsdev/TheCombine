@@ -41,8 +41,8 @@ jobs:
             dc.services.visualstudio.com:443
             deb.debian.org:80
             github.com:443
-            md-hdd-t032zjxllntc.z26.blob.storage.azure.net:443
             objects.githubusercontent.com:443
+            release-assets.githubusercontent.com:443
       - name: Checkout repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - name: Setup dotnet
@@ -50,7 +50,21 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet }}
       - name: Install ffmpeg
-        uses: FedericoCarboni/setup-ffmpeg@37062fbf7149fc5578d6c57e08aed62458b375d6 # v3.1
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        working-directory: ${{ runner.temp }}
+        run: |
+          # RELEASE, ARCHIVE, and EXPECTED_SHA256 must be updated together.
+          # BtbN keeps month-end autobuilds for two years and daily builds for only 14 days,
+          # so RELEASE must be a month-end build and must be bumped before it ages out.
+          RELEASE="autobuild-2026-09-30-13-08"
+          ARCHIVE="ffmpeg-n8.1.3-9-g29e619e767-linux64-gpl-8.1.tar.xz"
+          EXPECTED_SHA256="97ce978979194b5cf7e06a5e68020dbdaa7a4f3294c5452b6a1bc347100dbb79"
+          gh release download "$RELEASE" --repo BtbN/FFmpeg-Builds --pattern "$ARCHIVE"
+          echo "${EXPECTED_SHA256}  ${ARCHIVE}" | sha256sum --check
+          tar -xJf "$ARCHIVE"
+          echo "${PWD}/${ARCHIVE%.tar.xz}/bin" >> "$GITHUB_PATH"
       - name: Run coverage tests
         run: dotnet test Backend.Tests/Backend.Tests.csproj
         shell: bash
