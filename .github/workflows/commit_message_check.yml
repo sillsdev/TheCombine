@@ -16,4 +16,4 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    uses: sillsdev/FieldWorks/.github/workflows/CommitMessage.yml@fb4c99d89f4574ac648e3445192ad7e667dcef0f
+    uses: sillsdev/FieldWorks/.github/workflows/CommitMessage.yml@d0d85cb71e266c2d53b604fd8bb94b4f6ca46975
