@@ -19,7 +19,7 @@ jobs:
         with:
           egress-policy: block
           allowed-endpoints: >
-            s3.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
+            s3.us-east-2.amazonaws.com:443
             sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@254c19bd240aabef8777f48595e9d2d7b972184b # v6.2.1
@@ -33,6 +33,9 @@ jobs:
       # Certs match combineCertProxyList in deploy/scripts/setup_files/profiles/prod.yaml.
       - name: Check the certs in S3
         run: |
+          # The cert buckets are in us-east-2, which might not be AWS_DEFAULT_REGION,
+          # and the egress policy blocks the CLI's redirect to another region.
+          export AWS_REGION=us-east-2
           failed=0
           for cert in \
             prod.thecombine.app/certs/nuc1-thecombine-app-tls \
