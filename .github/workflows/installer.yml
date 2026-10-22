@@ -33,8 +33,8 @@ jobs:
         with:
           egress-policy: block
           allowed-endpoints: >
-            *-docker.pkg.dev:443
             *.cloudfront.net:443
+            *.pkg.dev:443
             azure.archive.ubuntu.com:80
             cdn.dl.k8s.io:443
             dl.k8s.io:443
