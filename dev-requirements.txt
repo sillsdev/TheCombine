@@ -12,7 +12,7 @@ babel==2.18.0
     # via mkdocs-material
 backrefs==6.2
     # via mkdocs-material
-black==26.3.1
+black==26.10.1
     # via -r dev-requirements.in
 cachetools==7.0.5
     # via tox
@@ -31,8 +31,6 @@ click==8.3.2
 colorama==0.4.6
     # via
     #   -r dev-requirements.in
-    #   click
-    #   mkdocs
     #   mkdocs-material
     #   tox
 cryptography==46.0.7
@@ -164,9 +162,7 @@ pyopenssl==26.0.0
 pyproject-api==1.10.0
     # via tox
 pyreadline3==3.5.4
-    # via
-    #   -r dev-requirements.in
-    #   humanfriendly
+    # via -r dev-requirements.in
 python-dateutil==2.9.0.post0
     # via
     #   ghp-import
