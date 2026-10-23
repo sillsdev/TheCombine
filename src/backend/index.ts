@@ -201,7 +201,7 @@ export async function avatarSrc(userId: string): Promise<string> {
         ""
       )
     );
-    return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
+    return `data:${String(resp.headers["content-type"]).toLowerCase()};base64,${image}`;
   } catch (err) {
     // Avatar fetching can fail if hasAvatar=True but the avatar path is broken.
     // Avoid opening a toast because a different user's avatar could cause this
@@ -654,7 +654,7 @@ export async function getConsentImageSrc(speaker: Speaker): Promise<string> {
       ""
     )
   );
-  return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
+  return `data:${String(resp.headers["content-type"]).toLowerCase()};base64,${image}`;
 }
 
 /* StatisticsController.cs */
