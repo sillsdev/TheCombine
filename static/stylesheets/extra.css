@@ -1,0 +1,5 @@
+/* Center images. */
+.center {
+    display: block;
+    margin: 0 auto;
+}
