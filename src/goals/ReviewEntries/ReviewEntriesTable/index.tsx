@@ -433,6 +433,8 @@ export default function ReviewEntriesTable(props: {
     enableDensityToggle: false,
     enableFullScreenToggle: false,
     enableGlobalFilter: false,
+    // MRT's cell keyboard nav blocks arrow keys in dialogs opened from cells.
+    enableKeyboardShortcuts: false,
     enablePagination,
     enableRowVirtualization: !props.disableVirtualization,
     initialState: { density: "compact" },

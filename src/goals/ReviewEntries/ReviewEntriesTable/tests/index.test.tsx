@@ -1,5 +1,6 @@
 import {
   act,
+  fireEvent,
   render,
   screen,
   waitForElementToBeRemoved,
@@ -11,6 +12,7 @@ import configureMockStore from "redux-mock-store";
 
 import { Permission } from "api/models";
 import { defaultState } from "components/Project/ProjectReduxTypes";
+import { defaultState as defaultPronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import ReviewEntriesTable, {
   ColumnHeaderTextId,
   ColumnId,
@@ -74,6 +76,7 @@ const mockState = (
       grammaticalInfoEnabled,
     },
   },
+  pronunciationsState: defaultPronunciationsState,
 });
 
 const renderReviewEntriesTable = async (
@@ -168,6 +171,33 @@ describe("ReviewEntriesTable", () => {
     expect(mockAsyncUpdateEntry).toHaveBeenCalledWith("0", undefined);
     expect(screen.queryByText(verns[0])).toBeNull();
     expect(screen.getAllByRole("row")).toHaveLength(initialRowCount - 1);
+  });
+
+  describe("arrow keys", () => {
+    test("work in the edit dialog text fields", async () => {
+      await renderReviewEntriesTable();
+      await userEvent.click(screen.getByTestId("row-0-edit"));
+      const dialog = screen.getByRole("dialog");
+      const textField = within(dialog).getAllByRole("textbox")[0];
+
+      // fireEvent returns false if the event's default was prevented.
+      expect(fireEvent.keyDown(textField, { key: "ArrowLeft" })).toBe(true);
+      expect(fireEvent.keyDown(textField, { key: "ArrowRight" })).toBe(true);
+    });
+
+    // The semantic domain tree navigates with a window keydown listener.
+    test("from the edit dialog reach window listeners", async () => {
+      await renderReviewEntriesTable();
+      await userEvent.click(screen.getByTestId("row-0-edit"));
+      const dialog = screen.getByRole("dialog");
+
+      const listener = jest.fn();
+      window.addEventListener("keydown", listener);
+      fireEvent.keyDown(dialog, { key: "ArrowRight" });
+      window.removeEventListener("keydown", listener);
+
+      expect(listener).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe("table sort", () => {
