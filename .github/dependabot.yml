@@ -54,6 +54,10 @@ updates:
       python-deps:
         patterns:
           - "*"
+      python-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
 
   - package-ecosystem: "npm" # minor and patch updates
     directory: "/"
