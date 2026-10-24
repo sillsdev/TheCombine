@@ -28,6 +28,5 @@ namespace BackendFramework.Interfaces
             Action<Word, Word?> modifyUpdatedWord, Action<Word> modifyDeletedWord);
         Task<bool> RevertReplaceFrontier(string projectId, List<string> idsToRestore, List<string> idsToDelete,
             Action<Word> modifyDeletedWord);
-        Task<int> CountFrontierWordsWithDomain(string projectId, string domainId);
     }
 }
