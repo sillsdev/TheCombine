@@ -12,11 +12,11 @@ babel==2.18.0
     # via mkdocs-material
 backrefs==6.2
     # via mkdocs-material
-black==26.3.1
+black==26.10.1
     # via -r dev-requirements.in
 cachetools==7.0.5
     # via tox
-certifi==2026.2.25
+certifi==2026.10.18
     # via
     #   kubernetes
     #   requests
@@ -31,8 +31,6 @@ click==8.3.2
 colorama==0.4.6
     # via
     #   -r dev-requirements.in
-    #   click
-    #   mkdocs
     #   mkdocs-material
     #   tox
 cryptography==46.0.7
@@ -41,7 +39,7 @@ cryptography==46.0.7
     #   types-pyopenssl
 distlib==0.4.0
     # via virtualenv
-dnspython==2.8.0
+dnspython==2.9.0
     # via pymongo
 durationpy==0.10
     # via kubernetes
@@ -72,7 +70,7 @@ ghp-import==2.1.0
     # via mkdocs
 humanfriendly==10.0
     # via -r dev-requirements.in
-idna==3.11
+idna==3.15
     # via requests
 isort==8.0.1
     # via -r dev-requirements.in
@@ -109,7 +107,7 @@ mkdocs==1.6.1
     #   mkdocs-static-i18n
 mkdocs-get-deps==0.2.2
     # via mkdocs
-mkdocs-material==9.7.6
+mkdocs-material==9.7.7
     # via -r dev-requirements.in
 mkdocs-material-extensions==1.3.1
     # via mkdocs-material
@@ -121,7 +119,7 @@ mypy-extensions==1.1.0
     # via
     #   black
     #   mypy
-oauthlib==3.3.1
+oauthlib==4.0.0
     # via requests-oauthlib
 packaging==26.0
     # via
@@ -155,18 +153,16 @@ pyflakes==3.4.0
     # via flake8
 pygments==2.20.0
     # via mkdocs-material
-pymdown-extensions==10.21.2
+pymdown-extensions==11.0.1
     # via mkdocs-material
-pymongo==4.16.0
+pymongo==4.18.3
     # via -r dev-requirements.in
 pyopenssl==26.0.0
     # via -r dev-requirements.in
 pyproject-api==1.10.0
     # via tox
 pyreadline3==3.5.4
-    # via
-    #   -r dev-requirements.in
-    #   humanfriendly
+    # via -r dev-requirements.in
 python-dateutil==2.9.0.post0
     # via
     #   ghp-import
@@ -219,7 +215,7 @@ typing-extensions==4.15.0
     # via
     #   mypy
     #   pyopenssl
-urllib3==2.6.3
+urllib3==2.8.0
     # via
     #   kubernetes
     #   requests
