@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -95,25 +96,37 @@ namespace BackendFramework.Services
         }
 
         /// <summary>
-        /// Authenticates the Lexbox cookie, clearing it if it's unreadable or belongs to a different Combine user.
+        /// Authenticates the Lexbox cookie, clearing it if it's unreadable, belongs to a different Combine user,
+        /// or holds an expired access token.
         /// </summary>
         /// <returns> The successful result, or null. </returns>
         private static async Task<AuthenticateResult?> AuthenticateForCombineUser(
             HttpContext httpContext, string combineUserId)
         {
             var result = await httpContext.AuthenticateAsync(LexboxCookieScheme);
-            if (result.Succeeded && result.Principal?.FindFirst(CombineUserIdClaimType)?.Value == combineUserId)
+            if (result.Succeeded && result.Principal?.FindFirst(CombineUserIdClaimType)?.Value == combineUserId
+                && !IsAccessTokenExpired(result.Properties))
             {
                 return result;
             }
 
             // Clear a stale or undecryptable cookie (e.g. after a server restart loses Data Protection keys),
-            // or one left by another Combine user of this browser.
+            // one left by another Combine user of this browser, or one whose access token Lexbox would reject.
             if (httpContext.Request.Cookies.ContainsKey("lexbox_auth"))
             {
                 await httpContext.SignOutAsync(LexboxCookieScheme);
             }
             return null;
+        }
+
+        /// <summary>
+        /// The cookie can outlive Lexbox's access token, so check the expiry saved with the token.
+        /// </summary>
+        private static bool IsAccessTokenExpired(AuthenticationProperties? properties)
+        {
+            var expiresAt = properties?.GetTokenValue("expires_at");
+            return DateTimeOffset.TryParse(expiresAt, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind,
+                out var expiry) && expiry <= DateTimeOffset.UtcNow;
         }
 
         private static LexboxAuthUser GetUserFromClaims(ClaimsPrincipal principal)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -165,6 +166,24 @@ namespace Backend.Tests.Controllers
             Assert.That(authStatus, Is.Not.Null);
             Assert.That(authStatus.IsLoggedIn, Is.False);
             Assert.That(authService.SignOutCallCount, Is.EqualTo(1));
+        }
+
+        [TestCase(-1, false)]
+        [TestCase(1, true)]
+        public async Task TestGetAuthStatusChecksAccessTokenExpiry(int hoursFromNow, bool expectLoggedIn)
+        {
+            var expiresAt = DateTimeOffset.UtcNow.AddHours(hoursFromNow).ToString("o", CultureInfo.InvariantCulture);
+            var authService = new AuthenticationServiceMock(LexboxSessionResult(UserId, expiresAt));
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(authService);
+            _lexboxController.ControllerContext.HttpContext.Request.Headers.Cookie = "lexbox_auth=value";
+
+            var result = await _lexboxController.GetAuthStatus() as OkObjectResult;
+
+            Assert.That(result, Is.Not.Null);
+            var authStatus = result.Value as LexboxAuthStatus;
+            Assert.That(authStatus, Is.Not.Null);
+            Assert.That(authStatus.IsLoggedIn, Is.EqualTo(expectLoggedIn));
+            Assert.That(authService.SignOutCallCount, Is.EqualTo(expectLoggedIn ? 0 : 1));
         }
 
         [Test]
@@ -384,10 +403,15 @@ namespace Backend.Tests.Controllers
         }
 
         /// <summary> A Lexbox cookie with an access token, stamped with the given Combine user. </summary>
-        private static AuthenticateResult LexboxSessionResult(string combineUserId = UserId)
+        private static AuthenticateResult LexboxSessionResult(string combineUserId = UserId, string? expiresAt = null)
         {
             var properties = new AuthenticationProperties();
-            properties.StoreTokens([new AuthenticationToken { Name = "access_token", Value = "token" }]);
+            List<AuthenticationToken> tokens = [new() { Name = "access_token", Value = "token" }];
+            if (expiresAt is not null)
+            {
+                tokens.Add(new() { Name = "expires_at", Value = expiresAt });
+            }
+            properties.StoreTokens(tokens);
             var principal = LexboxAuthResult([new("sub", "lex-1")], combineUserId).Principal!;
             return AuthenticateResult.Success(new AuthenticationTicket(principal, properties, "LexboxCookie"));
         }
