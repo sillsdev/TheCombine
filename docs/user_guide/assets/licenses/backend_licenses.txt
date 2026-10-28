@@ -60,6 +60,13 @@ Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
+PackageId: Microsoft.AspNetCore.Authentication.OpenIdConnect
+PackageVersion: 8.0.32
+PackageProjectUrl: https://asp.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
 PackageId: Microsoft.Bcl.Cryptography
 PackageVersion: 10.0.2
 PackageProjectUrl: https://dot.net/
