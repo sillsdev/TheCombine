@@ -18,6 +18,7 @@ import {
   logoutLexboxUser,
 } from "backend";
 import LoadingButton from "components/Buttons/LoadingButton";
+import { listenForLexboxLogin } from "components/Lexbox/lexboxAuthChannel";
 
 interface LexboxLoginProps {
   text?: string;
@@ -33,8 +34,8 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
 
   const { t } = useTranslation();
 
-  const loadStatus = async (): Promise<void> => {
-    setStatusLoading(true);
+  const loadStatus = async (showLoading = true): Promise<void> => {
+    setStatusLoading(showLoading);
     try {
       setStatus(await getLexboxAuthStatus());
     } catch (err) {
@@ -47,7 +48,18 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
 
   useEffect(() => {
     loadStatus();
+    return listenForLexboxLogin(() => void loadStatus(false));
   }, []);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      return;
+    }
+    // Fallback for browsers without BroadcastChannel and for logins completed elsewhere.
+    const handleFocus = (): void => void loadStatus(false);
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
+  }, [isLoggedIn]);
 
   useEffect(() => {
     setIsLoggedIn(status?.isLoggedIn ?? false);

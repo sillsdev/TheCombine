@@ -52,14 +52,9 @@ export default function LexboxProjectsDialog(
   };
 
   useEffect(() => {
-    if (!props.open || !isLoggedIn) {
-      return;
+    if (props.open && isLoggedIn) {
+      loadProjects();
     }
-
-    loadProjects();
-    const handleFocus = (): void => void loadProjects();
-    window.addEventListener("focus", handleFocus);
-    return () => window.removeEventListener("focus", handleFocus);
   }, [isLoggedIn, props.open]);
 
   const handleConfirm = (): void => {

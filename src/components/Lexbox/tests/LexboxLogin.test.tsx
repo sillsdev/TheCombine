@@ -16,9 +16,28 @@ const mockLogoutLexboxUser = jest.fn();
 
 const testUrl = "not-a-valid-url";
 
+/** Stands in for BroadcastChannel, which jsdom lacks. */
+class MockBroadcastChannel {
+  static instances: MockBroadcastChannel[] = [];
+  onmessage: (() => void) | null = null;
+  close = jest.fn();
+  constructor() {
+    MockBroadcastChannel.instances.push(this);
+  }
+}
+
 describe("LexboxLogin", () => {
+  beforeAll(() => {
+    Object.assign(globalThis, { BroadcastChannel: MockBroadcastChannel });
+  });
+
+  afterAll(() => {
+    Reflect.deleteProperty(globalThis, "BroadcastChannel");
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
+    MockBroadcastChannel.instances = [];
     jest.spyOn(window, "open").mockImplementation(() => null);
     mockGetLexboxLoginUrl.mockReturnValue(testUrl);
   });
@@ -57,6 +76,46 @@ describe("LexboxLogin", () => {
     expect(onStatusChange).toHaveBeenCalledWith(false);
     expect(onStatusChange).not.toHaveBeenCalledWith(true);
     consoleError.mockRestore();
+  });
+
+  it("refreshes status when the window regains focus", async () => {
+    mockGetLexboxAuthStatus
+      .mockResolvedValueOnce({ isLoggedIn: false })
+      .mockResolvedValueOnce({ isLoggedIn: true, loggedInAs: "Lex User" });
+
+    await act(async () => {
+      render(<LexboxLogin />);
+    });
+    await screen.findByRole("button", { name: /login/i });
+
+    await act(async () => {
+      window.dispatchEvent(new Event("focus"));
+    });
+
+    expect(
+      await screen.findByRole("button", { name: "Lex User" })
+    ).toBeInTheDocument();
+  });
+
+  it("refreshes status when another window reports a login", async () => {
+    mockGetLexboxAuthStatus
+      .mockResolvedValueOnce({ isLoggedIn: false })
+      .mockResolvedValueOnce({ isLoggedIn: true, loggedInAs: "Lex User" });
+
+    const { unmount } = render(<LexboxLogin />);
+    await screen.findByRole("button", { name: /login/i });
+    expect(MockBroadcastChannel.instances).toHaveLength(1);
+
+    await act(async () => {
+      MockBroadcastChannel.instances[0].onmessage?.();
+    });
+
+    expect(
+      await screen.findByRole("button", { name: "Lex User" })
+    ).toBeInTheDocument();
+
+    unmount();
+    expect(MockBroadcastChannel.instances[0].close).toHaveBeenCalled();
   });
 
   it("shows logged-in menu and logs out", async () => {
