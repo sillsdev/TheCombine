@@ -14,6 +14,8 @@ namespace BackendFramework.Services
     {
         private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
 
+        public const int EntriesPageSize = 1000;
+
         public async Task<List<LexboxProject>> GetMyProjectsAsync(string accessToken)
         {
             var httpClient = _httpClientFactory.CreateClient();
@@ -51,8 +53,28 @@ namespace BackendFramework.Services
             httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", accessToken);
 
-            // Without a Count, Lexbox returns at most 1000 entries; -1 (QueryOptions.QueryAll) returns all.
-            var url = $"{LexboxQuery.LfClassicBaseUrl}/{Uri.EscapeDataString(projectCode)}/entries?Count=-1";
+            // Lexbox's Count=-1 (QueryOptions.QueryAll) becomes a $limit of 0, which its Mongo driver rejects,
+            // so page through the entries instead. Lexbox sorts them by headword, morph type, then id.
+            var lexboxEntries = new List<LexboxEntry>();
+            List<LexboxEntry> page;
+            do
+            {
+                page = await GetEntriesPageAsync(httpClient, projectCode, lexboxEntries.Count);
+                lexboxEntries.AddRange(page);
+            } while (page.Count == EntriesPageSize);
+
+            return lexboxEntries
+                .Where(e => e.DeletedAt is null)
+                .Select(e => e.ToWord(vernacularLang, analysisLangs))
+                .OfType<Word>()
+                .ToList();
+        }
+
+        private static async Task<List<LexboxEntry>> GetEntriesPageAsync(
+            HttpClient httpClient, string projectCode, int offset)
+        {
+            var url = $"{LexboxQuery.LfClassicBaseUrl}/{Uri.EscapeDataString(projectCode)}/entries"
+                + $"?Count={EntriesPageSize}&Offset={offset}";
             var response = await httpClient.GetAsync(url);
 
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -69,12 +91,7 @@ namespace BackendFramework.Services
                         + (string.IsNullOrEmpty(responseBody) ? "" : $"\nBody: {responseBody}"));
             }
 
-            var lexboxEntries = await response.Content.ReadFromJsonAsync<List<LexboxEntry>>() ?? [];
-            return lexboxEntries
-                .Where(e => e.DeletedAt is null)
-                .Select(e => e.ToWord(vernacularLang, analysisLangs))
-                .OfType<Word>()
-                .ToList();
+            return await response.Content.ReadFromJsonAsync<List<LexboxEntry>>() ?? [];
         }
     }
 }

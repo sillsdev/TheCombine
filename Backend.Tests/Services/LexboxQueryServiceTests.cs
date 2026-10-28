@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -17,6 +18,8 @@ namespace Backend.Tests.Services
         private Mock<HttpMessageHandler> _handlerMock = null!;
         private LexboxQueryService _lexboxQueryService = null!;
         private string _responseJson = "[]";
+        /// <summary> Overrides <see cref="_responseJson"/> when set. </summary>
+        private Func<HttpRequestMessage, string>? _respond;
 
         private const string Vern = "seh";
         private const string Analysis1 = "en";
@@ -26,13 +29,14 @@ namespace Backend.Tests.Services
         public void Setup()
         {
             _responseJson = "[]";
+            _respond = null;
             _handlerMock = new Mock<HttpMessageHandler>();
             _handlerMock.Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK)
+                .ReturnsAsync((HttpRequestMessage req, CancellationToken _) => new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    Content = new StringContent(_responseJson)
+                    Content = new StringContent(_respond?.Invoke(req) ?? _responseJson)
                 });
 
             var httpClientFactory = new Mock<IHttpClientFactory>();
@@ -124,14 +128,36 @@ namespace Backend.Tests.Services
         public bool TestIsAudioTag(string tag) => WsIdDto.IsAudioTag(tag);
 
         [Test]
-        public async Task TestGetProjectEntriesAsyncRequestsAllEntries()
+        public async Task TestGetProjectEntriesAsyncStopsAfterShortPage()
         {
             await _lexboxQueryService.GetProjectEntriesAsync("token", "proj-code", Vern, []);
 
             _handlerMock.Protected().Verify(
                 "SendAsync",
                 Times.Once(),
-                ItExpr.Is<HttpRequestMessage>(req => req.RequestUri!.Query == "?Count=-1"),
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.RequestUri!.Query == $"?Count={LexboxQueryService.EntriesPageSize}&Offset=0"),
+                ItExpr.IsAny<CancellationToken>());
+        }
+
+        [Test]
+        public async Task TestGetProjectEntriesAsyncPagesThroughAllEntries()
+        {
+            const int pageSize = LexboxQueryService.EntriesPageSize;
+            static string Page(int start, int count) => "[" + string.Join(",", Enumerable.Range(start, count).Select(
+                i => $$"""{ "id": "{{new Guid(i, 0, 0, new byte[8])}}", "lexemeForm": { "{{Vern}}": "w{{i}}" } }"""))
+                + "]";
+            _respond = req => req.RequestUri!.Query.EndsWith("&Offset=0", StringComparison.Ordinal)
+                ? Page(0, pageSize)
+                : Page(pageSize, 5);
+
+            var words = await _lexboxQueryService.GetProjectEntriesAsync("token", "proj-code", Vern, []);
+
+            Assert.That(words, Has.Count.EqualTo(pageSize + 5));
+            _handlerMock.Protected().Verify(
+                "SendAsync",
+                Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req => req.RequestUri!.Query == $"?Count={pageSize}&Offset={pageSize}"),
                 ItExpr.IsAny<CancellationToken>());
         }
 
