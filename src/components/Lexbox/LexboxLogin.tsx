@@ -1,5 +1,6 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
+import SwitchAccountIcon from "@mui/icons-material/SwitchAccount";
 import {
   Button,
   ListItemIcon,
@@ -69,9 +70,20 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
     props.onStatusChange?.(isLoggedIn);
   }, [props.onStatusChange, isLoggedIn]);
 
-  const handleLogin = (): void => {
-    if (!window.open(getLexboxLoginUrl())) {
+  const openLogin = async (switchAccount = false): Promise<void> => {
+    setMenuAnchor(null);
+    // Open the window before awaiting, so popup blockers treat it as a direct response to the click.
+    const loginWindow = window.open("", "_blank");
+    if (!loginWindow) {
       toast.error("Failed to open login window");
+      return;
+    }
+    try {
+      loginWindow.location.href = await getLexboxLoginUrl(switchAccount);
+    } catch (err) {
+      loginWindow.close();
+      console.error("Failed to start Lexbox login", err);
+      toast.error("Failed to start Lexbox login");
     }
   };
 
@@ -89,7 +101,7 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
   if (!status?.isLoggedIn) {
     return (
       <LoadingButton
-        buttonProps={{ onClick: handleLogin, variant: "outlined" }}
+        buttonProps={{ onClick: () => openLogin(), variant: "outlined" }}
         loading={actionLoading || statusLoading}
       >
         {props.text ?? t("login.login")}
@@ -112,6 +124,14 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
         onClose={() => setMenuAnchor(null)}
         open={Boolean(menuAnchor)}
       >
+        <MenuItem disabled={actionLoading} onClick={() => openLogin(true)}>
+          <ListItemIcon>
+            <SwitchAccountIcon fontSize="small" />
+          </ListItemIcon>
+
+          <ListItemText>{t("Switch Lexbox account")}</ListItemText>
+        </MenuItem>
+
         <MenuItem disabled={actionLoading} onClick={handleLogout}>
           <ListItemIcon>
             <LogoutIcon fontSize="small" />

@@ -272,8 +272,16 @@ export async function getLexboxAuthStatus(): Promise<LexboxAuthStatus> {
   return (await lexboxApi.getAuthStatus(defaultOptions())).data;
 }
 
-export function getLexboxLoginUrl(): string {
-  return `${baseURL}/auth/lexbox-login`;
+/** Returns a single-use url that starts Lexbox login for the current user. */
+export async function getLexboxLoginUrl(
+  switchAccount = false
+): Promise<string> {
+  const ticket = (await lexboxApi.createLoginTicket(defaultOptions())).data;
+  const query = new URLSearchParams({
+    switchAccount: `${switchAccount}`,
+    ticket,
+  });
+  return `${baseURL}/lexbox/login?${query}`;
 }
 
 export async function getLexboxProjects(): Promise<LexboxProject[]> {

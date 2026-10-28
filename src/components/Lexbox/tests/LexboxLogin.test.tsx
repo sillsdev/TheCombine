@@ -6,7 +6,8 @@ import LexboxLogin from "components/Lexbox/LexboxLogin";
 
 jest.mock("backend", () => ({
   getLexboxAuthStatus: () => mockGetLexboxAuthStatus(),
-  getLexboxLoginUrl: () => mockGetLexboxLoginUrl(),
+  getLexboxLoginUrl: (switchAccount?: boolean) =>
+    mockGetLexboxLoginUrl(switchAccount),
   logoutLexboxUser: () => mockLogoutLexboxUser(),
 }));
 
@@ -15,6 +16,8 @@ const mockGetLexboxLoginUrl = jest.fn();
 const mockLogoutLexboxUser = jest.fn();
 
 const testUrl = "not-a-valid-url";
+
+let mockLoginWindow: { close: jest.Mock; location: { href: string } };
 
 /** Stands in for BroadcastChannel, which jsdom lacks. */
 class MockBroadcastChannel {
@@ -38,8 +41,11 @@ describe("LexboxLogin", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     MockBroadcastChannel.instances = [];
-    jest.spyOn(window, "open").mockImplementation(() => null);
-    mockGetLexboxLoginUrl.mockReturnValue(testUrl);
+    mockLoginWindow = { close: jest.fn(), location: { href: "" } };
+    jest
+      .spyOn(window, "open")
+      .mockImplementation(() => mockLoginWindow as unknown as Window);
+    mockGetLexboxLoginUrl.mockResolvedValue(testUrl);
   });
 
   it("redirects to Lexbox login when logged out", async () => {
@@ -55,8 +61,47 @@ describe("LexboxLogin", () => {
 
     await userEvent.click(loginButton);
 
-    expect(mockGetLexboxLoginUrl).toHaveBeenCalledTimes(1);
-    expect(window.open).toHaveBeenCalledWith(testUrl);
+    expect(window.open).toHaveBeenCalledWith("", "_blank");
+    expect(mockGetLexboxLoginUrl).toHaveBeenCalledWith(false);
+    await waitFor(() => expect(mockLoginWindow.location.href).toEqual(testUrl));
+  });
+
+  it("closes the login window when the login url can't be fetched", async () => {
+    const consoleError = jest.spyOn(console, "error").mockImplementation();
+    mockGetLexboxAuthStatus.mockResolvedValue({ isLoggedIn: false });
+    mockGetLexboxLoginUrl.mockRejectedValue(new Error("Ticket failed."));
+
+    await act(async () => {
+      render(<LexboxLogin />);
+    });
+    const loginButton = await screen.findByRole("button", { name: /login/i });
+    await waitFor(() => expect(loginButton).toBeEnabled());
+
+    await userEvent.click(loginButton);
+
+    await waitFor(() => expect(mockLoginWindow.close).toHaveBeenCalled());
+    expect(consoleError).toHaveBeenCalled();
+    consoleError.mockRestore();
+  });
+
+  it("switches account from the logged-in menu", async () => {
+    mockGetLexboxAuthStatus.mockResolvedValue({
+      isLoggedIn: true,
+      loggedInAs: "Lex User",
+    });
+
+    await act(async () => {
+      render(<LexboxLogin />);
+    });
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Lex User" })
+    );
+    await userEvent.click(
+      await screen.findByRole("menuitem", { name: /switch/i })
+    );
+
+    expect(mockGetLexboxLoginUrl).toHaveBeenCalledWith(true);
+    await waitFor(() => expect(mockLoginWindow.location.href).toEqual(testUrl));
   });
 
   it("falls back to logged out when the status request fails", async () => {

@@ -141,7 +141,6 @@ namespace BackendFramework
 
             // Authorization endpoint needs to be defined because discovery silently fails in dev.
             var lexboxAuthorizationEndpoint = lexboxAuthConfig["AuthorizationEndpoint"]?.Trim();
-            var lexboxPrompt = lexboxAuthConfig["Prompt"]?.Trim();
 
             services.AddAuthentication(x =>
                 {
@@ -197,11 +196,16 @@ namespace BackendFramework
                             context.ProtocolMessage.IssuerAddress = lexboxAuthorizationEndpoint;
                         }
 
-                        if (!string.IsNullOrEmpty(lexboxPrompt))
-                        {
-                            context.ProtocolMessage.Prompt = lexboxPrompt;
-                        }
+                        return Task.CompletedTask;
+                    };
 
+                    options.Events.OnTicketReceived = ctx =>
+                    {
+                        if (ctx.Principal is null || ctx.Properties is null
+                            || !LexboxAuthService.AddCombineUserClaim(ctx.Principal, ctx.Properties))
+                        {
+                            ctx.Fail("Lexbox login wasn't started by a Combine user.");
+                        }
                         return Task.CompletedTask;
                     };
 

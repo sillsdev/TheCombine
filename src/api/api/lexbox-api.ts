@@ -55,7 +55,49 @@ export const LexboxApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    generateLogin: async (options: any = {}): Promise<RequestArgs> => {
+    createLoginTicket: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/v1/lexbox/login-ticket`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} [ticket]
+     * @param {boolean} [switchAccount]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    generateLogin: async (
+      ticket?: string,
+      switchAccount?: boolean,
+      options: any = {}
+    ): Promise<RequestArgs> => {
       const localVarPath = `/v1/lexbox/login`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -71,6 +113,14 @@ export const LexboxApiAxiosParamCreator = function (
       };
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
+
+      if (ticket !== undefined) {
+        localVarQueryParameter["ticket"] = ticket;
+      }
+
+      if (switchAccount !== undefined) {
+        localVarQueryParameter["switchAccount"] = switchAccount;
+      }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
@@ -266,13 +316,39 @@ export const LexboxApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
+    async createLoginTicket(
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.createLoginTicket(options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} [ticket]
+     * @param {boolean} [switchAccount]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
     async generateLogin(
+      ticket?: string,
+      switchAccount?: boolean,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.generateLogin(options);
+      const localVarAxiosArgs = await localVarAxiosParamCreator.generateLogin(
+        ticket,
+        switchAccount,
+        options
+      );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -390,9 +466,25 @@ export const LexboxApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    generateLogin(options?: any): AxiosPromise<void> {
+    createLoginTicket(options?: any): AxiosPromise<string> {
       return localVarFp
-        .generateLogin(options)
+        .createLoginTicket(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} [ticket]
+     * @param {boolean} [switchAccount]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    generateLogin(
+      ticket?: string,
+      switchAccount?: boolean,
+      options?: any
+    ): AxiosPromise<void> {
+      return localVarFp
+        .generateLogin(ticket, switchAccount, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -447,6 +539,27 @@ export const LexboxApiFactory = function (
 };
 
 /**
+ * Request parameters for generateLogin operation in LexboxApi.
+ * @export
+ * @interface LexboxApiGenerateLoginRequest
+ */
+export interface LexboxApiGenerateLoginRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof LexboxApiGenerateLogin
+   */
+  readonly ticket?: string;
+
+  /**
+   *
+   * @type {boolean}
+   * @memberof LexboxApiGenerateLogin
+   */
+  readonly switchAccount?: boolean;
+}
+
+/**
  * Request parameters for getEntries operation in LexboxApi.
  * @export
  * @interface LexboxApiGetEntriesRequest
@@ -487,9 +600,29 @@ export class LexboxApi extends BaseAPI {
    * @throws {RequiredError}
    * @memberof LexboxApi
    */
-  public generateLogin(options?: any) {
+  public createLoginTicket(options?: any) {
     return LexboxApiFp(this.configuration)
-      .generateLogin(options)
+      .createLoginTicket(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {LexboxApiGenerateLoginRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof LexboxApi
+   */
+  public generateLogin(
+    requestParameters: LexboxApiGenerateLoginRequest = {},
+    options?: any
+  ) {
+    return LexboxApiFp(this.configuration)
+      .generateLogin(
+        requestParameters.ticket,
+        requestParameters.switchAccount,
+        options
+      )
       .then((request) => request(this.axios, this.basePath));
   }
 

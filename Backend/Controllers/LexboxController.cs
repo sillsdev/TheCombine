@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Otel;
-using BackendFramework.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,25 +33,51 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
-            return Ok(await _lexboxAuthService.GetAuthStatus(HttpContext));
+            var combineUserId = _permissionService.GetUserId(HttpContext);
+            return Ok(await _lexboxAuthService.GetAuthStatus(HttpContext, combineUserId));
         }
 
-        /// <summary> Generates a redirect to Lexbox login for OIDC sign-in. </summary>
-        [HttpGet("login", Name = "GenerateLogin")]
-        [ProducesResponseType(StatusCodes.Status302Found)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GenerateLogin()
+        /// <summary> Creates a single-use ticket for <see cref="GenerateLogin"/>. </summary>
+        /// <remarks>
+        /// The login page opens in a new window, which can't send the Combine auth header, so the ticket
+        /// carries the Combine user's identity instead.
+        /// </remarks>
+        [HttpPost("login-ticket", Name = "CreateLoginTicket")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public IActionResult CreateLoginTicket()
         {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "generating login");
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "creating login ticket");
 
             if (!_permissionService.IsCurrentUserAuthenticated(HttpContext))
             {
                 return Forbid();
             }
 
+            var combineUserId = _permissionService.GetUserId(HttpContext);
+            return Ok(_lexboxAuthService.CreateLoginTicket(combineUserId));
+        }
+
+        /// <summary> Generates a redirect to Lexbox login for OIDC sign-in. </summary>
+        /// <param name="ticket"> From <see cref="CreateLoginTicket"/>. </param>
+        /// <param name="switchAccount"> Whether to make Lexbox ask for credentials even if already logged in. </param>
+        [HttpGet("login", Name = "GenerateLogin")]
+        [ProducesResponseType(StatusCodes.Status302Found)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GenerateLogin([FromQuery] string? ticket, [FromQuery] bool switchAccount)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "generating login");
+
+            var combineUserId = _lexboxAuthService.RedeemLoginTicket(ticket);
+            if (combineUserId is null)
+            {
+                return Forbid();
+            }
+
             try
             {
-                await _lexboxAuthService.Challenge(HttpContext);
+                await _lexboxAuthService.Challenge(HttpContext, combineUserId, switchAccount);
                 return new EmptyResult();
             }
             catch (Exception ex)
@@ -80,16 +104,22 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Gets Lexbox projects for the signed-in Lexbox user. </summary>
-        [Authorize(AuthenticationSchemes = LexboxAuthService.LexboxCookieScheme)]
         [HttpGet("projects", Name = "GetProjects")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LexboxProject>))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status502BadGateway)]
         public async Task<IActionResult> GetProjects()
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting Lexbox projects");
 
-            var accessToken = await _lexboxAuthService.TryGetAccessToken(HttpContext);
+            if (!_permissionService.IsCurrentUserAuthenticated(HttpContext))
+            {
+                return Forbid();
+            }
+
+            var combineUserId = _permissionService.GetUserId(HttpContext);
+            var accessToken = await _lexboxAuthService.TryGetAccessToken(HttpContext, combineUserId);
             if (string.IsNullOrEmpty(accessToken))
             {
                 return Unauthorized();
@@ -108,17 +138,23 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Gets entries from a Lexbox project. </summary>
-        [Authorize(AuthenticationSchemes = LexboxAuthService.LexboxCookieScheme)]
         [HttpGet("entries/{projectCode}/{vernacularLang}", Name = "GetEntries")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Word>))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status502BadGateway)]
         public async Task<IActionResult> GetEntries(
             string projectCode, string vernacularLang, [FromQuery] List<string>? analysisLangs)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting Lexbox entries");
 
-            var accessToken = await _lexboxAuthService.TryGetAccessToken(HttpContext);
+            if (!_permissionService.IsCurrentUserAuthenticated(HttpContext))
+            {
+                return Forbid();
+            }
+
+            var combineUserId = _permissionService.GetUserId(HttpContext);
+            var accessToken = await _lexboxAuthService.TryGetAccessToken(HttpContext, combineUserId);
             if (string.IsNullOrEmpty(accessToken))
             {
                 return Unauthorized();

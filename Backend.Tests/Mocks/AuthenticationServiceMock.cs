@@ -9,6 +9,7 @@ namespace Backend.Tests.Mocks
     {
         internal int ChallengeCallCount { get; private set; }
         internal AuthenticationProperties? LastChallengeProperties { get; private set; }
+        internal int SignOutCallCount { get; private set; }
 
         public Task<AuthenticateResult> AuthenticateAsync(HttpContext context, string? scheme)
             => Task.FromResult(authenticateResult);
@@ -27,6 +28,9 @@ namespace Backend.Tests.Mocks
             AuthenticationProperties? properties) => Task.CompletedTask;
 
         public Task SignOutAsync(HttpContext context, string? scheme, AuthenticationProperties? properties)
-            => Task.CompletedTask;
+        {
+            SignOutCallCount++;
+            return Task.CompletedTask;
+        }
     }
 }
