@@ -115,9 +115,20 @@ namespace BackendFramework.Models
         public bool IsDefault { get; init; }
         public string Tag { get; init; } = "";
 
+        /// <summary> Gets the tags of active, non-audio writing systems, default first. </summary>
         public static List<string> GetActiveTags(List<WsIdDto> wsList)
         {
-            return wsList.Where(ws => ws.IsActive).OrderByDescending(ws => ws.IsDefault).Select(ws => ws.Tag).ToList();
+            return wsList.Where(ws => ws.IsActive && !IsAudioTag(ws.Tag))
+                .OrderByDescending(ws => ws.IsDefault).Select(ws => ws.Tag).ToList();
+        }
+
+        /// <summary> Whether the tag is a FieldWorks audio writing system, e.g. "es-Zxxx-419-x-audio". </summary>
+        public static bool IsAudioTag(string tag)
+        {
+            var subtags = tag.Split('-');
+            var privateUseStart = Array.FindIndex(subtags, s => s.Equals("x", StringComparison.OrdinalIgnoreCase));
+            return privateUseStart >= 0 && subtags.Skip(privateUseStart + 1)
+                .Any(s => s.Equals("audio", StringComparison.OrdinalIgnoreCase));
         }
     }
 

@@ -80,6 +80,50 @@ namespace Backend.Tests.Services
         }
 
         [Test]
+        public async Task TestGetMyProjectsAsyncSkipsInactiveAndAudioWritingSystems()
+        {
+            _responseJson = """
+                {
+                    "data": {
+                        "myProjects": [{
+                            "code": "proj-code",
+                            "id": "00000000-0000-0000-0000-000000000001",
+                            "name": "Project",
+                            "flexProjectMetadata": {
+                                "projectId": "00000000-0000-0000-0000-000000000001",
+                                "writingSystems": {
+                                    "analysisWss": [
+                                        { "tag": "ru", "isActive": true, "isDefault": false },
+                                        { "tag": "en", "isActive": true, "isDefault": true }
+                                    ],
+                                    "vernacularWss": [
+                                        { "tag": "es-419", "isActive": true, "isDefault": true },
+                                        { "tag": "es-Zxxx-419-x-audio", "isActive": true, "isDefault": false },
+                                        { "tag": "es-fonipa", "isActive": false, "isDefault": false }
+                                    ]
+                                }
+                            }
+                        }]
+                    }
+                }
+                """;
+
+            var projects = await _lexboxQueryService.GetMyProjectsAsync("token");
+
+            Assert.That(projects, Has.Count.EqualTo(1));
+            Assert.That(projects[0].AnalysisWsTags, Is.EqualTo(new List<string> { "en", "ru" }));
+            Assert.That(projects[0].VernacularWsTags, Is.EqualTo(new List<string> { "es-419" }));
+        }
+
+        [TestCase("kjj-Zxxx-x-audio", ExpectedResult = true)]
+        [TestCase("es-Zxxx-419-x-audio", ExpectedResult = true)]
+        [TestCase("es-Zxxx-419-X-AUDIO", ExpectedResult = true)]
+        [TestCase("kjj-AZ-x-unif", ExpectedResult = false)]
+        [TestCase("kjj-fonipa", ExpectedResult = false)]
+        [TestCase("audio", ExpectedResult = false)]
+        public bool TestIsAudioTag(string tag) => WsIdDto.IsAudioTag(tag);
+
+        [Test]
         public async Task TestGetProjectEntriesAsyncRequestsAllEntries()
         {
             await _lexboxQueryService.GetProjectEntriesAsync("token", "proj-code", Vern, []);
