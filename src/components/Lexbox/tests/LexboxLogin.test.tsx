@@ -142,6 +142,31 @@ describe("LexboxLogin", () => {
     expect(MockBroadcastChannel.instances[0].close).toHaveBeenCalled();
   });
 
+  it("reports a failed logout", async () => {
+    const consoleError = jest.spyOn(console, "error").mockImplementation();
+    mockGetLexboxAuthStatus.mockResolvedValue({
+      isLoggedIn: true,
+      loggedInAs: "Lex User",
+    });
+    mockLogoutLexboxUser.mockRejectedValue(new Error("Logout failed."));
+
+    await act(async () => {
+      render(<LexboxLogin />);
+    });
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Lex User" })
+    );
+    await userEvent.click(
+      await screen.findByRole("menuitem", { name: /logout/i })
+    );
+
+    await waitFor(() => expect(consoleError).toHaveBeenCalled());
+    expect(
+      screen.getByRole("button", { name: "Lex User" })
+    ).toBeInTheDocument();
+    consoleError.mockRestore();
+  });
+
   it("shows logged-in menu and logs out", async () => {
     mockGetLexboxAuthStatus
       .mockResolvedValueOnce({ isLoggedIn: true, loggedInAs: "Lex User" })

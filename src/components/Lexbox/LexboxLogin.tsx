@@ -90,6 +90,9 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
     try {
       await logoutLexboxUser();
       await loadStatus();
+    } catch (err) {
+      console.error("Failed to log out of Lexbox", err);
+      toast.error("Failed to log out of Lexbox");
     } finally {
       setActionLoading(false);
       setMenuAnchor(null);
