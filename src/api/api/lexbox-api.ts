@@ -126,12 +126,14 @@ export const LexboxApiAxiosParamCreator = function (
      *
      * @param {string} projectCode
      * @param {string} vernacularLang
+     * @param {Array<string>} [analysisLangs]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getEntries: async (
       projectCode: string,
       vernacularLang: string,
+      analysisLangs?: Array<string>,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectCode' is not null or undefined
@@ -158,6 +160,10 @@ export const LexboxApiAxiosParamCreator = function (
       };
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
+
+      if (analysisLangs) {
+        localVarQueryParameter["analysisLangs"] = analysisLangs;
+      }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
@@ -300,12 +306,14 @@ export const LexboxApiFp = function (configuration?: Configuration) {
      *
      * @param {string} projectCode
      * @param {string} vernacularLang
+     * @param {Array<string>} [analysisLangs]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getEntries(
       projectCode: string,
       vernacularLang: string,
+      analysisLangs?: Array<string>,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Word>>
@@ -313,6 +321,7 @@ export const LexboxApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getEntries(
         projectCode,
         vernacularLang,
+        analysisLangs,
         options
       );
       return createRequestFunction(
@@ -400,16 +409,18 @@ export const LexboxApiFactory = function (
      *
      * @param {string} projectCode
      * @param {string} vernacularLang
+     * @param {Array<string>} [analysisLangs]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getEntries(
       projectCode: string,
       vernacularLang: string,
+      analysisLangs?: Array<string>,
       options?: any
     ): AxiosPromise<Array<Word>> {
       return localVarFp
-        .getEntries(projectCode, vernacularLang, options)
+        .getEntries(projectCode, vernacularLang, analysisLangs, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -454,6 +465,13 @@ export interface LexboxApiGetEntriesRequest {
    * @memberof LexboxApiGetEntries
    */
   readonly vernacularLang: string;
+
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof LexboxApiGetEntries
+   */
+  readonly analysisLangs?: Array<string>;
 }
 
 /**
@@ -502,6 +520,7 @@ export class LexboxApi extends BaseAPI {
       .getEntries(
         requestParameters.projectCode,
         requestParameters.vernacularLang,
+        requestParameters.analysisLangs,
         options
       )
       .then((request) => request(this.axios, this.basePath));

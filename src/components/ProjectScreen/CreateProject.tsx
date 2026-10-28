@@ -228,7 +228,11 @@ export default function CreateProject(): ReactElement {
       try {
         console.info(
           "Project entries:",
-          await getLexboxEntries(lexboxProject.code, vernLang.bcp47)
+          await getLexboxEntries(
+            lexboxProject.code,
+            vernLang.bcp47,
+            lexboxProject.analysisWsTags ?? []
+          )
         );
       } catch (e) {
         console.error("Error fetching Lexbox entries:", e);

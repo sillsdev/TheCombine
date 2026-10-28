@@ -45,7 +45,7 @@ namespace BackendFramework.Services
         }
 
         public async Task<List<Word>> GetProjectEntriesAsync(
-            string accessToken, string projectCode, string vernacularLang)
+            string accessToken, string projectCode, string vernacularLang, List<string> analysisLangs)
         {
             var httpClient = _httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Authorization =
@@ -72,7 +72,7 @@ namespace BackendFramework.Services
             var lexboxEntries = await response.Content.ReadFromJsonAsync<List<LexboxEntry>>() ?? [];
             return lexboxEntries
                 .Where(e => e.DeletedAt is null)
-                .Select(e => e.ToWord(vernacularLang))
+                .Select(e => e.ToWord(vernacularLang, analysisLangs))
                 .OfType<Word>()
                 .ToList();
         }

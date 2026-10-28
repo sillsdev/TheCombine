@@ -282,9 +282,10 @@ export async function getLexboxProjects(): Promise<LexboxProject[]> {
 
 export async function getLexboxEntries(
   projectCode: string,
-  vernacularLang: string
+  vernacularLang: string,
+  analysisLangs: string[]
 ): Promise<Word[]> {
-  const params = { projectCode, vernacularLang };
+  const params = { projectCode, vernacularLang, analysisLangs };
   return (await lexboxApi.getEntries(params, defaultOptions())).data;
 }
 

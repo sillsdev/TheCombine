@@ -7,6 +7,7 @@ namespace BackendFramework.Interfaces
     public interface ILexboxQueryService
     {
         Task<List<LexboxProject>> GetMyProjectsAsync(string accessToken);
-        Task<List<Word>> GetProjectEntriesAsync(string accessToken, string projectCode, string vernacularLang);
+        Task<List<Word>> GetProjectEntriesAsync(
+            string accessToken, string projectCode, string vernacularLang, List<string> analysisLangs);
     }
 }

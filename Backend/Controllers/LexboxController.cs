@@ -113,7 +113,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Word>))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status502BadGateway)]
-        public async Task<IActionResult> GetEntries(string projectCode, string vernacularLang)
+        public async Task<IActionResult> GetEntries(
+            string projectCode, string vernacularLang, [FromQuery] List<string>? analysisLangs)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting Lexbox entries");
 
@@ -125,8 +126,8 @@ namespace BackendFramework.Controllers
 
             try
             {
-                List<Word> entries =
-                    await _lexboxQueryService.GetProjectEntriesAsync(accessToken, projectCode, vernacularLang);
+                List<Word> entries = await _lexboxQueryService.GetProjectEntriesAsync(
+                    accessToken, projectCode, vernacularLang, analysisLangs ?? []);
                 return Ok(entries);
             }
             catch (LexboxQueryException ex)

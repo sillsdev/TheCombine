@@ -128,10 +128,17 @@ namespace BackendFramework.Models
 
     public sealed class LexboxEntry
     {
+        // Lexbox defaults to "Stem", and "Unknown" carries no morph-type data to protect.
+        private static readonly HashSet<string> UnprotectedMorphTypes = ["Stem", "Unknown"];
+
         public Dictionary<string, string> CitationForm { get; init; } = [];
+        public List<LexboxDeletable> ComplexForms { get; init; } = [];
+        public List<LexboxDeletable> Components { get; init; } = [];
         public DateTime? DeletedAt { get; init; }
         public Guid Id { get; init; }
         public Dictionary<string, string> LexemeForm { get; init; } = [];
+        public Dictionary<string, LexboxRichString> LiteralMeaning { get; init; } = [];
+        public string? MorphType { get; init; }
         public Dictionary<string, LexboxRichString> Note { get; init; } = [];
         public List<LexboxSense> Senses { get; init; } = [];
 
@@ -161,16 +168,45 @@ namespace BackendFramework.Models
                 ? noteRich.GetPlainText()
                 : "";
 
+            var protectReasons = GetProtectReasons();
             return new Word
             {
+                Accessibility = protectReasons.Count > 0 ? Status.Protected : Status.Active,
                 Guid = Id,
                 Id = Guid.NewGuid().ToString(),
                 Note = new Note(noteLang, noteText),
+                ProtectReasons = protectReasons,
                 Senses = Senses
                     .Select(s => s.ToSense(analysisLangs)).Where(s => s is not null).OfType<Sense>().ToList(),
                 UsingCitationForm = usingCitationForm,
                 Vernacular = vernacular,
             };
+        }
+
+        /// <summary> Determine what entry data is not handled by The Combine. </summary>
+        public List<ProtectReason> GetProtectReasons()
+        {
+            var reasons = new List<ProtectReason>();
+            if (LiteralMeaning.Values.Any(lm => !string.IsNullOrWhiteSpace(lm.GetPlainText())))
+            {
+                reasons.Add(new() { Type = ReasonType.Field, Value = "literal-meaning" });
+            }
+            if (MorphType is not null && !UnprotectedMorphTypes.Contains(MorphType))
+            {
+                reasons.Add(new() { Type = ReasonType.TraitMorphType, Value = MorphType });
+            }
+            // The Combine keeps only one note language.
+            var noteCount = Note.Values.Count(n => !string.IsNullOrWhiteSpace(n.GetPlainText()));
+            if (noteCount > 1)
+            {
+                reasons.Add(new() { Type = ReasonType.Notes, Count = noteCount });
+            }
+            var relationCount = Components.Concat(ComplexForms).Count(r => r.DeletedAt is null);
+            if (relationCount > 0)
+            {
+                reasons.Add(new() { Type = ReasonType.Relations, Count = relationCount });
+            }
+            return reasons;
         }
     }
 
@@ -178,24 +214,57 @@ namespace BackendFramework.Models
     {
         public Dictionary<string, LexboxRichString> Definition { get; init; } = [];
         public DateTime? DeletedAt { get; init; }
+        public List<LexboxDeletable> ExampleSentences { get; init; } = [];
         public Dictionary<string, string> Gloss { get; init; } = [];
         public Guid Id { get; init; }
         public LexboxPartOfSpeech? PartOfSpeech { get; init; }
+        public List<LexboxDeletable> Pictures { get; init; } = [];
         public List<LexboxSemanticDomain> SemanticDomains { get; init; } = [];
 
         public Sense? ToSense(IEnumerable<string>? langs = null)
         {
-            // Ignore any sense that was deleted.
-            return DeletedAt is null ? null : new()
+            if (DeletedAt is not null)
             {
+                // Ignore any sense that was deleted.
+                return null;
+            }
+
+            var protectReasons = GetProtectReasons();
+            return new()
+            {
+                Accessibility = protectReasons.Count > 0 ? Status.Protected : Status.Active,
                 Definitions = Definition
                     .Select(kvp => new Definition { Language = kvp.Key, Text = kvp.Value.GetPlainText() }).ToList(),
                 Glosses = Gloss.Select(kvp => new Gloss { Def = kvp.Value, Language = kvp.Key }).ToList(),
                 GrammaticalInfo = PartOfSpeech?.ToGrammaticalInfo(langs) ?? new GrammaticalInfo(),
                 Guid = Id,
+                ProtectReasons = protectReasons,
                 SemanticDomains = SemanticDomains.Select(sd => sd.ToSemanticDomain(langs)).ToList(),
             };
         }
+
+        /// <summary> Determine what sense data is not handled by The Combine. </summary>
+        public List<ProtectReason> GetProtectReasons()
+        {
+            var reasons = new List<ProtectReason>();
+            var exampleCount = ExampleSentences.Count(ex => ex.DeletedAt is null);
+            if (exampleCount > 0)
+            {
+                reasons.Add(new() { Type = ReasonType.Examples, Count = exampleCount });
+            }
+            var pictureCount = Pictures.Count(pic => pic.DeletedAt is null);
+            if (pictureCount > 0)
+            {
+                reasons.Add(new() { Type = ReasonType.Illustrations, Count = pictureCount });
+            }
+            return reasons;
+        }
+    }
+
+    /// <summary> A Lexbox object whose content The Combine ignores, other than whether it was deleted. </summary>
+    public sealed class LexboxDeletable
+    {
+        public DateTime? DeletedAt { get; init; }
     }
 
     public sealed class LexboxPartOfSpeech
