@@ -15,6 +15,10 @@ namespace BackendFramework.Models
     meAuth {
         id
         isAdmin
+        orgs {
+            orgId
+            role
+        }
     }
     myProjects {
         code
@@ -41,6 +45,9 @@ namespace BackendFramework.Models
         isConfidential
         isLanguageForgeProject
         name
+        organizations {
+            id
+        }
         parentId
         projectOrigin
         repoSizeInKb
@@ -79,8 +86,10 @@ namespace BackendFramework.Models
 
     public sealed class LexboxProject
     {
-        // Lexbox only lets these roles (or a site admin) read LF Classic entries; see CanSyncProject in Lexbox.
+        // Lexbox only lets these project roles, a site admin, or an admin of an organization that owns the
+        // project read LF Classic entries; see CanSyncProject in Lexbox.
         private static readonly HashSet<string> ImportRoles = ["EDITOR", "MANAGER"];
+        private const string OrgAdminRole = "ADMIN";
 
         public LexboxProject(LexboxProjectDto dto, LexboxMeDto me)
         {
@@ -94,11 +103,13 @@ namespace BackendFramework.Models
             VernacularWsTags = WsIdDto.GetActiveTags(dto.FlexProjectMetadata?.WritingSystems?.VernacularWss ?? []);
 
             var role = dto.Users.FirstOrDefault(u => u.UserId == me.Id)?.Role;
+            var isOrgAdmin = dto.Organizations.Any(
+                o => me.Orgs.Any(m => m.OrgId == o.Id && m.Role == OrgAdminRole));
             if (!dto.IsLanguageForgeProject)
             {
                 ImportBlocker = LexboxImportBlocker.NotLanguageForge;
             }
-            else if (!me.IsAdmin && (role is null || !ImportRoles.Contains(role)))
+            else if (!me.IsAdmin && !isOrgAdmin && (role is null || !ImportRoles.Contains(role)))
             {
                 ImportBlocker = LexboxImportBlocker.InsufficientRole;
             }
@@ -139,6 +150,18 @@ namespace BackendFramework.Models
     {
         public Guid Id { get; init; }
         public bool IsAdmin { get; init; }
+        public List<LexboxOrgMembershipDto> Orgs { get; init; } = [];
+    }
+
+    public sealed class LexboxOrgMembershipDto
+    {
+        public Guid OrgId { get; init; }
+        public string Role { get; init; } = "";
+    }
+
+    public sealed class LexboxOrgDto
+    {
+        public Guid Id { get; init; }
     }
 
     public sealed class LexboxProjectDto
@@ -150,6 +173,7 @@ namespace BackendFramework.Models
         public bool? IsConfidential { get; init; }
         public bool IsLanguageForgeProject { get; init; }
         public string Name { get; init; } = "";
+        public List<LexboxOrgDto> Organizations { get; init; } = [];
         public Guid? ParentId { get; init; }
         public string ProjectOrigin { get; init; } = "";
         public int? RepoSizeInKb { get; init; }

@@ -126,13 +126,19 @@ namespace Backend.Tests.Services
         private const string MeId = "00000000-0000-0000-0000-0000000000aa";
         private const string OtherUserId = "00000000-0000-0000-0000-0000000000bb";
 
-        private async Task<LexboxProject> GetSingleProject(
-            bool isLanguageForge, string usersJson, bool isAdmin = false, string vernacularTag = "es")
+        private const string OrgId = "00000000-0000-0000-0000-0000000000cc";
+
+        private async Task<LexboxProject> GetSingleProject(bool isLanguageForge, string usersJson,
+            bool isAdmin = false, string vernacularTag = "es", string myOrgsJson = "", string projectOrgsJson = "")
         {
             _responseJson = $$"""
                 {
                     "data": {
-                        "meAuth": { "id": "{{MeId}}", "isAdmin": {{(isAdmin ? "true" : "false")}} },
+                        "meAuth": {
+                            "id": "{{MeId}}",
+                            "isAdmin": {{(isAdmin ? "true" : "false")}},
+                            "orgs": [{{myOrgsJson}}]
+                        },
                         "myProjects": [{
                             "code": "proj-code",
                             "id": "00000000-0000-0000-0000-000000000001",
@@ -145,6 +151,7 @@ namespace Backend.Tests.Services
                                     "vernacularWss": [{ "tag": "{{vernacularTag}}", "isActive": true, "isDefault": true }]
                                 }
                             },
+                            "organizations": [{{projectOrgsJson}}],
                             "users": [{{usersJson}}]
                         }]
                     }
@@ -185,6 +192,32 @@ namespace Backend.Tests.Services
             var project = await GetSingleProject(true, UserJson(MeId, "OBSERVER"), isAdmin: true);
 
             Assert.That(project.ImportBlocker, Is.Null);
+        }
+
+        [TestCase("ADMIN", true)]
+        [TestCase("USER", false)]
+        public async Task TestGetMyProjectsAsyncChecksOwningOrgRole(string orgRole, bool importable)
+        {
+            var myOrgs = $$"""{ "orgId": "{{OrgId}}", "role": "{{orgRole}}" }""";
+            var projectOrgs = $$"""{ "id": "{{OrgId}}" }""";
+
+            var project = await GetSingleProject(true, UserJson(MeId, "OBSERVER"),
+                myOrgsJson: myOrgs, projectOrgsJson: projectOrgs);
+
+            Assert.That(project.ImportBlocker, importable
+                ? Is.Null : Is.EqualTo(LexboxImportBlocker.InsufficientRole));
+        }
+
+        [Test]
+        public async Task TestGetMyProjectsAsyncIgnoresAdminOfOtherOrg()
+        {
+            var myOrgs = $$"""{ "orgId": "{{OrgId}}", "role": "ADMIN" }""";
+            var projectOrgs = """{ "id": "00000000-0000-0000-0000-0000000000dd" }""";
+
+            var project = await GetSingleProject(true, UserJson(MeId, "OBSERVER"),
+                myOrgsJson: myOrgs, projectOrgsJson: projectOrgs);
+
+            Assert.That(project.ImportBlocker, Is.EqualTo(LexboxImportBlocker.InsufficientRole));
         }
 
         [Test]
