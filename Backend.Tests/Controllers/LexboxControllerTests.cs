@@ -207,8 +207,9 @@ namespace Backend.Tests.Controllers
             // The ticket's Combine user ends up on the principal the Lexbox cookie will hold.
             var principal = new ClaimsPrincipal(new ClaimsIdentity());
             Assert.That(LexboxAuthService.AddCombineUserClaim(principal, properties), Is.True);
-            Assert.That(principal.FindFirst(LexboxAuthService.CombineUserIdClaimType)?.Value,
-                Is.EqualTo(OtherUserId));
+            var claim = principal.FindFirst(LexboxAuthService.CombineUserIdClaimType);
+            Assert.That(claim, Is.Not.Null);
+            Assert.That(claim.Value, Is.EqualTo(OtherUserId));
         }
 
         [Test]
@@ -252,8 +253,11 @@ namespace Backend.Tests.Controllers
             var result = await _lexboxController.GetProjects() as ObjectResult;
 
             // Not a 401, which the frontend treats as a Combine logout.
-            Assert.That(result?.StatusCode, Is.EqualTo(StatusCodes.Status403Forbidden));
-            Assert.That((result.Value as ProblemDetails)?.Title, Is.EqualTo("Not logged in to Lexbox"));
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status403Forbidden));
+            var problem = result.Value as ProblemDetails;
+            Assert.That(problem, Is.Not.Null);
+            Assert.That(problem.Title, Is.EqualTo("Not logged in to Lexbox"));
         }
 
         private static LexboxImportRequest ImportRequest() => new() { ProjectCode = "lex-code", AnalysisLangs = ["en"] };
