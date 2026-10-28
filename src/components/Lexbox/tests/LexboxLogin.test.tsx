@@ -40,6 +40,25 @@ describe("LexboxLogin", () => {
     expect(window.open).toHaveBeenCalledWith(testUrl);
   });
 
+  it("falls back to logged out when the status request fails", async () => {
+    const consoleError = jest.spyOn(console, "error").mockImplementation();
+    mockGetLexboxAuthStatus.mockRejectedValue(new Error("Status failed."));
+
+    const onStatusChange = jest.fn();
+
+    await act(async () => {
+      render(<LexboxLogin onStatusChange={onStatusChange} />);
+    });
+
+    const loginButton = await screen.findByRole("button", { name: /login/i });
+    await waitFor(() => expect(loginButton).toBeEnabled());
+
+    expect(consoleError).toHaveBeenCalled();
+    expect(onStatusChange).toHaveBeenCalledWith(false);
+    expect(onStatusChange).not.toHaveBeenCalledWith(true);
+    consoleError.mockRestore();
+  });
+
   it("shows logged-in menu and logs out", async () => {
     mockGetLexboxAuthStatus
       .mockResolvedValueOnce({ isLoggedIn: true, loggedInAs: "Lex User" })
