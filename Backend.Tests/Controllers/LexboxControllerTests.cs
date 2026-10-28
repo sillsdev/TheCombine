@@ -8,7 +8,6 @@ using BackendFramework.Controllers;
 using BackendFramework.Models;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -177,14 +176,13 @@ namespace Backend.Tests.Controllers
             _lexboxController.ControllerContext.HttpContext = GetAuthContext(authService);
             var ticket = _lexboxAuthService.CreateLoginTicket(OtherUserId);
 
-            var result = await _lexboxController.GenerateLogin(ticket, false);
+            var result = await _lexboxController.GenerateLogin(ticket);
 
             Assert.That(result, Is.InstanceOf<EmptyResult>());
             Assert.That(authService.ChallengeCallCount, Is.EqualTo(1));
-            var properties = authService.LastChallengeProperties as OpenIdConnectChallengeProperties;
+            var properties = authService.LastChallengeProperties;
             Assert.That(properties, Is.Not.Null);
             Assert.That(properties.RedirectUri, Does.EndWith(LexboxAuthService.LoginCompletePath));
-            Assert.That(properties.Prompt, Is.Null);
 
             // The ticket's Combine user ends up on the principal the Lexbox cookie will hold.
             var principal = new ClaimsPrincipal(new ClaimsIdentity());
@@ -194,29 +192,16 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestGenerateLoginSwitchAccountPromptsLogin()
-        {
-            var authService = new AuthenticationServiceMock(AuthenticateResult.NoResult());
-            _lexboxController.ControllerContext.HttpContext = GetAuthContext(authService);
-            var ticket = _lexboxAuthService.CreateLoginTicket(UserId);
-
-            await _lexboxController.GenerateLogin(ticket, true);
-
-            var properties = authService.LastChallengeProperties as OpenIdConnectChallengeProperties;
-            Assert.That(properties?.Prompt, Is.EqualTo("login"));
-        }
-
-        [Test]
         public async Task TestGenerateLoginRejectsInvalidOrReusedTicket()
         {
             var authService = new AuthenticationServiceMock(AuthenticateResult.NoResult());
             _lexboxController.ControllerContext.HttpContext = GetAuthContext(authService);
             var ticket = _lexboxAuthService.CreateLoginTicket(UserId);
 
-            Assert.That(await _lexboxController.GenerateLogin(null, false), Is.InstanceOf<ForbidResult>());
-            Assert.That(await _lexboxController.GenerateLogin("not-a-ticket", false), Is.InstanceOf<ForbidResult>());
-            Assert.That(await _lexboxController.GenerateLogin(ticket, false), Is.InstanceOf<EmptyResult>());
-            Assert.That(await _lexboxController.GenerateLogin(ticket, false), Is.InstanceOf<ForbidResult>());
+            Assert.That(await _lexboxController.GenerateLogin(null), Is.InstanceOf<ForbidResult>());
+            Assert.That(await _lexboxController.GenerateLogin("not-a-ticket"), Is.InstanceOf<ForbidResult>());
+            Assert.That(await _lexboxController.GenerateLogin(ticket), Is.InstanceOf<EmptyResult>());
+            Assert.That(await _lexboxController.GenerateLogin(ticket), Is.InstanceOf<ForbidResult>());
             Assert.That(authService.ChallengeCallCount, Is.EqualTo(1));
         }
 

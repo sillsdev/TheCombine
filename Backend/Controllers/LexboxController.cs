@@ -60,12 +60,11 @@ namespace BackendFramework.Controllers
 
         /// <summary> Generates a redirect to Lexbox login for OIDC sign-in. </summary>
         /// <param name="ticket"> From <see cref="CreateLoginTicket"/>. </param>
-        /// <param name="switchAccount"> Whether to make Lexbox ask for credentials even if already logged in. </param>
         [HttpGet("login", Name = "GenerateLogin")]
         [ProducesResponseType(StatusCodes.Status302Found)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GenerateLogin([FromQuery] string? ticket, [FromQuery] bool switchAccount)
+        public async Task<IActionResult> GenerateLogin([FromQuery] string? ticket)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "generating login");
 
@@ -77,7 +76,7 @@ namespace BackendFramework.Controllers
 
             try
             {
-                await _lexboxAuthService.Challenge(HttpContext, combineUserId, switchAccount);
+                await _lexboxAuthService.Challenge(HttpContext, combineUserId);
                 return new EmptyResult();
             }
             catch (Exception ex)

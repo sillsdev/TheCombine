@@ -6,7 +6,6 @@ using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -52,14 +51,9 @@ namespace BackendFramework.Services
             return combineUserId;
         }
 
-        public async Task Challenge(HttpContext httpContext, string combineUserId, bool switchAccount)
+        public async Task Challenge(HttpContext httpContext, string combineUserId)
         {
-            var properties = new OpenIdConnectChallengeProperties
-            {
-                // Lexbox reuses an existing lexbox.org session unless prompted to log in again.
-                Prompt = switchAccount ? "login" : null,
-                RedirectUri = Domain.FrontendDomain + LoginCompletePath,
-            };
+            var properties = new AuthenticationProperties { RedirectUri = Domain.FrontendDomain + LoginCompletePath };
             properties.Items[CombineUserIdItem] = combineUserId;
             await httpContext.ChallengeAsync(LexboxOidcScheme, properties);
         }

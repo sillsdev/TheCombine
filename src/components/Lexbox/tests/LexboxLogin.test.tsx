@@ -6,8 +6,7 @@ import LexboxLogin from "components/Lexbox/LexboxLogin";
 
 jest.mock("backend", () => ({
   getLexboxAuthStatus: () => mockGetLexboxAuthStatus(),
-  getLexboxLoginUrl: (switchAccount?: boolean) =>
-    mockGetLexboxLoginUrl(switchAccount),
+  getLexboxLoginUrl: () => mockGetLexboxLoginUrl(),
   logoutLexboxUser: () => mockLogoutLexboxUser(),
 }));
 
@@ -62,7 +61,7 @@ describe("LexboxLogin", () => {
     await userEvent.click(loginButton);
 
     expect(window.open).toHaveBeenCalledWith("", "_blank");
-    expect(mockGetLexboxLoginUrl).toHaveBeenCalledWith(false);
+    expect(mockGetLexboxLoginUrl).toHaveBeenCalledTimes(1);
     await waitFor(() => expect(mockLoginWindow.location.href).toEqual(testUrl));
   });
 
@@ -82,26 +81,6 @@ describe("LexboxLogin", () => {
     await waitFor(() => expect(mockLoginWindow.close).toHaveBeenCalled());
     expect(consoleError).toHaveBeenCalled();
     consoleError.mockRestore();
-  });
-
-  it("switches account from the logged-in menu", async () => {
-    mockGetLexboxAuthStatus.mockResolvedValue({
-      isLoggedIn: true,
-      loggedInAs: "Lex User",
-    });
-
-    await act(async () => {
-      render(<LexboxLogin />);
-    });
-    await userEvent.click(
-      await screen.findByRole("button", { name: "Lex User" })
-    );
-    await userEvent.click(
-      await screen.findByRole("menuitem", { name: /switch/i })
-    );
-
-    expect(mockGetLexboxLoginUrl).toHaveBeenCalledWith(true);
-    await waitFor(() => expect(mockLoginWindow.location.href).toEqual(testUrl));
   });
 
   it("falls back to logged out when the status request fails", async () => {

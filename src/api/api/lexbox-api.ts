@@ -89,13 +89,11 @@ export const LexboxApiAxiosParamCreator = function (
     /**
      *
      * @param {string} [ticket]
-     * @param {boolean} [switchAccount]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     generateLogin: async (
       ticket?: string,
-      switchAccount?: boolean,
       options: any = {}
     ): Promise<RequestArgs> => {
       const localVarPath = `/v1/lexbox/login`;
@@ -116,10 +114,6 @@ export const LexboxApiAxiosParamCreator = function (
 
       if (ticket !== undefined) {
         localVarQueryParameter["ticket"] = ticket;
-      }
-
-      if (switchAccount !== undefined) {
-        localVarQueryParameter["switchAccount"] = switchAccount;
       }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -333,20 +327,17 @@ export const LexboxApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} [ticket]
-     * @param {boolean} [switchAccount]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async generateLogin(
       ticket?: string,
-      switchAccount?: boolean,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.generateLogin(
         ticket,
-        switchAccount,
         options
       );
       return createRequestFunction(
@@ -474,17 +465,12 @@ export const LexboxApiFactory = function (
     /**
      *
      * @param {string} [ticket]
-     * @param {boolean} [switchAccount]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    generateLogin(
-      ticket?: string,
-      switchAccount?: boolean,
-      options?: any
-    ): AxiosPromise<void> {
+    generateLogin(ticket?: string, options?: any): AxiosPromise<void> {
       return localVarFp
-        .generateLogin(ticket, switchAccount, options)
+        .generateLogin(ticket, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -550,13 +536,6 @@ export interface LexboxApiGenerateLoginRequest {
    * @memberof LexboxApiGenerateLogin
    */
   readonly ticket?: string;
-
-  /**
-   *
-   * @type {boolean}
-   * @memberof LexboxApiGenerateLogin
-   */
-  readonly switchAccount?: boolean;
 }
 
 /**
@@ -618,11 +597,7 @@ export class LexboxApi extends BaseAPI {
     options?: any
   ) {
     return LexboxApiFp(this.configuration)
-      .generateLogin(
-        requestParameters.ticket,
-        requestParameters.switchAccount,
-        options
-      )
+      .generateLogin(requestParameters.ticket, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

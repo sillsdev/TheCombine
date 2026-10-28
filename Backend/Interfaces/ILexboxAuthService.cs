@@ -11,7 +11,7 @@ namespace BackendFramework.Interfaces
         /// <summary> Consumes a login ticket. </summary>
         /// <returns> The Combine user id it was created for, or null if invalid, expired, or already used. </returns>
         string? RedeemLoginTicket(string? ticket);
-        Task Challenge(HttpContext httpContext, string combineUserId, bool switchAccount);
+        Task Challenge(HttpContext httpContext, string combineUserId);
         Task<LexboxAuthStatus> GetAuthStatus(HttpContext httpContext, string combineUserId);
         Task SignOut(HttpContext httpContext);
         Task<string?> TryGetAccessToken(HttpContext httpContext, string combineUserId);
