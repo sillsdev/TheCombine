@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace BackendFramework.Services
 {
@@ -27,10 +29,7 @@ namespace BackendFramework.Services
 
             if (!response.IsSuccessStatusCode)
             {
-                var responseBody = await response.Content.ReadAsStringAsync();
-                throw new LexboxQueryException("Lexbox GraphQL request failed",
-                    $"Status: {(int)response.StatusCode} {response.ReasonPhrase}"
-                        + (string.IsNullOrEmpty(responseBody) ? "" : $"\nBody: {responseBody}"));
+                throw await FailedRequestException(response, "Lexbox GraphQL request failed");
             }
 
             var graph = await response.Content.ReadFromJsonAsync<LexboxQueryResponse<MyProjectsData>>()
@@ -78,21 +77,36 @@ namespace BackendFramework.Services
                 + $"?Count={EntriesPageSize}&Offset={offset}";
             var response = await httpClient.GetAsync(url);
 
-            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            switch (response.StatusCode)
             {
-                throw new LexboxQueryException("Language Forge project not found",
-                    $"Project '{projectCode}' was not found in Language Forge.");
+                case HttpStatusCode.Forbidden:
+                    throw new LexboxQueryException("Lexbox access denied",
+                        $"Reading entries of project '{projectCode}' requires the Manager or Editor role.",
+                        StatusCodes.Status403Forbidden);
+                case HttpStatusCode.NotFound:
+                    throw new LexboxQueryException("Language Forge project not found",
+                        $"Project '{projectCode}' was not found in Language Forge.", StatusCodes.Status404NotFound);
             }
 
             if (!response.IsSuccessStatusCode)
             {
-                var responseBody = await response.Content.ReadAsStringAsync();
-                throw new LexboxQueryException("Project entries request failed",
-                    $"Status: {(int)response.StatusCode} {response.ReasonPhrase}"
-                        + (string.IsNullOrEmpty(responseBody) ? "" : $"\nBody: {responseBody}"));
+                throw await FailedRequestException(response, "Project entries request failed");
             }
 
             return await response.Content.ReadFromJsonAsync<List<LexboxEntry>>() ?? [];
+        }
+
+        private static async Task<LexboxQueryException> FailedRequestException(
+            HttpResponseMessage response, string title)
+        {
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return LexboxQueryException.NotLoggedIn();
+            }
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return new LexboxQueryException(title, $"Status: {(int)response.StatusCode} {response.ReasonPhrase}"
+                + (string.IsNullOrEmpty(responseBody) ? "" : $"\nBody: {responseBody}"));
         }
     }
 }

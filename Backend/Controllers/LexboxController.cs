@@ -105,7 +105,6 @@ namespace BackendFramework.Controllers
         /// <summary> Gets Lexbox projects for the signed-in Lexbox user. </summary>
         [HttpGet("projects", Name = "GetProjects")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LexboxProject>))]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status502BadGateway)]
         public async Task<IActionResult> GetProjects()
@@ -121,7 +120,7 @@ namespace BackendFramework.Controllers
             var accessToken = await _lexboxAuthService.TryGetAccessToken(HttpContext, combineUserId);
             if (string.IsNullOrEmpty(accessToken))
             {
-                return Unauthorized();
+                return LexboxProblem(LexboxQueryException.NotLoggedIn());
             }
 
             try
@@ -131,16 +130,15 @@ namespace BackendFramework.Controllers
             }
             catch (LexboxQueryException ex)
             {
-                return Problem(title: ex.Title, detail: ex.Message,
-                    statusCode: StatusCodes.Status502BadGateway);
+                return LexboxProblem(ex);
             }
         }
 
         /// <summary> Gets entries from a Lexbox project. </summary>
         [HttpGet("entries/{projectCode}/{vernacularLang}", Name = "GetEntries")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Word>))]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status502BadGateway)]
         public async Task<IActionResult> GetEntries(
             string projectCode, string vernacularLang, [FromQuery] List<string>? analysisLangs)
@@ -156,7 +154,7 @@ namespace BackendFramework.Controllers
             var accessToken = await _lexboxAuthService.TryGetAccessToken(HttpContext, combineUserId);
             if (string.IsNullOrEmpty(accessToken))
             {
-                return Unauthorized();
+                return LexboxProblem(LexboxQueryException.NotLoggedIn());
             }
 
             try
@@ -167,10 +165,11 @@ namespace BackendFramework.Controllers
             }
             catch (LexboxQueryException ex)
             {
-                return Problem(title: ex.Title, detail: ex.Message,
-                    statusCode: StatusCodes.Status502BadGateway);
+                return LexboxProblem(ex);
             }
         }
 
+        private ObjectResult LexboxProblem(LexboxQueryException ex)
+            => Problem(title: ex.Title, detail: ex.Message, statusCode: ex.StatusCode);
     }
 }

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BackendFramework.Models;
 using BackendFramework.Services;
+using Microsoft.AspNetCore.Http;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
@@ -18,6 +19,7 @@ namespace Backend.Tests.Services
         private Mock<HttpMessageHandler> _handlerMock = null!;
         private LexboxQueryService _lexboxQueryService = null!;
         private string _responseJson = "[]";
+        private HttpStatusCode _status = HttpStatusCode.OK;
         /// <summary> Overrides <see cref="_responseJson"/> when set. </summary>
         private Func<HttpRequestMessage, string>? _respond;
 
@@ -30,11 +32,12 @@ namespace Backend.Tests.Services
         {
             _responseJson = "[]";
             _respond = null;
+            _status = HttpStatusCode.OK;
             _handlerMock = new Mock<HttpMessageHandler>();
             _handlerMock.Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync((HttpRequestMessage req, CancellationToken _) => new HttpResponseMessage(HttpStatusCode.OK)
+                .ReturnsAsync((HttpRequestMessage req, CancellationToken _) => new HttpResponseMessage(_status)
                 {
                     Content = new StringContent(_respond?.Invoke(req) ?? _responseJson)
                 });
@@ -207,6 +210,31 @@ namespace Backend.Tests.Services
         [TestCase("kjj-fonipa", ExpectedResult = false)]
         [TestCase("audio", ExpectedResult = false)]
         public bool TestIsAudioTag(string tag) => WsIdDto.IsAudioTag(tag);
+
+        [TestCase(HttpStatusCode.Unauthorized, StatusCodes.Status403Forbidden, "Not logged in to Lexbox")]
+        [TestCase(HttpStatusCode.Forbidden, StatusCodes.Status403Forbidden, "Lexbox access denied")]
+        [TestCase(HttpStatusCode.NotFound, StatusCodes.Status404NotFound, "Language Forge project not found")]
+        [TestCase(HttpStatusCode.InternalServerError, StatusCodes.Status502BadGateway, "Project entries request failed")]
+        public async Task TestGetProjectEntriesAsyncMapsLexboxErrors(HttpStatusCode lexboxStatus, int status, string title)
+        {
+            _status = lexboxStatus;
+
+            var ex = await Assert.ThrowsAsync<LexboxQueryException>(
+                () => _lexboxQueryService.GetProjectEntriesAsync("token", "proj-code", Vern, []));
+
+            Assert.That(ex.StatusCode, Is.EqualTo(status));
+            Assert.That(ex.Title, Is.EqualTo(title));
+        }
+
+        [Test]
+        public async Task TestGetMyProjectsAsyncRejectedTokenIsNotLoggedIn()
+        {
+            _status = HttpStatusCode.Unauthorized;
+
+            var ex = await Assert.ThrowsAsync<LexboxQueryException>(() => _lexboxQueryService.GetMyProjectsAsync("token"));
+
+            Assert.That(ex.StatusCode, Is.EqualTo(StatusCodes.Status403Forbidden));
+        }
 
         [Test]
         public async Task TestGetProjectEntriesAsyncStopsAfterShortPage()

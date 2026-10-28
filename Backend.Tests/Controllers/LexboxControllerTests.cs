@@ -225,7 +225,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestGetProjectsWithOtherCombineUsersCookieReturnsUnauthorized()
+        public async Task TestGetProjectsWithOtherCombineUsersCookieReturnsNotLoggedIn()
         {
             var claims = new List<Claim> { new("sub", "lex-1") };
             var properties = new AuthenticationProperties();
@@ -234,9 +234,11 @@ namespace Backend.Tests.Controllers
                 LexboxAuthResult(claims, OtherUserId).Principal!, properties, "LexboxCookie");
             _lexboxController.ControllerContext.HttpContext = GetAuthContext(AuthenticateResult.Success(ticket));
 
-            var result = await _lexboxController.GetProjects();
+            var result = await _lexboxController.GetProjects() as ObjectResult;
 
-            Assert.That(result, Is.InstanceOf<UnauthorizedResult>());
+            // Not a 401, which the frontend treats as a Combine logout.
+            Assert.That(result?.StatusCode, Is.EqualTo(StatusCodes.Status403Forbidden));
+            Assert.That((result.Value as ProblemDetails)?.Title, Is.EqualTo("Not logged in to Lexbox"));
         }
 
         [Test]
@@ -277,6 +279,7 @@ namespace Backend.Tests.Controllers
             var context = PermissionServiceMock.HttpContextWithUserId(UserId);
             var services = new ServiceCollection();
             services.AddSingleton(authenticationService);
+            services.AddMvcCore();
             context.RequestServices = services.BuildServiceProvider();
             return context;
         }

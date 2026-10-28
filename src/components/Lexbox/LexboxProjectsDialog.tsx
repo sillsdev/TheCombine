@@ -12,6 +12,7 @@ import {
   Radio,
   Typography,
 } from "@mui/material";
+import { isAxiosError } from "axios";
 import { type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -19,6 +20,14 @@ import { LexboxImportBlocker, type LexboxProject } from "api/models";
 import { getLexboxProjects } from "backend";
 import LoadingButton from "components/Buttons/LoadingButton";
 import LexboxLogin from "components/Lexbox/LexboxLogin";
+
+/** Prefers the title of a problem-details error response over the generic axios message. */
+function errorText(err: unknown): string {
+  if (isAxiosError<{ title?: string }>(err) && err.response?.data?.title) {
+    return err.response.data.title;
+  }
+  return err instanceof Error ? err.message : String(err);
+}
 
 interface LexboxProjectsDialogProps {
   chooseProject: (project: LexboxProject) => void;
@@ -44,7 +53,7 @@ export default function LexboxProjectsDialog(
     try {
       setProjects(await getLexboxProjects());
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      setError(errorText(err));
       setProjects([]);
     } finally {
       setLoading(false);

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace BackendFramework.Models
 {
@@ -194,9 +195,18 @@ namespace BackendFramework.Models
         }
     }
 
-    public sealed class LexboxQueryException(string title, string detail) : Exception(detail)
+    public sealed class LexboxQueryException(string title, string detail, int statusCode = 502) : Exception(detail)
     {
         public string Title { get; } = title;
+        /// <summary> The status for our API to return. </summary>
+        public int StatusCode { get; } = statusCode;
+
+        /// <summary> Lexbox didn't accept the access token, or there wasn't one. </summary>
+        /// <remarks>
+        /// A 403, not a 401: the frontend treats any 401 from our API as a Combine logout.
+        /// </remarks>
+        public static LexboxQueryException NotLoggedIn() => new("Not logged in to Lexbox",
+            "Log in to Lexbox again.", StatusCodes.Status403Forbidden);
     }
 
     public sealed class LexboxEntry

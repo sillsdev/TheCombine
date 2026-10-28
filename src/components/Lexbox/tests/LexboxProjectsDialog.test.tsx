@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { AxiosError, type AxiosResponse } from "axios";
 import { type ReactElement, useEffect } from "react";
 
 import { LexboxImportBlocker, type LexboxProject } from "api/models";
@@ -72,5 +73,29 @@ describe("LexboxProjectsDialog", () => {
     await userEvent.click(screen.getByRole("button", { name: /confirm/i }));
 
     expect(chooseProject).toHaveBeenCalledWith(importableProject);
+  });
+
+  it("shows the title of a problem-details error", async () => {
+    const response = {
+      data: { title: "Not logged in to Lexbox" },
+      status: 403,
+    } as AxiosResponse;
+    mockGetLexboxProjects.mockRejectedValue(
+      new AxiosError("Request failed", "ERR", undefined, undefined, response)
+    );
+
+    await act(async () => {
+      render(
+        <LexboxProjectsDialog
+          chooseProject={jest.fn()}
+          onClose={jest.fn()}
+          open
+        />
+      );
+    });
+
+    expect(
+      await screen.findByText("Not logged in to Lexbox")
+    ).toBeInTheDocument();
   });
 });
