@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
@@ -13,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using Moq.Protected;
 using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
@@ -21,7 +25,11 @@ namespace Backend.Tests.Controllers
     {
         private LexboxAuthService _lexboxAuthService = null!;
         private PermissionServiceMock _permissionService = null!;
+        private ProjectRepositoryMock _projRepo = null!;
+        private WordRepositoryMock _wordRepo = null!;
         private LexboxController _lexboxController = null!;
+        /// <summary> What Lexbox returns for any request. </summary>
+        private string _lexboxResponseJson = "[]";
 
         private const string UserId = "LexboxControllerTestsUserId";
         private const string OtherUserId = "LexboxControllerTestsOtherUserId";
@@ -36,12 +44,24 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _lexboxAuthService = new LexboxAuthService(new MemoryCache(new MemoryCacheOptions()));
-            var httpClient = new HttpClient(new Mock<HttpMessageHandler>().Object);
+            _lexboxResponseJson = "[]";
+            var handler = new Mock<HttpMessageHandler>();
+            handler.Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(_lexboxResponseJson)
+                });
             var httpClientFactory = new Mock<IHttpClientFactory>();
-            httpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
+            httpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>()))
+                .Returns(() => new HttpClient(handler.Object));
             var lexboxQueryService = new LexboxQueryService(httpClientFactory.Object);
             _permissionService = new PermissionServiceMock();
-            _lexboxController = new LexboxController(_lexboxAuthService, lexboxQueryService, _permissionService);
+            _projRepo = new ProjectRepositoryMock();
+            _wordRepo = new WordRepositoryMock();
+            _lexboxController = new LexboxController(_lexboxAuthService, lexboxQueryService, _permissionService,
+                _projRepo, new WordService(_wordRepo));
         }
 
         [Test]
@@ -227,12 +247,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestGetProjectsWithOtherCombineUsersCookieReturnsNotLoggedIn()
         {
-            var claims = new List<Claim> { new("sub", "lex-1") };
-            var properties = new AuthenticationProperties();
-            properties.StoreTokens([new AuthenticationToken { Name = "access_token", Value = "token" }]);
-            var ticket = new AuthenticationTicket(
-                LexboxAuthResult(claims, OtherUserId).Principal!, properties, "LexboxCookie");
-            _lexboxController.ControllerContext.HttpContext = GetAuthContext(AuthenticateResult.Success(ticket));
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(LexboxSessionResult(OtherUserId));
 
             var result = await _lexboxController.GetProjects() as ObjectResult;
 
@@ -241,14 +256,107 @@ namespace Backend.Tests.Controllers
             Assert.That((result.Value as ProblemDetails)?.Title, Is.EqualTo("Not logged in to Lexbox"));
         }
 
+        private static LexboxImportRequest ImportRequest() => new() { ProjectCode = "lex-code", AnalysisLangs = ["en"] };
+
+        private async Task<Project> CreateProject(Action<Project>? modify = null)
+        {
+            var project = new Project { Name = "Lexbox import", VernacularWritingSystem = new("es") };
+            project.AnalysisWritingSystems.Add(new());
+            modify?.Invoke(project);
+            return await _projRepo.Create(project) ?? throw new AssertionException("Failed to create project");
+        }
+
         [Test]
-        public async Task TestGetEntriesUnauthorizedReturnsForbid()
+        public async Task TestImportEntriesUnauthorizedReturnsForbid()
         {
             _lexboxController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
-            var result = await _lexboxController.GetEntries("proj-code", "en", null);
+            var result = await _lexboxController.ImportEntries("projId", ImportRequest());
 
             Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public async Task TestImportEntriesWithoutLexboxSessionReturnsNotLoggedIn()
+        {
+            var project = await CreateProject();
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(AuthenticateResult.NoResult());
+
+            var result = await _lexboxController.ImportEntries(project.Id, ImportRequest()) as ObjectResult;
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status403Forbidden));
+        }
+
+        [Test]
+        public async Task TestImportEntriesMissingProjectReturnsNotFound()
+        {
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(LexboxSessionResult());
+
+            var result = await _lexboxController.ImportEntries("missing", ImportRequest());
+
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+        }
+
+        [TestCase(true, null)]
+        [TestCase(false, "other-code")]
+        public async Task TestImportEntriesIntoImportedProjectReturnsBadRequest(bool liftImported, string? lexboxCode)
+        {
+            var project = await CreateProject(p =>
+            {
+                p.LiftImported = liftImported;
+                p.LexboxProjectCode = lexboxCode;
+            });
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(LexboxSessionResult());
+
+            var result = await _lexboxController.ImportEntries(project.Id, ImportRequest());
+
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+            Assert.That(await _wordRepo.GetAllFrontier(project.Id), Is.Empty);
+        }
+
+        [Test]
+        public async Task TestImportEntriesSavesWordsAndUpdatesProject()
+        {
+            var project = await CreateProject();
+            _lexboxResponseJson = """
+                [
+                    {
+                        "id": "00000000-0000-0000-0000-000000000001",
+                        "lexemeForm": { "es": "hola" },
+                        "senses": [{
+                            "id": "00000000-0000-0000-0000-000000000002",
+                            "definition": { "en": { "spans": [{ "text": "greeting" }] } },
+                            "gloss": { "en": "hi" },
+                            "partOfSpeech": { "id": "00000000-0000-0000-0000-000000000003", "name": { "en": "Noun" } }
+                        }]
+                    },
+                    {
+                        "id": "00000000-0000-0000-0000-000000000004",
+                        "lexemeForm": { "fr": "salut" }
+                    }
+                ]
+                """;
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(LexboxSessionResult());
+            var request = new LexboxImportRequest { ProjectCode = "lex-code", AnalysisLangs = ["en", "ru", "en"] };
+
+            var result = await _lexboxController.ImportEntries(project.Id, request) as OkObjectResult;
+
+            // The entry without an "es" form is skipped.
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo(1));
+            var words = await _wordRepo.GetAllFrontier(project.Id);
+            Assert.That(words, Has.Count.EqualTo(1));
+            Assert.That(words[0].Vernacular, Is.EqualTo("hola"));
+            Assert.That(words[0].Created, Is.Not.Empty);
+
+            var updated = await _projRepo.GetProject(project.Id);
+            Assert.That(updated, Is.Not.Null);
+            Assert.That(updated.LexboxProjectCode, Is.EqualTo("lex-code"));
+            Assert.That(updated.LiftImported, Is.False);
+            Assert.That(updated.AnalysisWritingSystems.Select(ws => ws.Bcp47), Is.EqualTo(new List<string> { "en", "ru" }));
+            Assert.That(updated.DefinitionsEnabled, Is.True);
+            Assert.That(updated.GrammaticalInfoEnabled, Is.True);
         }
 
         [Test]
@@ -269,6 +377,15 @@ namespace Backend.Tests.Controllers
             claims = [.. claims, new(LexboxAuthService.CombineUserIdClaimType, combineUserId)];
             return AuthenticateResult.Success(new AuthenticationTicket(
                 new ClaimsPrincipal(new ClaimsIdentity(claims, "LexboxCookie")), "LexboxCookie"));
+        }
+
+        /// <summary> A Lexbox cookie with an access token, stamped with the given Combine user. </summary>
+        private static AuthenticateResult LexboxSessionResult(string combineUserId = UserId)
+        {
+            var properties = new AuthenticationProperties();
+            properties.StoreTokens([new AuthenticationToken { Name = "access_token", Value = "token" }]);
+            var principal = LexboxAuthResult([new("sub", "lex-1")], combineUserId).Principal!;
+            return AuthenticateResult.Success(new AuthenticationTicket(principal, properties, "LexboxCookie"));
         }
 
         private static HttpContext GetAuthContext(AuthenticateResult authenticateResult)

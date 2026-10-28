@@ -41,6 +41,7 @@ models/grammatical-info.ts
 models/index.ts
 models/lexbox-auth-status.ts
 models/lexbox-import-blocker.ts
+models/lexbox-import-request.ts
 models/lexbox-project.ts
 models/merge-source-word.ts
 models/merge-undo-ids.ts

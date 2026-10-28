@@ -109,6 +109,7 @@ namespace BackendFramework.Repositories
                 .Set(x => x.Name, project.Name)
                 .Set(x => x.IsActive, project.IsActive)
                 .Set(x => x.LiftImported, project.LiftImported)
+                .Set(x => x.LexboxProjectCode, project.LexboxProjectCode)
                 .Set(x => x.DefinitionsEnabled, project.DefinitionsEnabled)
                 .Set(x => x.GrammaticalInfoEnabled, project.GrammaticalInfoEnabled)
                 .Set(x => x.AutocompleteSetting, project.AutocompleteSetting)

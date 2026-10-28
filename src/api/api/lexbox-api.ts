@@ -39,9 +39,9 @@ import {
 // @ts-ignore
 import { LexboxAuthStatus } from "../models";
 // @ts-ignore
-import { LexboxProject } from "../models";
+import { LexboxImportRequest } from "../models";
 // @ts-ignore
-import { Word } from "../models";
+import { LexboxProject } from "../models";
 /**
  * LexboxApi - axios parameter creator
  * @export
@@ -168,63 +168,6 @@ export const LexboxApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {string} projectCode
-     * @param {string} vernacularLang
-     * @param {Array<string>} [analysisLangs]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getEntries: async (
-      projectCode: string,
-      vernacularLang: string,
-      analysisLangs?: Array<string>,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectCode' is not null or undefined
-      assertParamExists("getEntries", "projectCode", projectCode);
-      // verify required parameter 'vernacularLang' is not null or undefined
-      assertParamExists("getEntries", "vernacularLang", vernacularLang);
-      const localVarPath = `/v1/lexbox/entries/{projectCode}/{vernacularLang}`
-        .replace(`{${"projectCode"}}`, encodeURIComponent(String(projectCode)))
-        .replace(
-          `{${"vernacularLang"}}`,
-          encodeURIComponent(String(vernacularLang))
-        );
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      if (analysisLangs) {
-        localVarQueryParameter["analysisLangs"] = analysisLangs;
-      }
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -253,6 +196,60 @@ export const LexboxApiAxiosParamCreator = function (
         ...headersFromBaseOptions,
         ...options.headers,
       };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {LexboxImportRequest} [lexboxImportRequest]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    importEntries: async (
+      projectId: string,
+      lexboxImportRequest?: LexboxImportRequest,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("importEntries", "projectId", projectId);
+      const localVarPath = `/v1/lexbox/import/{projectId}`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        lexboxImportRequest,
+        localVarRequestOptions,
+        configuration
+      );
 
       return {
         url: toPathString(localVarUrlObj),
@@ -371,35 +368,6 @@ export const LexboxApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {string} projectCode
-     * @param {string} vernacularLang
-     * @param {Array<string>} [analysisLangs]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async getEntries(
-      projectCode: string,
-      vernacularLang: string,
-      analysisLangs?: Array<string>,
-      options?: any
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Word>>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getEntries(
-        projectCode,
-        vernacularLang,
-        analysisLangs,
-        options
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -413,6 +381,32 @@ export const LexboxApiFp = function (configuration?: Configuration) {
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getProjects(options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {LexboxImportRequest} [lexboxImportRequest]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async importEntries(
+      projectId: string,
+      lexboxImportRequest?: LexboxImportRequest,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.importEntries(
+        projectId,
+        lexboxImportRequest,
+        options
+      );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -485,30 +479,28 @@ export const LexboxApiFactory = function (
     },
     /**
      *
-     * @param {string} projectCode
-     * @param {string} vernacularLang
-     * @param {Array<string>} [analysisLangs]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getEntries(
-      projectCode: string,
-      vernacularLang: string,
-      analysisLangs?: Array<string>,
-      options?: any
-    ): AxiosPromise<Array<Word>> {
-      return localVarFp
-        .getEntries(projectCode, vernacularLang, analysisLangs, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getProjects(options?: any): AxiosPromise<Array<LexboxProject>> {
       return localVarFp
         .getProjects(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {LexboxImportRequest} [lexboxImportRequest]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    importEntries(
+      projectId: string,
+      lexboxImportRequest?: LexboxImportRequest,
+      options?: any
+    ): AxiosPromise<number> {
+      return localVarFp
+        .importEntries(projectId, lexboxImportRequest, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -539,31 +531,24 @@ export interface LexboxApiGenerateLoginRequest {
 }
 
 /**
- * Request parameters for getEntries operation in LexboxApi.
+ * Request parameters for importEntries operation in LexboxApi.
  * @export
- * @interface LexboxApiGetEntriesRequest
+ * @interface LexboxApiImportEntriesRequest
  */
-export interface LexboxApiGetEntriesRequest {
+export interface LexboxApiImportEntriesRequest {
   /**
    *
    * @type {string}
-   * @memberof LexboxApiGetEntries
+   * @memberof LexboxApiImportEntries
    */
-  readonly projectCode: string;
+  readonly projectId: string;
 
   /**
    *
-   * @type {string}
-   * @memberof LexboxApiGetEntries
+   * @type {LexboxImportRequest}
+   * @memberof LexboxApiImportEntries
    */
-  readonly vernacularLang: string;
-
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof LexboxApiGetEntries
-   */
-  readonly analysisLangs?: Array<string>;
+  readonly lexboxImportRequest?: LexboxImportRequest;
 }
 
 /**
@@ -615,27 +600,6 @@ export class LexboxApi extends BaseAPI {
 
   /**
    *
-   * @param {LexboxApiGetEntriesRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof LexboxApi
-   */
-  public getEntries(
-    requestParameters: LexboxApiGetEntriesRequest,
-    options?: any
-  ) {
-    return LexboxApiFp(this.configuration)
-      .getEntries(
-        requestParameters.projectCode,
-        requestParameters.vernacularLang,
-        requestParameters.analysisLangs,
-        options
-      )
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof LexboxApi
@@ -643,6 +607,26 @@ export class LexboxApi extends BaseAPI {
   public getProjects(options?: any) {
     return LexboxApiFp(this.configuration)
       .getProjects(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {LexboxApiImportEntriesRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof LexboxApi
+   */
+  public importEntries(
+    requestParameters: LexboxApiImportEntriesRequest,
+    options?: any
+  ) {
+    return LexboxApiFp(this.configuration)
+      .importEntries(
+        requestParameters.projectId,
+        requestParameters.lexboxImportRequest,
+        options
+      )
       .then((request) => request(this.axios, this.basePath));
   }
 

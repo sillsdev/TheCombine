@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 
@@ -117,6 +118,15 @@ namespace BackendFramework.Models
         public string Name { get; init; }
         public string Type { get; init; }
         public List<string> VernacularWsTags { get; init; }
+    }
+
+    public sealed class LexboxImportRequest
+    {
+        [Required]
+        public string ProjectCode { get; set; } = "";
+        /// <summary> The Lexbox project's analysis languages, default first. </summary>
+        [Required]
+        public List<string> AnalysisLangs { get; set; } = [];
     }
 
     public sealed class MyProjectsData

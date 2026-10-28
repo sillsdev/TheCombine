@@ -282,13 +282,16 @@ export async function getLexboxProjects(): Promise<LexboxProject[]> {
   return (await lexboxApi.getProjects(defaultOptions())).data;
 }
 
-export async function getLexboxEntries(
+/** Import a Lexbox project's entries into a project with no imported data.
+ * Returns the number of words imported. */
+export async function importLexboxEntries(
+  projectId: string,
   projectCode: string,
-  vernacularLang: string,
   analysisLangs: string[]
-): Promise<Word[]> {
-  const params = { projectCode, vernacularLang, analysisLangs };
-  return (await lexboxApi.getEntries(params, defaultOptions())).data;
+): Promise<number> {
+  const lexboxImportRequest = { analysisLangs, projectCode };
+  const params = { lexboxImportRequest, projectId };
+  return (await lexboxApi.importEntries(params, defaultOptions())).data;
 }
 
 export async function logoutLexboxUser(): Promise<void> {

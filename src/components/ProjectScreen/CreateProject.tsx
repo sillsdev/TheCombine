@@ -23,16 +23,13 @@ import { Trans, useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import { LexboxProject, type WritingSystem } from "api/models";
-import {
-  getLexboxEntries,
-  projectDuplicateCheck,
-  uploadLiftAndGetWritingSystems,
-} from "backend";
+import { projectDuplicateCheck, uploadLiftAndGetWritingSystems } from "backend";
 import FileInputButton from "components/Buttons/FileInputButton";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import LanguagePicker from "components/LanguagePicker";
 import LexboxProjectsDialog from "components/Lexbox/LexboxProjectsDialog";
 import {
+  asyncCreateLexboxProject,
   asyncCreateProject,
   asyncFinishProject,
 } from "components/ProjectScreen/CreateProjectActions";
@@ -225,22 +222,20 @@ export default function CreateProject(): ReactElement {
         setSuccess(true)
       );
     } else if (lexboxProject?.code) {
-      try {
-        console.info(
-          "Project entries:",
-          await getLexboxEntries(
-            lexboxProject.code,
-            vernLang.bcp47,
-            lexboxProject.analysisWsTags ?? []
-          )
-        );
-      } catch (e) {
-        console.error("Error fetching Lexbox entries:", e);
-      }
-      toast.error(
-        "Creating project from Lexbox import is not yet implemented."
+      const action = asyncCreateLexboxProject(
+        trimmedName,
+        vernLang,
+        lexboxProject.code,
+        lexboxProject.analysisWsTags ?? []
       );
-      setLoading(false);
+      try {
+        await dispatch(action);
+        setSuccess(true);
+      } catch (err) {
+        console.error("Failed to import from Lexbox", err);
+        toast.error("Failed to import from Lexbox");
+        setLoading(false);
+      }
     } else {
       await dispatch(
         asyncCreateProject(trimmedName, vernLang, [analysisLang])

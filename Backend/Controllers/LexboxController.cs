@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -12,11 +13,13 @@ namespace BackendFramework.Controllers
     [Produces("application/json")]
     [Route("v1/lexbox")]
     public class LexboxController(ILexboxAuthService lexboxAuthService, ILexboxQueryService lexboxQueryService,
-        IPermissionService permissionService) : Controller
+        IPermissionService permissionService, IProjectRepository projRepo, IWordService wordService) : Controller
     {
         private readonly ILexboxAuthService _lexboxAuthService = lexboxAuthService;
         private readonly ILexboxQueryService _lexboxQueryService = lexboxQueryService;
         private readonly IPermissionService _permissionService = permissionService;
+        private readonly IProjectRepository _projRepo = projRepo;
+        private readonly IWordService _wordService = wordService;
 
         private const string otelTagName = "otel.LexboxController";
 
@@ -134,18 +137,22 @@ namespace BackendFramework.Controllers
             }
         }
 
-        /// <summary> Gets entries from a Lexbox project. </summary>
-        [HttpGet("entries/{projectCode}/{vernacularLang}", Name = "GetEntries")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Word>))]
+        /// <summary>
+        /// Imports a Lexbox project's entries, in the Combine project's vernacular language, into a Combine project
+        /// that has no imported data.
+        /// </summary>
+        /// <returns> The number of words imported. </returns>
+        [HttpPost("import/{projectId}", Name = "ImportEntries")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status502BadGateway)]
-        public async Task<IActionResult> GetEntries(
-            string projectCode, string vernacularLang, [FromQuery] List<string>? analysisLangs)
+        public async Task<IActionResult> ImportEntries(string projectId, [FromBody] LexboxImportRequest request)
         {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting Lexbox entries");
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "importing Lexbox entries");
 
-            if (!_permissionService.IsCurrentUserAuthenticated(HttpContext))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import, projectId))
             {
                 return Forbid();
             }
@@ -157,16 +164,55 @@ namespace BackendFramework.Controllers
                 return LexboxProblem(LexboxQueryException.NotLoggedIn());
             }
 
+            var project = await _projRepo.GetProject(projectId);
+            if (project is null)
+            {
+                return NotFound(projectId);
+            }
+            if (project.LiftImported || project.LexboxProjectCode is not null)
+            {
+                return BadRequest("This project already has imported data.");
+            }
+
+            List<Word> words;
             try
             {
-                List<Word> entries = await _lexboxQueryService.GetProjectEntriesAsync(
-                    accessToken, projectCode, vernacularLang, analysisLangs ?? []);
-                return Ok(entries);
+                words = await _lexboxQueryService.GetProjectEntriesAsync(accessToken, request.ProjectCode,
+                    project.VernacularWritingSystem.Bcp47, request.AnalysisLangs);
             }
             catch (LexboxQueryException ex)
             {
                 return LexboxProblem(ex);
             }
+
+            words.ForEach(w => w.ProjectId = projectId);
+            words = await _wordService.ImportWords(words);
+
+            AddImportToProject(project, request, words);
+            await _projRepo.Update(projectId, project);
+
+            return Ok(words.Count);
+        }
+
+        /// <summary> Updates project settings for imported data, as LIFT import does. </summary>
+        private static void AddImportToProject(Project project, LexboxImportRequest request, List<Word> words)
+        {
+            project.AnalysisWritingSystems.AddRange(request.AnalysisLangs
+                .Where(lang => !project.AnalysisWritingSystems.Any(ws => ws.Bcp47 == lang))
+                .Distinct().Select(lang => new WritingSystem(lang)));
+            project.AnalysisWritingSystems.RemoveAll(ws => string.IsNullOrWhiteSpace(ws.Bcp47));
+            if (project.AnalysisWritingSystems.Count == 0)
+            {
+                // The list cannot be empty.
+                project.AnalysisWritingSystems.Add(new("en", "English"));
+            }
+
+            // Signal the frontend to display definitions or grammatical info if any were imported.
+            project.DefinitionsEnabled = words.Any(w => w.Senses.Any(s => s.Definitions.Count > 0));
+            project.GrammaticalInfoEnabled = words.Any(
+                w => w.Senses.Any(s => s.GrammaticalInfo.CatGroup != GramCatGroup.Unspecified));
+
+            project.LexboxProjectCode = request.ProjectCode;
         }
 
         private ObjectResult LexboxProblem(LexboxQueryException ex)
