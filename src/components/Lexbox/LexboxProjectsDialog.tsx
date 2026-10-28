@@ -15,7 +15,7 @@ import {
 import { type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { type LexboxProject } from "api/models";
+import { LexboxImportBlocker, type LexboxProject } from "api/models";
 import { getLexboxProjects } from "backend";
 import LoadingButton from "components/Buttons/LoadingButton";
 import LexboxLogin from "components/Lexbox/LexboxLogin";
@@ -76,6 +76,17 @@ export default function LexboxProjectsDialog(
     }
   }, [isLoggedIn]);
 
+  const importBlockerText = (blocker: LexboxImportBlocker): string => {
+    switch (blocker) {
+      case LexboxImportBlocker.NotLanguageForge:
+        return t("Only Language Forge projects can be imported for now.");
+      case LexboxImportBlocker.InsufficientRole:
+        return t("Importing requires the Manager or Editor role.");
+      case LexboxImportBlocker.NoVernacularLanguage:
+        return t("This project has no vernacular language.");
+    }
+  };
+
   const projectContent = (): ReactElement => {
     if (loading) {
       return (
@@ -99,10 +110,15 @@ export default function LexboxProjectsDialog(
         <Typography sx={{ mt: 2 }}>{t("No Lexbox projects found.")}</Typography>
       );
     }
+    // Importable projects first; sort is stable, so Lexbox's order is otherwise kept.
+    const sortedProjects = [...projects].sort(
+      (a, b) => Number(!!a.importBlocker) - Number(!!b.importBlocker)
+    );
     return (
       <List sx={{ mt: 1 }}>
-        {projects.map((project) => (
+        {sortedProjects.map((project) => (
           <ListItemButton
+            disabled={!!project.importBlocker}
             key={project.id}
             onClick={() => setSelected(project)}
             selected={selected?.id === project.id}
@@ -119,6 +135,12 @@ export default function LexboxProjectsDialog(
                   {`${t("Vernacular languages: ")}${project.vernacularWsTags?.join(", ") || t("None")}`}
                   <br />
                   {`${t("Analysis languages: ")}${project.analysisWsTags?.join(", ") || t("None")}`}
+                  {project.importBlocker && (
+                    <>
+                      <br />
+                      {importBlockerText(project.importBlocker)}
+                    </>
+                  )}
                 </>
               }
             />

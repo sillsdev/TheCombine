@@ -43,7 +43,8 @@ namespace BackendFramework.Services
                 throw new LexboxQueryException("Lexbox GraphQL returned errors", errorText);
             }
 
-            return graph.Data?.MyProjects?.Select(p => new LexboxProject(p)).ToList() ?? [];
+            var me = graph.Data?.MeAuth ?? throw new LexboxQueryException("Lexbox GraphQL response had no user", "");
+            return graph.Data.MyProjects.Select(p => new LexboxProject(p, me)).ToList();
         }
 
         public async Task<List<Word>> GetProjectEntriesAsync(

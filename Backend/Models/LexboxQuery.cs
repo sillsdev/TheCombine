@@ -10,6 +10,10 @@ namespace BackendFramework.Models
         public const string MiniLcmBaseUrl = "https://lexbox.org/api/mini-lcm";
         public const string LfClassicBaseUrl = "https://lexbox.org/api/lfclassic";
         public const string MyProjectsQuery = @"query {
+    meAuth {
+        id
+        isAdmin
+    }
     myProjects {
         code
         description
@@ -33,6 +37,7 @@ namespace BackendFramework.Models
         }
         id
         isConfidential
+        isLanguageForgeProject
         name
         parentId
         projectOrigin
@@ -41,6 +46,10 @@ namespace BackendFramework.Models
         retentionPolicy
         type
         userCount
+        users {
+            role
+            userId
+        }
     }
 }";
 
@@ -58,23 +67,67 @@ namespace BackendFramework.Models
         public string? Message { get; init; }
     }
 
-    public sealed class LexboxProject(LexboxProjectDto dto)
+    /// <summary> Why a Lexbox project can't be imported into The Combine. </summary>
+    public enum LexboxImportBlocker
     {
-        public List<string> AnalysisWsTags { get; init; } =
-            WsIdDto.GetActiveTags(dto.FlexProjectMetadata?.WritingSystems?.AnalysisWss ?? []).ToList();
-        public string Code { get; init; } = dto.Code;
-        public string? Description { get; init; } = dto.Description;
-        public Guid Id { get; init; } = dto.Id;
-        public bool? IsConfidential { get; init; } = dto.IsConfidential;
-        public string Name { get; init; } = dto.Name;
-        public string Type { get; init; } = dto.Type;
-        public List<string> VernacularWsTags { get; init; } =
-            WsIdDto.GetActiveTags(dto.FlexProjectMetadata?.WritingSystems?.VernacularWss ?? []).ToList();
+        NotLanguageForge,
+        InsufficientRole,
+        NoVernacularLanguage,
+    }
+
+    public sealed class LexboxProject
+    {
+        // Lexbox only lets these roles (or a site admin) read LF Classic entries; see CanSyncProject in Lexbox.
+        private static readonly HashSet<string> ImportRoles = ["EDITOR", "MANAGER"];
+
+        public LexboxProject(LexboxProjectDto dto, LexboxMeDto me)
+        {
+            AnalysisWsTags = WsIdDto.GetActiveTags(dto.FlexProjectMetadata?.WritingSystems?.AnalysisWss ?? []);
+            Code = dto.Code;
+            Description = dto.Description;
+            Id = dto.Id;
+            IsConfidential = dto.IsConfidential;
+            Name = dto.Name;
+            Type = dto.Type;
+            VernacularWsTags = WsIdDto.GetActiveTags(dto.FlexProjectMetadata?.WritingSystems?.VernacularWss ?? []);
+
+            var role = dto.Users.FirstOrDefault(u => u.UserId == me.Id)?.Role;
+            if (!dto.IsLanguageForgeProject)
+            {
+                ImportBlocker = LexboxImportBlocker.NotLanguageForge;
+            }
+            else if (!me.IsAdmin && (role is null || !ImportRoles.Contains(role)))
+            {
+                ImportBlocker = LexboxImportBlocker.InsufficientRole;
+            }
+            else if (VernacularWsTags.Count == 0)
+            {
+                ImportBlocker = LexboxImportBlocker.NoVernacularLanguage;
+            }
+        }
+
+        public List<string> AnalysisWsTags { get; init; }
+        public string Code { get; init; }
+        public string? Description { get; init; }
+        public Guid Id { get; init; }
+        /// <summary> Null if the project can be imported. </summary>
+        public LexboxImportBlocker? ImportBlocker { get; init; }
+        public bool? IsConfidential { get; init; }
+        public string Name { get; init; }
+        public string Type { get; init; }
+        public List<string> VernacularWsTags { get; init; }
     }
 
     public sealed class MyProjectsData
     {
+        public LexboxMeDto? MeAuth { get; init; }
         public List<LexboxProjectDto> MyProjects { get; init; } = [];
+    }
+
+    public sealed class LexboxMeDto
+    {
+        public Guid Id { get; init; }
+        public bool IsAdmin { get; init; }
     }
 
     public sealed class LexboxProjectDto
@@ -84,6 +137,7 @@ namespace BackendFramework.Models
         public ProjectMetadataDto? FlexProjectMetadata { get; init; }
         public Guid Id { get; init; }
         public bool? IsConfidential { get; init; }
+        public bool IsLanguageForgeProject { get; init; }
         public string Name { get; init; } = "";
         public Guid? ParentId { get; init; }
         public string ProjectOrigin { get; init; } = "";
@@ -92,6 +146,14 @@ namespace BackendFramework.Models
         public string RetentionPolicy { get; init; } = "";
         public string Type { get; init; } = "";
         public int UserCount { get; init; }
+        /// <summary> All members if the user may see them, otherwise just the user's own membership. </summary>
+        public List<ProjectUserDto> Users { get; init; } = [];
+    }
+
+    public sealed class ProjectUserDto
+    {
+        public string Role { get; init; } = "";
+        public Guid UserId { get; init; }
     }
 
     public sealed class ProjectMetadataDto

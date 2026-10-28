@@ -89,6 +89,7 @@ namespace Backend.Tests.Services
             _responseJson = """
                 {
                     "data": {
+                        "meAuth": { "id": "00000000-0000-0000-0000-0000000000aa", "isAdmin": false },
                         "myProjects": [{
                             "code": "proj-code",
                             "id": "00000000-0000-0000-0000-000000000001",
@@ -117,6 +118,86 @@ namespace Backend.Tests.Services
             Assert.That(projects, Has.Count.EqualTo(1));
             Assert.That(projects[0].AnalysisWsTags, Is.EqualTo(new List<string> { "en", "ru" }));
             Assert.That(projects[0].VernacularWsTags, Is.EqualTo(new List<string> { "es-419" }));
+        }
+
+        private const string MeId = "00000000-0000-0000-0000-0000000000aa";
+        private const string OtherUserId = "00000000-0000-0000-0000-0000000000bb";
+
+        private async Task<LexboxProject> GetSingleProject(
+            bool isLanguageForge, string usersJson, bool isAdmin = false, string vernacularTag = "es")
+        {
+            _responseJson = $$"""
+                {
+                    "data": {
+                        "meAuth": { "id": "{{MeId}}", "isAdmin": {{(isAdmin ? "true" : "false")}} },
+                        "myProjects": [{
+                            "code": "proj-code",
+                            "id": "00000000-0000-0000-0000-000000000001",
+                            "isLanguageForgeProject": {{(isLanguageForge ? "true" : "false")}},
+                            "name": "Project",
+                            "flexProjectMetadata": {
+                                "projectId": "00000000-0000-0000-0000-000000000001",
+                                "writingSystems": {
+                                    "analysisWss": [],
+                                    "vernacularWss": [{ "tag": "{{vernacularTag}}", "isActive": true, "isDefault": true }]
+                                }
+                            },
+                            "users": [{{usersJson}}]
+                        }]
+                    }
+                }
+                """;
+            var projects = await _lexboxQueryService.GetMyProjectsAsync("token");
+            Assert.That(projects, Has.Count.EqualTo(1));
+            return projects[0];
+        }
+
+        private static string UserJson(string userId, string role) => $$"""{ "userId": "{{userId}}", "role": "{{role}}" }""";
+
+        [TestCase("MANAGER")]
+        [TestCase("EDITOR")]
+        public async Task TestGetMyProjectsAsyncImportableForEditorOrManager(string role)
+        {
+            var project = await GetSingleProject(true, UserJson(MeId, role));
+
+            Assert.That(project.ImportBlocker, Is.Null);
+        }
+
+        [TestCase("OBSERVER")]
+        [TestCase("COMMENTER")]
+        [TestCase("EDITOR_LITE")]
+        public async Task TestGetMyProjectsAsyncBlocksOtherRoles(string role)
+        {
+            // Another member's role must not count as the user's.
+            var users = $"{UserJson(OtherUserId, "MANAGER")}, {UserJson(MeId, role)}";
+
+            var project = await GetSingleProject(true, users);
+
+            Assert.That(project.ImportBlocker, Is.EqualTo(LexboxImportBlocker.InsufficientRole));
+        }
+
+        [Test]
+        public async Task TestGetMyProjectsAsyncImportableForAdminWithoutRole()
+        {
+            var project = await GetSingleProject(true, UserJson(MeId, "OBSERVER"), isAdmin: true);
+
+            Assert.That(project.ImportBlocker, Is.Null);
+        }
+
+        [Test]
+        public async Task TestGetMyProjectsAsyncBlocksNonLanguageForge()
+        {
+            var project = await GetSingleProject(false, UserJson(MeId, "MANAGER"));
+
+            Assert.That(project.ImportBlocker, Is.EqualTo(LexboxImportBlocker.NotLanguageForge));
+        }
+
+        [Test]
+        public async Task TestGetMyProjectsAsyncBlocksNoVernacularLanguage()
+        {
+            var project = await GetSingleProject(true, UserJson(MeId, "MANAGER"), vernacularTag: "es-Zxxx-x-audio");
+
+            Assert.That(project.ImportBlocker, Is.EqualTo(LexboxImportBlocker.NoVernacularLanguage));
         }
 
         [TestCase("kjj-Zxxx-x-audio", ExpectedResult = true)]

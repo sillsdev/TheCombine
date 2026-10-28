@@ -12,6 +12,8 @@
  * Do not edit the class manually.
  */
 
+import { LexboxImportBlocker } from "./lexbox-import-blocker";
+
 /**
  *
  * @export
@@ -42,6 +44,12 @@ export interface LexboxProject {
    * @memberof LexboxProject
    */
   id?: string;
+  /**
+   *
+   * @type {LexboxImportBlocker}
+   * @memberof LexboxProject
+   */
+  importBlocker?: LexboxImportBlocker;
   /**
    *
    * @type {boolean}
