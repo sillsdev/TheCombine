@@ -10,7 +10,6 @@ using BackendFramework.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
@@ -33,9 +32,7 @@ namespace Backend.Tests.Controllers
         [SetUp]
         public void Setup()
         {
-            var configValues = new Dictionary<string, string?> { { "LexboxAuth:PostLoginRedirect", "/" } };
-            var configuration = new ConfigurationBuilder().AddInMemoryCollection(configValues).Build();
-            var lexboxAuthService = new LexboxAuthService(configuration);
+            var lexboxAuthService = new LexboxAuthService();
             var httpClient = new HttpClient(new Mock<HttpMessageHandler>().Object);
             var httpClientFactory = new Mock<IHttpClientFactory>();
             httpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
@@ -145,6 +142,8 @@ namespace Backend.Tests.Controllers
 
             Assert.That(result, Is.InstanceOf<EmptyResult>());
             Assert.That(authService.ChallengeCallCount, Is.EqualTo(1));
+            Assert.That(authService.LastChallengeProperties?.RedirectUri,
+                Does.EndWith(LexboxAuthService.LoginCompletePath));
         }
 
         [Test]

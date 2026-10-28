@@ -8,6 +8,7 @@ namespace Backend.Tests.Mocks
     internal sealed class AuthenticationServiceMock(AuthenticateResult authenticateResult) : IAuthenticationService
     {
         internal int ChallengeCallCount { get; private set; }
+        internal AuthenticationProperties? LastChallengeProperties { get; private set; }
 
         public Task<AuthenticateResult> AuthenticateAsync(HttpContext context, string? scheme)
             => Task.FromResult(authenticateResult);
@@ -15,6 +16,7 @@ namespace Backend.Tests.Mocks
         public Task ChallengeAsync(HttpContext context, string? scheme, AuthenticationProperties? properties)
         {
             ChallengeCallCount++;
+            LastChallengeProperties = properties;
             return Task.CompletedTask;
         }
 

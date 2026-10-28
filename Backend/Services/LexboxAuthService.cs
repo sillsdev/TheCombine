@@ -6,22 +6,21 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 
 namespace BackendFramework.Services
 {
-    public sealed class LexboxAuthService(IConfiguration configuration) : ILexboxAuthService
+    public sealed class LexboxAuthService : ILexboxAuthService
     {
-        private readonly IConfiguration _configuration = configuration;
-
         public const string LexboxCookieScheme = "LexboxCookie";
         private const string LexboxOidcScheme = "LexboxOidc";
-        private const string PostLoginRedirectConfigKey = "LexboxAuth:PostLoginRedirect";
+
+        /// <summary> Frontend page that reports the login to the opener and closes the login window. </summary>
+        /// <remarks> Must match Path.LexboxLoginComplete in src/types/path.ts. </remarks>
+        public const string LoginCompletePath = "/lexbox-login-complete";
 
         public async Task Challenge(HttpContext httpContext)
         {
-            var redirectUrl = NormalizeReturnUrl(_configuration[PostLoginRedirectConfigKey])
-                ?? Domain.FrontendDomain + "/app/auth-success";
+            var redirectUrl = Domain.FrontendDomain + LoginCompletePath;
             await httpContext.ChallengeAsync(LexboxOidcScheme, new() { RedirectUri = redirectUrl });
         }
 
@@ -50,14 +49,6 @@ namespace BackendFramework.Services
         {
             var result = await httpContext.AuthenticateAsync(LexboxCookieScheme);
             return result.Properties?.GetTokenValue("access_token");
-        }
-
-        private static string? NormalizeReturnUrl(string? url)
-        {
-            url = url?.Trim();
-            return string.IsNullOrEmpty(url) || !Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var uri)
-                ? null
-                : uri.ToString();
         }
 
         private static LexboxAuthUser GetUserFromClaims(ClaimsPrincipal principal)
