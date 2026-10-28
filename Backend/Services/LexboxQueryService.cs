@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -50,7 +51,8 @@ namespace BackendFramework.Services
             httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", accessToken);
 
-            var url = $"{LexboxQuery.LfClassicBaseUrl}/{projectCode}/entries";
+            // Without a Count, Lexbox returns at most 1000 entries; -1 (QueryOptions.QueryAll) returns all.
+            var url = $"{LexboxQuery.LfClassicBaseUrl}/{Uri.EscapeDataString(projectCode)}/entries?Count=-1";
             var response = await httpClient.GetAsync(url);
 
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
