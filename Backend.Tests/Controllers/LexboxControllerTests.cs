@@ -88,14 +88,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestGetAuthStatusThrowsWhenSubClaimMissing()
+        public async Task TestGetAuthStatusThrowsWhenSubClaimMissing()
         {
             var claims = new List<Claim> { new("user", "Lex User") };
             var authResult = AuthenticateResult.Success(new AuthenticationTicket(
                 new ClaimsPrincipal(new ClaimsIdentity(claims, "LexboxCookie")), "LexboxCookie"));
             _lexboxController.ControllerContext.HttpContext = GetAuthContext(authResult);
 
-            Assert.ThrowsAsync<InvalidOperationException>(_lexboxController.GetAuthStatus);
+            await Assert.ThrowsAsync<InvalidOperationException>(_lexboxController.GetAuthStatus);
         }
 
         [Test]

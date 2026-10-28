@@ -207,7 +207,8 @@ namespace BackendFramework
 
                     options.Events.OnRemoteFailure = ctx =>
                     {
-                        _logger.LogError(ctx.Failure, "[OIDC] Remote failure: {Message}", ctx.Failure?.Message);
+                        var logger = ctx.HttpContext.RequestServices.GetRequiredService<ILogger<Startup>>();
+                        logger.LogError(ctx.Failure, "[OIDC] Remote failure: {Message}", ctx.Failure?.Message);
                         ctx.HandleResponse();
                         ctx.Response.Redirect("/error");
                         return Task.CompletedTask;
@@ -215,7 +216,8 @@ namespace BackendFramework
 
                     options.Events.OnAuthenticationFailed = ctx =>
                     {
-                        _logger.LogError(ctx.Exception, "[OIDC] Authentication failed: {Message}", ctx.Exception?.Message);
+                        var logger = ctx.HttpContext.RequestServices.GetRequiredService<ILogger<Startup>>();
+                        logger.LogError(ctx.Exception, "[OIDC] Authentication failed: {Message}", ctx.Exception?.Message);
                         return Task.CompletedTask;
                     };
                 });
