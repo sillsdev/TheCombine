@@ -1,6 +1,10 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using BackendFramework.Contexts;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -10,6 +14,7 @@ using BackendFramework.Repositories;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
@@ -133,6 +138,20 @@ namespace BackendFramework
             }
 
             var key = ASCII.GetBytes(secretKey);
+
+            // The keys protect the Lexbox cookie and in-flight Lexbox sign-ins. Keeping them on the backend volume
+            // lets those survive restarts and deploys, and lets pods share them during a rolling update.
+            // The keys are unencrypted at rest. That's acceptable while the cookie holds only a 1-hour access token,
+            // since misusing the keys also needs a captured cookie. If the Lexbox scopes ever include offline_access,
+            // the cookie would hold a long-lived refresh token, so protect the keys (e.g., with a certificate) then.
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo(FileStorage.GenerateDataProtectionKeysDirPath()));
+
+            var lexboxAuthConfig = Configuration.GetSection("LexboxAuth");
+
+            // Authorization endpoint needs to be defined because discovery silently fails in dev.
+            var lexboxAuthorizationEndpoint = lexboxAuthConfig["AuthorizationEndpoint"]?.Trim();
+
             services.AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -144,10 +163,76 @@ namespace BackendFramework
                     x.SaveToken = true;
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateAudience = false,
                         ValidateIssuer = false,
-                        ValidateAudience = false
+                        ValidateIssuerSigningKey = true
+                    };
+                })
+                .AddCookie("LexboxCookie", options =>
+                {
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.IsEssential = true;
+                    options.Cookie.Name = "lexbox_auth";
+                    options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax;
+                    options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.SameAsRequest;
+                    options.ExpireTimeSpan = TimeSpan.FromHours(1);
+                    options.SlidingExpiration = true;
+                })
+                .AddOpenIdConnect("LexboxOidc", options =>
+                {
+                    lexboxAuthConfig.Bind(options);
+
+                    // Keep claim names (e.g. "sub", "name") as-is, rather than remapping to URI-based ClaimTypes.
+                    options.MapInboundClaims = false;
+
+                    // Discovery isn't working (at least in dev), so manually fetch the keys.
+                    options.TokenValidationParameters.IssuerSigningKeyResolver = (_, _, kid, _) =>
+                    {
+                        var jwksUrl = "https://lexbox.org/.well-known/jwks";
+                        // Task.Run avoids sync-over-async deadlock by running on a thread-pool thread with no
+                        // synchronization context.
+                        var response = Task.Run(() => new HttpClient().GetStringAsync(jwksUrl))
+                            .GetAwaiter().GetResult();
+                        var keys = new JsonWebKeySet(response).GetSigningKeys();
+                        return keys.Where(x => x.KeyId == kid);
+                    };
+
+                    options.Events.OnRedirectToIdentityProvider = context =>
+                    {
+                        if (string.IsNullOrWhiteSpace(context.ProtocolMessage.IssuerAddress)
+                            && !string.IsNullOrEmpty(lexboxAuthorizationEndpoint))
+                        {
+                            context.ProtocolMessage.IssuerAddress = lexboxAuthorizationEndpoint;
+                        }
+
+                        return Task.CompletedTask;
+                    };
+
+                    options.Events.OnTicketReceived = ctx =>
+                    {
+                        if (ctx.Principal is null || ctx.Properties is null
+                            || !LexboxAuthService.AddCombineUserClaim(ctx.Principal, ctx.Properties))
+                        {
+                            ctx.Fail("Lexbox login wasn't started by a Combine user.");
+                        }
+                        return Task.CompletedTask;
+                    };
+
+                    options.Events.OnRemoteFailure = ctx =>
+                    {
+                        var logger = ctx.HttpContext.RequestServices.GetRequiredService<ILogger<Startup>>();
+                        logger.LogError(ctx.Failure, "[OIDC] Remote failure: {Message}", ctx.Failure?.Message);
+                        ctx.HandleResponse();
+                        ctx.Response.Redirect("/error");
+                        return Task.CompletedTask;
+                    };
+
+                    options.Events.OnAuthenticationFailed = ctx =>
+                    {
+                        var logger = ctx.HttpContext.RequestServices.GetRequiredService<ILogger<Startup>>();
+                        logger.LogError(ctx.Exception, "[OIDC] Authentication failed: {Message}", ctx.Exception?.Message);
+                        return Task.CompletedTask;
                     };
                 });
 
@@ -248,6 +333,9 @@ namespace BackendFramework
 
             // Register concrete types for dependency injection
 
+            // HttpClientFactory for Lexbox and OpenTelemetry instrumentation
+            services.AddHttpClient();
+
             // Mongo context for use in repo contexts
             services.AddSingleton<IMongoDbContext, MongoDbContext>();
 
@@ -270,6 +358,10 @@ namespace BackendFramework
             services.AddTransient<IInviteService, InviteService>();
             services.AddTransient<IPasswordResetRepository, PasswordResetRepository>();
             services.AddTransient<IPasswordResetService, PasswordResetService>();
+
+            // Lexbox types
+            services.AddTransient<ILexboxAuthService, LexboxAuthService>();
+            services.AddTransient<ILexboxQueryService, LexboxQueryService>();
 
             // Lift Service - Singleton to avoid initializing the Sldr multiple times,
             // also to avoid leaking LanguageTag data
@@ -310,7 +402,6 @@ namespace BackendFramework
             services.AddTransient<IWordService, WordService>();
 
             // OpenTelemetry
-            services.AddHttpClient();
             services.AddMemoryCache();
             services.AddHttpContextAccessor();
             services.AddTransient<ILocationProvider, LocationProvider>();

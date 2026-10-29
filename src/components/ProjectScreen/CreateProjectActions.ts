@@ -1,5 +1,11 @@
 import { type WritingSystem } from "api/models";
-import { createProject, finishUploadLift, getProject } from "backend";
+import {
+  checkLexboxProject,
+  createProject,
+  finishUploadLift,
+  getProject,
+  importLexboxEntries,
+} from "backend";
 import { asyncSetNewCurrentProject } from "components/Project/ProjectActions";
 import { asyncCreateUserEdits } from "goals/Redux/GoalActions";
 import { type StoreStateDispatch } from "rootRedux/types";
@@ -21,6 +27,33 @@ export function asyncCreateProject(
     project.analysisWritingSystems = analysisWritingSystems;
 
     const createdProject = await createProject(project);
+    await dispatch(asyncSetNewCurrentProject(createdProject));
+
+    // Manually pause so they have a chance to see the success message.
+    setTimeout(() => {
+      dispatch(asyncCreateUserEdits());
+      router.navigate(Path.ProjSettings);
+    }, 1000);
+  };
+}
+
+/** Create a project and import a Lexbox project's entries into it. */
+export function asyncCreateLexboxProject(
+  name: string,
+  vernacularWritingSystem: WritingSystem,
+  lexboxProjectCode: string,
+  lexboxAnalysisLangs: string[]
+) {
+  return async (dispatch: StoreStateDispatch) => {
+    // Catch most import failures before the project name is taken.
+    await checkLexboxProject(lexboxProjectCode);
+
+    const project = newProject(name);
+    project.vernacularWritingSystem = vernacularWritingSystem;
+
+    const projId = (await createProject(project)).id;
+    await importLexboxEntries(projId, lexboxProjectCode, lexboxAnalysisLangs);
+    const createdProject = await getProject(projId);
     await dispatch(asyncSetNewCurrentProject(createdProject));
 
     // Manually pause so they have a chance to see the success message.

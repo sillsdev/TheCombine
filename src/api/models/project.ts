@@ -55,6 +55,12 @@ export interface Project {
   liftImported: boolean;
   /**
    *
+   * @type {string}
+   * @memberof Project
+   */
+  lexboxProjectCode?: string | null;
+  /**
+   *
    * @type {boolean}
    * @memberof Project
    */
