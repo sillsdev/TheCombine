@@ -146,6 +146,7 @@ export default function CreateProject(): ReactElement {
     setVernLangOptions(langOptions);
     if (langOptions.length) {
       setVernLang(newWritingSystem(undBcp47));
+      setVernLangIsOther(false);
     }
   };
 
@@ -156,6 +157,7 @@ export default function CreateProject(): ReactElement {
     setVernLangOptions(vernLangs.map((lang) => newWritingSystem(lang)));
     if (vernLangs.length) {
       setVernLang(newWritingSystem(undBcp47));
+      setVernLangIsOther(false);
     }
   };
 
@@ -184,6 +186,12 @@ export default function CreateProject(): ReactElement {
       </MenuItem>
     );
 
+    const value = vernLangIsOther
+      ? vernIdOther
+      : langs.some((l) => l.bcp47 === vernLang.bcp47)
+        ? vernLang.bcp47
+        : vernIdNone;
+
     const onChange = (e: SelectChangeEvent): void => {
       const ws = langs.find((l) => l.bcp47 === e.target.value);
       if (ws) {
@@ -196,7 +204,7 @@ export default function CreateProject(): ReactElement {
     };
 
     return (
-      <Select defaultValue={vernIdNone} onChange={onChange}>
+      <Select onChange={onChange} value={value}>
         {menuItems}
       </Select>
     );

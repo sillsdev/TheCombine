@@ -211,4 +211,24 @@ describe("CreateProject", () => {
     );
     expect(button).toBeEnabled();
   });
+
+  it("resets the vernacular selector when choosing another source", async () => {
+    await userEvent.type(screen.getByRole("textbox"), "non-empty-name");
+    await userEvent.click(screen.getByText(mockChooseLexboxProject));
+    await userEvent.click(screen.getByRole("combobox"));
+    await userEvent.click(
+      screen.getByRole("option", { name: mockLangs[1].bcp47 })
+    );
+    expect(screen.getByRole("combobox")).toHaveTextContent(mockLangs[1].bcp47);
+
+    // Choosing a file clears the chosen vernacular language.
+    mockUploadLiftAndGetWritingSystems.mockResolvedValueOnce(mockLangs);
+    await userEvent.click(screen.getByText(CreateProjectTextId.UploadBrowse));
+    expect(screen.getByRole("combobox")).toHaveTextContent(
+      CreateProjectTextId.SelectLanguage
+    );
+    expect(
+      screen.getByRole("button", { name: CreateProjectTextId.Create })
+    ).toBeDisabled();
+  });
 });
