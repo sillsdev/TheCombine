@@ -272,6 +272,11 @@ export async function getLexboxAuthStatus(): Promise<LexboxAuthStatus> {
   return (await lexboxApi.getAuthStatus(defaultOptions())).data;
 }
 
+/** Rejects if the current Lexbox user can't import the Lexbox project's entries. */
+export async function checkLexboxProject(projectCode: string): Promise<void> {
+  await lexboxApi.checkProject({ projectCode }, defaultOptions());
+}
+
 /** Returns a single-use url that starts Lexbox login for the current user. */
 export async function getLexboxLoginUrl(): Promise<string> {
   const ticket = (await lexboxApi.createLoginTicket(defaultOptions())).data;

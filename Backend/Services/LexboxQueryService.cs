@@ -18,11 +18,16 @@ namespace BackendFramework.Services
 
         public const int EntriesPageSize = 1000;
 
-        public async Task<List<LexboxProject>> GetMyProjectsAsync(string accessToken)
+        private HttpClient CreateClient(string accessToken)
         {
             var httpClient = _httpClientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            return httpClient;
+        }
+
+        public async Task<List<LexboxProject>> GetMyProjectsAsync(string accessToken)
+        {
+            var httpClient = CreateClient(accessToken);
 
             var response = await httpClient.PostAsJsonAsync(LexboxQuery.QueryUrl,
                 new LexboxQuery { Query = LexboxQuery.MyProjectsQuery });
@@ -46,12 +51,15 @@ namespace BackendFramework.Services
             return graph.Data.MyProjects.Select(p => new LexboxProject(p, me)).ToList();
         }
 
+        public async Task CheckProjectEntriesAsync(string accessToken, string projectCode)
+        {
+            await GetEntriesPageAsync(CreateClient(accessToken), projectCode, 0, 1);
+        }
+
         public async Task<List<Word>> GetProjectEntriesAsync(
             string accessToken, string projectCode, string vernacularLang, List<string> analysisLangs)
         {
-            var httpClient = _httpClientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
+            var httpClient = CreateClient(accessToken);
 
             // Lexbox's Count=-1 (QueryOptions.QueryAll) becomes a $limit of 0, which its Mongo driver rejects,
             // so page through the entries instead. Lexbox sorts them by headword, morph type, then id.
@@ -59,7 +67,7 @@ namespace BackendFramework.Services
             List<LexboxEntry> page;
             do
             {
-                page = await GetEntriesPageAsync(httpClient, projectCode, lexboxEntries.Count);
+                page = await GetEntriesPageAsync(httpClient, projectCode, lexboxEntries.Count, EntriesPageSize);
                 lexboxEntries.AddRange(page);
             } while (page.Count == EntriesPageSize);
 
@@ -71,10 +79,10 @@ namespace BackendFramework.Services
         }
 
         private static async Task<List<LexboxEntry>> GetEntriesPageAsync(
-            HttpClient httpClient, string projectCode, int offset)
+            HttpClient httpClient, string projectCode, int offset, int count)
         {
             var url = $"{LexboxQuery.LfClassicBaseUrl}/{Uri.EscapeDataString(projectCode)}/entries"
-                + $"?Count={EntriesPageSize}&Offset={offset}";
+                + $"?Count={count}&Offset={offset}";
             var response = await httpClient.GetAsync(url);
 
             switch (response.StatusCode)

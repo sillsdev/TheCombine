@@ -138,6 +138,40 @@ namespace BackendFramework.Controllers
             }
         }
 
+        /// <summary> Checks that the signed-in Lexbox user can import the entries of a Lexbox project. </summary>
+        /// <remarks> Lets the frontend catch a failing import before it creates a project to import into. </remarks>
+        [HttpGet("projects/{projectCode}/check", Name = "CheckProject")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status502BadGateway)]
+        public async Task<IActionResult> CheckProject(string projectCode)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking Lexbox project");
+
+            if (!_permissionService.IsCurrentUserAuthenticated(HttpContext))
+            {
+                return Forbid();
+            }
+
+            var combineUserId = _permissionService.GetUserId(HttpContext);
+            var accessToken = await _lexboxAuthService.TryGetAccessToken(HttpContext, combineUserId);
+            if (string.IsNullOrEmpty(accessToken))
+            {
+                return LexboxProblem(LexboxQueryException.NotLoggedIn());
+            }
+
+            try
+            {
+                await _lexboxQueryService.CheckProjectEntriesAsync(accessToken, projectCode);
+                return NoContent();
+            }
+            catch (LexboxQueryException ex)
+            {
+                return LexboxProblem(ex);
+            }
+        }
+
         /// <summary>
         /// Imports a Lexbox project's entries, in the Combine project's vernacular language, into a Combine project
         /// that has no imported data.

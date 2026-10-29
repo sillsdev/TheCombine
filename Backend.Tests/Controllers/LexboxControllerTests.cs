@@ -279,6 +279,37 @@ namespace Backend.Tests.Controllers
             Assert.That(problem.Title, Is.EqualTo("Not logged in to Lexbox"));
         }
 
+        [Test]
+        public async Task TestCheckProjectUnauthorizedReturnsForbid()
+        {
+            _lexboxController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            var result = await _lexboxController.CheckProject("lex-code");
+
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public async Task TestCheckProjectWithoutLexboxSessionReturnsNotLoggedIn()
+        {
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(AuthenticateResult.NoResult());
+
+            var result = await _lexboxController.CheckProject("lex-code") as ObjectResult;
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status403Forbidden));
+        }
+
+        [Test]
+        public async Task TestCheckProjectReadableReturnsNoContent()
+        {
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(LexboxSessionResult());
+
+            var result = await _lexboxController.CheckProject("lex-code");
+
+            Assert.That(result, Is.InstanceOf<NoContentResult>());
+        }
+
         private static LexboxImportRequest ImportRequest() => new() { ProjectCode = "lex-code", AnalysisLangs = ["en"] };
 
         private async Task<Project> CreateProject(Action<Project>? modify = null)

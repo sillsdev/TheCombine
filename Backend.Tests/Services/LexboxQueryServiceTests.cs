@@ -260,6 +260,30 @@ namespace Backend.Tests.Services
         }
 
         [Test]
+        public async Task TestCheckProjectEntriesAsyncRequestsOneEntry()
+        {
+            await _lexboxQueryService.CheckProjectEntriesAsync("token", "proj-code");
+
+            _handlerMock.Protected().Verify(
+                "SendAsync",
+                Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req => req.RequestUri!.Query == "?Count=1&Offset=0"),
+                ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestCase(HttpStatusCode.Forbidden, StatusCodes.Status403Forbidden)]
+        [TestCase(HttpStatusCode.InternalServerError, StatusCodes.Status502BadGateway)]
+        public async Task TestCheckProjectEntriesAsyncMapsLexboxErrors(HttpStatusCode lexboxStatus, int status)
+        {
+            _status = lexboxStatus;
+
+            var ex = await Assert.ThrowsAsync<LexboxQueryException>(
+                () => _lexboxQueryService.CheckProjectEntriesAsync("token", "proj-code"));
+
+            Assert.That(ex.StatusCode, Is.EqualTo(status));
+        }
+
+        [Test]
         public async Task TestGetMyProjectsAsyncRejectedTokenIsNotLoggedIn()
         {
             _status = HttpStatusCode.Unauthorized;

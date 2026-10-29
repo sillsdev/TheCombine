@@ -1,5 +1,6 @@
 import { type WritingSystem } from "api/models";
 import {
+  checkLexboxProject,
   createProject,
   finishUploadLift,
   getProject,
@@ -44,6 +45,9 @@ export function asyncCreateLexboxProject(
   lexboxAnalysisLangs: string[]
 ) {
   return async (dispatch: StoreStateDispatch) => {
+    // Catch most import failures before the project name is taken.
+    await checkLexboxProject(lexboxProjectCode);
+
     const project = newProject(name);
     project.vernacularWritingSystem = vernacularWritingSystem;
 
