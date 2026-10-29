@@ -383,6 +383,68 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestImportEntriesAddsAnalysisLangsFromEntries()
+        {
+            var project = await CreateProject();
+            _lexboxResponseJson = """
+                [{
+                    "id": "00000000-0000-0000-0000-000000000001",
+                    "lexemeForm": { "es": "hola" },
+                    "senses": [{
+                        "id": "00000000-0000-0000-0000-000000000002",
+                        "definition": { "pt": { "spans": [{ "text": "saudação" }] } },
+                        "gloss": { "en": "hi", "fr": "salut" }
+                    }]
+                }]
+                """;
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(LexboxSessionResult());
+
+            await _lexboxController.ImportEntries(project.Id, ImportRequest());
+
+            var updated = await _projRepo.GetProject(project.Id);
+            Assert.That(updated, Is.Not.Null);
+            Assert.That(updated.AnalysisWritingSystems.Select(ws => ws.Bcp47),
+                Is.EqualTo(new List<string> { "en", "pt", "fr" }));
+        }
+
+        [Test]
+        public async Task TestImportEntriesWithNoWordsDoesNotMarkNewProject()
+        {
+            var project = await CreateProject();
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(LexboxSessionResult());
+
+            var result = await _lexboxController.ImportEntries(project.Id, ImportRequest()) as OkObjectResult;
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo(0));
+            var updated = await _projRepo.GetProject(project.Id);
+            Assert.That(updated, Is.Not.Null);
+            Assert.That(updated.LexboxProjectCode, Is.Null);
+            Assert.That(updated.AnalysisWritingSystems.Select(ws => ws.Bcp47), Is.EqualTo(new List<string> { "en" }));
+        }
+
+        [Test]
+        public async Task TestImportEntriesWithNoWordsLeavesExistingProjectUnchanged()
+        {
+            var project = await CreateProject(p =>
+            {
+                p.AnalysisWritingSystems = [new("fr")];
+                p.DefinitionsEnabled = true;
+            });
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(LexboxSessionResult());
+
+            var result = await _lexboxController.ImportEntries(project.Id, ImportRequest()) as OkObjectResult;
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Is.EqualTo(0));
+            var updated = await _projRepo.GetProject(project.Id);
+            Assert.That(updated, Is.Not.Null);
+            Assert.That(updated.LexboxProjectCode, Is.Null);
+            Assert.That(updated.AnalysisWritingSystems.Select(ws => ws.Bcp47), Is.EqualTo(new List<string> { "fr" }));
+            Assert.That(updated.DefinitionsEnabled, Is.True);
+        }
+
+        [Test]
         public async Task TestLogOutReturnsNoContent()
         {
             var claims = new List<Claim> { new("sub", "lex-1"), new("user", "Lex User") };

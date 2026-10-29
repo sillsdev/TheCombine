@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Otel;
@@ -188,6 +189,13 @@ namespace BackendFramework.Controllers
             words.ForEach(w => w.ProjectId = projectId);
             words = await _wordService.ImportWords(words);
 
+            // Don't update an existing project if no words were imported in its vernacular language.
+            var isNewProject = project.AnalysisWritingSystems.All(ws => string.IsNullOrEmpty(ws.Bcp47));
+            if (!isNewProject && words.Count == 0)
+            {
+                return Ok(0);
+            }
+
             AddImportToProject(project, request, words);
             await _projRepo.Update(projectId, project);
 
@@ -197,9 +205,11 @@ namespace BackendFramework.Controllers
         /// <summary> Updates project settings for imported data, as LIFT import does. </summary>
         private static void AddImportToProject(Project project, LexboxImportRequest request, List<Word> words)
         {
-            project.AnalysisWritingSystems.AddRange(request.AnalysisLangs
-                .Where(lang => !project.AnalysisWritingSystems.Any(ws => ws.Bcp47 == lang))
-                .Distinct().Select(lang => new WritingSystem(lang)));
+            // The Lexbox metadata can omit languages the entries use, so add those after the metadata's.
+            var dataLangs = words.SelectMany(w => w.Senses.SelectMany(Language.GetSenseAnalysisLangTags));
+            var newLangs = request.AnalysisLangs.Concat(dataLangs).Distinct()
+                .Where(lang => !project.AnalysisWritingSystems.Any(ws => ws.Bcp47 == lang));
+            project.AnalysisWritingSystems.AddRange(Language.ConvertLangTagsToWritingSystems(newLangs));
             project.AnalysisWritingSystems.RemoveAll(ws => string.IsNullOrWhiteSpace(ws.Bcp47));
             if (project.AnalysisWritingSystems.Count == 0)
             {
@@ -212,7 +222,11 @@ namespace BackendFramework.Controllers
             project.GrammaticalInfoEnabled = words.Any(
                 w => w.Senses.Any(s => s.GrammaticalInfo.CatGroup != GramCatGroup.Unspecified));
 
-            project.LexboxProjectCode = request.ProjectCode;
+            // An empty import leaves nothing for another import to duplicate.
+            if (words.Count > 0)
+            {
+                project.LexboxProjectCode = request.ProjectCode;
+            }
         }
 
         private ObjectResult LexboxProblem(LexboxQueryException ex)
