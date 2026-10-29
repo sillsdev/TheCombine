@@ -114,7 +114,7 @@
     "uploadFormat": "File must be a zipped folder containing a <1>Lexicon Interchange FormaT (LIFT)</1> project.",
     "create": "Create Project",
     "fileSelected": "File selected: {{ val }}",
-    "language": "Project language information will be automatically extracted from the imported project.",
+    "language": "Project language information will be automatically extracted from the imported data.",
     "languageOptionOther": "other",
     "languageSelect": "Select project language:",
     "success": "Project Created!"
