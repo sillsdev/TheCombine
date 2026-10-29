@@ -141,6 +141,9 @@ namespace BackendFramework
 
             // The keys protect the Lexbox cookie and in-flight Lexbox sign-ins. Keeping them on the backend volume
             // lets those survive restarts and deploys, and lets pods share them during a rolling update.
+            // The keys are unencrypted at rest. That's acceptable while the cookie holds only a 1-hour access token,
+            // since misusing the keys also needs a captured cookie. If the Lexbox scopes ever include offline_access,
+            // the cookie would hold a long-lived refresh token, so protect the keys (e.g., with a certificate) then.
             services.AddDataProtection()
                 .PersistKeysToFileSystem(new DirectoryInfo(FileStorage.GenerateDataProtectionKeysDirPath()));
 
