@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json.Serialization;
@@ -13,6 +14,7 @@ using BackendFramework.Repositories;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
@@ -136,6 +138,11 @@ namespace BackendFramework
             }
 
             var key = ASCII.GetBytes(secretKey);
+
+            // The keys protect the Lexbox cookie and in-flight Lexbox sign-ins. Keeping them on the backend volume
+            // lets those survive restarts and deploys, and lets pods share them during a rolling update.
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo(FileStorage.GenerateDataProtectionKeysDirPath()));
 
             var lexboxAuthConfig = Configuration.GetSection("LexboxAuth");
 
