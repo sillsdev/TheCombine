@@ -6,6 +6,7 @@ import { ReactNode } from "react";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
+import { type LexboxProject } from "api/models";
 import CreateProject, {
   CreateProjectTextId,
 } from "components/ProjectScreen/CreateProject";
@@ -46,11 +47,29 @@ jest.mock("components/Buttons/FileInputButton", () => ({
     </MockFIB>
   ),
 }));
+jest.mock("components/Lexbox/LexboxProjectsDialog", () => ({
+  __esModule: true,
+  /** Mocked with a button that chooses a mock Lexbox project. */
+  default: (props: { chooseProject: (project: LexboxProject) => void }) => (
+    <MockFIB onClick={() => props.chooseProject(mockLexboxProject)}>
+      {mockChooseLexboxProject}
+    </MockFIB>
+  ),
+}));
 jest.mock("i18n", () => ({ language: "" })); // else `thrown: "Error: AggregateError`
 
+const mockChooseLexboxProject = "mock-choose-lexbox-project";
 const mockFile = new File([], "file-name");
 const mockLangPickerId = "mock-mui-language-picker";
 const mockLangs = [newWritingSystem("oneLang"), newWritingSystem("twoLang")];
+const mockLexboxProject: LexboxProject = {
+  analysisWsTags: [],
+  code: "lex-code",
+  id: "lex-id",
+  name: "Lexbox project",
+  type: "FLEx",
+  vernacularWsTags: mockLangs.map((ws) => ws.bcp47),
+};
 const mockProjectDuplicateCheck = jest.fn();
 const mockUploadLiftAndGetWritingSystems = jest.fn();
 
@@ -173,5 +192,23 @@ describe("CreateProject", () => {
 
     // Number of options is +2 for the menu title item and an "other" item.
     expect(screen.getAllByRole("option")).toHaveLength(mockLangs.length + 2);
+  });
+
+  it("requires choosing a vernacular language from the Lexbox project", async () => {
+    const button = screen.getByRole("button", {
+      name: CreateProjectTextId.Create,
+    });
+    await userEvent.type(screen.getByRole("textbox"), "non-empty-name");
+    await userEvent.click(screen.getByText(mockChooseLexboxProject));
+
+    // No vernacular language chosen yet: button disabled.
+    expect(button).toBeDisabled();
+
+    // Choose a vernacular language: button enabled.
+    await userEvent.click(screen.getByRole("combobox"));
+    await userEvent.click(
+      screen.getByRole("option", { name: mockLangs[1].bcp47 })
+    );
+    expect(button).toBeEnabled();
   });
 });

@@ -155,7 +155,7 @@ export default function CreateProject(): ReactElement {
     const vernLangs = project?.vernacularWsTags ?? [];
     setVernLangOptions(vernLangs.map((lang) => newWritingSystem(lang)));
     if (vernLangs.length) {
-      setVernLang(newWritingSystem(vernLangs[0]));
+      setVernLang(newWritingSystem(undBcp47));
     }
   };
 
