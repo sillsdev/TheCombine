@@ -43,6 +43,10 @@ export enum CreateProjectTextId {
   LangAnalysis = "projectSettings.language.analysisLanguage",
   LangAnalysisInfo = "createProject.language",
   LangVernacular = "projectSettings.language.vernacularLanguage",
+  LexboxImport = "lexbox.import?",
+  LexboxImportButton = "buttons.import",
+  LexboxImportFailed = "lexbox.importFailed",
+  LexboxSelected = "lexbox.projectSelected",
   Name = "createProject.name",
   NameTaken = "createProject.nameTaken",
   Required = "login.required",
@@ -233,7 +237,7 @@ export default function CreateProject(): ReactElement {
         setSuccess(true);
       } catch (err) {
         console.error("Failed to import from Lexbox", err);
-        toast.error("Failed to import from Lexbox");
+        toast.error(t(CreateProjectTextId.LexboxImportFailed));
         setLoading(false);
       }
     } else {
@@ -304,21 +308,22 @@ export default function CreateProject(): ReactElement {
           {/* Lexbox import */}
           <Box sx={{ mb: 2, mt: 1 }}>
             <Typography display="inline" sx={{ mt: 2 }} variant="body1">
-              {t("Import from Lexbox?")}
+              {t(CreateProjectTextId.LexboxImport)}
             </Typography>
             <Button
               onClick={() => setLexboxDialogOpen(true)}
               sx={{ m: 1 }}
               variant="contained"
             >
-              {t("Import")}
+              {t(CreateProjectTextId.LexboxImportButton)}
             </Button>
-            {/* Uploaded file name and remove button */}
+            {/* Selected project name and remove button */}
             {lexboxProject && (
               <Typography sx={{ m: 1 }} variant="body2">
-                {t(
-                  `Project selected: ${lexboxProject.name} (${lexboxProject.code})`
-                )}
+                {t(CreateProjectTextId.LexboxSelected, {
+                  val1: lexboxProject.name,
+                  val2: lexboxProject.code,
+                })}
                 <IconButton size="small" onClick={() => updateLexboxProject()}>
                   <Cancel />
                 </IconButton>

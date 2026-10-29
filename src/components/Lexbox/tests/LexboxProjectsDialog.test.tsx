@@ -67,7 +67,7 @@ describe("LexboxProjectsDialog", () => {
     ]);
     expect(items[0]).not.toHaveAttribute("aria-disabled", "true");
     expect(items[1]).toHaveAttribute("aria-disabled", "true");
-    expect(items[1]).toHaveTextContent(/Manager or Editor/);
+    expect(items[1]).toHaveTextContent("lexbox.blockerInsufficientRole");
 
     await userEvent.click(items[0]);
     await userEvent.click(screen.getByRole("button", { name: /confirm/i }));

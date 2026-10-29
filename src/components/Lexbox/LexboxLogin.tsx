@@ -73,7 +73,7 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
     // Open the window before awaiting, so popup blockers treat it as a direct response to the click.
     const loginWindow = window.open("", "_blank");
     if (!loginWindow) {
-      toast.error("Failed to open login window");
+      toast.error(t("lexbox.loginWindowFailed"));
       return;
     }
     try {
@@ -81,7 +81,7 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
     } catch (err) {
       loginWindow.close();
       console.error("Failed to start Lexbox login", err);
-      toast.error("Failed to start Lexbox login");
+      toast.error(t("lexbox.loginFailed"));
     }
   };
 
@@ -92,7 +92,7 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
       await loadStatus();
     } catch (err) {
       console.error("Failed to log out of Lexbox", err);
-      toast.error("Failed to log out of Lexbox");
+      toast.error(t("lexbox.logoutFailed"));
     } finally {
       setActionLoading(false);
       setMenuAnchor(null);

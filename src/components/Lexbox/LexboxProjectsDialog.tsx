@@ -88,13 +88,16 @@ export default function LexboxProjectsDialog(
   const importBlockerText = (blocker: LexboxImportBlocker): string => {
     switch (blocker) {
       case LexboxImportBlocker.NotLanguageForge:
-        return t("Only Language Forge projects can be imported for now.");
+        return t("lexbox.blockerNotLanguageForge");
       case LexboxImportBlocker.InsufficientRole:
-        return t("Importing requires the Manager or Editor role.");
+        return t("lexbox.blockerInsufficientRole");
       case LexboxImportBlocker.NoVernacularLanguage:
-        return t("This project has no vernacular language.");
+        return t("lexbox.blockerNoVernacularLanguage");
     }
   };
+
+  const languagesText = (tags?: string[] | null): string =>
+    tags?.join(", ") || t("lexbox.noLanguages");
 
   const projectContent = (): ReactElement => {
     if (loading) {
@@ -109,15 +112,11 @@ export default function LexboxProjectsDialog(
     }
     if (!isLoggedIn) {
       return (
-        <Typography sx={{ mt: 2 }}>
-          {t("Log in to Lexbox to see your projects.")}
-        </Typography>
+        <Typography sx={{ mt: 2 }}>{t("lexbox.logInToSeeProjects")}</Typography>
       );
     }
     if (!projects.length) {
-      return (
-        <Typography sx={{ mt: 2 }}>{t("No Lexbox projects found.")}</Typography>
-      );
+      return <Typography sx={{ mt: 2 }}>{t("lexbox.noProjects")}</Typography>;
     }
     // Importable projects first; sort is stable, so Lexbox's order is otherwise kept.
     const sortedProjects = [...projects].sort(
@@ -141,9 +140,13 @@ export default function LexboxProjectsDialog(
               primary={`${project.name} (${project.code})`}
               secondary={
                 <>
-                  {`${t("Vernacular languages: ")}${project.vernacularWsTags?.join(", ") || t("None")}`}
+                  {t("lexbox.vernacularLanguages", {
+                    val: languagesText(project.vernacularWsTags),
+                  })}
                   <br />
-                  {`${t("Analysis languages: ")}${project.analysisWsTags?.join(", ") || t("None")}`}
+                  {t("lexbox.analysisLanguages", {
+                    val: languagesText(project.analysisWsTags),
+                  })}
                   {project.importBlocker && (
                     <>
                       <br />
@@ -170,7 +173,7 @@ export default function LexboxProjectsDialog(
       }}
       open={props.open}
     >
-      <DialogTitle>{t("Import from Lexbox")}</DialogTitle>
+      <DialogTitle>{t("lexbox.importTitle")}</DialogTitle>
       <DialogContent>
         <LexboxLogin onStatusChange={setIsLoggedIn} />
         {projectContent()}

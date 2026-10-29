@@ -14,9 +14,5 @@ export default function LexboxLoginComplete(): ReactElement {
     window.close();
   }, []);
 
-  return (
-    <Typography sx={{ m: 2 }}>
-      {t("Lexbox login complete. You can close this window.")}
-    </Typography>
-  );
+  return <Typography sx={{ m: 2 }}>{t("lexbox.loginComplete")}</Typography>;
 }

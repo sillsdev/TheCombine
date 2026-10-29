@@ -119,6 +119,24 @@
     "languageSelect": "Select project language:",
     "success": "Project Created!"
   },
+  "lexbox": {
+    "import?": "Import from Lexbox?",
+    "importTitle": "Import from Lexbox",
+    "importFailed": "Failed to import from Lexbox",
+    "projectSelected": "Project selected: {{ val1 }} ({{ val2 }})",
+    "loginComplete": "Lexbox login complete. You can close this window.",
+    "loginWindowFailed": "Failed to open login window",
+    "loginFailed": "Failed to start Lexbox login",
+    "logoutFailed": "Failed to log out of Lexbox",
+    "logInToSeeProjects": "Log in to Lexbox to see your projects.",
+    "noProjects": "No Lexbox projects found.",
+    "vernacularLanguages": "Vernacular languages: {{ val }}",
+    "analysisLanguages": "Analysis languages: {{ val }}",
+    "noLanguages": "None",
+    "blockerNotLanguageForge": "Only Language Forge projects can be imported for now.",
+    "blockerInsufficientRole": "Importing requires the Manager or Editor role.",
+    "blockerNoVernacularLanguage": "This project has no vernacular language."
+  },
   "selectProject": {
     "title": "Select Project"
   },
@@ -563,6 +581,7 @@
     "done": "Done",
     "exit": "Exit",
     "export": "Export",
+    "import": "Import",
     "invite": "Invite",
     "proceedWithCaution": "Proceed with Caution!",
     "reject": "Reject",
