@@ -134,7 +134,7 @@ namespace BackendFramework.Controllers
             }
             catch (LexboxQueryException ex)
             {
-                return await LexboxQueryProblem(ex);
+                return LexboxQueryProblem(ex, accessToken);
             }
         }
 
@@ -168,7 +168,7 @@ namespace BackendFramework.Controllers
             }
             catch (LexboxQueryException ex)
             {
-                return await LexboxQueryProblem(ex);
+                return LexboxQueryProblem(ex, accessToken);
             }
         }
 
@@ -217,7 +217,7 @@ namespace BackendFramework.Controllers
             }
             catch (LexboxQueryException ex)
             {
-                return await LexboxQueryProblem(ex);
+                return LexboxQueryProblem(ex, accessToken);
             }
 
             words.ForEach(w => w.ProjectId = projectId);
@@ -266,16 +266,17 @@ namespace BackendFramework.Controllers
         private ObjectResult LexboxProblem(LexboxQueryException ex)
             => Problem(title: ex.Title, detail: ex.Message, statusCode: ex.StatusCode);
 
-        /// <summary> Like <see cref="LexboxProblem"/>, but also clears a Lexbox cookie that Lexbox rejected. </summary>
+        /// <summary> Like <see cref="LexboxProblem"/>, but also records an access token that Lexbox rejected. </summary>
         /// <remarks>
-        /// Lexbox can reject an access token before it expires. Clearing the cookie makes the auth status report
-        /// a logout, so the frontend offers to log in again.
+        /// Lexbox can reject an access token before it expires. The next auth status check then clears the cookie,
+        /// so the frontend offers to log in again. This response doesn't clear the cookie itself: it can arrive after
+        /// a login in another window, and would then clear the new cookie.
         /// </remarks>
-        private async Task<ObjectResult> LexboxQueryProblem(LexboxQueryException ex)
+        private ObjectResult LexboxQueryProblem(LexboxQueryException ex, string accessToken)
         {
             if (ex.IsNotLoggedIn)
             {
-                await _lexboxAuthService.SignOut(HttpContext);
+                _lexboxAuthService.RejectAccessToken(accessToken);
             }
             return LexboxProblem(ex);
         }

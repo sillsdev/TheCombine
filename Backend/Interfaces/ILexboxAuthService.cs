@@ -14,6 +14,8 @@ namespace BackendFramework.Interfaces
         Task Challenge(HttpContext httpContext, string combineUserId);
         Task<LexboxAuthStatus> GetAuthStatus(HttpContext httpContext, string combineUserId);
         Task SignOut(HttpContext httpContext);
+        /// <summary> Treats a Lexbox cookie holding this access token as logged out. </summary>
+        void RejectAccessToken(string accessToken);
         Task<string?> TryGetAccessToken(HttpContext httpContext, string combineUserId);
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -29,6 +30,10 @@ namespace BackendFramework.Services
 
         private const string LoginTicketCachePrefix = "LexboxLoginTicket:";
         private static readonly TimeSpan LoginTicketLifetime = TimeSpan.FromMinutes(2);
+
+        private const string RejectedTokenCachePrefix = "LexboxRejectedToken:";
+        /// <summary> How long Lexbox access tokens last, so a rejected one is useless after this anyway. </summary>
+        private static readonly TimeSpan RejectedTokenLifetime = TimeSpan.FromHours(1);
 
         public string CreateLoginTicket(string combineUserId)
         {
@@ -89,6 +94,11 @@ namespace BackendFramework.Services
             await httpContext.SignOutAsync(LexboxCookieScheme);
         }
 
+        public void RejectAccessToken(string accessToken)
+        {
+            _memoryCache.Set(RejectedTokenCachePrefix + HashToken(accessToken), true, RejectedTokenLifetime);
+        }
+
         public async Task<string?> TryGetAccessToken(HttpContext httpContext, string combineUserId)
         {
             var result = await AuthenticateForCombineUser(httpContext, combineUserId);
@@ -97,21 +107,22 @@ namespace BackendFramework.Services
 
         /// <summary>
         /// Authenticates the Lexbox cookie, clearing it if it's unreadable, belongs to a different Combine user,
-        /// or holds an expired access token.
+        /// or holds an access token that's expired or that Lexbox rejected.
         /// </summary>
         /// <returns> The successful result, or null. </returns>
-        private static async Task<AuthenticateResult?> AuthenticateForCombineUser(
+        private async Task<AuthenticateResult?> AuthenticateForCombineUser(
             HttpContext httpContext, string combineUserId)
         {
             var result = await httpContext.AuthenticateAsync(LexboxCookieScheme);
             if (result.Succeeded && result.Principal?.FindFirst(CombineUserIdClaimType)?.Value == combineUserId
-                && !IsAccessTokenExpired(result.Properties))
+                && !IsAccessTokenExpired(result.Properties) && !IsAccessTokenRejected(result.Properties))
             {
                 return result;
             }
 
             // Clear a stale or undecryptable cookie (e.g. after a server restart loses Data Protection keys),
-            // one left by another Combine user of this browser, or one whose access token Lexbox would reject.
+            // one left by another Combine user of this browser, or one whose access token is expired or was rejected
+            // by Lexbox.
             if (httpContext.Request.Cookies.ContainsKey("lexbox_auth"))
             {
                 await httpContext.SignOutAsync(LexboxCookieScheme);
@@ -128,6 +139,16 @@ namespace BackendFramework.Services
             return DateTimeOffset.TryParse(expiresAt, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind,
                 out var expiry) && expiry <= DateTimeOffset.UtcNow;
         }
+
+        private bool IsAccessTokenRejected(AuthenticationProperties? properties)
+        {
+            var accessToken = properties?.GetTokenValue("access_token");
+            return accessToken is not null
+                && _memoryCache.TryGetValue(RejectedTokenCachePrefix + HashToken(accessToken), out _);
+        }
+
+        private static string HashToken(string accessToken)
+            => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(accessToken)));
 
         private static LexboxAuthUser GetUserFromClaims(ClaimsPrincipal principal)
         {

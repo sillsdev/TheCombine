@@ -282,17 +282,20 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestGetProjectsRejectedTokenReturnsNotLoggedInAndClearsCookie()
+        public async Task TestGetProjectsRejectedTokenReturnsNotLoggedInAndLogsOutOnlyThatToken()
         {
             _lexboxStatus = HttpStatusCode.Unauthorized;
-            var authService = new AuthenticationServiceMock(LexboxSessionResult());
+            var authService = new AuthenticationServiceMock(LexboxSessionResult(accessToken: "old-token"));
             _lexboxController.ControllerContext.HttpContext = GetAuthContext(authService);
 
             var result = await _lexboxController.GetProjects() as ObjectResult;
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status403Forbidden));
-            Assert.That(authService.SignOutCallCount, Is.EqualTo(1));
+            // The response could arrive after a new login, so it mustn't clear the cookie.
+            Assert.That(authService.SignOutCallCount, Is.Zero);
+            Assert.That(await IsLoggedInWithToken("new-token"), Is.True);
+            Assert.That(await IsLoggedInWithToken("old-token"), Is.False);
         }
 
         [Test]
@@ -326,20 +329,19 @@ namespace Backend.Tests.Controllers
             Assert.That(result, Is.InstanceOf<NoContentResult>());
         }
 
-        [TestCase(HttpStatusCode.Unauthorized, 1)]
-        [TestCase(HttpStatusCode.Forbidden, 0)]
-        public async Task TestCheckProjectClearsCookieOnlyIfLexboxRejectsToken(
-            HttpStatusCode lexboxStatus, int expectedSignOutCount)
+        [TestCase(HttpStatusCode.Unauthorized, false)]
+        [TestCase(HttpStatusCode.Forbidden, true)]
+        public async Task TestCheckProjectLogsOutOnlyIfLexboxRejectsToken(
+            HttpStatusCode lexboxStatus, bool expectLoggedIn)
         {
             _lexboxStatus = lexboxStatus;
-            var authService = new AuthenticationServiceMock(LexboxSessionResult());
-            _lexboxController.ControllerContext.HttpContext = GetAuthContext(authService);
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(LexboxSessionResult());
 
             var result = await _lexboxController.CheckProject("lex-code") as ObjectResult;
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status403Forbidden));
-            Assert.That(authService.SignOutCallCount, Is.EqualTo(expectedSignOutCount));
+            Assert.That(await IsLoggedInWithToken("token"), Is.EqualTo(expectLoggedIn));
         }
 
         private static LexboxImportRequest ImportRequest() => new() { ProjectCode = "lex-code", AnalysisLangs = ["en"] };
@@ -375,19 +377,18 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestImportEntriesRejectedTokenReturnsNotLoggedInAndClearsCookie()
+        public async Task TestImportEntriesRejectedTokenReturnsNotLoggedInAndLogsOut()
         {
             var project = await CreateProject();
             _lexboxStatus = HttpStatusCode.Unauthorized;
-            var authService = new AuthenticationServiceMock(LexboxSessionResult());
-            _lexboxController.ControllerContext.HttpContext = GetAuthContext(authService);
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(LexboxSessionResult());
 
             var result = await _lexboxController.ImportEntries(project.Id, ImportRequest()) as ObjectResult;
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status403Forbidden));
-            Assert.That(authService.SignOutCallCount, Is.EqualTo(1));
             Assert.That(await _wordRepo.GetAllFrontier(project.Id), Is.Empty);
+            Assert.That(await IsLoggedInWithToken("token"), Is.False);
         }
 
         [Test]
@@ -544,10 +545,11 @@ namespace Backend.Tests.Controllers
         }
 
         /// <summary> A Lexbox cookie with an access token, stamped with the given Combine user. </summary>
-        private static AuthenticateResult LexboxSessionResult(string combineUserId = UserId, string? expiresAt = null)
+        private static AuthenticateResult LexboxSessionResult(
+            string combineUserId = UserId, string? expiresAt = null, string accessToken = "token")
         {
             var properties = new AuthenticationProperties();
-            List<AuthenticationToken> tokens = [new() { Name = "access_token", Value = "token" }];
+            List<AuthenticationToken> tokens = [new() { Name = "access_token", Value = accessToken }];
             if (expiresAt is not null)
             {
                 tokens.Add(new() { Name = "expires_at", Value = expiresAt });
@@ -555,6 +557,21 @@ namespace Backend.Tests.Controllers
             properties.StoreTokens(tokens);
             var principal = LexboxAuthResult([new("sub", "lex-1")], combineUserId).Principal!;
             return AuthenticateResult.Success(new AuthenticationTicket(principal, properties, "LexboxCookie"));
+        }
+
+        /// <summary> Gets the auth status with a Lexbox cookie holding the given access token. </summary>
+        /// <remarks> Also checks that the cookie is cleared exactly when the status is logged out. </remarks>
+        private async Task<bool> IsLoggedInWithToken(string accessToken)
+        {
+            var authService = new AuthenticationServiceMock(LexboxSessionResult(accessToken: accessToken));
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(authService);
+            _lexboxController.ControllerContext.HttpContext.Request.Headers.Cookie = "lexbox_auth=value";
+
+            var result = await _lexboxController.GetAuthStatus() as OkObjectResult;
+
+            var authStatus = result?.Value as LexboxAuthStatus ?? throw new AssertionException("No auth status");
+            Assert.That(authService.SignOutCallCount, Is.EqualTo(authStatus.IsLoggedIn ? 0 : 1));
+            return authStatus.IsLoggedIn;
         }
 
         private static HttpContext GetAuthContext(AuthenticateResult authenticateResult)
