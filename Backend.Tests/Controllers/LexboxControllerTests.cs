@@ -31,6 +31,7 @@ namespace Backend.Tests.Controllers
         private LexboxController _lexboxController = null!;
         /// <summary> What Lexbox returns for any request. </summary>
         private string _lexboxResponseJson = "[]";
+        private HttpStatusCode _lexboxStatus = HttpStatusCode.OK;
 
         private const string UserId = "LexboxControllerTestsUserId";
         private const string OtherUserId = "LexboxControllerTestsOtherUserId";
@@ -46,11 +47,12 @@ namespace Backend.Tests.Controllers
         {
             _lexboxAuthService = new LexboxAuthService(new MemoryCache(new MemoryCacheOptions()));
             _lexboxResponseJson = "[]";
+            _lexboxStatus = HttpStatusCode.OK;
             var handler = new Mock<HttpMessageHandler>();
             handler.Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK)
+                .ReturnsAsync(() => new HttpResponseMessage(_lexboxStatus)
                 {
                     Content = new StringContent(_lexboxResponseJson)
                 });
@@ -280,6 +282,20 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestGetProjectsRejectedTokenReturnsNotLoggedInAndClearsCookie()
+        {
+            _lexboxStatus = HttpStatusCode.Unauthorized;
+            var authService = new AuthenticationServiceMock(LexboxSessionResult());
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(authService);
+
+            var result = await _lexboxController.GetProjects() as ObjectResult;
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status403Forbidden));
+            Assert.That(authService.SignOutCallCount, Is.EqualTo(1));
+        }
+
+        [Test]
         public async Task TestCheckProjectUnauthorizedReturnsForbid()
         {
             _lexboxController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
@@ -308,6 +324,22 @@ namespace Backend.Tests.Controllers
             var result = await _lexboxController.CheckProject("lex-code");
 
             Assert.That(result, Is.InstanceOf<NoContentResult>());
+        }
+
+        [TestCase(HttpStatusCode.Unauthorized, 1)]
+        [TestCase(HttpStatusCode.Forbidden, 0)]
+        public async Task TestCheckProjectClearsCookieOnlyIfLexboxRejectsToken(
+            HttpStatusCode lexboxStatus, int expectedSignOutCount)
+        {
+            _lexboxStatus = lexboxStatus;
+            var authService = new AuthenticationServiceMock(LexboxSessionResult());
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(authService);
+
+            var result = await _lexboxController.CheckProject("lex-code") as ObjectResult;
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status403Forbidden));
+            Assert.That(authService.SignOutCallCount, Is.EqualTo(expectedSignOutCount));
         }
 
         private static LexboxImportRequest ImportRequest() => new() { ProjectCode = "lex-code", AnalysisLangs = ["en"] };
@@ -340,6 +372,22 @@ namespace Backend.Tests.Controllers
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status403Forbidden));
+        }
+
+        [Test]
+        public async Task TestImportEntriesRejectedTokenReturnsNotLoggedInAndClearsCookie()
+        {
+            var project = await CreateProject();
+            _lexboxStatus = HttpStatusCode.Unauthorized;
+            var authService = new AuthenticationServiceMock(LexboxSessionResult());
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(authService);
+
+            var result = await _lexboxController.ImportEntries(project.Id, ImportRequest()) as ObjectResult;
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status403Forbidden));
+            Assert.That(authService.SignOutCallCount, Is.EqualTo(1));
+            Assert.That(await _wordRepo.GetAllFrontier(project.Id), Is.Empty);
         }
 
         [Test]

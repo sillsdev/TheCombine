@@ -134,7 +134,7 @@ namespace BackendFramework.Controllers
             }
             catch (LexboxQueryException ex)
             {
-                return LexboxProblem(ex);
+                return await LexboxQueryProblem(ex);
             }
         }
 
@@ -168,7 +168,7 @@ namespace BackendFramework.Controllers
             }
             catch (LexboxQueryException ex)
             {
-                return LexboxProblem(ex);
+                return await LexboxQueryProblem(ex);
             }
         }
 
@@ -217,7 +217,7 @@ namespace BackendFramework.Controllers
             }
             catch (LexboxQueryException ex)
             {
-                return LexboxProblem(ex);
+                return await LexboxQueryProblem(ex);
             }
 
             words.ForEach(w => w.ProjectId = projectId);
@@ -265,5 +265,19 @@ namespace BackendFramework.Controllers
 
         private ObjectResult LexboxProblem(LexboxQueryException ex)
             => Problem(title: ex.Title, detail: ex.Message, statusCode: ex.StatusCode);
+
+        /// <summary> Like <see cref="LexboxProblem"/>, but also clears a Lexbox cookie that Lexbox rejected. </summary>
+        /// <remarks>
+        /// Lexbox can reject an access token before it expires. Clearing the cookie makes the auth status report
+        /// a logout, so the frontend offers to log in again.
+        /// </remarks>
+        private async Task<ObjectResult> LexboxQueryProblem(LexboxQueryException ex)
+        {
+            if (ex.IsNotLoggedIn)
+            {
+                await _lexboxAuthService.SignOut(HttpContext);
+            }
+            return LexboxProblem(ex);
+        }
     }
 }
