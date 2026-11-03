@@ -57,6 +57,9 @@ jest.mock("components/Lexbox/LexboxProjectsDialog", () => ({
   ),
 }));
 jest.mock("i18n", () => ({ language: "" })); // else `thrown: "Error: AggregateError`
+jest.mock("types/runtimeConfig", () => ({
+  RuntimeConfig: { getInstance: () => ({ isOffline: mockIsOffline }) },
+}));
 
 const mockChooseLexboxProject = "mock-choose-lexbox-project";
 const mockFile = new File([], "file-name");
@@ -70,10 +73,11 @@ const mockLexboxProject: LexboxProject = {
   type: "FLEx",
   vernacularWsTags: mockLangs.map((ws) => ws.bcp47),
 };
+const mockIsOffline = jest.fn();
 const mockProjectDuplicateCheck = jest.fn();
 const mockUploadLiftAndGetWritingSystems = jest.fn();
 
-beforeEach(async () => {
+const renderCreateProject = async (): Promise<void> => {
   await act(async () => {
     render(
       <Provider store={configureMockStore()(defaultState)}>
@@ -81,9 +85,31 @@ beforeEach(async () => {
       </Provider>
     );
   });
+};
+
+beforeEach(() => {
+  mockIsOffline.mockReturnValue(false);
+});
+
+describe("CreateProject offline", () => {
+  it("hides the Lexbox import", async () => {
+    mockIsOffline.mockReturnValue(true);
+    await renderCreateProject();
+    expect(screen.queryByText(CreateProjectTextId.LexboxImport)).toBeNull();
+    expect(screen.queryByText(mockChooseLexboxProject)).toBeNull();
+    expect(screen.getByText(CreateProjectTextId.Upload)).toBeTruthy();
+  });
 });
 
 describe("CreateProject", () => {
+  beforeEach(async () => {
+    await renderCreateProject();
+  });
+
+  it("shows the Lexbox import", () => {
+    expect(screen.getByText(CreateProjectTextId.LexboxImport)).toBeTruthy();
+  });
+
   it("enables language pickers when name nonempty", async () => {
     // No language pickers by default.
     expect(screen.queryByTestId(mockLangPickerId)).toBeNull();

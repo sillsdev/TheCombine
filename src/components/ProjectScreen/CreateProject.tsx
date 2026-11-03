@@ -34,6 +34,7 @@ import {
   asyncFinishProject,
 } from "components/ProjectScreen/CreateProjectActions";
 import { useAppDispatch } from "rootRedux/hooks";
+import { RuntimeConfig } from "types/runtimeConfig";
 import { newWritingSystem } from "types/writingSystem";
 import { NormalizedTextField } from "utilities/fontComponents";
 
@@ -314,38 +315,43 @@ export default function CreateProject(): ReactElement {
           </Box>
 
           {/* Lexbox import */}
-          <Box sx={{ mb: 2, mt: 1 }}>
-            <Typography display="inline" sx={{ mt: 2 }} variant="body1">
-              {t(CreateProjectTextId.LexboxImport)}
-            </Typography>
-            <Button
-              onClick={() => setLexboxDialogOpen(true)}
-              sx={{ m: 1 }}
-              variant="contained"
-            >
-              {t(CreateProjectTextId.LexboxImportButton)}
-            </Button>
-            {/* Selected project name and remove button */}
-            {lexboxProject && (
-              <Typography sx={{ m: 1 }} variant="body2">
-                {t(CreateProjectTextId.LexboxSelected, {
-                  val1: lexboxProject.name,
-                  val2: lexboxProject.code,
-                })}
-                <IconButton size="small" onClick={() => updateLexboxProject()}>
-                  <Cancel />
-                </IconButton>
+          {!RuntimeConfig.getInstance().isOffline() && (
+            <Box sx={{ mb: 2, mt: 1 }}>
+              <Typography display="inline" sx={{ mt: 2 }} variant="body1">
+                {t(CreateProjectTextId.LexboxImport)}
               </Typography>
-            )}
-            <LexboxProjectsDialog
-              chooseProject={(project) => {
-                updateLexboxProject(project);
-                setLexboxDialogOpen(false);
-              }}
-              onClose={() => setLexboxDialogOpen(false)}
-              open={lexboxDialogOpen}
-            />
-          </Box>
+              <Button
+                onClick={() => setLexboxDialogOpen(true)}
+                sx={{ m: 1 }}
+                variant="contained"
+              >
+                {t(CreateProjectTextId.LexboxImportButton)}
+              </Button>
+              {/* Selected project name and remove button */}
+              {lexboxProject && (
+                <Typography sx={{ m: 1 }} variant="body2">
+                  {t(CreateProjectTextId.LexboxSelected, {
+                    val1: lexboxProject.name,
+                    val2: lexboxProject.code,
+                  })}
+                  <IconButton
+                    size="small"
+                    onClick={() => updateLexboxProject()}
+                  >
+                    <Cancel />
+                  </IconButton>
+                </Typography>
+              )}
+              <LexboxProjectsDialog
+                chooseProject={(project) => {
+                  updateLexboxProject(project);
+                  setLexboxDialogOpen(false);
+                }}
+                onClose={() => setLexboxDialogOpen(false)}
+                open={lexboxDialogOpen}
+              />
+            </Box>
+          )}
 
           {/* Don't render language pickers until project creation begins. */}
           {!!(
