@@ -90,18 +90,17 @@ namespace BackendFramework.Controllers
             }
         }
 
-        /// <summary> Signs out the current user from Lexbox cookie and OIDC. </summary>
+        /// <summary> Clears the current user's Lexbox cookie. </summary>
         [HttpPost("logout", Name = "LogOut")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> LogOut()
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "logging out");
 
+            // Logout is local only: Lexbox's OIDC discovery has no end_session_endpoint or revocation_endpoint.
+            // So the access token stays valid at Lexbox until it expires, and the browser's Lexbox session
+            // remains, so the next login may not prompt for Lexbox credentials.
             await _lexboxAuthService.SignOut(HttpContext);
-
-            // TODO: Consider if we also need to sign out of the OIDC scheme here.
-            // await HttpContext.SignOutAsync(LexboxOidcScheme)
-            // is a no-op since it doesn't handle the redirect.
 
             return NoContent();
         }
