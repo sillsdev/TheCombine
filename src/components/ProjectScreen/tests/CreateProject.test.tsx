@@ -1,9 +1,10 @@
 import { Button as MockFIB, Input as MockLP } from "@mui/material";
 import "@testing-library/jest-dom";
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ReactNode } from "react";
 import { Provider } from "react-redux";
+import { toast } from "react-toastify";
 import configureMockStore from "redux-mock-store";
 
 import { type LexboxProject } from "api/models";
@@ -56,7 +57,17 @@ jest.mock("components/Lexbox/LexboxProjectsDialog", () => ({
     </MockFIB>
   ),
 }));
+jest.mock("components/ProjectScreen/CreateProjectActions", () => ({
+  asyncCreateLexboxProject: (...args: unknown[]) =>
+    mockAsyncCreateLexboxProject(...args),
+  asyncCreateProject: jest.fn(),
+  asyncFinishProject: jest.fn(),
+}));
 jest.mock("i18n", () => ({ language: "" })); // else `thrown: "Error: AggregateError`
+jest.mock("rootRedux/hooks", () => ({
+  ...jest.requireActual("rootRedux/hooks"),
+  useAppDispatch: () => mockDispatch,
+}));
 jest.mock("types/runtimeConfig", () => ({
   RuntimeConfig: { getInstance: () => ({ isOffline: mockIsOffline }) },
 }));
@@ -66,13 +77,15 @@ const mockFile = new File([], "file-name");
 const mockLangPickerId = "mock-mui-language-picker";
 const mockLangs = [newWritingSystem("oneLang"), newWritingSystem("twoLang")];
 const mockLexboxProject: LexboxProject = {
-  analysisWsTags: [],
+  analysisWsTags: ["en"],
   code: "lex-code",
   id: "lex-id",
   name: "Lexbox project",
   type: "FLEx",
   vernacularWsTags: mockLangs.map((ws) => ws.bcp47),
 };
+const mockAsyncCreateLexboxProject = jest.fn();
+const mockDispatch = jest.fn();
 const mockIsOffline = jest.fn();
 const mockProjectDuplicateCheck = jest.fn();
 const mockUploadLiftAndGetWritingSystems = jest.fn();
@@ -256,5 +269,89 @@ describe("CreateProject", () => {
     expect(
       screen.getByRole("button", { name: CreateProjectTextId.Create })
     ).toBeDisabled();
+  });
+
+  it("shows the chosen Lexbox project until it is removed", async () => {
+    await userEvent.click(screen.getByText(mockChooseLexboxProject));
+    const selected = screen.getByText(CreateProjectTextId.LexboxSelected);
+    expect(screen.getByRole("combobox")).toBeTruthy();
+
+    // Analysis languages come from the Lexbox project, so no analysis picker.
+    expect(screen.getByText(CreateProjectTextId.LangAnalysisInfo)).toBeTruthy();
+
+    await userEvent.click(within(selected).getByRole("button"));
+    expect(screen.queryByText(CreateProjectTextId.LexboxSelected)).toBeNull();
+    expect(screen.queryByRole("combobox")).toBeNull();
+  });
+
+  it("keeps only the latest of a file and a Lexbox project", async () => {
+    mockUploadLiftAndGetWritingSystems.mockResolvedValueOnce(mockLangs);
+    await userEvent.click(screen.getByText(CreateProjectTextId.UploadBrowse));
+    expect(screen.getByText(CreateProjectTextId.UploadSelected)).toBeTruthy();
+
+    // Choosing a Lexbox project removes the file.
+    await userEvent.click(screen.getByText(mockChooseLexboxProject));
+    expect(screen.queryByText(CreateProjectTextId.UploadSelected)).toBeNull();
+    expect(screen.getByText(CreateProjectTextId.LexboxSelected)).toBeTruthy();
+
+    // Choosing a file removes the Lexbox project.
+    mockUploadLiftAndGetWritingSystems.mockResolvedValueOnce(mockLangs);
+    await userEvent.click(screen.getByText(CreateProjectTextId.UploadBrowse));
+    expect(screen.getByText(CreateProjectTextId.UploadSelected)).toBeTruthy();
+    expect(screen.queryByText(CreateProjectTextId.LexboxSelected)).toBeNull();
+  });
+
+  describe("with a Lexbox project and vernacular language chosen", () => {
+    const projName = "non-empty-name";
+    const mockAction = "mock-lexbox-action";
+
+    beforeEach(async () => {
+      mockAsyncCreateLexboxProject.mockReturnValue(mockAction);
+      mockProjectDuplicateCheck.mockResolvedValue(false);
+      await userEvent.type(screen.getByRole("textbox"), projName);
+      await userEvent.click(screen.getByText(mockChooseLexboxProject));
+      await userEvent.click(screen.getByRole("combobox"));
+      await userEvent.click(
+        screen.getByRole("option", { name: mockLangs[1].bcp47 })
+      );
+    });
+
+    it("creates the project from the Lexbox project", async () => {
+      await userEvent.click(
+        screen.getByRole("button", { name: CreateProjectTextId.Create })
+      );
+
+      expect(mockAsyncCreateLexboxProject).toHaveBeenCalledWith(
+        projName,
+        expect.objectContaining({ bcp47: mockLangs[1].bcp47 }),
+        mockLexboxProject.code,
+        mockLexboxProject.analysisWsTags
+      );
+      expect(mockDispatch).toHaveBeenCalledWith(mockAction);
+      expect(
+        screen.getByRole("button", { name: CreateProjectTextId.CreateSuccess })
+      ).toBeTruthy();
+      expect(toast.error).not.toHaveBeenCalled();
+    });
+
+    it("toasts and allows a retry when the import fails", async () => {
+      const consoleError = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+      mockDispatch.mockRejectedValueOnce(new Error("Import failed."));
+
+      await userEvent.click(
+        screen.getByRole("button", { name: CreateProjectTextId.Create })
+      );
+
+      expect(toast.error).toHaveBeenCalledWith(
+        CreateProjectTextId.LexboxImportFailed
+      );
+      expect(
+        screen.getByRole("button", { name: CreateProjectTextId.Create })
+      ).toBeEnabled();
+      expect(consoleError).toHaveBeenCalled();
+      consoleError.mockRestore();
+    });
   });
 });
