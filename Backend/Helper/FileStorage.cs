@@ -14,6 +14,7 @@ namespace BackendFramework.Helper
         private const string CombineFilesDir = ".CombineFiles";
         private const string AvatarsDir = "Avatars";
         private const string ConsentDir = "Consent";
+        private const string DataProtectionKeysDir = "DataProtectionKeys";
         private static readonly string ImportExtractedLocation = Path.Combine("Import", "ExtractedLocation");
         private static readonly string LiftImportSuffix = Path.Combine(ImportExtractedLocation, "Lift");
         private static readonly string AudioPathSuffix = Path.Combine(LiftImportSuffix, "audio");
@@ -93,6 +94,12 @@ namespace BackendFramework.Helper
         {
             var fileName = FileOperations.ChangeExtension(Sanitization.SanitizeId(speakerId), extension);
             return GenerateFilePath(ConsentDir, fileName);
+        }
+
+        /// <summary> Generate the path to where ASP.NET Core Data Protection keys are stored. </summary>
+        public static string GenerateDataProtectionKeysDirPath()
+        {
+            return GenerateDirPath(DataProtectionKeysDir, true);
         }
 
         /// <summary>

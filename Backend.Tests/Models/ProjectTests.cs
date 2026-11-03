@@ -16,6 +16,7 @@ namespace Backend.Tests.Models
                 Created = DateTime.UtcNow,
                 IsActive = true,
                 LiftImported = true,
+                LexboxProjectCode = "lexbox-code",
                 DefinitionsEnabled = true,
                 GrammaticalInfoEnabled = true,
                 AutocompleteSetting = OffOnSetting.On,

@@ -1,0 +1,36 @@
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+
+namespace Backend.Tests.Mocks
+{
+    internal sealed class AuthenticationServiceMock(AuthenticateResult authenticateResult) : IAuthenticationService
+    {
+        internal int ChallengeCallCount { get; private set; }
+        internal AuthenticationProperties? LastChallengeProperties { get; private set; }
+        internal int SignOutCallCount { get; private set; }
+
+        public Task<AuthenticateResult> AuthenticateAsync(HttpContext context, string? scheme)
+            => Task.FromResult(authenticateResult);
+
+        public Task ChallengeAsync(HttpContext context, string? scheme, AuthenticationProperties? properties)
+        {
+            ChallengeCallCount++;
+            LastChallengeProperties = properties;
+            return Task.CompletedTask;
+        }
+
+        public Task ForbidAsync(HttpContext context, string? scheme, AuthenticationProperties? properties)
+            => Task.CompletedTask;
+
+        public Task SignInAsync(HttpContext context, string? scheme, ClaimsPrincipal principal,
+            AuthenticationProperties? properties) => Task.CompletedTask;
+
+        public Task SignOutAsync(HttpContext context, string? scheme, AuthenticationProperties? properties)
+        {
+            SignOutCallCount++;
+            return Task.CompletedTask;
+        }
+    }
+}
