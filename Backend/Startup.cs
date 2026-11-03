@@ -1,8 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using BackendFramework.Contexts;
@@ -185,18 +183,6 @@ namespace BackendFramework
 
                     // Keep claim names (e.g. "sub", "name") as-is, rather than remapping to URI-based ClaimTypes.
                     options.MapInboundClaims = false;
-
-                    // Discovery isn't working (at least in dev), so manually fetch the keys.
-                    options.TokenValidationParameters.IssuerSigningKeyResolver = (_, _, kid, _) =>
-                    {
-                        var jwksUrl = "https://lexbox.org/.well-known/jwks";
-                        // Task.Run avoids sync-over-async deadlock by running on a thread-pool thread with no
-                        // synchronization context.
-                        var response = Task.Run(() => new HttpClient().GetStringAsync(jwksUrl))
-                            .GetAwaiter().GetResult();
-                        var keys = new JsonWebKeySet(response).GetSigningKeys();
-                        return keys.Where(x => x.KeyId == kid);
-                    };
 
                     options.Events.OnRedirectToIdentityProvider = context =>
                     {

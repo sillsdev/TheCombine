@@ -222,14 +222,14 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.IdentityModel.Protocols
-PackageVersion: 7.7.3
+PackageVersion: 8.23.0
 PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.IdentityModel.Protocols.OpenIdConnect
-PackageVersion: 7.7.3
+PackageVersion: 8.23.0
 PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Authors: Microsoft
 License: MIT
