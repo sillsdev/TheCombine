@@ -147,9 +147,6 @@ namespace BackendFramework
 
             var lexboxAuthConfig = Configuration.GetSection("LexboxAuth");
 
-            // Authorization endpoint needs to be defined because discovery silently fails in dev.
-            var lexboxAuthorizationEndpoint = lexboxAuthConfig["AuthorizationEndpoint"]?.Trim();
-
             services.AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -183,17 +180,6 @@ namespace BackendFramework
 
                     // Keep claim names (e.g. "sub", "name") as-is, rather than remapping to URI-based ClaimTypes.
                     options.MapInboundClaims = false;
-
-                    options.Events.OnRedirectToIdentityProvider = context =>
-                    {
-                        if (string.IsNullOrWhiteSpace(context.ProtocolMessage.IssuerAddress)
-                            && !string.IsNullOrEmpty(lexboxAuthorizationEndpoint))
-                        {
-                            context.ProtocolMessage.IssuerAddress = lexboxAuthorizationEndpoint;
-                        }
-
-                        return Task.CompletedTask;
-                    };
 
                     options.Events.OnTicketReceived = ctx =>
                     {
