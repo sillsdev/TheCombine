@@ -27,6 +27,7 @@ export enum ProjectImportTextId {
   DialogLanguageMismatch = "projectSettings.import.liftLanguageMismatch",
   FileSelected = "createProject.fileSelected",
   Instructions = "projectSettings.import.body",
+  LexboxImported = "projectSettings.import.lexboxImported",
   ReuploadConfirm = "projectSettings.import.reuploadConfirm",
   ReuploadWarning = "projectSettings.import.reuploadWarning",
   ToastFail = "projectSettings.import.noWordsUploaded",
@@ -97,6 +98,16 @@ export default function ProjectImport(
       props.setProject(await getProject(props.project.id));
     }
   };
+
+  if (props.project.lexboxProjectCode) {
+    return (
+      <Typography variant="body2">
+        {t(ProjectImportTextId.LexboxImported, {
+          val: props.project.lexboxProjectCode,
+        })}
+      </Typography>
+    );
+  }
 
   return (
     <Grid2 alignItems="center" container spacing={1}>

@@ -161,7 +161,7 @@ namespace BackendFramework.Repositories
                 return false;
             }
 
-            return !project.LiftImported;
+            return !project.LiftImported && project.LexboxProjectCode is null;
         }
     }
 }

@@ -148,10 +148,9 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            // Ensure LIFT file has not already been imported.
             if (!allowReupload && !await _projRepo.CanImportLift(projectId))
             {
-                return BadRequest("A LIFT file has already been uploaded into this project.");
+                return BadRequest("This project already has imported data.");
             }
 
             var extractDir = _liftService.RetrieveImport(userId);
@@ -214,10 +213,9 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            // Ensure LIFT file has not already been imported.
             if (!await _projRepo.CanImportLift(projectId))
             {
-                return BadRequest("A LIFT file has already been uploaded into this project.");
+                return BadRequest("This project already has imported data.");
             }
 
             string extractDir;
