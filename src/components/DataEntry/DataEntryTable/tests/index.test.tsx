@@ -154,6 +154,13 @@ const addRecentEntry = async (word?: Word): Promise<Word> => {
   return word;
 };
 
+/** Recent entries are read-only until clicked. */
+const clickRecentEntry = async (index = 0): Promise<void> => {
+  await agent.click(
+    screen.getByTestId(`${RecentEntryIdPrefix.ButtonEdit}${index}`)
+  );
+};
+
 describe("DataEntryTable", () => {
   describe("initial render", () => {
     beforeEach(async () => await renderTable());
@@ -514,9 +521,9 @@ describe("DataEntryTable", () => {
       const word = await addRecentEntry();
       const rows = screen.getAllByRole("row");
       expect(rows).toHaveLength(2);
-      expect(within(rows[0]).getByDisplayValue(word.vernacular)).toBeTruthy();
+      expect(within(rows[0]).getByText(word.vernacular)).toBeTruthy();
       expect(
-        within(rows[0]).getByDisplayValue(word.senses[0].glosses[0].def)
+        within(rows[0]).getByText(word.senses[0].glosses[0].def)
       ).toBeTruthy();
     });
   });
@@ -526,10 +533,10 @@ describe("DataEntryTable", () => {
 
     it("removes a recent entry", async () => {
       await addRecentEntry();
-      const rows = screen.getAllByRole("row");
-      expect(rows).toHaveLength(2);
+      expect(screen.getAllByRole("row")).toHaveLength(2);
+      await clickRecentEntry();
       await agent.click(
-        within(rows[0]).getByTestId(
+        within(screen.getAllByRole("row")[0]).getByTestId(
           new RegExp(RecentEntryIdPrefix.ButtonDelete)
         )
       );
@@ -545,6 +552,7 @@ describe("DataEntryTable", () => {
       // Setup the scenario
       const word = await addRecentEntry();
       expect(mockUpdateWord).not.toHaveBeenCalled();
+      await clickRecentEntry();
 
       // Update the vernacular
       const newVern = "other vern";
@@ -566,6 +574,7 @@ describe("DataEntryTable", () => {
       // Setup the scenario
       const word = await addRecentEntry();
       expect(mockUpdateWord).not.toHaveBeenCalled();
+      await clickRecentEntry();
 
       // Update the gloss
       const newGloss = "other gloss";
@@ -581,6 +590,39 @@ describe("DataEntryTable", () => {
       const calledWith: Word = mockUpdateWord.mock.calls[0][0];
       expect(calledWith.id).toEqual(word.id);
       expect(calledWith.senses[0].glosses[0].def).toEqual(newGloss);
+    });
+  });
+
+  describe("recent entry editing", () => {
+    beforeEach(async () => await renderTable());
+
+    it("swaps a read-only row for an editable one when clicked", async () => {
+      await addRecentEntry();
+      expect(
+        within(screen.getAllByRole("row")[0]).queryAllByRole("combobox")
+      ).toHaveLength(0);
+
+      await clickRecentEntry();
+      expect(
+        within(screen.getAllByRole("row")[0]).getAllByRole("combobox")
+      ).toHaveLength(2);
+    });
+
+    it("only makes one row editable at a time", async () => {
+      await addRecentEntry(simpleWord("vern1", "gloss1"));
+      await addRecentEntry(simpleWord("vern2", "gloss2"));
+      expect(screen.getAllByRole("row")).toHaveLength(3);
+
+      const editId = (index: number): string =>
+        `${RecentEntryIdPrefix.ButtonEdit}${index}`;
+
+      await clickRecentEntry(0);
+      expect(screen.queryByTestId(editId(0))).toBeNull();
+      expect(screen.queryByTestId(editId(1))).toBeTruthy();
+
+      await clickRecentEntry(1);
+      expect(screen.queryByTestId(editId(0))).toBeTruthy();
+      expect(screen.queryByTestId(editId(1))).toBeNull();
     });
   });
 });
