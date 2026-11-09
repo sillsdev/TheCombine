@@ -9,10 +9,16 @@
 //   mongosh CombineDatabase database/backfill-semantic-domain-counts.js
 //
 // Usage (Kubernetes, e.g. production):
+//   POD=$(kubectl -n thecombine get pod -l combine-component=database \
+//     -o jsonpath="{.items[0].metadata.name}")
 //   kubectl -n thecombine cp database/backfill-semantic-domain-counts.js \
-//     <database-pod>:/tmp/backfill-semantic-domain-counts.js
-//   kubectl -n thecombine exec <database-pod> -- \
+//     "$POD:/tmp/backfill-semantic-domain-counts.js"
+//   kubectl -n thecombine exec "$POD" -- \
 //     mongosh CombineDatabase /tmp/backfill-semantic-domain-counts.js
+//
+//   Look the pod name up rather than hard-coding it: it changes on every redeploy.
+//   Add `--context <kube-context>` to each kubectl command to target a cluster other
+//   than the current context.
 //
 // IMPORTANT:
 // - This is NOT a breaking schema change: an old backend simply ignores the new collection, and the
@@ -43,7 +49,10 @@ var aggregated = frontier
       { $unwind: "$senses.SemanticDomains" },
       {
         $group: {
-          _id: { projectId: "$projectId", domainId: "$senses.SemanticDomains.id" },
+          _id: {
+            projectId: "$projectId",
+            domainId: "$senses.SemanticDomains.id",
+          },
           count: { $sum: 1 },
         },
       },
@@ -68,7 +77,9 @@ print("Inserted " + docs.length + " count document(s).");
 
 // Unique compound index matches the one the backend creates on start-up.
 counts.createIndex({ projectId: 1, domainId: 1 }, { unique: true });
-print("Ensured unique index { projectId: 1, domainId: 1 } on SemanticDomainCountCollection.");
+print(
+  "Ensured unique index { projectId: 1, domainId: 1 } on SemanticDomainCountCollection."
+);
 
 // Verify: total counted occurrences equal the number of (sense, domain) pairs in the Frontier.
 var expected = frontier
@@ -90,8 +101,18 @@ counts.find({}, { count: 1 }).forEach(function (d) {
 
 if (actualTotal === expectedTotal) {
   print(
-    "Verification passed: " + actualTotal + " occurrence(s) across " + docs.length + " (project, domain) pair(s)."
+    "Verification passed: " +
+      actualTotal +
+      " occurrence(s) across " +
+      docs.length +
+      " (project, domain) pair(s)."
   );
 } else {
-  print("WARNING: counted " + actualTotal + " occurrence(s) but Frontier has " + expectedTotal + ".");
+  print(
+    "WARNING: counted " +
+      actualTotal +
+      " occurrence(s) but Frontier has " +
+      expectedTotal +
+      "."
+  );
 }
