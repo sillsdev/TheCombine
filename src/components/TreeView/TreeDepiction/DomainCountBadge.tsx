@@ -15,21 +15,21 @@ export default function DomainCountBadge(
   props: DomainCountBadgeProps
 ): ReactNode {
   const { className, domainId, showTooltip } = props;
-  const [wordCount, setWordCount] = useState<number | undefined>();
+  const [senseCount, setSenseCount] = useState<number | undefined>();
   const { t } = useTranslation();
 
   useEffect(() => {
-    setWordCount(undefined);
+    setSenseCount(undefined);
     if (domainId && domainId !== rootId) {
       getDomainWordCount(domainId)
-        .then(setWordCount)
+        .then(setSenseCount)
         .catch(() =>
-          console.warn(`Failed to get word count for domain ${domainId}.`)
+          console.warn(`Failed to get sense count for domain ${domainId}.`)
         );
     }
   }, [domainId]);
 
-  if (wordCount === undefined) {
+  if (senseCount === undefined) {
     return null;
   }
 
@@ -40,7 +40,7 @@ export default function DomainCountBadge(
         title={showTooltip ? t("treeView.wordCountTooltip") : ""}
       >
         <Badge
-          badgeContent={`${wordCount}`} // Convert to string to show even if 0
+          badgeContent={`${senseCount}`} // Convert to string to show even if 0
           color="secondary"
           sx={{ insetInlineEnd: 6, position: "absolute", top: 6 }}
         />
