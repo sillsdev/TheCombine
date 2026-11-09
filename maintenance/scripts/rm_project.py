@@ -24,6 +24,7 @@ collections_with_project_id = (
     "FrontierCollection",
     "MergeBlacklistCollection",
     "MergeGraylistCollection",
+    "SemanticDomainCountCollection",
     "SpeakersCollection",
     "UserEditsCollection",
     "UserRolesCollection",
