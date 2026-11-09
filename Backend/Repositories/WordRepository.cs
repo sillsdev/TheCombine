@@ -387,7 +387,7 @@ namespace BackendFramework.Repositories
             // The first collection insert will generate the id, which should match in the second collection.
             await _words.InsertManyAsync(session, words);
             await _frontier.InsertManyAsync(session, words);
-            await ApplyDomainDeltas(session, words, 1);
+            await AddDomainCounts(session, words);
             return words;
         }
 
@@ -410,7 +410,7 @@ namespace BackendFramework.Repositories
                 return null;
             }
 
-            await ApplyDomainDeltas(session, [deletedWord], -1);
+            await RemoveDomainCounts(session, deletedWord);
 
             var modifiedWord = deletedWord.Clone();
             modifyDeletedWord(modifiedWord);
@@ -446,7 +446,7 @@ namespace BackendFramework.Repositories
             }
 
             await _frontier.InsertOneAsync(session, word);
-            await ApplyDomainDeltas(session, [word], 1);
+            await AddDomainCounts(session, [word]);
             return true;
         }
 
@@ -467,7 +467,7 @@ namespace BackendFramework.Repositories
                 return null;
             }
 
-            await ApplyDomainDeltas(session, [deletedWord], -1);
+            await RemoveDomainCounts(session, deletedWord);
 
             var word = deletedWord.Clone();
             modifyUpdatedWord(word);
@@ -502,7 +502,7 @@ namespace BackendFramework.Repositories
 
             if (deletedWord is not null)
             {
-                await ApplyDomainDeltas(session, [deletedWord], -1);
+                await RemoveDomainCounts(session, deletedWord);
             }
 
             modifyUpdatedWord(word, deletedWord?.Clone());
@@ -609,24 +609,31 @@ namespace BackendFramework.Repositories
         }
 
         /// <summary>
-        /// Applies semantic domain sense-count deltas for the given words within the transaction session, one
-        /// call per distinct project. <paramref name="sign"/> is +1 when the words enter the Frontier and -1
-        /// when they leave it, so the cached counts commit or roll back with the same transaction as the word write.
+        /// Adds the words' semantic domain sense-occurrences to the cached counts within the transaction session,
+        /// so the counts commit or roll back with the word write that put the words in the Frontier.
         /// </summary>
         /// <param name="session">Mongo transaction session.</param>
-        /// <param name="words">Words whose semantic domain occurrences changed in the Frontier.</param>
-        /// <param name="sign">+1 to add the words' domain occurrences, -1 to remove them.</param>
-        private async Task ApplyDomainDeltas(IClientSessionHandle session, IEnumerable<Word> words, int sign)
+        /// <param name="words">Words entering the Frontier.</param>
+        private async Task AddDomainCounts(IClientSessionHandle session, IEnumerable<Word> words)
         {
             foreach (var wordsByProject in words.GroupBy(w => w.ProjectId))
             {
                 var deltas = SemanticDomainCountRepository.CountDomains(wordsByProject);
-                if (sign < 0)
-                {
-                    deltas = deltas.ToDictionary(kv => kv.Key, kv => -kv.Value);
-                }
                 await _semDomCountRepo.ApplyDeltas(session, wordsByProject.Key, deltas);
             }
+        }
+
+        /// <summary>
+        /// Removes the word's semantic domain sense-occurrences from the cached counts within the transaction
+        /// session, so the counts commit or roll back with the word write that took the word out of the Frontier.
+        /// </summary>
+        /// <param name="session">Mongo transaction session.</param>
+        /// <param name="word">Word leaving the Frontier.</param>
+        private async Task RemoveDomainCounts(IClientSessionHandle session, Word word)
+        {
+            var deltas = SemanticDomainCountRepository.CountDomains([word])
+                .ToDictionary(kv => kv.Key, kv => -kv.Value);
+            await _semDomCountRepo.ApplyDeltas(session, word.ProjectId, deltas);
         }
 
         #endregion

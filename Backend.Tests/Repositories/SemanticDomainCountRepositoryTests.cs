@@ -127,7 +127,7 @@ namespace Backend.Tests.Repositories
                 ],
             };
 
-            var counts = SemanticDomainCountRepository.CountDomains(word);
+            var counts = SemanticDomainCountRepository.CountDomains([word]);
             Assert.That(counts["1"], Is.EqualTo(2));
             Assert.That(counts["2"], Is.EqualTo(1));
         }

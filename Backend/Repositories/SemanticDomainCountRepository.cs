@@ -18,8 +18,8 @@ namespace BackendFramework.Repositories
         {
             _counts = dbContext.Db.GetCollection<ProjectSemanticDomainCount>("SemanticDomainCountCollection");
 
-            // The unique compound index enforces one document per (project, domain). Creating it here also
-            // guarantees the collection exists before any transactional upsert touches it.
+            // The unique compound index enforces one document per (project, domain); without it, concurrent
+            // first upserts of the same pair could each insert a document.
             var keys = Builders<ProjectSemanticDomainCount>.IndexKeys
                 .Ascending(c => c.ProjectId)
                 .Ascending(c => c.DomainId);
@@ -106,12 +106,6 @@ namespace BackendFramework.Repositories
             }
 
             return counts;
-        }
-
-        /// <summary> Tallies semantic domain sense-occurrences for a single word. </summary>
-        public static Dictionary<string, int> CountDomains(Word word)
-        {
-            return CountDomains([word]);
         }
 
         private static FilterDefinition<ProjectSemanticDomainCount> ProjectDomainFilter(
