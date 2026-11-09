@@ -20,7 +20,8 @@ namespace Backend.Tests.Mocks
 
         public Task<List<ProjectSemanticDomainCount>> GetAllCounts(string projectId)
         {
-            return Task.FromResult(_counts.Where(c => c.ProjectId == projectId).Select(c => c.Clone()).ToList());
+            return Task.FromResult(_counts.Where(c => c.ProjectId == projectId)
+                .Select(c => new ProjectSemanticDomainCount(c.ProjectId, c.DomainId, c.Count)).ToList());
         }
 
         // The session is ignored: this mock does not simulate transactions.
