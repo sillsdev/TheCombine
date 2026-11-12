@@ -10,3 +10,13 @@ combineDb.EditsCollection.createIndex({ projectId: 1, userEditId: 1, guid: 1 });
 print(
   "Ensured index { projectId: 1, userEditId: 1, guid: 1 } on EditsCollection."
 );
+
+// The backend filters FrontierCollection by projectId, often with a semantic
+// domain id.
+combineDb.FrontierCollection.createIndex({
+  projectId: 1,
+  "senses.SemanticDomains.id": 1,
+});
+print(
+  'Ensured index { projectId: 1, "senses.SemanticDomains.id": 1 } on FrontierCollection.'
+);
