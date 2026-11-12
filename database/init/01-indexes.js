@@ -11,9 +11,8 @@ print(
   "Ensured index { projectId: 1, userEditId: 1, guid: 1 } on EditsCollection."
 );
 
-// The backend filters FrontierCollection by projectId (most Frontier queries,
-// including the per-domain sense tally for statistics) and counts a project's
-// Frontier words in a given semantic domain (the domain tree's count badge).
+// The backend filters FrontierCollection by projectId, often with a semantic
+// domain id.
 combineDb.FrontierCollection.createIndex({
   projectId: 1,
   "senses.SemanticDomains.id": 1,
