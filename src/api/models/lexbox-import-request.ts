@@ -23,6 +23,12 @@ export interface LexboxImportRequest {
    * @type {string}
    * @memberof LexboxImportRequest
    */
+  projectId: string;
+  /**
+   *
+   * @type {string}
+   * @memberof LexboxImportRequest
+   */
   projectCode: string;
   /**
    *

@@ -26,9 +26,9 @@ const blockedProject: LexboxProject = {
   analysisWsTags: [],
   code: "blocked",
   id: "1",
-  importBlocker: LexboxImportBlocker.InsufficientRole,
+  importBlocker: LexboxImportBlocker.NoVernacularLanguage,
   name: "Blocked",
-  vernacularWsTags: ["es"],
+  vernacularWsTags: [],
 };
 const importableProject: LexboxProject = {
   analysisWsTags: ["en"],
@@ -67,7 +67,7 @@ describe("LexboxProjectsDialog", () => {
     ]);
     expect(items[0]).not.toHaveAttribute("aria-disabled", "true");
     expect(items[1]).toHaveAttribute("aria-disabled", "true");
-    expect(items[1]).toHaveTextContent("lexbox.blockerInsufficientRole");
+    expect(items[1]).toHaveTextContent("lexbox.blockerNoVernacularLanguage");
 
     await userEvent.click(items[0]);
     await userEvent.click(screen.getByRole("button", { name: /confirm/i }));

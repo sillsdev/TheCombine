@@ -273,8 +273,10 @@ export async function getLexboxAuthStatus(): Promise<LexboxAuthStatus> {
 }
 
 /** Rejects if the current Lexbox user can't import the Lexbox project's entries. */
-export async function checkLexboxProject(projectCode: string): Promise<void> {
-  await lexboxApi.checkProject({ projectCode }, defaultOptions());
+export async function checkLexboxProject(
+  lexboxProjectId: string
+): Promise<void> {
+  await lexboxApi.checkProject({ lexboxProjectId }, defaultOptions());
 }
 
 /** Returns a single-use url that starts Lexbox login for the current user. */
@@ -291,10 +293,13 @@ export async function getLexboxProjects(): Promise<LexboxProject[]> {
  * Returns the number of words imported. */
 export async function importLexboxEntries(
   projectId: string,
-  projectCode: string,
-  analysisLangs: string[]
+  lexboxProject: LexboxProject
 ): Promise<number> {
-  const lexboxImportRequest = { analysisLangs, projectCode };
+  const lexboxImportRequest = {
+    analysisLangs: lexboxProject.analysisWsTags,
+    projectCode: lexboxProject.code,
+    projectId: lexboxProject.id,
+  };
   const params = { lexboxImportRequest, projectId };
   return (await lexboxApi.importEntries(params, defaultOptions())).data;
 }

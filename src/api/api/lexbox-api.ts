@@ -52,20 +52,21 @@ export const LexboxApiAxiosParamCreator = function (
   return {
     /**
      *
-     * @param {string} projectCode
+     * @param {string} lexboxProjectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     checkProject: async (
-      projectCode: string,
+      lexboxProjectId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'projectCode' is not null or undefined
-      assertParamExists("checkProject", "projectCode", projectCode);
-      const localVarPath = `/v1/lexbox/projects/{projectCode}/check`.replace(
-        `{${"projectCode"}}`,
-        encodeURIComponent(String(projectCode))
-      );
+      // verify required parameter 'lexboxProjectId' is not null or undefined
+      assertParamExists("checkProject", "lexboxProjectId", lexboxProjectId);
+      const localVarPath =
+        `/v1/lexbox/projects/{lexboxProjectId}/check`.replace(
+          `{${"lexboxProjectId"}}`,
+          encodeURIComponent(String(lexboxProjectId))
+        );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -349,18 +350,18 @@ export const LexboxApiFp = function (configuration?: Configuration) {
   return {
     /**
      *
-     * @param {string} projectCode
+     * @param {string} lexboxProjectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async checkProject(
-      projectCode: string,
+      lexboxProjectId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.checkProject(
-        projectCode,
+        lexboxProjectId,
         options
       );
       return createRequestFunction(
@@ -516,13 +517,13 @@ export const LexboxApiFactory = function (
   return {
     /**
      *
-     * @param {string} projectCode
+     * @param {string} lexboxProjectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    checkProject(projectCode: string, options?: any): AxiosPromise<void> {
+    checkProject(lexboxProjectId: string, options?: any): AxiosPromise<void> {
       return localVarFp
-        .checkProject(projectCode, options)
+        .checkProject(lexboxProjectId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -606,7 +607,7 @@ export interface LexboxApiCheckProjectRequest {
    * @type {string}
    * @memberof LexboxApiCheckProject
    */
-  readonly projectCode: string;
+  readonly lexboxProjectId: string;
 }
 
 /**
@@ -663,7 +664,7 @@ export class LexboxApi extends BaseAPI {
     options?: any
   ) {
     return LexboxApiFp(this.configuration)
-      .checkProject(requestParameters.projectCode, options)
+      .checkProject(requestParameters.lexboxProjectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

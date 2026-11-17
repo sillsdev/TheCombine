@@ -6,133 +6,50 @@ using Microsoft.AspNetCore.Http;
 
 namespace BackendFramework.Models
 {
-    public sealed class LexboxQuery
+    public static class LexboxQuery
     {
-        public const string QueryUrl = "https://lexbox.org/api/graphql";
-        public const string MiniLcmBaseUrl = "https://lexbox.org/api/mini-lcm";
-        public const string LfClassicBaseUrl = "https://lexbox.org/api/lfclassic";
-        public const string MyProjectsQuery = @"query {
-    meAuth {
-        id
-        isAdmin
-        orgs {
-            orgId
-            role
-        }
-    }
-    myProjects {
-        code
-        description
-        flexProjectMetadata {
-            flexModelVersion
-            langProjectId
-            lexEntryCount
-            projectId
-            writingSystems {
-                analysisWss {
-                    isActive
-                    isDefault
-                    tag
-                }
-                vernacularWss {
-                    isActive
-                    isDefault
-                    tag
-                }
-            }
-        }
-        id
-        isConfidential
-        isLanguageForgeProject
-        name
-        organizations {
-            id
-        }
-        parentId
-        projectOrigin
-        repoSizeInKb
-        resetStatus
-        retentionPolicy
-        type
-        userCount
-        users {
-            role
-            userId
-        }
-    }
-}";
-
-        public required string Query { get; init; }
-    }
-
-    public sealed class LexboxQueryResponse<T>
-    {
-        public T? Data { get; init; }
-        public LexboxQueryError[]? Errors { get; init; }
-    }
-
-    public sealed class LexboxQueryError
-    {
-        public string? Message { get; init; }
+        public const string LexiconUrl = "https://lexbox.org/api/lexicon";
     }
 
     /// <summary> Why a Lexbox project can't be imported into The Combine. </summary>
     public enum LexboxImportBlocker
     {
-        NotLanguageForge,
-        InsufficientRole,
         NoVernacularLanguage,
     }
 
     public sealed class LexboxProject
     {
-        // Lexbox only lets these project roles, a site admin, or an admin of an organization that owns the
-        // project read LF Classic entries; see CanSyncProject in Lexbox.
-        private static readonly HashSet<string> ImportRoles = ["EDITOR", "MANAGER"];
-        private const string OrgAdminRole = "ADMIN";
-
-        public LexboxProject(LexboxProjectDto dto, LexboxMeDto me)
+        public LexboxProject(LexiconProjectDto dto, LexboxWritingSystemsDto writingSystems)
         {
-            AnalysisWsTags = WsIdDto.GetActiveTags(dto.FlexProjectMetadata?.WritingSystems?.AnalysisWss ?? []);
+            AnalysisWsTags = LexboxWritingSystemDto.GetTags(writingSystems.Analysis);
             Code = dto.Code;
-            Description = dto.Description;
             Id = dto.Id;
-            IsConfidential = dto.IsConfidential;
             Name = dto.Name;
-            Type = dto.Type;
-            VernacularWsTags = WsIdDto.GetActiveTags(dto.FlexProjectMetadata?.WritingSystems?.VernacularWss ?? []);
-
-            var role = dto.Users.FirstOrDefault(u => u.UserId == me.Id)?.Role;
-            var isOrgAdmin = dto.Organizations.Any(
-                o => me.Orgs.Any(m => m.OrgId == o.Id && m.Role == OrgAdminRole));
-            if (!dto.IsLanguageForgeProject)
-            {
-                ImportBlocker = LexboxImportBlocker.NotLanguageForge;
-            }
-            else if (!me.IsAdmin && !isOrgAdmin && (role is null || !ImportRoles.Contains(role)))
-            {
-                ImportBlocker = LexboxImportBlocker.InsufficientRole;
-            }
-            else if (VernacularWsTags.Count == 0)
+            VernacularWsTags = LexboxWritingSystemDto.GetTags(writingSystems.Vernacular);
+            if (VernacularWsTags.Count == 0)
             {
                 ImportBlocker = LexboxImportBlocker.NoVernacularLanguage;
             }
         }
 
+        [Required]
         public List<string> AnalysisWsTags { get; init; }
+        [Required]
         public string Code { get; init; }
-        public string? Description { get; init; }
+        [Required]
         public Guid Id { get; init; }
         /// <summary> Null if the project can be imported. </summary>
         public LexboxImportBlocker? ImportBlocker { get; init; }
-        public bool? IsConfidential { get; init; }
+        [Required]
         public string Name { get; init; }
-        public string Type { get; init; }
+        [Required]
         public List<string> VernacularWsTags { get; init; }
     }
 
     public sealed class LexboxImportRequest
     {
+        [Required]
+        public Guid ProjectId { get; set; }
         [Required]
         public string ProjectCode { get; set; } = "";
         /// <summary> The Lexbox project's analysis languages, default first. </summary>
@@ -140,92 +57,30 @@ namespace BackendFramework.Models
         public List<string> AnalysisLangs { get; set; } = [];
     }
 
-    public sealed class MyProjectsData
-    {
-        public LexboxMeDto? MeAuth { get; init; }
-        public List<LexboxProjectDto> MyProjects { get; init; } = [];
-    }
-
-    public sealed class LexboxMeDto
-    {
-        public Guid Id { get; init; }
-        public bool IsAdmin { get; init; }
-        public List<LexboxOrgMembershipDto> Orgs { get; init; } = [];
-    }
-
-    public sealed class LexboxOrgMembershipDto
-    {
-        public Guid OrgId { get; init; }
-        public string Role { get; init; } = "";
-    }
-
-    public sealed class LexboxOrgDto
-    {
-        public Guid Id { get; init; }
-    }
-
-    public sealed class LexboxProjectDto
+    public sealed class LexiconProjectDto
     {
         public string Code { get; init; } = "";
-        public string? Description { get; init; }
-        public ProjectMetadataDto? FlexProjectMetadata { get; init; }
         public Guid Id { get; init; }
-        public bool? IsConfidential { get; init; }
-        public bool IsLanguageForgeProject { get; init; }
         public string Name { get; init; } = "";
-        public List<LexboxOrgDto> Organizations { get; init; } = [];
-        public Guid? ParentId { get; init; }
-        public string ProjectOrigin { get; init; } = "";
-        public int? RepoSizeInKb { get; init; }
-        public string ResetStatus { get; init; } = "";
-        public string RetentionPolicy { get; init; } = "";
-        public string Type { get; init; } = "";
-        public int UserCount { get; init; }
-        /// <summary> All members if the user may see them, otherwise just the user's own membership. </summary>
-        public List<ProjectUserDto> Users { get; init; } = [];
     }
 
-    public sealed class ProjectUserDto
+    public sealed class LexboxWritingSystemsDto
     {
-        public string Role { get; init; } = "";
-        public Guid UserId { get; init; }
+        public List<LexboxWritingSystemDto> Analysis { get; init; } = [];
+        public List<LexboxWritingSystemDto> Vernacular { get; init; } = [];
     }
 
-    public sealed class ProjectMetadataDto
+    public sealed class LexboxWritingSystemDto
     {
-        public int? FlexModelVersion { get; init; }
-        public Guid? LangProjectId { get; init; }
-        public int? LexEntryCount { get; init; }
-        public Guid ProjectId { get; init; }
-        public ProjectWritingSystemsDto? WritingSystems { get; init; }
-    }
+        public DateTime? DeletedAt { get; init; }
+        public bool IsAudio { get; init; }
+        public string WsId { get; init; } = "";
 
-    public sealed class ProjectWritingSystemsDto
-    {
-        public List<WsIdDto> AnalysisWss { get; init; } = [];
-        public List<WsIdDto> VernacularWss { get; init; } = [];
-    }
-
-    public sealed class WsIdDto
-    {
-        public bool IsActive { get; init; }
-        public bool IsDefault { get; init; }
-        public string Tag { get; init; } = "";
-
-        /// <summary> Gets the tags of active, non-audio writing systems, default first. </summary>
-        public static List<string> GetActiveTags(List<WsIdDto> wsList)
+        /// <summary> Gets the tags of undeleted, non-audio writing systems, in Lexbox's order (default first). </summary>
+        public static List<string> GetTags(List<LexboxWritingSystemDto> wsList)
         {
-            return wsList.Where(ws => ws.IsActive && !IsAudioTag(ws.Tag))
-                .OrderByDescending(ws => ws.IsDefault).Select(ws => ws.Tag).ToList();
-        }
-
-        /// <summary> Whether the tag is a FieldWorks audio writing system, e.g. "es-Zxxx-419-x-audio". </summary>
-        public static bool IsAudioTag(string tag)
-        {
-            var subtags = tag.Split('-');
-            var privateUseStart = Array.FindIndex(subtags, s => s.Equals("x", StringComparison.OrdinalIgnoreCase));
-            return privateUseStart >= 0 && subtags.Skip(privateUseStart + 1)
-                .Any(s => s.Equals("audio", StringComparison.OrdinalIgnoreCase));
+            return wsList.Where(ws => ws.DeletedAt is null && !ws.IsAudio && !string.IsNullOrEmpty(ws.WsId))
+                .Select(ws => ws.WsId).ToList();
         }
     }
 

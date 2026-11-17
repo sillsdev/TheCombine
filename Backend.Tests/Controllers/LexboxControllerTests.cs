@@ -35,6 +35,7 @@ namespace Backend.Tests.Controllers
 
         private const string UserId = "LexboxControllerTestsUserId";
         private const string OtherUserId = "LexboxControllerTestsOtherUserId";
+        private static readonly Guid LexboxProjectId = new("00000000-0000-0000-0000-0000000000ee");
 
         public void Dispose()
         {
@@ -303,7 +304,7 @@ namespace Backend.Tests.Controllers
         {
             _lexboxController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
-            var result = await _lexboxController.CheckProject("lex-code");
+            var result = await _lexboxController.CheckProject(LexboxProjectId);
 
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
@@ -313,7 +314,7 @@ namespace Backend.Tests.Controllers
         {
             _lexboxController.ControllerContext.HttpContext = GetAuthContext(AuthenticateResult.NoResult());
 
-            var result = await _lexboxController.CheckProject("lex-code") as ObjectResult;
+            var result = await _lexboxController.CheckProject(LexboxProjectId) as ObjectResult;
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status403Forbidden));
@@ -324,7 +325,7 @@ namespace Backend.Tests.Controllers
         {
             _lexboxController.ControllerContext.HttpContext = GetAuthContext(LexboxSessionResult());
 
-            var result = await _lexboxController.CheckProject("lex-code");
+            var result = await _lexboxController.CheckProject(LexboxProjectId);
 
             Assert.That(result, Is.InstanceOf<NoContentResult>());
         }
@@ -337,14 +338,19 @@ namespace Backend.Tests.Controllers
             _lexboxStatus = lexboxStatus;
             _lexboxController.ControllerContext.HttpContext = GetAuthContext(LexboxSessionResult());
 
-            var result = await _lexboxController.CheckProject("lex-code") as ObjectResult;
+            var result = await _lexboxController.CheckProject(LexboxProjectId) as ObjectResult;
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status403Forbidden));
             Assert.That(await IsLoggedInWithToken("token"), Is.EqualTo(expectLoggedIn));
         }
 
-        private static LexboxImportRequest ImportRequest() => new() { ProjectCode = "lex-code", AnalysisLangs = ["en"] };
+        private static LexboxImportRequest ImportRequest() => new()
+        {
+            ProjectId = LexboxProjectId,
+            ProjectCode = "lex-code",
+            AnalysisLangs = ["en"],
+        };
 
         private async Task<Project> CreateProject(Action<Project>? modify = null)
         {
@@ -441,7 +447,12 @@ namespace Backend.Tests.Controllers
                 ]
                 """;
             _lexboxController.ControllerContext.HttpContext = GetAuthContext(LexboxSessionResult());
-            var request = new LexboxImportRequest { ProjectCode = "lex-code", AnalysisLangs = ["en", "ru", "en"] };
+            var request = new LexboxImportRequest
+            {
+                ProjectId = LexboxProjectId,
+                ProjectCode = "lex-code",
+                AnalysisLangs = ["en", "ru", "en"],
+            };
 
             var result = await _lexboxController.ImportEntries(project.Id, request) as OkObjectResult;
 

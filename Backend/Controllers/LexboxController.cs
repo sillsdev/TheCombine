@@ -109,6 +109,8 @@ namespace BackendFramework.Controllers
         [HttpGet("projects", Name = "GetProjects")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LexboxProject>))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status502BadGateway)]
         public async Task<IActionResult> GetProjects()
         {
@@ -139,12 +141,13 @@ namespace BackendFramework.Controllers
 
         /// <summary> Checks that the signed-in Lexbox user can import the entries of a Lexbox project. </summary>
         /// <remarks> Lets the frontend catch a failing import before it creates a project to import into. </remarks>
-        [HttpGet("projects/{projectCode}/check", Name = "CheckProject")]
+        [HttpGet("projects/{lexboxProjectId}/check", Name = "CheckProject")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status502BadGateway)]
-        public async Task<IActionResult> CheckProject(string projectCode)
+        public async Task<IActionResult> CheckProject(Guid lexboxProjectId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "checking Lexbox project");
 
@@ -162,7 +165,7 @@ namespace BackendFramework.Controllers
 
             try
             {
-                await _lexboxQueryService.CheckProjectEntriesAsync(accessToken, projectCode);
+                await _lexboxQueryService.CheckProjectEntriesAsync(accessToken, lexboxProjectId);
                 return NoContent();
             }
             catch (LexboxQueryException ex)
@@ -181,6 +184,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status502BadGateway)]
         public async Task<IActionResult> ImportEntries(string projectId, [FromBody] LexboxImportRequest request)
         {
@@ -211,7 +215,7 @@ namespace BackendFramework.Controllers
             List<Word> words;
             try
             {
-                words = await _lexboxQueryService.GetProjectEntriesAsync(accessToken, request.ProjectCode,
+                words = await _lexboxQueryService.GetProjectEntriesAsync(accessToken, request.ProjectId,
                     project.VernacularWritingSystem.Bcp47, request.AnalysisLangs);
             }
             catch (LexboxQueryException ex)

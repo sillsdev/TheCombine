@@ -234,12 +234,11 @@ export default function CreateProject(): ReactElement {
       await dispatch(asyncFinishProject(trimmedName, vernLang)).then(() =>
         setSuccess(true)
       );
-    } else if (lexboxProject?.code) {
+    } else if (lexboxProject) {
       const action = asyncCreateLexboxProject(
         trimmedName,
         vernLang,
-        lexboxProject.code,
-        lexboxProject.analysisWsTags ?? []
+        lexboxProject
       );
       try {
         await dispatch(action);

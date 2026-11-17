@@ -1,4 +1,4 @@
-import { type WritingSystem } from "api/models";
+import { type LexboxProject, type WritingSystem } from "api/models";
 import {
   checkLexboxProject,
   createProject,
@@ -41,18 +41,17 @@ export function asyncCreateProject(
 export function asyncCreateLexboxProject(
   name: string,
   vernacularWritingSystem: WritingSystem,
-  lexboxProjectCode: string,
-  lexboxAnalysisLangs: string[]
+  lexboxProject: LexboxProject
 ) {
   return async (dispatch: StoreStateDispatch) => {
     // Catch most import failures before the project name is taken.
-    await checkLexboxProject(lexboxProjectCode);
+    await checkLexboxProject(lexboxProject.id);
 
     const project = newProject(name);
     project.vernacularWritingSystem = vernacularWritingSystem;
 
     const projId = (await createProject(project)).id;
-    await importLexboxEntries(projId, lexboxProjectCode, lexboxAnalysisLangs);
+    await importLexboxEntries(projId, lexboxProject);
     const createdProject = await getProject(projId);
     await dispatch(asyncSetNewCurrentProject(createdProject));
 

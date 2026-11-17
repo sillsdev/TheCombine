@@ -25,25 +25,19 @@ export interface LexboxProject {
    * @type {Array<string>}
    * @memberof LexboxProject
    */
-  analysisWsTags?: Array<string> | null;
+  analysisWsTags: Array<string>;
   /**
    *
    * @type {string}
    * @memberof LexboxProject
    */
-  code?: string | null;
+  code: string;
   /**
    *
    * @type {string}
    * @memberof LexboxProject
    */
-  description?: string | null;
-  /**
-   *
-   * @type {string}
-   * @memberof LexboxProject
-   */
-  id?: string;
+  id: string;
   /**
    *
    * @type {LexboxImportBlocker}
@@ -52,26 +46,14 @@ export interface LexboxProject {
   importBlocker?: LexboxImportBlocker;
   /**
    *
-   * @type {boolean}
-   * @memberof LexboxProject
-   */
-  isConfidential?: boolean | null;
-  /**
-   *
    * @type {string}
    * @memberof LexboxProject
    */
-  name?: string | null;
-  /**
-   *
-   * @type {string}
-   * @memberof LexboxProject
-   */
-  type?: string | null;
+  name: string;
   /**
    *
    * @type {Array<string>}
    * @memberof LexboxProject
    */
-  vernacularWsTags?: Array<string> | null;
+  vernacularWsTags: Array<string>;
 }

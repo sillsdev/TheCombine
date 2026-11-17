@@ -129,12 +129,10 @@
     "loginFailed": "Failed to start Lexbox login",
     "logoutFailed": "Failed to log out of Lexbox",
     "logInToSeeProjects": "Log in to Lexbox to see your projects.",
-    "noProjects": "No Lexbox projects found.",
+    "noProjects": "No Lexbox projects found. Only projects that have been synced to FieldWorks Lite on Lexbox are listed.",
     "vernacularLanguages": "Vernacular languages: {{ val }}",
     "analysisLanguages": "Analysis languages: {{ val }}",
     "noLanguages": "None",
-    "blockerNotLanguageForge": "Only Language Forge projects can be imported for now.",
-    "blockerInsufficientRole": "Importing requires the Manager or Editor role.",
     "blockerNoVernacularLanguage": "This project has no vernacular language."
   },
   "selectProject": {

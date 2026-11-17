@@ -18,7 +18,5 @@
  * @enum {string}
  */
 export enum LexboxImportBlocker {
-  NotLanguageForge = "NotLanguageForge",
-  InsufficientRole = "InsufficientRole",
   NoVernacularLanguage = "NoVernacularLanguage",
 }

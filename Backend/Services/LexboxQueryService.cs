@@ -16,8 +16,6 @@ namespace BackendFramework.Services
     {
         private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
 
-        public const int EntriesPageSize = 1000;
-
         private HttpClient CreateClient(string accessToken)
         {
             var httpClient = _httpClientFactory.CreateClient();
@@ -25,83 +23,79 @@ namespace BackendFramework.Services
             return httpClient;
         }
 
+        private static string ProjectUrl(Guid projectId) => $"{LexboxQuery.LexiconUrl}/project/{projectId}";
+
         public async Task<List<LexboxProject>> GetMyProjectsAsync(string accessToken)
         {
             var httpClient = CreateClient(accessToken);
 
-            var response = await httpClient.PostAsJsonAsync(LexboxQuery.QueryUrl,
-                new LexboxQuery { Query = LexboxQuery.MyProjectsQuery });
-
+            var response = await httpClient.GetAsync($"{LexboxQuery.LexiconUrl}/projects");
             if (!response.IsSuccessStatusCode)
             {
-                throw await FailedRequestException(response, "Lexbox GraphQL request failed");
+                throw await FailedRequestException(response, "Lexbox projects request failed");
             }
+            var projects = await response.Content.ReadFromJsonAsync<List<LexiconProjectDto>>() ?? [];
 
-            var graph = await response.Content.ReadFromJsonAsync<LexboxQueryResponse<MyProjectsData>>()
-                ?? throw new LexboxQueryException("Lexbox GraphQL response was empty", "");
-
-            if (graph.Errors is { Length: > 0 })
-            {
-                var errorText = string.Join("; ",
-                    graph.Errors.Select(e => e.Message).Where(m => !string.IsNullOrEmpty(m)));
-                throw new LexboxQueryException("Lexbox GraphQL returned errors", errorText);
-            }
-
-            var me = graph.Data?.MeAuth ?? throw new LexboxQueryException("Lexbox GraphQL response had no user", "");
-            return graph.Data.MyProjects.Select(p => new LexboxProject(p, me)).ToList();
+            return (await Task.WhenAll(projects.Select(async p =>
+                new LexboxProject(p, await GetWritingSystemsAsync(httpClient, p.Id))))).ToList();
         }
 
-        public async Task CheckProjectEntriesAsync(string accessToken, string projectCode)
+        private static async Task<LexboxWritingSystemsDto> GetWritingSystemsAsync(
+            HttpClient httpClient, Guid projectId)
         {
-            await GetEntriesPageAsync(CreateClient(accessToken), projectCode, 0, 1);
+            var response = await httpClient.GetAsync($"{ProjectUrl(projectId)}/writing-systems");
+            await ThrowIfProjectRequestFailed(response, projectId, "Project writing systems request failed");
+            return await response.Content.ReadFromJsonAsync<LexboxWritingSystemsDto>() ?? new();
+        }
+
+        public async Task CheckProjectEntriesAsync(string accessToken, Guid projectId)
+        {
+            var response = await CreateClient(accessToken).GetAsync($"{ProjectUrl(projectId)}/entries?Count=1");
+            await ThrowIfProjectRequestFailed(response, projectId, "Project entries request failed");
         }
 
         public async Task<List<Word>> GetProjectEntriesAsync(
-            string accessToken, string projectCode, string vernacularLang, List<string> analysisLangs)
+            string accessToken, Guid projectId, string vernacularLang, List<string> analysisLangs)
         {
-            var httpClient = CreateClient(accessToken);
+            // Count=-1 asks for all entries. Lexbox streams them, so read them as they arrive: once the headers
+            // are read, the client's timeout no longer applies, and a big lexicon is never held as one string.
+            using var response = await CreateClient(accessToken).GetAsync(
+                $"{ProjectUrl(projectId)}/entries?Count=-1", HttpCompletionOption.ResponseHeadersRead);
+            await ThrowIfProjectRequestFailed(response, projectId, "Project entries request failed");
 
-            // Lexbox's Count=-1 (QueryOptions.QueryAll) becomes a $limit of 0, which its Mongo driver rejects,
-            // so page through the entries instead. Lexbox sorts them by headword, morph type, then id.
-            var lexboxEntries = new List<LexboxEntry>();
-            List<LexboxEntry> page;
-            do
+            var words = new List<Word>();
+            await foreach (var entry in response.Content.ReadFromJsonAsAsyncEnumerable<LexboxEntry>())
             {
-                page = await GetEntriesPageAsync(httpClient, projectCode, lexboxEntries.Count, EntriesPageSize);
-                lexboxEntries.AddRange(page);
-            } while (page.Count == EntriesPageSize);
-
-            return lexboxEntries
-                .Where(e => e.DeletedAt is null)
-                .Select(e => e.ToWord(vernacularLang, analysisLangs))
-                .OfType<Word>()
-                .ToList();
+                if (entry?.ToWord(vernacularLang, analysisLangs) is Word word)
+                {
+                    words.Add(word);
+                }
+            }
+            return words;
         }
 
-        private static async Task<List<LexboxEntry>> GetEntriesPageAsync(
-            HttpClient httpClient, string projectCode, int offset, int count)
+        private static async Task ThrowIfProjectRequestFailed(
+            HttpResponseMessage response, Guid projectId, string title)
         {
-            var url = $"{LexboxQuery.LfClassicBaseUrl}/{Uri.EscapeDataString(projectCode)}/entries"
-                + $"?Count={count}&Offset={offset}";
-            var response = await httpClient.GetAsync(url);
-
             switch (response.StatusCode)
             {
                 case HttpStatusCode.Forbidden:
                     throw new LexboxQueryException("Lexbox access denied",
-                        $"Reading entries of project '{projectCode}' requires the Manager or Editor role.",
-                        StatusCodes.Status403Forbidden);
+                        $"You don't have access to Lexbox project {projectId}.", StatusCodes.Status403Forbidden);
                 case HttpStatusCode.NotFound:
-                    throw new LexboxQueryException("Language Forge project not found",
-                        $"Project '{projectCode}' was not found in Language Forge.", StatusCodes.Status404NotFound);
+                    throw new LexboxQueryException("Lexbox project not found",
+                        $"Project {projectId} was not found in Lexbox.", StatusCodes.Status404NotFound);
+                case HttpStatusCode.Conflict:
+                    // For reads, Lexbox returns 409 only for a project not yet synced to FieldWorks Lite.
+                    throw new LexboxQueryException("Lexbox project not ready",
+                        $"Project {projectId} has not been synced to FieldWorks Lite on Lexbox yet.",
+                        StatusCodes.Status409Conflict);
             }
 
             if (!response.IsSuccessStatusCode)
             {
-                throw await FailedRequestException(response, "Project entries request failed");
+                throw await FailedRequestException(response, title);
             }
-
-            return await response.Content.ReadFromJsonAsync<List<LexboxEntry>>() ?? [];
         }
 
         private static async Task<LexboxQueryException> FailedRequestException(

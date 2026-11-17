@@ -1,3 +1,4 @@
+import { type LexboxProject } from "api/models";
 import { asyncCreateLexboxProject } from "components/ProjectScreen/CreateProjectActions";
 import { newProject } from "types/project";
 import { newWritingSystem } from "types/writingSystem";
@@ -24,6 +25,13 @@ const mockImportLexboxEntries = jest.fn();
 const mockDispatch = jest.fn();
 const projId = "proj-id";
 const vern = newWritingSystem("es");
+const lexboxProject: LexboxProject = {
+  analysisWsTags: ["en"],
+  code: "lex-code",
+  id: "lex-id",
+  name: "Lexbox project",
+  vernacularWsTags: ["es"],
+};
 
 describe("asyncCreateLexboxProject", () => {
   beforeEach(() => {
@@ -35,18 +43,14 @@ describe("asyncCreateLexboxProject", () => {
   it("creates the project, imports, then sets it as current", async () => {
     mockImportLexboxEntries.mockResolvedValue(2);
 
-    await asyncCreateLexboxProject("name", vern, "lex-code", ["en"])(
-      mockDispatch
-    );
+    await asyncCreateLexboxProject("name", vern, lexboxProject)(mockDispatch);
 
-    expect(mockCheckLexboxProject).toHaveBeenCalledWith("lex-code");
+    expect(mockCheckLexboxProject).toHaveBeenCalledWith("lex-id");
     expect(mockCreateProject.mock.calls[0][0]).toMatchObject({
       name: "name",
       vernacularWritingSystem: vern,
     });
-    expect(mockImportLexboxEntries).toHaveBeenCalledWith(projId, "lex-code", [
-      "en",
-    ]);
+    expect(mockImportLexboxEntries).toHaveBeenCalledWith(projId, lexboxProject);
     expect(mockAsyncSetNewCurrentProject).toHaveBeenCalledTimes(1);
   });
 
@@ -54,7 +58,7 @@ describe("asyncCreateLexboxProject", () => {
     mockCheckLexboxProject.mockRejectedValue(new Error("Check failed."));
 
     await expect(
-      asyncCreateLexboxProject("name", vern, "lex-code", [])(mockDispatch)
+      asyncCreateLexboxProject("name", vern, lexboxProject)(mockDispatch)
     ).rejects.toThrow("Check failed.");
     expect(mockCreateProject).not.toHaveBeenCalled();
   });
@@ -63,7 +67,7 @@ describe("asyncCreateLexboxProject", () => {
     mockImportLexboxEntries.mockRejectedValue(new Error("Import failed."));
 
     await expect(
-      asyncCreateLexboxProject("name", vern, "lex-code", [])(mockDispatch)
+      asyncCreateLexboxProject("name", vern, lexboxProject)(mockDispatch)
     ).rejects.toThrow("Import failed.");
     expect(mockAsyncSetNewCurrentProject).not.toHaveBeenCalled();
   });

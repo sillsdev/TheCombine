@@ -23,6 +23,7 @@ namespace Backend.Tests.Services
         /// <summary> Overrides <see cref="_responseJson"/> when set. </summary>
         private Func<HttpRequestMessage, string>? _respond;
 
+        private static readonly Guid ProjId = new("00000000-0000-0000-0000-0000000000ee");
         private const string Vern = "seh";
         private const string Analysis1 = "en";
         private const string Analysis2 = "pt";
@@ -81,206 +82,66 @@ namespace Backend.Tests.Services
         {
             _responseJson = $"[{entryJson}]";
             var words = await _lexboxQueryService.GetProjectEntriesAsync(
-                "token", "proj-code", Vern, [Analysis1, Analysis2]);
+                "token", ProjId, Vern, [Analysis1, Analysis2]);
             Assert.That(words, Has.Count.EqualTo(1));
             return words[0];
         }
 
-        [Test]
-        public async Task TestGetMyProjectsAsyncSkipsInactiveAndAudioWritingSystems()
+        private static string WritingSystemJson(string wsId, string extraFields = "")
+            => $$"""{ "wsId": "{{wsId}}", "name": "", "abbreviation": "", "font": "", "type": 0 {{extraFields}} }""";
+
+        private const string IsAudio = """, "isAudio": true""";
+
+        private void RespondWithProject(string analysisWss, string vernacularWss)
         {
-            _responseJson = """
-                {
-                    "data": {
-                        "meAuth": { "id": "00000000-0000-0000-0000-0000000000aa", "isAdmin": false },
-                        "myProjects": [{
-                            "code": "proj-code",
-                            "id": "00000000-0000-0000-0000-000000000001",
-                            "name": "Project",
-                            "flexProjectMetadata": {
-                                "projectId": "00000000-0000-0000-0000-000000000001",
-                                "writingSystems": {
-                                    "analysisWss": [
-                                        { "tag": "ru", "isActive": true, "isDefault": false },
-                                        { "tag": "en", "isActive": true, "isDefault": true }
-                                    ],
-                                    "vernacularWss": [
-                                        { "tag": "es-419", "isActive": true, "isDefault": true },
-                                        { "tag": "es-Zxxx-419-x-audio", "isActive": true, "isDefault": false },
-                                        { "tag": "es-fonipa", "isActive": false, "isDefault": false }
-                                    ]
-                                }
-                            }
-                        }]
-                    }
-                }
-                """;
+            _respond = req => req.RequestUri!.AbsolutePath.EndsWith("/writing-systems", StringComparison.Ordinal)
+                ? $$"""{ "analysis": [{{analysisWss}}], "vernacular": [{{vernacularWss}}] }"""
+                : $$"""[{ "id": "{{ProjId}}", "code": "proj-code", "name": "Project", "role": "Manager" }]""";
+        }
+
+        [Test]
+        public async Task TestGetMyProjectsAsyncGetsWritingSystems()
+        {
+            const string deleted = """, "deletedAt": "2026-01-01T00:00:00Z" """;
+            RespondWithProject($"{WritingSystemJson("en")}, {WritingSystemJson("ru")}",
+                $"{WritingSystemJson("es-419")}, {WritingSystemJson("es-Zxxx-419-x-audio", IsAudio)}, "
+                + WritingSystemJson("es-fonipa", deleted));
 
             var projects = await _lexboxQueryService.GetMyProjectsAsync("token");
 
             Assert.That(projects, Has.Count.EqualTo(1));
-            Assert.That(projects[0].AnalysisWsTags, Is.EqualTo(new List<string> { "en", "ru" }));
-            Assert.That(projects[0].VernacularWsTags, Is.EqualTo(new List<string> { "es-419" }));
-        }
-
-        private const string MeId = "00000000-0000-0000-0000-0000000000aa";
-        private const string OtherUserId = "00000000-0000-0000-0000-0000000000bb";
-
-        private const string OrgId = "00000000-0000-0000-0000-0000000000cc";
-
-        private async Task<LexboxProject> GetSingleProject(bool isLanguageForge, string usersJson,
-            bool isAdmin = false, string vernacularTag = "es", string myOrgsJson = "", string projectOrgsJson = "")
-        {
-            _responseJson = $$"""
-                {
-                    "data": {
-                        "meAuth": {
-                            "id": "{{MeId}}",
-                            "isAdmin": {{(isAdmin ? "true" : "false")}},
-                            "orgs": [{{myOrgsJson}}]
-                        },
-                        "myProjects": [{
-                            "code": "proj-code",
-                            "id": "00000000-0000-0000-0000-000000000001",
-                            "isLanguageForgeProject": {{(isLanguageForge ? "true" : "false")}},
-                            "name": "Project",
-                            "flexProjectMetadata": {
-                                "projectId": "00000000-0000-0000-0000-000000000001",
-                                "writingSystems": {
-                                    "analysisWss": [],
-                                    "vernacularWss": [{ "tag": "{{vernacularTag}}", "isActive": true, "isDefault": true }]
-                                }
-                            },
-                            "organizations": [{{projectOrgsJson}}],
-                            "users": [{{usersJson}}]
-                        }]
-                    }
-                }
-                """;
-            var projects = await _lexboxQueryService.GetMyProjectsAsync("token");
-            Assert.That(projects, Has.Count.EqualTo(1));
-            return projects[0];
-        }
-
-        private static string UserJson(string userId, string role) => $$"""{ "userId": "{{userId}}", "role": "{{role}}" }""";
-
-        [TestCase("MANAGER")]
-        [TestCase("EDITOR")]
-        public async Task TestGetMyProjectsAsyncImportableForEditorOrManager(string role)
-        {
-            var project = await GetSingleProject(true, UserJson(MeId, role));
-
+            var project = projects[0];
+            Assert.That(project.Id, Is.EqualTo(ProjId));
+            Assert.That(project.Code, Is.EqualTo("proj-code"));
+            Assert.That(project.Name, Is.EqualTo("Project"));
+            Assert.That(project.AnalysisWsTags, Is.EqualTo(new List<string> { "en", "ru" }));
+            Assert.That(project.VernacularWsTags, Is.EqualTo(new List<string> { "es-419" }));
             Assert.That(project.ImportBlocker, Is.Null);
-        }
-
-        [TestCase("OBSERVER")]
-        [TestCase("COMMENTER")]
-        [TestCase("EDITOR_LITE")]
-        public async Task TestGetMyProjectsAsyncBlocksOtherRoles(string role)
-        {
-            // Another member's role must not count as the user's.
-            var users = $"{UserJson(OtherUserId, "MANAGER")}, {UserJson(MeId, role)}";
-
-            var project = await GetSingleProject(true, users);
-
-            Assert.That(project.ImportBlocker, Is.EqualTo(LexboxImportBlocker.InsufficientRole));
-        }
-
-        [Test]
-        public async Task TestGetMyProjectsAsyncImportableForAdminWithoutRole()
-        {
-            var project = await GetSingleProject(true, UserJson(MeId, "OBSERVER"), isAdmin: true);
-
-            Assert.That(project.ImportBlocker, Is.Null);
-        }
-
-        [TestCase("ADMIN", true)]
-        [TestCase("USER", false)]
-        public async Task TestGetMyProjectsAsyncChecksOwningOrgRole(string orgRole, bool importable)
-        {
-            var myOrgs = $$"""{ "orgId": "{{OrgId}}", "role": "{{orgRole}}" }""";
-            var projectOrgs = $$"""{ "id": "{{OrgId}}" }""";
-
-            var project = await GetSingleProject(true, UserJson(MeId, "OBSERVER"),
-                myOrgsJson: myOrgs, projectOrgsJson: projectOrgs);
-
-            Assert.That(project.ImportBlocker, importable
-                ? Is.Null : Is.EqualTo(LexboxImportBlocker.InsufficientRole));
-        }
-
-        [Test]
-        public async Task TestGetMyProjectsAsyncIgnoresAdminOfOtherOrg()
-        {
-            var myOrgs = $$"""{ "orgId": "{{OrgId}}", "role": "ADMIN" }""";
-            var projectOrgs = """{ "id": "00000000-0000-0000-0000-0000000000dd" }""";
-
-            var project = await GetSingleProject(true, UserJson(MeId, "OBSERVER"),
-                myOrgsJson: myOrgs, projectOrgsJson: projectOrgs);
-
-            Assert.That(project.ImportBlocker, Is.EqualTo(LexboxImportBlocker.InsufficientRole));
-        }
-
-        [Test]
-        public async Task TestGetMyProjectsAsyncBlocksNonLanguageForge()
-        {
-            var project = await GetSingleProject(false, UserJson(MeId, "MANAGER"));
-
-            Assert.That(project.ImportBlocker, Is.EqualTo(LexboxImportBlocker.NotLanguageForge));
+            _handlerMock.Protected().Verify(
+                "SendAsync",
+                Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.RequestUri!.AbsoluteUri == $"{LexboxQuery.LexiconUrl}/project/{ProjId}/writing-systems"),
+                ItExpr.IsAny<CancellationToken>());
         }
 
         [Test]
         public async Task TestGetMyProjectsAsyncBlocksNoVernacularLanguage()
         {
-            var project = await GetSingleProject(true, UserJson(MeId, "MANAGER"), vernacularTag: "es-Zxxx-x-audio");
+            RespondWithProject(WritingSystemJson("en"), WritingSystemJson("es-Zxxx-x-audio", IsAudio));
 
-            Assert.That(project.ImportBlocker, Is.EqualTo(LexboxImportBlocker.NoVernacularLanguage));
-        }
+            var projects = await _lexboxQueryService.GetMyProjectsAsync("token");
 
-        [TestCase("kjj-Zxxx-x-audio", ExpectedResult = true)]
-        [TestCase("es-Zxxx-419-x-audio", ExpectedResult = true)]
-        [TestCase("es-Zxxx-419-X-AUDIO", ExpectedResult = true)]
-        [TestCase("kjj-AZ-x-unif", ExpectedResult = false)]
-        [TestCase("kjj-fonipa", ExpectedResult = false)]
-        [TestCase("audio", ExpectedResult = false)]
-        public bool TestIsAudioTag(string tag) => WsIdDto.IsAudioTag(tag);
-
-        [TestCase(HttpStatusCode.Unauthorized, StatusCodes.Status403Forbidden, "Not logged in to Lexbox")]
-        [TestCase(HttpStatusCode.Forbidden, StatusCodes.Status403Forbidden, "Lexbox access denied")]
-        [TestCase(HttpStatusCode.NotFound, StatusCodes.Status404NotFound, "Language Forge project not found")]
-        [TestCase(HttpStatusCode.InternalServerError, StatusCodes.Status502BadGateway, "Project entries request failed")]
-        public async Task TestGetProjectEntriesAsyncMapsLexboxErrors(HttpStatusCode lexboxStatus, int status, string title)
-        {
-            _status = lexboxStatus;
-
-            var ex = await Assert.ThrowsAsync<LexboxQueryException>(
-                () => _lexboxQueryService.GetProjectEntriesAsync("token", "proj-code", Vern, []));
-
-            Assert.That(ex.StatusCode, Is.EqualTo(status));
-            Assert.That(ex.Title, Is.EqualTo(title));
+            Assert.That(projects, Has.Count.EqualTo(1));
+            Assert.That(projects[0].ImportBlocker, Is.EqualTo(LexboxImportBlocker.NoVernacularLanguage));
         }
 
         [Test]
-        public async Task TestCheckProjectEntriesAsyncRequestsOneEntry()
+        public async Task TestGetMyProjectsAsyncWithNoProjects()
         {
-            await _lexboxQueryService.CheckProjectEntriesAsync("token", "proj-code");
+            var projects = await _lexboxQueryService.GetMyProjectsAsync("token");
 
-            _handlerMock.Protected().Verify(
-                "SendAsync",
-                Times.Once(),
-                ItExpr.Is<HttpRequestMessage>(req => req.RequestUri!.Query == "?Count=1&Offset=0"),
-                ItExpr.IsAny<CancellationToken>());
-        }
-
-        [TestCase(HttpStatusCode.Forbidden, StatusCodes.Status403Forbidden)]
-        [TestCase(HttpStatusCode.InternalServerError, StatusCodes.Status502BadGateway)]
-        public async Task TestCheckProjectEntriesAsyncMapsLexboxErrors(HttpStatusCode lexboxStatus, int status)
-        {
-            _status = lexboxStatus;
-
-            var ex = await Assert.ThrowsAsync<LexboxQueryException>(
-                () => _lexboxQueryService.CheckProjectEntriesAsync("token", "proj-code"));
-
-            Assert.That(ex.StatusCode, Is.EqualTo(status));
+            Assert.That(projects, Is.Empty);
         }
 
         [Test]
@@ -291,40 +152,86 @@ namespace Backend.Tests.Services
             var ex = await Assert.ThrowsAsync<LexboxQueryException>(() => _lexboxQueryService.GetMyProjectsAsync("token"));
 
             Assert.That(ex.StatusCode, Is.EqualTo(StatusCodes.Status403Forbidden));
+            Assert.That(ex.IsNotLoggedIn, Is.True);
+        }
+
+        [TestCase(HttpStatusCode.Unauthorized, StatusCodes.Status403Forbidden, "Not logged in to Lexbox")]
+        [TestCase(HttpStatusCode.Forbidden, StatusCodes.Status403Forbidden, "Lexbox access denied")]
+        [TestCase(HttpStatusCode.NotFound, StatusCodes.Status404NotFound, "Lexbox project not found")]
+        [TestCase(HttpStatusCode.Conflict, StatusCodes.Status409Conflict, "Lexbox project not ready")]
+        [TestCase(HttpStatusCode.InternalServerError, StatusCodes.Status502BadGateway, "Project entries request failed")]
+        public async Task TestGetProjectEntriesAsyncMapsLexboxErrors(HttpStatusCode lexboxStatus, int status, string title)
+        {
+            _status = lexboxStatus;
+
+            var ex = await Assert.ThrowsAsync<LexboxQueryException>(
+                () => _lexboxQueryService.GetProjectEntriesAsync("token", ProjId, Vern, []));
+
+            Assert.That(ex.StatusCode, Is.EqualTo(status));
+            Assert.That(ex.Title, Is.EqualTo(title));
         }
 
         [Test]
-        public async Task TestGetProjectEntriesAsyncStopsAfterShortPage()
+        public async Task TestCheckProjectEntriesAsyncRequestsOneEntry()
         {
-            await _lexboxQueryService.GetProjectEntriesAsync("token", "proj-code", Vern, []);
+            await _lexboxQueryService.CheckProjectEntriesAsync("token", ProjId);
 
             _handlerMock.Protected().Verify(
                 "SendAsync",
                 Times.Once(),
                 ItExpr.Is<HttpRequestMessage>(
-                    req => req.RequestUri!.Query == $"?Count={LexboxQueryService.EntriesPageSize}&Offset=0"),
+                    req => req.RequestUri!.AbsoluteUri == $"{LexboxQuery.LexiconUrl}/project/{ProjId}/entries?Count=1"),
+                ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestCase(HttpStatusCode.Forbidden, StatusCodes.Status403Forbidden)]
+        [TestCase(HttpStatusCode.Conflict, StatusCodes.Status409Conflict)]
+        [TestCase(HttpStatusCode.InternalServerError, StatusCodes.Status502BadGateway)]
+        public async Task TestCheckProjectEntriesAsyncMapsLexboxErrors(HttpStatusCode lexboxStatus, int status)
+        {
+            _status = lexboxStatus;
+
+            var ex = await Assert.ThrowsAsync<LexboxQueryException>(
+                () => _lexboxQueryService.CheckProjectEntriesAsync("token", ProjId));
+
+            Assert.That(ex.StatusCode, Is.EqualTo(status));
+        }
+
+        [Test]
+        public async Task TestGetProjectEntriesAsyncRequestsAllEntries()
+        {
+            _responseJson = $$"""
+                [
+                    { "id": "00000000-0000-0000-0000-000000000001", "lexemeForm": { "{{Vern}}": "one" } },
+                    { "id": "00000000-0000-0000-0000-000000000002", "lexemeForm": { "{{Vern}}": "two" } }
+                ]
+                """;
+
+            var words = await _lexboxQueryService.GetProjectEntriesAsync("token", ProjId, Vern, []);
+
+            Assert.That(words.Select(w => w.Vernacular), Is.EqualTo(new List<string> { "one", "two" }));
+            _handlerMock.Protected().Verify(
+                "SendAsync",
+                Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(
+                    req => req.RequestUri!.AbsoluteUri == $"{LexboxQuery.LexiconUrl}/project/{ProjId}/entries?Count=-1"),
                 ItExpr.IsAny<CancellationToken>());
         }
 
         [Test]
-        public async Task TestGetProjectEntriesAsyncPagesThroughAllEntries()
+        public async Task TestGetProjectEntriesAsyncSkipsDeletedEntries()
         {
-            const int pageSize = LexboxQueryService.EntriesPageSize;
-            static string Page(int start, int count) => "[" + string.Join(",", Enumerable.Range(start, count).Select(
-                i => $$"""{ "id": "{{new Guid(i, 0, 0, new byte[8])}}", "lexemeForm": { "{{Vern}}": "w{{i}}" } }"""))
-                + "]";
-            _respond = req => req.RequestUri!.Query.EndsWith("&Offset=0", StringComparison.Ordinal)
-                ? Page(0, pageSize)
-                : Page(pageSize, 5);
+            _responseJson = $$"""
+                [{
+                    "id": "00000000-0000-0000-0000-000000000001",
+                    "lexemeForm": { "{{Vern}}": "vern" },
+                    "deletedAt": "2026-01-01T00:00:00Z"
+                }]
+                """;
 
-            var words = await _lexboxQueryService.GetProjectEntriesAsync("token", "proj-code", Vern, []);
+            var words = await _lexboxQueryService.GetProjectEntriesAsync("token", ProjId, Vern, []);
 
-            Assert.That(words, Has.Count.EqualTo(pageSize + 5));
-            _handlerMock.Protected().Verify(
-                "SendAsync",
-                Times.Once(),
-                ItExpr.Is<HttpRequestMessage>(req => req.RequestUri!.Query == $"?Count={pageSize}&Offset={pageSize}"),
-                ItExpr.IsAny<CancellationToken>());
+            Assert.That(words, Is.Empty);
         }
 
         [Test]

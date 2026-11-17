@@ -87,10 +87,6 @@ export default function LexboxProjectsDialog(
 
   const importBlockerText = (blocker: LexboxImportBlocker): string => {
     switch (blocker) {
-      case LexboxImportBlocker.NotLanguageForge:
-        return t("lexbox.blockerNotLanguageForge");
-      case LexboxImportBlocker.InsufficientRole:
-        return t("lexbox.blockerInsufficientRole");
       case LexboxImportBlocker.NoVernacularLanguage:
         return t("lexbox.blockerNoVernacularLanguage");
     }

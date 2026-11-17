@@ -81,7 +81,6 @@ const mockLexboxProject: LexboxProject = {
   code: "lex-code",
   id: "lex-id",
   name: "Lexbox project",
-  type: "FLEx",
   vernacularWsTags: mockLangs.map((ws) => ws.bcp47),
 };
 const mockAsyncCreateLexboxProject = jest.fn();
@@ -324,8 +323,7 @@ describe("CreateProject", () => {
       expect(mockAsyncCreateLexboxProject).toHaveBeenCalledWith(
         projName,
         expect.objectContaining({ bcp47: mockLangs[1].bcp47 }),
-        mockLexboxProject.code,
-        mockLexboxProject.analysisWsTags
+        mockLexboxProject
       );
       expect(mockDispatch).toHaveBeenCalledWith(mockAction);
       expect(
