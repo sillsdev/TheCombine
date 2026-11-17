@@ -21,8 +21,8 @@ import LoadingButton from "components/Buttons/LoadingButton";
 import { listenForLexboxLogin } from "components/Lexbox/lexboxAuthChannel";
 
 interface LexboxLoginProps {
-  text?: string;
   onStatusChange?: (loggedIn: boolean) => void;
+  text?: string;
 }
 
 export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
