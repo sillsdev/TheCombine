@@ -170,7 +170,8 @@ namespace BackendFramework
                     options.Cookie.IsEssential = true;
                     options.Cookie.Name = "lexbox_auth";
                     options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax;
-                    options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.SameAsRequest;
+                    // Always: behind the TLS-terminating proxy, requests reach the backend over HTTP.
+                    options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
                     options.ExpireTimeSpan = TimeSpan.FromHours(1);
                     options.SlidingExpiration = true;
                 })
