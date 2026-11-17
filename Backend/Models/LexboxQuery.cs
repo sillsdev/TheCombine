@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
 using Microsoft.AspNetCore.Http;
 
 namespace BackendFramework.Models
@@ -9,6 +10,9 @@ namespace BackendFramework.Models
     public static class LexboxQuery
     {
         public const string LexiconUrl = "https://lexbox.org/api/lexicon";
+
+        /// <summary> Trims and NFC-normalizes text, as LIFT import and The Combine's text fields do. </summary>
+        public static string CleanText(string text) => text.Trim().Normalize(NormalizationForm.FormC);
     }
 
     /// <summary> Why a Lexbox project can't be imported into The Combine. </summary>
@@ -131,16 +135,23 @@ namespace BackendFramework.Models
             {
                 LexemeForm.TryGetValue(vernacularLang, out vernacular);
             }
-            vernacular = vernacular?.Trim();
+            vernacular = LexboxQuery.CleanText(vernacular ?? "");
             if (string.IsNullOrEmpty(vernacular))
             {
                 // Ignore any entry with no citation/lexeme form in specified vernacular language.
                 return null;
             }
 
+            var senses = Senses.Select(s => s.ToSense(analysisLangs)).OfType<Sense>().ToList();
+            if (senses.Count == 0)
+            {
+                // Ignore any entry with no undeleted senses, as LIFT import does.
+                return null;
+            }
+
             var noteLang = (analysisLangs ?? []).FirstOrDefault(Note.ContainsKey) ?? Note.Keys.FirstOrDefault() ?? "";
             var noteText = noteLang.Length > 0 && Note.TryGetValue(noteLang, out var noteRich)
-                ? noteRich.GetPlainText()
+                ? LexboxQuery.CleanText(noteRich.GetPlainText())
                 : "";
 
             var protectReasons = GetProtectReasons();
@@ -151,8 +162,7 @@ namespace BackendFramework.Models
                 Id = Guid.NewGuid().ToString(),
                 Note = new Note(noteLang, noteText),
                 ProtectReasons = protectReasons,
-                Senses = Senses
-                    .Select(s => s.ToSense(analysisLangs)).Where(s => s is not null).OfType<Sense>().ToList(),
+                Senses = senses,
                 UsingCitationForm = usingCitationForm,
                 Vernacular = vernacular,
             };
@@ -208,9 +218,16 @@ namespace BackendFramework.Models
             return new()
             {
                 Accessibility = protectReasons.Count > 0 ? Status.Protected : Status.Active,
-                Definitions = Definition
-                    .Select(kvp => new Definition { Language = kvp.Key, Text = kvp.Value.GetPlainText() }).ToList(),
-                Glosses = Gloss.Select(kvp => new Gloss { Def = kvp.Value, Language = kvp.Key }).ToList(),
+                Definitions = Definition.Select(kvp => new Definition
+                {
+                    Language = kvp.Key,
+                    Text = LexboxQuery.CleanText(kvp.Value.GetPlainText()),
+                }).ToList(),
+                Glosses = Gloss.Select(kvp => new Gloss
+                {
+                    Def = LexboxQuery.CleanText(kvp.Value),
+                    Language = kvp.Key,
+                }).ToList(),
                 GrammaticalInfo = PartOfSpeech?.ToGrammaticalInfo(langs) ?? new GrammaticalInfo(),
                 Guid = Id,
                 ProtectReasons = protectReasons,

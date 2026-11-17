@@ -50,15 +50,20 @@ namespace Backend.Tests.Services
             _lexboxQueryService = new LexboxQueryService(httpClientFactory.Object);
         }
 
+        private const string Deleted = """, "deletedAt": "2026-01-01T00:00:00Z" """;
+
         private static string RichString(string text) => $$"""{ "spans": [{ "text": "{{text}}" }] }""";
 
-        private static string EntryJson(string senses = "", string extraFields = "")
+        /// <param name="senses"> Defaults to one sense. </param>
+        /// <param name="extraFields"></param>
+        /// <param name="vern"></param>
+        private static string EntryJson(string? senses = null, string extraFields = "", string vern = "vern")
         {
             return $$"""
                 {
                     "id": "00000000-0000-0000-0000-000000000001",
-                    "lexemeForm": { "{{Vern}}": "vern" },
-                    "senses": [{{senses}}]
+                    "lexemeForm": { "{{Vern}}": "{{vern}}" },
+                    "senses": [{{senses ?? SenseJson()}}]
                     {{extraFields}}
                 }
                 """;
@@ -200,12 +205,7 @@ namespace Backend.Tests.Services
         [Test]
         public async Task TestGetProjectEntriesAsyncRequestsAllEntries()
         {
-            _responseJson = $$"""
-                [
-                    { "id": "00000000-0000-0000-0000-000000000001", "lexemeForm": { "{{Vern}}": "one" } },
-                    { "id": "00000000-0000-0000-0000-000000000002", "lexemeForm": { "{{Vern}}": "two" } }
-                ]
-                """;
+            _responseJson = $"[{EntryJson(vern: "one")}, {EntryJson(vern: "two")}]";
 
             var words = await _lexboxQueryService.GetProjectEntriesAsync("token", ProjId, Vern, []);
 
@@ -221,17 +221,41 @@ namespace Backend.Tests.Services
         [Test]
         public async Task TestGetProjectEntriesAsyncSkipsDeletedEntries()
         {
-            _responseJson = $$"""
-                [{
-                    "id": "00000000-0000-0000-0000-000000000001",
-                    "lexemeForm": { "{{Vern}}": "vern" },
-                    "deletedAt": "2026-01-01T00:00:00Z"
-                }]
-                """;
+            _responseJson = $"[{EntryJson(extraFields: Deleted)}]";
 
             var words = await _lexboxQueryService.GetProjectEntriesAsync("token", ProjId, Vern, []);
 
             Assert.That(words, Is.Empty);
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task TestGetProjectEntriesAsyncSkipsEntriesWithoutUndeletedSenses(bool hasDeletedSense)
+        {
+            var senses = hasDeletedSense ? SenseJson(Deleted) : "";
+            _responseJson = $"[{EntryJson(senses)}]";
+
+            var words = await _lexboxQueryService.GetProjectEntriesAsync("token", ProjId, Vern, []);
+
+            Assert.That(words, Is.Empty);
+        }
+
+        [Test]
+        public async Task TestGetProjectEntriesAsyncTrimsAndComposesText()
+        {
+            // "cafe" followed by U+0301 COMBINING ACUTE ACCENT, which NFC composes into "café".
+            const string decomposed = "cafe\u0301";
+            const string composed = "caf\u00e9";
+            var definition = $$""", "definition": { "{{Analysis1}}": {{RichString($" {decomposed} ")}} }""";
+            var note = $$""", "note": { "{{Analysis1}}": {{RichString($" {decomposed} ")}} }""";
+
+            var word = await GetSingleWord(
+                EntryJson(SenseJson(definition, $" {decomposed} "), note, $" {decomposed} "));
+
+            Assert.That(word.Vernacular, Is.EqualTo(composed));
+            Assert.That(word.Note.Text, Is.EqualTo(composed));
+            Assert.That(word.Senses[0].Glosses[0].Def, Is.EqualTo(composed));
+            Assert.That(word.Senses[0].Definitions[0].Text, Is.EqualTo(composed));
         }
 
         [Test]
