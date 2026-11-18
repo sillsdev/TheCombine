@@ -54,9 +54,6 @@ namespace Backend.Tests.Services
 
         private static string RichString(string text) => $$"""{ "spans": [{ "text": "{{text}}" }] }""";
 
-        /// <param name="senses"> Defaults to one sense. </param>
-        /// <param name="extraFields"></param>
-        /// <param name="vern"></param>
         private static string EntryJson(string? senses = null, string extraFields = "", string vern = "vern")
         {
             return $$"""
