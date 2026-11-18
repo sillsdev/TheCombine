@@ -30,6 +30,10 @@ namespace BackendFramework.Models
         [BsonElement("liftImported")]
         public bool LiftImported { get; set; }
 
+        /// <summary> Code of the Lexbox project whose entries were imported, if any. </summary>
+        [BsonElement("lexboxProjectCode")]
+        public string? LexboxProjectCode { get; set; }
+
         [Required]
         [BsonElement("definitionsEnabled")]
         public bool DefinitionsEnabled { get; set; }
@@ -132,6 +136,7 @@ namespace BackendFramework.Models
                 Created = Created,
                 IsActive = IsActive,
                 LiftImported = LiftImported,
+                LexboxProjectCode = LexboxProjectCode,
                 DefinitionsEnabled = DefinitionsEnabled,
                 GrammaticalInfoEnabled = GrammaticalInfoEnabled,
                 AutocompleteSetting = AutocompleteSetting,

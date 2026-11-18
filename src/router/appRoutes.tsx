@@ -3,6 +3,7 @@ import { RouteObject } from "react-router";
 
 import EmailVerify from "components/EmailVerify";
 import LandingPage from "components/LandingPage";
+import LexboxLoginComplete from "components/Lexbox/LexboxLoginComplete";
 import Login from "components/Login/Login";
 import ProjectInvite from "components/Login/ProjectInvite";
 import Signup from "components/Login/Signup";
@@ -32,6 +33,10 @@ export const appRoutes: RouteObject[] = [
   {
     path: `${Path.EmailVerify}/:token`,
     element: <EmailVerify />,
+  },
+  {
+    path: Path.LexboxLoginComplete,
+    element: <LexboxLoginComplete />,
   },
   {
     path: Path.Login,

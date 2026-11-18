@@ -225,14 +225,37 @@ namespace Backend.Tests.Controllers
             Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
         }
 
-        [Test]
-        public void TestUploadLiftFileAlreadyImported()
+        [TestCase(true, null)]
+        [TestCase(false, "lexbox-code")]
+        public void TestUploadLiftFileAlreadyImported(bool liftImported, string? lexboxProjectCode)
         {
-            var proj = _projRepo.Create(new Project { Name = "already has import", LiftImported = true }).Result;
+            var proj = _projRepo.Create(new Project
+            {
+                Name = "already has import",
+                LiftImported = liftImported,
+                LexboxProjectCode = lexboxProjectCode
+            }).Result;
             Assert.That(proj, Is.Not.Null);
             var result = _liftController.UploadLiftFile(proj.Id, _file).Result as BadRequestObjectResult;
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Value, Contains.Substring("LIFT"));
+            Assert.That(result.Value, Contains.Substring("imported data"));
+        }
+
+        [TestCase(true, null)]
+        [TestCase(false, "lexbox-code")]
+        public void TestFinishUploadLiftFileAlreadyImported(bool liftImported, string? lexboxProjectCode)
+        {
+            var proj = _projRepo.Create(new Project
+            {
+                Name = "already has import",
+                LiftImported = liftImported,
+                LexboxProjectCode = lexboxProjectCode
+            }).Result;
+            Assert.That(proj, Is.Not.Null);
+            _liftService.StoreImport(UserId, "not-a-real-path");
+            var result = _liftController.FinishUploadLiftFile(proj.Id, UserId).Result as BadRequestObjectResult;
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Value, Contains.Substring("imported data"));
         }
 
         [Test]
