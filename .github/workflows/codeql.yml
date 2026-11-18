@@ -41,8 +41,10 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             *.actions.githubusercontent.com:443
+            aka.ms:443
             api.github.com:443
             api.nuget.org:443
+            builds.dotnet.microsoft.com:443
             dc.services.visualstudio.com:443
             files.pythonhosted.org:443
             github.com:443
@@ -53,6 +55,13 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # The runner image may not include the SDK version that global.json requires.
+      - name: Setup dotnet
+        if: matrix.language == 'csharp'
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
 
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL
