@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Backend.Tests.Mocks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -118,6 +119,54 @@ namespace Backend.Tests.Services
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result.First().Count, Is.EqualTo(1));
+        }
+
+        private static List<SemanticDomainTreeNode> TreeNodesWithIds(params string[] ids)
+        {
+            return ids.Select(id => new SemanticDomainTreeNode(new SemanticDomain { Id = id })).ToList();
+        }
+
+        [Test]
+        public async Task GetDomainProgressProportionTestInvalidId()
+        {
+            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodesWithIds("1"));
+            await _wordRepo.AddFrontier(GetWordWithDomain("1"));
+
+            Assert.That(await _statsService.GetDomainProgressProportion(ProjId, "Sem"), Is.Zero);
+        }
+
+        [Test]
+        public async Task GetDomainProgressProportionTestNoDomains()
+        {
+            await _wordRepo.AddFrontier(GetWordWithDomain("1"));
+
+            Assert.That(await _statsService.GetDomainProgressProportion(ProjId, "1"), Is.Zero);
+        }
+
+        [Test]
+        public async Task GetDomainProgressProportionTestDomainNotInTree()
+        {
+            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodesWithIds("1", "1.1"));
+            await _wordRepo.AddFrontier(GetWordWithDomain("2"));
+
+            Assert.That(await _statsService.GetDomainProgressProportion(ProjId, "2"), Is.Zero);
+        }
+
+        [Test]
+        public async Task GetDomainProgressProportionTestCountsOnlySubtreeDomainsInTree()
+        {
+            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(
+                TreeNodesWithIds("1", "1.1", "1.1.1", "1.2", "2"));
+            // In the subtree: 1.1 (twice) and 1.1.1. Ignored: 2 is outside it and 1.3 isn't in the tree.
+            await _wordRepo.AddFrontier(GetWordWithDomain("1.1"));
+            await _wordRepo.AddFrontier(GetWordWithDomain("1.1"));
+            await _wordRepo.AddFrontier(GetWordWithDomain("1.1.1"));
+            await _wordRepo.AddFrontier(GetWordWithDomain("1.3"));
+            await _wordRepo.AddFrontier(GetWordWithDomain("2"));
+
+            Assert.That(await _statsService.GetDomainProgressProportion(ProjId, "1"), Is.EqualTo(0.5));
+            Assert.That(await _statsService.GetDomainProgressProportion(ProjId, "1.1"), Is.EqualTo(1.0));
+            Assert.That(await _statsService.GetDomainProgressProportion(ProjId, "1.2"), Is.Zero);
         }
 
         [Test]

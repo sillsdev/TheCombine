@@ -785,5 +785,37 @@ namespace Backend.Tests.Repositories
             var counts = await _repo.CountFrontierSensesByDomain(_projectId);
             Assert.That(counts, Is.Empty);
         }
+
+        [Test]
+        public async Task TestGetFrontierDomainIdsInSubtreeReturnsDistinctSubtreeIds()
+        {
+            await CreateWordWithDomains(_projectId, ["1.1", "2.2"], ["1.1.1"]);
+            await CreateWordWithDomains(_projectId, ["1.1"], ["1.2"]);
+            await CreateWordWithDomains(_projectId, ["1"]);
+
+            var ids = await _repo.GetFrontierDomainIdsInSubtree(_projectId, "1.1");
+            Assert.That(ids, Is.EquivalentTo(new List<string> { "1.1", "1.1.1" }));
+        }
+
+        [Test]
+        public async Task TestGetFrontierDomainIdsInSubtreeIgnoresOtherProjectsAndNonFrontierWords()
+        {
+            await CreateWordWithDomains(Guid.NewGuid().ToString(), ["1.1"]);
+            var deleted = await CreateWordWithDomains(_projectId, ["1.2"]);
+            await _repo.DeleteFrontier(_projectId, deleted.Id, w => w.Accessibility = Status.Deleted);
+            await CreateWordWithDomains(_projectId, ["1.3"]);
+
+            var ids = await _repo.GetFrontierDomainIdsInSubtree(_projectId, "1");
+            Assert.That(ids, Is.EquivalentTo(new List<string> { "1.3" }));
+        }
+
+        [Test]
+        public async Task TestGetFrontierDomainIdsInSubtreeEscapesRegex()
+        {
+            await CreateWordWithDomains(_projectId, ["1.1"]);
+
+            Assert.That(await _repo.GetFrontierDomainIdsInSubtree(_projectId, "."), Is.Empty);
+            Assert.That(await _repo.GetFrontierDomainIdsInSubtree(_projectId, "1.1"), Is.EquivalentTo(new List<string> { "1.1" }));
+        }
     }
 }

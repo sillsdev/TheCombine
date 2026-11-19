@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -12,6 +14,12 @@ namespace Backend.Tests.Mocks
         public Task<List<SemanticDomainTreeNode>?> GetAllSemanticDomainTreeNodes(string lang)
         {
             return Task.FromResult((List<SemanticDomainTreeNode>?)_responseObj);
+        }
+
+        public Task<List<string>> GetSemanticDomainIdsInSubtree(string id, string lang)
+        {
+            var nodes = _responseObj as List<SemanticDomainTreeNode> ?? [];
+            return Task.FromResult(nodes.Select(n => n.Id).Where(i => i.StartsWith(id, StringComparison.Ordinal)).ToList());
         }
 
         public Task<SemanticDomainFull?> GetSemanticDomainFull(string id, string lang)

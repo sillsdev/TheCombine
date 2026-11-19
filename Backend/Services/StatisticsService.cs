@@ -355,5 +355,30 @@ namespace BackendFramework.Services
             // return descending order by senseCount
             return resUserMap.Values.ToList().OrderByDescending(t => t.WordCount).ToList();
         }
+
+        /// <summary>
+        /// Get the proportion of a semantic domain and its descendants that have at least one Frontier word
+        /// </summary>
+        /// <returns> A number between 0 and 1, or 0 if the domain id is invalid </returns>
+        public async Task<double> GetDomainProgressProportion(string projectId, string domainId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain progress proportion");
+
+            // The repository subtree queries match by id prefix, which needs a well-formed id.
+            if (!SemanticDomain.IsValidId(domainId))
+            {
+                return 0.0;
+            }
+
+            // Domain ids are language-independent, and every deployment has the English tree.
+            var subtreeIds = await _domainRepo.GetSemanticDomainIdsInSubtree(domainId, "en");
+            if (subtreeIds.Count == 0)
+            {
+                return 0.0;
+            }
+
+            var usedIds = (await _wordRepo.GetFrontierDomainIdsInSubtree(projectId, domainId)).ToHashSet();
+            return (double)subtreeIds.Count(usedIds.Contains) / subtreeIds.Count;
+        }
     }
 }

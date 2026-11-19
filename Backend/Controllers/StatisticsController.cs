@@ -118,5 +118,25 @@ namespace BackendFramework.Controllers
 
             return Ok(await _statService.GetSemanticDomainUserCounts(projectId));
         }
+
+        /// <summary>
+        /// Get the proportion of a semantic domain and its descendants that have at least one Frontier word
+        /// </summary>
+        /// <returns> A number between 0 and 1 </returns>
+        [HttpGet("GetDomainProgressProportion", Name = "GetDomainProgressProportion")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(double))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetDomainProgressProportion(string projectId, string domainId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain progress proportion");
+
+            // Data entry uses this in the domain tree, so it doesn't require the Statistics permission.
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
+            {
+                return Forbid();
+            }
+
+            return Ok(await _statService.GetDomainProgressProportion(projectId, domainId));
+        }
     }
 }

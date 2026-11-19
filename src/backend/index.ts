@@ -693,6 +693,16 @@ export async function getLineChartRootData(
   return response.data ?? undefined;
 }
 
+export async function getDomainProgressProportion(
+  domainId: string
+): Promise<number> {
+  const response = await statisticsApi.getDomainProgressProportion(
+    { projectId: LocalStorage.getProjectId(), domainId },
+    defaultOptions()
+  );
+  return response.data;
+}
+
 export async function getProgressEstimationLineChartRoot(
   projectId: string
 ): Promise<ChartRootData | undefined> {

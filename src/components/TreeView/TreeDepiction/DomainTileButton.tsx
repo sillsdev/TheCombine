@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 
 import { SemanticDomain } from "api/models";
 import DomainCountBadge from "components/TreeView/TreeDepiction/DomainCountBadge";
+import DomainProgressBar from "components/TreeView/TreeDepiction/DomainProgressBar";
 import { Direction } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
 import { rootId } from "types/semanticDomain";
 
@@ -104,6 +105,10 @@ export default function DomainTileButton(
       <DomainTile {...domainTileProps} />
 
       <DomainCountBadge className={badgeClass} domainId={props.domain.id} />
+
+      {props.direction !== Direction.Up && (
+        <DomainProgressBar domainId={props.domain.id} />
+      )}
     </Button>
   );
 }

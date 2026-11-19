@@ -30,5 +30,6 @@ namespace BackendFramework.Interfaces
             Action<Word> modifyDeletedWord);
         Task<int> CountFrontierWordsWithDomain(string projectId, string domainId);
         Task<Dictionary<string, int>> CountFrontierSensesByDomain(string projectId);
+        Task<List<string>> GetFrontierDomainIdsInSubtree(string projectId, string domainId);
     }
 }

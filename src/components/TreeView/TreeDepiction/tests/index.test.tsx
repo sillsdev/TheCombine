@@ -6,6 +6,7 @@ import testDomainMap, {
 } from "components/TreeView/tests/SemanticDomainMock";
 
 jest.mock("backend", () => ({
+  getDomainProgressProportion: () => Promise.resolve(0.5),
   getDomainWordCount: () => mockGetDomainWordCount(),
 }));
 
