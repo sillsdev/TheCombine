@@ -14,15 +14,17 @@ namespace BackendFramework.Services
         private readonly IWordRepository _wordRepo;
         private readonly ISemanticDomainRepository _domainRepo;
         private readonly IUserRepository _userRepo;
+        private readonly IProjectRepository _projRepo;
 
         private const string otelTagName = "otel.StatisticsService";
 
-        public StatisticsService(
-            IWordRepository wordRepo, ISemanticDomainRepository domainRepo, IUserRepository userRepo)
+        public StatisticsService(IWordRepository wordRepo, ISemanticDomainRepository domainRepo,
+            IUserRepository userRepo, IProjectRepository projRepo)
         {
             _wordRepo = wordRepo;
             _domainRepo = domainRepo;
             _userRepo = userRepo;
+            _projRepo = projRepo;
         }
 
         // Statistic names (TODO: localize)
@@ -357,21 +359,26 @@ namespace BackendFramework.Services
         }
 
         /// <summary>
-        /// Get the proportion of a semantic domain and its descendants that have at least one Frontier word
+        /// Get the proportion of a semantic domain and its descendants (standard and project custom domains) that
+        /// have at least one Frontier word
         /// </summary>
         /// <returns> A number between 0 and 1, or 0 if the domain id is invalid </returns>
         public async Task<double> GetDomainProgressProportion(string projectId, string domainId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting domain progress proportion");
 
-            // The repository subtree queries match by id prefix, which needs a well-formed id.
-            if (!SemanticDomain.IsValidId(domainId))
+            // The subtree queries match by id prefix, which needs a well-formed id.
+            if (!SemanticDomain.IsValidId(domainId, allowCustom: true))
             {
                 return 0.0;
             }
 
-            // Domain ids are language-independent, and every deployment has the English tree.
-            var subtreeIds = await _domainRepo.GetSemanticDomainIdsInSubtree(domainId, "en");
+            // Standard domain ids are language-independent, and every deployment has the English tree.
+            // Custom domains are defined per language, but any of them can be on a word.
+            var standardIds = await _domainRepo.GetSemanticDomainIdsInSubtree(domainId, "en");
+            var customIds = (await _projRepo.GetProject(projectId))?.SemanticDomains.Select(d => d.Id)
+                .Where(id => id.StartsWith(domainId, StringComparison.Ordinal)) ?? [];
+            var subtreeIds = standardIds.Union(customIds).ToList();
             if (subtreeIds.Count == 0)
             {
                 return 0.0;
