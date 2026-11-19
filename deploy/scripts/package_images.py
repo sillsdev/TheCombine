@@ -93,7 +93,10 @@ def package_images(
         run_cmd(pull_cmd + [image], print_cmd=debug, print_output=debug)
 
     # Save pulled images into a .tar archive
-    save_cmd = container_cli_cmd + ["save"] + image_list + ["-o", str(tar_file)]
+    save_cmd = container_cli_cmd + ["save"]
+    if container_cli_cmd[0] == "nerdctl":
+        save_cmd.append(f"--platform=linux/{arch}")
+    save_cmd += image_list + ["-o", str(tar_file)]
     run_cmd(save_cmd, print_cmd=debug, print_output=debug)
 
     # Compress the tarball

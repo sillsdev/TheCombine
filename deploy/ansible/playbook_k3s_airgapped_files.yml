@@ -60,9 +60,11 @@
     - name: Download kubectl
       get_url:
         dest: "{{ package_dir }}/kubectl"
+        force: true
         url: "https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/{{ cpu_arch }}/kubectl"
 
     - name: Download helm
       get_url:
         dest: "{{ package_dir }}/helm.tar.gz"
+        force: true
         url: "https://get.helm.sh/helm-{{ helm_version }}-linux-{{ cpu_arch }}.tar.gz"
