@@ -321,5 +321,13 @@ namespace Backend.Tests.Mocks
                 .GroupBy(sd => sd.Id).ToDictionary(g => g.Key, g => g.Count());
             return Task.FromResult(counts);
         }
+
+        public Task<List<string>> GetFrontierDomainIdsInSubtree(string projectId, string domainId)
+        {
+            var ids = _frontier.Where(w => w.ProjectId == projectId)
+                .SelectMany(w => w.Senses).SelectMany(s => s.SemanticDomains).Select(sd => sd.Id)
+                .Where(id => id.StartsWith(domainId, StringComparison.Ordinal)).Distinct().ToList();
+            return Task.FromResult(ids);
+        }
     }
 }

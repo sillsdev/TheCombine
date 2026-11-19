@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -411,6 +412,29 @@ namespace BackendFramework.Repositories
 
             var groups = await _frontier.Aggregate(pipeline).ToListAsync();
             return groups.ToDictionary(g => g["_id"].AsString, g => g["count"].AsInt32);
+        }
+
+        /// <summary>
+        /// Gets the distinct semantic domain ids used in a project's Frontier that are the specified domain or
+        /// one of its descendants.
+        /// </summary>
+        /// <param name="projectId">The project id</param>
+        /// <param name="domainId">The id of the root of the domain subtree</param>
+        public async Task<List<string>> GetFrontierDomainIdsInSubtree(string projectId, string domainId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting frontier domain ids in subtree");
+
+            // An anchored regex with a literal prefix uses the { projectId, senses.SemanticDomains.id } index.
+            const string domainIdField = "senses.SemanticDomains.id";
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.And(
+                filterDef.Eq(w => w.ProjectId, projectId),
+                filterDef.Regex(domainIdField, new BsonRegularExpression($"^{Regex.Escape(domainId)}")));
+
+            // Distinct returns every domain id of each matched word, so filter out those outside the subtree.
+            // Each id component is a single digit, so a prefix match finds exactly the subtree.
+            var ids = await (await _frontier.DistinctAsync<string>(domainIdField, filter)).ToListAsync();
+            return ids.Where(id => id.StartsWith(domainId, StringComparison.Ordinal)).ToList();
         }
 
         #endregion
