@@ -16,7 +16,8 @@ RUN apt-get update && \
   rm -rf /var/lib/apt/lists/*
 
 # Install kubectl and helm
-RUN MACH=amd64 && \
+ARG TARGETARCH
+RUN MACH=${TARGETARCH} && \
   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/${MACH}/kubectl" && \
   install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
   curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
