@@ -176,7 +176,9 @@ namespace Backend.Tests.Services
         {
             var proj = Util.RandomProject();
             proj.SemanticDomains = ids.Select(id => new SemanticDomainFull { Id = id, Lang = "en" }).ToList();
-            return (await _projRepo.Create(proj))!.Id;
+            var created = await _projRepo.Create(proj);
+            Assert.That(created, Is.Not.Null);
+            return created.Id;
         }
 
         private async Task AddWordWithDomain(string projId, string semDomId)
