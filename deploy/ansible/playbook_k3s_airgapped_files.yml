@@ -21,6 +21,10 @@
   vars_files:
     - "vars/k3s_versions.yml"
 
+  vars:
+    # k3s releases name the amd64 executable "k3s" and the others "k3s-<arch>".
+    k3s_release_binary: "{{ 'k3s' if cpu_arch == 'amd64' else 'k3s-' + cpu_arch }}"
+
   tasks:
     - name: Create package directory if necessary
       file:
@@ -33,7 +37,7 @@
         url: "https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/{{ item }}"
       loop:
         - k3s-airgap-images-{{ cpu_arch }}.tar.zst
-        - k3s
+        - "{{ k3s_release_binary }}"
         - sha256sum-{{ cpu_arch }}.txt
 
     - name: Verify k3s downloads
@@ -41,6 +45,12 @@
         cmd: sha256sum --check --ignore-missing sha256sum-{{ cpu_arch }}.txt
         chdir: "{{ package_dir }}"
       changed_when: False
+
+    - name: Rename k3s executable to the name the installer expects
+      command:
+        cmd: mv -f {{ k3s_release_binary }} k3s
+        chdir: "{{ package_dir }}"
+      when: k3s_release_binary != 'k3s'
 
     - name: Download k3s install script
       get_url:
