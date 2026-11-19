@@ -7,7 +7,7 @@
 ############################################################
 
 # Docker multi-stage build
-FROM mcr.microsoft.com/dotnet/sdk:8.0.416-jammy@sha256:48a4798dec68044fff6592f4c6c5ceeff15b1bed428810814cf757a5b5f1068d AS builder
+FROM mcr.microsoft.com/dotnet/sdk:8.0.428-noble@sha256:3d5cad4bb76fd0130aefd6c629f7267c4aad40cccc86f7fbd1c81e277b58493b AS builder
 WORKDIR /app
 
 # Copy csproj and restore (fetch dependencies) as distinct layers.
@@ -19,7 +19,7 @@ COPY . ./
 RUN dotnet publish -c Release -o build
 
 # Build runtime image.
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.22-jammy@sha256:b7cb9bbd93b79247880df1792cd8641ca2319e2e62daebea214ba2d2fa25704e
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.34-noble@sha256:fb50a3d0efad014b4fa8ee85fa498818172e38216cc73742821319f9db827bb2
 
 ENV ASPNETCORE_URLS=http://+:5000
 ENV COMBINE_IS_IN_CONTAINER=1
@@ -31,20 +31,22 @@ ENV HOME=/home/app
 ENV APP_HOME=${HOME}/backend
 ENV APP_FILES=${HOME}/.CombineFiles
 
-# Install system dependencies.
-RUN apt-get update \
-  && apt-get install -y ffmpeg \
-  && rm -rf /var/lib/apt/lists/*
-
 # Create the home directory for the new app user.
 RUN mkdir -p $HOME
 
 # Setup app user and group to known UID/GID; no login.
+# This precedes the package install, whose dependencies (e.g., systemd) create
+# system groups with dynamically allocated GIDs that can otherwise claim 999.
 RUN groupmod --gid 999 app
 RUN usermod  --uid 999 --gid app \
   --shell /sbin/nologin \
   --comment "Docker image user" \
   app
+
+# Install system dependencies.
+RUN apt-get update \
+  && apt-get install -y ffmpeg \
+  && rm -rf /var/lib/apt/lists/*
 
 ## Set up application install directory.
 RUN mkdir $APP_HOME && \
