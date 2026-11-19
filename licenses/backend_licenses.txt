@@ -1,0 +1,631 @@
+###############################################################
+PackageId: BouncyCastle.Cryptography
+PackageVersion: 2.7.0
+PackageProjectUrl: https://www.bouncycastle.org/stable/nuget/csharp/website
+Authors: Legion of the Bouncy Castle Inc.
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: DnsClient
+PackageVersion: 1.6.1
+PackageProjectUrl: http://dnsclient.michaco.net/
+Authors: MichaCo
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: icu.net
+PackageVersion: 4.0.0
+PackageProjectUrl: https://github.com/sillsdev/icu-dotnet
+Authors: SIL Global
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Icu4c.Win.Full.Lib
+PackageVersion: 62.2.3-beta
+PackageProjectUrl: https://github.com/sillsdev/icu
+Authors: SIL International
+LicenseUrl: https://aka.ms/deprecateLicenseUrl
+###############################################################
+PackageId: JetBrains.Annotations
+PackageVersion: 2026.2.0
+PackageProjectUrl: https://www.jetbrains.com/help/resharper/Code_Analysis__Code_Annotations.html
+Authors: JetBrains
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: L10NSharp
+PackageVersion: 11.0.1
+PackageProjectUrl: https://github.com/sillsdev/l10nsharp
+Authors: SIL Global
+LicenseUrl: https://aka.ms/deprecateLicenseUrl
+###############################################################
+PackageId: MailKit
+PackageVersion: 4.18.1
+PackageProjectUrl: http://www.mimekit.net/
+Authors: Jeffrey Stedfast
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Markdig.Signed
+PackageVersion: 1.4.0
+PackageProjectUrl: https://xoofx.github.io/markdig
+Authors: Alexandre Mutel
+License: BSD-2-Clause
+LicenseUrl: https://licenses.nuget.org/BSD-2-Clause
+###############################################################
+PackageId: Microsoft.AspNetCore.Authentication.JwtBearer
+PackageVersion: 8.0.32
+PackageProjectUrl: https://asp.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Bcl.Cryptography
+PackageVersion: 10.0.2
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.CSharp
+PackageVersion: 4.7.0
+PackageProjectUrl: https://github.com/dotnet/corefx
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.ApiDescription.Server
+PackageVersion: 8.0.0
+PackageProjectUrl: https://asp.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Configuration
+PackageVersion: 8.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Configuration.Abstractions
+PackageVersion: 8.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Configuration.Binder
+PackageVersion: 8.0.2
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Configuration.EnvironmentVariables
+PackageVersion: 8.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.DependencyInjection
+PackageVersion: 8.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.DependencyInjection.Abstractions
+PackageVersion: 8.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.DependencyModel
+PackageVersion: 10.0.9
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Diagnostics.Abstractions
+PackageVersion: 8.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.FileProviders.Abstractions
+PackageVersion: 8.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Hosting.Abstractions
+PackageVersion: 8.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Logging
+PackageVersion: 8.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Logging.Abstractions
+PackageVersion: 8.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Logging.Configuration
+PackageVersion: 8.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Options
+PackageVersion: 8.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Options.ConfigurationExtensions
+PackageVersion: 8.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Primitives
+PackageVersion: 8.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.IdentityModel.Abstractions
+PackageVersion: 8.23.0
+PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.IdentityModel.JsonWebTokens
+PackageVersion: 8.23.0
+PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.IdentityModel.Logging
+PackageVersion: 8.23.0
+PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.IdentityModel.Protocols
+PackageVersion: 7.7.3
+PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.IdentityModel.Protocols.OpenIdConnect
+PackageVersion: 7.7.3
+PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.IdentityModel.Tokens
+PackageVersion: 8.23.0
+PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.NETCore.Platforms
+PackageVersion: 5.0.0
+PackageProjectUrl: https://github.com/dotnet/runtime
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.OpenApi
+PackageVersion: 2.7.5
+PackageProjectUrl: https://github.com/Microsoft/OpenAPI.NET
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Win32.Registry
+PackageVersion: 5.0.0
+PackageProjectUrl: https://github.com/dotnet/runtime
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Win32.SystemEvents
+PackageVersion: 6.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: MimeKit
+PackageVersion: 4.18.1
+PackageProjectUrl: https://www.mimekit.net/
+Authors: Jeffrey Stedfast
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: MongoDB.Bson
+PackageVersion: 3.12.0
+PackageProjectUrl: https://www.mongodb.com/docs/drivers/csharp/
+Authors: MongoDB Inc.
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: MongoDB.Driver
+PackageVersion: 3.12.0
+PackageProjectUrl: https://www.mongodb.com/docs/drivers/csharp/
+Authors: MongoDB Inc.
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: Mono.Unix
+PackageVersion: 7.1.0-final.1.21458.1
+PackageProjectUrl: https://github.com/mono/mono.posix
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Newtonsoft.Json
+PackageVersion: 13.0.4
+PackageProjectUrl: https://www.newtonsoft.com/json
+Authors: James Newton-King
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: OpenTelemetry
+PackageVersion: 1.20.0
+PackageProjectUrl: https://opentelemetry.io/
+Authors: OpenTelemetry Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: OpenTelemetry.Api
+PackageVersion: 1.20.0
+PackageProjectUrl: https://opentelemetry.io/
+Authors: OpenTelemetry Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: OpenTelemetry.Api.ProviderBuilderExtensions
+PackageVersion: 1.20.0
+PackageProjectUrl: https://opentelemetry.io/
+Authors: OpenTelemetry Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: OpenTelemetry.Exporter.Console
+PackageVersion: 1.20.0
+PackageProjectUrl: https://opentelemetry.io/
+Authors: OpenTelemetry Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: OpenTelemetry.Exporter.OpenTelemetryProtocol
+PackageVersion: 1.20.0
+PackageProjectUrl: https://opentelemetry.io/
+Authors: OpenTelemetry Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: OpenTelemetry.Extensions.Hosting
+PackageVersion: 1.20.0
+PackageProjectUrl: https://opentelemetry.io/
+Authors: OpenTelemetry Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: OpenTelemetry.Instrumentation.AspNetCore
+PackageVersion: 1.20.0
+PackageProjectUrl: https://opentelemetry.io/
+Authors: OpenTelemetry Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: OpenTelemetry.Instrumentation.Http
+PackageVersion: 1.20.0
+PackageProjectUrl: https://opentelemetry.io/
+Authors: OpenTelemetry Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: RelaxNG
+PackageVersion: 3.2.3
+PackageProjectUrl: https://github.com/mono/mono/tree/master/mcs/class/Commons.Xml.Relaxng
+Authors: Atsushi Enomoto,Alexandre Alapetite,the Mono team
+License: http://www.mono-project.com/FAQ:_Licensing
+LicenseUrl: http://www.mono-project.com/FAQ:_Licensing
+###############################################################
+PackageId: relaxngDatatype
+PackageVersion: 1.0.0.39
+PackageProjectUrl: https://github.com/josephmyers/relaxng-tenuto
+Authors: relaxngDatatype
+###############################################################
+PackageId: SharpCompress
+PackageVersion: 0.48.1
+PackageProjectUrl: https://github.com/adamhathcock/sharpcompress
+Authors: Adam Hathcock
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: SIL.Core
+PackageVersion: 18.0.0
+PackageProjectUrl: https://github.com/sillsdev/libpalaso
+Authors: SIL Global
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: SIL.Core.Desktop
+PackageVersion: 18.0.0
+PackageProjectUrl: https://github.com/sillsdev/libpalaso
+Authors: SIL Global
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: SIL.DictionaryServices
+PackageVersion: 18.0.0
+PackageProjectUrl: https://github.com/sillsdev/libpalaso
+Authors: SIL Global
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: SIL.Lift
+PackageVersion: 18.0.0
+PackageProjectUrl: https://github.com/sillsdev/libpalaso
+Authors: SIL Global
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: SIL.WritingSystems
+PackageVersion: 18.0.0
+PackageProjectUrl: https://github.com/sillsdev/libpalaso
+Authors: SIL Global
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Snappier
+PackageVersion: 1.3.1
+PackageProjectUrl: https://brantburnett.github.io/Snappier/
+Authors: btburnett3
+License: BSD-3-Clause
+LicenseUrl: https://licenses.nuget.org/BSD-3-Clause
+###############################################################
+PackageId: Spart
+PackageVersion: 1.0.0
+PackageProjectUrl: https://github.com/sillsdev/spart
+Authors: Jonathan de Halleux, SIL
+License: https://opensource.org/licenses/Zlib
+LicenseUrl: https://opensource.org/licenses/Zlib
+###############################################################
+PackageId: Swashbuckle.AspNetCore
+PackageVersion: 10.3.1
+PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
+Authors: domaindrivendev
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Swashbuckle.AspNetCore.Swagger
+PackageVersion: 10.3.1
+PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
+Authors: domaindrivendev
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Swashbuckle.AspNetCore.SwaggerGen
+PackageVersion: 10.3.1
+PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
+Authors: domaindrivendev
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Swashbuckle.AspNetCore.SwaggerUI
+PackageVersion: 10.3.1
+PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
+Authors: domaindrivendev
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Buffers
+PackageVersion: 4.6.1
+PackageProjectUrl: https://github.com/dotnet/maintenance-packages
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Collections.Immutable
+PackageVersion: 10.0.12
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Configuration.ConfigurationManager
+PackageVersion: 6.0.2
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Diagnostics.DiagnosticSource
+PackageVersion: 10.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Drawing.Common
+PackageVersion: 6.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Formats.Asn1
+PackageVersion: 10.0.2
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Formats.Nrbf
+PackageVersion: 10.0.12
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.IdentityModel.Tokens.Jwt
+PackageVersion: 8.23.0
+PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.IO.FileSystem.AccessControl
+PackageVersion: 5.0.0
+PackageProjectUrl: https://github.com/dotnet/runtime
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.IO.Pipelines
+PackageVersion: 10.0.9
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Memory
+PackageVersion: 4.6.3
+PackageProjectUrl: https://github.com/dotnet/maintenance-packages
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Reflection.Metadata
+PackageVersion: 10.0.12
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Resources.Extensions
+PackageVersion: 10.0.12
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Runtime.CompilerServices.Unsafe
+PackageVersion: 6.1.2
+PackageProjectUrl: https://github.com/dotnet/maintenance-packages
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Security.AccessControl
+PackageVersion: 5.0.0
+PackageProjectUrl: https://github.com/dotnet/runtime
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Security.Cryptography.Pkcs
+PackageVersion: 10.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Security.Cryptography.ProtectedData
+PackageVersion: 6.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Security.Permissions
+PackageVersion: 6.0.1
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Security.Principal.Windows
+PackageVersion: 5.0.0
+PackageProjectUrl: https://github.com/dotnet/runtime
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Text.Encodings.Web
+PackageVersion: 10.0.9
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Text.Json
+PackageVersion: 10.0.9
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: System.Windows.Extensions
+PackageVersion: 6.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: TagLibSharp
+PackageVersion: 2.3.0
+PackageProjectUrl: https://github.com/mono/taglib-sharp
+Authors: Brian Nickel, Gabriel Burt, Stephen Shaw, etc
+License: LGPL-2.1-only
+LicenseUrl: https://licenses.nuget.org/LGPL-2.1-only
+###############################################################
+PackageId: Tenuto
+PackageVersion: 1.0.0.39
+PackageProjectUrl: https://github.com/josephmyers/relaxng-tenuto
+Authors: Tenuto
+###############################################################
+PackageId: Xabe.FFmpeg
+PackageVersion: 6.1.1
+PackageProjectUrl: https://ffmpeg.xabe.net/index.html
+Authors: Xabe
+License: https://ffmpeg.xabe.net/license.html
+LicenseUrl: https://ffmpeg.xabe.net/license.html
+###############################################################
+PackageId: ZstdSharp.Port
+PackageVersion: 0.7.3
+PackageProjectUrl: https://github.com/oleg-st/ZstdSharp
+Authors: Oleg Stepanischev
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
