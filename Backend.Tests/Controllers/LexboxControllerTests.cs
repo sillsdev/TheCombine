@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -9,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
+using BackendFramework.Helper;
 using BackendFramework.Models;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -471,6 +473,39 @@ namespace Backend.Tests.Controllers
             Assert.That(updated.AnalysisWritingSystems.Select(ws => ws.Bcp47), Is.EqualTo(new List<string> { "en", "ru" }));
             Assert.That(updated.DefinitionsEnabled, Is.True);
             Assert.That(updated.GrammaticalInfoEnabled, Is.True);
+        }
+
+        [Test]
+        public async Task TestImportEntriesSavesAudio()
+        {
+            var project = await CreateProject();
+            const string fileId = "00000000-0000-0000-0000-0000000000a1";
+            // The mock Lexbox returns this for the media request too, as the audio file's content.
+            _lexboxResponseJson = $$"""
+                [{
+                    "id": "00000000-0000-0000-0000-000000000001",
+                    "lexemeForm": { "es": "hola", "es-Zxxx-x-audio": "sil-media://lexbox.org/{{fileId}}" },
+                    "senses": [{ "id": "00000000-0000-0000-0000-000000000002", "gloss": { "en": "hi" } }]
+                }]
+                """;
+            _lexboxController.ControllerContext.HttpContext = GetAuthContext(LexboxSessionResult());
+
+            try
+            {
+                await _lexboxController.ImportEntries(project.Id, ImportRequest());
+
+                var words = await _wordRepo.GetAllFrontier(project.Id);
+                Assert.That(words, Has.Count.EqualTo(1));
+                Assert.That(words[0].Audio, Has.Count.EqualTo(1));
+                Assert.That(words[0].Audio[0].FileName, Is.EqualTo(fileId));
+                Assert.That(words[0].Audio[0].Protected, Is.True);
+                var filePath = FileStorage.GenerateAudioFilePath(project.Id, fileId);
+                Assert.That(File.ReadAllText(filePath), Is.EqualTo(_lexboxResponseJson));
+            }
+            finally
+            {
+                await _projRepo.Delete(project.Id);
+            }
         }
 
         [Test]

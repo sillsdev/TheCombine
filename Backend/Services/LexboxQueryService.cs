@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -15,6 +17,8 @@ namespace BackendFramework.Services
     public sealed class LexboxQueryService(IHttpClientFactory httpClientFactory) : ILexboxQueryService
     {
         private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
+
+        private const int MaxConcurrentDownloads = 4;
 
         private HttpClient CreateClient(string accessToken)
         {
@@ -72,6 +76,57 @@ namespace BackendFramework.Services
                 }
             }
             return words;
+        }
+
+        public async Task DownloadAudioAsync(string accessToken, List<Word> words, string audioDir)
+        {
+            var httpClient = CreateClient(accessToken);
+            var audioByFileId = words.SelectMany(w => w.Audio).GroupBy(a => Guid.Parse(a.FileName)).ToList();
+            var fileNames = new ConcurrentDictionary<Guid, string>();
+            var options = new ParallelOptions { MaxDegreeOfParallelism = MaxConcurrentDownloads };
+            await Parallel.ForEachAsync(audioByFileId, options, async (audio, _) =>
+            {
+                if (await DownloadMediaFileAsync(httpClient, audio.Key, audioDir) is string fileName)
+                {
+                    fileNames[audio.Key] = fileName;
+                }
+            });
+
+            foreach (var word in words)
+            {
+                word.Audio.RemoveAll(a => !fileNames.ContainsKey(Guid.Parse(a.FileName)));
+                word.Audio.ForEach(a => a.FileName = fileNames[Guid.Parse(a.FileName)]);
+            }
+        }
+
+        /// <summary> Saves a Lexbox media file as "{fileId}{extension}" in a directory. </summary>
+        /// <returns> The saved file's name, or null if Lexbox doesn't have the file. </returns>
+        private static async Task<string?> DownloadMediaFileAsync(HttpClient httpClient, Guid fileId, string dir)
+        {
+            using var response = await httpClient.GetAsync(
+                $"{LexboxQuery.MediaUrl}/{fileId}", HttpCompletionOption.ResponseHeadersRead);
+            // Lexbox returns 404 for a file missing from storage, and 403 for a file id it doesn't know.
+            if (response.StatusCode is HttpStatusCode.NotFound or HttpStatusCode.Forbidden)
+            {
+                return null;
+            }
+            if (!response.IsSuccessStatusCode)
+            {
+                throw await FailedRequestException(response, "Lexbox audio request failed");
+            }
+
+            var disposition = response.Content.Headers.ContentDisposition;
+            var originalName = (disposition?.FileNameStar ?? disposition?.FileName ?? "").Trim('"');
+            var extension = Path.GetExtension(originalName);
+            if (!extension.Skip(1).All(char.IsAsciiLetterOrDigit))
+            {
+                extension = "";
+            }
+
+            var fileName = $"{fileId}{extension}";
+            await using var fileStream = new FileStream(Path.Combine(dir, fileName), FileMode.Create);
+            await response.Content.CopyToAsync(fileStream);
+            return fileName;
         }
 
         private static async Task ThrowIfProjectRequestFailed(

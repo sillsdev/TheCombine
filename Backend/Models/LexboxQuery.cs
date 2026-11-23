@@ -10,9 +10,26 @@ namespace BackendFramework.Models
     public static class LexboxQuery
     {
         public const string LexiconUrl = "https://lexbox.org/api/lexicon";
+        public const string MediaUrl = "https://lexbox.org/api/media";
+
+        private const string MediaUriScheme = "sil-media";
 
         /// <summary> Trims and NFC-normalizes text, as LIFT import and The Combine's text fields do. </summary>
         public static string CleanText(string text) => text.Trim().Normalize(NormalizationForm.FormC);
+
+        /// <summary>
+        /// Gets the Lexbox media file id from a value in an audio writing system, such as
+        /// "sil-media://lexbox.org/{fileId}", or null if the value isn't one.
+        /// </summary>
+        /// <remarks> FW Lite writes an empty file id for media it couldn't find. </remarks>
+        public static Guid? GetMediaFileId(string value)
+        {
+            if (!Uri.TryCreate(value, UriKind.Absolute, out var uri) || uri.Scheme != MediaUriScheme)
+            {
+                return null;
+            }
+            return Guid.TryParse(uri.Segments[^1], out var fileId) && fileId != Guid.Empty ? fileId : null;
+        }
     }
 
     /// <summary> Why a Lexbox project can't be imported into The Combine. </summary>
@@ -158,6 +175,8 @@ namespace BackendFramework.Models
             return new Word
             {
                 Accessibility = protectReasons.Count > 0 ? Status.Protected : Status.Active,
+                // Imported audio is protected from modification or deletion, as in LIFT import.
+                Audio = GetAudioFileIds().Select(id => new Pronunciation(id.ToString()) { Protected = true }).ToList(),
                 Guid = Id,
                 Id = Guid.NewGuid().ToString(),
                 Note = new Note(noteLang, noteText),
@@ -166,6 +185,13 @@ namespace BackendFramework.Models
                 UsingCitationForm = usingCitationForm,
                 Vernacular = vernacular,
             };
+        }
+
+        /// <summary> Gets the Lexbox media file ids of the entry's audio forms. </summary>
+        public List<Guid> GetAudioFileIds()
+        {
+            return CitationForm.Values.Concat(LexemeForm.Values).Select(LexboxQuery.GetMediaFileId)
+                .OfType<Guid>().Distinct().ToList();
         }
 
         /// <summary> Determine what entry data is not handled by The Combine. </summary>

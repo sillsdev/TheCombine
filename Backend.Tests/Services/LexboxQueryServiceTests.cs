@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -22,6 +23,8 @@ namespace Backend.Tests.Services
         private HttpStatusCode _status = HttpStatusCode.OK;
         /// <summary> Overrides <see cref="_responseJson"/> when set. </summary>
         private Func<HttpRequestMessage, string>? _respond;
+        /// <summary> Overrides the whole response when set. </summary>
+        private Func<HttpRequestMessage, HttpResponseMessage>? _respondWithMessage;
 
         private static readonly Guid ProjId = new("00000000-0000-0000-0000-0000000000ee");
         private const string Vern = "seh";
@@ -33,15 +36,17 @@ namespace Backend.Tests.Services
         {
             _responseJson = "[]";
             _respond = null;
+            _respondWithMessage = null;
             _status = HttpStatusCode.OK;
             _handlerMock = new Mock<HttpMessageHandler>();
             _handlerMock.Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync((HttpRequestMessage req, CancellationToken _) => new HttpResponseMessage(_status)
-                {
-                    Content = new StringContent(_respond?.Invoke(req) ?? _responseJson)
-                });
+                .ReturnsAsync((HttpRequestMessage req, CancellationToken _) =>
+                    _respondWithMessage?.Invoke(req) ?? new HttpResponseMessage(_status)
+                    {
+                        Content = new StringContent(_respond?.Invoke(req) ?? _responseJson)
+                    });
 
             var httpClientFactory = new Mock<IHttpClientFactory>();
             httpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>()))
@@ -331,6 +336,135 @@ namespace Backend.Tests.Services
                 (ReasonType.Examples, (int?)1, (string?)null),
                 (ReasonType.Illustrations, 1, null),
             }));
+        }
+
+        private static readonly Guid FileId1 = new("00000000-0000-0000-0000-0000000000a1");
+        private static readonly Guid FileId2 = new("00000000-0000-0000-0000-0000000000a2");
+        private const string AudioWs = $"{Vern}-Zxxx-x-audio";
+
+        private static string MediaUri(Guid fileId) => $"sil-media://lexbox.org/{fileId}";
+
+        [Test]
+        public void TestGetMediaFileId()
+        {
+            Assert.That(LexboxQuery.GetMediaFileId(MediaUri(FileId1)), Is.EqualTo(FileId1));
+            Assert.That(LexboxQuery.GetMediaFileId(MediaUri(Guid.Empty)), Is.Null);
+            Assert.That(LexboxQuery.GetMediaFileId($"https://lexbox.org/{FileId1}"), Is.Null);
+            Assert.That(LexboxQuery.GetMediaFileId("sil-media://lexbox.org/not-a-guid"), Is.Null);
+            Assert.That(LexboxQuery.GetMediaFileId("vern"), Is.Null);
+        }
+
+        [Test]
+        public async Task TestGetProjectEntriesAsyncGetsAudioFileIds()
+        {
+            var word = await GetSingleWord($$"""
+                {
+                    "id": "00000000-0000-0000-0000-000000000001",
+                    "citationForm": { "{{AudioWs}}": "{{MediaUri(FileId1)}}", "x-Zxxx-x-audio": "{{MediaUri(Guid.Empty)}}" },
+                    "lexemeForm": { "{{Vern}}": "vern", "{{AudioWs}}": "{{MediaUri(FileId2)}}", "x-Zxxx-x-audio": "{{MediaUri(FileId1)}}" },
+                    "senses": [{{SenseJson()}}]
+                }
+                """);
+
+            Assert.That(word.Vernacular, Is.EqualTo("vern"));
+            Assert.That(word.UsingCitationForm, Is.False);
+            Assert.That(word.Audio.Select(a => a.FileName),
+                Is.EqualTo(new List<string> { FileId1.ToString(), FileId2.ToString() }));
+            Assert.That(word.Audio.All(a => a.Protected), Is.True);
+            Assert.That(word.Accessibility, Is.EqualTo(Status.Active));
+        }
+
+        private static HttpResponseMessage MediaResponse(string content, string fileName)
+        {
+            var response = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(content) };
+            response.Content.Headers.ContentDisposition = new("attachment") { FileName = fileName };
+            return response;
+        }
+
+        private static List<Word> WordsWithAudio(params Guid[][] fileIdsPerWord)
+        {
+            return fileIdsPerWord.Select(ids => new Word
+            {
+                Audio = ids.Select(id => new Pronunciation(id.ToString()) { Protected = true }).ToList()
+            }).ToList();
+        }
+
+        private static string CreateTempDir()
+        {
+            var dir = Path.Combine(Path.GetTempPath(), $"lexbox-audio-test-{Guid.NewGuid():N}");
+            Directory.CreateDirectory(dir);
+            return dir;
+        }
+
+        [Test]
+        public async Task TestDownloadAudioAsyncSavesFilesAndDropsMissingAudio()
+        {
+            var missingId = new Guid("00000000-0000-0000-0000-0000000000a3");
+            var unknownId = new Guid("00000000-0000-0000-0000-0000000000a4");
+            _respondWithMessage = req =>
+            {
+                var url = req.RequestUri!.AbsoluteUri;
+                return url == $"{LexboxQuery.MediaUrl}/{FileId1}" ? MediaResponse("audio 1", "\"Recording 1.WAV\"")
+                    : url == $"{LexboxQuery.MediaUrl}/{FileId2}" ? MediaResponse("audio 2", "odd.e-x")
+                    : url == $"{LexboxQuery.MediaUrl}/{missingId}" ? new HttpResponseMessage(HttpStatusCode.NotFound)
+                    : new HttpResponseMessage(HttpStatusCode.Forbidden);
+            };
+            var words = WordsWithAudio([FileId1, missingId], [FileId2, FileId1, unknownId]);
+            var dir = CreateTempDir();
+
+            try
+            {
+                await _lexboxQueryService.DownloadAudioAsync("token", words, dir);
+
+                var file1 = $"{FileId1}.WAV";
+                var file2 = FileId2.ToString();
+                Assert.That(words[0].Audio.Select(a => a.FileName), Is.EqualTo(new List<string> { file1 }));
+                Assert.That(words[1].Audio.Select(a => a.FileName), Is.EqualTo(new List<string> { file2, file1 }));
+                Assert.That(words.SelectMany(w => w.Audio).All(a => a.Protected), Is.True);
+                Assert.That(File.ReadAllText(Path.Combine(dir, file1)), Is.EqualTo("audio 1"));
+                Assert.That(File.ReadAllText(Path.Combine(dir, file2)), Is.EqualTo("audio 2"));
+                Assert.That(Directory.GetFiles(dir), Has.Length.EqualTo(2));
+            }
+            finally
+            {
+                Directory.Delete(dir, true);
+            }
+
+            // Each file is requested once.
+            _handlerMock.Protected().Verify("SendAsync", Times.Exactly(4),
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [TestCase(HttpStatusCode.Unauthorized, StatusCodes.Status403Forbidden, true)]
+        [TestCase(HttpStatusCode.InternalServerError, StatusCodes.Status502BadGateway, false)]
+        public async Task TestDownloadAudioAsyncMapsLexboxErrors(
+            HttpStatusCode lexboxStatus, int status, bool isNotLoggedIn)
+        {
+            _status = lexboxStatus;
+            var words = WordsWithAudio([FileId1]);
+            var dir = CreateTempDir();
+
+            try
+            {
+                var ex = await Assert.ThrowsAsync<LexboxQueryException>(
+                    () => _lexboxQueryService.DownloadAudioAsync("token", words, dir));
+
+                Assert.That(ex.StatusCode, Is.EqualTo(status));
+                Assert.That(ex.IsNotLoggedIn, Is.EqualTo(isNotLoggedIn));
+            }
+            finally
+            {
+                Directory.Delete(dir, true);
+            }
+        }
+
+        [Test]
+        public async Task TestDownloadAudioAsyncWithoutAudioSendsNoRequests()
+        {
+            await _lexboxQueryService.DownloadAudioAsync("token", WordsWithAudio([]), "unused");
+
+            _handlerMock.Protected().Verify("SendAsync", Times.Never(),
+                ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>());
         }
     }
 }

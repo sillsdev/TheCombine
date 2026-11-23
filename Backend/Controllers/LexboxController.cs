@@ -175,8 +175,8 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary>
-        /// Imports a Lexbox project's entries, in the Combine project's vernacular language, into a Combine project
-        /// that has no imported data.
+        /// Imports a Lexbox project's entries, in the Combine project's vernacular language, with their audio, into a
+        /// Combine project that has no imported data.
         /// </summary>
         /// <returns> The number of words imported. </returns>
         [HttpPost("import/{projectId}", Name = "ImportEntries")]
@@ -217,6 +217,8 @@ namespace BackendFramework.Controllers
             {
                 words = await _lexboxQueryService.GetProjectEntriesAsync(accessToken, request.ProjectId,
                     project.VernacularWritingSystem.Bcp47, request.AnalysisLangs);
+                await _lexboxQueryService.DownloadAudioAsync(
+                    accessToken, words, FileStorage.GenerateAudioFileDirPath(projectId));
             }
             catch (LexboxQueryException ex)
             {
