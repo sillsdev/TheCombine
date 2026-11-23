@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Backend.Tests.Mocks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -13,6 +14,7 @@ namespace Backend.Tests.Services
     {
         private ISemanticDomainRepository _domainRepo = null!;
         private IUserRepository _userRepo = null!;
+        private IProjectRepository _projRepo = null!;
         private WordRepositoryMock _wordRepo = null!;
         private IStatisticsService _statsService = null!;
 
@@ -48,7 +50,8 @@ namespace Backend.Tests.Services
             _domainRepo = new SemanticDomainRepositoryMock();
             _userRepo = new UserRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _statsService = new StatisticsService(_wordRepo, _domainRepo, _userRepo);
+            _projRepo = new ProjectRepositoryMock();
+            _statsService = new StatisticsService(_wordRepo, _domainRepo, _userRepo, _projRepo);
         }
 
         [Test]
@@ -118,6 +121,93 @@ namespace Backend.Tests.Services
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result.First().Count, Is.EqualTo(1));
+        }
+
+        private static List<SemanticDomainTreeNode> TreeNodesWithIds(params string[] ids)
+        {
+            return ids.Select(id => new SemanticDomainTreeNode(new SemanticDomain { Id = id })).ToList();
+        }
+
+        [Test]
+        public async Task GetDomainProgressProportionTestInvalidId()
+        {
+            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodesWithIds("1"));
+            await _wordRepo.AddFrontier(GetWordWithDomain("1"));
+
+            Assert.That(await _statsService.GetDomainProgressProportion(ProjId, "Sem"), Is.Zero);
+        }
+
+        [Test]
+        public async Task GetDomainProgressProportionTestNoDomains()
+        {
+            await _wordRepo.AddFrontier(GetWordWithDomain("1"));
+
+            Assert.That(await _statsService.GetDomainProgressProportion(ProjId, "1"), Is.Zero);
+        }
+
+        [Test]
+        public async Task GetDomainProgressProportionTestDomainNotInTree()
+        {
+            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodesWithIds("1", "1.1"));
+            await _wordRepo.AddFrontier(GetWordWithDomain("2"));
+
+            Assert.That(await _statsService.GetDomainProgressProportion(ProjId, "2"), Is.Zero);
+        }
+
+        [Test]
+        public async Task GetDomainProgressProportionTestCountsOnlySubtreeDomainsInTree()
+        {
+            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(
+                TreeNodesWithIds("1", "1.1", "1.1.1", "1.2", "2"));
+            // In the subtree: 1.1 (twice) and 1.1.1. Ignored: 2 is outside it and 1.3 isn't in the tree.
+            await _wordRepo.AddFrontier(GetWordWithDomain("1.1"));
+            await _wordRepo.AddFrontier(GetWordWithDomain("1.1"));
+            await _wordRepo.AddFrontier(GetWordWithDomain("1.1.1"));
+            await _wordRepo.AddFrontier(GetWordWithDomain("1.3"));
+            await _wordRepo.AddFrontier(GetWordWithDomain("2"));
+
+            Assert.That(await _statsService.GetDomainProgressProportion(ProjId, "1"), Is.EqualTo(0.5));
+            Assert.That(await _statsService.GetDomainProgressProportion(ProjId, "1.1"), Is.EqualTo(1.0));
+            Assert.That(await _statsService.GetDomainProgressProportion(ProjId, "1.2"), Is.Zero);
+        }
+
+        /// <summary> Creates a project with the given custom domain ids and returns its id. </summary>
+        private async Task<string> CreateProjectWithCustomDomains(params string[] ids)
+        {
+            var proj = Util.RandomProject();
+            proj.SemanticDomains = ids.Select(id => new SemanticDomainFull { Id = id, Lang = "en" }).ToList();
+            var created = await _projRepo.Create(proj);
+            Assert.That(created, Is.Not.Null);
+            return created.Id;
+        }
+
+        private async Task AddWordWithDomain(string projId, string semDomId)
+        {
+            var word = GetWordWithDomain(semDomId);
+            word.ProjectId = projId;
+            await _wordRepo.AddFrontier(word);
+        }
+
+        [Test]
+        public async Task GetDomainProgressProportionTestCustomDomain()
+        {
+            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodesWithIds("1", "1.1", "1.1.1"));
+            var projId = await CreateProjectWithCustomDomains("1.1.0");
+            await AddWordWithDomain(projId, "1.1.0");
+
+            Assert.That(await _statsService.GetDomainProgressProportion(projId, "1.1.0"), Is.EqualTo(1.0));
+        }
+
+        [Test]
+        public async Task GetDomainProgressProportionTestStandardParentCountsCustomDescendants()
+        {
+            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodesWithIds("1", "1.1", "1.1.1"));
+            // A custom domain listed twice (as in two languages) counts once.
+            var projId = await CreateProjectWithCustomDomains("1.1.0", "1.1.0", "2.0");
+            await AddWordWithDomain(projId, "1.1.0");
+
+            // Subtree of 1.1: 1.1, 1.1.0 (used), 1.1.1.
+            Assert.That(await _statsService.GetDomainProgressProportion(projId, "1.1"), Is.EqualTo(1.0 / 3));
         }
 
         [Test]

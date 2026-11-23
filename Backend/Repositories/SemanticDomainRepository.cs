@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -100,6 +101,19 @@ namespace BackendFramework.Repositories
             {
                 return null;
             }
+        }
+
+        /// <summary> Get the ids of a semantic domain and its descendants in the specified language. </summary>
+        /// <remarks> Assumes each id component is a single digit, so a prefix match finds exactly the subtree. </remarks>
+        public async Task<List<string>> GetSemanticDomainIdsInSubtree(string id, string lang)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting semantic domain ids in subtree");
+
+            var filterDef = new FilterDefinitionBuilder<SemanticDomainTreeNode>();
+            var filter = filterDef.And(
+                filterDef.Eq(x => x.Lang, lang),
+                filterDef.Regex(x => x.Id, new BsonRegularExpression($"^{Regex.Escape(id)}")));
+            return await _semanticDomains.Find(filter).Project(x => x.Id).ToListAsync();
         }
     }
 }
