@@ -41,6 +41,7 @@ export default function LexboxProjectsDialog(
   const [error, setError] = useState<string | undefined>();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loginReloadKey, setLoginReloadKey] = useState(0);
   const [projects, setProjects] = useState<LexboxProject[]>([]);
   const [selected, setSelected] = useState<LexboxProject | undefined>();
 
@@ -55,6 +56,10 @@ export default function LexboxProjectsDialog(
     } catch (err) {
       setError(errorText(err));
       setProjects([]);
+      // On "Not logged in to Lexbox", the next status check clears the rejected login.
+      if (isAxiosError(err) && err.response?.status === 403) {
+        setLoginReloadKey((key) => key + 1);
+      }
     } finally {
       setLoading(false);
     }
@@ -171,7 +176,10 @@ export default function LexboxProjectsDialog(
     >
       <DialogTitle>{t("lexbox.importTitle")}</DialogTitle>
       <DialogContent>
-        <LexboxLogin onStatusChange={setIsLoggedIn} />
+        <LexboxLogin
+          onStatusChange={setIsLoggedIn}
+          reloadKey={loginReloadKey}
+        />
         {projectContent()}
       </DialogContent>
       <DialogActions>

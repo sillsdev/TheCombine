@@ -22,6 +22,8 @@ import { listenForLexboxLogin } from "components/Lexbox/lexboxAuthChannel";
 
 interface LexboxLoginProps {
   onStatusChange?: (loggedIn: boolean) => void;
+  /** Changing this reloads the login status. */
+  reloadKey?: number;
   text?: string;
 }
 
@@ -50,6 +52,12 @@ export default function LexboxLogin(props: LexboxLoginProps): ReactElement {
     loadStatus();
     return listenForLexboxLogin(() => void loadStatus(false));
   }, []);
+
+  useEffect(() => {
+    if (props.reloadKey) {
+      loadStatus(false);
+    }
+  }, [props.reloadKey]);
 
   useEffect(() => {
     if (isLoggedIn) {

@@ -15,12 +15,34 @@ jest.mock("components/Lexbox/LexboxLogin", () => mockLexboxLogin);
 /** Stands in for LexboxLogin, reporting a logged-in user. */
 function mockLexboxLogin(props: {
   onStatusChange?: (loggedIn: boolean) => void;
+  reloadKey?: number;
 }): ReactElement {
   useEffect(() => props.onStatusChange?.(true), []);
+  useEffect(() => mockReloadKey(props.reloadKey), [props.reloadKey]);
   return <div />;
 }
 
 const mockGetLexboxProjects = jest.fn();
+const mockReloadKey = jest.fn();
+
+function rejectProjects(status: number, title: string): void {
+  const response = { data: { title }, status } as AxiosResponse;
+  mockGetLexboxProjects.mockRejectedValue(
+    new AxiosError("Request failed", "ERR", undefined, undefined, response)
+  );
+}
+
+async function renderDialog(): Promise<void> {
+  await act(async () => {
+    render(
+      <LexboxProjectsDialog
+        chooseProject={jest.fn()}
+        onClose={jest.fn()}
+        open
+      />
+    );
+  });
+}
 
 const blockedProject: LexboxProject = {
   analysisWsTags: [],
@@ -75,27 +97,25 @@ describe("LexboxProjectsDialog", () => {
     expect(chooseProject).toHaveBeenCalledWith(importableProject);
   });
 
-  it("shows the title of a problem-details error", async () => {
-    const response = {
-      data: { title: "Not logged in to Lexbox" },
-      status: 403,
-    } as AxiosResponse;
-    mockGetLexboxProjects.mockRejectedValue(
-      new AxiosError("Request failed", "ERR", undefined, undefined, response)
-    );
+  it("shows the title of a problem-details error and reloads login status on 403", async () => {
+    rejectProjects(403, "Not logged in to Lexbox");
 
-    await act(async () => {
-      render(
-        <LexboxProjectsDialog
-          chooseProject={jest.fn()}
-          onClose={jest.fn()}
-          open
-        />
-      );
-    });
+    await renderDialog();
 
     expect(
       await screen.findByText("Not logged in to Lexbox")
     ).toBeInTheDocument();
+    expect(mockReloadKey).toHaveBeenLastCalledWith(1);
+  });
+
+  it("doesn't reload login status on other errors", async () => {
+    rejectProjects(502, "Lexbox projects request failed");
+
+    await renderDialog();
+
+    expect(
+      await screen.findByText("Lexbox projects request failed")
+    ).toBeInTheDocument();
+    expect(mockReloadKey).toHaveBeenLastCalledWith(0);
   });
 });

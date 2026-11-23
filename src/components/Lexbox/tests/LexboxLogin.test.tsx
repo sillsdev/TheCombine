@@ -142,6 +142,25 @@ describe("LexboxLogin", () => {
     expect(MockBroadcastChannel.instances[0].close).toHaveBeenCalled();
   });
 
+  it("refreshes status when the reload key changes", async () => {
+    mockGetLexboxAuthStatus
+      .mockResolvedValueOnce({ isLoggedIn: true, loggedInAs: "Lex User" })
+      .mockResolvedValueOnce({ isLoggedIn: false });
+
+    const { rerender } = render(<LexboxLogin reloadKey={0} />);
+    await screen.findByRole("button", { name: "Lex User" });
+    expect(mockGetLexboxAuthStatus).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      rerender(<LexboxLogin reloadKey={1} />);
+    });
+
+    expect(
+      await screen.findByRole("button", { name: /login/i })
+    ).toBeInTheDocument();
+    expect(mockGetLexboxAuthStatus).toHaveBeenCalledTimes(2);
+  });
+
   it("reports a failed logout", async () => {
     const consoleError = jest.spyOn(console, "error").mockImplementation();
     mockGetLexboxAuthStatus.mockResolvedValue({
