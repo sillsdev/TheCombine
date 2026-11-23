@@ -95,6 +95,20 @@ namespace Backend.Tests.Services
         }
 
         [Test]
+        public void GetSemanticDomainCountsTestWordsWithNoDomains()
+        {
+            // Add to the database a semantic domain and a word whose sense has no semantic domain
+            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodes);
+            var word = GetWordWithDomain();
+            word.Senses[0].SemanticDomains.Clear();
+            _wordRepo.AddFrontier(word);
+
+            var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
+            Assert.That(result, Has.Count.EqualTo(1));
+            Assert.That(result.First().Count, Is.Zero);
+        }
+
+        [Test]
         public void GetSemanticDomainCountsTestIdMatch()
         {
             // Add to the database a semantic domain and a word with the same semantic domain

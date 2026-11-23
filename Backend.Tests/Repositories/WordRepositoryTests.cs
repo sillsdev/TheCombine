@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Contexts;
@@ -741,6 +742,48 @@ namespace Backend.Tests.Repositories
             await CreateWord();
             var count = await _repo.CountFrontierWordsWithDomain(_projectId, "99.99");
             Assert.That(count, Is.Zero);
+        }
+
+        /// <summary> Creates a Frontier word with one sense per entry, each with the given domain ids. </summary>
+        private Task<Word> CreateWordWithDomains(string projectId, params string[][] domainIdsPerSense)
+        {
+            var word = Util.RandomWord(projectId);
+            word.Senses = domainIdsPerSense.Select(ids =>
+            {
+                var sense = Util.RandomSense();
+                sense.SemanticDomains = ids.Select(id => Util.RandomSemanticDomain(id)).ToList();
+                return sense;
+            }).ToList();
+            return _repo.Create(word);
+        }
+
+        [Test]
+        public async Task TestCountFrontierSensesByDomainCountsEachSenseOccurrence()
+        {
+            await CreateWordWithDomains(_projectId, ["1.1", "2.2"], ["1.1"]);
+            await CreateWordWithDomains(_projectId, ["1.1"], []);
+
+            var counts = await _repo.CountFrontierSensesByDomain(_projectId);
+            Assert.That(counts, Is.EquivalentTo(new Dictionary<string, int> { ["1.1"] = 3, ["2.2"] = 1 }));
+        }
+
+        [Test]
+        public async Task TestCountFrontierSensesByDomainIgnoresOtherProjectsAndNonFrontierWords()
+        {
+            await CreateWordWithDomains(Guid.NewGuid().ToString(), ["1.1"]);
+            var deleted = await CreateWordWithDomains(_projectId, ["1.1"]);
+            await _repo.DeleteFrontier(_projectId, deleted.Id, w => w.Accessibility = Status.Deleted);
+            await CreateWordWithDomains(_projectId, ["2.2"]);
+
+            var counts = await _repo.CountFrontierSensesByDomain(_projectId);
+            Assert.That(counts, Is.EquivalentTo(new Dictionary<string, int> { ["2.2"] = 1 }));
+        }
+
+        [Test]
+        public async Task TestCountFrontierSensesByDomainEmptyFrontierReturnsEmpty()
+        {
+            var counts = await _repo.CountFrontierSensesByDomain(_projectId);
+            Assert.That(counts, Is.Empty);
         }
     }
 }

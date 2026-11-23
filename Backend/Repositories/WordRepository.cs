@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Otel;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
@@ -381,6 +382,35 @@ namespace BackendFramework.Repositories
                 filterDef.ElemMatch(w => w.Senses, s => s.SemanticDomains.Any(sd => sd.Id == domainId)));
 
             return (int)await _frontier.CountDocumentsAsync(filter);
+        }
+
+        /// <summary>
+        /// Counts, per semantic domain, the Frontier sense-occurrences of that domain in a project.
+        /// </summary>
+        /// <param name="projectId">The project id</param>
+        /// <returns>
+        /// A map from semantic domain id to the number of (sense, domain) pairs with that id: a word with two
+        /// senses in the same domain contributes 2. Domains with no senses are absent.
+        /// </returns>
+        public async Task<Dictionary<string, int>> CountFrontierSensesByDomain(string projectId)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "counting frontier senses by domain");
+
+            // Tally in the database so that a project's whole Frontier isn't loaded into the backend.
+            PipelineDefinition<Word, BsonDocument> pipeline = new BsonDocument[]
+            {
+                new("$match", new BsonDocument("projectId", projectId)),
+                new("$unwind", "$senses"),
+                new("$unwind", "$senses.SemanticDomains"),
+                new("$group", new BsonDocument
+                {
+                    { "_id", "$senses.SemanticDomains.id" },
+                    { "count", new BsonDocument("$sum", 1) },
+                }),
+            };
+
+            var groups = await _frontier.Aggregate(pipeline).ToListAsync();
+            return groups.ToDictionary(g => g["_id"].AsString, g => g["count"].AsInt32);
         }
 
         #endregion

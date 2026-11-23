@@ -313,5 +313,13 @@ namespace Backend.Tests.Mocks
                 w => w.ProjectId == projectId && w.Senses.Any(s => s.SemanticDomains.Any(sd => sd.Id == domainId)));
             return Task.FromResult(count);
         }
+
+        public Task<Dictionary<string, int>> CountFrontierSensesByDomain(string projectId)
+        {
+            var counts = _frontier.Where(w => w.ProjectId == projectId)
+                .SelectMany(w => w.Senses).SelectMany(s => s.SemanticDomains)
+                .GroupBy(sd => sd.Id).ToDictionary(g => g.Key, g => g.Count());
+            return Task.FromResult(counts);
+        }
     }
 }

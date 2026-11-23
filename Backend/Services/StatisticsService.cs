@@ -39,32 +39,20 @@ namespace BackendFramework.Services
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting semantic domain counts");
 
-            var hashMap = new Dictionary<string, int>();
             var domainTreeNodeList = await _domainRepo.GetAllSemanticDomainTreeNodes(lang);
-            var wordList = await _wordRepo.GetAllFrontier(projectId);
-
-            if (domainTreeNodeList is null || domainTreeNodeList.Count == 0 || wordList.Count == 0)
+            if (domainTreeNodeList is null || domainTreeNodeList.Count == 0)
             {
                 return [];
             }
 
-            foreach (var word in wordList)
+            var domainCounts = await _wordRepo.CountFrontierSensesByDomain(projectId);
+            if (domainCounts.Count == 0 && !await _wordRepo.HasFrontierWords(projectId))
             {
-                foreach (var sense in word.Senses)
-                {
-                    foreach (var sd in sense.SemanticDomains)
-                    {
-                        hashMap[sd.Id] = hashMap.GetValueOrDefault(sd.Id, 0) + 1;
-                    }
-                }
+                return [];
             }
 
-            var resList = new List<SemanticDomainCount>();
-            foreach (var domainTreeNode in domainTreeNodeList)
-            {
-                resList.Add(new(domainTreeNode, hashMap.GetValueOrDefault(domainTreeNode.Id, 0)));
-            }
-            return resList;
+            return domainTreeNodeList
+                .Select(node => new SemanticDomainCount(node, domainCounts.GetValueOrDefault(node.Id, 0))).ToList();
         }
 
         /// <summary>
