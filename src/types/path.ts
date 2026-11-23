@@ -5,6 +5,8 @@ export enum Path {
   GoalCurrent = "/app/goals/current",
   GoalNext = "/app/goals/next",
   Goals = "/app/goals",
+  /** Must match LexboxAuthService.LoginCompletePath in the backend. */
+  LexboxLoginComplete = "/lexbox-login-complete",
   Login = "/login",
   ProjInvite = "/invite",
   ProjScreen = "/app/projects",
