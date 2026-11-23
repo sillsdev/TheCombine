@@ -11,7 +11,7 @@ namespace Backend.Tests.Repositories
 {
     /// <summary>
     /// Starts and manages an ephemeral MongoDB process for integration testing.
-    /// Uses the mongod binary from the EphemeralMongo7 NuGet package.
+    /// Uses the mongod binary from the EphemeralMongo8 NuGet package.
     /// Supports single-node replica sets to enable multi-document transactions.
     /// </summary>
     internal sealed class MongoDbTestRunner : IDisposable
@@ -70,7 +70,7 @@ namespace Backend.Tests.Repositories
             if (!File.Exists(binaryPath))
             {
                 throw new FileNotFoundException(
-                    $"mongod binary not found at '{binaryPath}'. Ensure one of the EphemeralMongo7.runtime.* packages is installed.",
+                    $"mongod binary not found at '{binaryPath}'. Ensure one of the EphemeralMongo8.runtime.* packages is installed.",
                     binaryPath);
             }
 
@@ -92,7 +92,7 @@ namespace Backend.Tests.Repositories
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return "win-x64";
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return "linux-x64";
-            // EphemeralMongo7 only provides an arm64 binary for macOS
+            // EphemeralMongo8 only provides an arm64 binary for macOS
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) return "osx-arm64";
             throw new PlatformNotSupportedException("Unsupported operating system.");
         }
